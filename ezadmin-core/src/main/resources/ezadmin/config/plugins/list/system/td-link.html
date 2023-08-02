@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表格-文本链接</title>
+</head>
+<body id="td-link" alias="24" type="td">
+<table>
+    <tr id="content">
+        <td th:title="${dataInDb}" th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}"
+            th:ITEM_ID="${item_name}"
+            th:class="${'layui-text layui-elip  ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
+            <a href="#" th:tab-id="${item_name+'-'+item_name}"
+               th:ITEM_ID="${item_name+''+item_name}"
+               th:ITEM_URL="${url}"
+               th:ITEM_OPEN_TYPE="${opentype}" th:windowname="${windowname}"
+               th:ITEM_OPEN_TITLE="${windowname}" class="ezopenbutton ">
+                [[${dataInDb}]]
+            </a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

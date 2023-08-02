@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>列表主体</title>
+    <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+    <link href="../global.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid  layui-bg-gray">
+    <div class="layui-row layui-col-space5">
+        <blockquote class="layui-elem-quote" style="margin-top:10px">
+            通过配置body的属性与相关的sql，传递给ezadmin解析，最终生成对应的UI。<br>
+            支持如下功能
+            1.debug: /ezadmin/list/trace-${ID}<BR>
+            2.导出: /ezadmin/list/ezExport-${ID}<BR>
+            3.json格式返回: /ezadmin/list/api-${ID}<BR>
+            4.总条数: /ezadmin/list/count-${ID}<BR>
+            5.统计和: /ezadmin/list/sum-${ID}<BR>
+            6.树形结构: /ezadmin/list/tree-${ID}<BR>
+            7.树形结构JSON: /ezadmin/list/treeapi-${ID}<BR>
+        </blockquote>
+      主体的配置结构
+      <pre id="code" class="layui-code layui-code-view layui-box">
+          &lt;!doctype html&gt;
+            &lt;html lang=&quot;en&quot;&gt;
+            &lt;head&gt;
+                &lt;meta charset=&quot;UTF-8&quot;&gt;
+                &lt;title&gt;模版&lt;/title&gt;
+                &lt;link href=&quot;https://cdn.staticfile.org/layui/2.6.13/css/layui.css&quot; rel=&quot;stylesheet&quot;&gt;
+            &lt;/head&gt;
+            &lt;body id=&quot;listtemplate&quot; tree="0" datasource=&quot;System&quot; empty_show=&quot;&quot;
+                  fixednumber=&quot;0&quot; fixednumberright=&quot;0&quot;
+                  firstcol=&quot;numbers&quot; tablesearchflag=&quot;true&quot;&gt;
+            &lt;div id=&quot;appendHead&quot;&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;layui-fluid&quot;&gt;
+                &lt;div class=&quot;layui-tab&quot;&gt;
+                    &lt;ul class=&quot;layui-tab-title&quot; id=&quot;tab&quot;&gt;
+
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+                &lt;form class=&quot;layui-form&quot; id=&quot;search&quot;&gt;
+
+                &lt;/form&gt;
+                &lt;hr class=&quot;layui-border-blue&quot;&gt;
+                &lt;div class=&quot;btn-group   bd-highlight&quot; id=&quot;tableButton&quot;&gt;
+
+                &lt;/div&gt;
+                &lt;table id=&quot;table&quot; class=&quot;layui-table&quot; style=&quot; width:100%&quot;&gt;
+                    &lt;thead&gt;
+                    &lt;tr id=&quot;column&quot;&gt;
+                        &lt;th type=&quot;rowbutton&quot; id=&quot;rowbutton&quot;&gt;&lt;/th&gt;
+                    &lt;/tr&gt;
+                    &lt;/thead&gt;
+                    &lt;tbody&gt;
+                    &lt;tr&gt;
+                        &lt;td&gt; express:&lt;/td&gt;
+                        &lt;td colspan=&quot;100&quot;&gt;
+                            &lt;pre id=&quot;express&quot; class=&quot;layui-code&quot; orderby=&quot;&quot; groupby=&quot;&quot;&gt;
+                     &lt;/pre&gt;
+
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;td&gt; count:&lt;/td&gt;
+                        &lt;td colspan=&quot;100&quot;&gt;
+                            &lt;pre id=&quot;count&quot; class=&quot;layui-code&quot;&gt;
+                            &lt;/pre&gt;
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/tbody&gt;
+                &lt;/table&gt;
+            &lt;/div&gt;
+            &lt;div id=&quot;appendFoot&quot;&gt;
+
+            &lt;/div&gt;
+            &lt;script src=&quot;https://cdn.staticfile.org/layui/2.6.13/layui.js&quot;&gt;&lt;/script&gt;
+
+            &lt;/body&gt;
+            &lt;/html&gt;
+      </pre>
+
+  </div>
+    <div class="layui-row layui-col-space5 doctext">
+
+        <div class="layui-card" id="id">
+            <div class="layui-ez-color layui-card-header">列表编码>body>id</div>
+            <div class="layui-card-body ">
+<pre>
+1.含义： 列表的唯一编码，用于URL映射
+eg: userList
+则通过/ezadmin/list/list-userList 访问此列表
+</pre>
+            </div>
+        </div>
+        <div class="layui-card" id="title">
+            <div class="layui-ez-color layui-card-header">列表名称>title</div>
+            <div class="layui-card-body">
+<pre>
+1.含义：主要展示为title，同时在列表开发便于查找。
+2.eg：用户列表
+</pre>
+            </div>
+        </div>
+        <div class="layui-card" id="datasource">
+            <div class="layui-ez-color layui-card-header">数据源body>datasource</div>
+            <div class="layui-card-body">
+<pre>
+1.含义：通过配置spring的beanName查询SQL所对应的数据源
+如：springboot项目配置了两个数据源，则可以做如下配置：
+ezadmin.datasourceBeanNames=datasource,saas-datasource
+对于非spring项目，可以参考EzAdminFilter，复写context对象获取datasource的方法， 进行修改之后再嵌入。
+</pre>
+            </div>
+        </div>
+        <div class="layui-card" id="tree">
+            <div class="layui-ez-color layui-card-header">树形列表body>tree</div>
+            <div class="layui-card-body">
+<pre>
+1.含义：设置为1，则展示为treetable
+2.插件：treegrid
+使用treegrid，需要确保后台返回的数据是平铺的树形结构，按照顺序返回
+示例返回：
+</pre>
+                <table class="layui-table">
+
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>PARENT_ID</th>
+                        <th>NAME</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td></td>
+                        <td>第一级</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>1</td>
+                        <td>第1.1级</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>2</td>
+                        <td>第1.1.1级</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td></td>
+                        <td>第一级</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>4</td>
+                        <td>第1.1级</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="layui-card" id="express">
+            <div class="layui-ez-color layui-card-header">查询表达式>express</div>
+            <div class="layui-card-body">
+<pre>
+含义：列表数据总数对应的SQL或表达式。
+系统通过寻找 &lt;pre id=&quot;express&quot; class=&quot;layui-code&quot;&gt;&lt;/pre&gt; id为express的节点里面的内容作为获取列表数据的SQL或表达式，
+最后根据返回的List&lt;Map&gt;格式的数据渲染成列表。
+支持QLEXPRESS。
+</pre>
+有如下几种情况：
+    <pre  lay-options="{title:'纯sql', height: '320px'}" class="layui-code layui-code-view layui-box">
+select user_id,user_name from T_USER where 1=1 and user_id=#{USER_ID};
+    </pre>
+    <pre  lay-options="{title:'不包含html参数的表达式', height: '320px'}" class="layui-code layui-code-view layui-box">
+user_id=$("USER_ID");
+StringBuilder sql=new StringBuilder();
+sql.append("select user_id ,user_name from T_USER WHERE 1=1 AND USER_ID=");
+sql.append(user_id);
+return  search(sql);
+    </pre>
+    <pre  lay-options="{title:'包含html参数的表达式,使用cdata包裹', height: '320px'}" class="layui-code layui-code-view layui-box">
+&lt;![CDATA[
+        user_id=$("USER_ID");
+        StringBuilder sql=new StringBuilder();
+        sql.append("select user_id ,user_name ");
+        sql.append(" concat('<a>',user_address,'</a>') address ");
+        sql.append(" from T_USER WHERE 1=1 AND USER_ID= ");
+        sql.append(user_id);
+        return  search(sql);
+]]&gt;
+    </pre>
+
+    $,search均为内置表达式函数，内置表达式函数详见<a href="../express.html">内置表达式函数</a>
+
+            </div>
+        </div>
+        <div class="layui-card" id="count">
+            <div class="layui-ez-color layui-card-header">总数表达式>count</div>
+            <div class="layui-card-body">
+<pre>
+含义： 列表数据总数对应的SQL或表达式。
+系统通过寻找 &lt;pre id=&quot;count&quot; class=&quot;layui-code&quot;&gt;&lt;/pre&gt; id为count的节点里面的内容作为计算总数的SQL或表达式，
+最后根据此数据渲染成page插件。
+支持QLEXPRESS。
+</pre>
+1.默认值为空时：直接使用 select count(1) from ( 原sql ) a
+2.设置为count(1)：  截取表达式第一个from以后的字符串，然后前面拼接 select count(1) from ,后面拼接 where 语句。
+3.自己写SQL: 直接使用此SQL，然后按照查询表达式的规则拼接where语句
+以上三种情况，如果有order by ,会去除。 如果有groupby 则会拼接到最后。
+        </div>
+        </div>
+        <div class="layui-card" id="orderby">
+            <div class="layui-ez-color layui-card-header">排序表达式>express>orderby</div>
+            <div class="layui-card-body">
+<pre>
+含义： order by。
+系统通过寻找 &lt;pre id=&quot;express&quot; class=&quot;layui-code&quot; orderby=&quot;ORDER BY ADD_TIME DESC&quot; groupby=&quot;&quot; id为express的节点的ORDERBY属性，作为表达式。
+不支持QLEXPRESS。
+</pre>
+ORDER BY ADD_TIME DESC;
+        </div>
+    </div>
+        <div class="layui-card" id="groupby">
+            <div class="layui-ez-color layui-card-header">分组表达式>>express>groupby</div>
+            <div class="layui-card-body">
+<pre>
+含义： group by 。
+系统通过寻找 &lt;pre id=&quot;express&quot; class=&quot;layui-code&quot; orderby=&quot;ORDER BY ADD_TIME DESC&quot; groupby=&quot;&quot; id为express的节点的groupby属性，作为表达式。
+支持QLEXPRESS。
+</pre>
+if(isBlank("xxx")){
+   group  BY ADD_TIME  ;
+}
+        </div>
+        </div>
+        <div class="layui-card" id="append_head">
+            <div class="layui-ez-color layui-card-header">自定义样式>appendHead</div>
+            <div class="layui-card-body">
+<pre>
+含义： 拼接在页头的html片段，用于自定义样式或js脚本
+系统通过寻找 &lt;div id=&quot;appendHead&quot;&gt;&lt;/div&gt; id为 appendHead 的节点的内容，作为表达式。
+ 支持js,css
+</pre>
+            </div>
+        </div>
+        <div class="layui-card" id="append_foot">
+            <div class="layui-ez-color layui-card-header">自定义脚本>appendFoot</div>
+            <div class="layui-card-body">
+<pre>
+含义：  拼接在页尾的html片段，用于自定义样式或js脚本
+系统通过寻找 &lt;div id=&quot;appendFoot&quot;&gt;&lt;/div&gt; id为 appendFoot 的节点的内容，作为表达式。
+ 支持js,css
+</pre>
+            </div>
+        </div>
+        <div class="layui-card" id="fixednumber">
+            <div class="layui-ez-color layui-card-header">固定列数(左侧)>body>fixednumber</div>
+            <div class="layui-card-body">
+<pre>
+含义：  左侧固定
+</pre>
+        </div>
+    </div>
+        <div class="layui-card" id="fixednumberright">
+            <div class="layui-ez-color layui-card-header">固定列数(右侧)>body>fixednumberright</div>
+            <div class="layui-card-body">
+<pre>
+含义：  右侧固定
+</pre>
+        </div>
+    </div>
+        <div class="layui-card" id="empty_show">
+            <div class="layui-ez-color layui-card-header">空值填充>body>empty_show</div>
+            <div class="layui-card-body">
+<pre>
+含义：   全表配置，如果值为空，则默认配置的字符串
+    -   /
+</pre>
+        </div>
+    </div>
+        <div class="layui-card" id="firstcol">
+            <div class="layui-ez-color layui-card-header">首列>body>firstcol</div>
+            <div class="layui-card-body">
+<pre>
+含义： 首列
+   1.空  2.numbers  3.checkbox  4.radio
+</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js">
+</script>
+<script src="../global.js"></script>
+
+</div>
+</div>
+</div>
+</body>
+</html>

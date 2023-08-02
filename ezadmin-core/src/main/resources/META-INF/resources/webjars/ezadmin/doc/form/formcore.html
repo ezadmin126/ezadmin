@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>表单主体</title>
+    <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+    <link href="../global.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid  layui-bg-gray">
+  <div class="layui-row layui-col-space5">
+      <blockquote class="layui-elem-quote" style="margin-top:10px">
+           通过配置表单的基本信息，自动生成页面。
+      </blockquote>
+<pre id="code" class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+    &lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+ &lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;表单内容管理&lt;/title&gt;
+  &lt;link href=&quot;https://cdn.staticfile.org/layui/2.6.13/css/layui.css&quot; rel=&quot;stylesheet&quot;&gt;
+ &lt;/head&gt;
+ &lt;body id=&quot;formCore&quot; datasource success_url=&quot;&quot;&gt;
+  &lt;div id=&quot;APPEND_HEAD&quot;&gt;&lt;/div&gt;
+  &lt;div class=&quot;layui-fluid&quot;&gt;
+   &lt;form id=&quot;inputForm&quot; method=&quot;post&quot; class=&quot;layui-form&quot;&gt;
+    &lt;div class=&quot;layui-card&quot; group_name=&quot;EZ_DEFAULT_GROUP&quot;&gt;
+     &lt;div class=&quot;layui-card-header&quot;&gt;
+       EZ_DEFAULT_GROUP
+     &lt;/div&gt;
+     &lt;div class=&quot;layui-card-body&quot;&gt;
+      &lt;div class=&quot; layui-form-item&quot;&gt;
+       &lt;label class=&quot;layui-form-label&quot;&gt;表单编码&lt;/label&gt;
+       &lt;div class=&quot;layui-input-block form-group&quot;&gt;
+        &lt;input lay-verify=&quot;&quot; type=&quot;text&quot; placeholder=&quot;&quot; class=&quot;layui-input form-item&quot; value=&quot;&quot; name=&quot;ENCODE_FORM_ID&quot; item_desc=&quot;&quot; group_data=&quot;&quot; item_name=&quot;ENCODE_FORM_ID&quot; style=&quot;&quot; alias=&quot;&quot; jdbctype=&quot;&quot; data=&quot;&quot; datatype=&quot;&quot; lay_verify=&quot;required&quot; valid_rule=&quot;&quot; valid_msg=&quot;&quot;&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+
+
+     &lt;/div&gt;
+    &lt;/div&gt;
+
+   &lt;/form&gt;
+   &lt;form id=&quot;configForm&quot; class=&quot;layui-form&quot;&gt;
+    &lt;div class=&quot;layui-card&quot; group_name=&quot;表单数据配置&quot;&gt;
+     &lt;div class=&quot;layui-card-header&quot;&gt;
+       表单数据配置
+     &lt;/div&gt;
+     &lt;div class=&quot;layui-card-body&quot;&gt;
+      &lt;div class=&quot;layui-form-item &quot;&gt;
+       &lt;label class=&quot;layui-form-label&quot;&gt;初始表达式&lt;/label&gt;
+       &lt;div class=&quot;layui-input-block form-group&quot;&gt;
+        &lt;pre class=&quot;form-item layui-code&quot; name=&quot;INIT_EXPRESS&quot; type=&quot;&quot;&gt; &lt;/pre&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;layui-form-item &quot;&gt;
+        &lt;label class=&quot;layui-form-label&quot;&gt;删除表达式&lt;/label&gt;
+       &lt;div class=&quot;layui-input-block form-group&quot;&gt;
+        &lt;pre class=&quot;form-item layui-code&quot; id=&quot;delete&quot; name=&quot;DELETE_EXPRESS&quot; type=&quot;&quot;&gt; &lt;/pre&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;layui-form-item &quot;&gt;
+        &lt;label class=&quot;layui-form-label&quot;&gt;提交表达式&lt;/label&gt;
+       &lt;div class=&quot;layui-input-block form-group&quot;&gt;
+        &lt;pre class=&quot;form-item layui-code&quot; name=&quot;SUBMIT_EXPRESS&quot; type=&quot;&quot;&gt;&lt;/pre&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;layui-form-item &quot;&gt;
+       &lt;label class=&quot;layui-form-label&quot;&gt;分组表达式&lt;/label&gt;
+       &lt;div class=&quot;layui-input-block form-group&quot;&gt;
+        &lt;pre class=&quot;form-item layui-code&quot; name=&quot;GROUP_DATA&quot; type=&quot;&quot;&gt; &lt;/pre&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+    &lt;/div&gt;
+   &lt;/form&gt;
+  &lt;/div&gt;
+  &lt;script src=&quot;https://cdn.staticfile.org/layui/2.6.13/layui.js&quot;&gt;&lt;/script&gt;
+
+  &lt;div id=&quot;APPEND_FOOT&quot;&gt;
+&lt;!--    这是一段放在后面的自定义的html代码片段--&gt;
+  &lt;/div&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+  </div>
+    <div class="layui-row layui-col-space5 doctext">
+        <div class="layui-card" id="id">
+            <div class="layui-ez-color layui-card-header">表单编码>body>id</div>
+            <div class="layui-card-body ">
+            表单的唯一编码，通过 /ezadmin/form/form-{表单编码}
+            </div>
+        </div>
+        <div class="layui-card" id="title">
+            <div class="layui-ez-color layui-card-header">表单名称>title</div>
+            <div class="layui-card-body">
+                表单的名称，在页面会展示
+            </div>
+        </div>
+        <div class="layui-card" id="datasource">
+            <div class="layui-ez-color layui-card-header">数据源>body>datasource</div>
+            <div class="layui-card-body">
+               ezadmin.datasourceBeanNames配置的数据源列表
+            </div>
+        </div>
+
+        <div class="layui-card" id="GROUP_DATA">
+            <div class="layui-ez-color layui-card-header">分组配置>formitem>GROUP_DATA</div>
+            <div class="layui-card-body">
+系统获取name为  GROUP_DATA 的 元素text()配置
+生成的表单，按照card格式展示，此处统一配置，表单选择可以选择一个选项。
+<pre>
+     &lt;pre class=&quot;form-item layui-code&quot; name=&quot;GROUP_DATA&quot; type=&quot;&quot;&gt;
+                    [ {&quot;V&quot;:&quot;基础数据&quot;,&quot;K&quot;:&quot;基础数据&quot;,&quot;type&quot;:&quot;inline&quot;},
+                    {&quot;V&quot;:&quot;初始数据&quot;,&quot;K&quot;:&quot;初始数据&quot;,&quot;type&quot;:&quot;block&quot;} ,
+                    {&quot;V&quot;:&quot;自定义&quot;,&quot;K&quot;:&quot;自定义&quot;,&quot;type&quot;:&quot;block&quot;} ]
+                &lt;/pre&gt;
+</pre>
+            </div>
+        </div>
+
+        <div class="layui-card" id="INIT_EXPRESS">
+            <div class="layui-ez-color layui-card-header">初始化表达式>formitem>INIT_EXPRESS</div>
+            <div class="layui-card-body">
+                系统获取name为  INIT_EXPRESS 的 元素text()配置
+
+                初始化表单数据
+            </div>
+        </div>
+        <div class="layui-card" id="SUBMIT_EXPRESS">
+            <div class="layui-ez-color layui-card-header">提交表达式>formitem>SUBMIT_EXPRESS</div>
+            <div class="layui-card-body">
+                系统获取name为  SUBMIT_EXPRESS 的 元素text()配置
+
+                提交表达式
+                /ezadmin/form/doSubmit-{}
+            </div>
+        </div>
+        <div class="layui-card" id="DELETE_EXPRESS">
+            <div class="layui-ez-color layui-card-header">删除表达式>formitem>DELETE_EXPRESS</div>
+            <div class="layui-card-body">
+                系统获取name为  DELETE_EXPRESS 的 元素text()配置
+
+                删除表达式
+                /ezadmin/form/doDelete-{}
+            </div>
+        </div>
+        <div class="layui-card" id="append_head">
+            <div class="layui-ez-color layui-card-header">自定义样式>formitem>APPEND_HEAD</div>
+            <div class="layui-card-body">
+                获取id为APPEND_HEAD的html()
+                自定义样式
+            </div>
+        </div>
+        <div class="layui-card" id="append_foot">
+            <div class="layui-ez-color layui-card-header">自定义脚本>formitem>APPEND_FOOT</div>
+            <div class="layui-card-body">
+                获取id为APPEND_FOOT的html()
+                自定义脚本
+            </div>
+        </div>
+        <div class="layui-card" id="SUCCESS_URL">
+            <div class="layui-ez-color layui-card-header">自定义成功URL>body>SUCCESS_URL</div>
+            <div class="layui-card-body">
+                保持成功之后跳转的url,默认编辑页。
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js">
+</script>
+<script src="../global.js"></script></body>
+</html>

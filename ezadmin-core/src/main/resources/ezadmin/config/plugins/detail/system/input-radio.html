@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>输入-单选框</title>
+</head>
+<body id="input-radio">
+<span th:style="${style}" th:text="${item.V}" th:name="${item_name}" th:title="${item.V}" th:each="item:${items}"
+      th:if="${#strings.equals(value+'',item.K+'')}"></span>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>列表内容管理</title>
+
+</head>
+<body id="listCoreHtml" datasource="datasource" success_url="reload">
+<div id="append_head"></div>
+<div class="layui-container">
+    <!--    <div id="append_head">--><!--        这是一段放在前面的自定义的html代码片段--><!--    </div>-->
+    <form id="inputForm" method="post" class="layui-form">
+        <div class="layui-card" group_name="基础信息">
+            <div class="layui-card-header">
+                基础信息
+            </div>
+            <div class="layui-card-body">
+                <div class=" layui-form-item"><label class="layui-form-label">列表编码</label>
+                    <div class="layui-input-block form-group">
+                        <input group_data="基础信息" lay-verify="required" type="text" placeholder=""
+                               class="layui-input form-item" value="" name="ENCRYPT_LIST_ID" item_name="ENCRYPT_LIST_ID"
+                               style="" alias="" jdbctype="" data="" datatype="" lay_verify="required" item_desc=""
+                               valid_rule="" valid_msg="">
+                    </div>
+                </div>
+                <div class=" layui-form-item"><label class="layui-form-label">列表名称</label>
+                    <div class="layui-input-block form-group">
+                        <input group_data="基础信息" help="/webjars/ezadmin/doc/list/core.html#title"
+                               lay-verify="required" type="text" placeholder="" class="layui-input form-item" value=""
+                               name="LIST_NAME" item_name="LIST_NAME" style="" alias="" jdbctype="" data="" datatype=""
+                               lay_verify="required" item_desc="" valid_rule="" valid_msg="">
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">数据源</label>
+                    <div class="layui-input-block form-group">
+                        <select help="/webjars/ezadmin/doc/list/core.html#datasource" group_data="基础信息"
+                                lay-verify="required" type="search" placeholder="" class="layui-input form-item"
+                                value="" name="DATASOURCE" data="DATABASE" item_name="DATASOURCE" style="" alias=""
+                                jdbctype="" datatype="" lay_verify="required" item_desc="" valid_rule=""
+                                valid_msg=""></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card" group_name="初始数据">
+            <div class="layui-card-header">
+                初始数据
+            </div>
+            <div class="layui-card-body">
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">查询表达式</label>
+                    <div class="layui-input-block form-group">
+                        <textarea help="/webjars/ezadmin/doc/list/core.html#express" style="height:400px"
+                                  group_data="初始数据" placeholder="" class="layui-input form-item" value=""
+                                  name="SELECT_EXPRESS" data="ItemDataSourceType" item_desc="" type=""
+                                  item_name="SELECT_EXPRESS" style="" alias="" jdbctype="" datatype=""
+                                  lay_verify="required" valid_rule="" valid_msg=""></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">总数表达式</label>
+                    <div class="layui-input-block form-group">
+                        <textarea group_data="初始数据" help="/webjars/ezadmin/doc/list/core.html#count" placeholder=""
+                                  class="layui-input form-item" value="" name="COUNT_EXPRESS" type=""
+                                  item_name="COUNT_EXPRESS" style="" alias="" jdbctype="" data="" datatype=""
+                                  item_desc="" valid_rule="" valid_msg=""></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">排序表达式</label>
+                    <div class="layui-input-block form-group">
+                        <input group_data="初始数据" type="text" help="/webjars/ezadmin/doc/list/core.html#orderby"
+                               placeholder="  ORDER BY  xxx desc " class="layui-input form-item" name="DEFAULT_ORDER"
+                               item_name="DEFAULT_ORDER">
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">分组表达式</label>
+                    <div class="layui-input-block form-group">
+                        <input group_data="初始数据" type="text" help="/webjars/ezadmin/doc/list/core.html#groupby"
+                               placeholder="  group by xxx " class="layui-input form-item" name="DEFAULT_GROUP"
+                               item_name="DEFAULT_GROUP">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card" group_name="个性化配置">
+            <div class="layui-card-header">
+                个性化配置
+            </div>
+            <div class="layui-card-body">
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">自定义样式</label>
+                    <div class="layui-input-block form-group">
+                        <textarea group_data="个性化配置" placeholder=""
+                                  help="/webjars/ezadmin/doc/list/core.html#appendHead" class="layui-input form-item"
+                                  name="APPEND_HEAD" item_name="APPEND_HEAD"
+                                  item_desc="页头的一段自定义html代码"></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">自定义脚本</label>
+                    <div class="layui-input-block form-group">
+                        <textarea group_data="个性化配置" placeholder=""
+                                  help="/webjars/ezadmin/doc/list/core.html#appendFoot" class="layui-input form-item"
+                                  name="APPEND_FOOT" item_name="APPEND_FOOT"
+                                  item_desc="页脚的一段自定义html代码"></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">固定列数(左侧)</label>
+                    <div class="layui-input-block form-group">
+                        <input group_data="个性化配置" type="text" placeholder=""
+                               help="/webjars/ezadmin/doc/list/core.html#fixnumber" class="layui-input form-item"
+                               name="FIX_NUMBER" item_name="FIX_NUMBER"
+                               item_desc="固定的列数，默认不固定，用户本地可以配置">
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">固定列数(右侧)</label>
+                    <div class="layui-input-block form-group">
+                        <input group_data="个性化配置" type="text" placeholder=""
+                               help="/webjars/ezadmin/doc/list/core.html#fixnumberright" class="layui-input form-item"
+                               name="FIX_NUMBER_RIGHT" item_name="FIX_NUMBER_RIGHT"
+                               item_desc="固定的列数，默认不固定，用户本地可以配置">
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">空值填充</label>
+                    <div class="layui-input-block form-group">
+                        <input group_data="个性化配置" type="text" placeholder="" class="layui-input form-item"
+                               help="/webjars/ezadmin/doc/list/core.html#empty_show" name="EMPTY_SHOW"
+                               item_name="EMPTY_SHOW"
+                               item_desc="所有数据为空时的默认值，如果需要单独设置，在列配置项配置">
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">首列类型</label>
+                    <div class="layui-input-block form-group">
+                        <select group_data="个性化配置" placeholder=""
+                                help="/webjars/ezadmin/doc/list/core.html#firstcol" class="layui-input form-item"
+                                name="FIRSTCOL" item_name="FIRSTCOL" data="FirstColEnum"
+                                item_desc="默认numbers"> </select>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">是否树形</label>
+                    <div class="layui-input-block form-group">
+                        <select group_data="个性化配置" placeholder="" help="/webjars/ezadmin/doc/list/core.html#tree"
+                                class="layui-input form-item" name="TREEGRID" item_name="TREEGRID" data="yesno"
+                                item_desc="默认否"> </select>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">table样式</label>
+                    <div class="layui-input-block form-group">
+                        <select group_data="个性化配置" placeholder=""
+                               help="/webjars/ezadmin/doc/list/core.html#tablestyle" class="layui-input form-item"
+                               name="tablestyle" item_name="tablestyle" item_desc="pure,layui" data="pure,layui"> </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card" group_name="EZ_DEFAULT_GROUP">
+            <div class="layui-card-header">
+                EZ_DEFAULT_GROUP
+            </div>
+            <div class="layui-card-body">
+            </div>
+        </div>
+    </form>
+    <form id="configForm" class="layui-form">
+        <div class="layui-card" group_name="表单数据配置">
+            <div class="layui-card-header">
+                表单数据配置
+            </div>
+            <div class="layui-card-body">
+            </div>
+        </div>
+        <div class="layui-form-item "><label class="layui-form-label">初始表达式</label>
+            <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="init_express" item_name="init_express" type="">import com.ezadmin.common.utils.JsoupConfigHolder;
+                     id=$("ENCRYPT_LIST_ID");
+                     name=$("ID");
+                   data=  JsoupConfigHolder.selectListById(id);</pre>
+            </div>
+        </div>
+        <div class="layui-form-item "><label class="layui-form-label">提交表达式</label>
+            <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="submit_express" item_name="submit_express" type="">import com.ezadmin.common.utils.JsoupConfigHolder;
+                  id=$("ENCRYPT_LIST_ID");
+                  name=$("ID");
+                  JsoupConfigHolder.updateCoreByListId(id,name,$("request"));</pre>
+            </div>
+        </div>
+        <div class="layui-form-item "><label class="layui-form-label">删除表达式</label>
+            <div class="layui-input-block form-group">
+                <pre class="form-item layui-code" name="delete_express" item_name="delete_express" type=""></pre>
+            </div>
+        </div>
+        <div class="layui-form-item "><label class="layui-form-label">分组表达式</label>
+            <div class="layui-input-block form-group">
+                <pre class="form-item layui-code" name="group_data" item_name="group_data" type="">[{"K":"基础信息","V":"基础信息","type":"inline"},{"K":"初始数据","V":"初始数据","type":"block"},{"K":"个性化配置","V":"个性化配置","type":"block"},{"K":"列编辑配置","V":"列编辑配置","type":"block"}]</pre>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(function () {
+
+    })
+</script><!--<div id="append_foot">--><!--    这是一段放在后面的自定义的html代码片段--><!--</div>-->
+<div id="append_foot">
+    <script>
+        $(function () {
+            if ($("#ENCRYPT_LIST_ID").val() != '') {
+                $("#ENCRYPT_LIST_ID").attr("readonly", "readonly");
+                $("#ENCRYPT_LIST_ID").css("border", "0");
+
+            }
+        })
+    </script>
+
+</div>
+</body>
+</html>

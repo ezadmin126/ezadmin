@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表格-输入框</title>
+</head>
+<body id="td-inputtext" type="td">
+<table>
+    <tr id="content">
+        <td th:edit_flag="${editFlag}"
+
+            th:ITEM_NAME="${item_name}" th:title="${dataInDb}" th:ITEM_ID="${item_name}"
+            th:class="${ ' tooltips  ezadmin-td ezadmin-td-'+item_name}"
+            th:classappend="${editFlag==1?'ez-view-group-parent':''}"
+            th:style="${style+(#strings.equals(jdbctype,'NUMBER')?';text-align:right':'')}"
+        >
+            <div class="layui-elip td-text  " th:classappend="${editFlag==1?'ez-view-group':''}">
+                <input
+                        autocomplete="false"
+                        type="text"
+                        th:lay-filter="${'lay_filter_'+item_name}"
+                        th:style="${style}" th:data-id="${ID}"
+                        th:class="${#strings.isEmpty(dataInDb)?'layui-input':'layui-input  ' } "
+                        th:value="${dataInDb}" th:name="${item_name}" th:id="${'search-itemName-' + item_name}">
+
+            </div>
+            <div class="  td-edit layui-form" th:classappend="${editFlag==1?'ez-view-group':''}"
+                 th:if="${editFlag==1}" style="display: none">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline" style="width:80%!important;margin-right:5px">[(${editHtml})]</div>
+                    <div class="layui-form-mid" style="padding:0 !important;line-height: 30px;margin-right:0">
+                        <i title='保存' class="saverow layui-icon layui-icon-ok-circle" th:editExpress="${editExpress}"
+                           style="color:#1E9FFF;cursor: pointer"></i></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

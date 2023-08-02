@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表单-级联下拉</title>
+</head>
+<body id="cascader" type="form">
+<style>.el-input__inner {
+    height: 26px;
+    line-height: 26px
+}</style>
+
+<input th:value="${#strings.isEmpty(value)?'':value}" th:name="${item_name}" th:id="${'search-itemName-' + item_name}"
+       class="ez-laycascader"
+       th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+       th:ezlist_url="${item_url}"
+       ez_value="ID" ez_label="LABEL"
+       th:multi="${multi}"
+       span="true"
+       style="display:none"
+       th:collapseTags="${collapsetags}"
+       th:showAllLevels="${showalllevels}"
+       th:itemPlaceholder="${placeholder}">
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:text="${data.listName}">List</title>
+    <link th:href="${contextName+'/webjars/ezadmin/plugins/font-awesome/css/all.min.css'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="${contextName+'/webjars/ezadmin/plugins/bootstrap/css/bootstrap.min.css'}"/>
+
+    <link th:href="${contextName+'/webjars/ezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
+    <link th:href="${contextName+'/webjars/layui/2.8.10/dist/css/layui.css?v='+vi}" rel="stylesheet">
+    <link th:href="${contextName+'/webjars/ezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
+    <link th:href="${contextName+'/webjars/ezadmin/plugins/datatable/datatables.min.css'}" rel="stylesheet"
+          type="text/css"/>
+    <link th:href="${contextName+'/webjars/ezadmin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css'}"
+          rel="stylesheet" type="text/css"/>
+
+     <script th:src="${contextName+'/webjars/jquery/dist/jquery.min.js'}"></script>
+    <script th:src="${contextName+'/webjars/ezadmin/plugins/popper/umd/popper.min.js'}"></script>
+    <script th:src="${contextName+'/webjars/ezadmin/plugins/bootstrap/js/bootstrap.min.js'}"></script>
+    <script th:src="${contextName+'/webjars/layui/2.8.10/dist/layui.js?1'}" type="text/javascript"></script>
+    <script th:src="${contextName+'/webjars/ezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
+    <script th:src="${contextName+'/webjars/ezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
+    <script th:src="${contextName+'/webjars/ezadmin/plugins/treegrid/js/jquery.treegrid.min.js'}"
+            type="text/javascript"></script>
+    <script th:src="${contextName+'/webjars/ezadmin/plugins/datatable/datatables.min.js'}"
+            type="text/javascript"></script>
+    <script th:src="${contextName+'/webjars/ezadmin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js'}"
+            type="text/javascript"></script>
+
+    [(${data.appendHead})]
+</head>
+<body>
+
+<input type="hidden" ID="ENCRYPT_LIST_ID" name="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
+<input type="hidden" ID="EZ_SESSION_USER_NAME_KEY" name="EZ_SESSION_USER_NAME_KEY"
+       th:value="${EZ_SESSION_USER_NAME_KEY}">
+<input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
+<input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
+<input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${_EZ_LIST_EMPTY_NAME}">
+<div class="layui-fluid">
+    <div class="layui-tab layui-tab-brief searchWrap">
+        <ul class="layui-tab-title" th:if="${not #lists.isEmpty(data.navBarsList)}">
+            <li th:item_id="${item.itemId}" th:classappend="${item.select?'layui-this  ':' '}"
+                th:each="item:${data.navBarsList}"><a th:href="${item.itemUrl}" th:text="${item.itemLabel}"></a></li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <form id="searchForm" lay-filter="searchForm" class="layui-form" th:action="${listUrl}" method="get">
+                    <input type="hidden" id="currentPage" name="currentPage" th:value="${data.page.currentPage}">
+                    <input type="hidden" id="perPageInt" name="perPageInt" th:value="${data.page.perPageInt}">
+                    <input type="hidden" id="totalPage" name="totalPage" th:value="${data.page.totalPage}">
+                    <input type="hidden" id="totalRecord" name="totalRecord" th:value="${data.page.totalRecord}">
+                    <div class="layui-form-item">
+                        <div th:remove="tag" th:each="item,index:${data.searchItemList}" th:utext="${item.html}">
+                        </div>
+                        <div class="form-group col-md-3 row orderBy" STYLE="display:none">
+                            <input id="orderBy" th:name="${data.ezOrderName}" th:value="${data.ezOrderValue}">
+                        </div>
+                        <input type="hidden" id="_SEARCH_ITEM_DISPLAY" name="_SEARCH_ITEM_DISPLAY"
+                               th:value="${_SEARCH_ITEM_DISPLAY}">
+                        <input type="hidden" id="_EZ_MOBILE_FLAG" name="_EZ_MOBILE_FLAG" th:value="${_EZ_MOBILE_FLAG}">
+
+                        <div class="layui-inline " style="text-align: right;FLOAT: RIGHT;">
+                            <button type="button" id="submitBtn" class="layui-btn layui-btn-normal layui-btn-sm">查询
+                            </button>
+                            <button type="button" id="resetBtn"
+                                    class="layui-btn layui-border-blue  layui-btn-primary layui-btn-sm ">重置
+                            </button>
+
+                            <button type="button" th:style="${_SEARCH_ITEM_DISPLAY!=1?'':'display:none'}" id="downBtn"
+                                    class="layui-btn layui-btn-primary layui-btn-sm "
+                                    data-placement="top" title="展开">
+                                展开
+                                <i class="layui-icon layui-icon-down"></i>
+                            </button>
+                            <button type="button" id="upBtn" th:style="${_SEARCH_ITEM_DISPLAY==1?'':'display:none'}"
+                                    class="layui-btn layui-btn-primary layui-btn-sm  "
+                                    data-placement="top" title="收起">
+                                收起
+                                <i class="layui-icon-up layui-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div><!--formitem-->
+        </div><!--tab-content-->
+    </div><!--tab -->
+    <hr class="layui-border-blue">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <div class="d-flex justify-content-between bd-highlight ">
+                <div class="tableButton  bd-highlight">
+                    <div th:remove="tag" th:each="item:${data.tableButtonItemList}" th:utext="${item.html}">
+                    </div>
+                </div>
+
+                <div class=" buttons-toolbar ">
+                    <button title="上一页" type="button"
+                            th:classappend="${data.page.currentPage<2?'layui-btn-disabled ':' page-button '}"
+                            th:page="${data.page.currentPage-1}" class=" layui-btn  layui-btn-sm  layui-btn-primary"
+                    ><i style="font-size: 16px ;" class="layui-icon layui-icon-prev"></i></button>
+                    <button title="下一页" type="button" th:page="${data.page.currentPage+1}"
+                            class="page-button layui-btn  layui-btn-sm  layui-btn-primary"
+                    ><i style="font-size: 16px ;" class="layui-icon layui-icon-next"></i></button>
+
+                    <button title="自定义搜索与字段" type="button" id="customColAndSearch"
+                            class="layui-btn  layui-btn-sm  "
+                            th:classappend="${_EZ_CUSTOM_FLAG==1?'':'layui-btn-primary'}"><i
+                            style="font-size: 16px !important;" class="layui-icon layui-icon-cols"></i></button>
+                    <button title="手机端展示" type="button" id="tomobile" class="layui-btn  layui-btn-sm "
+                            th:classappend="${_EZ_MOBILE_FLAG==1?'':'layui-btn-primary'}"
+                    ><i style="font-size: 16px  ;" class="layui-icon layui-icon-cellphone"></i></button>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div class=" " id="table-wrap">
+
+                <table lay-even lay-size="sm" cellspacing="0" cellpadding="0" id="mytable"
+                       th:classappend="${#strings.isEmpty(data.treegrid)?'':'table-treegrid'}"
+                       class="  layui-table  " style=" width:100%">
+                    <thead style="text-align: center">
+                    <tr>
+                        <th style="min-width:30px" scope="col" th:if="${not #strings.isEmpty(data.firstCol)}"
+                            class="text-center  ">
+                            <input type="checkbox" class="list-head-checkbox"
+                                   th:if="${#strings.equals(data.firstCol,'checkbox')}">
+                            <span th:if="${#strings.equals(data.firstCol,'radio')}">序号</span>
+                            <span th:if="${#strings.equals(data.firstCol,'numbers')}">序号</span>
+                        </th>
+                        <th th:remove="tag" th:each="item:${data.columnItemList}" th:utext="${item.html}">
+
+                        </th>
+                        <th class="rowButtons" style="width: 110px;" scope="col"
+                            th:if="${not #lists.isEmpty(data.rowButtonItemList)   }">
+                            操作
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);">
+                    <tr th:each="row,rowStat:${data.dataRow}" th:classappend="${row.treeClass}" th:data-id="${row.id}">
+                        <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <DIV>
+            <div th:remove="tag" th:utext="${data.pageHtml}"></div>
+        </DIV>
+    </div>
+</div>
+
+</div><!--container-->
+
+
+<input type="hidden" id="fixNumber" name="fixNumber" th:value="${data.fixNumber}">
+<input type="hidden" id="appendColumnUrl" name="appendColumnUrl" th:value="${data.appendColumnUrl}">
+<input type="hidden" id="appendRowUrl" name="appendRowUrl" th:value="${data.appendRowUrl}">
+</body>
+
+<script th:src="${contextName+'/webjars/ezadmin/layui/js/core.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/ezadmin/layui/js/ezlist.js?v='+vi}" type="text/javascript"></script>
+[( ${data.appendFoot})]
+</html>

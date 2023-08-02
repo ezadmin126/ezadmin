@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表单管理</title>
+
+</head>
+<body id="formHtml" datasource="System" empty_show="" fixednumber="0" firstcol="numbers">
+<div id="append_head">
+</div>
+<div class="layui-fluid">
+
+    <form class="layui-form" id="search">
+        <div class="layui-inline "><label class="layui-form-label">表单名称</label>
+            <div class="layui-input-inline">
+                <input class="layui-input list-search-item" jdbctype="VARCHAR" type="text" placeholder="请输入表单名称"
+                       oper="like" name="FORM_NAME" item_name="FORM_NAME" empty_show="">
+            </div>
+        </div>
+        <div class="layui-inline "><label class="layui-form-label">表单编码</label>
+            <div class="layui-input-inline">
+                <input class="layui-input list-search-item" jdbctype="VARCHAR" type="text" placeholder="请输入表单编码"
+                       oper="like" item_name="E_FORM_ID" name="E_FORM_ID" empty_show="">
+            </div>
+        </div>
+    </form>
+    <hr class="layui-border-blue">
+    <div class="btn-group   bd-highlight" id="tableButton">
+        <button type="table" class="layui-btn" opentype="_BLANK" url="/ezadmin/form/form-formCore">新增</button>
+    </div>
+    <table id="table" class="layui-table" style=" width:100%">
+        <thead>
+        <tr id="column">
+            <th body="td-link" head="th" opentype="PARENT" url="/ezadmin/form/form-${ENCRYPT_FORM_ID}"
+                windowname="${FORM_NAME}" name="FORM_NAME" item_name="FORM_NAME" order="1">表单名称
+            </th>
+            <th name="E_FORM_ID" head="th" item_name="E_FORM_ID" body="td-text" style="color:red">表单编码</th>
+            <th type="rowbutton" id="rowbutton">
+                <button class="layui-btn list-row-button" type="group" opentype="_BLANK"
+                        url="/ezadmin/form/form-formCore?ID=${ENCRYPT_FORM_ID}" windowname="修改${FORM_NAME}"
+                        name="update">修改表单内容
+                </button>
+                <button class="layui-btn list-row-button" type="group" opentype="_BLANK"
+                        url="/ezadmin/form/formEdit-${ENCRYPT_FORM_ID}" windowname="修改${FORM_NAME}" name="update">
+                    修改表单字段
+                </button>
+                <button class="layui-btn list-row-button" type="group" opentype="_BLANK"
+                        url="/ezadmin/form/form-formItem?ID=${ENCRYPT_FORM_ID}" windowname="修改${FORM_NAME}"
+                        name="update">新增表单字段
+                </button>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="100"> express:
+                <pre id="express" class="layui-code" orderby="order by list_id desc" groupby="">
+         import com.ezadmin.common.utils.JsoupConfigHolder;
+        page=$("currentPage");
+        name=$("FORM_NAME");
+        url=$("ENCODE_FORM_ID");
+         return JsoupConfigHolder.selectFormByHtmlConfig(page,name,url);
+                        </pre>
+                count:
+                <pre id="count" class="layui-code">
+         import com.ezadmin.common.utils.JsoupConfigHolder;
+        page=$("currentPage");
+        name=$("FORM_NAME");
+        url=$("ENCODE_FORM_ID");
+         return JsoupConfigHolder.formSize(page,name,url);
+       </pre>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="append_foot">
+</div>
+
+<script>
+    layui.use(function () {
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索-合并时间搜索</title>
+</head>
+<body id="uniondate" alias="search-date" type="search">
+<div th:ITEM_NAME="${model.getConfig('item_name')}" th:if="${searchFlag}" th:style="${model.getConfig('style')}"
+     th:ITEM_ID="${model.getConfig('item_name')}" editor="item">
+
+    <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px"
+         th:for="${'ITEM_ID_' + model.getConfig('item_name')}">
+        <select th:id="${'ITEM_ID_' + model.getConfig('item_name')}" style="width: 100%;" name="itemSearchDateKey">
+            <option th:selected="${model.getConfig('itemSearchDateKey')==null?false:#strings.equals(model.getConfig('itemSearchDateKey'),item.getConfig('item_name'))}"
+                    th:value="${item.getConfig('item_name')}" th:text="${item.getConfig('label')}"
+                    th:each="item:${itemNameList}">Alaska
+            </option>
+        </select>
+    </div>
+
+    <div class="ez-daterange-parent layui-inline" TH:ID="${'ITEM_ID_' + model.getConfig('item_name')}">
+        <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0">
+            <input autocomplete="off" type="text" class="layui-input layui-date"
+                   th:value="${model.getConfig('itemSearchDateValueStart')}" name="itemSearchDateValueStart"
+                   id="itemSearchDateValueStart_ID"
+                   th:classappend="${#strings.isEmpty(model.getConfig('itemSearchDateValueStart'))?'':'layui-border-blue' } ">
+        </div>
+        <div class="layui-form-mid">-</div>
+        <div class="layui-input-inline ez-range ez-daterange">
+            <input autocomplete="off" type="text" class="layui-input layui-date"
+                   th:value="${model.getConfig('itemSearchDateValueEnd')}" name="itemSearchDateValueEnd"
+                   id="itemSearchDateValueEnd_ID"
+                   th:classappend="${#strings.isEmpty(model.getConfig('itemSearchDateValueEnd'))?'':'layui-border-blue' } ">
+        </div>
+    </div>
+
+
+</div>
+<div th:if="${tableSearchFlag}" th:style="${model.getConfig('style')}" editor="item" class="layui-inline list-item">
+
+    <div class="ez-daterange-parent layui-inline" TH:ID="${'ITEM_ID_' + model.getConfig('item_name')}"
+         style="margin-right: 0">
+        <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0">
+            <input autocomplete="off" type="text" class="layui-input layui-date"
+                   th:value="${model.getConfig('itemSearchDateValueStart')}" name="itemSearchDateValueStart"
+                   th:id="${'itemSearchDateValueStart_ID'}"
+                   th:classappend="${#strings.isEmpty(itemSearchDateValueStart)?'':'layui-border-blue' } ">
+        </div>
+        <div class="layui-form-mid">-</div>
+        <div class="layui-input-inline ez-range ez-daterange">
+            <input autocomplete="off" type="text" class="layui-input layui-date"
+                   th:value="${model.getConfig('itemSearchDateValueEnd')}" name="itemSearchDateValueEnd"
+                   th:id="${'itemSearchDateValueEnd_ID'}"
+                   th:classappend="${#strings.isEmpty(itemSearchDateValueEnd)?'':'layui-border-blue' } ">
+        </div>
+        <div class="layui-form-mid" style="padding:0 !important;line-height: 30px;margin-right:0;">
+            <i class="tableSearch layui-icon layui-icon-ok-circle"
+               th:tableSearch_item_name="${model.getConfig('item_name')}" style="color:#1E9FFF;cursor: pointer"></i>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

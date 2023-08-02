@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表格</title>
+</head>
+<body id="table">
+<table lay-size="sm" th:id="${'ITEM_ID_' + item_name}"
+       class="  layui-table propTable " style=" width:100%">
+    <thead style="text-align: center">
+    <tr>
+        <th style="min-width:30px;max-width:30px" scope="col"
+            th:if="${not #strings.isEmpty(data.firstCol) and not #strings.equals('firstcol-',data.firstCol)}"
+            class="text-center fixedCol  ">
+            <input type="checkbox" class="list-head-checkbox" th:if="${#strings.equals(data.firstCol,'checkbox')
+                           || #strings.equals(data.firstCol,'firstcol-checkbox')}">
+
+            <span th:if="${#strings.equals(data.firstCol,'radio')
+                            || #strings.equals(data.firstCol,'firstcol-radio')
+                            }">序号</span>
+            <!--                            <input type="radio" class="list-head-radio" th:if="${#strings.equals(data.firstCol,'radio')-->
+            <!--                           || #strings.equals(data.firstCol,'firstcol-radio')}">-->
+
+            <span th:if="${#strings.equals(data.firstCol,'numbers')
+                            || #strings.equals(data.firstCol,'firstcol-numbers')
+                            }">序号</span>
+        </th>
+
+        <th th:remove="tag" th:each="item:${data.columnItemList}" th:utext="${item.html}">
+
+        </th>
+    </tr>
+    </thead>
+    <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);" class="dragula-container">
+    <tr th:each="row,rowStat:${data.dataRow}" th:classappend="${row.treeClass}" th:data-id="${row.id}">
+        <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

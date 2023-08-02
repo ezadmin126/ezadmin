@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>ez document</title>
+
+    <link href="https://cdn.bootcdn.net/ajax/libs/tooltipster/4.2.8/css/tooltipster.bundle.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/tooltipster/4.2.8/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css"
+          rel="stylesheet">
+    <style>
+        .layui-iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+    </style>
+    <script src="https://unpkg.com/konva@4.0.0/konva.min.js"></script>
+
+</head>
+<body>
+<div class="layui-fluid layui-bg-gray">
+    <div class="layui-row">
+  <span>
+      <i class="htmltooltips layui-icon-help layui-icon" data-tooltip-content="#tooltip_content" title="123"></i>
+
+      <form class="layui-form" action="">
+    <div class="layui-form-item">
+      <div class="layui-input-inline" style="width: 120px;">
+               <input type="hidden" value="" placeholder="请选择颜色" class="layui-input" id="test-form-input">
+          <div class="test-form colorpick" lay-options="{color: '#008000'}"></div>
+          <div class="test-form colorpick" lay-options="{color: '#008000'}"></div>
+
+      </div>
+
+    </div>
+  </form>
+
+      <div class="tooltip_templates" style="display:none">
+      <span id="tooltip_content">
+           <iframe frameborder="0" style="width: 400px;height:400px" src="list/search.html#datatype"></iframe>
+      </span>
+      </div>
+  </span>
+
+    </div>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/tooltipster/4.2.8/js/tooltipster.bundle.min.js"></script>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js"></script>
+<script>
+    layui.use(function () {
+        $(".htmltooltips").each(function () {
+            $(this).tooltipster({
+                theme: 'tooltipster-shadow',
+                interactive: true,
+                maxWidth: 400, maxHeight: 400
+            });
+        });
+
+
+        var colorpicker = layui.colorpicker;
+        colorpicker.render({
+            elem: '.colorpick',
+            done: function (color) {
+                console.log(this.elem, color);
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>

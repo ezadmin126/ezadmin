@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>layout 管理系统大布局 - Layui</title>
+    <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+    <link href="../global.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid  layui-bg-gray">
+    <div class="layui-row layui-col-space5">
+        <blockquote class="layui-elem-quote" style="margin-top:10px">
+            用于配置数据的列的展示，每个列对应后台数据返回的一列。
+        </blockquote>
+        <pre id="code" class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+                &lt;th name=&quot;ENCRYPT_LIST_ID&quot; style=&quot;color:red&quot; item_name=&quot;ENCRYPT_LIST_ID&quot; body=&quot;td-text&quot; order=&quot;&quot; url=&quot;&quot; opentype=&quot;&quot; windowname=&quot;&quot; datatype=&quot;&quot; data=&quot;&quot; jdbctype=&quot;&quot; head=&quot;th&quot; edit_flag=&quot;1&quot; edit_express=&quot;&quot; edit_plugin=&quot;input-text&quot;&gt;URL编码&lt;/th&gt;
+      </pre>
+    </div>
+    <div class="layui-row layui-col-space5 doctext">
+
+        <div class="layui-card" id="name">
+            <div class="layui-ez-color layui-card-header">字段名称>name|item_name</div>
+            <div class="layui-card-body ">
+                 对应返回数据的列
+            </div>
+        </div>
+        <div class="layui-card" id="span">
+            <div class="layui-ez-color layui-card-header">文案名称>text()</div>
+            <div class="layui-card-body">
+                表头
+            </div>
+        </div>
+        <div class="layui-card" id="order">
+            <div class="layui-ez-color layui-card-header">是否排序>order</div>
+            <div class="layui-card-body">
+               order=1 支持表头排序
+            </div>
+        </div>
+        <div class="layui-card" id="head">
+            <div class="layui-ez-color layui-card-header">表头插件>head</div>
+            <div class="layui-card-body">
+               默认 th
+            </div>
+        </div>
+        <div class="layui-card" id="body">
+            <div class="layui-ez-color layui-card-header">表体插件>body</div>
+            <div class="layui-card-body">
+                 <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>插件名称</th>
+                        <th>插件别名</th>
+                        <th>备注</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>文本(默认)</td>
+                        <td>td-text</td>
+                        <td>普通文本，直接展示后台返回的数据</td>
+                    </tr>
+                    <tr>
+                        <td>隐藏域</td>
+                        <td>td-hidden</td>
+                        <td>如果没有首列，应该用得到，如果有首列，每行数据均自动生成了隐藏域，可以直接获取。</td>
+                    </tr>
+                    <tr>
+                        <td>图片</td>
+                        <td>td-image</td>
+                        <td>
+                           图片的url需要配置属性url
+                            <br>
+                            http://www.baidu.com/${id}.jpg
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>超链接</td>
+                        <td>td-link</td>
+                        <td>
+                            需要配置属性url
+                            <br>
+                            http://www.baidu.com/${id}.jpg
+                            <br>
+                            支持opentype参数，默认当前窗口打开。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>下拉文案</td>
+                        <td>td-select</td>
+                        <td>
+                             配合 <a href="#data">data</a>, <a href="#datatype">datatype</a>使用<br>
+                             当后台返回的值匹配到时，输出匹配值。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>富文本</td>
+                        <td>td-utext</td>
+                        <td>
+                             输出后台返回的html，需考虑不要引起xss。
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="layui-card" id="jdbctype">
+            <div class="layui-ez-color layui-card-header">数据库类型>jdbctype</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>中文名</th>
+                        <th>字段名</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>数字</td>
+                        <td>NUMBER</td>
+                        <td>2位小数数字，默认会加上样式：text-align:right</td>
+                    </tr>
+                    <tr>
+                        <td>时间戳</td>
+                        <td>DATE_TO_NUMBER</td>
+                        <td>数据库里面是时间戳类型，但页面日期类型，系统会将页面的date类型转换为时间戳</td>
+                    </tr>
+                    <tr>
+                        <td>字符串（默认）</td>
+                        <td>VARCHAR</td>
+                        <td>自动补充单引号</td>
+                    </tr>
+                    <tr>
+                        <td>日期</td>
+                        <td>DATE</td>
+                        <td>格式化为：yyyy-MM-dd</td>
+                    </tr>
+                    <tr>
+                        <td>日期时间</td>
+                        <td>DATETIME</td>
+                        <td>格式化为：yyyy-MM-dd HH:mm:ss</td>
+                    </tr>
+                    <tr>
+                        <td>body</td>
+                        <td>BODY</td>
+                        <td>不会拼接到where语句中</td>
+                    </tr>
+                    <tr>
+                        <td>数字</td>
+                        <td>NUMBER0，NUMBER1，NUMBER2......</td>
+                        <td>精确到小数点指定的位数，四舍五入,如果你输入NUMBER3，NUMBER4，系统也是乐意看到的。</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="layui-card" id="data">
+            <div class="layui-ez-color layui-card-header">初始数据>data</div>
+
+            <div class="layui-card-body">
+                配合datatype一起使用
+                当搜索插件初始化需要有数据源时，此配置可以起到作用。<br>
+
+                <table class="layui-table">
+
+                    <thead>
+                    <tr>
+                        <th>datatype</th>
+                        <th>data</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>TEXT（默认）</td>
+                        <td>
+                            <pre  >
+text:
+1.yesno  是否，转缓存0否1是的json。
+2.status 是否启用，0禁用1启用
+3.delete 是否禁用，0启用1禁用
+4.换行输入
+男
+女
+则KV都为中文
+1:男
+0:女
+则K数字，V中文
+                            </pre>
+                        </td>
+                        <td>默认值</td>
+                    </tr>
+                    <tr>
+                        <td>JSON</td>
+                        <td>
+                            格式：   [{"V":"A","K":"1"},{"V":"B","K":"2"}]
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>KVSQL、KVSQLCACHE、KVSQLCACHE5</td>
+                        <td>
+                            select USER_ID K,USERNAME V FROM T_USER WHERE ID=${ID}
+                        </td>
+                        <td>
+                            支持使用${}语法获取request参数，<br>
+                            KVSQLCACHE5 5分钟缓存。<br>KVSQLCACHE永久缓存
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>QLEXPRESS</td>
+                        <td>
+                            QLEXPRESS表达式
+                        </td>
+                        <td>
+                            特殊场景，用到的时候，需要用到的时候，基本需求已经有点异常了。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>KVSQL2TREECACHE</td>
+                        <td>
+<pre> SELECT
+        A.REGION_ID ID,
+        A.PARENT_ID PARENT_ID,
+
+        A.REGION_FULL_NAME LABEL
+    FROM
+        T_BASE_REGION A where 1=1</pre>
+                        </td>
+                        <td>
+                            平铺数据改为树形数据。主要用于级联下拉框。
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+
+
+
+
+
+            </div>
+        </div>
+        <div class="layui-card" id="datatype">
+            <div class="layui-ez-color layui-card-header">数据类型>datatype</div>
+            <div class="layui-card-body">
+                配合data一起使用
+                <pre>
+    TEXT,//默认
+    JSON,
+    KVSQL,
+    HTTP,
+    JOIN,
+    KVSQLCACHE,
+    HTTPCACHE,
+    QLEXPRESS,
+    KVSQLCACHE5,
+    EZLIST,
+    KVJSONRESULT,
+    CASCADER,
+    KVSQL2TREECACHE
+</pre>
+            </div>
+        </div>
+
+        <div class="layui-card" id="url">
+            <div class="layui-ez-color layui-card-header">跳转链接>url</div>
+            <div class="layui-card-body">
+                 图片或超链接时的配置，支持${}获取行内参数
+            </div>
+        </div>
+        <div class="layui-card" id="opentype">
+            <div class="layui-ez-color layui-card-header">跳转链接>opentype
+            </div>
+            <div class="layui-card-body">
+<pre>
+      MODEL("1","弹窗"),
+    _BLANK("2","新浏览器窗口"),
+    LOCATION("3","当前窗口"),
+    PARENT("4","父窗口打开标签"),
+    APPEND_PARAM("5","携带当前搜索参数窗口打开"),
+    _BLANK_PARAM("6","携带当前搜索参数新浏览器窗口"),
+</pre>
+            </div>
+        </div>
+
+        <div class="layui-card" id="windowname">
+            <div class="layui-ez-color layui-card-header">窗口名称>windowname</div>
+            <div class="layui-card-body">
+                修改${USER_NAME}
+                支持获取request参数
+            </div>
+        </div>
+        <div class="layui-card" id="area">
+            <div class="layui-ez-color layui-card-header">窗口大小>area</div>
+            <div class="layui-card-body">
+                <pre>
+1.如果选择弹框，可以定义窗口大小。默认 ['90%', '90%']
+2.可以餐卡layer配置jsonarray
+3.逗号分割： 100px,200px
+4.高度自适应：100px 或 90%
+                    </pre>
+            </div>
+        </div>
+
+
+
+        <div class="layui-card" id="style">
+            <div class="layui-ez-color layui-card-header">自定义样式>style</div>
+            <div class="layui-card-body">
+                覆盖默认样式
+            </div>
+        </div>
+        <div class="layui-card" id="width">
+            <div class="layui-ez-color layui-card-header">自定义宽度>width</div>
+            <div class="layui-card-body">
+                目前使用的是datatable，需要使用layui-table才可以生效。故先通过自定义样式处理宽度。
+            </div>
+        </div>
+        <div class="layui-card" id="empty_show">
+            <div class="layui-ez-color layui-card-header">空值填充>empty_show</div>
+            <div class="layui-card-body">
+                默认空值，优先级高于主体。
+            </div>
+        </div>
+        <div class="layui-card" id="edit_flag">
+            <div class="layui-ez-color layui-card-header">编辑状态>edit_flag</div>
+            <div class="layui-card-body">
+                1.双击可以编辑<br>
+                其他值，不可以编辑，默认不可以编辑
+            </div>
+        </div>
+        <div class="layui-card" id="edit_express">
+            <div class="layui-ez-color layui-card-header">编辑表达式>edit_express</div>
+            <div class="layui-card-body">
+                编辑点击确认之后，提交的表达式操作。
+            </div>
+        </div>
+        <div class="layui-card" id="edit_plugin">
+            <div class="layui-ez-color layui-card-header">编辑插件>edit_plugin</div>
+            <div class="layui-card-body">
+                 参见 <a href="search.html#type">搜索插件</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<br>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js">
+</script>
+<script src="../global.js"></script></body>
+</html>

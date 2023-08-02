@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>上传文件</title>
+</head>
+<body id="uploadfile" alias="LAYUI-PDF-UPLOAD">
+
+<div class="layui-upload">
+    <button type="button" th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
+    ><i class="layui-icon layui-icon-upload"></i>上传文件
+    </button>
+    <div th:verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" class="layui-upload-list"
+         th:id="${'layui-upload-list_'+item_name}" style="display: flex">
+
+    </div>
+</div>
+<input type="hidden" th:value="${value}" th:name="${item_name}" th:id="${'ITEM_ID_' + item_name}"
+       th:aria-describedby="${'DESC_'+item_name}">
+
+
+<script>
+
+
+    layui.use(['upload', 'element', 'layer'], function () {
+        let $ = layui.jquery
+            , upload = layui.upload
+            , element = layui.element
+            , layer = layui.layer;
+        let laytpl = layui.laytpl;
+
+        let inputHiddenNode = $("#[[${'ITEM_ID_' + item_name}]]");
+
+        let currentIds = inputHiddenNode.val();
+        if (currentIds.endsWith(",")) {
+            currentIds = currentIds.substring(0, currentIds.length - 1);
+            inputHiddenNode.val(currentIds);
+        }
+        if (currentIds != undefined && currentIds.length > 0) {
+            var split = currentIds.split(",");
+            for (let i = 0; i < split.length; i++) {
+                upload_add_file('[[${item_name+'
+                '}]]', split[i]
+            )
+                ;
+            }
+        }
+        var conta = $("#layui-upload-list_[[${item_name}]]");
+        var exts = "pdf";
+        var verify = conta.attr("verify");
+        var max = 1;
+        var min = 0;
+        if (verify) {
+            var verifyJson = JSON.parse(verify);
+            exts = verifyJson.exts || exts;
+            max = verifyJson.max || max;
+            min = verifyJson.min || min;
+        }
+        conta.attr("item_max_upload_min", min);
+        conta.attr("item_max_upload_max", max);
+        console.log(exts + max + min);
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#[[${'FILE_ITEM_ID_' + item_name}]]'
+            , accept: 'file'
+
+            , url: '[[${uploadUrl}]]' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+            , before: function (file) {
+                if (conta.children().length > item_max_upload_max - 1) {
+                    layer.alert("超过最大文件数")
+                    return false;
+                }
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功的一些操作
+                $("#layui-upload-list_[[${item_name}]]").html('');
+                $("#[[${'ITEM_ID_' + item_name}]]").val('');
+                upload_add_file('[[${item_name+'
+                '}]]' , res.data[0].fileId
+            )
+                ;
+            }
+            , error: function () {
+                layer.alert("上传失败");
+            }
+            //进度条
+            , progress: function (n, elem, e) {
+                element.progress('[[${'
+                FILE_PROGRESS_ITEM_ID_
+                ' + item_name}]]', n + '%'
+            )
+                ; //可配合 layui 进度条元素使用
+                if (n == 100) {
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

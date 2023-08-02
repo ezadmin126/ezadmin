@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>输入-数字框</title>
+</head>
+<body id="input-number">
+
+<span th:style="${style}"
+      th:text="${#strings.isEmpty(value)?'0':value }"
+
+></span>
+
+</body>
+</html>

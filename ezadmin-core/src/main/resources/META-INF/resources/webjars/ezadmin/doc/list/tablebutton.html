@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>layout 管理系统大布局 - Layui</title>
+    <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+    <link href="../global.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid  layui-bg-gray">
+    <div class="layui-row layui-col-space5">
+        <blockquote class="layui-elem-quote" style="margin-top:10px">
+            table左上角的按钮，主要是 新增，导出等与行交互较少的功能。
+            通过配置id为tableButton的节点来实现。
+        </blockquote>
+        <pre id="code" class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+   &lt;div class=&quot;btn-group   bd-highlight&quot; id=&quot;tableButton&quot;&gt;
+          &lt;button item_name=&quot;新增&quot; name=&quot;新增&quot; url=&quot;/ezadmin/form/form-base_regist&quot; opentype=&quot;MODEL&quot; windowname style type=&quot;table&quot;&gt;
+          新增
+          &lt;/button&gt;
+   &lt;/div&gt;   </pre>
+
+  </div>
+    <div class="layui-row layui-col-space5 doctext">
+
+        <div class="layui-card" id="name">
+            <div class="layui-ez-color layui-card-header">字段名称>name</div>
+            <div class="layui-card-body ">
+                字段名称，如果想通过js操作次按钮，会有点作用<br>
+                &lt;button name=abc &gt;新增&lt;/button&gt;
+            </div>
+        </div>
+        <div class="layui-card" id="span">
+            <div class="layui-ez-color layui-card-header">文案名称>text()</div>
+            <div class="layui-card-body">
+                &lt;button&gt;新增&lt;/button&gt;
+            </div>
+        </div>
+        <div class="layui-card" id="url">
+            <div class="layui-ez-color layui-card-header">跳转链接>url
+            </div>
+            <div class="layui-card-body">
+                 相对或绝对的地址
+            </div>
+        </div>
+        <div class="layui-card" id="opentype">
+            <div class="layui-ez-color layui-card-header">打开方式>opentype
+            </div>
+            <div class="layui-card-body">
+<pre>
+MODEL("1","弹窗"),
+_BLANK("2","新浏览器窗口"),
+LOCATION("3","当前窗口"),
+PARENT("4","父窗口打开标签"),
+APPEND_PARAM("5","携带当前搜索参数窗口打开"),
+_BLANK_PARAM("6","携带当前搜索参数新浏览器窗口"),
+</pre>
+            </div>
+        </div>
+
+        <div class="layui-card" id="windowname">
+            <div class="layui-ez-color layui-card-header">窗口名称>windowname</div>
+            <div class="layui-card-body">
+            修改${USER_NAME}
+                支持获取request参数
+            </div>
+        </div>
+        <div class="layui-card" id="area">
+            <div class="layui-ez-color layui-card-header">窗口大小>area</div>
+            <div class="layui-card-body">
+                <pre>
+1.如果选择弹框，可以定义窗口大小。默认 ['90%', '90%']
+2.可以餐卡layer配置jsonarray
+3.逗号分割： 100px,200px
+4.高度自适应：100px 或 90%
+                    </pre>
+            </div>
+        </div>
+
+        <div class="layui-card" id="type">
+            <div class="layui-ez-color layui-card-header">插件>type</div>
+            <div class="layui-card-body">
+                <pre>
+1.普通：table
+2.弹框多选按钮：tableselectcheckbox
+3.弹框单选按钮：tableselectradio
+回调函数：
+ez_callback||url
+ez_callback为请求URL的参数，如果为空，则取：<a href="#url">跳转链接>url</a>
+
+ez_callback(ids,lines);
+ids为选中的ID，lines为当前行的所有数据
+
+
+                     </pre>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js">
+</script>
+<script src="../global.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>输入-数字框</title>
+</head>
+<body id="input-number" alias="SLIDER">
+
+<input th:style="${style}" autocomplete="off"  th:placeholder="${placeholder}" th:name="${item_name}"
+       th:value="${#strings.isEmpty(value)?'0':value }" min="0" step="1" class="layui-input" type="number" lay-affix="number"
+       th:lay-verify="${#strings.isEmpty(lay_verify)?'number':'required|number'}"
+>
+
+</body>
+</html>

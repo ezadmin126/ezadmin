@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>xm下拉框</title>
+</head>
+<body id="xmselect" alias="5">
+
+<div th:itemsJson="${itemsJson}" th:id="${'itemId-' + item_name}" th:name="${item_name}"
+     th:value="${#strings.isEmpty(value)?'[]':'['+value+']'}"></div>
+
+<script>
+    var xmel = $('[[${"#itemId-" + item_name}]]');
+    var initdata = xmel.attr("itemsJson");
+    var initvalue = xmel.attr("value");
+    var xmselect = xmSelect.render({
+        el: '[[${"#itemId-" + item_name}]]',
+        language: 'zn',
+        style: {
+            height: '26px',
+        },
+        prop: {
+            name: 'V',
+            value: 'K',
+        },
+        name: '[[${item_name}]]',
+        tips: '[[${#strings.isEmpty(placeholder)?"请选择":placeholder}]]',
+        data: JSON.parse(initdata),
+        initValue: JSON.parse(initvalue)
+    })
+</script>
+</body>
+</html>

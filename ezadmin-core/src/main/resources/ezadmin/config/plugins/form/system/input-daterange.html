@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>日期范围</title>
+</head>
+<body id="input-daterange" alias="2">
+
+<div class="layui-input-inline ez-daterange">
+    <input th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" autocomplete="off" type="text"
+           class="layui-input layui-date" th:value="${value_start}"
+           th:name="${item_name+'_START'}" th:id="${item_name+'_START_ID'}">
+</div>
+<div class="layui-form-mid">-</div>
+<div class="layui-input-inline ez-daterange">
+    <input th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" autocomplete="off" type="text"
+           class="layui-input layui-date" th:value="${value_end}"
+           th:name="${item_name+'_END'}" th:id="${item_name+'_END_ID'}">
+</div>
+
+</body>
+</html>

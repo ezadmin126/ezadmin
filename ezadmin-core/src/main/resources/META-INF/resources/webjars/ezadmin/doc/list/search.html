@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>layout 管理系统大布局 - Layui</title>
+    <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+    <link href="../global.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid  layui-bg-gray">
+    <div class="layui-row layui-col-space5">
+        <blockquote class="layui-elem-quote" style="margin-top:10px">
+            搜索项，实现的方式有很多种，比如让用户自己配置搜索项、表头搜索、且或交叉搜索。
+            考虑到如果有那么复杂的搜索，不应该使用数据库搜索了，且实现方式 会影响以后的扩展性，ez暂时不考虑。
+        </blockquote>
+        <pre id="code" class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+&lt;div class=&quot; layui-inline &quot;&gt;
+     &lt;label class=&quot;layui-form-label&quot;&gt;用户名&lt;/label&gt;
+     &lt;div class=&quot;layui-input-inline&quot;&gt;
+      &lt;input class=&quot; layui-input list-search-item &quot; type=&quot;text&quot; name=&quot;USER_NAME&quot; placeholder style alias=&quot;&quot; jdbctype data datatype oper&gt;
+     &lt;/div&gt;
+    &lt;/div&gt;
+      </pre>
+  </div>
+    <div class="layui-row layui-col-space5 doctext">
+
+        <div class="layui-card" id="name">
+            <div class="layui-ez-color layui-card-header">字段名称>name</div>
+            <div class="layui-card-body ">
+<pre>
+1.含义：用户点击搜索之后，会以此字段名称作为参数名传递给后台。后台会通过一系列的计算，将此字段名及用户输入的搜索值，拼接至最终的SQL后面。
+两种场景：
+    1.单字段：USER_NAME，拼接的SQL为：USER_NAME = '%lily%'  ，运算符参见：<a href="#oper">oper</a>
+    2.多字段：mobile,telphone
+    系统会根据名称逗号分割之后找到单字段名称为mobile 与 telphone 的两个字段，拼接SQL (mobile ='123' or telphone='123')。
+    用逗号分割,同时插件选择 <a href="#">合并搜索</a>；
+    如果不希望展示另外两个字段，则另外两个字段 插件选择：<a class="layui-text" href="#plugins">隐藏域</a>
+</pre>
+            </div>
+        </div>
+        <div class="layui-card" id="span">
+            <div class="layui-ez-color layui-card-header">文案名称>label</div>
+            <div class="layui-card-body">
+               展示的文案名称
+            </div>
+        </div>
+        <div class="layui-card" id="alias">
+            <div class="layui-ez-color layui-card-header">字段别名>alias</div>
+            <div class="layui-card-body">
+                1.含义：如果我们的sql语句中有两个表的字段名称一样，为了避免拼接的sql不产生歧义，用数据库表的别名区别。<br>
+                2.eg：字段别名：a ,字段名称： USER_NAME, 用户输入: lily<br>
+                  sql:  a.USER_NAME='lily'<br>
+            </div>
+        </div>
+        <div class="layui-card" id="type">
+            <div class="layui-ez-color layui-card-header">搜索插件>type</div>
+            <div class="layui-card-body">
+               含义：每个搜索项都是插件来实现各类不同场景的，如输入框，下拉框，时间选择框等。<br>
+                插件名称一般是 input-text格式。
+                如：&lt;input type="text"&gt; 表示插件为 input-text.
+               如果没有分隔符，则默认使用object作为标签： &lt;object type="xmselect"&gt;&lt;/object&gt;
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>插件名称</th>
+                        <th>插件别名</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>搜索-输入框</td>
+                        <td>input-text</td>
+                        <td>普通的文本框
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>搜索-隐藏域</td>
+                        <td>input-hidden</td>
+                        <td>隐藏的搜索框，参与搜索</td>
+                    </tr>
+                    <tr>
+                        <td>搜索-原生下拉框</td>
+                        <td>select</td>
+                        <td>原生下拉框，&lt;select&gt;&lt;/select&gt;
+                        <a href="#data">数据源</a> 配置
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>搜索-搜索下拉框</td>
+                        <td>select-search</td>
+                        <td>原生下拉框，&lt;select type=search &gt;&lt;/select&gt;  <a href="#data">数据源</a> 配置 </td>
+                    </tr>
+                    <tr>
+                        <td>搜索-多选下拉</td>
+                        <td>xmselect</td>
+                        <td>原生下拉框，&lt;object type=xmselect &gt;&lt;/object&gt;  <a href="#data">数据源</a> 配置 </td>
+
+                    </tr>
+                    <tr>
+                        <td>搜索-级联下拉</td>
+                        <td>search-cascader</td>
+                        <td>原生下拉框，&lt;search type=cascader &gt;&lt;/search&gt;<BR>
+                            1.item_url 远程数据地址 <br>
+                            2.multi 是否多选<br>
+                            3.collapseTags 多选是否折叠<br>
+                            4.showAllLevels  回显是否展示完整路径<br>
+                            接口返回数据格式如下，系统会自动转成tree格式。 可以使用ez的<a href="#api">api</a>功能
+                            <pre class="layui-code layui-code-view layui-box" lay-options="{title:'远程数据格式', height: '320px'}">
+{
+	"code": "0",
+	"count": 6,
+	"data": [{
+		"ID": "1",
+		"LABEL": "LABEL",
+		"PARENT_ID": "0"
+	} ,{
+		"ID": "2",
+		"LABEL": "LABEL2",
+		"PARENT_ID": "1"
+	}  ],
+	"success": true
+}
+
+                            </pre>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>搜索-级联下拉SQL</td>
+                        <td>search-cascadersql</td>
+                        <td>原生下拉框，&lt;search type=cascadersql &gt;&lt;/search&gt;<BR>
+                            1.初始数据 配置json, 初始数据类型配置（有性能影响，需要缓存，故数据为非实时）：KVSQL2TREECACHE  <br>
+                            2.multi 是否多选<br>
+                            3.collapseTags 多选是否折叠<br>
+                            4.showAllLevels  回显是否展示完整路径<br>
+                            初始数据 格式如下，系统会自动转成。
+                            <pre class="layui-code layui-code-view layui-box" lay-options="{title:'JSON数据格式', height: '320px'}">
+ SELECT
+        A.REGION_ID ID,
+        A.PARENT_ID PARENT_ID,
+
+        A.REGION_FULL_NAME LABEL
+    FROM
+        T_BASE_REGION A where 1=1
+                            </pre>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>搜索-日期范围</td>
+                        <td>daterange</td>
+                        <td>日期范围，可单选 &lt;object type=daterange &gt;&lt;/object&gt;  </td>
+                    </tr>
+                    <tr>
+                        <td>搜索-日期时间范围</td>
+                        <td>datetimerange</td>
+                        <td>日期时间范围，可单选&lt;object type=datetimerange &gt;&lt;/object&gt;  </td>
+                    </tr>
+                    <tr>
+                        <td>搜索-数字范围</td>
+                        <td>numberrange</td>
+                        <td>日期事件范围，可单选&lt;object type=numberrange &gt;&lt;/object&gt;  </td>
+                    </tr>
+                    <tr>
+                        <td>搜索-合并搜索</td>
+                        <td>union</td>
+                        <td>合并多个搜索项 性能可能有影响 &lt;object type=union &gt;&lt;/object&gt;  </td>
+                    </tr>
+                    <tr>
+                        <td>搜索-合并时间搜索</td>
+                        <td>uniondate</td>
+                        <td>合并多个时间搜索项 性能可能有影响 &lt;object type=uniondate &gt;&lt;/object&gt;  </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="layui-card" id="oper">
+            <div class="layui-ez-color layui-card-header">搜索操作符>oper</div>
+            <div class="layui-card-body">
+<PRE>
+oper="LIKE";
+EQ("=","等于"),
+NE("!=","不等于"),
+LTE( "<=","小于等于"),
+BETWEEN("BETWEEN","区间"),
+  说明：如果是jdbctype数字保持不变。
+       如果是jdbctype日期，加单引号
+       如果是jdbctype日期时间 ,如果搜索条件不包含时分秒，自动补充 时分秒。
+GTE(">=", "大于等于"),
+LIKE("LIKE","包含"),
+NOTLIKE("NOT LIKE","不包含"),
+IN("IN","IN"),
+NOT_IN("NOT IN","NOT IN");
+</PRE>
+            </div>
+        </div>
+        <div class="layui-card" id="jdbctype">
+            <div class="layui-ez-color layui-card-header">数据库类型>jdbctype</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>中文名</th>
+                        <th>字段名</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>数字</td>
+                        <td>NUMBER</td>
+                        <td>2位小数数字，默认会加上样式：text-align:right</td>
+                    </tr>
+                    <tr>
+                        <td>时间戳</td>
+                        <td>DATE_TO_NUMBER</td>
+                        <td>数据库里面是时间戳类型，但页面日期类型，系统会将页面的date类型转换为时间戳</td>
+                    </tr>
+                    <tr>
+                        <td>字符串（默认）</td>
+                        <td>VARCHAR</td>
+                        <td>自动补充单引号</td>
+                    </tr>
+                    <tr>
+                        <td>日期</td>
+                        <td>DATE</td>
+                        <td>格式化为：yyyy-MM-dd
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>日期时间</td>
+                        <td>DATETIME</td>
+                        <td>格式化为：yyyy-MM-dd HH:mm:ss
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>body</td>
+                        <td>BODY</td>
+                        <td>不会拼接到where语句中</td>
+                    </tr>
+                    <tr>
+                        <td>数字</td>
+                        <td>NUMBER0，NUMBER1，NUMBER2...</td>
+                        <td>精确到小数点指定的位数，四舍五入,如果你输入NUMBER3，NUMBER4，系统也是乐意看到的。</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-card" id="data">
+            <div class="layui-ez-color layui-card-header">初始数据>data</div>
+
+            <div class="layui-card-body">
+                配合datatype一起使用
+                当搜索插件初始化需要有数据源时，此配置可以起到作用。<br>
+
+                <table class="layui-table">
+
+                    <thead>
+                    <tr>
+                        <th>datatype</th>
+                        <th>data</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>TEXT（默认）</td>
+                        <td>
+<pre>
+text:
+1.yesno  是否，转缓存0否1是的json。
+2.status 是否启用，0禁用1启用
+3.delete 是否禁用，0启用1禁用
+4.换行输入
+  男
+  女
+    则KV都为中文
+  1:男
+  0:女
+    则K数字，V中文
+</pre>
+                        </td>
+                        <td>默认值</td>
+                    </tr>
+                    <tr>
+                        <td>JSON</td>
+                        <td>
+                         格式：   [{"V":"A","K":"1"},{"V":"B","K":"2"}]
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>KVSQL、KVSQLCACHE、KVSQLCACHE5</td>
+                        <td>
+                            select USER_ID K,USERNAME V FROM T_USER WHERE ID=${ID}
+                        </td>
+                        <td>
+                            支持使用${}语法获取request参数，<br>
+                            KVSQLCACHE5 5分钟缓存。KVSQLCACHE永久缓存
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>QLEXPRESS</td>
+                        <td>
+                            QLEXPRESS表达式
+                        </td>
+                        <td>
+                           特殊场景，用到的时候，需要用到的时候，基本需求已经有点异常了。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>KVSQL2TREECACHE</td>
+                        <td>
+<pre> SELECT
+        A.REGION_ID ID,
+        A.PARENT_ID PARENT_ID,
+
+        A.REGION_FULL_NAME LABEL
+    FROM
+        T_BASE_REGION A where 1=1</pre>
+                        </td>
+                        <td>
+                            平铺数据改为树形数据。主要用于级联下拉框。
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+
+
+
+
+
+            </div>
+        </div>
+        <div class="layui-card" id="datatype">
+            <div class="layui-ez-color layui-card-header">数据类型>datatype</div>
+            <div class="layui-card-body">
+                配合data一起使用
+<pre>
+    TEXT,//默认
+    JSON,
+    KVSQL,
+    HTTP,
+    JOIN,
+    KVSQLCACHE,
+    HTTPCACHE,
+    QLEXPRESS,
+    KVSQLCACHE5,
+    EZLIST,
+    KVJSONRESULT,
+    CASCADER,
+    KVSQL2TREECACHE
+</pre>
+            </div>
+        </div>
+        <div class="layui-card" id="VALIDATE_RULES">
+            <div class="layui-ez-color layui-card-header">验证规则>validate_rules</div>
+            <div class="layui-card-body">
+                有些需求会要求搜索的时候不要输入太长之类的
+                <br>
+                {"required": true, "minlength": 2}
+                <br>
+                系统最终会拼接好最终的验证规则
+            </div>
+        </div>
+        <div class="layui-card" id="VALIDATE_MESSAGES">
+            <div class="layui-ez-color layui-card-header">验证提示>validate_messages</div>
+            <div class="layui-card-body">
+                有些需求会要求搜索的时候不要输入太长之类的
+                <br>
+                {"required": true, "minlength": "长度{0}"}
+                系统最终会拼接好最终的验证消息
+
+            </div>
+        </div>
+
+</div>
+    <br></div>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js">
+</script>
+<script src="../global.js"></script>
+</body>
+</html>

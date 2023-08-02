@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表格</title>
+</head>
+<body id="table" alias="EZ-TABLE">
+
+
+<table lay-size="sm" th:id="${'ITEM_ID_' + item_name}"
+       class="  layui-table propTable " style=" width:100%">
+    <thead style="text-align: center">
+    <tr>
+        <th style="min-width:30px;max-width:30px" scope="col"
+            th:if="${not #strings.isEmpty(data.firstCol) and not #strings.equals('firstcol-',data.firstCol)}"
+            class="text-center fixedCol  ">
+            <input type="checkbox" class="list-head-checkbox" th:if="${#strings.equals(data.firstCol,'checkbox')
+                           || #strings.equals(data.firstCol,'firstcol-checkbox')}">
+
+            <span th:if="${#strings.equals(data.firstCol,'radio')
+                            || #strings.equals(data.firstCol,'firstcol-radio')
+                            }">序号</span>
+            <!--                            <input type="radio" class="list-head-radio" th:if="${#strings.equals(data.firstCol,'radio')-->
+            <!--                           || #strings.equals(data.firstCol,'firstcol-radio')}">-->
+
+            <span th:if="${#strings.equals(data.firstCol,'numbers')
+                            || #strings.equals(data.firstCol,'firstcol-numbers')
+                            }">序号</span>
+        </th>
+
+        <th th:remove="tag" th:each="item:${data.columnItemList}" th:utext="${item.html}">
+
+        </th>
+        <th style="min-width: 150px">操作</th>
+    </tr>
+    </thead>
+    <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);" class="dragula-container">
+    <tr th:each="row,rowStat:${data.dataRow}" th:classappend="${row.treeClass}" th:data-id="${row.id}">
+        <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<style>
+    .gu-mirror {
+        position: fixed !important;
+        margin: 0 !important;
+        z-index: 9999 !important;
+        opacity: 0.8;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+        filter: alpha(opacity=80);
+    }
+
+    .gu-hide {
+        display: none !important;
+    }
+
+    .gu-unselectable {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+    }
+
+    .gu-transit {
+        opacity: 0.2;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+        filter: alpha(opacity=20);
+    }
+</style>
+<script>
+    layui.use(['table', 'form', 'layCascader'], function () {
+        var form = layui.form;
+
+        var curTable = $("#[[${'ITEM_ID_' + item_name}]]");
+
+        var btnsNoadd = `<td style="min-width: 150px"> <button type="button" class="rowdelete layui-btn layui-btn-sm layui-btn-primary" aria-invalid="false">
+                                            <i class="layui-icon layui-icon-delete"></i>
+                                        </button>
+                                            <button type="button" class="rowadd layui-btn layui-btn-sm layui-btn-primary">
+                                                <i class="layui-icon layui-icon-addition"></i>
+                                            </button>
+                                              <button style='float:right;cursor: move' type="button" class="rowmove layui-btn layui-btn-sm layui-btn-primary" aria-invalid="false">
+                                            <i class="rowmove layui-icon layui-icon-screen-full"></i>
+                                        </button></td>`;
+        var trsize = curTable.find('tbody tr').length;
+        for (var x = 0; x < trsize; x++) {
+            var tr = curTable.find('tbody tr').eq(x);
+            tr.append(btnsNoadd);
+            form.render();
+        }
+
+        curTable.on("click", ".rowdelete", function () {
+            var sibLength = $(this).parents("tr").siblings().length;
+            if (sibLength >= 1) {
+                $(this).parents("tr").remove();
+            }
+            if (sibLength <= 1) {
+                curTable.find(".rowdelete").addClass("layui-btn-disabled")
+            }
+            form.render();
+        })
+        curTable.on("click", ".rowadd", function () {
+            var cloneTr = $(this).parents("tr").clone();
+            cloneTr.find("input").eq(0).val('');
+            $(this).parents("tr").after(cloneTr);
+            curTable.find(".rowdelete").removeClass("layui-btn-disabled")
+            form.render();
+        })
+
+
+        var drake = dragula({
+            isContainer: function (el) {
+                return el.classList.contains('dragula-container');
+            },
+            // copy: true,
+            //  removeOnSpill: true,
+            revertOnSpill: true,
+            //copySortSource: true,
+            moves: function (el, container, handle) {
+
+                return handle.classList.contains('rowmove');
+            }, accepts: function (el, target) {
+
+                return target.classList.contains('dragula-container');
+            }
+        })
+    })
+</script>
+
+
+</body>
+</html>

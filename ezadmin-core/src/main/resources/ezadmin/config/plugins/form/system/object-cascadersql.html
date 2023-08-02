@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表单-sql级联下拉</title>
+</head>
+<body id="cascadersql" type="form">
+<style>.el-input__inner {
+    height: 26px;
+    line-height: 26px
+}</style>
+<input th:value="${#strings.isEmpty(value)?'':value}" th:name="${item_name}" th:id="${'search-item_name-' + item_name}"
+       class="ez-laycascader"
+       th:itemsJson="${itemsJson}"
+       ez_value="ID" ez_label="LABEL"
+       th:multi="${multi}"
+       style="display:none"
+
+       th:collapseTags="${collapsetags}"
+       th:showAllLevels="${showalllevels}"
+       th:itemPlaceholder="${itemPlaceholder}">
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表格-100高度响应式图片</title>
+</head>
+<body id="td-pic" type="td">
+<table>
+    <tr id="content">
+
+        <td th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}" th:ITEM_ID="${item_name}"
+
+            th:class="${'   ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
+            <div style=" display: flex;align-items: center;"><img
+                    style=" max-height:110px;max-width:110px;margin-top:-6px" class="viewer-image"
+                    th:ITEM_ID="${item_name+''+item_name}"
+                    th:data-original="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"
+                    th:src="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"
+            /></div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>列表导航管理</title>
+
+</head>
+<body id="listNavHtml" datasource="System" success_url="reload">
+<div class="layui-container">
+    <!--    <div id="append_head">--><!--        这是一段放在前面的自定义的html代码片段--><!--    </div>-->
+    <form id="inputForm" method="post" class="layui-form">
+        <div class="layui-card" group_name="EZ_DEFAULT_GROUP">
+            <div class="layui-card-header">
+                导航名称
+            </div>
+            <div class="layui-card-body">
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">列表编码</label>
+                    <div class="layui-input-block form-group">
+                        <input lay-verify="required" type="span" placeholder="" class="layui-input form-item" value=""
+                               item_name="ENCRYPT_LIST_ID" name="ENCRYPT_LIST_ID"
+                               item_desc="全局唯一的一个编码，用于确保URL的唯一性" group_data="">
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">导航文案</label>
+                    <div class="layui-input-block form-group">
+                        <input lay-verify="required" type="text" placeholder="" class="layui-input form-item" value=""
+                               name="label" item_name="label" style="" alias="" jdbctype="" data="" datatype=""
+                               lay_verify="required" item_desc="" group_data="" valid_rule="" valid_msg="">
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">导航名称</label>
+                    <div class="layui-input-block form-group">
+                        <input lay-verify="required" type="text" placeholder="" class="layui-input form-item" value=""
+                               name="item_name" item_desc="用户排序或查找" item_name="item_name" style="" alias=""
+                               jdbctype="" data="" datatype="" lay_verify="required" group_data="" valid_rule=""
+                               valid_msg="">
+                    </div><!--            <div class="layui-form-mid layui-word-aux"  >辅助文字(右)</div>-->
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">导航地址</label>
+                    <div class="layui-input-block form-group">
+                        <textarea placeholder="" class="layui-input form-item" value=" " name="url" item_name="url"
+                                  group_data=""></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">前一个</label>
+                    <div class="layui-input-block form-group">
+                        <input type="hidden" placeholder="" class="layui-input form-item" value="" name="pre"
+                               item_name="pre" group_data="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form id="configForm" class="layui-form">
+        <div class="layui-card" group_name="表单数据配置">
+            <div class="layui-card-header">
+                表单数据配置
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">表单初始化</label>
+                    <div class="layui-input-block">
+        <pre id="init" name="init_express" item_name="init_express" class="layui-code">                import com.ezadmin.common.utils.JsoupConfigHolder;
+                     id=$("ENCRYPT_LIST_ID");
+                     name=$("ID");
+                   data=  JsoupConfigHolder.selectNavByListId(id,name);
+                 </pre>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">表单提交</label>
+                    <div class="layui-input-block">
+        <pre id="submit" name="submit_express" item_name="submit_express" class="layui-code" success_url="">                  import com.ezadmin.common.utils.JsoupConfigHolder;
+                  id=$("ENCRYPT_LIST_ID");
+                  name=$("ID");
+                  JsoupConfigHolder.updateNavByListId(id,name,$("request"));
+                 </pre>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">表单删除</label>
+                    <div class="layui-input-block">
+        <pre id="delete" name="delete_express" item_name="delete_express" class="layui-code">                import com.ezadmin.common.utils.JsoupConfigHolder;
+                     id=$("ENCRYPT_LIST_ID");
+                     name=$("ID");
+                   data=  JsoupConfigHolder.deleteNavByListId(id,name);
+                 </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(function () {
+
+    })
+</script><!--<div id="append_foot">--><!--    这是一段放在后面的自定义的html代码片段--><!--</div>-->
+<div id="append_foot">
+    <script>
+        $(function () {
+            if ($("#ITEM_ID_item_name").val() != '') {
+                $("#ITEM_ID_item_name").attr("readonly", "readonly");
+                $("#ITEM_ID_item_name").css("border", "0");
+
+            }
+        })
+    </script>
+</div>
+</body>
+</html>

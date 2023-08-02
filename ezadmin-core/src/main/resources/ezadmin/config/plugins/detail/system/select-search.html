@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>下拉框-搜索</title>
+</head>
+<body id="select-search">
+
+<span class="layui-text form-block-span" th:if="${#strings.equals(value+'',item.K+'')}" th:text="${item.V}"
+      th:each="item:${items}">Alaska</span>
+
+</body>
+</html>

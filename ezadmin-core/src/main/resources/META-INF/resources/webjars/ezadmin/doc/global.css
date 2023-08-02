@@ -1,0 +1,32 @@
+.doctext a{
+    color:    #01AAED
+}
+
+.layui-ez-color{
+    color:dodgerblue;
+}
+
+
+/* 目录 */
+.site-dir{display: none;}
+.site-dir li{line-height: 26px; margin-left: 20px; overflow: visible; list-style-type: disc;}
+.site-dir li a{display: block;}
+.site-dir li a:active{color: #01AAED;}
+.site-dir li a.layui-this{color: #01AAED;}
+body .layui-layer-dir{box-shadow: none; border: 1px solid #d2d2d2;
+    opacity:0.5
+}
+body .layui-layer-dir:hover{
+    opacity:1
+}
+body .layui-layer-dir .layui-layer-content{padding: 10px;}
+.site-dir a em{padding-left: 5px; font-size: 12px; color: #c2c2c2; font-style: normal;}
+.layui-menu li, .layui-menu-body-title a {
+    padding: 0px;
+}
+
+@media screen and (max-width: 992px) {
+    .layui-layer-dir {
+        display: none;
+    }
+}

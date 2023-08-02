@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>富文本</title>
+</head>
+<body id="tinymce">
+
+<!-- 内容状态 -->
+<textarea th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+          th:name="${item_name}" th:id="${'DESC_ITEM_ID_'+item_name}"
+          th:utext="${value}"></textarea>
+
+
+<script>
+
+    tinymce.init({
+        selector: "textarea#[[${'DESC_ITEM_ID_'+item_name}]]"
+        ,
+        language: 'zh_CN'
+        ,
+        height: 600
+        ,
+        width: '100%'
+        ,
+        plugins: 'link image media lists advlist table hr emoticons fullscreen print insertdatetime searchreplace  batchUploadImage'
+        ,
+        toolbar: ['styleselect formatselect fontselect fontsizeselect forecolor backcolor fullscreen print',
+            'undo redo bullist numlist lineheight visualaid bold italic underline strikethrough blockquote subscript superscript emoticons hr removeformat insertdatetime searchreplace',
+            'table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | outdent indent alignleft aligncenter alignright | link image batchUploadImage media ']
+        ,
+        form: {
+            name: 'file'
+        }
+        ,
+        toolbar_sticky: true
+        ,
+        autosave_ask_before_unload: false
+        ,
+        images_upload_url: '/system/uploadDesc.html'
+        ,
+        file_picker_callback: function (callback, value, meta) {
+            var filetype = '.bmp, .jpg, .jpeg, .png, .gif, .pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
+            var upurl = '/system/uploadDesc.html';
+            //为不同插件指定文件类型及后端地址
+            switch (meta.filetype) {
+                case 'image':
+                    filetype = '.bmp, .jpg, .jpeg, .png, .gif, .pdf';
+                    break;
+                case 'media':
+                    filetype = '.mp3, .mp4';
+                    break;
+                case 'file':
+                default:
+            }
+            //模拟出一个input用于添加本地文件
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', filetype);
+            input.click();
+            input.onchange = function () {
+                var file = this.files[0];
+
+                var xhr, formData;
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', upurl);
+                xhr.onload = function () {
+                    var json;
+                    if (xhr.status != 200) {
+                        layer.msg('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    json = JSON.parse(xhr.responseText);
+                    if (!json) {
+                        layer.msg('Invalid JSON: ' + xhr.responseText);
+                        return;
+                    }
+                    callback(json.data.src, {text: file.name, title: file.name, alt: file.name});
+                };
+                formData = new FormData();
+                formData.append('file', file, file.name);
+                xhr.send(formData);
+            }
+        }
+        ,
+        images_upload_handler: function (blobInfo, success, fail) {
+            // 图片上传实现 http://tinymce.ax-z.cn/general/upload-images.php
+            var formData = new FormData();
+            formData.append('file', blobInfo.blob(), blobInfo.filename());
+            $.ajax({
+                url: 'upload.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    success(response.url);
+                },
+                error: function () {
+                    failure('Image upload failed.');
+                }
+            });
+            // 上传成功调用 success(url);
+            // 上传失败调用 fail();
+        }
+        ,
+        setup: function (editor) {
+            editor.on('change', function (e) {
+                editor.save();
+            });
+        }
+    });
+
+</script>
+</body>
+</html>

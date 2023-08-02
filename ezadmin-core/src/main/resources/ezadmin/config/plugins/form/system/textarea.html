@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>输入-多行文本</title>
+</head>
+<body id="textarea" alias="8">
+<textarea th:label="${label}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+          th:placeholder="${placeholder}"
+          class="form-control layui-textarea"
+          th:text="${value}"
+          th:name="${item_name}"
+          th:id="${'ITEM_ID_' + item_name}"
+          th:style="${style}" th:aria-describedby="${aria_describedby}" rows="3"></textarea>
+</body>
+</html>

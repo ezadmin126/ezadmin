@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>layout 管理系统大布局 - Layui</title>
+    <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+    <link href="../global.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid  layui-bg-gray">
+  <div class="layui-row layui-col-space5">
+      <blockquote class="layui-elem-quote" style="margin-top:10px">
+        配置表单的 每个字段
+      </blockquote>
+<pre id="code" class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+    &lt;div class=&quot; layui-form-item&quot;&gt;
+       &lt;label class=&quot;layui-form-label&quot;&gt;表单编码&lt;/label&gt;
+       &lt;div class=&quot;layui-input-block form-group&quot;&gt;
+        &lt;input lay-verify=&quot;&quot; type=&quot;text&quot; placeholder=&quot;&quot; class=&quot;layui-input form-item&quot; value=&quot;&quot; name=&quot;ENCODE_FORM_ID&quot; item_desc=&quot;&quot; group_data=&quot;&quot; item_name=&quot;ENCODE_FORM_ID&quot; style=&quot;&quot; alias=&quot;&quot; jdbctype=&quot;&quot; data=&quot;&quot; datatype=&quot;&quot; lay_verify=&quot;required&quot; valid_rule=&quot;&quot; valid_msg=&quot;&quot;&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+</pre>
+  </div>
+    <div class="layui-row layui-col-space5 doctext">
+
+        <div class="layui-card" id="item_name">
+            <div class="layui-ez-color layui-card-header">字段名称>item_name</div>
+            <div class="layui-card-body ">
+                字段提交至后台的name
+            </div>
+        </div>
+        <div class="layui-card" id="label">
+            <div class="layui-ez-color layui-card-header">文案名称>label</div>
+            <div class="layui-card-body">
+             字段显示名称
+            </div>
+        </div>
+        <div class="layui-card" id="alias">
+            <div class="layui-ez-color layui-card-header">字段别名>alias</div>
+            <div class="layui-card-body">
+
+            </div>
+        </div>
+
+        <div class="layui-card" id="type">
+            <div class="layui-ez-color layui-card-header">插件>type</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>插件名称</th>
+                        <th>插件别名</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>右侧按钮</td>
+                        <td>button-single</td>
+                        <td> &lt;button type=&quot;single&quot;&gt;匹配&lt;/button&gt;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>日期</td>
+                        <td>input-date</td>
+                        <td>日期</td>
+                    </tr>
+                    <tr>
+                        <td>日期范围</td>
+                        <td>input-daterange</td>
+                        <td> 日期范围
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>日期时间</td>
+                        <td>input-datetime</td>
+                        <td>日期时间</td>
+                    </tr>
+                    <tr>
+                        <td>日期时间范围</td>
+                        <td>input-datetimerange</td>
+                        <td> 日期时间范围
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>隐藏域</td>
+                        <td>input-hidden</td>
+                        <td>隐藏域
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>输入-数字框</td>
+                        <td>input-number</td>
+                        <td>输入-数字框</td>
+                    </tr>
+                    <tr>
+                        <td>输入-单选框</td>
+                        <td>input-radio</td>
+                        <td>  </td>
+
+                    </tr>
+                    <tr>
+                        <td>输入-纯文字</td>
+                        <td>input-span</td>
+                        <td> 输入-纯文字 </td>
+
+                    </tr>
+                    <tr>
+                        <td>输入-单行文</td>
+                        <td>input-text</td>
+                        <td> 输入-单行文 </td>
+
+                    </tr>
+                    <tr>
+                        <td>表单-级联下拉</td>
+                        <td>object-cascader</td>
+                        <td>原生下拉框，&lt;object type=cascader &gt;&lt;/object&gt;<BR>
+                            1.item_url 远程数据地址 <br>
+                            2.multi 是否多选<br>
+                            3.collapseTags 多选是否折叠<br>
+                            4.showAllLevels  回显是否展示完整路径<br>
+                            接口返回数据格式如下，系统会自动转成tree格式。 可以使用ez的<a href="#api">api</a>功能
+                            <pre class="layui-code layui-code-view layui-box" lay-options="{title:'远程数据格式', height: '320px'}">
+{
+	"code": "0",
+	"count": 6,
+	"data": [{
+		"ID": "1",
+		"LABEL": "LABEL",
+		"PARENT_ID": "0"
+	} ,{
+		"ID": "2",
+		"LABEL": "LABEL2",
+		"PARENT_ID": "1"
+	}  ],
+	"success": true
+}
+
+                            </pre>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>表单-级联下拉SQL</td>
+                        <td>object-cascadersql</td>
+                        <td>原生下拉框，&lt;object type=cascadersql &gt;&lt;/object&gt;<BR>
+                            1.初始数据 配置json, 初始数据类型配置（有性能影响，需要缓存，故数据为非实时）：KVSQL2TREECACHE  <br>
+                            2.multi 是否多选<br>
+                            3.collapseTags 多选是否折叠<br>
+                            4.showAllLevels  回显是否展示完整路径<br>
+                            初始数据 格式如下，系统会自动转成。
+                            <pre class="layui-code layui-code-view layui-box" lay-options="{title:'JSON数据格式', height: '320px'}">
+ SELECT
+        A.REGION_ID ID,
+        A.PARENT_ID PARENT_ID,
+
+        A.REGION_FULL_NAME LABEL
+    FROM
+        T_BASE_REGION A where 1=1
+                            </pre>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td>富文本 WANGEDIT</td>
+                        <td>richtext</td>
+                        <td>富文本WANGEDIT &lt;object type=richtext &gt;&lt;/object&gt;  </td>
+                    </tr>
+                    <tr>
+                        <td>富文本 tinymce(推荐)</td>
+                        <td>tinymce</td>
+                        <td>富文本tinymce &lt;object type=tinymce &gt;&lt;/object&gt;  </td>
+                    </tr>
+                    <tr>
+                        <td>树形结构</td>
+                        <td>tree</td>
+                        <td>
+                        配置初始化JSON数据：
+                            <pre>
+zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+var zNodes =[
+    {_ID:1, _PARENT_ID:0, _NAME: "父节点1"},
+    {_ID:11, _PARENT_ID:1, _NAME: "子节点1"},
+    {_ID:12, _PARENT_ID:1, _NAME: "子节点2"}
+];
+                            </pre>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>文件上传/图片上传/pdf上传/视频上传</td>
+                        <td>uploadfile</td>
+                        <td> 结合<a href="#lay_verify">lay_verify</a>
+                            {"acceptMime":"image/png","exts":"png","max":1,"min":0}</td>
+                    </tr>
+                    <tr>
+                        <td>多选下拉框</td>
+                        <td>xmselect</td>
+                        <td>
+                            多选下拉框 ,参考 <a href="#data">数据源</a> 配置
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>原生下拉框</td>
+                        <td>select</td>
+                        <td>原生下拉框，&lt;select type='' &gt;&lt;/select&gt;  <a href="#data">数据源</a> 配置 </td>
+                    </tr>
+                    <tr>
+                        <td>搜索下拉框</td>
+                        <td>select-search</td>
+                        <td>搜索下拉框，&lt;select type=search &gt;&lt;/select&gt;  <a href="#data">数据源</a> 配置 </td>
+                    </tr>
+                    <tr>
+                        <td>下拉纯文本</td>
+                        <td>select-span</td>
+                        <td>下拉纯文本，&lt;select type=span &gt;&lt;/select&gt;  <a href="#data">数据源</a> 配置 </td>
+                    </tr>
+                    <tr>
+                        <td>多行文本</td>
+                        <td>textarea</td>
+                        <td>&lt;textarea&gt;</td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="layui-card" id="align">
+            <div class="layui-ez-color layui-card-header">排列方式>align</div>
+            <div class="layui-card-body">
+                block，inline
+                前者始终展示一行，后者平铺
+            </div>
+        </div>
+        <div class="layui-card" id="group_data">
+            <div class="layui-ez-color layui-card-header">分组配置>group_data</div>
+            <div class="layui-card-body">
+               选择表单主体配置的分组，分组相同的表单元素将会在一个card中展示
+            </div>
+        </div>
+        <div class="layui-card" id="data">
+            <div class="layui-ez-color layui-card-header">初始数据>data</div>
+
+            <div class="layui-card-body">
+                配合datatype一起使用
+                当插件初始化需要有数据源时，此配置可以起到作用。<br>
+
+                <table class="layui-table">
+
+                    <thead>
+                    <tr>
+                        <th>datatype</th>
+                        <th>data</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>TEXT（默认）</td>
+                        <td>
+<pre>
+text:
+1.yesno  是否，转缓存0否1是的json。
+2.status 是否启用，0禁用1启用
+3.delete 是否禁用，0启用1禁用
+4.换行输入
+  男
+  女
+    则KV都为中文
+  1:男
+  0:女
+    则K数字，V中文
+</pre>
+                        </td>
+                        <td>默认值</td>
+                    </tr>
+                    <tr>
+                        <td>JSON</td>
+                        <td>
+                            格式：   [{"V":"A","K":"1"},{"V":"B","K":"2"}]
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>KVSQL、KVSQLCACHE、KVSQLCACHE5</td>
+                        <td>
+                            select USER_ID K,USERNAME V FROM T_USER WHERE ID=${ID}
+                        </td>
+                        <td>
+                            支持使用${}语法获取request参数，<br>
+                            KVSQLCACHE5 5分钟缓存。KVSQLCACHE永久缓存
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>QLEXPRESS</td>
+                        <td>
+                            QLEXPRESS表达式
+                        </td>
+                        <td>
+                            特殊场景，用到的时候，需要用到的时候，基本需求已经有点异常了。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>KVSQL2TREECACHE</td>
+                        <td>
+<pre> SELECT
+        A.REGION_ID ID,
+        A.PARENT_ID PARENT_ID,
+
+        A.REGION_FULL_NAME LABEL
+    FROM
+        T_BASE_REGION A where 1=1</pre>
+                        </td>
+                        <td>
+                            平铺数据改为树形数据。主要用于级联下拉框。
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+
+
+
+
+
+            </div>
+        </div>
+        <div class="layui-card" id="datatype">
+            <div class="layui-ez-color layui-card-header">数据类型>datatype</div>
+            <div class="layui-card-body">
+                配合data一起使用
+                <pre>
+    TEXT,//默认
+    JSON,
+    KVSQL,
+    HTTP,
+    JOIN,
+    KVSQLCACHE,
+    HTTPCACHE,
+    QLEXPRESS,
+    KVSQLCACHE5,
+    EZLIST,
+    KVJSONRESULT,
+                    CASCADER, 需结合：<a href="#item_url">item_url</a>
+    KVSQL2TREECACHE
+</pre>
+            </div>
+        </div>
+        <div class="layui-card" id="item_url">
+            <div class="layui-ez-color layui-card-header">远程数据>item_url</div>
+            <div class="layui-card-body">
+                当插件是级联下拉时，获取远程数据。
+            </div>
+        </div>
+        <div class="layui-card" id="item_desc">
+            <div class="layui-ez-color layui-card-header">下方提示>item_desc</div>
+            <div class="layui-card-body">
+                一般只有在布局为block时使用
+            </div>
+        </div>
+        <div class="layui-card" id="right_desc">
+            <div class="layui-ez-color layui-card-header">右方提示>right_desc</div>
+            <div class="layui-card-body">
+                一般只有在布局为block时使用
+            </div>
+        </div>
+        <div class="layui-card" id="help">
+            <div class="layui-ez-color layui-card-header">弹框第三方页面提示>help</div>
+            <div class="layui-card-body">
+                一般只有在布局为block时使用，一般用于文档操作提示
+            </div>
+        </div>
+        <div class="layui-card" id="jdbctype">
+            <div class="layui-ez-color layui-card-header">数据库类型>jdbctype</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>中文名</th>
+                        <th>字段名</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>数字</td>
+                        <td>NUMBER</td>
+                        <td>2位小数数字，默认会加上样式：text-align:right</td>
+                    </tr>
+                    <tr>
+                        <td>时间戳</td>
+                        <td>DATE_TO_NUMBER</td>
+                        <td>数据库里面是时间戳类型，但页面日期类型，系统会将页面的date类型转换为时间戳</td>
+                    </tr>
+                    <tr>
+                        <td>字符串（默认）</td>
+                        <td>VARCHAR</td>
+                        <td>自动补充单引号</td>
+                    </tr>
+                    <tr>
+                        <td>日期</td>
+                        <td>DATE</td>
+                        <td>格式化为：yyyy-MM-dd</td>
+                    </tr>
+                    <tr>
+                        <td>日期时间</td>
+                        <td>DATETIME</td>
+                        <td>格式化为：yyyy-MM-dd HH:mm:ss</td>
+                    </tr>
+                    <tr>
+                        <td>body</td>
+                        <td>BODY</td>
+                        <td>不会拼接到where语句中</td>
+                    </tr>
+                    <tr>
+                        <td>数字</td>
+                        <td>NUMBER0，NUMBER1，NUMBER2...</td>
+                        <td>精确到小数点指定的位数，四舍五入,如果你输入NUMBER3，NUMBER4，系统也是乐意看到的。</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="layui-card" id="lay_verify">
+            <div class="layui-ez-color layui-card-header">layui验证>lay_verify</div>
+            <div class="layui-card-body">
+                required|phone|number, 文件参考layui文档配置：{"acceptMime":"image/png","exts":"png","max":1,"min":0}
+            </div>
+        </div>
+
+    </div>
+</div>
+<br>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js">
+</script>
+<script src="../global.js"></script></body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Admin</title>
+    <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+    <link href="../global.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid  layui-bg-gray">
+    <div class="layui-row layui-col-space5">
+        <blockquote class="layui-elem-quote" style="margin-top:10px">
+            jar包已经内置一个admin页面。引入springboot-starter之后，配置如下信息即可通过访问使用/ezadmin/index.html使用后台框架：
+        </blockquote>
+        <pre id="code" class="layui-code layui-code-view layui-box">
+          如下均为默认值：
+          #菜单URL
+          ezdmin.navUrl: /laynavs.html
+          #登出URL
+          ezadmin.signoutUrl: /login/signout.html
+          #logo等信息，会透传至页面，用于自定义参数
+          ezdmin.configJson: '{"favicon":"/static/favicon.ico","logo":"/static/logo.png"}'
+          # 自定义脚本
+          ezadmin.appendJs:
+          #自定义导出的类路径
+          ezadmin.exportClass：
+          #时间选择展示的假日信息，参见layui
+          ezadmin.holiday:
+
+      </pre>
+
+    </div>
+    <div class="layui-row layui-col-space5 doctext">
+
+        <div class="layui-card" id="数据格式">
+            <div class="layui-ez-color layui-card-header">数据格式</div>
+            <div class="layui-card-body ">
+                <pre class="layui-code code-demo">
+                    {
+    "code":"0",
+    "count":0,
+    "data":{
+        "homeInfo":{
+            "child":[
+
+            ],
+            "href":"",
+            "title":"System"
+        },
+        "logoInfo":{
+            "child":[
+
+            ],
+            "href":"/ezadmin/index.html",
+            "image":"/static/logo.png",
+            "title":""
+        },
+        "menuInfo":[
+            {
+                "child":[
+                    {
+                        "child":[
+                            {
+                                "child":[
+
+                                ],
+                                "href":"/ezadmin/list/list-base-product",
+                                "icon":"layui-icon-file layui-icon",
+                                "id":"8025",
+                                "image":"",
+                                "target":"_self",
+                                "title":"产品列表"
+                            }
+                        ],
+                        "href":"",
+                        "icon":"layui-icon-file layui-icon",
+                        "id":"8017",
+                        "image":"",
+                        "target":"_self",
+                        "title":"产品管理"
+                    },
+                    {
+                        "child":[
+                            {
+                                "child":[
+
+                                ],
+                                "href":"/ezadmin/list/list-2",
+                                "icon":"layui-icon-file layui-icon",
+                                "id":"8027",
+                                "image":"",
+                                "target":"_self",
+                                "title":"列表3"
+                            },
+                            {
+                                "child":[
+
+                                ],
+                                "href":"/ezadmin/list/list-1",
+                                "icon":"layui-icon-file layui-icon",
+                                "id":"8028",
+                                "image":"",
+                                "target":"_self",
+                                "title":"列表2"
+                            }
+                        ],
+                        "href":"",
+                        "icon":"layui-icon-file layui-icon",
+                        "id":"8026",
+                        "image":"",
+                        "target":"_self",
+                        "title":"管理1"
+                    }
+                ],
+                "title":"系统管理"
+            }
+        ]
+    },
+    "message":"ok",
+    "success":true
+}
+                </pre>
+
+            </div>
+        </div>
+        <div class="layui-card" id="后端实现demo">
+            <div class="layui-ez-color layui-card-header">后端实现demo</div>
+            <div class="layui-card-body ">
+
+<pre class="layui-code code-demo">
+ example:
+     @RequestMapping(value = &quot;laynavs.html&quot;, method = RequestMethod.GET)
+    @ResponseBody
+    public void laynavs(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        User user=getSessionUser();
+        List&lt;Map&lt;String,Object&gt;&gt; navList=Dao.getInstance().executeQuery(dataSource,
+                SystemSql.MININAV ,new Object[]{user.getUserId(),0});
+        List&lt;Info&gt; root=list(navList);
+        fillRootLayNav(root, user.getUserId());
+        InitVO vo=new InitVO()  ;
+
+        List&lt;Info&gt; toproot=new ArrayList&lt;&gt;();
+        Info TOP=new Info( );
+        TOP.setTitle(&quot;系统管理&quot;);
+        TOP.setChild(root);
+        toproot.add(TOP);
+
+        vo.homeInfo(EzBootstrap.instance().getSystemName(),&quot;&quot;).
+                logoInfo(&quot;&quot;,&quot;/ezadmin/index.html&quot;,EzBootstrap.instance().getConfig().get(&quot;logo&quot;)+&quot;&quot;)
+                .setMenuInfo(toproot);
+        EzResult.instance().msg(&quot;0&quot;,&quot;ok&quot;)
+                .data(vo).printJSONUtils(response);
+    }
+
+    private List&lt;Info&gt; list(List&lt;Map&lt;String,Object&gt;&gt; navList){
+
+        if(Utils.isEmpty(navList)){
+            return Collections.emptyList()  ;
+        }
+        List&lt;Info&gt; list=new ArrayList&lt;&gt;();
+        navList.forEach(item-&gt;{
+             Info in=new Info(
+                     Utils.trimNull(item.get(&quot;TITLE&quot;)),
+                     Utils.trimNull(item.get(&quot;HREF&quot;)),
+                     Utils.trimNull(item.get(&quot;IMAGE&quot;)),
+                     Utils.trimEmptyDefault(item.get(&quot;TARGET&quot;),&quot;_self&quot;),
+                     Utils.trimEmptyDefault(item.get(&quot;ICON&quot;),&quot;layui-icon-file layui-icon&quot;)
+             );
+             in.setId(Utils.trimNull(item.get(&quot;ID&quot;)));
+             list.add(in);
+        });
+        return list;
+    }
+
+    private  void fillRootLayNav(List&lt;Info&gt; root,  Long userId) {
+        if(CollectionUtils.isEmpty(root)){
+            return;
+        }
+        for (int i = 0; i &lt; root.size(); i++) {
+            Info map= root.get(i);
+            try {
+                List&lt;Map&lt;String, Object&gt;&gt; childList = Dao.getInstance().executeQuery(dataSource,
+                        SystemSql.MININAV, new Object[]{userId, map.getId()});
+                List&lt;Info&gt; clist=list(childList);
+               map.setChild(clist);
+                if(!CollectionUtils.isEmpty(childList)){
+                    fillRootLayNav(clist, userId);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+</pre>
+            </div>
+        </div>
+
+    </div>
+</div>
+<br>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js">
+</script>
+<script src="../global.js"></script>
+
+</body>
+</html>

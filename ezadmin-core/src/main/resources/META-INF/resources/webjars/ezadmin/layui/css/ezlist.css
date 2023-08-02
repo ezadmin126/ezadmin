@@ -1,0 +1,544 @@
+* {
+    font-size: 12px !important;
+}
+
+.layui-layer-imgnext{
+    font-size: 52px !important;
+    color: #8890b5;
+}
+
+/**来自bootstrap**/
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+table > th > span {
+    min-width: 100px;
+}
+
+th > i {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.ezopenbutton {
+    cursor: pointer
+}
+
+.btn.active.focus,
+.btn.active:focus, .btn.focus,
+.btn:active.focus, .btn:active:focus,
+.btn:focus {
+    outline: none;
+}
+
+button:focus {
+    outline: none;
+}
+
+button {
+    outline: none;
+}
+
+.layui-card-body {
+    padding: 0;
+}
+
+.layui-form-item {
+    margin-bottom: 0;
+}
+
+.layui-tab-content {
+    padding: 5px 0;
+}
+
+.layui-tab {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.search-content {
+    border: 1px solid #EDF0F2;
+    margin-top: 5px;
+    padding-top: 10px;
+}
+
+.nav-active {
+    border-bottom: 2px solid #007bff;
+    color: #007bff;
+}
+
+.nav-link {
+
+    color: #6c757d;
+}
+
+.nav-link:hover {
+    border-bottom: 2px solid #007bff;
+    color: #007bff;
+}
+
+.ez-list-card {
+    border-top: 3px solid #007bff;
+    border-radius: 0;
+}
+
+.page-link {
+    border: 0
+}
+
+th a {
+    color: #212529;
+}
+
+@media (min-width: 100px) {
+    .list-item label {
+        text-align: left !important;
+        min-width: 110px;
+    }
+
+    .el-cascader {
+        margin-left: 0px;
+    }
+
+    .layui-form-item .ez-range {
+        width: 80px !important;
+    }
+
+    .layui-form-item .ez-daterange {
+        width: 80px !important;
+        margin-right: 0px;
+    }
+
+    #searchForm .layui-inline {
+        height: 26px;
+    }
+}
+
+@media (min-width: 576px) {
+    .list-item label {
+        text-align: right !important;
+        min-width: 110px;
+    }
+
+    .layui-form-item .ez-range {
+        width: 80px !important;
+    }
+
+    /**数据库插件做兼容**/
+    .layui-form-item .ez-daterange {
+        width: 80px !important;
+    / / margin-right: 0 px;
+    }
+
+    .el-cascader {
+        margin-left: 0px;
+    }
+
+    #searchForm .layui-inline {
+        height: 34px;
+    }
+}
+
+.daterange {
+    min-width: 175px
+}
+
+.form-group {
+    z-index: 100
+}
+
+.card-header .tableButton {
+    width: 100%;
+    text-align: left;
+    margin-left: 13px;
+
+}
+
+.card-header .center {
+    width: 100%;
+    text-align: right;
+    margin-right: 20px !important;
+
+}
+
+
+.layui-form-item {
+    margin-bottom: 0px;
+}
+
+.layui-card-body {
+    padding: 0;
+}
+
+
+.layui-table-col-special .layui-table-cell {
+    height: auto;
+    overflow: visible;
+    text-overflow: inherit;
+    white-space: normal;
+
+}
+
+.layui-table-col-special-img .layui-table-cell {
+    height: 110px;
+    overflow: visible;
+    text-overflow: inherit;
+    white-space: normal;
+
+}
+
+.layui-form-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+.layui-table-page {
+    text-align: right;
+}
+
+.layui-table-tool {
+    min-height: 35px;
+    height: 35px;
+    padding: 3px 15px;
+}
+
+.layui-table-tool-self {
+    top: 1px
+}
+
+.layui-table td, .layui-table th, .layui-form-label, .layui-card-header {
+    font-size: 12px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    height: 26px;
+    margin-top: 2px;
+}
+
+.layui-form-label {
+    padding: 4px 15px;
+}
+
+
+.layui-input-inline {
+    min-height: auto;
+}
+
+.layui-form-label {
+}
+
+.layui-form-select dl {
+    top: 30px
+}
+
+.layui-form-selectup dl {
+    top: auto;
+    bottom: 30px;
+}
+
+.btn-group {
+    vertical-align: middle;
+    font-size: 0;
+}
+
+.btn-group .layui-btn:first-child {
+    border-left: none;
+    border-radius: 2px 0 0 2px;
+}
+
+.btn-group .layui-btn {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border-left: 1px solid rgba(255, 255, 255, .5);
+    border-radius: 0;
+}
+
+.rc-handle-container {
+    position: relative;
+}
+
+.rc-handle {
+    position: absolute;
+    width: 7px;
+    cursor: ew-resize;
+    margin-left: -3px;
+    z-index: 2;
+}
+
+table.rc-table-resizing {
+    cursor: ew-resize;
+}
+
+table.rc-table-resizing thead,
+table.rc-table-resizing thead > th,
+table.rc-table-resizing thead > th > a {
+    cursor: ew-resize;
+}
+
+
+.layui-card-header {
+    height: 34px;
+}
+
+.layui-form-item .layui-input-inline {
+    width: 175px;
+}
+
+
+#searchForm .layui-form-mid {
+    height: 34px;
+    margin-top: -7px;
+    margin-right: 4px;
+    margin-left: 5px;
+}
+
+
+/*.ezadmin-td{*/
+/*    min-width:110px;*/
+/*}*/
+
+.os-scrollbar {
+    z-index: 200
+}
+
+.redcircle {
+    background: #fc5151;
+}
+
+.greycircle {
+    background: #999;
+}
+
+.bluecircle {
+    background: #3384ef;
+}
+
+.greencircle {
+    background: #68bb68;
+}
+
+.orangecircle {
+    background: #ff9700;
+}
+
+.yellowcircle {
+    background: #fcf459;
+}
+
+.purplecircle {
+    background: #d606d6;
+}
+
+.redcircle, .greycircle, .bluecircle, .greencircle, .orangecircle, .yellowcircle, .purplecircle {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 2px 1px 0;
+    border-radius: 50%;
+}
+
+
+xm-select {
+    min-height: 26px !important;
+    line-height: 26px !important;
+}
+
+xm-select .xm-label .xm-label-block {
+    height: 18px !important;
+    line-height: 18px !important;
+    margin-top: 0px;
+}
+
+.el-cascader {
+    line-height: 28px !important;
+}
+
+
+/**手机端靠左显示**/
+ul.dtr-details {
+    text-align: left;
+}
+
+
+.list-item-hidden {
+    display: none
+}
+
+.dataTables_scrollBody {
+    min-height: 200px;
+}
+
+
+.gu-mirror {
+    position: fixed !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    opacity: 0.8;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+    filter: alpha(opacity=80);
+}
+
+.gu-hide {
+    display: none !important;
+}
+
+.gu-unselectable {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.gu-transit {
+    opacity: 0.2;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+    filter: alpha(opacity=20);
+}
+
+.layui-form-radio {
+    line-height: 0;
+}
+
+.dataTables_scrollHead .layui-table {
+    margin: 5px 0 0 0;
+}
+
+.dataTables_scrollBody .layui-table {
+    margin-top: 0px;
+}
+
+/**下拉框高度**/
+.el-input__inner {
+    height: 26px;
+    line-height: 26px
+}
+
+/**选中颜色**/
+table.dataTable tbody tr.selected > * {
+    box-shadow: inset 0 0 0 9999px #fafafa !important;
+    color: #666 !important;
+}
+
+table.dataTable tfoot tr > .dtfc-fixed-left, table.dataTable thead tr > .dtfc-fixed-right {
+    z-index: 1;
+    background-color: white
+}
+
+table.dataTable tbody tr > .dtfc-fixed-left, table.dataTable tbody tr > .dtfc-fixed-right {
+    z-index: 1;
+    background-color: white
+}
+
+div.dtfc-left-top-blocker, div.dtfc-right-top-blocker {
+    background-color: white
+}
+
+.rowButtons {
+    padding: 2px 5px !important;
+    max-width: 175px;
+}
+
+
+.layui-card-body .layui-table {
+    margin: 0 0 !important;
+    /*border-collapse:collapse !important;*/
+}
+
+#tableSearchTr th {
+    padding: 2px !important;
+}
+
+.table-th-icon {
+
+    cursor: pointer;
+}
+
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.is-invalid, .is-invalid:focus {
+    border-color: #dc3545 !important;
+    padding-right: 2.25rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(.375em + .1875rem) center;
+    background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+}
+
+
+.ezadmin-td-edit:hover {
+    border: 1px solid red;
+}
+
+.ezadmin-overflowvisible > .layui-layer-content {
+    overflow: visible !important;
+    background-color: #fafafa !important;
+    color: #5f5f5f !important;
+}
+
+.ezadmin-overflowvisible > .layui-layer-content > .layui-layer-TipsG {
+    border-right-color: #fafafa !important;
+}
+
+
+.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #fff;
+}
+
+.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background-color: #fff;
+}
+
+
+.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, .15);
+}
+
+
+.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, .4);
+}
+
+
+.layui-table img {
+    max-width: 200px !important;
+}
+
+/**
+表头固定时，没有border-bottom
+*/
+table.fixedHeader-floating.no-footer {
+    border-bottom-width: 2px !important;
+}
+
+/**这里会导致 没有下划线*/
+table.dataTable thead th {
+    border-bottom: none !important;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+    border-bottom: none !important;;
+}
+
+
+
+
+
+
+
+
+
+

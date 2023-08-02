@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表单内容管理</title>
+
+</head>
+<body id="formCore" datasource success_url="">
+<div id="append_head"></div>
+<div class="layui-container">
+    <form id="inputForm" method="post" class="layui-form">
+        <div class="layui-card" group_name="基础数据">
+            <div class="layui-card-header">
+                基础数据
+            </div>
+            <div class="layui-card-body">
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">表单编码</label>
+                    <div class="layui-input-block form-group">
+                        <input type="text" placeholder="" class="layui-input form-item" value="" name="ENCODE_FORM_ID"
+                               item_name="ENCODE_FORM_ID" item_desc="" group_data="基础数据" item_name="ENCODE_FORM_ID"
+                               style="" alias="" jdbctype="" data="" datatype="" lay_verify="required" valid_rule=""
+                               valid_msg="">
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">表单名称</label>
+                    <div class="layui-input-block form-group">
+                        <input lay-verify="required" help="/webjars/ezadmin/doc/form/formcore.html#title" type="text"
+                               placeholder="" class="layui-input form-item" value="" name="FORM_NAME"
+                               item_name="FORM_NAME" group_data="基础数据" item_name="form_name" style="" alias=""
+                               jdbctype="" data="" datatype="" lay_verify="required" item_desc="" valid_rule=""
+                               valid_msg="">
+                    </div>
+                </div>
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">数据源</label>
+                    <div class="layui-input-block form-group">
+                        <select class="form-item" name="DATASOURCE"
+                                help="/webjars/ezadmin/doc/form/formcore.html#datasource" type="search" value=""
+                                item_name="DATASOURCE" placeholder="" style="" alias="" jdbctype="" data="database"
+                                datatype="" lay_verify="required" item_desc="" group_data="基础数据" valid_rule=""
+                                valid_msg="" item_max_upload=""></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card" group_name="初始数据">
+            <div class="layui-card-header">
+                初始数据
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form-item "><label class="layui-form-label">分组配置</label>
+                    <div class="layui-input-block form-group"><textarea class="form-item"
+                                                                        help="/webjars/ezadmin/doc/form/formcore.html#GROUP_DATA"
+                                                                        name="GROUP_DATA" type="" value=""
+                                                                        item_name="group_data" placeholder="" style=""
+                                                                        alias="" jdbctype="" data="" datatype=""
+                                                                        item_desc="[ {&quot;V&quot;:&quot;基础数据&quot;,&quot;K&quot;:&quot;基础数据&quot;,&quot;type&quot;:&quot;inline&quot;}, {&quot;V&quot;:&quot;初始数据&quot;,&quot;K&quot;:&quot;初始数据&quot;,&quot;type&quot;:&quot;block&quot;} ]"
+                                                                        group_data="初始数据"></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">初始化表达式</label>
+                    <div class="layui-input-block form-group">
+                        <textarea row="5" placeholder="" class="layui-textarea form-item"
+                                  help="/webjars/ezadmin/doc/form/formcore.html#INIT_EXPRESS" value=""
+                                  name="INIT_EXPRESS" style="height:500px" item_desc="" group_data="初始数据" type=""
+                                  item_name="init_express" alias="" jdbctype="" data="" datatype=""
+                                  lay_verify="required" valid_rule="" valid_msg=""></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">提交表达式</label>
+                    <div class="layui-input-block form-group">
+                        <textarea row="5" placeholder="" class="layui-textarea form-item"
+                                  help="/webjars/ezadmin/doc/form/formcore.html#SUBMIT_EXPRESS" style="height:800px"
+                                  value="" name="submit_express" group_data="初始数据" type=""
+                                  item_name="submit_express" alias="" jdbctype="" data="" datatype=""
+                                  lay_verify="required" item_desc="" valid_rule="" valid_msg=""></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">删除表达式</label>
+                    <div class="layui-input-block form-group">
+                        <textarea row="5" placeholder="" class="layui-textarea form-item" value=""
+                                  help="/webjars/ezadmin/doc/form/formcore.html#DELETE_EXPRESS" name="delete_express"
+                                  item_name="delete_express" group_data="初始数据"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card" group_name="自定义">
+            <div class="layui-card-header">
+                自定义
+            </div>
+            <div class="layui-card-body">
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">自定义脚本</label>
+                    <div class="layui-input-block form-group">
+                        <textarea row="5" placeholder="" help="/webjars/ezadmin/doc/form/formcore.html#APPEND_FOOT"
+                                  class="layui-textarea form-item" value="" item_name="append_foot" name="append_foot"
+                                  item_desc="" group_data="自定义"></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">自定义样式</label>
+                    <div class="layui-input-block form-group">
+                        <textarea row="5" placeholder="" class="layui-textarea form-item"
+                                  help="/webjars/ezadmin/doc/form/formcore.html#APPEND_HEAD" value=""
+                                  item_name="append_head" name="append_head" item_desc=""
+                                  group_data="自定义"></textarea>
+                    </div>
+                </div>
+                <div class=" layui-form-item">
+                    <label class="layui-form-label">自定义成功URL</label>
+                    <div class="layui-input-block form-group">
+                        <input type="text" placeholder="" class="layui-input form-item"
+                               help="/webjars/ezadmin/doc/form/formcore.html#success_url" value=""
+                               item_name="success_url" name="success_url" group_data="自定义" item_name="SUCCESS_URL"
+                               style="" alias="" jdbctype="" data="" datatype="" item_desc="" lay_verify=""
+                               valid_rule="" valid_msg="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <form id="configForm" class="layui-form">
+        <div class="layui-card" group_name="表单数据配置">
+            <div class="layui-card-header">
+                表单数据配置
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">初始表达式</label>
+                    <div class="layui-input-block form-group">
+        <pre class="form-item layui-code" name="init_express" item_name="init_express"
+             help="/webjars/ezadmin/doc/form/formcore.html#INIT_EXPRESS" type="">import com.ezadmin.common.utils.JsoupConfigHolder;
+
+                             name=$("ID");
+       if(!isNotBlank("ID")){
+           name=$("ENCODE_FORM_ID");
+       }
+                           data=  JsoupConfigHolder.selectFormById(name);</pre>
+                    </div>
+                </div>
+                <div class="layui-form-item "><label class="layui-form-label">删除表达式</label>
+                    <div class="layui-input-block form-group">
+                        <pre class="form-item layui-code" id="delete" name="delete_express" item_name="delete_express"
+                             help="/webjars/ezadmin/doc/form/formcore.html#DELETE_EXPRESS" type=""> </pre>
+                    </div>
+                </div>
+                <div class="layui-form-item "><label class="layui-form-label">提交表达式</label>
+                    <div class="layui-input-block form-group">
+        <pre class="form-item layui-code" name="submit_express" item_name="submit_express"
+             help="/webjars/ezadmin/doc/form/formcore.html#SUBMIT_EXPRESS" type="">import com.ezadmin.common.utils.JsoupConfigHolder;
+
+                          name=$("ID");
+           if(!isNotBlank("ID")){
+               name=$("ENCODE_FORM_ID");
+           }
+                          JsoupConfigHolder.updateFormCoreByFormId(name,$("request"));</pre>
+                    </div>
+                </div>
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">分组表达式</label>
+                    <div class="layui-input-block form-group">
+                        <pre class="form-item layui-code" name="group_data" item_name="group_data" type="">[ {"V":"基础数据","K":"基础数据","type":"inline"}, {"V":"初始数据","K":"初始数据","type":"block"} , {"V":"自定义","K":"自定义","type":"block"} ]</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(function () {
+
+    })
+</script><!--<div id="append_foot">--><!--    这是一段放在后面的自定义的html代码片段--><!--</div>-->
+<div id="append_foot">
+    <script>
+        $(function () {
+            if ($("#ID").val() != '') {
+                $("div[item_name='ENCODE_FORM_ID']").find(".layui-input-inline").html(
+                    "<span class='form-block-span'>" + $("#ID").val() + "</span>"
+                )
+            }
+            if ($("#ITEM_ID_item_name").val() != '') {
+                $("#ITEM_ID_item_name").attr("readonly", "readonly");
+                $("#ITEM_ID_item_name").css("border", "0");
+            }
+        })
+    </script>
+</div>
+</body>
+</html>

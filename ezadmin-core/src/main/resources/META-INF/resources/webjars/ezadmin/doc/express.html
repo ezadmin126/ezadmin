@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>内置表达式函数</title>
+    <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+    <link href="global.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid  layui-bg-gray">
+  <div class="layui-row layui-col-space5">
+      <blockquote class="layui-elem-quote" style="margin-top:10px">
+           为了便于编写表达式，ezadmin内置了一些函数。主要是通过往ExpressRunner添加自定义function实现。
+      </blockquote>
+
+  </div>
+    <div class="layui-row layui-col-space5 doctext">
+
+        <div class="layui-card" id="id">
+            <div class="layui-ez-color layui-card-header">函数列表</div>
+            <div class="layui-card-body ">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>函数名</th>
+                        <th>入参</th>
+                        <th>出参</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>select</td>
+                        <td>Object[] objects</td>
+                        <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                        <td>
+<pre>
+使用objects[0]作为SQL, 执行jdbc的select操作。
+支持两种方式从request中获取参数
+* 1.${p}
+* 2.
+最早的版本，如果入参包含 sql注释代码：select user_id /*^ ,user_name=${userName} $*/ from T_USER;
+则只有在userName参数不为空的时候，才会拼接注释中的SQL片段。
+主要是懒得写表达式。
+
+    如果使用表达式,则建议使用isNotBlank函数。
+    如：
+    StringBuilder sql=new StringBuilder();
+    sql.append("select user_id");
+    if(isNotBlank("userName")){
+        sql.append(",username")
+    }
+    sql.append(" from T_USER where 1=1 ");
+    return search(sql);
+
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>search</td>
+                        <td>Object[] objects</td>
+                        <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                        <td>
+<pre>
+使用objects[0]作为SQL, 再通过解析request中的参数自动拼接where语句。
+入参需要至少包含一个where条件。如无，可以使用 where 1=1 。
+其他功能同select函数
+特例：
+某些情况下request传了参数，但是又不希望拼接sql语句，则需要配置<A HREF="list/plugins.html">插件</A>为 hidden-nowhere
+或者 jdbctype 为 BODY.
+1.   return  search("select username from T_USER WHERE 1=1");
+2.  当搜索的用户名不为空时，需要返回性别这个字段，且需要返回所有数据。
+     StringBuilder sql=new StringBuilder();
+    sql.append("select user_id");
+    if(isNotBlank("userName")){
+         sql.append(",user_sex" );
+    }
+    sql.append(" from T_USER where 1=1 ");
+    return search(sql);
+
+    此时jdbctype就设置为BODY.意思是只用于body之中
+
+
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>$</td>
+                        <td>Object[] objects</td>
+                        <td>Object</td>
+                        <td>
+<pre>
+$("request"):获取当前request Map参数。
+$("abc"):获取request里面的abc参数对应的String，并将'替换为''，\替换为\\。
+$("abcd","true"):获取request里面的abcd_ARRAY参数对应的String[]。
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>$$</td>
+                        <td>Object[] objects</td>
+                        <td>Object</td>
+                        <td>
+<pre>
+
+$$("abc"):获取session里面的abc参数对应的String，并将'替换为''，\替换为\\。
+例如数据权限，我们不能使用request里面的参数。
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>isNotBlank</td>
+                        <td>Object[] objects</td>
+                        <td>boolean</td>
+                        <td>
+<pre>
+
+isNotBlank("abc"):判断request里面的abc参数对应的String 是否不为blank
+isNotBlank("abc","session"):判断session里面的abc参数对应的String 是否不为blank
+isNotBlank("abc","string"):判断第一个参数  是否不为blank
+
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>isBlank</td>
+                        <td>Object[] objects</td>
+                        <td>boolean</td>
+                        <td>
+<pre>
+
+isNotBlank("abc"):判断request里面的abc参数对应的String 是否为blank
+isNotBlank("abc","session"):判断session里面的abc参数对应的String 是否为blank
+isNotBlank("abc","string"):判断第一个参数  是否为blank
+
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>unionall(先考虑一下业务是否合理)</td>
+                        <td>Object[] objects</td>
+                        <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                        <td>
+<pre>
+正常的search插件是直接在SQL最后面拼接where语句的。
+但
+当SQL中存在union all时，拼接的where语句就会得不到想要的结果，遇到groupby时更甚。
+unionall插件会给 每个字句加上where 最后汇总成一条sql。
+出现这种情况，得考虑用其他方式实现了。不建议使用。
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>spring</td>
+                        <td>Object[] objects</td>
+                        <td>spring bean</td>
+                        <td>
+<pre>
+通过beanName获取spring的bean. 主要用于一些需要远程获取数据的场景（如果一开始就需要这样做，建议不要使用ez，节省不了时间）。
+
+spring("userService").add($("user_name"),$$("session_user_id"));
+</pre>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<script src="//unpkg.com/layui@2.8.3/dist/layui.js">
+</script>
+    <script>
+        layui.use(['element','code'],function (){
+            layui.code({
+                about: false,
+                title: '模版代码',
+                height: '300px'
+
+            });
+        })
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索-数字范围</title>
+</head>
+<body id="numberrange" type="search">
+<div th:if="${searchFlag}" th:ITEM_NAME="${model.getConfig('item_name')}" th:style="${model.getConfig('style')}"
+     th:ITEM_ID="${model.getConfig('item_name')}">
+    <label class="layui-form-label" th:for="${'itemId-' + model.getConfig('item_name')}"
+           th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">Date range:</label>
+
+    <div class="layui-input-inline ez-range  " style="margin-right: 0">
+        <input autocomplete="off" type="text" class="layui-input  "
+               th:value="${model.getParam(model.getConfig('item_name')+'_START')}"
+               th:name="${model.getConfig('item_name')+'_START'}" th:id="${model.getConfig('item_name')+'_START_ID'}">
+    </div>
+    <div class="layui-form-mid">-</div>
+    <div class="layui-input-inline ez-range " style="margin-right: 0">
+        <input autocomplete="off" type="text" class="layui-input "
+               th:value="${model.getParam(model.getConfig('item_name')+'_END')}"
+               th:name="${model.getConfig('item_name')+'_END'}" th:id="${model.getConfig('item_name')+'_END_ID'}">
+    </div>
+
+</div>
+<div th:if="${tableSearchFlag}" th:style="${model.getConfig('style')}" class="layui-inline list-item">
+    <label class="layui-form-label" th:for="${'search-itemName-' + model.getConfig('item_name')}"
+           th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">Date range:</label>
+
+    <div class="layui-input-inline ez-range  " style=";width:45%;margin-right: 0">
+        <input autocomplete="off" type="text" class="layui-input  "
+               th:value="${model.getParam(model.getConfig('item_name')+'_START')}"
+               th:name="${model.getConfig('item_name')+'_START'}" th:id="${model.getConfig('item_name')+'_START_ID'}">
+    </div>
+    <div class="layui-form-mid" style="    height: 34px;
+    margin-top: -7px;
+    margin-right: 5px;
+    margin-left: 5px;">-
+    </div>
+    <div class="layui-input-inline ez-range " style=";width:45%;margin-right: 0">
+        <input autocomplete="off" type="text" class="layui-input "
+               th:value="${model.getParam(model.getConfig('item_name')+'_END')}"
+               th:name="${model.getConfig('item_name')+'_END'}" th:id="${model.getConfig('item_name')+'_END_ID'}">
+    </div>
+    <div class="layui-form-mid" style="padding:0 !important;line-height: 30px;margin-right:0; ">
+        <i class="tableSearch layui-icon layui-icon-ok-circle"
+           th:tableSearch_item_name="${model.getConfig('item_name')}" style="color:#1E9FFF;cursor: pointer"></i></div>
+</div>
+</body>
+</html>

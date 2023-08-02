@@ -1,0 +1,159 @@
+package com.ezadmin.web.filters.ez;
+
+ import com.ezadmin.common.annotation.EzMapping;
+import com.ezadmin.common.utils.*;
+import com.ezadmin.EzBootstrap;
+import com.ezadmin.web.EzResult;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+ import org.thymeleaf.context.WebContext;
+
+ import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ControllerFilter extends Filter {
+    Logger logger = LoggerFactory.getLogger(ControllerFilter.class);
+    public static String includeShow="/ezadmin/(list|form|anon)/([A-Za-z]+)-(.*)";
+    Map<String, Map<String, Object>> REQUEST_MAPPING = new HashMap<String, Map<String, Object>> ();
+    String pack = "com.ezadmin.biz";
+    public static String vesion=System.currentTimeMillis()+"";
+
+    Pattern pInclude = Pattern.compile(includeShow);
+
+    public ControllerFilter()  {
+        super.initFilterBean();
+        Set<String> controllersNew = ClassUtils.loadAllClassByPackage(pack );
+        for (String item:controllersNew) {
+            try {
+                if (item.endsWith("Controller")) {
+                    Object bean = BeanTools.applicationInstance(item);
+                    processEzMapping(bean);
+                }
+            } catch (Exception e) {
+                Utils.addLog(item, e);
+            }
+        }
+    }
+
+    private void processEzMapping(Object bean) {
+        EzMapping conAnno = bean.getClass().getAnnotation(EzMapping.class);
+        String controllerUrl = "";
+        if (conAnno != null) {
+            controllerUrl = conAnno.value();
+        }
+        Method[] method = bean.getClass().getDeclaredMethods();
+        for (int i1 = 0; i1 < method.length; i1++) {
+            EzMapping mAnno = method[i1].getAnnotation(EzMapping.class);
+            if (mAnno == null) {
+                continue;
+            }
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("controller", bean);
+            map.put("method", method[i1]);
+            REQUEST_MAPPING.put(controllerUrl + mAnno.value(), map);
+        }
+    }
+
+    @Override
+    public void doFilter(HttpServletRequest request, HttpServletResponse response) throws IOException {
+       String originatingUrl = Utils.trimEmptyDefault(request.getAttribute("EZ_REAL_URL"), request.getRequestURI());
+              ;
+        originatingUrl = originatingUrl.replaceAll("\\\\", "\\");
+        int js=originatingUrl.indexOf(";");
+        if(js>=0) {
+            originatingUrl = originatingUrl.substring(0, js);
+        }
+        String contextName = request.getServletContext().getContextPath();
+        request.setAttribute("contextName", contextName);
+        request.setAttribute("holiday", EzBootstrap.instance().getHoliday());
+        request.setAttribute("vi", vesion);
+        Matcher m=pInclude.matcher(originatingUrl);
+        if(m.find()&&m.groupCount()==3){
+             String contro=m.group(1);
+             String method=m.group(2);
+             String id=m.group(3);
+             if(id.endsWith("\\")){
+                id=id.substring(0,id.length()-2);
+             }
+             try {
+                 originatingUrl = "/ezadmin/" + contro + "/" + method+".html";
+                 switch (contro) {
+                     case "authc":
+                     case "anon":
+                     case "list":
+                         request.setAttribute("ENCRYPT_LIST_ID", id);
+                         break;
+                     case "form":
+                         request.setAttribute("ENCRYPT_FORM_ID", id);
+                         break;
+                 }
+             }catch (IllegalArgumentException  ee){
+                 //ignor
+                 logger.warn("",ee);
+             }
+             catch (Exception e){
+                 logger.error("URL 错误：{}",originatingUrl,e);
+             }
+        }
+        if (REQUEST_MAPPING.containsKey(originatingUrl)) {
+
+
+            request.setAttribute("contextName", contextName);
+            request.setAttribute("uploadUrl",  request.getContextPath()+EzBootstrap.instance().getUploadUrl());
+            if(StringUtils.startsWith(EzBootstrap.instance().getDownloadUrl(),"http")){
+                request.setAttribute("downloadUrl", EzBootstrap.instance().getDownloadUrl());
+            }else{
+                request.setAttribute("downloadUrl",request.getContextPath()+ EzBootstrap.instance().getDownloadUrl());
+            }
+
+            request.setAttribute("adminStyle", EzBootstrap.instance().getAdminStyle());
+
+            Map<String, Object> map = REQUEST_MAPPING.get(originatingUrl);
+            Object controller =  map.get("controller");
+            Method method = (Method) map.get("method");
+            try {
+
+                if (method.getReturnType().equals(Void.TYPE)) {
+                    method.invoke(controller, request, response);
+                } else if (method.getReturnType().equals(String.class)) {
+                    String view = method.invoke(controller, request, response) + "";
+                    if(StringUtils.startsWith(view,"redirect:")){
+                        view=StringUtils.replace(view,"redirect:","");
+                        response.sendRedirect(view);
+                    }else {
+                        view(view, request, response);
+                    }
+                } else if (method.getReturnType().equals(EzResult.class)) {
+                    EzResult result = (EzResult) method.invoke(controller, request, response);
+                    result.printJSONUtils(response);
+                } else {
+                    method.invoke(controller, request, response);
+                }
+            } catch (Exception e) {
+                logger.error("找不到指定的方法",e);
+                EzResult.instance().msg("500", ExceptionUtils.getFullStackTrace(e)).printJSONUtils(response);
+            }
+            return;
+        }
+        getNext().doFilter(request, response);
+
+    }
+
+    protected void view(String view, HttpServletRequest request, HttpServletResponse response) {
+        WebContext context = new WebContext(request, response, request.getServletContext());
+        try {
+            ThymeleafUtils.process(view, context, response.getWriter());
+        } catch (IOException e) {
+            Utils.addLog("渲染页面失败"+view+ request.getRequestURI(),e);
+        }
+    }
+}

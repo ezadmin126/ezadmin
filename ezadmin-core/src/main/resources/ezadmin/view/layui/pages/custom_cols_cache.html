@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义</title>
+    <link th:href="${contextName+'/webjars/layui/2.8.10/dist/css/layui.css?v2='+vi}" rel="stylesheet">
+    <link th:href="${contextName+'/webjars/ezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
+
+    <style>
+        .layui-btn:not(.layui-btn-lg ):not(.layui-btn-sm):not(.layui-btn-xs) {
+            height: 34px;
+            line-height: 34px;
+            padding: 0 8px;
+        }
+
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"] {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: 30px !important;
+        }
+
+        .gu-mirror .layui-input-inline {
+            display: none;
+        }
+
+        .move {
+            cursor: move
+        }
+
+        .layui-form-label {
+            width: 110px
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <blockquote class="layui-elem-quote">EZ</blockquote>
+    <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
+    <input type="hidden" name="IS_DEBUG" id="IS_DEBUG" th:value="${IS_DEBUG}">
+    <form class="layui-form" th:action="${contextName+'/ezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}" method="post"
+          id="form">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <span class="layui-breadcrumb" lay-separator="|">
+                    <a href="#">搜索项设置</a>
+                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
+                   onclick="changeSearchAll(1)"> 全选</a>
+                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
+                   onclick="changeSearchAll(2)"> 全不选</a>
+                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
+                   onclick="changeSearchAll(3)"> 反选</a>
+                </span>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form-item searchDrage">
+                    <div class="layui-inline" th:each="item:${fromSearchField}"
+                         th:ITEM_NAME="${item.getConfig('item_name')}">
+                        <label class="layui-form-label" th:title="${item.getConfig('label')}">[[${item.getConfig('label')}]] </label>
+                        <div class="layui-input-inline">
+
+                            <input th:if="${not (item.getConfig('plugin_code') eq 'input-hidden' or item.getConfig('plugin_code') eq 'hidden'
+                            or item.getConfig('plugin_code') eq '29' or item.getConfig('plugin_code') eq 'search')  }"
+                                   type="checkbox" name="searchId" th:value="${item.getConfig('item_name')}"
+                                   lay-skin="primary" lay-filter="changeList">
+                        </div>
+                        <div class="layui-input-inline">
+                            <i class='searchItem move  layui-icon-transfer layui-icon   '></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card">
+            <div class="layui-card-header"><span class="layui-breadcrumb" lay-separator="|">
+                <a href="#">列表项设置</a>
+                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
+                   onclick="changeListAll(1)"> 全选</a>
+                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
+                   onclick="changeListAll(2)"> 全不选</a>
+                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
+                   onclick="changeListAll(3)"> 反选</a></span>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form-item columnDrage">
+                    <div class="layui-inline" th:each="item:${fromColField}" th:ITEM_NAME="${item.item_name}">
+                        <label class="layui-form-label" th:title="${item.label}">[[${item.label}]] </label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="columnId" lay-filter="changeList" th:value="${item.item_name}"
+                                   lay-skin="primary">
+
+                        </div>
+                        <div class="layui-input-inline">
+                            <i class='columnItem move  layui-icon-transfer layui-icon   '></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card">
+            <div class="layui-card-header"><span class="layui-breadcrumb" lay-separator="|">
+                <a href="#">其他配置</a></span>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-form-item  ">
+                    <div class="layui-inline">
+                        <label class="layui-form-label"> 冻结列数(左)</label>
+                        <div class="layui-input-inline">
+                            <input style="width:50px !important;" class="layui-input" type="number" id="fixedNumber"
+                            >
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label"> 冻结列数(右)</label>
+                        <div class="layui-input-inline">
+                            <input style="width:50px !important;" class="layui-input" type="number" id="fixNumberRight"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" th:style="${IS_DEBUG==1?'':'display: none'}">
+            <label class="layui-form-label"> </label>
+            <div class="layui-input-block">
+                <button id="save" class="layui-btn">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+ <script th:src="${contextName+'/webjars/jquery/dist/jquery.min.js'}"></script>
+
+<script th:src="${contextName+'/webjars/layui/2.8.10/dist/layui.js?v=202301'}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/ezadmin/plugins/jquery/jquery.form.js?'}"></script>
+<script type='text/javascript' th:src="${contextName+'/webjars/ezadmin/plugins/dragula/dragula.min.js'}"></script>
+
+<script>
+
+    var drake = dragula({
+        isContainer: function (el) {
+            return el.classList.contains('searchDrage');
+        },
+        revertOnSpill: true,
+        moves: function (el, container, handle) {
+            // debugger
+            return handle.classList.contains('searchItem');
+        }, accepts: function (el, target) {
+
+            return target.classList.contains('searchDrage');
+        }
+    })
+    var drake2 = dragula({
+        isContainer: function (el) {
+            return el.classList.contains('columnDrage');
+        },
+        revertOnSpill: true,
+        moves: function (el, container, handle) {
+            return handle.classList.contains('columnItem');
+        }, accepts: function (el, target) {
+            return target.classList.contains('columnDrage');
+        }
+    })
+    var count = 0;
+    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+    layui.use(["form", 'element'], function () {
+        var form = layui.form;
+
+        var jsonconfig = localStorage.getItem(key);
+        if (jsonconfig != null) {
+            var json = JSON.parse(jsonconfig);
+            var search = json.search;
+            var column = json.column;
+            var fixNumber = json.fixNumber
+            var fixNumberRight = json.fixNumberRight
+
+            for (var i = 0; i < search.length; i++) {
+                $(".searchDrage").find('[item_name="' + search[i] + '"]').detach().appendTo(".searchDrage");
+            }
+            for (var i = 0; i < column.length; i++) {
+                $(".columnDrage").find('[item_name="' + column[i] + '"]').detach().appendTo(".columnDrage");
+            }
+
+            $("input[name=searchId]").each(function () {
+                if (search.includes($(this).val())) {
+                    $(this).prop("checked", true)
+                }
+            })
+
+
+            $("input[name=columnId]").each(function () {
+
+                if (column.includes($(this).val())) {
+                    $(this).prop("checked", true)
+                }
+            })
+
+            $("#fixedNumber").val(fixNumber);
+            $("#fixNumberRight").val(fixNumberRight);
+        } else {
+            //默认全部选中
+            $("input[name=searchId]").each(function () {
+                $(this).prop("checked", true)
+            })
+            //默认全部选中
+            $("input[name=columnId]").each(function () {
+                $(this).prop("checked", true)
+            })
+        }
+
+        form.render();
+
+        form.on('checkbox(changeList)', function (data) {
+            if (!checkless(data)) {
+                return false;
+            }
+            $("#save").click();
+        });
+
+
+    })
+
+    function changeListAll(type) {
+        debugger;
+        $("input[name=columnId]").each(function () {
+            if (type == 1) {
+                $(this).prop("checked", true)
+            }
+            if (type == 2) {
+                $(this).prop("checked", false)
+            }
+            if (type == 3) {
+                $(this).prop("checked", !$(this).prop("checked"))
+            }
+
+        })
+        layui.use("form", function () {
+            var form = layui.form;
+            form.render();
+        })
+
+    }
+
+    function changeSearchAll(type) {
+        debugger;
+        $("input[name=searchId]").each(function () {
+            if (type == 1) {
+                $(this).prop("checked", true)
+            }
+            if (type == 2) {
+                $(this).prop("checked", false)
+            }
+            if (type == 3) {
+                $(this).prop("checked", !$(this).prop("checked"))
+            }
+
+        })
+        layui.use("form", function () {
+            var form = layui.form;
+            form.render();
+        })
+
+    }
+
+    function checkless(data) {
+        if ($("input[name=searchId]:checked").length == 0) {
+            data.elem.checked = true;
+            form.render();
+            layer.alert("搜索项 还是留个火种吧~");
+            return false;
+        }
+        if ($("input[name=columnId]:checked").length == 0) {
+            data.elem.checked = true;
+            form.render();
+            layer.alert("列表项 还是留个火种吧~");
+            return false;
+        }
+        return true;
+    }
+
+    $("#save").click(function () {
+        debugger;
+        count++;
+        var json = {};
+        var search = [];
+        var column = [];
+        $("input[name=searchId]:checked").each(function () {
+            search.push($(this).val());
+        })
+        $("input[name=columnId]:checked").each(function () {
+            column.push($(this).val());
+        })
+
+
+        json['search'] = search;
+        json['column'] = column;
+        json['fixNumber'] = $("#fixedNumber").val();
+        json['fixNumberRight'] = $("#fixNumberRight").val();
+        if($("#IS_DEBUG").val()==1){
+            var url=$(".layui-form").attr("action");
+            json.search = JSON.stringify(search) ;
+            json.column  = JSON.stringify(column) ;
+            json.fixNumber  = $("#fixedNumber").val();
+            json.fixNumberRight  = $("#fixNumberRight").val();
+            $.post(url,  json , function(data) {
+                console.log(data)
+            }, 'json').fail(function() {
+                console.log('请求失败');
+            });
+        }else{
+            localStorage.setItem(key, JSON.stringify(json));
+        }
+        return false;
+    })
+
+
+</script>
+
+</body>
+</html>

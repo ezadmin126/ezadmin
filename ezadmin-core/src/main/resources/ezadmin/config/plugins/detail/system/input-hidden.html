@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>隐藏域</title>
+</head>
+<body id="input-hidden" alias="28">
+<input type="hidden" th:value="${value}" th:name="${item_name}" th:id="${'ITEM_ID_' + item_name}"
+       th:aria-describedby="${'DESC_'+item_name}">
+</body>
+</html>
