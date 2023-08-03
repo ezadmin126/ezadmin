@@ -37,7 +37,6 @@ public class Utils {
 
     /**
      * 外部系统初始化
-     * @param url
      */
     public static void initRequestUrl(String url){
         REQUEST_URL.set(url);
@@ -59,7 +58,6 @@ public class Utils {
     }
     /**
      * 把当前日志放到 尾部
-     * @param s
      */
     public static void addLog(String s,Object obj) {
         add(s+"\t"+JSONUtils.toJSONString(obj));

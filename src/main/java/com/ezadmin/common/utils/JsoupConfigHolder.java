@@ -89,8 +89,7 @@ public class JsoupConfigHolder extends  JsoupUtil{
     /**
      * 根据名称获取 search
      *
-     * @param encodeListId
-     * @param name
+
      * @return
      */
     public static Map<String, String> selectSearchByListId(String encodeListId, String name) {
@@ -136,8 +135,7 @@ public class JsoupConfigHolder extends  JsoupUtil{
     }
 
     /**
-     * @param encodeListId
-     * @param addSearch
+
      */
     public static void updateListColumnSort(String encodeListId, String addSearch) {
          ListDao.getInstance().updateListColumnSort(encodeListId,addSearch);

@@ -41,9 +41,7 @@ public class Dao {
     /**
      * 兼容blob
      *
-     * @param dataSource
-     * @param sql
-     * @param bindArgs
+
      * @return
      * @throws Exception
      */

@@ -107,9 +107,7 @@ public class DefaultEzList extends AbstractEzList {
 
     /**
      * 初始化验证规则
-     * @param item
-     * @param validRuleMap
-     * @param validMsgMap
+
      */
     private void updateValidate(EzSearchModel item, Map<String,Map<String,Object>> validRuleMap,
                                 Map<String,Map<String,Object>> validMsgMap) {
@@ -717,9 +715,7 @@ public class DefaultEzList extends AbstractEzList {
 
     /**
      * 默认值
-     * @param dataInDb
-     * @param globalEmptyShow
-     * @param columnEmptyShow
+
      * @return
      */
 

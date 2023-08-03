@@ -143,8 +143,7 @@ public class ExportController extends BaseController {
 
     /**
      * @param request  request.getParameter("LOG_ID")
-     * @param response
-     * @throws Exception
+      * @throws Exception
      */
     @EzMapping("/list/downloadExport.html")
     public void downloadExport(HttpServletRequest request, HttpServletResponse response) throws Exception {

@@ -18,13 +18,7 @@ public class SqlUtils {
 
     /**
      *
-     * @param itemOper
-     * @param itemName
-     * @param itemAliasName
-     * @param itemJdbcType
-     * @param itemValue
-     * @param itemValueStart
-     * @param itemValueEnd
+
      * @return
      */
     public static String transToWhere(String itemOper,String itemName, String itemAliasName

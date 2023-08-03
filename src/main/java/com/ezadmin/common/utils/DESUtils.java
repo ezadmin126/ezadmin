@@ -35,7 +35,7 @@ public class DESUtils {
     /**
      * DES加密
      *
-     * @param  :需要加密的数据
+
      * @return
      */
     public static String encryptDES(Object object) throws Exception {
@@ -67,7 +67,7 @@ public class DESUtils {
     /**
      * DES解密
      *
-     * @param data:需要解密的数据
+
      * @return
      * @throws Exception
      */

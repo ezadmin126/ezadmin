@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ListItemDTO {
     private ListItemDTO(){}
-    //button,button_row,daterange,head,input,pagination,select
+
     public static ListItemDTO  createSearch() {
         ListItemDTO item= new  ListItemDTO();
         item.itemType(ItemTypeEnum.SEARCH).itemCellCode("input");
@@ -86,8 +86,7 @@ public class ListItemDTO {
 
     /**
      * 名称 表头或者搜索的标签名称
-     * @param itemLabel
-     * @return
+      * @return
      */
     public ListItemDTO itemLabel(String itemLabel) {
         this.itemLabel = itemLabel;
@@ -113,8 +112,7 @@ public class ListItemDTO {
     }
     /**
      *
-     * @param itemPlaceHolder
-     * @return
+      * @return
      */
     public ListItemDTO itemPlaceHolder(String itemPlaceHolder) {
         this.itemPlaceHolder = itemPlaceHolder;
@@ -124,8 +122,7 @@ public class ListItemDTO {
     /**
      * 位于 template/${style}/list  下的文件的名称，内置：
      * button,button_row,daterange,head,input,pagination,select等
-     * @param itemCellCode
-     * @return
+      * @return
      */
     public ListItemDTO itemCellCode(String itemCellCode) {
         this.itemCellCode = itemCellCode;
@@ -200,8 +197,7 @@ public class ListItemDTO {
      *   <OPTION    value="3"   >当前窗口</OPTION>
      *   <OPTION    value="4"   >父窗口</OPTION>
      *   <OPTION    value="5"   >携带当前搜索参数窗口打开</OPTION>
-     * @param itemOpenType
-     */
+      */
     public ListItemDTO itemOpenType(UrlOpenTypeEnum itemOpenType) {
         this.itemOpenType = itemOpenType.code();
         return this;

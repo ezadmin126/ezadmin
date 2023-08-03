@@ -21,7 +21,7 @@ public class EzDateUtils{
 
     /**
      * 第i天前的日期  00:00:00
-     * @param i
+
      * @return
      */
     public static String preDay(int i){
@@ -35,7 +35,7 @@ public class EzDateUtils{
     }
     /**
      * 第i天后的日期  23:59:59
-     * @param i
+
      * @return
      */
     public static String afterDay(int i){
