@@ -103,7 +103,22 @@ public class ListDao extends  JsoupUtil{
                 listData.put(c.attr(JsoupUtil.ITEM_NAME), c.text());
             }
         }
-
+        //计算是否包含图片
+        Element column = doc.getElementById("column");
+        boolean haspic=false;
+        if (column != null) {
+            Elements thList=column.getElementsByTag("th");
+            for (int x = 0; x < thList.size(); x++) {
+                Element th=thList.get(x);
+                if (th.id().equalsIgnoreCase("rowbutton")) {
+                    continue;
+                }
+                Map<String, String> thMap = JsoupUtil.loadplugin(th );
+                if(isImageTd(th)){
+                    haspic=true;break;
+                }
+            }
+        }
 
 
 
@@ -117,10 +132,15 @@ public class ListDao extends  JsoupUtil{
             try {
                 String userStyle= rowbutton.attr("style");
                 Map<String, String> json = JSONUtils.parseMap(Json);
-                if(StringUtils.isBlank(userStyle) ){
-                    userStyle="min-height: 110px;white-space: normal";
+                if(haspic){
+                    if(StringUtils.isBlank(userStyle) ){
+                        userStyle="height: 110px;white-space: normal";
+                    }else{
+                        userStyle+=";height: 110px;white-space: normal";
+                    }
                 }else{
-                    userStyle+=";min-height: 110px;white-space: normal";
+
+                    userStyle+=";white-space: normal";
                 }
                 json.put("style",userStyle);
                 listData.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json));

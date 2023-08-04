@@ -1,117 +1,65 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html>
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>demo</title>
-    <link th:href="${contextName+'/webjars/ezadmin/plugins/font-awesome/css/all.min.css'}" rel="stylesheet">
-    <link rel="stylesheet" th:href="${contextName+'/webjars/ezadmin/plugins/bootstrap/css/bootstrap.min.css'}"/>
-    <link th:href="${contextName+'/webjars/ezadmin/plugins/viewer/viewer.min.css'}" rel="stylesheet">
-    <link th:href="${contextName+'/webjars/ezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
-    <link th:href="${contextName+'/webjars/layui/2.8.10/dist/css/layui.css?v='+vi}" rel="stylesheet">
-    <link th:href="${contextName+'/webjars/ezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
-    <link th:href="${contextName+'/webjars/ezadmin/plugins/datatable/datatables.min.css'}" rel="stylesheet"
-          type="text/css"/>
-    <link th:href="${contextName+'/webjars/ezadmin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css'}"
-          rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" type="text/css" href="/webjars/ezadmin/plugins/tooltips/css/tooltipster.bundle.min.css"/>
-    <link rel="stylesheet" type="text/css"
-          href="/webjars/ezadmin/plugins/tooltips/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css"/>
-     <script th:src="${contextName+'/webjars/jquery/dist/jquery.min.js'}"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css"/>
-
-
-    <script th:src="${contextName+'/webjars/layui/2.8.10/dist/layui.js?1'}" type="text/javascript"></script>
-    <script th:src="${contextName+'/webjars/ezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
-    <script th:src="${contextName+'/webjars/ezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
-    <script th:src="${contextName+'/webjars/ezadmin/plugins/datatable/datatables.min.js'}"
-            type="text/javascript"></script>
-    <script th:src="${contextName+'/webjars/ezadmin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js'}"
-            type="text/javascript"></script>
-    <script th:src="${contextName+'/webjars/ezadmin/plugins/viewer/viewer.min.js'}" type="text/javascript"></script>
-
-    <script type="text/javascript"
-            th:src="${contextName+'/webjars/ezadmin/plugins/tooltips/js/tooltipster.bundle.min.js'}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link href="//unpkg.com/layui@2.8.12/dist/css/layui.css" rel="stylesheet">
 </head>
 <body>
-
-<div class="layui-fluid">
-    <div class="layui-card">
-        <div class="layui-card-header">弹框选择</div>
-        <div class="layui-card-body">
-            <button class='layui-btn layui-btn-normal layui-btn-sm ez-select'
-                    ez-url="/ezadmin/list/list-demoList">请选择
-            </button>
-
-            <SCRIPT>
-                function ez_callback(ids, lines) {
-                    debugger
-                    //ids字符串格式：  ["1","2"]
-                    layer.alert("选中的ID" + ids + "选种的行" + lines)
-                    //lines字符串格式：  [{"id":"1","name":"name1"},{"id":"1","name":"name2"}]
-                    //  layer.alert()
-                    //关闭选择框
-                    // layer.closeAll();
-                }
-            </SCRIPT>
-
-        </div>
-    </div>
-    <div class="layui-card">
-        <div class="layui-card-header">拼音下拉</div>
-        <div class="layui-card-body">
-            <form class="layui-form">
-                <select name="modules" lay-verify="required" lay-search="">
-                    <option value="">直接选择或搜索选择</option>
-                    <option value="13">好样的</option>
-                    <option value="14">中国的孩子</option>
-                    <option value="16">3m</option>
-                    <option value="17">3M</option>
-                </select>
-            </form>
-        </div>
-    </div>
-    <div class="layui-card">
-        <div class="layui-card-header">树形控件</div>
-        <div class="layui-card-body">
-            <div id="jstree_demo_div">
-
-            </div>
-            <script>
-                $(function () {
-                    $('#jstree_demo_div').jstree({
-                        'core': {
-                            'data': {
-                                'url': function (node) {
-
-                                    console.log(node)
-                                    return node.id === '#' ?
-                                        '/ezadmin/api/parent.html' :
-                                        '/ezadmin/api/child.html?parentId=' + node.id;
-                                },
-                                'data': function (node) {
-
-                                    console.log(node)
-                                    return {'id': node.id};
-                                }
-                            }
-                        }
-                    });
-                });
-
-            </script>
-        </div>
-    </div>
-
+<div class="layui-btn-container">
+    <button class="layui-btn" lay-on="parseTable">转换为数据表格</button>
 </div>
+<table lay-filter="parse-table-demo">
+    <thead>
+    <tr>
+        <th lay-data="{field:'name', width:150}">人物</th>
+        <th lay-data="{field:'nation', width:150}">民族</th>
+        <th lay-data="{field:'maxim', minWidth: 180}">格言</th>
+        <th lay-data="{field:'a', minWidth: 180}">格言</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>孔子</td>
+        <td>华夏</td>
+        <td>有朋至远方来，不亦乐乎</td>
+        <td><button>a</button></td>
+    </tr>
+    <tr>
+        <td>孟子</td>
+        <td>华夏</td>
+        <td>穷则独善其身，达则兼济天下</td>
+        <td><button>a</button></td>
 
-</div><!--container-->
+    </tr>
+    <tr>
+        <td>庄子</td>
+        <td>华夏</td>
+        <td>朴素而天下莫能与之争美</td>
+        <td><button>a</button></td>
 
+    </tr>
+    </tbody>
+</table>
+
+<!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+<script src="//unpkg.com/layui@2.8.12/dist/layui.js"></script>
+<script>
+    layui.use(function(){
+        var table = layui.table;
+        var util = layui.util;
+        // 事件
+        util.on('lay-on', {
+            parseTable: function(){
+                // 转化静态表格
+                table.init('parse-table-demo', {
+                      escape: false
+                });
+            }
+        });
+    });
+</script>
 </body>
-
-<script th:src="${contextName+'/webjars/ezadmin/layui/js/core.js?v='+vi}" type="text/javascript"></script>
-<script th:src="${contextName+'/webjars/ezadmin/layui/js/ezlist.js?v='+vi}" type="text/javascript"></script>
-
 </html>
