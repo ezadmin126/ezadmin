@@ -574,7 +574,7 @@ function selfConfig() {
         //$("#mytable tfoot").remove();
     }
 
-    $('.table-treegrid').treegrid();
+   // $('.table-treegrid').treegrid();
 
 }
 
@@ -600,8 +600,9 @@ function renderTable() {
         console.log('userConfig error', e)
     }
 
-    layui.use("table", function () {
+    layui.use(function () {
         var table2 = layui.table;
+        var treeTable = layui.treeTable;
 
         //转换静态表格
         laytable = table2.init('mytable', {
@@ -644,6 +645,18 @@ function renderTable() {
 
             }
         });
+        var json=JSON.parse($("#coldata").val());
+        var col=[];
+        col.push(json);
+
+        var inst = treeTable.render({
+            elem: '#treetable',
+            url: '/ezadmin/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
+            //maxHeight: '501px',
+            cols: col,
+            defaultToolbar:''
+        });
+
     });
 
     //watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});

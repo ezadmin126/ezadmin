@@ -127,41 +127,10 @@
         <div class="layui-card-body" style=" border: 1px solid #eee; margin-top: 5px;
 ">
             <div id="table-wrap">
-                <table border-spacing="0" th:lay-filter="${not #strings.equals('pure',data.tableStyle)?'mytable':''}"
-                       id="mytable" th:classappend="${ #strings.equals(data.treegrid,'1') ?'table-treegrid':''}"
-                       class="  layui-table ez-table " style=" width:100%">
-                    <thead style="text-align: center">
-                    <tr th:f="${data.firstCol}">
-                        <th style="min-width:30px;max-width:30px" scope="col" lay-data="{field:'firstcol', width:60}"
-                            th:if="${not #strings.isEmpty(data.firstCol) and not #strings.equals('firstcol-',data.firstCol)}"
-                            class="text-center fixedCol  ">
-                            <input type="checkbox" class="list-head-checkbox" th:if="${#strings.equals(data.firstCol,'checkbox')
-                           || #strings.equals(data.firstCol,'firstcol-checkbox')}">
+                <table
+                       id="treetable"
+                       class="layui-hide" >
 
-                            <span th:if="${#strings.equals(data.firstCol,'radio')
-                            || #strings.equals(data.firstCol,'firstcol-radio')
-                            }">序号</span>
-                            <span th:if="${#strings.equals(data.firstCol,'numbers')
-                            || #strings.equals(data.firstCol,'firstcol-numbers')
-                            }">序号</span>
-                            <span th:if="${#strings.equals(data.firstCol,'tree')
-                            || #strings.equals(data.firstCol,'firstcol-tree')
-                            }">序号</span>
-                        </th>
-                        <th th:remove="tag" th:each="item:${data.columnItemList}" th:utext="${item.html}">
-
-                        </th>
-                        <th th:lay-data="${data.operLaydata}" class="rowButtons fixedCol  "
-                            th:if="${not #lists.isEmpty(data.rowButtonItemList)   }">
-                            操作
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);">
-                    <tr th:each="row,rowStat:${data.dataRow}" th:classappend="${row.treeClass}" th:data-id="${row.id}">
-                        <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
-                    </tr>
-                    </tbody>
                 </table>
             </div>
 
@@ -188,6 +157,7 @@
 <input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
 <input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
 <input type="hidden" id='IS_DEBUG' name='IS_DEBUG' th:value="${IS_DEBUG}">
+<input type="hidden" id='coldata' name='coldata' th:value="${coldata}">
 </body>
 
 <script th:src="${contextName+'/webjars/ezadmin/layui/js/core.js?v='+vi}" type="text/javascript"></script>

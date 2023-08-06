@@ -91,6 +91,7 @@ public   class EzExpressExecutor {
         runner.addFunction("select",new SelectOperator());
         //  runner.addFunction("http",new HttpOperator(operatorParam));
         runner.addFunction("search",new SearchOperator( ));
+        runner.addFunction("treeSearch",new TreeSearchOperator( ));
         runner.addFunction("count",new CountOperator());
         runner.addFunction("join",new JoinOperator( ));
         runner.addFunction("recursive",new RecursiveSelectOperator( ));

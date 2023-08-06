@@ -15,9 +15,6 @@ import java.util.List;
 
 public class SearchOperator extends AbstractOperator {
 
-
-
-
     @Override
     public Object executeInner(Object[] objects) throws Exception {
         String sql=objects[0].toString();

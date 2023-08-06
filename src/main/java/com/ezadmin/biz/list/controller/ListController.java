@@ -209,8 +209,88 @@ public class ListController extends BaseController {
             return  EzResult.instance().code("500").setMessage(ExceptionUtils.getFullStackTrace(e));
         }
     }
+
+
     @EzMapping("tree.html")
-    public String listtree(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String tree(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        try {
+            long start = System.currentTimeMillis();
+
+            logger.info("ezadmin LIST={} START ",ENCRYPT_LIST_ID);
+
+            Map<String, Object> requestParamMap =requestToMap(request);
+            if(NumberUtils.toInt(""+requestParamMap.get("perPageInt"))>5000){
+                requestParamMap.put("perPageInt",5000);
+            }
+            requestParamMap.put("ContextPath", request.getContextPath());
+            requestParamMap.put("perPageInt",100000);
+            Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+
+            EzList list = new TreeEzList( ENCRYPT_LIST_ID, bootstrap.getOriginDataSource(), requestParamMap,sessionParamMap);
+            if (list.getEzListDto() == null) {
+                if(logger.isDebugEnabled()){
+                    logger.debug("EZADMIN LIST={} 没有找到配置文件 ",ENCRYPT_LIST_ID);
+                }
+                EzResult.instance().code("404").setMessage("没有找到配置文件" +ENCRYPT_LIST_ID)
+                        .setSuccess(false)
+                        .printJSONUtils(response);
+                return "404";
+            } else {
+                if(logger.isDebugEnabled()){
+                    logger.debug("EZADMIN LIST={} 开始渲染HTML ",ENCRYPT_LIST_ID);
+                }
+                list.renderHtml();
+                if(logger.isDebugEnabled()){
+                    logger.debug("EZADMIN LIST={} 结束渲染HTML  ",ENCRYPT_LIST_ID);
+                }
+                //组装col
+                List col=new ArrayList();
+
+                col.add(JSONUtils.parseObjectMap("{\"type\": \"checkbox\", \"fixed\": \"left\"}"));
+
+                for (int i = 0; i < list.getEzListDto().getColumnItemList().size(); i++) {
+                    String laydata=list.getEzListDto().getColumnItemList()
+
+                            .get(i).get(JsoupUtil.LAYDATA);
+                    col.add(JSONUtils.parseObjectMap(laydata));
+                }
+                col.add(JSONUtils.parseObjectMap("{ fixed: \"right\", title: \"操作\", width: 181, align: \"center\", toolbar: \"#TPL-treeTable-demo-tools\"} "));
+
+
+                request.setAttribute("data", list.getEzListDto());
+                request.setAttribute("coldata",JSONUtils.toJSONString(col));
+                request.setAttribute(RequestParamConstants._SEARCH_ITEM_DISPLAY, request.getParameter("_SEARCH_ITEM_DISPLAY"));
+                request.setAttribute("_EZ_MOBILE_FLAG",request.getParameter("_EZ_MOBILE_FLAG"));
+
+                request.setAttribute("_EZ_LIST_EMPTY_NAME",list.getEzListDto().getListEmptyName());
+
+                request.setAttribute("listUrl", request.getContextPath()+"/ezadmin/list/tree-" + ENCRYPT_LIST_ID);
+                request.setAttribute("EZ_NAME",list.getEzListDto().getListName() );
+
+                request.setAttribute("_EZ_SERVER_NAME",  "//"+request.getServerName()+":"+request.getServerPort());
+
+                // ThymeleafUtils.writeHtml(list.getEzListDto().getTemplateBodyList(), request, response);
+//                if (Utils.getLog() != null) {
+//                    Utils.addLog("渲染列表结束" + ENCRYPT_LIST_ID);
+//                }
+
+                if(logger.isDebugEnabled()){
+                    logger.debug("EZADMIN LIST={} 结束执行列表  ,总共耗时：{} ms",ENCRYPT_LIST_ID,(System.currentTimeMillis() - start) );
+                }
+                return "layui/list/treelist";
+            }
+        }catch(Exception e){
+            EzResult.instance().code("500").setMessage("服务器异常" +ExceptionUtils.getFullStackTrace(e))
+                    .setSuccess(false)
+                    .printJSONUtils(response);
+            logger.error("EZADMIN LIST={} 服务器异常 ",ENCRYPT_LIST_ID,e);
+            return "500";
+        }
+    }
+    @EzMapping("treedata.html")
+    public EzResult listtree(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String listId = Utils.trimNull(request.getAttribute("LIST_ID")) ;
         String ENCRYPT_LIST_ID =Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID")) ;
         long start=System.currentTimeMillis();
@@ -234,23 +314,9 @@ public class ListController extends BaseController {
             if (EzBootstrap.instance().getDataSourceByKey(list.getEzListDto().getDataSource()) == null) {
                 throw new IllegalStateException("数据库配置错误" + list.getEzListDto().getDataSource());
             }
-            // list.renderHtml();
-            request.setAttribute("data", list.getEzListDto());
-            request.setAttribute("jsonData", JSONUtils.toJSONString( list.getEzListDto().getDataList()));
-            request.setAttribute("_ID", request.getParameter("_ID"));
-            request.setAttribute("_PARENT_ID", request.getParameter("_PARENT_ID"));
-            request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
-            request.setAttribute("_EZ_MOBILE_FLAG",request.getParameter("_EZ_MOBILE_FLAG"));
-            request.setAttribute("_EZ_LIST_EMPTY_NAME",list.getEzListDto().getListEmptyName());
-            request.setAttribute("listUrl", request.getContextPath()+"/ezadmin/list/list-" + ENCRYPT_LIST_ID);
-            if (Utils.getLog() != null) {
-                Utils.addLog("结束执行列表 list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
-            }
-            request.setAttribute("_EZ_SERVER_NAME",  "//"+request.getServerName()+":"+request.getServerPort());
-            //   ThymeleafUtils.writeHtml(list.getEzListDto().getTemplateBodyList(), request, response);
-            return "layui/list/tree";
+
         }
-        return "404";
+        return EzResult.instance().data(  list.getEzListDto().getDataList());
     }
 
     @EzMapping("trace.html")

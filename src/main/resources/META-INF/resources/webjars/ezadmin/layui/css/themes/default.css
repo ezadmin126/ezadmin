@@ -75,7 +75,14 @@
 }
 
 /*å·¦ä¾§èœå•é€‰ä¸­èƒŒæ™¯ leftMenuBgThis */
-.layuimini-menu-left .layui-nav-tree .layui-this, .layuimini-menu-left .layui-nav-tree .layui-this > a, .layuimini-menu-left .layui-nav-tree .layui-nav-child dd.layui-this, .layuimini-menu-left .layui-nav-tree .layui-nav-child dd.layui-this a, .layuimini-menu-left-zoom.layui-nav-tree .layui-this, .layuimini-menu-left-zoom.layui-nav-tree .layui-this > a, .layuimini-menu-left-zoom.layui-nav-tree .layui-nav-child dd.layui-this, .layuimini-menu-left-zoom.layui-nav-tree .layui-nav-child dd.layui-this a {
+.layuimini-menu-left .layui-nav-tree .layui-this,
+.layuimini-menu-left .layui-nav-tree .layui-this > a,
+.layuimini-menu-left .layui-nav-tree .layui-nav-child dd.layui-this,
+.layuimini-menu-left .layui-nav-tree .layui-nav-child dd.layui-this a,
+.layuimini-menu-left-zoom.layui-nav-tree .layui-this,
+.layuimini-menu-left-zoom.layui-nav-tree .layui-this > a,
+.layuimini-menu-left-zoom.layui-nav-tree .layui-nav-child dd.layui-this,
+.layuimini-menu-left-zoom.layui-nav-tree .layui-nav-child dd.layui-this a {
     background-color: #e0f3ff !important
 }
 
