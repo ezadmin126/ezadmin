@@ -6,7 +6,7 @@
 
     <groupId>top.ezadmin</groupId>
     <artifactId>ezadmin-core</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ezadmin-core</name>
     <url>https://github.com/ezadmin126/ezadmin</url>

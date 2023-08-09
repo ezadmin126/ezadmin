@@ -463,12 +463,12 @@ function calculateSearchItemDisplay() {
         $(".searchcontent > .list-item").not(".list-item-hidden").each(function () {
             if (search.length > 0) {
                 if (search.includes($(this).attr("ez-name"))) {
-                    $(this).show();
+                    $(this).css("display","inline-block");
                 } else {
                     $(this).hide();
                 }
             } else {
-                $(this).show();
+                $(this).css("display","inline-block");
             }
         })
     } else {
@@ -476,14 +476,14 @@ function calculateSearchItemDisplay() {
             if (search.length > 0) {
                 if (count < 8 && search.includes($(this).attr("ez-name"))) {
                     count++;
-                    $(this).show();
+                    $(this).css("display","inline-block");
                 } else {
                     $(this).hide();
                 }
             } else {
                 if (count < 8) {
                     count++;
-                    $(this).show();
+                    $(this).css("display","inline-block");
                 } else {
                     $(this).hide();
                 }
@@ -603,7 +603,6 @@ function renderTable() {
     layui.use(function () {
         var table2 = layui.table;
         var treeTable = layui.treeTable;
-
         //转换静态表格
         laytable = table2.init('mytable', {
             // height: $(document).height()-$(".searchWrap").height()-150 , //设置高度
@@ -645,21 +644,23 @@ function renderTable() {
 
             }
         });
-        var json=JSON.parse($("#coldata").val());
-        var col=[];
-        col.push(json);
+        if($("#coldata").val()!=undefined){
+            var json=JSON.parse($("#coldata").val());
+            var col=[];
+            col.push(json);
 
-        var inst = treeTable.render({
-            elem: '#treetable',
-            url: '/ezadmin/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
-            //maxHeight: '501px',
-            cols: col,
-            defaultToolbar:''
-        });
-
+            var inst = treeTable.render({
+                elem: '#treetable',
+                url: '/ezadmin/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
+                //maxHeight: '501px',
+                cols: col,
+                defaultToolbar:'',
+                done: function (res, curr, count) {
+                    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});
+                }
+            });
+        }
     });
-
-    //watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});
 }
 
 function refreshOrder(item_id) {
