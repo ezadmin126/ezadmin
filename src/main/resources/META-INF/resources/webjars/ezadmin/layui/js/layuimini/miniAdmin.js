@@ -307,6 +307,10 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
 
             $('body').on('click', '[data-note]', function () {
 
+                if($('.notelocal').parent().is(':visible')){
+                    return false;
+                }
+
                 if (localStorage.getItem("noteContent")) {
                     $('.notelocal').text(localStorage.getItem("noteContent"));
                 }
