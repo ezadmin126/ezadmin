@@ -230,9 +230,9 @@ $(document).ready(function () {
 
     $(document).on('click', '.list-head-checkbox', function () {
         if (this.checked) {
-            $("input[name='list-body-checkbox']:not(:disabled)").attr('checked', true);
+            $("input[name='list-body-checkbox']:not(:disabled)").prop('checked', true);
         } else {
-            $("input[name='list-body-checkbox']:not(:disabled)").attr('checked', false);
+            $("input[name='list-body-checkbox']:not(:disabled)").prop('checked', false);
         }
     })
     renderTable();
@@ -603,6 +603,21 @@ function renderTable() {
     layui.use(function () {
         var table2 = layui.table;
         var treeTable = layui.treeTable;
+        var form=layui.form;
+
+        form.on('checkbox(list-head-checkbox)', function(data){
+            var elem = data.elem; // 获得 checkbox 原始 DOM 对象
+            var checked = elem.checked; // 获得 checkbox 选中状态
+            if (checked) {
+                $("input[name='list-body-checkbox']:not(:disabled)").prop('checked', true);
+            } else {
+                $("input[name='list-body-checkbox']:not(:disabled)").prop('checked', false);
+            }
+            form.render();
+        });
+
+
+
         //转换静态表格
         laytable = table2.init('mytable', {
             // height: $(document).height()-$(".searchWrap").height()-150 , //设置高度

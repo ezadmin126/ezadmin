@@ -1,6 +1,7 @@
 package com.ezadmin.biz.dao;
 
 import com.ezadmin.EzBootstrap;
+import com.ezadmin.common.enums.ColTypeEnum;
 import com.ezadmin.common.enums.JdbcTypeEnum;
 import com.ezadmin.common.enums.OperatorEnum;
 import com.ezadmin.common.utils.*;
@@ -13,11 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -113,7 +111,7 @@ public class ListDao extends  JsoupUtil{
                 if (th.id().equalsIgnoreCase("rowbutton")) {
                     continue;
                 }
-                Map<String, String> thMap = JsoupUtil.loadplugin(th );
+               // Map<String, String> thMap = JsoupUtil.loadplugin(th );
                 if(isImageTd(th)){
                     haspic=true;break;
                 }
@@ -126,7 +124,7 @@ public class ListDao extends  JsoupUtil{
 
         Element rowbutton = doc.getElementById("rowbutton");
         if(rowbutton!=null) {
-            String Json = Utils.trimEmptyDefault(rowbutton.attr(JsoupUtil.LAYDATA), "{\"field\":\"oper\",\"minWidth\":\"230\",\"fixed\":\"right\"}");
+            String Json = Utils.trimEmptyDefault(rowbutton.attr(JsoupUtil.LAYDATA), "{\"field\":\"oper\",\"maxWidth\":\"250\",\"minWidth\":\"230\",\"fixed\":\"right\"}");
             listData.put(JsoupUtil.LAYDATA, Json);
             //由于layui没有提供height操作，需要对height做一层处理
             try {
@@ -148,6 +146,9 @@ public class ListDao extends  JsoupUtil{
                 log.error("", e);
             }
         }
+        //首列宽度
+
+
         return listData;
 
         //外层已经有了缓存，此处可以 强制刷新
@@ -304,6 +305,7 @@ public class ListDao extends  JsoupUtil{
         Element column = doc.getElementById("column");
         List<Map<String, String>> columnList = new ArrayList<>();
         if (column != null) {
+            insertFirstCol(doc,columnList);
             Elements thList=column.getElementsByTag("th");
             for (int x = 0; x < thList.size(); x++) {
                 Element th=thList.get(x);
@@ -333,14 +335,53 @@ public class ListDao extends  JsoupUtil{
                 styleTomap(laydataMap,th);
 
                 defaultMap(laydataMap,th);
-
                 thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
-
                 columnList.add(thMap);
             }
         }
         return columnList;
     }
+
+    private void insertFirstCol(Document doc, List<Map<String, String>> columnList) {
+        Map<String,Object> laydataMap=new HashMap<>();
+        String firstOld=doc.body().attr("firstCol");
+        if(StringUtils.isNotJsBlank(firstOld)){
+            firstOld=firstOld.replace("th-","");
+        }else{
+            return;
+        }
+        Map<String, String> thMap = new HashMap<>();
+        thMap.put(JsoupUtil.ITEM_NAME,"firstCol");
+        if(ColTypeEnum.isCheckbox(firstOld)
+        ){
+            laydataMap.put("title","<input type=\"checkbox\" class=\"list-head-checkbox\" lay-filter=\"list-head-checkbox\" >");
+            laydataMap.put("maxWidth",60);
+            laydataMap.put("field","firstcol");
+            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.checkbox.bodycode());
+            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.checkbox.code());
+        }
+        if(ColTypeEnum.isRadio(firstOld) ){
+            laydataMap.put("title","序号");
+            laydataMap.put("field","firstcol");
+            laydataMap.put("maxWidth",60);
+            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.radio.bodycode());
+            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.radio.code());
+
+        }
+        if(ColTypeEnum.isNumbers(firstOld)){
+            laydataMap.put("title","序号");
+            laydataMap.put("field","firstcol");
+            laydataMap.put("maxWidth",60);
+            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.numbers.bodycode());
+            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.numbers.code());
+        }
+        if(ColTypeEnum.isFirst(firstOld)){
+            thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
+            columnList.add(thMap);
+        }
+
+    }
+
     private boolean isImageTd(Element th){
         String plugin=Utils.trimNull(th.attr(JsoupUtil.BODY_PLUGIN_CODE));
         return  "td-pic".equals(plugin)||

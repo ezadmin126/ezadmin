@@ -2,7 +2,7 @@ package com.ezadmin.common.utils;
 
 
 import com.ezadmin.common.enums.DefaultParamEnum;
-import com.ezadmin.common.enums.FirstColEnum;
+import com.ezadmin.common.enums.ColTypeEnum;
 import com.ezadmin.common.enums.JdbcTypeEnum;
 import com.ezadmin.common.enums.OperatorEnum;
 
@@ -104,8 +104,8 @@ public class Utils {
     public static List<String> firstColList = new ArrayList<>();
 
     static {
-        for (int i = 0; i < FirstColEnum.values().length; i++) {
-            firstColList.add(FirstColEnum.values()[i].name());
+        for (int i = 0; i < ColTypeEnum.values().length; i++) {
+            firstColList.add(ColTypeEnum.values()[i].name());
         }
     }
 

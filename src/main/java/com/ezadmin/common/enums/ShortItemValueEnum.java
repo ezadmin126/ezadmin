@@ -8,4 +8,5 @@ public enum ShortItemValueEnum {
     JdbcTypeEnum,OperatorEnum,ItemDataSourceType,UrlOpenTypeEnum
     ,FirstColEnum,DATABASE,yesno,status,delete;
 
+
 }

@@ -7,6 +7,7 @@ import com.ezadmin.biz.list.service.ListService;
 import com.ezadmin.biz.model.EzSearchModel;
 import com.ezadmin.biz.model.ItemInitData;
 import com.ezadmin.common.EzAdminRuntimeException;
+import com.ezadmin.common.enums.ColTypeEnum;
 import com.ezadmin.common.enums.ItemDataSourceType;
 import com.ezadmin.common.enums.JdbcTypeEnum;
 import com.ezadmin.common.enums.ParamNameEnum;
@@ -266,31 +267,6 @@ public class DefaultEzList extends AbstractEzList {
                     resultRow.setId(NumberUtils.toInt(""+dataRow.get("ID")));
                     resultRow.setPid(NumberUtils.toInt(""+dataRow.get("PARENT_ID")));
                 }
-                //补充首列
-                try {
-                    if(StringUtils.isNotBlank(ezListDTO.getFirstCol())){
-                        if(LOG.isDebugEnabled()){
-                            LOG.debug("EZADMIN LIST={}  渲染行按钮开始 第 {} 行  首列{}",encodeListId ,i ,ezListDTO.getFirstCol());
-                        }
-                        Context context = new Context();
-                        context.setVariable("firstCol", ezListDTO.getFirstCol());
-                        context.setVariable("count", pagination.getStartRecord()+i+1);
-                        context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
-                        context.setVariable("dataRow", dataRow);
-                        String template = Utils.trimNull(listService.getDbTemplateByCode(ezListDTO.getFirstCol(),ezListDTO.getTemplateId(),"list")
-                                .get("PLUGIN_BODY"));
-                        String html = ThymeleafUtils.processString(template, context);
-                        if(StringUtils.isBlank(html)){
-                            resultRow.addTd("");
-                        }else{
-                            resultRow.addTd(html);
-                        }
-                    }
-
-                } catch (Exception e) {
-                    LOG.error("EZADMIN LIST={}  补充首列 第 {} 行 异常 {}",encodeListId ,i ,ezListDTO.getFirstCol());
-                }
-
                 //补充数据列
                 for (int j = 0; j < ezListDTO.getColumnItemList().size(); j++) {
                     Map<String,String> column=ezListDTO.getColumnItemList().get(j);
@@ -306,6 +282,26 @@ public class DefaultEzList extends AbstractEzList {
                             if(Utils.getLog()!=null){
                                 Utils.addLog("获取插件错误"+column.get(JsoupUtil.BODY_PLUGIN_CODE),e);
                             }
+                        }
+                        try {
+                            if(ColTypeEnum.isFirst(column.get(JsoupUtil.HEAD_PLUGIN_CODE))){
+                            Context context = new Context();
+                            context.setVariable("firstCol", ezListDTO.getFirstCol());
+                            context.setVariable("count", pagination.getStartRecord() + i + 1);
+                            context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
+                            context.setVariable("dataRow", dataRow);
+                            String template = Utils.trimNull(listService.getDbTemplateByCode(column.get(JsoupUtil.BODY_PLUGIN_CODE), ezListDTO.getTemplateId(), "list")
+                                    .get("PLUGIN_BODY"));
+                            String html = ThymeleafUtils.processString(template, context);
+                            if (StringUtils.isBlank(html)) {
+                                resultRow.addTd("");
+                            } else {
+                                resultRow.addTd(html);
+                            }
+                            continue;
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
                     }
                     Map<String, String> pluginEdit = new HashMap<>();

@@ -218,10 +218,10 @@ public class ListServiceImpl implements ListService {
         }
         if (ShortItemValueEnum.FirstColEnum.name().equalsIgnoreCase(sql)) {
             List<Map<String, Object>> keyvalues = new ArrayList();
-            for (int i = 0; i < FirstColEnum.values().length; i++) {
+            for (int i = 0; i < ColTypeEnum.values().length; i++) {
                 Map<String, Object> map2 = new HashMap<>();
-                map2.put(SelectKVContants.KEY, FirstColEnum.values()[i].name());
-                map2.put(SelectKVContants.VALUE, FirstColEnum.values()[i].name());
+                map2.put(SelectKVContants.KEY, ColTypeEnum.values()[i].name());
+                map2.put(SelectKVContants.VALUE, ColTypeEnum.values()[i].name());
                 keyvalues.add(map2);
             }
             return data.items(keyvalues);
