@@ -5,9 +5,13 @@
     <title>搜索-合并时间搜索</title>
 </head>
 <body id="uniondate" alias="search-date" type="search">
-<div th:ITEM_NAME="${model.getConfig('item_name')}" th:if="${searchFlag}" th:style="${model.getConfig('style')}"
-     th:ITEM_ID="${model.getConfig('item_name')}" editor="item">
-
+<div class=" layui-col-md3 list-item "
+     th:style="${model.getConfig('style')}"
+     th:ITEM_NAME="${model.getConfig('item_name')}"
+     th:ez-name="${model.getConfig('item_name')}"
+     th:classappend="${(model.getConfig('plugin')=='hidden'||model.getConfig('plugin')=='input-hidden')?'list-item-hidden':''}"
+>
+    <div  class="layui-form-item" >
     <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px"
          th:for="${'ITEM_ID_' + model.getConfig('item_name')}">
         <select th:id="${'ITEM_ID_' + model.getConfig('item_name')}" style="width: 100%;" name="itemSearchDateKey">
@@ -18,7 +22,7 @@
         </select>
     </div>
 
-    <div class="ez-daterange-parent layui-inline" TH:ID="${'ITEM_ID_' + model.getConfig('item_name')}">
+    <div class="ez-daterange-parent  " TH:ID="${'ITEM_ID_' + model.getConfig('item_name')}">
         <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0">
             <input autocomplete="off" type="text" class="layui-input layui-date"
                    th:value="${model.getConfig('itemSearchDateValueStart')}" name="itemSearchDateValueStart"
@@ -34,6 +38,7 @@
         </div>
     </div>
 
+    </div>
 
 </div>
 <div th:if="${tableSearchFlag}" th:style="${model.getConfig('style')}" editor="item" class="layui-inline list-item">

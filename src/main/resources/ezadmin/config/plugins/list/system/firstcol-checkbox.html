@@ -9,6 +9,7 @@
     <tr id="content">
         <td style="max-width:30px" th:if="${not #strings.isEmpty(firstCol)}" class="text-center fixedCol ">
             <input th:_CHECK_ID_VALUE="${_CHECK_ID_VALUE}" type="checkbox" name="list-body-checkbox"
+                   lay-filter="list-body-checkbox"
                    class="list-body-checkbox"
             >
             <input type="hidden" th:value="${_CHECK_ID_VALUE}" name="row_data_id"

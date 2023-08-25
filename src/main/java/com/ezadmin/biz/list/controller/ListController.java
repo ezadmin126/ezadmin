@@ -489,6 +489,7 @@ public class ListController extends BaseController {
         requestParamMap.put("default_empty","1");
         EzList list = new EmptyEzList( ENCRYPT_LIST_ID, bootstrap.getOriginDataSource(), requestParamMap,sessionParamMap);
         request.setAttribute("fromSearchField",list.getEzListDto().getSearchItemList());
+
         request.setAttribute("fromColField",list.getEzListDto().getColumnItemList());
         request.setAttribute("IS_DEBUG",request.getParameter("IS_DEBUG"));
         request.setAttribute("_EZ_SERVER_NAME",  "//"+request.getServerName()+":"+request.getServerPort());

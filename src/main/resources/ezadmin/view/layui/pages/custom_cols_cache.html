@@ -48,21 +48,18 @@
                     <a href="#">搜索项设置</a>
                 <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
                    onclick="changeSearchAll(1)"> 全选</a>
-                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
-                   onclick="changeSearchAll(2)"> 全不选</a>
-                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
-                   onclick="changeSearchAll(3)"> 反选</a>
                 </span>
             </div>
             <div class="layui-card-body">
                 <div class="layui-form-item searchDrage">
                     <div class="layui-inline" th:each="item:${fromSearchField}"
-                         th:ITEM_NAME="${item.getConfig('item_name')}">
+                         th:ITEM_NAME="${item.getConfig('item_name')}" >
                         <label class="layui-form-label" th:title="${item.getConfig('label')}">[[${item.getConfig('label')}]] </label>
                         <div class="layui-input-inline">
 
                             <input th:if="${not (item.getConfig('plugin_code') eq 'input-hidden' or item.getConfig('plugin_code') eq 'hidden'
-                            or item.getConfig('plugin_code') eq '29' or item.getConfig('plugin_code') eq 'search')  }"
+                            or item.getConfig('plugin_code') eq '29' or item.getConfig('plugin_code') eq 'search'
+                            )  }"
                                    type="checkbox" name="searchId" th:value="${item.getConfig('item_name')}"
                                    lay-skin="primary" lay-filter="changeList">
                         </div>
@@ -78,21 +75,23 @@
                 <a href="#">列表项设置</a>
                 <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
                    onclick="changeListAll(1)"> 全选</a>
-                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
-                   onclick="changeListAll(2)"> 全不选</a>
-                <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
-                   onclick="changeListAll(3)"> 反选</a></span>
+                </span>
             </div>
             <div class="layui-card-body">
                 <div class="layui-form-item columnDrage">
-                    <div class="layui-inline" th:each="item:${fromColField}" th:ITEM_NAME="${item.item_name}">
-                        <label class="layui-form-label" th:title="${item.label}">[[${item.label}]] </label>
+                    <div class="layui-inline" th:each="item:${fromColField}" th:ITEM_NAME="${item.item_name}"
+
+                    >
+                        <label class="layui-form-label" th:title="${ item.item_name =='firstCol'?'首列':  item.label}"
+                               th:text="${ item.item_name =='firstCol'?'首列':  item.label}">  </label>
                         <div class="layui-input-inline">
-                            <input type="checkbox" name="columnId" lay-filter="changeList" th:value="${item.item_name}"
+                            <input type="checkbox" name="columnId"   th:if="${item.item_name !='firstCol'}"  lay-filter="changeList" th:value="${item.item_name}"
+                                   lay-skin="primary">
+                            <input type="checkbox" name="columnId"  disabled   th:if="${item.item_name =='firstCol'}"  lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
 
                         </div>
-                        <div class="layui-input-inline">
+                        <div class="layui-input-inline" th:if="${item.item_name !='firstCol'}">
                             <i class='columnItem move  layui-icon-transfer layui-icon   '></i>
                         </div>
                     </div>
@@ -281,16 +280,23 @@
     }
 
     $("#save").click(function () {
-        debugger;
+         ;
         count++;
         var json = {};
         var search = [];
         var column = [];
+
+
+
         $("input[name=searchId]:checked").each(function () {
             search.push($(this).val());
         })
         $("input[name=columnId]:checked").each(function () {
-            column.push($(this).val());
+            if($(this).val()=='firstCol'){ //首列始终放在前面
+                column.unshift($(this).val());
+            }else{
+                column.push($(this).val());
+            }
         })
 
 

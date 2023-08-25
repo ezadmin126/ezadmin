@@ -1,6 +1,4 @@
-* {
-    font-size: 12px !important;
-}
+
 
 .layui-layer-imgnext{
     font-size: 52px !important;
@@ -44,9 +42,9 @@ button {
     padding: 0;
 }
 
-.layui-form-item {
-    margin-bottom: 0;
-}
+/*.layui-form-item {*/
+/*    margin-bottom: 0;*/
+/*}*/
 
 .layui-tab-content {
     padding: 5px 0;
@@ -96,56 +94,42 @@ th a {
         text-align: left !important;
         min-width: 110px;
     }
-
     .el-cascader {
         margin-left: 0px;
     }
-
     .layui-form-item .ez-range {
-        width: 80px !important;
+        width: 22% !important;
     }
-
     .layui-form-item .ez-daterange {
-        width: 80px !important;
+        width: 22% !important;
         margin-right: 0px;
-    }
-
-    #searchForm .layui-inline {
-        height: 26px;
     }
 }
 
-@media (min-width: 576px) {
+@media (min-width: 992px) {
     .list-item label {
         text-align: right !important;
         min-width: 110px;
     }
 
+    .el-cascader {
+        margin-left: 0px;
+    }
+}
+@media (min-width: 1400px) {
+    .list-item label {
+        text-align: right !important;
+        min-width: 110px;
+    }
     .layui-form-item .ez-range {
-        width: 80px !important;
+        width: 102px !important;
     }
 
     /**数据库插件做兼容**/
     .layui-form-item .ez-daterange {
-        width: 80px !important;
-    / / margin-right: 0 px;
+        width: 102px !important;
     }
 
-    .el-cascader {
-        margin-left: 0px;
-    }
-
-    #searchForm .layui-inline {
-        height: 34px;
-    }
-}
-
-.daterange {
-    min-width: 175px
-}
-
-.form-group {
-    z-index: 100
 }
 
 .card-header .tableButton {
@@ -163,9 +147,9 @@ th a {
 }
 
 
-.layui-form-item {
-    margin-bottom: 0px;
-}
+/*.layui-form-item {*/
+/*    margin-bottom: 0px;*/
+/*}*/
 
 .layui-card-body {
     padding: 0;
@@ -209,26 +193,26 @@ th a {
     top: 1px
 }
 
-.layui-table td, .layui-table th, .layui-form-label, .layui-card-header {
-    font-size: 12px;
-}
+/*.layui-table td, .layui-table th, .layui-form-label, .layui-card-header {*/
+/*    font-size: 12px;*/
+/*}*/
 
-.layui-input, .layui-select, .layui-textarea {
-    height: 26px;
-    margin-top: 2px;
-}
+/*.layui-input, .layui-select, .layui-textarea {*/
+/*    height: 26px;*/
+/*    margin-top: 2px;*/
+/*}*/
 
-.layui-form-label {
-    padding: 4px 15px;
-}
+/*.layui-form-label {*/
+/*    padding: 4px 15px;*/
+/*}*/
 
 
-.layui-input-inline {
-    min-height: auto;
-}
+/*.layui-input-inline {*/
+/*    min-height: auto;*/
+/*}*/
 
-.layui-form-label {
-}
+/*.layui-form-label {*/
+/*}*/
 
 .layui-form-select dl {
     top: 30px
@@ -283,9 +267,9 @@ table.rc-table-resizing thead > th > a {
     height: 34px;
 }
 
-.layui-form-item .layui-input-inline {
-    width: 175px;
-}
+/*.layui-form-item .layui-input-inline {*/
+/*    width: 175px;*/
+/*}*/
 
 
 #searchForm .layui-form-mid {
@@ -341,16 +325,7 @@ table.rc-table-resizing thead > th > a {
 }
 
 
-xm-select {
-    min-height: 26px !important;
-    line-height: 26px !important;
-}
 
-xm-select .xm-label .xm-label-block {
-    height: 18px !important;
-    line-height: 18px !important;
-    margin-top: 0px;
-}
 
 .el-cascader {
     line-height: 28px !important;

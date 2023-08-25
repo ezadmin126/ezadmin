@@ -5,37 +5,26 @@
     <title>搜索-输入框</title>
 </head>
 <body id="input-text" alias="19" alias2="input" type="search">
-<div th:if="${searchFlag}" th:style="${model.getConfig('style')}" th:ITEM_NAME="${model.getConfig('item_name')}"
-     th:ITEM_ID="${model.getConfig('item_name')}">
-    <label class="layui-form-label" th:for="${'itemId-' + model.getConfig('item_name')}"
-           th:text="${model.getConfig('label')}" th:title="${label}">普通文本</label>
-    <div class="layui-input-inline">
-        <input th:placeholder="${model.getConfig('placeholder')}"
-               autocomplete="false"
-               type="text"
-               th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input':'layui-input layui-border-blue' } "
-               th:value="${model.getParam(model.getConfig('item_name'))}" th:name="${model.getConfig('item_name')}"
-               th:id="${'search-itemName-' + model.getConfig('item_name')}">
-    </div>
 
+<div class=" layui-col-md3 list-item "
+     th:style="${model.getConfig('style')}"
+     th:ITEM_NAME="${model.getConfig('item_name')}"
+     th:ez-name="${model.getConfig('item_name')}"
+     th:classappend="${(model.getConfig('plugin')=='hidden'||model.getConfig('plugin')=='input-hidden')?'list-item-hidden':''}"
+      >
+    <div  class="layui-form-item" >
+        <label class="layui-form-label" th:for="${'search-itemName-' + model.getConfig('item_name')}"
+               th:text="${model.getConfig('label')}" th:title="${label}">普通文本</label>
+        <div class="layui-input-block">
+            <input th:placeholder="${model.getConfig('placeholder')}"
+                   type="text"
+                   th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input':'layui-input layui-border-blue' } "
+                   th:value="${model.getParam(model.getConfig('item_name'))}" th:name="${model.getConfig('item_name')}"
+                   th:id="${'search-itemName-' + model.getConfig('item_name')}">
+        </div>
+
+    </div>
 </div>
 
-<div th:if="${tableSearchFlag}" th:style="${model.getConfig('style')}" class="layui-inline list-item">
-    <label class="layui-form-label" th:for="${'table-itemName-' + model.getConfig('item_name')}"
-           th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">普通文本</label>
-    <div class="layui-input-inline" style="width:100px">
-        <input th:placeholder="${model.getConfig('placeholder')}"
-               autocomplete="false"
-               type="text"
-               th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input':'layui-input layui-border-blue' } "
-               th:value="${model.getParam(model.getConfig('item_name'))}" th:name="${model.getConfig('item_name')}"
-               th:id="${'table-itemName-' + model.getConfig('item_name')}">
-    </div>
-    <div class="layui-form-mid" style="padding:0 !important;line-height: 30px;margin-right:0">
-        <i class="tableSearch layui-icon layui-icon-ok-circle"
-           th:tableSearch_item_name="${model.getConfig('item_name')}"
-           style="color:#1E9FFF;cursor: pointer"></i>
-    </div>
-</div>
 </body>
 </html>

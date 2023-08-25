@@ -124,7 +124,7 @@ public class ListDao extends  JsoupUtil{
 
         Element rowbutton = doc.getElementById("rowbutton");
         if(rowbutton!=null) {
-            String Json = Utils.trimEmptyDefault(rowbutton.attr(JsoupUtil.LAYDATA), "{\"field\":\"oper\",\"maxWidth\":\"250\",\"minWidth\":\"230\",\"fixed\":\"right\"}");
+            String Json = Utils.trimEmptyDefault(rowbutton.attr(JsoupUtil.LAYDATA), "{\"field\":\"oper\", \"minWidth\":\"230\", \"fixed\":\"right\"}");
             listData.put(JsoupUtil.LAYDATA, Json);
             //由于layui没有提供height操作，需要对height做一层处理
             try {
@@ -355,7 +355,7 @@ public class ListDao extends  JsoupUtil{
         if(ColTypeEnum.isCheckbox(firstOld)
         ){
             laydataMap.put("title","<input type=\"checkbox\" class=\"list-head-checkbox\" lay-filter=\"list-head-checkbox\" >");
-            laydataMap.put("maxWidth",60);
+
             laydataMap.put("field","firstcol");
             thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.checkbox.bodycode());
             thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.checkbox.code());
@@ -363,7 +363,7 @@ public class ListDao extends  JsoupUtil{
         if(ColTypeEnum.isRadio(firstOld) ){
             laydataMap.put("title","序号");
             laydataMap.put("field","firstcol");
-            laydataMap.put("maxWidth",60);
+
             thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.radio.bodycode());
             thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.radio.code());
 
@@ -371,7 +371,7 @@ public class ListDao extends  JsoupUtil{
         if(ColTypeEnum.isNumbers(firstOld)){
             laydataMap.put("title","序号");
             laydataMap.put("field","firstcol");
-            laydataMap.put("maxWidth",60);
+
             thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.numbers.bodycode());
             thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.numbers.code());
         }

@@ -36,7 +36,7 @@
 <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
 <input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${_EZ_LIST_EMPTY_NAME}">
-<div class="layui-fluid">
+<div class="layui-container">
     <div class="layui-tab layui-tab-brief searchWrap">
         <ul class="layui-tab-title" id="list-tab" th:if="${not #lists.isEmpty(data.navBarsList)}">
             <li th:item_id="${item.item_name}" th:item_name="${item.item_name}"
@@ -47,16 +47,15 @@
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <form id="searchForm" lay-filter="searchForm" class="layui-form" th:action="${listUrl}" method="get">
+                <form id="searchForm" lay-filter="searchForm" class="layui-form   " th:action="${listUrl}" method="get">
                     <input type="hidden" id="currentPage" name="currentPage" th:value="${data.page.currentPage}">
                     <input type="hidden" id="perPageInt" name="perPageInt" th:value="${data.page.perPageInt}">
                     <input type="hidden" id="totalPage" name="totalPage" th:value="${data.page.totalPage}">
                     <input type="hidden" id="totalRecord" name="totalRecord" th:value="${data.page.totalRecord}">
-                    <div class="layui-form-item searchcontent">
-                        <div th:style="${indexStat.index>8?'display:none':''}" class="layui-inline list-item"
-                             th:ez-name="${item.getConfig('item_name')}"
-                             th:classappend="${(item.getConfig('plugin')=='hidden'||item.getConfig('plugin')=='input-hidden')?'list-item-hidden':''}"
-                             th:each="item,indexStat:${data.searchItemList}" th:utext="${item.html}">
+                    <div class="  searchcontent layui-row layui-col-space5">
+                        <div th:style="${indexStat.index>8?'display:none':''}"  th:remove="tag"
+                             th:each="item,indexStat:${data.searchItemList}" th:utext="${item.html}"
+                             >
                         </div>
                         <div class="form-group col-md-3 row orderBy" STYLE="display:none">
                             <input id="orderBy" th:name="${data.ezOrderName}" th:value="${data.ezOrderValue}">
@@ -114,9 +113,9 @@
                     class="page-button layui-btn  layui-btn-sm  layui-btn-primary"
             ><i style="font-size: 16px ;" class="layui-icon layui-icon-next"></i></button>
 
-            <button type="button" id="tomobile" class="layui-btn  layui-btn-sm "
-                    th:classappend="${_EZ_MOBILE_FLAG==1?'layui-btn-normal':'layui-btn-primary'}"
-            ><i style="font-size: 16px !important;" class="layui-icon layui-icon-cellphone"></i></button>
+<!--            <button type="button" id="tomobile" class="layui-btn  layui-btn-sm "-->
+<!--                    th:classappend="${_EZ_MOBILE_FLAG==1?'layui-btn-normal':'layui-btn-primary'}"-->
+<!--            ><i style="font-size: 16px !important;" class="layui-icon layui-icon-cellphone"></i></button>-->
             <button type="button" id="customColAndSearch" class="layui-btn  layui-btn-sm  "
                     th:classappend="${_EZ_CUSTOM_FLAG==1?'layui-btn-normal':'layui-btn-primary'}"><i
                     style="font-size: 16px !important;" class="layui-icon layui-icon-set"></i>
@@ -133,23 +132,6 @@
                     <thead style="text-align: center">
                     <tr th:f="${data.firstCol}">
 
-<!--                        <th style="min-width:30px;max-width:30px" scope="col" lay-options="{&quot;field&quot;:&quot;firstcol&quot;-->
-<!--                         ,&quot;maxWidth&quot;:60,&quot;fixed&quot;:&quot;left&quot;}"-->
-<!--                            th:if="${not #strings.isEmpty(data.firstCol) and not #strings.equals('firstcol-',data.firstCol)}"-->
-<!--                            class="text-center fixedCol  ">-->
-<!--                            <input type="checkbox" class="list-head-checkbox" th:if="${#strings.equals(data.firstCol,'checkbox')-->
-<!--                           || #strings.equals(data.firstCol,'firstcol-checkbox')}">-->
-
-<!--                            <span th:if="${#strings.equals(data.firstCol,'radio')-->
-<!--                            || #strings.equals(data.firstCol,'firstcol-radio')-->
-<!--                            }">序号</span>-->
-<!--                            <span th:if="${#strings.equals(data.firstCol,'numbers')-->
-<!--                            || #strings.equals(data.firstCol,'firstcol-numbers')-->
-<!--                            }">序号</span>-->
-<!--                            <span th:if="${#strings.equals(data.firstCol,'tree')-->
-<!--                            || #strings.equals(data.firstCol,'firstcol-tree')-->
-<!--                            }">序号</span>-->
-<!--                        </th>-->
                         <th th:remove="tag" th:each="item:${data.columnItemList}" th:utext="${item.html}">
 
                         </th>

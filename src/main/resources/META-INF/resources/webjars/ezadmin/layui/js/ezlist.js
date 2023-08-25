@@ -235,6 +235,7 @@ $(document).ready(function () {
             $("input[name='list-body-checkbox']:not(:disabled)").prop('checked', false);
         }
     })
+
     renderTable();
 
 
@@ -250,15 +251,7 @@ $(document).ready(function () {
         });
     })
 
-    $("#tomobile").click(function () {
 
-        if ($("#_EZ_MOBILE_FLAG").val() !== '1') {
-            $("#_EZ_MOBILE_FLAG").val('1')
-        } else {
-            $("#_EZ_MOBILE_FLAG").val('0')
-        }
-        $("#searchForm").submit();
-    })
     $("#customColAndSearch").click(function () {
         var index = layer.open({
             title: "设置",
@@ -463,12 +456,12 @@ function calculateSearchItemDisplay() {
         $(".searchcontent > .list-item").not(".list-item-hidden").each(function () {
             if (search.length > 0) {
                 if (search.includes($(this).attr("ez-name"))) {
-                    $(this).css("display","inline-block");
+                    $(this).show();
                 } else {
                     $(this).hide();
                 }
             } else {
-                $(this).css("display","inline-block");
+                $(this).css("display","block");
             }
         })
     } else {
@@ -476,14 +469,14 @@ function calculateSearchItemDisplay() {
             if (search.length > 0) {
                 if (count < 8 && search.includes($(this).attr("ez-name"))) {
                     count++;
-                    $(this).css("display","inline-block");
+                    $(this).show();
                 } else {
                     $(this).hide();
                 }
             } else {
                 if (count < 8) {
                     count++;
-                    $(this).css("display","inline-block");
+                    $(this).show();
                 } else {
                     $(this).hide();
                 }
@@ -552,18 +545,18 @@ function selfConfig() {
                 if (column.includes($(this).attr("item_name"))) {
                     $(this).show();
                 } else {
-                    $(this).hide();
-                    var laydata=$(this).attr("lay-data");
-                    var json=JSON.parse(laydata);
-                    json.hide=true;
-                    $(this).attr("lay-data",JSON.stringify(json))
+                    $(this).remove();
+                    // var laydata=$(this).attr("lay-data");
+                    // var json=JSON.parse(laydata);
+                    // json.hide=true;
+                    // $(this).attr("lay-data",JSON.stringify(json))
                 }
             })
             $("#mytable td").not(".fixedCol").each(function () {
                 if (column.includes($(this).attr("item_name"))) {
                     $(this).show();
                 } else {
-                    $(this).hide();
+                    $(this).remove();
                 }
             })
         }
@@ -615,8 +608,22 @@ function renderTable() {
             }
             form.render();
         });
+        form.on('checkbox(list-body-checkbox)', function(data){
+            var cl=$(".layui-table-box").find("[name=list-body-checkbox]:checked").length;
+            var al=$(".layui-table-box").find("[name=list-body-checkbox]").length;
+            if(cl<al&&cl>0){
+                $('.list-head-checkbox').prop('indeterminate', true);
+            }else{
+                $('.list-head-checkbox').prop('indeterminate', false);
+            }
+            if(al==cl){
+                $(".list-head-checkbox").prop('checked', true);
+            }else{
+                $(".list-head-checkbox").prop('checked', false);
 
-
+            }
+            form.render();
+        });
 
         //转换静态表格
         laytable = table2.init('mytable', {
@@ -652,6 +659,10 @@ function renderTable() {
                             }
                         })
                     })
+
+                    $("[item_name='删除']").addClass("layui-border-red");
+                    $("[item_name='修改']").addClass("layui-border-blue");
+                    $("[item_name='编辑']").addClass("layui-border-blue");
                     watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + getNow()});
                 } catch (e) {
                     console.log(e)

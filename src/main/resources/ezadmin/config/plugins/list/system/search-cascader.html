@@ -5,13 +5,15 @@
     <title>搜索-级联下拉</title>
 </head>
 <body id="search-cascader" type="search">
-<style>.el-input__inner {
-    height: 26px;
-    line-height: 26px
-}</style>
-<div th:if="${searchFlag}" th:style="${'z-index:101;'+model.getConfig('style')}"
-     th:ITEM_NAME="${model.getConfig('item_name')}" th:ITEM_ID="${model.getConfig('item_name')}"
-     class=" ">
+ </style>
+
+ <div class=" layui-col-md3 list-item "
+      th:style="${model.getConfig('style')}"
+      th:ITEM_NAME="${model.getConfig('item_name')}"
+      th:ez-name="${model.getConfig('item_name')}"
+      th:classappend="${(model.getConfig('plugin')=='hidden'||model.getConfig('plugin')=='input-hidden')?'list-item-hidden':''}"
+ >
+     <div  class="layui-form-item" >
     <label class="layui-form-label" th:for="${'itemName-' + model.getConfig('item_name')}"
            th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">普通文本</label>
     <div th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input-inline':'layui-input-inline layui-border-blue' } ">
@@ -29,26 +31,6 @@
         <i class="tableSearch layui-icon layui-icon-ok-circle"
            th:tableSearch_item_name="${model.getConfig('item_name')}" style="color:#1E9FFF;cursor: pointer"></i></div>
 </div>
-<div th:if="${tableSearchFlag}" th:style="${'z-index:101;'+model.getConfig('style')}"
-     class="layui-inline list-item">
-    <label
-            class="layui-form-label" th:for="${'itemName-' + model.getConfig('item_name')}"
-            th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">普通文本</label>
-    <div style="width:45%"
-         th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input-inline':'layui-input-inline layui-border-blue' } ">
-        <input th:value="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'':model.getParam(model.getConfig('item_name'))}"
-               th:name="${model.getConfig('item_name')}" th:id="${'search-itemName-' + model.getConfig('item_name')}"
-               class="ez-laycascader"
-               th:ezlist_url="${model.getConfig('url')}"
-               ez_value="ID" ez_label="LABEL"
-               th:multi="${model.getConfig('multi')}"
-               th:collapseTags="${model.getConfig('collapsetags')}"
-               th:showAllLevels="${model.getConfig('showalllevels')}"
-               th:placeholder="${model.getConfig('placeholder')}">
-    </div>
-    <div class="layui-form-mid" style="padding:0 !important;line-height: 30px;margin-right:0">
-        <i class="tableSearch layui-icon layui-icon-ok-circle"
-           th:tableSearch_item_name="${model.getConfig('item_name')}" style="color:#1E9FFF;cursor: pointer"></i></div>
-</div>
-</body>
+ </div>
+ </body>
 </html>
