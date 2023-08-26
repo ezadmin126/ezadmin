@@ -16,11 +16,13 @@
         <label class="layui-form-label" th:for="${'search-itemName-' + model.getConfig('item_name')}"
                th:text="${model.getConfig('label')}" th:title="${label}">普通文本</label>
         <div class="layui-input-block">
+            <div class="layui-input-wrap">
             <input th:placeholder="${model.getConfig('placeholder')}"
-                   type="text"
+                   type="text" lay-affix="clear"
                    th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input':'layui-input layui-border-blue' } "
                    th:value="${model.getParam(model.getConfig('item_name'))}" th:name="${model.getConfig('item_name')}"
                    th:id="${'search-itemName-' + model.getConfig('item_name')}">
+            </div>
         </div>
 
     </div>

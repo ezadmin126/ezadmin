@@ -67,7 +67,7 @@
 
                     </div>
 
-                    <div style="text-align: center;" class="layui-form-item searchButtonRow">
+                    <div   class="layui-form-item searchButtonRow">
                         <div class="layui-inline ">
                             <button type="button" id="submitBtn" class="layui-btn layui-btn-normal layui-btn-sm">查询
                             </button>
@@ -97,8 +97,7 @@
             </div><!--formitem-->
         </div><!--tab-content-->
     </div><!--tab -->
-    <hr class="layui-border-blue">
-    <div class="layui-row">
+     <div class="layui-row">
         <div class="layui-col-xs6">
             <div class="  tableButton  " style="text-align: left">
                 <div th:remove="tag" th:each="item:${data.tableButtonItemList}" th:utext="${item.html}"></div>

@@ -418,51 +418,51 @@ layui.define(["jquery", "layer"], function (exports) {
          * @param options
          */
         listen: function (options) {
-            // $('body').on('click', '[data-bgcolor]', function () {
-            //     var loading = layer.load(0, {shade: false, time: 2 * 1000});
-            //     var clientHeight = (document.documentElement.clientHeight) - 60;
-            //     var bgColorHtml = miniTheme.buildBgColorHtml(options);
-            //     var html = '<div class="layuimini-color">\n' +
-            //         '<div class="color-title">\n' +
-            //         '<span>配色方案</span>\n' +
-            //         '</div>\n' +
-            //         '<div class="color-content">\n' +
-            //         '<ul>\n' + bgColorHtml + '</ul>\n' +
-            //         '</div>\n' +
-            //         '<div class="more-menu-list">\n' +
-            //
-            //         '</div>' +
-            //         '</div>';
-            //     layer.open({
-            //         type: 1,
-            //         title: false,
-            //         closeBtn: 0,
-            //         shade: 0.2,
-            //         anim: 2,
-            //         shadeClose: true,
-            //         id: 'layuiminiBgColor',
-            //         area: ['340px', clientHeight + 'px'],
-            //         offset: 'rb',
-            //         content: html,
-            //         success: function (index, layero) {
-            //         },
-            //         end: function () {
-            //             $('.layuimini-select-bgcolor').removeClass('layui-this');
-            //         }
-            //     });
-            //     layer.close(loading);
-            // });
-            //
-            // $('body').on('click', '[data-select-bgcolor]', function () {
-            //     var bgcolorId = $(this).attr('data-select-bgcolor');
-            //     $('.layuimini-color .color-content ul .layui-this').attr('class', '');
-            //     $(this).attr('class', 'layui-this');
-            //     sessionStorage.setItem('layuiminiBgcolorId', bgcolorId);
-            //     miniTheme.render({
-            //         bgColorDefault: bgcolorId,
-            //         listen: false,
-            //     });
-            // });
+            $('body').on('click', '[data-bgcolor]', function () {
+                var loading = layer.load(0, {shade: false, time: 2 * 1000});
+                var clientHeight = (document.documentElement.clientHeight) - 60;
+                var bgColorHtml = miniTheme.buildBgColorHtml(options);
+                var html = '<div class="layuimini-color">\n' +
+                    '<div class="color-title">\n' +
+                    '<span>配色方案</span>\n' +
+                    '</div>\n' +
+                    '<div class="color-content">\n' +
+                    '<ul>\n' + bgColorHtml + '</ul>\n' +
+                    '</div>\n' +
+                    '<div class="more-menu-list">\n' +
+
+                    '</div>' +
+                    '</div>';
+                layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: 0,
+                    shade: 0.2,
+                    anim: 2,
+                    shadeClose: true,
+                    id: 'layuiminiBgColor',
+                    area: ['340px', clientHeight + 'px'],
+                    offset: 'rb',
+                    content: html,
+                    success: function (index, layero) {
+                    },
+                    end: function () {
+                        $('.layuimini-select-bgcolor').removeClass('layui-this');
+                    }
+                });
+                layer.close(loading);
+            });
+
+            $('body').on('click', '[data-select-bgcolor]', function () {
+                var bgcolorId = $(this).attr('data-select-bgcolor');
+                $('.layuimini-color .color-content ul .layui-this').attr('class', '');
+                $(this).attr('class', 'layui-this');
+                sessionStorage.setItem('layuiminiBgcolorId', bgcolorId);
+                miniTheme.render({
+                    bgColorDefault: bgcolorId,
+                    listen: false,
+                });
+            });
         }
     };
 

@@ -13,14 +13,14 @@
             padding: 0 8px;
         }
 
-        .layui-form-item .layui-form-checkbox[lay-skin="primary"] {
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
+        /*.layui-form-item .layui-form-checkbox[lay-skin="primary"] {*/
+        /*    margin-top: 0px;*/
+        /*    margin-bottom: 0px;*/
+        /*}*/
 
-        .layui-form-item .layui-input-inline {
-            width: 30px !important;
-        }
+        /*.layui-form-item .layui-input-inline {*/
+        /*    width: 30px !important;*/
+        /*}*/
 
         .gu-mirror .layui-input-inline {
             display: none;
@@ -30,14 +30,14 @@
             cursor: move
         }
 
-        .layui-form-label {
-            width: 110px
-        }
+        /*.layui-form-label {*/
+        /*    width: 110px*/
+        /*}*/
     </style>
 </head>
 <body>
-<div class="layui-fluid">
-    <blockquote class="layui-elem-quote">EZ</blockquote>
+<div class="layui-container">
+    <blockquote class="layui-elem-quote">勾选需要展示的搜索项或表格列，拖拽 <i class='layui-icon-transfer layui-icon'></i> 排序</blockquote>
     <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
     <input type="hidden" name="IS_DEBUG" id="IS_DEBUG" th:value="${IS_DEBUG}">
     <form class="layui-form" th:action="${contextName+'/ezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}" method="post"
@@ -50,21 +50,19 @@
                    onclick="changeSearchAll(1)"> 全选</a>
                 </span>
             </div>
-            <div class="layui-card-body">
-                <div class="layui-form-item searchDrage">
-                    <div class="layui-inline" th:each="item:${fromSearchField}"
-                         th:ITEM_NAME="${item.getConfig('item_name')}" >
+            <div class="layui-card-body layui-row layui-col-space5">
+                <div class="layui-col-md3 searchDrage" th:each="item:${fromSearchField}"
+                     th:ITEM_NAME="${item.getConfig('item_name')}">
+                    <div class="layui-form-item ">
                         <label class="layui-form-label" th:title="${item.getConfig('label')}">[[${item.getConfig('label')}]] </label>
-                        <div class="layui-input-inline">
+                        <div class="layui-input-block">
 
                             <input th:if="${not (item.getConfig('plugin_code') eq 'input-hidden' or item.getConfig('plugin_code') eq 'hidden'
                             or item.getConfig('plugin_code') eq '29' or item.getConfig('plugin_code') eq 'search'
                             )  }"
                                    type="checkbox" name="searchId" th:value="${item.getConfig('item_name')}"
                                    lay-skin="primary" lay-filter="changeList">
-                        </div>
-                        <div class="layui-input-inline">
-                            <i class='searchItem move  layui-icon-transfer layui-icon   '></i>
+                            <i class='searchItem move   layui-form-mid layui-icon-transfer layui-icon   '></i>
                         </div>
                     </div>
                 </div>
@@ -77,26 +75,25 @@
                    onclick="changeListAll(1)"> 全选</a>
                 </span>
             </div>
-            <div class="layui-card-body">
-                <div class="layui-form-item columnDrage">
-                    <div class="layui-inline" th:each="item:${fromColField}" th:ITEM_NAME="${item.item_name}"
 
-                    >
-                        <label class="layui-form-label" th:title="${ item.item_name =='firstCol'?'首列':  item.label}"
-                               th:text="${ item.item_name =='firstCol'?'首列':  item.label}">  </label>
-                        <div class="layui-input-inline">
+            <div class="layui-card-body layui-row layui-col-space5">
+                <div class="layui-col-md3 columnDrage" th:each="item:${fromColField}"
+                     th:ITEM_NAME="${item.item_name}">
+                    <div class="layui-form-item " style="margin-bottom: 0;" >
+                        <label class="layui-form-label"  th:title="${ item.item_name =='firstCol'?'首列':  item.label}"
+                               th:text="${ item.item_name =='firstCol'?'首列':  item.label}">Field E :</label>
+                        <div class="layui-input-block">
                             <input type="checkbox" name="columnId"   th:if="${item.item_name !='firstCol'}"  lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
                             <input type="checkbox" name="columnId"  disabled   th:if="${item.item_name =='firstCol'}"  lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
 
-                        </div>
-                        <div class="layui-input-inline" th:if="${item.item_name !='firstCol'}">
-                            <i class='columnItem move  layui-icon-transfer layui-icon   '></i>
+                            <i class='columnItem move layui-form-mid layui-icon-transfer layui-icon   ' th:if="${item.item_name !='firstCol'}"></i>
                         </div>
                     </div>
                 </div>
-            </div>
+
+             </div>
         </div>
         <div class="layui-card">
             <div class="layui-card-header"><span class="layui-breadcrumb" lay-separator="|">
