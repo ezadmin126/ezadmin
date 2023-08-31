@@ -20,21 +20,6 @@
     background-size: calc(.75em + .375rem) calc(.75em + .375rem);
 }
 
-.select2-container--bootstrap4 .select2-selection--multiple {
-    min-height: calc(1.5em + 0.75rem + 2px) !important;
-}
-
-.select2-search--dropdown .select2-search__field {
-
-    padding: 0.375rem 0.75rem;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-}
-
-.select2-container--bootstrap4 .select2-selection--single {
-
-    height: calc(1.5em + 0.75rem + 2px) !important;
-}
 
 
 .gu-mirror {
@@ -86,4 +71,21 @@
 .layui-upload-list{
     display: flex;
     flex-wrap: wrap;
+}
+
+small {
+    color: #6c757d !important;
+    display: block;
+    margin-top: .25rem;
+    font-size: 80%;
+    font-weight: 400;
+}
+.custom-select{
+    height: 38px;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #fff;
+    color: rgba(0,0,0,.85);
+    border-radius: 2px;
+    border-color: #fff;
 }

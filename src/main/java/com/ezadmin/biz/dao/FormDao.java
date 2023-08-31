@@ -169,6 +169,7 @@ public class FormDao extends JsoupUtil{
             //用于编辑
             listitem.put("group_data_init", formCore.get("group_data"));
             Utils.putIfAbsent(listitem,JsoupUtil.NAME, item.attr("item_name"));
+            Utils.putIfAbsent(listitem,JsoupUtil.COL, Utils.trimEmptyDefault(item.attr("col"),"12"));
             list.add(listitem);
         }
         return list;

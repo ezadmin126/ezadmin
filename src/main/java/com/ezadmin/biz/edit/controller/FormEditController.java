@@ -1,17 +1,19 @@
-package com.ezadmin.biz.dao.edit.controller;
+package com.ezadmin.biz.edit.controller;
 
 import com.ezadmin.EzBootstrap;
 import com.ezadmin.biz.base.controller.BaseController;
+import com.ezadmin.biz.dao.PluginsDao;
 import com.ezadmin.biz.emmber.form.DefalutEzFormBuilder;
 import com.ezadmin.biz.emmber.form.EzFormBuilder;
 import com.ezadmin.biz.emmber.form.EzFormDTO;
+import com.ezadmin.biz.list.service.ListService;
 import com.ezadmin.common.annotation.EzMapping;
-import com.ezadmin.common.utils.JsoupConfigHolder;
-import com.ezadmin.common.utils.StringUtils;
-import com.ezadmin.common.utils.Utils;
+import com.ezadmin.common.utils.*;
+import org.thymeleaf.context.Context;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,9 +23,13 @@ import java.util.Map;
  */
 @EzMapping("/ezadmin/form/")
 public class FormEditController extends BaseController {
+    ListService listService = EzProxy.singleInstance(ListService.class);
 
     @EzMapping("formEdit.html")
     public String formEdit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+
+
         String formId = Utils.trimNull(request.getAttribute("FORM_ID"));
         String ENCRYPT_FORM_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
         request.setAttribute("formSubmitUrl",request.getContextPath()+"/ezadmin/form/doSubmit-"+ ENCRYPT_FORM_ID);
@@ -50,7 +56,18 @@ public class FormEditController extends BaseController {
 
 
         request.setAttribute("data",form.getData());
+        if(StringUtils.isNotBlank(request.getParameter("_edit"))){
+            List<Map<String, Object>> plugins= PluginsDao.getInstance().allFormPlugin();
+            request.setAttribute("plugins",plugins);
+            return "layui/pages/formedit";
+        }
         return "layui/form/form";
      }
-
+    @EzMapping("edit.html")
+    public String edit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //所有表单类型的插件
+        List<Map<String, Object>> plugins= PluginsDao.getInstance().allFormPlugin();
+        request.setAttribute("plugins",plugins);
+        return "layui/pages/formedit";
+    }
 }

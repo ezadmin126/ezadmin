@@ -4,7 +4,35 @@
     <meta charset="UTF-8">
     <title>日期范围</title>
 </head>
-<body id="input-daterange" alias="2">
+<body id="input-daterange" alias="2" type="form" icon="layui-icon-date">
+
+<div id="template" >
+    <div class="layui-col-md12 selector" type="input-date">
+        <div class="layui-form-item " style="margin-bottom: 0;">
+            <label class="layui-form-label  ">日期</label>
+            <div class="layui-input-block">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input   autocomplete="off" type="text"
+                             class="layui-input layui-date-narmal"
+                             name="default" >
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input   autocomplete="off" type="text"
+                             class="layui-input layui-date-narmal"
+                             name="default" >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
 
 <div class="layui-input-inline ez-daterange">
     <input th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" autocomplete="off" type="text"
@@ -17,6 +45,6 @@
            class="layui-input layui-date" th:value="${value_end}"
            th:name="${item_name+'_END'}" th:id="${item_name+'_END_ID'}">
 </div>
-
+</div>
 </body>
 </html>

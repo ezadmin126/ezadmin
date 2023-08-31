@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class JsoupUtil {
     protected static final String HREF ="href" ;
+    protected static final String COL = "col";
     public static String TABLESTYLE="tablestyle";
     private static  Logger logger= LoggerFactory.getLogger(JsoupUtil.class);
 

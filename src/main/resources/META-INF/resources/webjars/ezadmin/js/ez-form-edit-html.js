@@ -28,7 +28,7 @@ $(document).ready(function () {
             return handle.classList.contains('rowmove');
         }, accepts: function (el, target) {
 
-            return target.classList.contains('dragula-container');
+            return true;
         }
     }).on('drop', function (el) {
         let encryptFormId = $("#FORM_ID").val();

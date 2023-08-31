@@ -2,10 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>xm下拉框</title>
+    <title>多选下拉框</title>
 </head>
-<body id="xmselect" alias="5">
+<body id="xmselect" alias="5" type="form" icon="layui-icon-slider">
 
+<div id="template" >
+    <div class="layui-col-md12 selector" type="xmselect">
+        <div class="layui-form-item " style="margin-bottom: 0;">
+            <label class="layui-form-label  ">多选下拉框</label>
+            <div class="layui-input-block">
+                <select name="default" class=""></select>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
 <div th:itemsJson="${itemsJson}" th:id="${'itemId-' + item_name}" th:name="${item_name}"
      th:value="${#strings.isEmpty(value)?'[]':'['+value+']'}"></div>
 
@@ -29,5 +40,6 @@
         initValue: JSON.parse(initvalue)
     })
 </script>
+</div>
 </body>
 </html>

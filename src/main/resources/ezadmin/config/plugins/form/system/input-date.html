@@ -4,7 +4,26 @@
     <meta charset="UTF-8">
     <title>日期</title>
 </head>
-<body id="input-date" alias="LAYUI-DATE">
+<body id="input-date" alias="LAYUI-DATE" type="form" icon="layui-icon-upload-drag">
+
+<div id="template" >
+    <div class="layui-col-md12 selector" type="input-date">
+        <div class="layui-form-item " style="margin-bottom: 0;">
+            <label class="layui-form-label  ">日期</label>
+            <div class="layui-input-block">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input   autocomplete="off" type="text"
+                           class="layui-input layui-date-narmal"
+                            name="default" >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
 
 <div th:style="${style}" class="layui-input-inline   ">
     <div class="layui-input-wrap">
@@ -16,6 +35,6 @@
                th:name="${item_name}" th:id="${item_name+'_ID'}">
     </div>
 </div>
-
+</div>
 </body>
 </html>

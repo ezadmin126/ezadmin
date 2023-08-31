@@ -2,15 +2,77 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>输入-多行文本</title>
+    <title>多行文本</title>
 </head>
-<body id="textarea" alias="8">
-<textarea th:label="${label}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
-          th:placeholder="${placeholder}"
-          class="form-control layui-textarea"
-          th:text="${value}"
-          th:name="${item_name}"
-          th:id="${'ITEM_ID_' + item_name}"
-          th:style="${style}" th:aria-describedby="${aria_describedby}" rows="3"></textarea>
+<body id="textarea" alias="8" type="form" icon="layui-icon-form">
+<div id="template">
+    <div class="layui-col-md12 selector" type="textarea">
+        <div class="layui-form-item " style="margin-bottom: 0;">
+            <label class="layui-form-label  ">多行文本</label>
+            <div class="layui-input-block">
+                 <textarea name="default" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div id="content">
+        <div class=" selector" th:classappend="${'layui-col-md'+col}" type="textarea"
+             th:d-label="${label}"
+             th:d-item_name="${item_name}"
+             th:d-placeholder="${placeholder}"
+             th:d-alias="${alias}"
+             th:d-col="${col}"
+
+             th:d-item_desc="${item_desc}"
+             th:d-top_desc="${top_desc}"
+             th:d-jdbctype="${jdbctype}"
+             th:d-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+             th:d-valid_rule="${valid_rule}"
+             th:d-valid_msg="${valid_msg}"
+             th:d-style="${style}"
+             th:d-help="${help}"
+        >
+            <div class="layui-form-item " style="margin-bottom: 0;">
+                <label class="layui-form-label  "   >
+                    <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                    <i th:if="${not #strings.isEmpty(help)}"
+                       th:id="${'ez-help-'+item_name}"
+                       class="ez-help layui-icon-help layui-icon"
+                       th:src="${help}"></i>
+                    [[${label}]]
+                </label>
+                <div class="layui-input-block">
+                    <small
+                            class="layui-form-mid layui-text-em top_desc"
+                            th:utext="${top_desc}" style="float:none"
+                            th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+                        <textarea th:label="${label}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                                  th:placeholder="${placeholder}"
+                                  class=" layui-textarea"
+                                  th:text="${value}"
+                                  th:name="${item_name}"
+                                  th:id="${'ITEM_ID_' + item_name}"
+                                  th:style="${style}"   rows="3"></textarea>
+
+
+
+                    <small
+                            class="layui-form-mid layui-text-em item_desc"
+                            th:utext="${item_desc}"
+                            th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
 </body>
+
 </html>

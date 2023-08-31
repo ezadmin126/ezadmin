@@ -1,4 +1,4 @@
-package com.ezadmin.biz.dao.edit.service;
+package com.ezadmin.biz.edit.service;
  
 import java.util.List;
 import java.util.Map;

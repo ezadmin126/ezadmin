@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>code</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link href="https://unpkg.com/layui@2.8.12/dist/css/layui.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.css" integrity="sha512-gGkweS4I+MDqo1tLZtHl3Nu3PGY7TU8ldedRnu60fY6etWjQ/twRHRG2J92oDj7GDU2XvX8k6G5mbp0yCoyXCA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+
+        .ez-plugin:hover {
+            background: #009688;
+            border-radius: 5px;
+            color: #fff  ;
+            border-color: #fff;
+        }
+
+        .ez-plugin a i{
+            display: inline-block;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            border-radius: 2px;
+            font-size: 30px;
+            background-color: #F8F8F8;
+            color: #333;
+        }
+        .ez-plugin a span {
+            position: relative;
+            top: 2px;
+            display: block;
+            color: #666;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 14px;
+            text-align: center;
+        }
+        .ez-plugin a:hover{
+            color:#fff;
+        }
+        .left{
+            border-right: 1px solid #f6f6ff;
+            max-height: 768px;
+            overflow: scroll;
+        }
+        .center,.right{
+            border-right: 1px solid #f6f6ff;
+            min-height: 768px;
+        }
+        .center .body{
+            border: 1px dashed #ccc;
+            min-height: 768px;
+            padding-bottom: 80px;
+        }
+        .layui-form-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            box-shadow: 0 -1px 5px rgba(0,0,0,.15);
+            padding: 15px;
+            z-index: 9999;
+            margin-bottom: 0px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        div.active {
+            border: 1px solid #009688;
+            background-color: #e9f4fd !important;
+        }
+        .selector   {
+            border: 1px dashed #d1d1d1;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            padding: 10px;
+        }
+        #centerContainer .dragula-container{
+            background-color: #f1f1f1;
+            min-height: 50px;
+            border: 1px dashed #ccc;
+        }
+
+
+        .layui-component-tools {
+            position: absolute;
+            background: #009688;
+            right: 0;
+            bottom: 0;
+            padding: 1px 5px;
+            cursor: pointer;
+            z-index: 21;
+            color: #fff;
+            width: 32px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+        }
+        .layui-component-tools i, .layui-component-move i {
+            font-size: 12px;
+        }
+    </style>
+    <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+    <script src="https://unpkg.com/layui@2.8.12/dist/layui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.js"   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link th:href="${contextName+'/webjars/ezadmin/layui/css/ezform.css?v='+vi}" rel="stylesheet">
+
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row top" >
+        <blockquote class="layui-elem-quote layui-col-md-offset2" th:text="${data.form.formName}">
+            表单编辑
+        </blockquote>
+    </div>
+    <div class="layui-row layui-col-space5">
+        <div class="layui-col-md2 layui-col-xs3 left">
+            <div class="layui-tab layui-tab-brief" lay-filter="test-hash">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" lay-id="11">系统</li>
+                </ul>
+                <div class="layui-tab-content lefttab">
+                    <div class="layui-tab-item layui-show ">
+                        <div class="layui-row layui-col-space5  dragula-container " id="leftContainer">
+                            <div class="layui-col-xs4 ez-plugin" th:each="item:${plugins}" >
+                                <a href="javascript:;"    >
+                                    <i class="layui-icon  " th:classappend="${item.ICON}"></i>
+                                    <span th:text="${item.PLUGIN_NAME}">单行输入框</span>
+                                    <div style="display: none" class="template" th:utext="${item.TEMPLATE}">
+                                        <div class="layui-col-md12 selector" type="input-text" d-col="12"  >
+                                            <div class="layui-form-item " style="margin-bottom: 0;">
+                                                <label class="layui-form-label  "  >单行输入框</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="default" placeholder="请输入" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="layui-col-xs4 ez-plugin" >
+                                <a href="javascript:;" >
+                                    <i class="layui-icon layui-icon-layer"></i>
+                                    <span>面板</span>
+                                </a>
+                                <div style="display: none" class="template">
+                                    <div class="layui-col-md12 selector" type="card" d-col="12" d-groupname="卡片面板">
+                                        <div class="layui-card  ">
+                                            <div class="layui-card-header  ">卡片面板</div>
+                                            <div class="layui-card-body ">
+                                                <div class="layui-row dragula-container" type="card" d-col="12" d-groupname="卡片面板">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <button class="layui-btn">在线开发组件</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md8 layui-col-xs6 center">
+            <div class="layui-card-header">
+                <div class="fr">
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-export"><i class="layui-icon layui-icon-export"></i>导出</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-import"><i class="layui-icon layui-icon-layer"></i>导入</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-component"> <i class="layui-icon layui-icon-component"></i> 预览</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-form-clear"><i class="layui-icon layui-icon-delete"></i>清空</button>
+                </div>
+                <div class="body layui-row layui-col-space5 dragula-container layui-form " id="centerContainer">
+                    <blockquote class="layui-elem-quote">
+                        表单名称
+                    </blockquote>
+                    <div class="layui-col-md12 selector " th:each="group:${data.groupFormItem}" th:d-groupname="${#strings.equals('EZ_DEFAULT_GROUP',group.name)?'默认面板，预览名称不展示':group.name}" type="card" d-col="12">
+                        <div class="layui-card" th:id="${group.name}"
+                         th:if="${not #lists.isEmpty(group.list)}">
+                        <div class="layui-card-header" th:text="${#strings.equals('EZ_DEFAULT_GROUP',group.name)?'默认面板，预览名称不展示':group.name}"
+                              >卡片面板
+                        </div>
+                        <!--block start-->
+                        <div class="layui-card-body   ">
+                            <div class="layui-row dragula-container">
+                                <div   th:each="rowdata,stat:${group.list}" th:remove="tag" th:utext="${rowdata.html}">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md2 layui-col-xs3 right">
+            <div class="layui-tab layui-tab-brief" lay-filter="test-hash">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" >配置</li>
+                </ul>
+                <div class="layui-tab-content righttab">
+                     <div class="layui-form config-form config-input-text" style="display: none">
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">标签名</label>
+                             <div class="layui-input-block">
+                                 <input type="text" name="label" autocomplete="false" class="layui-input">
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">Placeholder</label>
+                             <div class="layui-input-block">
+                                 <input type="text" name="placeholder" autocomplete="false" class="layui-input">
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">字段名</label>
+                             <div class="layui-input-block">
+                                 <input type="text" name="item_name" autocomplete="false" class="layui-input">
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">别名</label>
+                             <div class="layui-input-block">
+                                 <input type="text" name="alias" autocomplete="false" class="layui-input">
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">栅格</label>
+                             <div class="layui-input-block">
+                                      <select name="col" lay-filter="col">
+                                         <option value="12">12</option>
+                                         <option value="11">11</option>
+                                         <option value="10">10</option>
+                                         <option value="9">9</option>
+                                         <option value="8">8</option>
+                                         <option value="7">7</option>
+                                         <option value="6">6</option>
+                                         <option value="5">5</option>
+                                         <option value="4">4</option>
+                                         <option value="3">3</option>
+                                         <option value="2">2</option>
+                                         <option value="1">1</option>
+                                     </select>
+                              </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">数据类型</label>
+                             <div class="layui-input-block">
+
+                                     <select   name="datatype"   lay-search="" lay-filter="lay_filter_datatype"    > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
+
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">数据</label>
+                             <div class="layui-input-block">
+                                     <textarea name="data" class="layui-textarea" autocomplete="false"></textarea>
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">帮助弹框提示</label>
+                             <div class="layui-input-block">
+                                     <input name="help" class="layui-input" autocomplete="false">
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">上方提示</label>
+                             <div class="layui-input-block">
+                                     <textarea name="top_desc" class="layui-textarea" autocomplete="false"></textarea>
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">下方提示</label>
+                             <div class="layui-input-block">
+                                     <textarea name="item_desc" class="layui-textarea" autocomplete="false"></textarea>
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">数据库类型</label>
+                             <div class="layui-input-block">
+                                 <select  lay-search="" lay-filter="lay_filter_jdbctype"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option> <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option> </select>
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">layui验证</label>
+                             <div class="layui-input-block">
+                                 <textarea name="lay_verify" class="layui-textarea" autocomplete="false"></textarea>
+                                 <small id="DESC_lay_verify" class="layui-form-mid layui-text-em">
+                                     required|phone|number, <br>
+                                     文件参考layui文档配置：<br>
+                                     {"acceptMime":"image/jpeg, image/jpg",<br>
+                                     "exts":"jpg|jpeg","max":1,"min":1,"size":200}
+                                 </small>
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">jquery验证</label>
+                             <div class="layui-input-block">
+                                 <textarea name="valid_rule" class="layui-textarea" autocomplete="false"></textarea>
+                                 <small id="DESC_valid_rule" class="layui-form-mid layui-text-em">{"required": true,
+                                     "minlength": 2}</small>
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">jquery提示</label>
+                             <div class="layui-input-block">
+                                 <textarea name="valid_msg" class="layui-textarea" autocomplete="false"></textarea>
+                                 <small id="DESC_valid_msg" class="layui-form-mid layui-text-em">{"required": true,
+                                     "minlength": "长度{0}"}</small>
+                             </div>
+                         </div>
+                         <div class="layui-form-item">
+                             <label class="layui-form-label">自定义样式</label>
+                             <div class="layui-input-block">
+                                 <textarea name="style" class="layui-textarea" autocomplete="false"></textarea>
+                             </div>
+                         </div>
+
+                     </div>
+                    <div class="layui-form config-form config-card" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">卡片名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="groupname" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">栅格</label>
+                            <div class="layui-input-block">
+                                <select name="col" lay-filter="col">
+                                    <option value="12">12</option>
+                                    <option value="11">11</option>
+                                    <option value="10">10</option>
+                                    <option value="9">9</option>
+                                    <option value="8">8</option>
+                                    <option value="7">7</option>
+                                    <option value="6">6</option>
+                                    <option value="5">5</option>
+                                    <option value="4">4</option>
+                                    <option value="3">3</option>
+                                    <option value="2">2</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+        <div class="layui-footer layui-form-footer">
+        <button class="layui-btn layui-btn-primary" type="button" sa-event="closeDialog">取消</button>
+        <button class="layui-btn" lay-filter="submitIframe" type="button" lay-submit="">提交</button>
+    </div>
+    </div>
+</div>
+<script>
+    layui.use(function(){
+            var form=layui.form;
+            var $=layui.jquery;
+            form.on('select(col)',function(data){
+                var active=$(".active");
+                var col=active.attr("d-col")||12;
+                active.removeClass("layui-col-md"+col)
+                active.addClass("layui-col-md"+data.value);
+                active.attr("d-col",data.value);
+            });
+
+            $(".config-form").find("input,textarea").on("change",function(){
+                    var name=$(this).attr("name");
+                    var active=$(".active");
+                    active.attr("d-"+name,$(this).val());
+                    if(name=='label'){
+                        active.find('.layui-form-label').text($(this).val())
+                    }
+                    if(name=='placeholder'){
+                        active.find('input').attr("placeholder",$(this).val())
+                    }
+                    if(name=='top_desc'){
+                        active.find(".top_desc").remove();
+                        if($(this).val()!='') {
+                            active.find(".layui-input-block").prepend("<div class=\"layui-form-mid layui-text-em top_desc\">" + $(this).val() + "</div>");
+                        }
+                    }
+                    if(name=='item_desc'){
+                          active.find(".item_desc").remove();
+                          if($(this).val()!=''){
+                              active.find(".layui-input-block").append("<div class=\"layui-form-mid layui-text-em item_desc\">"+$(this).val()+"</div>");
+                          }
+                    }
+                    if(name=='groupname'){
+                          active.find(".layui-card-header").text($(this).val());
+                    }
+            })
+
+
+
+
+    });
+    $(function (){
+
+        dragula({
+            isContainer: function (el) {
+                return $(el).hasClass('dragula-container'); // only elements in drake.containers will be taken into account
+            },
+            moves: function (el, source, handle, sibling) {
+                return true; // elements are always draggable by default
+            },
+            accepts: function (el, target, source, sibling) {
+                 return true; // elements can be dropped in any of the `containers` by default
+            },
+            invalid: function (el, handle) {
+                return false; // don't prevent any drags from initiating by default
+            },
+            copy: true,
+            revertOnSpill: true,
+             copySortSource: true
+        }).on('drop', function (el, target, source, sibling) {
+
+            if( $(el).find(".template").length>0){
+                var tmp=$(el).find(".template");
+                    tmp.find('[name=default]').attr("name",Date.now());
+
+                $(el).replaceWith($(el).find(".template").html());
+            }else{
+                return false;
+            }
+            layui.form.render()
+            //return $(el).find(".template").html();
+        })
+
+        let tools=`<div class="layui-component-tools">
+<i class="layui-icon layui-icon-templeate-1" title="复制"></i>
+<i class="layui-icon layui-icon-delete" title="删除"></i>
+</div>`;
+        function rowselect(el){
+            $(".active").removeClass("active");
+            $(".layui-component-tools").remove();
+            el.addClass("active");
+            el.append(tools);
+            $(".config-form").hide();
+            var currentConfig=$(".config-"+el.attr("type"));
+            $.each(el[0].attributes,function(i,d){
+                if(d.name.indexOf('d-')>=0){
+                    var cname=d.name.replace('d-','');
+                    try{
+                        currentConfig.find("[name="+cname+"]").val(d.value);
+                    }catch(e){
+                        console.log(e);
+                    }
+                }
+            })
+            switch (el.attr("type")){
+                case 'input-text':
+                    console.log('input-text');
+                    break;
+                case 'card':
+                    console.log('card');
+                    break;
+                default:
+                    break;
+            }
+            layui.form.render();
+            currentConfig.show();
+        }
+
+        $(document).on("click",".selector",function(e){
+            // console.log($(this)[0].classList)
+              if(!$(this).hasClass("active")){
+                  rowselect($(this));
+              }
+            e.preventDefault();
+            e.stopPropagation();
+        })
+
+        $(document).on("click",".layui-icon-delete",function(e){
+            $(this).parents(".active").remove();
+        })
+        $(document).on("click",".layui-icon-templeate-1",function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var copy=$(this).parents(".active").clone();
+            $(this).parents(".active").parent().append(copy);
+            $(".active").removeClass("active");
+            $(".layui-component-tools").remove();
+        })
+
+        layer.open({
+            type: 1,
+            offset: 'l',
+            anim: 5, // 从左往右
+            area: ['17.666667%', '100%'],
+            shade: 0,
+            closeBtn:0,
+            title:'',
+            content:$(".lefttab"),
+            success: function(){
+
+            },end: function(){
+            }
+        });
+        layer.open({
+                    type: 1,
+                    offset: 'r',
+                    anim: 5, // 从左往右
+                    area: ['17.666667%', '100%'],
+                    shade: 0,
+                    closeBtn:1,
+                    title:'配置',
+                    maxmin: true,
+                    resize:true,
+                    content:$(".righttab"),
+                    success: function(){
+
+                    },end: function(){
+                    }
+                });
+    })
+
+
+</script>
+</body>
+</html>

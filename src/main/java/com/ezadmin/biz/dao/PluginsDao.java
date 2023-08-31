@@ -2,6 +2,7 @@ package com.ezadmin.biz.dao;
 
 import com.ezadmin.EzBootstrap;
 import com.ezadmin.common.utils.StringUtils;
+import com.ezadmin.common.utils.Utils;
 import com.ezadmin.web.Config;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,9 +18,18 @@ public class PluginsDao {
 
     private static PluginsDao dao = new PluginsDao();
 
+    /**
+     * key:plugincode
+     * value:config
+     */
     private static Map<String, Config> pluginsFormConfigMap=new HashMap();
     private static Map<String, Config> pluginsListConfigMap=new HashMap();
     private static Map<String, Config> pluginsDetailConfigMap=new HashMap();
+
+    /**
+     * key:plugintype
+     * value:List-config
+     */
     private static Map<String, List<Config>> pluginsFormTypeConfigMap=new HashMap();
     private static Map<String, List<Config>> pluginsDetailTypeConfigMap=new HashMap();
     private static Map<String, List<Config>> pluginsListTypeConfigMap=new HashMap();
@@ -62,7 +72,14 @@ public class PluginsDao {
         } else {
             p.put("PLUGIN_BODY", doc.body().html());
         }
+        if(doc.getElementById("template")!=null){
+            p.put("TEMPLATE",doc.getElementById("template").html());
+        }else{
+            p.put("TEMPLATE","");
+
+        }
         p.put("PLUGIN_NAME", doc.title());
+        p.put("ICON", Utils.trimEmptyDefault(doc.body().attr("icon"),"layui-icon-app") );
         p.put("PLUGIN_TYPE", type);
         p.put("PLUGIN_CODE", id);
         return p;
@@ -96,7 +113,16 @@ public class PluginsDao {
         return l;
     }
 
+    public   List<Map<String, Object>> allFormPlugin() {
+        List<Config> configList=pluginsFormTypeConfigMap.get("form");
+        List<Map<String, Object>> l = new ArrayList<>();
 
+        for (int i = 0; i < configList.size(); i++) {
+            Map  v=docToPluginMap(configList.get(i).getDoc());
+            l.add(v);
+        }
+        return l;
+    }
     public   List<Map<String, Object>> formPlugin(String pre) {
         List<Map<String, Object>> l = new ArrayList<>();
         for (Map.Entry<String, List<Config>> entry:pluginsFormTypeConfigMap.entrySet()){

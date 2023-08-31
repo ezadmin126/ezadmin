@@ -1,4 +1,4 @@
-package com.ezadmin.biz.dao.edit.controller;
+package com.ezadmin.biz.edit.controller;
 
 import com.ezadmin.EzBootstrap;
 import com.ezadmin.biz.base.service.CoreService;
