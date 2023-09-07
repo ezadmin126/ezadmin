@@ -2,10 +2,46 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>搜索-日期时间范围</title>
+    <title>日期时间区间</title>
 </head>
-<body id="datetimerange" type="search">
-     <div class=" layui-col-md3 list-item "
+<body id="datetimerange" type="search" icon="layui-icon-date">
+
+
+<div id="template" >
+    <div class="layui-col-md3 layui-col-space10 selector" type="input-datetimerange">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">日期时间区间</label>
+            <div class="layui-input-block">
+                <div class="ez-daterange-parent  ">
+                    <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0;width:30px!important">
+                        <div class="layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-date"></i>
+                            </div>
+                            <input  PLACEHOLDER="开始时间"  autocomplete="off" type="text"
+                                    class="layui-input layui-date"
+                                    name="default" >
+                        </div>
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0;width:30px!important">
+
+                        <div class="layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-date"></i>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="content">
+     <div class="selector layui-col-md3 list-item " type="input-datetimerange"
              th:style="${model.getConfig('style')}"
              th:ITEM_NAME="${model.getConfig('item_name')}"
              th:ez-name="${model.getConfig('item_name')}"
@@ -22,7 +58,7 @@
                    th:id="${model.getConfig('item_name')+'_START_ID'}"
             >
         </div>
-        <div class="layui-form-mid">-</div>
+        <div class="layui-form-mid"  >-</div>
         <div class="layui-input-inline ez-range ez-datetimerange" style="margin-right: 0">
             <input autocomplete="off" type="text" class="layui-input layui-datetime"
                    th:value="${model.getParam(model.getConfig('item_name')+'_END')}"
@@ -32,5 +68,7 @@
     </div>
     </div>
 </div>
- </body>
+
+ </div>
+</body>
 </html>

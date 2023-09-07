@@ -37,7 +37,7 @@ public class FormDao extends JsoupUtil{
             ,JsoupUtil.STYLE
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
             ,JsoupUtil.TOP_DESC,JsoupUtil.ITEM_DESC,JsoupUtil.RIGHT_DESC
-            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP
+            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE
     };
     private FormDao() {
 
@@ -101,6 +101,7 @@ public class FormDao extends JsoupUtil{
         formMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
         formMap.put(JsoupUtil.FORM_NAME, doc.title());
         formMap.put(JsoupUtil.FORM_NAME.toLowerCase(), doc.title());
+
 
         return formMap;
     }
@@ -464,6 +465,8 @@ public class FormDao extends JsoupUtil{
             item.html(Utils.trimNull(append_head));
             doc.body().appendChild(item);
             return item;
+        }else{
+            el.html(Utils.trimNull(append_head));
         }
         return el;
     }
@@ -482,5 +485,210 @@ public class FormDao extends JsoupUtil{
     }
 
     public void clear() {
+    }
+    public   Map<String, Object> selectAllFormById(String formCode) {
+        Map<String, Object> result=new HashMap<>();
+
+        Config config=formConfigMap.get(formCode.toLowerCase());
+        Document doc = config.getDoc();
+        Element body = doc.body();
+        Map<String, String> formMap = JsoupUtil.loadAttrNoChild(body);
+        formMap.put("formcode", formCode);
+        formMap.put("datasource", strip(body.attr("datasource")));
+        formMap.put("success_url", strip(body.attr("success_url")));
+
+        Element configForm=body.getElementById("configForm");
+        if(configForm!=null){
+            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.SUBMIT_EXPRESS);
+            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.INIT_EXPRESS);
+            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.DELETE_EXPRESS);
+            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.STATUS_EXPRESS);
+         }
+        formMap.put(JsoupUtil.APPEND_HEAD, doc.getElementById(JsoupUtil.APPEND_HEAD) == null ? "" : doc.getElementById(JsoupUtil.APPEND_HEAD).html());
+        formMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
+        formMap.put(JsoupUtil.FORM_NAME, doc.title());
+         formMap.put(JsoupUtil.FORM_NAME.toLowerCase(), doc.title());
+
+        result.put("core",formMap);
+        List<Map<String,Object>> cardsList=new ArrayList<>();
+        result.put("cards",cardsList);
+
+
+        Element inputForm=body.getElementById("inputForm");
+
+        Elements cardColList= inputForm.select(".layui-card");
+        if(cardColList!=null&&cardColList.size()>0){
+            for (int i = 0; i < cardColList.size(); i++) {
+
+                Map<String,Object> cardEl=new HashMap<>();
+                cardEl.put("col",Utils.trimEmptyDefault(cardColList.get(i).parent().attr("col"),"12"));
+                cardEl.put("cardname",cardColList.get(i).selectFirst(".layui-card-header").html());
+
+                List<Map<String,String>> formitemList=new ArrayList<>();
+
+                Elements formitems=cardColList.get(i).select(".layui-form-item");
+                for (int j = 0; j < formitems.size(); j++) {
+                    Element label=formitems.get(j).selectFirst(".layui-form-label");
+                    Element plugin=formitems.get(j).selectFirst("[item_name]");
+                    if(plugin==null){
+                        continue;
+                    }
+                    Map<String, String> attrMap = JsoupUtil.loadAttrNoChild(plugin);
+                    attrMap.put(JsoupUtil.LABEL,label.text());
+                    attrMap.put(JsoupUtil.COL,Utils.trimEmptyDefault(formitems.get(j).parent().attr("col"),"12"));
+                    attrMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(plugin));
+                    if(StringUtils.isBlank(attrMap.get(JsoupUtil.URL))){
+                        attrMap.put(JsoupUtil.URL,plugin.attr("item_url"));
+                    }
+                    formitemList.add(attrMap);
+                }
+                if(Utils.isNotEmpty(formitemList)){
+                    cardEl.put("items",formitemList);
+                    cardsList.add(cardEl);
+                }
+            }
+        }else{//兼容没有card的情况
+            Map<String,Object> cardEl=new HashMap<>();
+            cardEl.put("col","12");
+            List<Map<String,String>> formitemList=new ArrayList<>();
+            Elements formitems=inputForm.select(".layui-form-item");
+            for (int j = 0; j < formitems.size(); j++) {
+                Element label=formitems.get(j).selectFirst(".layui-form-label");
+
+                Element plugin=formitems.get(j) .selectFirst("[item_name]");
+                       ;
+                Map<String, String> attrMap = JsoupUtil.loadAttrNoChild(plugin);
+                attrMap.put(JsoupUtil.LABEL,label.text());
+                attrMap.put(JsoupUtil.COL,formitems.get(j).parent().attr("col"));
+                attrMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(plugin));
+                if(StringUtils.isBlank(attrMap.get(JsoupUtil.URL))){
+                    attrMap.put(JsoupUtil.URL,plugin.attr("item_url"));
+                }
+                formitemList.add(attrMap);
+
+            }
+            if(Utils.isNotEmpty(formitemList)){
+                cardEl.put("items",formitemList);
+                cardsList.add(cardEl);
+            }
+        }
+
+         return result;
+    }
+
+    public void updateForm(Map<String, Object> form) throws IOException {
+        Map<String,Object> coreMap=(Map<String,Object>)form.get("core");
+
+        String formcode= Utils.trimNull( coreMap.get("formcode"));
+        String formname=  Utils.trimNull( coreMap.get(JsoupUtil.FORM_NAME.toLowerCase()));
+        String successurl=Utils.trimNull( coreMap.get("successurl"));
+        String datasource=Utils.trimNull( coreMap.get("datasource"));
+        String initcode=  Utils.trimNull( coreMap.get("initcode"));
+        String subcode=   Utils.trimNull( coreMap.get("subcode"));
+        String delcode=   Utils.trimNull( coreMap.get("delcode"));
+        String statuscode=   Utils.trimNull( coreMap.get("statuscode"));
+        String appendhead=Utils.trimNull( coreMap.get(JsoupUtil.APPEND_HEAD));
+        String appendfoot=Utils.trimNull( coreMap.get(JsoupUtil.APPEND_FOOT));
+
+
+        Config config=null;
+        if (config==null) {
+            Config tempConfig=formConfigMap.get("formtemplate");
+
+            Document doc =tempConfig.getDoc().clone();
+
+            String editPath=EzBootstrap.instance().getEditLocation()+File.separator+"form";
+            editPath=editPath+(File.separator+formcode+".html");
+
+
+
+            //创建新文件
+            Config c=new Config();
+            c.setFile(new File(editPath));
+            c.setUrl(new File(editPath).toURI().toURL());
+            c.setPath(new File(editPath).toURI().toURL().getPath());
+            c.setProtocol("file");
+            if(!new File(editPath).exists()){
+                Files.createFile(Paths.get(editPath));
+            }
+            doc.body().attr("id",formcode.toLowerCase());
+            c.setDoc(doc);
+            formConfigMap.put(formcode.toLowerCase(),c);
+            // stream.close();
+            config=c;
+        }
+        Document doc=config.getDoc();
+        Element body = doc.body();
+        //处理主体
+        body.attr("id", formcode);
+        body.attr(JsoupUtil.DATASOURCE,datasource);
+        body.attr(JsoupUtil.SUCCESS_URL, successurl);
+        Element configForm= doc.getElementById("configForm");
+        configForm.selectFirst("[item_name=init_express]").html(initcode);
+        configForm.selectFirst("[item_name=submit_express]").html(subcode);
+        configForm.selectFirst("[item_name=delete_express]").html(delcode);
+        configForm.selectFirst("[item_name=status_express]").html(statuscode);
+        doc.title(formname);
+        head(doc,JsoupUtil.APPEND_HEAD,appendhead);
+        foot(doc,JsoupUtil.APPEND_FOOT,appendfoot);
+        //处理元素
+        Element inputForm=doc.getElementById("inputForm");
+
+        List<Map<String,Object>> cardsList=(List<Map<String,Object>>)form.get("cards");
+        if(Utils.isNotEmpty(cardsList)){
+            for (int i = 0; i < cardsList.size(); i++) {
+                Map<String,Object> card=cardsList.get(i);
+                String cardName=Utils.trimNull(card.get("cardname"));
+                String col=Utils.trimNull(card.get("col"));
+                Element newcardElement=newCard(cardName,col);
+                List<Map<String,Object>> formItemList=(List<Map<String,Object>>)card.get("items");
+                for (int j = 0; j < formItemList.size(); j++) {
+                    Map<String,Object> formItem=formItemList.get(j);
+                    String formitemcol=Utils.trimEmptyDefault(formItem.get("col"),"12");
+                    Element formItemHtmlElement=newFormItem(Utils.trimNull(formItem.get(JsoupUtil.LABEL)),formitemcol);
+                    for (int k = 0; k < names.length; k++) {
+                        String formItemAttrValue=Utils.trimNull(formItem.get(names[k]));
+                        if(StringUtils.isNotBlank(formItemAttrValue)){
+                            formItemHtmlElement.getElementsByTag("object").attr(names[k],formItemAttrValue);
+                        }
+                    }
+                     newcardElement.selectFirst(".layui-card-body")
+                            .appendChild(formItemHtmlElement);
+                }
+                inputForm.appendChild(newcardElement);
+            }
+        }
+        updateConfig(config);
+    }
+
+
+    Element newCard(String label,String col){
+        return Jsoup.parse(" <div class=\"cardcol layui-col-md"+col+"\" col='"+col+"'  ><div class=\"layui-card\"  >\n" +
+                "            <div class=\"layui-card-header\">\n" +
+                label +
+                "            </div>\n" +
+                "            <div class=\"layui-card-body\">\n" +
+                "            </div>\n" +
+                "        </div></div>").body().child(0);
+    }
+    Element newFormItem(String label,String col){
+        return Jsoup.parse("<div class=\"layui-col-space10  layui-col-md"+col+"\"  col='"+col+"'   >\n" +
+                "                    <div class=\"layui-form-item \">\n" +
+                "                        <label class=\"layui-form-label  \">"+label+"</label>\n" +
+                "                        <div class=\"layui-input-block\">\n" +
+                "                            <object   >\n" +
+                "                            </object>\n" +
+                "                        </div>\n" +
+                "                    </div>\n" +
+                "                </div>").body().child(0);
+    }
+    public static void main(String[] args) {
+        System.out.println(Jsoup.parse("<div class=\"layui-card\"  >\n" +
+                "            <div class=\"layui-card-header\">\n" +
+                "                EZ_DEFAULT_GROUP\n" +
+                "            </div>\n" +
+                "            <div class=\"layui-card-body\">\n" +
+                "            </div>\n" +
+                "        </div>").body().child(0).outerHtml());;
     }
 }

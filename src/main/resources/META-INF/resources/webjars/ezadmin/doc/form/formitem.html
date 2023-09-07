@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>layout 管理系统大布局 - Layui</title>
+    <title>表单元素API</title>
     <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
     <link href="../global.css" rel="stylesheet">
 
@@ -37,10 +37,16 @@
              字段显示名称
             </div>
         </div>
+        <div class="layui-card" id="placeholder">
+            <div class="layui-ez-color layui-card-header">placeholder>placeholder</div>
+            <div class="layui-card-body">
+                placeholder
+            </div>
+        </div>
         <div class="layui-card" id="alias">
             <div class="layui-ez-color layui-card-header">字段别名>alias</div>
             <div class="layui-card-body">
-
+                数据库字段别名
             </div>
         </div>
 
@@ -164,11 +170,7 @@
 
                     </tr>
 
-                    <tr>
-                        <td>富文本 WANGEDIT</td>
-                        <td>richtext</td>
-                        <td>富文本WANGEDIT &lt;object type=richtext &gt;&lt;/object&gt;  </td>
-                    </tr>
+
                     <tr>
                         <td>富文本 tinymce(推荐)</td>
                         <td>tinymce</td>
@@ -230,17 +232,11 @@ var zNodes =[
         </div>
 
 
-        <div class="layui-card" id="align">
-            <div class="layui-ez-color layui-card-header">排列方式>align</div>
+
+        <div class="layui-card" id="col">
+            <div class="layui-ez-color layui-card-header">栅栏>col</div>
             <div class="layui-card-body">
-                block，inline
-                前者始终展示一行，后者平铺
-            </div>
-        </div>
-        <div class="layui-card" id="group_data">
-            <div class="layui-ez-color layui-card-header">分组配置>group_data</div>
-            <div class="layui-card-body">
-               选择表单主体配置的分组，分组相同的表单元素将会在一个card中展示
+                宽度，页面分成12份，不同的数字代码不同的宽度。如无法满足需求，则可以使用自定义样式。
             </div>
         </div>
         <div class="layui-card" id="data">
@@ -364,13 +360,13 @@ text:
         <div class="layui-card" id="item_desc">
             <div class="layui-ez-color layui-card-header">下方提示>item_desc</div>
             <div class="layui-card-body">
-                一般只有在布局为block时使用
+                输入框下方的提示
             </div>
         </div>
-        <div class="layui-card" id="right_desc">
-            <div class="layui-ez-color layui-card-header">右方提示>right_desc</div>
+        <div class="layui-card" id="top_desc">
+            <div class="layui-ez-color layui-card-header">上方提示>top_desc</div>
             <div class="layui-card-body">
-                一般只有在布局为block时使用
+                输入框上方的提示
             </div>
         </div>
         <div class="layui-card" id="help">
@@ -435,6 +431,28 @@ text:
             <div class="layui-ez-color layui-card-header">layui验证>lay_verify</div>
             <div class="layui-card-body">
                 required|phone|number, 文件参考layui文档配置：{"acceptMime":"image/png","exts":"png","max":1,"min":0}
+            </div>
+        </div>
+        <div class="layui-card" id="valid_rule">
+            <div class="layui-ez-color layui-card-header">jquery验证>valid_rule</div>
+            <div class="layui-card-body">
+                参考jquery validate api
+                {"required": true,
+                "minlength": 2}
+            </div>
+        </div>
+        <div class="layui-card" id="valid_msg">
+            <div class="layui-ez-color layui-card-header">jquery验证>valid_msg</div>
+            <div class="layui-card-body">
+                参考jquery validate api
+                {"required": true,
+                "minlength": "长度{0}"}
+            </div>
+        </div>
+        <div class="layui-card" id="style">
+            <div class="layui-ez-color layui-card-header">自定义样式>style</div>
+            <div class="layui-card-body">
+                给当前输入项自定义的样式
             </div>
         </div>
 

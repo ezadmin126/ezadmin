@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>表单主体</title>
+  <title>表单API</title>
     <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
     <link href="../global.css" rel="stylesheet">
 
@@ -106,34 +106,70 @@
             </div>
         </div>
 
-        <div class="layui-card" id="GROUP_DATA">
-            <div class="layui-ez-color layui-card-header">分组配置>formitem>GROUP_DATA</div>
-            <div class="layui-card-body">
-系统获取name为  GROUP_DATA 的 元素text()配置
-生成的表单，按照card格式展示，此处统一配置，表单选择可以选择一个选项。
-<pre>
-     &lt;pre class=&quot;form-item layui-code&quot; name=&quot;GROUP_DATA&quot; type=&quot;&quot;&gt;
-                    [ {&quot;V&quot;:&quot;基础数据&quot;,&quot;K&quot;:&quot;基础数据&quot;,&quot;type&quot;:&quot;inline&quot;},
-                    {&quot;V&quot;:&quot;初始数据&quot;,&quot;K&quot;:&quot;初始数据&quot;,&quot;type&quot;:&quot;block&quot;} ,
-                    {&quot;V&quot;:&quot;自定义&quot;,&quot;K&quot;:&quot;自定义&quot;,&quot;type&quot;:&quot;block&quot;} ]
-                &lt;/pre&gt;
-</pre>
-            </div>
-        </div>
-
         <div class="layui-card" id="INIT_EXPRESS">
             <div class="layui-ez-color layui-card-header">初始化表达式>formitem>INIT_EXPRESS</div>
             <div class="layui-card-body">
                 系统获取name为  INIT_EXPRESS 的 元素text()配置
-
-                初始化表单数据
+                <br>
+                1.纯SQL
+                <pre class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+select user_id ,user_name from T_USER WHERE 1=1
+                </pre>
+                <br>
+                2.QLExpress   最终需要返回一条SQL，$$取session  $取request
+                <pre class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("select COMPANY_ID,BRAND_NAME,BRAND_WEBSITE,ADD_TIME,ADD_NAME from T_BRAND where  BRAND_ID=${ID}  ");
+if(companyId&gt;1){
+	sql.append(" AND COMPANY_ID="+companyId);
+}
+return select(sql).get(0);
+                </pre>
             </div>
         </div>
         <div class="layui-card" id="SUBMIT_EXPRESS">
             <div class="layui-ez-color layui-card-header">提交表达式>formitem>SUBMIT_EXPRESS</div>
             <div class="layui-card-body">
                 系统获取name为  SUBMIT_EXPRESS 的 元素text()配置
-
+                <br>添加了一些自定义类，便于增减字段。<br>
+                insertSimple会根据InsertParam的值，生成SQL，最终也是执行 insert(sql)或者update(sql);<br>
+                特殊情况可以：调用springbean ，传入request参数Map，执行特殊业务逻辑。<br>
+                当然也可以自定义函数。<br>
+                id= spring("productService").create($("request"));<br>
+<pre class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+import com.ezadmin.plugins.express.jdbc.UpdateParam;
+import com.ezadmin.plugins.express.jdbc.InsertParam;
+companyId=$$("COMPANY_ID");
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");
+sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");
+if(!isNotBlank("ID")){
+    param=new InsertParam();
+    param.table("T_BASE_ATTRIBUTE");
+     param.add("#{ATTRIBUTE_NAME}");
+    param.add("#{COMPANY_ID,value="+companyId+"}");
+    param.add("#{ADD_TIME,value=NOW()}");
+    param.add("#{ADD_ID,value='"+sessionUserId+"'}");
+    param.add("#{ADD_NAME,value='"+sessionUserName+"'}");
+    id=insertSimple(param);
+    return id;
+}else{
+    param=new UpdateParam();
+    param.table("T_BASE_ATTRIBUTE");
+    param.add("#{ATTRIBUTE_NAME}");
+    param.add("#{UPDATE_TIME,value=NOW()}");
+    param.add("#{UPDATE_ID,value='"+sessionUserId+"'}");
+    param.add("#{UPDATE_NAME,value='"+sessionUserName+"'}");
+    StringBuilder updateSql=new StringBuilder();
+    updateSql.append(" where ATTRIBUTE_ID=#{ID} ");
+    if(companyId&gt;1){
+        updateSql.append(" and COMPANY_ID= "+companyId);
+    }
+    param.where(updateSql.toString());
+    updateSimple(param);
+    return ID;
+}
+                </pre>
                 提交表达式
                 /ezadmin/form/doSubmit-{}
             </div>
@@ -142,22 +178,28 @@
             <div class="layui-ez-color layui-card-header">删除表达式>formitem>DELETE_EXPRESS</div>
             <div class="layui-card-body">
                 系统获取name为  DELETE_EXPRESS 的 元素text()配置
-
+                执行一个SQL
+                <pre class="layui-code layui-code-view layui-box" lay-options="{title:'示例', height: '320px'}">
+                    update("UPDATE T_SUPPLIER set status=${STATUS} where SUPPLIER_ID=${ID}");
+                </pre>
                 删除表达式
                 /ezadmin/form/doDelete-{}
             </div>
         </div>
         <div class="layui-card" id="append_head">
-            <div class="layui-ez-color layui-card-header">自定义样式>formitem>APPEND_HEAD</div>
+            <div class="layui-ez-color layui-card-header">自定义样式>APPEND_HEAD</div>
             <div class="layui-card-body">
-                获取id为APPEND_HEAD的html()
+                获取id为APPEND_HEAD的html(),<br>
+                此段代码会以源码形式添加到body最前面
                 自定义样式
             </div>
         </div>
         <div class="layui-card" id="append_foot">
-            <div class="layui-ez-color layui-card-header">自定义脚本>formitem>APPEND_FOOT</div>
+            <div class="layui-ez-color layui-card-header">自定义脚本>APPEND_FOOT</div>
             <div class="layui-card-body">
                 获取id为APPEND_FOOT的html()
+                <br>
+                此段代码会以源码形式添加到body最后面
                 自定义脚本
             </div>
         </div>
@@ -165,6 +207,10 @@
             <div class="layui-ez-color layui-card-header">自定义成功URL>body>SUCCESS_URL</div>
             <div class="layui-card-body">
                 保持成功之后跳转的url,默认编辑页。
+                reload:全局刷新，主要是 iframe格式的页面<br>
+                reloadlocal: 仅限跳转当前页面，刷新当前tab<br>
+                http:xxx:跳转到其他页面,配置绝对路径或者相对路径，url支持${xxx}获取request或者返回值里面的数据<br>
+                表单提交之后的跳转URl
             </div>
         </div>
     </div>
@@ -172,5 +218,6 @@
 <br>
 <script src="//unpkg.com/layui@2.8.3/dist/layui.js">
 </script>
-<script src="../global.js"></script></body>
+<script src="../global.js"></script>
+</body>
 </html>

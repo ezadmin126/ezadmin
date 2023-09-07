@@ -21,6 +21,7 @@ import java.util.Map;
 public class JsoupUtil {
     protected static final String HREF ="href" ;
     protected static final String COL = "col";
+    protected static final String TYPE ="type" ;
     public static String TABLESTYLE="tablestyle";
     private static  Logger logger= LoggerFactory.getLogger(JsoupUtil.class);
 
@@ -61,7 +62,6 @@ public class JsoupUtil {
     public static final String TOP_DESC ="top_desc" ;
     public static final String ITEM_DESC ="item_desc" ;
     public static final String RIGHT_DESC = "right_desc";
-    public static final String IMAGE_WIDTH_HEIGHT = "image_width_height";
     public static final String HELP ="help" ;
     public static final String SUBMIT_EXPRESS = "submit_express";
     public static final String INIT_EXPRESS ="init_express" ;
@@ -248,6 +248,12 @@ public class JsoupUtil {
              if (ATTR_KEY_MAPPING.containsKey(attribute.getKey().toLowerCase())) {
                 Utils.putIfAbsent(ITEM_MAP,ATTR_KEY_MAPPING.get(attribute.getKey().toLowerCase()), strip(attribute.getValue()));
             }
+             if(StringUtils.equalsIgnoreCase(attribute.getKey(),"readonly")){
+                 ITEM_MAP.put(attribute.getKey().toLowerCase(), "readonly");
+             }
+             if(StringUtils.equalsIgnoreCase(attribute.getKey(),"disabled")){
+                 ITEM_MAP.put(attribute.getKey().toLowerCase(), "disabled");
+             }
 
         } ;
         return ITEM_MAP;
@@ -264,6 +270,22 @@ public class JsoupUtil {
         };
         return ITEM_MAP;
     }
+
+    public static String getTypeByElement(Element item){
+        String type = strip(item.attr("type"));
+        StringBuilder sb = new StringBuilder();
+        if (StringUtils.isBlank(type)) {
+            sb.append(item.tagName());
+        } else if (type.contains("-")) {
+            sb.append(type);
+        } else if (StringUtils.equalsIgnoreCase(item.tagName(), "object")) {
+            sb.append(type);
+        } else {
+            sb.append(item.tagName() + "-" + type);
+        }
+        return sb.toString();
+    }
+
     public static Map<String, String> loadplugin(Element item ) {
         Map<String, String> ITEM_MAP = new HashMap<>();
         String type = strip(item.attr("type"));

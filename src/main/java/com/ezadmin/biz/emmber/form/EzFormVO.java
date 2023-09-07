@@ -12,6 +12,7 @@ public class EzFormVO {
 
     private String initExpress;
     private String submitExpress;
+    private String deleteExpress;
 
     private String appendHead;
     private String appendFoot;
@@ -103,5 +104,13 @@ public class EzFormVO {
 
     public void setGroupData(String groupData) {
         this.groupData = groupData;
+    }
+
+    public String getDeleteExpress() {
+        return deleteExpress;
+    }
+
+    public void setDeleteExpress(String deleteExpress) {
+        this.deleteExpress = deleteExpress;
     }
 }

@@ -2,11 +2,27 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>搜索-concat字段模糊搜索</title>
+    <title>concat字段模糊搜索</title>
 </head>
-<body id="union" type="search">
+<body id="union" type="search"  icon="layui-icon-more">
 
-<div class=" layui-col-md3 list-item "
+<div id="template" >
+    <div class="layui-col-space10 selector layui-col-md3" type="union">
+        <div class="layui-form-item ">
+            <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px">
+
+                <select name="default" class=""><option value="">请选择</option></select>
+            </div>
+            <div class="layui-input-block">
+                <input type="text" name="default" placeholder="请输入" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div id="content">
+    <div class=" layui-col-md3 list-item selector" type="union"
      th:style="${model.getConfig('style')}"
      th:ITEM_NAME="${model.getConfig('item_name')}"
      th:ez-name="${model.getConfig('item_name')}"
@@ -31,6 +47,6 @@
     </div>
     </div>
 </div>
-
+</div>
 </body>
 </html>

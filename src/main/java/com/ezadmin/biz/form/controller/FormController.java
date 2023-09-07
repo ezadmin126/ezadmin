@@ -19,6 +19,7 @@ import com.ezadmin.web.EzResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.sql.DataSource;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -65,7 +66,7 @@ public class FormController extends BaseController {
         String ENCRYPT_FORM_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
         request.setAttribute("formSubmitUrl",request.getContextPath()+"/ezadmin/form/doSubmit-"+ ENCRYPT_FORM_ID);
         request.setAttribute("formUrl",request.getContextPath()+"/ezadmin/form/form-"+ ENCRYPT_FORM_ID);
-
+        //自定义ID
         String ID= getIdInForm(request);
 
         if (StringUtils.isBlank(formId)&&StringUtils.isBlank(ENCRYPT_FORM_ID)) {
@@ -75,25 +76,17 @@ public class FormController extends BaseController {
         Map<String,Object> searchParamsValues=requestToMap(request );
         Map<String, String> sessionMap = sessionToMap(request.getSession());
         searchParamsValues.put("ContextPath", request.getContextPath());
-
         searchParamsValues.put("FORM_ID",formId);
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",ID);
-        EzFormBuilder form=new DefalutEzFormBuilder(EzBootstrap.instance().getOriginDataSource(), searchParamsValues,sessionMap);
-
-        if (form == null) {
-           // notFound(false,request,response);
-            return "404";
+        Map<String, Object> form=new HashMap<>();
+        if(StringUtils.isNotBlank(ENCRYPT_FORM_ID)){
+            form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
         }
-        request.setAttribute("EZ_NAME",form.getData().getForm().getFormName() );
-
-        searchParamsValues.put("FORM_ID",form.getData().getForm().getFormId());
-        //form.load();
-        form.renderHtml();
-        request.setAttribute("data",form.getData());
+        formService.fillFormById(form,searchParamsValues,sessionMap);
+        request.setAttribute("form",form);
         return "layui/form/form";
-       // ThymeleafUtils.writeHtml(form.getData().getForm().getTemplateBodyForm(),request,response);
-    }
+     }
 
     @EzMapping("upload.html")
     public void upload(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -188,38 +181,51 @@ public class FormController extends BaseController {
     }
     @EzMapping("doSubmit.html")
     public EzResult doSubmit(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String formId =  Utils.trimNull(request.getAttribute("FORM_ID"));
+
         String ENCRYPT_FORM_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
         String ID=getIdInForm(request);
         try {
 
-            logger.info("ezform doSubmit start {} {} ID={}",formId,ENCRYPT_FORM_ID,ID);
-            if (StringUtils.isBlank(formId)&&StringUtils.isBlank(ENCRYPT_FORM_ID)) {
+            logger.info("ezform doSubmit start {} {} ID={}", ENCRYPT_FORM_ID,ID);
+            if ( StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, String> form = formService.selectFormById(formId,ENCRYPT_FORM_ID);
+            Map<String, Object>   form=    formService.selectAllFormMapById(ENCRYPT_FORM_ID)  ;
 
-            if (form == null) {
+            if (form==null||form.isEmpty() ) {
                 return EzResult.instance().code("404");
             }
-            formId=form.get("FORM_ID");
-            EzSqlogDataSource formDs = EzBootstrap.instance().getDataSourceByKey(form.get("datasource"));
-            String express = Utils.trimNull(form.get(JsoupUtil.SUBMIT_EXPRESS));
 
+            DataSource formDs=null;
+            Map<String, Object> core=(Map<String, Object>)form.get("core");
+            if(core!=null){
+                formDs= EzBootstrap.instance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
+            }else{
+                form.put("core",new HashMap<>());
+            }
+            String successurl=Utils.trimNull( core.get("successurl"));
+            String express=   Utils.trimNull( core.get("subcode"));
             Map<String, Object> paras = new HashMap<>();
             paras.put("ID", ID);
-            List<Map<String, String>> itemOriginList = formService.getItemListByFormId(formId,ENCRYPT_FORM_ID);
-
-            for (int i = 0; i < itemOriginList.size(); i++) {
-                String itemName = Utils.trimNull(itemOriginList.get(i).get(JsoupUtil.ITEM_NAME));
-                paras.put(itemName, request.getParameter(itemName));
+            List<Map<String,Object>> cardList=(List<Map<String,Object>>)form.get("cards");
+            if(Utils.isNotEmpty(cardList)){
+                for (int i = 0; i < cardList.size(); i++) {
+                    List<Map<String,Object>> items=(List<Map<String,Object>>)cardList.get(i).get("items");
+                    if(Utils.isNotEmpty(items)) {
+                        for (int j = 0; j < items.size(); j++) {
+                            Map<String, Object> item = items.get(j);
+                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME)) ;
+                            paras.put(item_name, request.getParameter(item_name));
+                        }
+                    }
+                }
             }
 
             Map<String,Object> searchParamsValues=requestToMap(request );
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
             paras.putAll(searchParamsValues);
-            logger.info("ezform doSubmit execute {} {} ID={} param={}",formId,ENCRYPT_FORM_ID,ID, JSONUtils.toJSONString(searchParamsValues));
+            logger.info("ezform doSubmit execute   {} ID={} param={}",  ENCRYPT_FORM_ID,ID, JSONUtils.toJSONString(searchParamsValues));
             //计算初始化表单的参数值
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
@@ -235,14 +241,14 @@ public class FormController extends BaseController {
                     return r;
                 }
             }
+
             //data.data
             String defaultTo=request.getContextPath()+"/ezadmin/form/form-"+ ENCRYPT_FORM_ID+"?ID="+toFormId(rowId,request);
-            if(form.containsKey(JsoupUtil.SUCCESS_URL) && StringUtils.isNotBlank(form.get(JsoupUtil.SUCCESS_URL))){
-                String successUrl=form.get("success_url");
-                if(StringUtils.contains(successUrl,"/")){
-                    successUrl=request.getContextPath()+successUrl;
+            if(form.containsKey(JsoupUtil.SUCCESS_URL) && StringUtils.isNotBlank(successurl)){
+                 if(StringUtils.contains(successurl,"/")){
+                    successurl=request.getContextPath()+successurl;
                 }
-                defaultTo= MapParser.parseDefaultEmpty(successUrl, paras).getResult();
+                defaultTo= MapParser.parseDefaultEmpty(successurl, paras).getResult();
             }
             return EzResult.instance().data( defaultTo);
         }catch (EzAdminRuntimeException e2){
@@ -252,7 +258,7 @@ public class FormController extends BaseController {
             return EzResult.instance().setSuccess(false).code("500").setMessage("表达式配置错误");
         }
         catch (Exception e) {
-            logger.error("ezform doSubmit error {} {} ID={}",formId,ENCRYPT_FORM_ID,ID,e);
+            logger.error("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID,ID,e);
             return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
         }
     }

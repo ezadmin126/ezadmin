@@ -247,13 +247,19 @@ table.rc-table-resizing thead > th > a {
 /*}*/
 
 
-#searchForm .layui-form-mid {
-    height: 34px;
-    margin-top: -7px;
+.layui-form-mid {
     margin-right: 4px;
     margin-left: 5px;
 }
-
+.custom-select{
+    height: 38px;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #fff;
+    color: rgba(0,0,0,.85);
+    border-radius: 2px;
+    border-color: #eee;
+}
 
 /*.ezadmin-td{*/
 /*    min-width:110px;*/

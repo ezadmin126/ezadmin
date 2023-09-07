@@ -6,8 +6,8 @@
 </head>
 <body id="textarea" alias="8" type="form" icon="layui-icon-form">
 <div id="template">
-    <div class="layui-col-md12 selector" type="textarea">
-        <div class="layui-form-item " style="margin-bottom: 0;">
+    <div class="layui-col-space10 selector layui-col-md12" type="textarea">
+        <div class="layui-form-item ">
             <label class="layui-form-label  ">多行文本</label>
             <div class="layui-input-block">
                  <textarea name="default" class="layui-textarea"></textarea>
@@ -19,22 +19,22 @@
 
     <div id="content">
         <div class=" selector" th:classappend="${'layui-col-md'+col}" type="textarea"
-             th:d-label="${label}"
-             th:d-item_name="${item_name}"
-             th:d-placeholder="${placeholder}"
-             th:d-alias="${alias}"
-             th:d-col="${col}"
+             th:ez-label="${label}"
+             th:ez-item_name="${item_name}"
+             th:ez-placeholder="${placeholder}"
+             th:ez-alias="${alias}"
+             th:ez-col="${col}"
 
-             th:d-item_desc="${item_desc}"
-             th:d-top_desc="${top_desc}"
-             th:d-jdbctype="${jdbctype}"
-             th:d-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
-             th:d-valid_rule="${valid_rule}"
-             th:d-valid_msg="${valid_msg}"
-             th:d-style="${style}"
-             th:d-help="${help}"
+             th:ez-item_desc="${item_desc}"
+             th:ez-top_desc="${top_desc}"
+             th:ez-jdbctype="${jdbctype}"
+             th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+             th:ez-valid_rule="${valid_rule}"
+             th:ez-valid_msg="${valid_msg}"
+             th:ez-style="${style}"
+             th:ez-help="${help}"
         >
-            <div class="layui-form-item " style="margin-bottom: 0;">
+            <div class="layui-form-item "  >
                 <label class="layui-form-label  "   >
                     <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
                     <i th:if="${not #strings.isEmpty(help)}"

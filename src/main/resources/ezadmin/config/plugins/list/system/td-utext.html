@@ -2,9 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>表格-utext富文本</title>
+    <title>富文本</title>
 </head>
-<body id="td-utext" type="td">
+<body id="td-utext" type="td" icon="layui-icon-fonts-html">
+<div id="template" >
+    <li class="layui-nav-item selector" type="td-utext"> 富文本 </li>
+</div>
 <table>
     <tr id="content">
         <td th:edit_flag="${editFlag}"

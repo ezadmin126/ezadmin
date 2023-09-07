@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <title>原生下拉框</title>
 </head>
-<body id="select" alias="6" type="form" icon="layui-icon-slider">
+<body id="select" alias="6" type="form" icon="layui-icon-share">
 
 <div id="template" >
-    <div class="layui-col-md12 selector" type="select">
-        <div class="layui-form-item " style="margin-bottom: 0;">
+    <div class="layui-col-space10 selector layui-col-md12" type="select">
+        <div class="layui-form-item ">
             <label class="layui-form-label  ">原生下拉框</label>
             <div class="layui-input-block">
-                <select name="default" class="" lay-ignore>
+                <select name="default" style="width:100%" class="" lay-ignore>
                     <option value="">请选择</option>
                 </select>
             </div>
@@ -20,24 +20,26 @@
 </div>
 <div id="content">
 
-    <div class=" selector" th:classappend="${'layui-col-md'+col}" type="select"
-         th:d-label="${label}"
-         th:d-item_name="${item_name}"
-         th:d-placeholder="${placeholder}"
-         th:d-alias="${alias}"
-         th:d-col="${col}"
-         th:d-data="${data}"
-         th:d-datatype="${datatype}"
-         th:d-item_desc="${item_desc}"
-         th:d-top_desc="${top_desc}"
-         th:d-jdbctype="${jdbctype}"
-         th:d-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
-         th:d-valid_rule="${valid_rule}"
-         th:d-valid_msg="${valid_msg}"
-         th:d-style="${style}"
-         th:d-help="${help}"
+    <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}" type="select"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+         th:ez-url="${url}"
+
+         th:ez-data="${data}"
+         th:ez-datatype="${datatype}"
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
     >
-        <div class="layui-form-item " style="margin-bottom: 0;">
+        <div class="layui-form-item ">
             <label class="layui-form-label  "   >
                 <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
                 <i th:if="${not #strings.isEmpty(help)}"

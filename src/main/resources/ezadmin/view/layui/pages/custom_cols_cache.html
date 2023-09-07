@@ -79,7 +79,7 @@
             <div class="layui-card-body layui-row layui-col-space5">
                 <div class="layui-col-md3 columnDrage" th:each="item:${fromColField}"
                      th:ITEM_NAME="${item.item_name}">
-                    <div class="layui-form-item " style="margin-bottom: 0;" >
+                    <div class="layui-form-item " >
                         <label class="layui-form-label"  th:title="${ item.item_name =='firstCol'?'首列':  item.label}"
                                th:text="${ item.item_name =='firstCol'?'首列':  item.label}">Field E :</label>
                         <div class="layui-input-block">

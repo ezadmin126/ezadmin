@@ -43,7 +43,8 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
             options.maxTabNum = options.maxTabNum || 20;
             $.getJSON(options.iniUrl, function (rdata) {
                 if (!rdata.success) {
-                    miniAdmin.error('暂无菜单信息')
+                    miniAdmin.error('暂无菜单信息');
+                    miniAdmin.deleteLoader(options.loadingTime);
                 } else {
                     var data = rdata.data;
                     console.log(data)
@@ -76,6 +77,7 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
                     miniAdmin.deleteLoader(options.loadingTime);
                 }
             }).fail(function () {
+                miniAdmin.deleteLoader(options.loadingTime);
                 miniAdmin.error('菜单接口有误');
             });
         },

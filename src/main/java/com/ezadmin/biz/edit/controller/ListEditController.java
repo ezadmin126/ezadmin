@@ -2,9 +2,12 @@ package com.ezadmin.biz.edit.controller;
 
 import com.ezadmin.EzBootstrap;
 import com.ezadmin.biz.base.controller.BaseController;
+import com.ezadmin.biz.dao.PluginsDao;
 import com.ezadmin.biz.edit.service.EditService;
+import com.ezadmin.biz.form.service.FormService;
 import com.ezadmin.biz.list.emmber.list.DefaultEzList;
 import com.ezadmin.biz.list.emmber.list.EzList;
+import com.ezadmin.biz.list.service.ListService;
 import com.ezadmin.common.annotation.EzMapping;
 import com.ezadmin.common.utils.*;
 import com.ezadmin.plugins.sqlog.format.FormatStyle;
@@ -33,6 +36,8 @@ public class ListEditController extends BaseController {
     EzBootstrap bootstrap=EzBootstrap.instance();
     EditService editService = EzProxy.singleInstance(EditService.class);
 
+    ListService listService = EzProxy.singleInstance(ListService.class);
+    FormService formService = EzProxy.singleInstance(FormService.class);
 
     @EzMapping("listEdit.html")
     public String listEdit2(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -79,6 +84,16 @@ public class ListEditController extends BaseController {
         request.setAttribute("listUrl",request.getContextPath()+"/ezadmin/list/list-"+ENCRYPT_LIST_ID);
         return "layui/list/list";
      }
+    @EzMapping("loadList.html")
+    public String loadList(HttpServletRequest request, HttpServletResponse response){
+             List<Map<String, Object>> searchPlugins= PluginsDao.getInstance().allListPlugin("search");
+            List<Map<String, Object>> tdPlugins= PluginsDao.getInstance().allListPlugin("td");
+            request.setAttribute("searchPlugins",searchPlugins);
+            request.setAttribute("tdPlugins",tdPlugins);
+            request.setAttribute("data",new HashMap<>());
+
+            return "layui/pages/listedit";
+    }
 
     @EzMapping("fastlist.html")
     public void fastlist(HttpServletRequest request, HttpServletResponse response) throws Exception {

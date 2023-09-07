@@ -2,10 +2,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>搜索-原生下拉框</title>
+    <title>原生下拉框</title>
 </head>
-<body id="select" alias="input-select" type="search">
-<div class=" layui-col-md3 list-item "
+<body id="select" alias="input-select" type="search"
+      icon="layui-icon-share">
+
+<div id="template" >
+    <div class="layui-col-space10 selector layui-col-md3" type="select">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">原生下拉框</label>
+            <div class="layui-input-block">
+                <select name="default" style="width:100%" class="custom-select" lay-ignore>
+                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+ <div class=" layui-col-md3 list-item selector" type="select"
      th:style="${model.getConfig('style')}"
      th:ITEM_NAME="${model.getConfig('item_name')}"
      th:ez-name="${model.getConfig('item_name')}"
@@ -14,7 +29,7 @@
     <div  class="layui-form-item" >
         <label th:title="${model.getConfig('label')}" class="layui-form-label"
                th:for="${'search-itemName-' + model.getConfig('item_name')}"
-               th:text="${model.getConfig('label')}">普通文本</label>
+               th:text="${model.getConfig('label')}">原生下拉框</label>
         <div th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input-block':'layui-input-block layui-border-blue' } ">
             <select lay-search="" th:id="${'itemId-' + model.getConfig('item_name')}" style="width: 100%;"
                     th:name="${model.getConfig('item_name')}">
@@ -25,6 +40,7 @@
             </select>
         </div>
     </div>
+</div>
 </div>
  </body>
 </html>

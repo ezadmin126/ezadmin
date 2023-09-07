@@ -123,6 +123,15 @@ public class PluginsDao {
         }
         return l;
     }
+    public   List<Map<String, Object>> allListPlugin(String type) {
+        List<Config> configList=pluginsListTypeConfigMap.get(type);
+        List<Map<String, Object>> l = new ArrayList<>();
+        for (int i = 0; i < configList.size(); i++) {
+            Map  v=docToPluginMap(configList.get(i).getDoc());
+            l.add(v);
+        }
+        return l;
+    }
     public   List<Map<String, Object>> formPlugin(String pre) {
         List<Map<String, Object>> l = new ArrayList<>();
         for (Map.Entry<String, List<Config>> entry:pluginsFormTypeConfigMap.entrySet()){

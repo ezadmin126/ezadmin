@@ -191,30 +191,29 @@ function initForm() {
             });
         })
     })
-    $(".ez-help").each(function () {
-        $(this).click(function () {
-            var url = $(this).attr("src");
-            var tips = $(this).attr("tips");
-            var id = $(this).attr("id");
-            if (url) {
-                layer.open({
-                    type: 2,
-                    title: '说明',
-                    shadeClose: true,
-                    shade: 0.3,
-                    maxmin: true, //开启最大化最小化按钮
-                    area: ['90%', '90%'],
-                    content: url
-                });
-            }
-            if (tips) {
-                layer.tips(tips, '#' + id, {
-                    tips: [1, '#3595CC'],
-                    time: 4000
-                });
-            }
-        })
-    });
+
+    $(document).on("click",".ez-help",function(){
+        var url = $(this).attr("src");
+        var tips = $(this).attr("tips");
+        var id = $(this).attr("id");
+        if (url) {
+            layer.open({
+                type: 2,
+                title: '说明',
+                shadeClose: true,
+                shade: 0.3,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['90%', '90%'],
+                content: url
+            });
+        }
+        if (tips) {
+            layer.tips(tips, '#' + id, {
+                tips: [1, '#3595CC'],
+                time: 4000
+            });
+        }
+    })
 
 
     $(".ez-xmselect").each(function () {

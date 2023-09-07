@@ -2,10 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>搜索-搜索下拉框</title>
+    <title>搜索下拉框</title>
 </head>
-<body id="select-search" alias="20" type="search">
-<div class=" layui-col-md3 list-item "
+<body id="select-search" alias="20" type="search"
+      icon="layui-icon-share">
+
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md3" type="select-search">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">搜索下拉框</label>
+            <div class="layui-input-block">
+                <select name="default" class="">                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class=" layui-col-md3 list-item selector" type="select-search"
      th:style="${model.getConfig('style')}"
      th:ITEM_NAME="${model.getConfig('item_name')}"
      th:ez-name="${model.getConfig('item_name')}"
@@ -24,6 +38,7 @@
             </select>
         </div>
     </div>
+</div>
 </div>
  </body>
 </html>

@@ -210,7 +210,7 @@ public class DefalutEzFormBuilder implements EzFormBuilder {
                 context.setVariable(entry.getKey()  ,entry.getValue());
             }
 
-            String itemUrl=Utils.trimNull(initItemMap.get(item_url));
+            String itemUrl=Utils.trimNull(item_url);
             if(StringUtils.isNotBlank(itemUrl)){
                 String url= MapParser.parseDefaultEmpty(itemUrl, initItemMap).getResult();
                 context.setVariable("item_url",url);
@@ -224,7 +224,7 @@ public class DefalutEzFormBuilder implements EzFormBuilder {
                     //获取
                     EzList list = new DefaultEzList( dataConf, dataSource, requestParamMap,sessionParamMap);
                     list.renderHtml();
-                    context.setVariable("data",list.getEzListDto());
+                    context.setVariable("list",list.getEzListDto());
                 }
                 else {
                     try {
@@ -239,7 +239,8 @@ public class DefalutEzFormBuilder implements EzFormBuilder {
                         ItemInitData items = listService.getSelectItems(temp, dataConf, datatype,
                                 nm );
                         context.setVariable("items", items.getItems());
-                        context.setVariable("data", items.getEzList());
+                        context.setVariable("data", dataConf);
+                        context.setVariable("list", items.getEzList());
                         context.setVariable("childItems", items.getChildItems());
                         context.setVariable("itemsJson", JSONUtils.toJSONString(items.getItems()));
                     } catch (Exception e) {

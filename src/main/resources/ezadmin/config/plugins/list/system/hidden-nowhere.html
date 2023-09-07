@@ -2,10 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>搜索-隐藏域无where</title>
+    <title>隐藏域无where</title>
 </head>
 <body id="hidden-nowhere" type="search">
-<div th:if="${searchFlag}" th:ITEM_ID="${model.getConfig('item_name')}" class="list-item list-item-hidden">
+
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md3"   type="hidden">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">隐藏域无where</label>
+            <div class="layui-input-block">
+                <input type="text" name="default" placeholder="隐藏域,不占用位置" disabled class="layui-input">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+<div   th:ITEM_ID="${model.getConfig('item_name')}" class="list-item list-item-hidden">
     <label class="layui-form-label" th:for="${'itemId-' + model.getConfig('item_name')}"
            th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}"
     >普通文本</label>
@@ -15,12 +27,6 @@
                th:aria-describedby="${'DESC_'+model.getConfig('item_name')}">
     </div>
 </div>
-<div th:if="${tableSearchFlag}" class="list-item ">
-
-    <input class="layui-input " style="width:175px" th:value="${model.getParam(model.getConfig('item_name'))}"
-           th:name="${model.getConfig('item_name')}" th:id="${'itemId-' + model.getConfig('item_name')}"
-           th:aria-describedby="${'DESC_'+model.getConfig('item_name')}">
-
 </div>
 </body>
 </html>

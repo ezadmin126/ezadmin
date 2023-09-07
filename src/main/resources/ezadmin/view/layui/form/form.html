@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title th:text="${data.form.formName}">formName</title>
+    <title th:text="${form.core.form_name}">formName</title>
 
     <link th:href="${contextName+'/webjars/ezadmin/layui/css/ezform.css?v='+vi}" rel="stylesheet">
     <link th:href="${contextName+'/webjars/layui/2.8.10/dist/css/layui.css?v=2.7.6'}" rel="stylesheet">
@@ -46,124 +46,51 @@
             background-color: #fff;
             color: rgba(0,0,0,.85);
             border-radius: 2px;
-            border-color: #fff;
+            border-color: #eee;
         }
     </style>
 </head>
 <body class="layui-bg-gray">
 
 <div class="layui-container">
-    [(${data.form.appendHead})]
+    [(${form.core.append_head})]
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-        <ul class="layui-tab-title" th:if="${not #lists.isEmpty(data.formNavbars)}">
-            <li th:item_id="${item.itemId}" th:classappend="${item.select?'layui-this  ':' '}"
-                th:each="item:${data.formNavbars}"><a th:href="${item.itemUrl}" th:text="${item.itemLabel}"></a></li>
-        </ul>
+
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
 
-                <blockquote th:if="${#lists.isEmpty(data.formNavbars)}" class="layui-elem-quote layui-quote-nm"
-                            th:text="${data.form.formName}">这个
+                <blockquote  class="layui-elem-quote layui-quote-nm"
+                            th:text="${form.core.form_name}">这个
                 </blockquote>
-
-                <input type="hidden" id="FORM_ID" name="FORM_ID" th:VALUE="${data.form.encodeFormId}">
-                <div class="layui-row">
-                    <div class="layui-col-md12">
-                        <form ID="inputForm" method="post" class="  layui-form">
-                            <input type="hidden" ID="ID" name="ID" th:VALUE="${data.id}">
-
-                            <div class="layui-card" th:id="${group.name}" th:each="group:${data.groupFormItem}"
-                                 th:if="${not #lists.isEmpty(group.list)}">
-                                <div class="layui-card-header" th:text="${group.name}"
-                                     th:if="${not #strings.equals('EZ_DEFAULT_GROUP',group.name)}">卡片面板
+                <form ID="inputForm" method="post" class="  layui-form">
+                     <input type="hidden" ID="ID" name="ID" th:VALUE="${ID}">
+                    <input type="hidden" id="FORM_ID" name="FORM_ID" th:VALUE="${form.core.formcode}">
+                    <div class="layui-col-space10 layui-row ">
+                        <div th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}">
+                            <div class="layui-card"  >
+                                <div class="layui-card-header" th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
+                                    卡片面板
                                 </div>
-                                <!--block start-->
-                                <div class="layui-card-body dragula-container">
-
-                                    <div th:each="rowdata,stat:${group.list}" th:ITEM_NAME='${rowdata.item_name}'
-                                         editor="formitem" class="formitem layui-form-item"
-                                         th:style="${rowdata.style}">
-                                        <!--block start-->
-                                        <div th:remove="tag" th:if="${#strings.equals(rowdata.align,'block')}">
-                                            <label class="layui-form-label" th:for="${'ITEM_ID_' + rowdata.item_name}">
-                                                <span class="layui-required"
-                                                      th:if="${not #strings.isEmpty(rowdata.redRequired)}">*</span>
-                                                <i th:if="${not #strings.isEmpty(rowdata.help)}"
-                                                   th:id="${'ez-help-'+rowdata.item_name}"
-                                                   class="ez-help layui-icon-help layui-icon"
-                                                   th:src="${rowdata.help}"></i>
-                                                [[${rowdata.label}]]
-                                            </label>
-                                            <div class="layui-input-block">
-                                                <small th:id="${'DESC_'+rowdata.item_name}"
-                                                       class="layui-form-mid layui-text-em"
-                                                       th:utext="${rowdata.top_desc}" style="float:none"
-                                                       th:if="${not #strings.isEmpty(rowdata.top_desc)}">辅助文字(上)</small>
-                                                <div th:remove="tag" th:utext="${rowdata.html}"></div>
-                                                <small th:id="${'DESC_'+rowdata.item_name}"
-                                                       class="layui-form-mid layui-text-em"
-                                                       th:utext="${rowdata.item_desc}"
-                                                       th:if="${not #strings.isEmpty(rowdata.item_desc)}">辅助文字(下)</small>
-                                            </div>
-                                            <div class="layui-form-mid layui-word-aux"
-                                                 th:if="${not #strings.isEmpty(rowdata.right_desc)}"
-                                                 th:utext="${rowdata.right_desc}">辅助文字(右)
-                                            </div>
-
+                                <div class="layui-card-body   ">
+                                    <div class="layui-row  ">
+                                        <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
                                         </div>
-                                        <!--block end-->
-
-                                        <!--inline start-->
-                                        <div editor="formitem" th:item_name='${inlinedata.item_name}'
-                                             th:if="${#strings.equals(rowdata.align,'inline')}"
-                                             class="formitem layui-inline " th:each="inlinedata:${rowdata.inlineItems}">
-
-                                            <label class="layui-form-label"
-                                                   th:for="${'ITEM_ID_' + inlinedata.item_name}">
-                                                <span class="layui-required"
-                                                      th:if="${not #strings.isEmpty(rowdata.redRequired)}">*</span>
-
-                                                <i th:if="${not #strings.isEmpty(inlinedata.help)}"
-                                                   th:id="${'ez-help-'+inlinedata.item_name}"
-                                                   class="ez-help layui-icon-help layui-icon"
-                                                   th:src="${inlinedata.help}"></i>
-
-                                                [[${inlinedata.label}]]</label>
-                                            <div class=" layui-input-inline">
-                                                <div th:remove="tag" th:utext="${inlinedata.html}"></div>
-                                                <small th:id="${'DESC_'+inlinedata.item_name}"
-                                                       class="layui-form-mid layui-text-em"
-                                                       th:utext="${inlinedata.item_desc}"
-                                                       th:if="${not #strings.isEmpty(inlinedata.item_desc)}">辅助文字(下)</small>
-                                            </div>
-                                            <div class="layui-form-mid layui-word-aux"
-                                                 th:if="${not #strings.isEmpty(inlinedata.right_desc)}"
-                                                 th:utext="${inlinedata.right_desc}">辅助文字(右)
-                                            </div>
-
-
-                                        </div>
-
-                                        <!--inline end-->
-
                                     </div>
-
-                                </div>
-                                <!--block end-->
-
-                            </div>
-
-                            <div class="layui-form-item">
-                                <div class="layui-input-block">
-                                    <button id="submitbtn" type="submit" class="layui-btn" lay-submit
-                                            lay-filter="formDemo">立即提交
-                                    </button>
-                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button id="submitbtn" type="submit" class="layui-btn" lay-submit
+                                        lay-filter="formDemo">立即提交
+                                </button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    </div>
+                </form>
             </div>
         </div><!--end layui-tab-content-->
     </div>
@@ -228,18 +155,18 @@
             }
         </style>
         <ul id="dianti" class="layui-menu site-dir layui-layer-wrap">
-            <li th:each="group:${data.groupFormItem}"
-                th:if="${not #lists.isEmpty(group.list) && not #strings.equals('EZ_DEFAULT_GROUP',group.name)}">
-                <a th:href="${'#'+group.name}"><cite th:text="${group.name}">水平导航</cite></a>
+            <li th:each="card:${form.cards}"
+                th:if="${not #lists.isEmpty(form.cards)}">
+                <a th:href="${'#'+card.cardname}"><cite th:text="${card.cardname}">水平导航</cite></a>
             </li>
         </ul>
     </div>
 
 </div>
-<input type="hidden" id='validateRules' name='validateRules' th:value="${data.validateRules}">
-<input type="hidden" id='validateMessages' name='validateMessages' th:value="${data.validateMessages}">
-<input type="hidden" id='formSubmitUrl' name='formSubmitUrl' th:value="${data.formSubmitUrl}">
-<input type="hidden" id='formUrl' name='formUrl' th:value="${data.formUrl}">
+<input type="hidden" id='validateRules' name='validateRules' th:value="${form.core.validaterules}">
+<input type="hidden" id='validateMessages' name='validateMessages' th:value="${form.core.validatemessages}">
+<input type="hidden" id='formSubmitUrl' name='formSubmitUrl' th:value="${formSubmitUrl}">
+<input type="hidden" id='formUrl' name='formUrl' th:value="${formUrl}">
 <input type="hidden" id='contextName' name='contextName' th:value="${contextName}">
 <input type="hidden" id='uploadUrl' name='uploadUrl' th:value="${uploadUrl}">
 <input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
@@ -265,5 +192,5 @@
 </script>
 
 
-[(${data.form.appendFoot})]
+[(${form.core.append_foot})]
 </html>

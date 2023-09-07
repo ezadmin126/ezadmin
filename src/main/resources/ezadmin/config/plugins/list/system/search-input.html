@@ -2,11 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>搜索-输入框</title>
+    <title>单行输入框</title>
 </head>
-<body id="input-text" alias="19" alias2="input" type="search">
+<body id="input-text" alias="19" alias2="input" type="search" icon="layui-icon-file">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md3"   type="input-text">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">单行输入框</label>
+            <div class="layui-input-block">
+                <input type="text" name="default" placeholder="请输入" class="layui-input">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
 
-<div class=" layui-col-md3 list-item "
+<div class="selector layui-col-md3 list-item " type="input-text"
      th:style="${model.getConfig('style')}"
      th:ITEM_NAME="${model.getConfig('item_name')}"
      th:ez-name="${model.getConfig('item_name')}"
@@ -14,7 +25,7 @@
       >
     <div  class="layui-form-item" >
         <label class="layui-form-label" th:for="${'search-itemName-' + model.getConfig('item_name')}"
-               th:text="${model.getConfig('label')}" th:title="${label}">普通文本</label>
+               th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">普通文本</label>
         <div class="layui-input-block">
             <div class="layui-input-wrap">
             <input th:placeholder="${model.getConfig('placeholder')}"
@@ -28,5 +39,6 @@
     </div>
 </div>
 
+</div>
 </body>
 </html>
