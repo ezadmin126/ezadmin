@@ -2,6 +2,8 @@ package com.ezadmin.biz.edit.controller;
 
 import com.ezadmin.EzBootstrap;
 import com.ezadmin.biz.base.controller.BaseController;
+import com.ezadmin.biz.dao.FormDao;
+import com.ezadmin.biz.dao.ListDao;
 import com.ezadmin.biz.dao.PluginsDao;
 import com.ezadmin.biz.edit.service.EditService;
 import com.ezadmin.biz.form.service.FormService;
@@ -11,6 +13,7 @@ import com.ezadmin.biz.list.service.ListService;
 import com.ezadmin.common.annotation.EzMapping;
 import com.ezadmin.common.utils.*;
 import com.ezadmin.plugins.sqlog.format.FormatStyle;
+import com.ezadmin.web.EzResult;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
@@ -84,15 +87,32 @@ public class ListEditController extends BaseController {
         request.setAttribute("listUrl",request.getContextPath()+"/ezadmin/list/list-"+ENCRYPT_LIST_ID);
         return "layui/list/list";
      }
-    @EzMapping("loadList.html")
+    @EzMapping("loadEdit.html")
     public String loadList(HttpServletRequest request, HttpServletResponse response){
              List<Map<String, Object>> searchPlugins= PluginsDao.getInstance().allListPlugin("search");
             List<Map<String, Object>> tdPlugins= PluginsDao.getInstance().allListPlugin("td");
             request.setAttribute("searchPlugins",searchPlugins);
             request.setAttribute("tdPlugins",tdPlugins);
-            request.setAttribute("data",new HashMap<>());
+        HashMap list=new HashMap();
+        list.put("core",new HashMap());
+        list.put("search",new HashMap());
+        list.put("tab",new HashMap());
+        list.put("tablebtn",new HashMap());
+        list.put("rowbtn",new HashMap());
+        list.put("col",new HashMap());
+            request.setAttribute("list",list);
 
             return "layui/pages/listedit";
+    }
+    @EzMapping("submitEdit.html")
+    public EzResult edit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //所有表单类型的插件
+        System.out.println(request.getParameter("data"));
+        Map<String, Object> form=JSONUtils.parseObjectMap(request.getParameter("data"));
+
+        ListDao.getInstance().updateList(form);
+
+        return EzResult.instance();
     }
 
     @EzMapping("fastlist.html")

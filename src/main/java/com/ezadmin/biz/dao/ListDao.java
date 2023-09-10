@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -39,6 +40,17 @@ public class ListDao extends  JsoupUtil{
             JsoupUtil.DATASOURCE,JsoupUtil.EDIT_FLAG,
             JsoupUtil.EDIT_EXPRESS,JsoupUtil.EDIT_PLUGIN,
             JsoupUtil.WIDTH,JsoupUtil.MIN_WIDTH,MIN_HEIGHT
+    };
+    private static   String [] names=new String[]{ JsoupUtil.VALIDATERULES,JsoupUtil.VALIDATEMESSAGES,JsoupUtil.DATATYPE,
+            JsoupUtil.OPENTYPE,JsoupUtil.WINDOW_NAME,JsoupUtil.URL,
+            JsoupUtil.DATA,JsoupUtil.JDBCTYPE,JsoupUtil.PLACEHOLDER,JsoupUtil.LAYVERIFY
+            , JsoupUtil.NAME,
+            JsoupUtil.ITEM_NAME,
+            JsoupUtil.OPER
+            ,JsoupUtil.STYLE
+            ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
+            ,JsoupUtil.TOP_DESC,JsoupUtil.ITEM_DESC,JsoupUtil.RIGHT_DESC
+            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE
     };
     private ListDao() {
 
@@ -1188,6 +1200,155 @@ public class ListDao extends  JsoupUtil{
         }
         JsoupUtil.updateConfig(config);
     }
+
+    public   Map<String, Object> selectAllFormById(String formCode) {
+        Map<String, Object> result=new HashMap<>();
+        Config config=listConfigMap.get(formCode.toLowerCase());
+
+        return result;
+    }
+    static String[] attr=new String[]{"datasource",
+    "fixnumber","fixnumberright",
+    "empty_show",
+    "firstcol"
+    };
+    public void updateList(Map<String, Object> list) throws  Exception {
+
+        Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
+        List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
+        List<Map<String,Object>> tabList=(List<Map<String,Object>>)list.get("tab");
+        List<Map<String,Object>> tablebtnList=(List<Map<String,Object>>)list.get("tablebtn");
+        List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
+        List<Map<String,Object>> rowbtnList=(List<Map<String,Object>>)list.get("rowbtn");
+
+        String listcode= Utils.trimNull( coreMap.get("listcode"));
+        String listname=  Utils.trimNull( coreMap.get("listname"));
+        String select_express=  Utils.trimNull( coreMap.get("select_express"));
+        String count_express=  Utils.trimNull( coreMap.get("count_express"));
+        String orderby_express=  Utils.trimNull( coreMap.get("orderby_express"));
+        String groupby_express=  Utils.trimNull( coreMap.get("groupby_express"));
+        String APPEND_HEAD=  Utils.trimNull( coreMap.get(JsoupUtil.APPEND_HEAD));
+        String APPEND_FOOT=  Utils.trimNull( coreMap.get(JsoupUtil.APPEND_FOOT));
+        Config config=null;
+        if (config==null) {
+            Config tempConfig=listConfigMap.get("listtemplate");
+            // path = "ezadmin/config/list/template.html";
+            Document doc =tempConfig.getDoc().clone();
+            String editPath=EzBootstrap.instance().getEditLocation()+File.separator+"list";
+            editPath=editPath+(File.separator+listcode.toLowerCase()+".html");
+            //创建新文件
+            Config c=new Config();
+            c.setFile(new File(editPath));
+            c.setUrl(new File(editPath).toURI().toURL());
+            c.setPath(new File(editPath).toURI().toURL().getPath());
+            c.setProtocol("file");
+            if(!new File(editPath).exists()){
+                Files.createFile(Paths.get(editPath));
+            }
+
+            doc.body().attr("id",listcode.toLowerCase());
+            c.setDoc(doc);
+            listConfigMap.put(listcode.toLowerCase(),c);
+            config=c;
+        }
+        Document doc=listConfigMap.get(listcode.toLowerCase()).getDoc();
+        Element body = doc.body();
+        //处理主体
+        doc.title(listname);
+        body.attr("id", listcode);
+        body.getElementById("express").html(select_express);
+        body.getElementById("express").attr("orderby",orderby_express);
+        body.getElementById("express").attr("groupby",groupby_express);
+        body.getElementById("count").html(count_express);
+        body.getElementById(JsoupUtil.APPEND_HEAD).html(APPEND_HEAD);
+        body.getElementById(JsoupUtil.APPEND_FOOT).html(APPEND_FOOT);
+
+        for (int i = 0; i < attr.length; i++) {
+            String value=   Utils.trimNull( coreMap.get(attr[i]));
+            body.attr(attr[i],value);
+        }
+        //处理tab
+        for (int i = 0; i < tabList.size(); i++) {
+            Map<String,Object> tab= tabList.get(i);
+            Element tabHtml=newTab(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL),tab.get(JsoupUtil.URL));
+            body.getElementById("tab").appendChild(tabHtml);
+        }
+        //处理search
+        for (int i = 0; i < searchList.size(); i++) {
+            Map<String,Object> tab= searchList.get(i);
+            Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
+            for (int k = 0; k < names.length; k++) {
+                String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
+                if(StringUtils.isNotBlank(formItemAttrValue)){
+                    tabHtml.getElementsByTag("object").attr(names[k],formItemAttrValue);
+                }
+            }
+            body.getElementById("search").appendChild(tabHtml);
+        }
+        //处理tablebutton
+        for (int i = 0; i < tablebtnList.size(); i++) {
+            Map<String,Object> tab= tablebtnList.get(i);
+            Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
+            for (int k = 0; k < names.length; k++) {
+                String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
+                if(StringUtils.isNotBlank(formItemAttrValue)){
+                    tabHtml.getElementsByTag("button").attr(names[k],formItemAttrValue);
+                }
+            }
+            body.getElementById("tableButton").appendChild(tabHtml);
+        }
+        //处理rowbutton
+        for (int i = 0; i < rowbtnList.size(); i++) {
+            Map<String,Object> tab= rowbtnList.get(i);
+            Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
+            for (int k = 0; k < names.length; k++) {
+                String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
+                if(StringUtils.isNotBlank(formItemAttrValue)){
+                    tabHtml.getElementsByTag("button").attr(names[k],formItemAttrValue);
+                }
+            }
+            body.getElementById("rowbutton").appendChild(tabHtml);
+        }
+        //处理列
+        for (int i = 0; i < colList.size(); i++) {
+            Map<String,Object> tab= colList.get(i);
+            Element tabHtml=newCol();
+            for (int k = 0; k < colNames.length; k++) {
+                String formItemAttrValue=Utils.trimNull(tab.get(colNames[k]));
+                if(StringUtils.isNotBlank(formItemAttrValue)){
+                    tabHtml.getElementsByTag("th").attr(colNames[k],formItemAttrValue);
+                }
+            }
+            body.getElementById("column").appendChild(tabHtml);
+        }
+    }
+
+    private Element newCol() {
+        return Jsoup.parse("<th  >\n" +
+                "</th>").body().child(0);
+    }
+
+    public Element newTab(Object name,Object label,Object url){
+        return Jsoup.parse("<li  >\n" +
+                "   <a item_name=\""+name+"\"class=\"tablink\" href=\""+url+"\"> "+label+"</a>\n" +
+                "</li>").body().child(0);
+    }
+    public Element newButton(Object name,Object label ){
+        return Jsoup.parse("<button\n" +
+                "        class=\" layui-btn   layui-btn-sm layui-btn-normal  \">\n" +
+                "</button> ").body().child(0);
+    }
+    public Element newSearch(Object name,Object label ){
+        return Jsoup.parse(" <div class=\"selector layui-col-md3 list-item \" type=\"input-text\"  >\n" +
+                "    <div  class=\"layui-form-item\" >\n" +
+                "        <label class=\"layui-form-label\"  >"+label+"</label>\n" +
+                "        <div class=\"layui-input-block\">\n" +
+                "                <object  item_name=\""+name+"\"></object>\n" +
+                "        </div>\n" +
+                "    </div>\n" +
+                "</div>").body().child(0);
+    }
+
 }
 
 

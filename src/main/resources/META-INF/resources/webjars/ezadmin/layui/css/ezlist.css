@@ -259,6 +259,7 @@ table.rc-table-resizing thead > th > a {
     color: rgba(0,0,0,.85);
     border-radius: 2px;
     border-color: #eee;
+    width:100%;
 }
 
 /*.ezadmin-td{*/

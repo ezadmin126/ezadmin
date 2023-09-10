@@ -31,24 +31,6 @@
     <script th:src="${contextName+'/webjars/jquery-validation/1.19.5/localization/messages_zh.min.js'}"></script>
     <script type='text/javascript' th:src="${contextName+'/webjars/ezadmin/plugins/dragula/dragula.min.js'}"></script>
     <script th:src="${contextName+'/webjars/tinymce/5.10.7/tinymce.min.js'}" type="text/javascript"></script>
-    <style>
-        small {
-            color: #6c757d !important;
-            display: block;
-            margin-top: .25rem;
-            font-size: 80%;
-            font-weight: 400;
-        }
-        .custom-select{
-            height: 38px;
-            border-width: 1px;
-            border-style: solid;
-            background-color: #fff;
-            color: rgba(0,0,0,.85);
-            border-radius: 2px;
-            border-color: #eee;
-        }
-    </style>
 </head>
 <body class="layui-bg-gray">
 
@@ -68,7 +50,7 @@
                     <div class="layui-col-space10 layui-row ">
                         <div th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}">
                             <div class="layui-card"  >
-                                <div class="layui-card-header" th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
+                                <div class="layui-card-header" th:ID="${card.cardname}"  th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
                                     卡片面板
                                 </div>
                                 <div class="layui-card-body   ">
@@ -156,7 +138,7 @@
         </style>
         <ul id="dianti" class="layui-menu site-dir layui-layer-wrap">
             <li th:each="card:${form.cards}"
-                th:if="${not #lists.isEmpty(form.cards)}">
+                th:if="${not #lists.isEmpty(form.cards) and not #strings.isEmpty(card.cardname)}">
                 <a th:href="${'#'+card.cardname}"><cite th:text="${card.cardname}">水平导航</cite></a>
             </li>
         </ul>

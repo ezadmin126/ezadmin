@@ -38,7 +38,7 @@
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${_EZ_LIST_EMPTY_NAME}">
 <div class="layui-container">
     <div class="layui-tab layui-tab-brief searchWrap">
-        <ul class="layui-tab-title" id="list-tab" th:if="${not #lists.isEmpty(data.navBarsList)}">
+        <ul class="layui-tab-title" id="tab" th:if="${not #lists.isEmpty(data.navBarsList)}">
             <li th:item_id="${item.item_name}" th:item_name="${item.item_name}"
                 th:classappend="${item.select?'layui-this  ':' '}"
                 th:each="item:${data.navBarsList}"><a th:item_name="${item.item_name}" th:href="${item.url}"

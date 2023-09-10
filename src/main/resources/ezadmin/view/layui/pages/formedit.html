@@ -27,6 +27,10 @@
             background-color: #F8F8F8;
             color: #333;
         }
+        .ez-plugin a i:hover{
+
+            box-shadow: 2px 0 8px 0 lightgray !important;
+        }
         .ez-plugin a span {
             position: relative;
             top: 2px;
@@ -38,9 +42,7 @@
             font-size: 14px;
             text-align: center;
         }
-        .ez-plugin a:hover{
-            color:#fff;
-        }
+
         .left{
             border-right: 1px solid #f6f6ff;
             max-height: 768px;
@@ -182,13 +184,14 @@
         <div class="layui-col-md8 layui-col-xs6 center">
             <div class="layui-card-header">
                 <div class="layui-row">
-                     <a type="button" class="layui-btn layui-btn-sm   "  href="/ezadmin/form/loadEdit-" target="_blank"><i class="layui-icon layui-icon-add-circle-fine"></i>新增</a>
-                     <button type="button" class="layui-btn layui-btn-sm layui-btn-save  " ><i class="layui-icon layui-icon-ok-circle"></i>保存</button>
+                    <a type="button" class="layui-btn layui-btn-sm   "  href="/ezadmin/form/loadEdit-" target="_blank"><i class="layui-icon layui-icon-add-circle-fine"></i>新增</a>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-save  " ><i class="layui-icon layui-icon-ok-circle"></i>保存</button>
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-preview  "> <i class="layui-icon layui-icon-component"></i> 预览</button>
-                 </div>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-export  "> <i class="layui-icon layui-icon-component"></i> 导出</button>
+                </div>
 
                 <hr>
-                <div class="body layui-row layui-col-space16 dragula-container layui-form " id="centerContainer">
+                <div class="body dragula-container layui-row layui-col-space16  layui-form " id="centerContainer">
                     <div id="append_head" th:utext="${form.core.append_head}" >
 
                     </div>
@@ -201,21 +204,33 @@
                         <pre style="display: none" id="subcode" th:utext="${form.core.submit_express}"></pre>
                         <pre style="display: none" id="delcode" th:utext="${form.core.delete_express}"></pre>
                     </blockquote>
-                    <div class="layui-col-space10 layui-row ">
-                         <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
-                         th:ez-cardname="${card.cardname}" type="card" th:ez-col="${card.col}">
-                        <div class="layui-card"  >
-                            <div class="layui-card-header" th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
-                                卡片面板
-                            </div>
-                            <div class="layui-card-body   ">
-                                <div class="layui-row dragula-container">
-                                    <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
+                    <div class=" layui-col-space10 layui-row ">
+                        <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
+                             th:ez-cardname="${card.cardname}" type="card" th:ez-col="${card.col}">
+                            <div class="layui-card"  >
+                                <div class="layui-card-header" th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
+                                    卡片面板
+                                </div>
+                                <div class="layui-card-body   ">
+                                    <div class="layui-row dragula-container">
+                                        <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class=" selector cardcol layui-col-md12"  th:if="${form.cards==null}"
+                             type="card" ez-col="12">
+                            <div class="layui-card"  >
+
+                                <div class="layui-card-body   ">
+                                    <div class="layui-row dragula-container">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div id="append_foot" th:utext="${form.core.append_foot}">
@@ -248,8 +263,8 @@
                             <div class="layui-input-block">
                                 <input type="text" name="form_name" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
-                                      <i class="ez-help layui-icon-tips layui-icon"
-                                                      src="/webjars/ezadmin/doc/form/formcore.html#title"></i>
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/form/formcore.html#title"></i>
                                 </small>
                             </div>
                         </div>
@@ -506,7 +521,7 @@
                             <div class="layui-input-block">
                                 <input type="text" name="cardname" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
-                                   表单页按card区分，每块的标题，如果不填，则为一个空card，参考layui-card
+                                    表单页按card区分，每块的标题，如果不填，则为一个空card，参考layui-card
                                 </small>
                             </div>
                         </div>
@@ -754,9 +769,9 @@
                             <label class="layui-form-label">上方提示</label>
                             <div class="layui-input-block">
                                 <small   class="layui-form-mid layui-text-em">看这里，这里就是上方提示，支持html
-                                <i class="ez-help layui-icon-tips layui-icon"
-                                   src="/webjars/ezadmin/doc/form/formitem.html#top_desc"></i>
-                            </small>
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/form/formitem.html#top_desc"></i>
+                                </small>
                                 <textarea name="top_desc" class="layui-textarea" autocomplete="false"></textarea>
                             </div>
                         </div>
@@ -955,9 +970,9 @@
                             <label class="layui-form-label">上方提示</label>
                             <div class="layui-input-block">
                                 <small   class="layui-form-mid layui-text-em">看这里，这里就是上方提示，支持html
-                                <i class="ez-help layui-icon-tips layui-icon"
-                                   src="/webjars/ezadmin/doc/form/formitem.html#top_desc"></i>
-                            </small>
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/form/formitem.html#top_desc"></i>
+                                </small>
                                 <textarea name="top_desc" class="layui-textarea" autocomplete="false"></textarea>
                             </div>
                         </div>
@@ -1175,12 +1190,39 @@
 
 <script th:src="${contextName+'/webjars/ezadmin/layui/js/ezform.js?v='+vi}" type="text/javascript"></script>
 
+
+<template id="export">
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>表单编辑</title>
+        <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+        <link href="https://unpkg.com/layui@2.8.12/dist/css/layui.css" rel="stylesheet"> <script src="https://unpkg.com/layui@2.8.12/dist/layui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"   ></script>
+    </head>
+    <body>
+    <div class="layui-container">
+        <div class="layui-row layui-form layui-col-space5">
+            ##replace##
+        </div>
+    </div>
+    </body>
+    </html>
+</template>
+
 <script>
+
+
+
 
     let tools=`<div class="layui-component-tools">
 <i class="layui-icon layui-icon-templeate-1" title="复制"></i>
 <i class="layui-icon layui-icon-delete" title="删除"></i>
 </div>`;
+
+
     layui.use(function(){
         let form=layui.form;
         let $=layui.jquery;
@@ -1218,15 +1260,15 @@
             }
         });
         form.on('select(readonly)',function(data){
-             let active=$(".active");
-             if(data.value=='readonly'){
-                 active.attr("ez-readonly","readonly");
-                 active.find('[item_name]').attr("readonly","readonly");
+            let active=$(".active");
+            if(data.value=='readonly'){
+                active.attr("ez-readonly","readonly");
+                active.find('[item_name]').attr("readonly","readonly");
 
-             }else{
-                 active.removeAttr("ez-readonly");
-                 active.find('[item_name]').removeAttr("readonly");
-             }
+            }else{
+                active.removeAttr("ez-readonly");
+                active.find('[item_name]').removeAttr("readonly");
+            }
 
         });
 
@@ -1234,6 +1276,7 @@
             let name=$(this).attr("name");
             let active=$(".active");
             active.attr("ez-"+name,$(this).val());
+            var type=active.attr('type');
             //可视化兼容
             if(name=='label'){
                 active.find('.layui-form-label').text($(this).val())
@@ -1243,7 +1286,7 @@
             }
             if(name=='placeholder'){
                 active.find('input,textarea').attr("placeholder",$(this).val());
-             }
+            }
             if(name=='top_desc'){
                 active.find(".top_desc").remove();
                 if($(this).val()!='') {
@@ -1257,11 +1300,18 @@
                 }
             }
             if(name=='cardname'){
-                active.find(".layui-card-header").text($(this).val());
+                var h=active.find(".layui-card-header");
+                if(h.length>0){
+                    active.find(".layui-card-header").text($(this).val());
+                }else{
+                    active.find('.layui-card').prepend(
+                    '<div class="layui-card-header">'+ $(this).val()+'</div>');
+                }
+
             }
             if(name=='style'){
                 active.find('input,textarea').attr("style",$(this).val());
-             }
+            }
             if(name=='init_express'){
                 active.find('#initcode').html( $(this).val());
             }
@@ -1275,13 +1325,66 @@
                 active.find('#form_name').html( $(this).val());
             }
             if(name=='append_head'){
-               $('#append_head').html( $(this).val());
+                $('#append_head').html( $(this).val());
             }
             if(name=='append_foot'){
                 $('#append_foot').html( $(this).val());
             }
+            if(name=='data'){
+                if($(".config-form:visible").find('[name=datatype]').val()==''||
+                    $(".config-form:visible").find('[name=datatype]').val()=='TEXT'){
+                    //先清空选项
+                    active.find('.layui-input-block').html('');
+                    if(type=='select-search'||type=='select'){
+                        active.find('.layui-input-block').html('<select><option>请选择</option></select>');
+                    }
+                    console.log('text:'+ JSON.stringify($(this).val().split('\n')));
+                    $.each($(this).val().split('\n'),function(i,j){
+                        if(type.indexOf('input-radio')>-1&&j!=''){
+                            active.find('.layui-input-block').append('<input type="radio"  value="'+j+'" title="'+j+'">');
+                        }
+                        if(type.indexOf('input-checkbox')>-1&&j!=''){
+                            active.find('.layui-input-block').append('<input type="checkbox"  value="'+j+'" title="'+j+'">');
+                        }
+                        if(type.indexOf('input-select')>-1&&j!=''){
+                            active.find('select').append('<option   value="'+j+'"  >'+j+'</option>');
+                        }
+                    })
+                    form.render();
+                }
+                if(
+                    $(".config-form:visible").find('[name=datatype]').val()=='JSON'){
+
+                    var json=JSON.parse($(this).val())
+                    //先清空选项
+                    active.find('.layui-input-block').html('');
+                    if(type=='select-search'||type=='select'){
+                        active.find('.layui-input-block').html('<select><option>请选择</option></select>');
+                    }
+                    $.each(json,function(i,j){
+                        //补充选项
+                        console.log('json:'+j.K+'--'+j.V);
+                        if(type.indexOf('input-radio')>-1&&j!=''){
+                            active.find('.layui-input-block').append('<input type="radio"  value="'+j.K+'" title="'+j.V+'">');
+                        }
+                        if(type.indexOf('input-checkbox')>-1&&j!=''){
+                            active.find('.layui-input-block').append('<input type="checkbox"  value="'+j.K+'" title="'+j.V+'">');
+                        }
+                        if(type.indexOf('input-select')>-1&&j!=''){
+                            active.find('select').append('<option   value="'+j.K+'"  >'+j.V+'</option>');
+                        }
+                    })
+                    form.render();
+
+                }
+            }
         })
     });
+    // edittype=='select-search'||edittype=='select-span'||edittype=='xmselect'
+    // ||edittype=='table'
+    // ||edittype=='input-radio'||edittype=='input-checkbox'
+
+
 
     $(function (){
 
@@ -1296,21 +1399,32 @@
                 // if($(target).attr("id")=='leftContainer'){
                 //     return false;
                 // }
+                if($(target).attr("id")=='centerContainer'&&$(el).find("[type=card]").length==0){
+                    return false;
+                }
                 return true; // elements can be dropped in any of the `containers` by default
             },
             invalid: function (el, handle) {
+                if($(el).hasClass("tip")){
+                    return true;
+                }
                 return false; // don't prevent any drags from initiating by default
             },
             copy: true,
             revertOnSpill: true,
             copySortSource: true
         }).on('drop', function (el, target, source, sibling) {
-             if($(target).attr("id")=='leftContainer'){
-                 return false;
-             }
+            if($(target).attr("id")=='leftContainer'){
+                return false;
+            }
+            if($(target).attr("id")=='centerContainer'&&$(el).find("[type=card]").length==0){
+                return false;
+            }
+            $(target).find(".tip").remove();
+
             if( $(el).find(".template").length>0){
                 var tmp=$(el).find(".template");
-                tmp.find('[name=default]').attr("name",Date.now());
+                tmp.find('[name=default]').attr("name",Math.random());
 
                 $(el).replaceWith($(el).find(".template").html());
             }else{
@@ -1329,19 +1443,9 @@
                 el.append(tools);
             }
             $(".config-form").hide();//所有配置隐藏
-            if(edittype=='select-search'||edittype=='select-span'||edittype=='xmselect'
-               ||edittype=='table'
-               ||edittype=='input-radio'||edittype=='input-checkbox'){
-                edittype='select';
-            }
-            if(edittype=='input-span' ){
-                edittype='input-text';
-            }
-            if(edittype=='cascader'||edittype=='cascadersql' ){
-                edittype='cascader';
-            }
 
-            var currentConfig=$(".config-"+edittype);
+
+            var currentConfig=typeform(edittype);
 
             //清空当前表单
             var elms = currentConfig.find("[name]"); //formid 包含name属性的所有元素
@@ -1357,8 +1461,8 @@
                 if(d.name.indexOf('ez-')>=0){
                     var cname=d.name.replace('ez-','');
                     try{
-                       var item= currentConfig.find("[name="+cname+"]");
-                       //配置表单如果是 radio或者checkbox需要单独处理
+                        var item= currentConfig.find("[name="+cname+"]");
+                        //配置表单如果是 radio或者checkbox需要单独处理
                         var type = $(item).attr("type");
                         if (type != 'hidden' && type != 'radio' &&type != 'checkbox') {
                             $(item).val(d.value);
@@ -1424,6 +1528,7 @@
             if(!$(this).hasClass("active")){
                 rowselect($(this));
             }
+            console.log('stopPropagation')
             e.preventDefault();
             e.stopPropagation();
         })
@@ -1435,6 +1540,9 @@
             e.preventDefault();
             e.stopPropagation();
             var copy=$(this).parents(".active").clone();
+            $.each(copy.find("[name]"),function(i,j){
+                $(this).attr("name",Math.random());
+            });
             $(this).parents(".active").parent().append(copy);
             $(".active").removeClass("active");
             $(".layui-component-tools").remove();
@@ -1494,6 +1602,20 @@
             });
 
         })
+        $(document).on("click",".layui-btn-export",function(e){
+            var data = $("#export").html().replace('##replace##',$("#centerContainer").html()) ;
+            // var data = '自定义的数据内容，可以是服务端返回滴！';
+            var name = 'template.html';
+            exportRaw(data, name);
+        })
+        function exportRaw(data, name) {
+            var urlObject = window.URL || window.webkitURL || window;
+            var export_blob = new Blob([data]);
+            var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+            save_link.href = urlObject.createObjectURL(export_blob);
+            save_link.download = name;
+            save_link.click();
+        }
 
         //保存
         $(".layui-btn-save").click(function(){
@@ -1507,7 +1629,7 @@
             let append_head=$("#append_head").html();
             let append_foot=$("#append_foot").html();
             if(formcode==undefined||formcode==''){
-                formcode= Date.now();
+                formcode= Math.random();
             }
 
             var formData={};
@@ -1524,34 +1646,34 @@
             formData.core=core;
             var cards=[];
             $("#centerContainer").find("[type=card]").each(function(){
-                 var card={};
-                 let cardname=$(this).find(".layui-card-header").text();
-                 let col=$(this).attr("ez-col");
-                 if(cardname==''){
-                     console.log('卡片名称为空，页面名称将不展示')
+                var card={};
+                let cardname=$(this).find(".layui-card-header").text();
+                let col=$(this).attr("ez-col");
+                if(cardname==''){
+                    console.log('卡片名称为空，页面名称将不展示')
 
-                 }
-                 card.cardname=cardname;
-                 card.col=col;
-                 var items=[];
-                 $(this).find(".selector").each(function(){
-                     var item={};
-                     $.each($(this)[0].attributes,function(i,d){
-                         if(d.name.indexOf('ez-')>=0){
-                             var cname=d.name.replace('ez-','');
-                             try{
-                                 item[cname]=d.value;
-                             }catch(e){
-                                 console.log(e);
-                             }
-                         }
-                     })
-                     item.type=$(this).attr("type");
-                     if(item.item_name==''||item.item_name==undefined){
-                         item.item_name=Date.now();
-                     }
-                     items.push(item);
-                 })
+                }
+                card.cardname=cardname;
+                card.col=col;
+                var items=[];
+                $(this).find(".selector").each(function(){
+                    var item={};
+                    $.each($(this)[0].attributes,function(i,d){
+                        if(d.name.indexOf('ez-')>=0){
+                            var cname=d.name.replace('ez-','');
+                            try{
+                                item[cname]=d.value;
+                            }catch(e){
+                                console.log(e);
+                            }
+                        }
+                    })
+                    item.type=$(this).attr("type");
+                    if(item.item_name==''||item.item_name==undefined){
+                        item.item_name=Math.random();
+                    }
+                    items.push(item);
+                })
                 card.items=items;
                 cards.push(card);
             })
@@ -1570,7 +1692,51 @@
             });
         })
 
+        $("#centerContainer").on("click",".layui-form-label:not(input)",function(){
+            $(this).parent().prepend("<input class='templabelname layui-input layui-form-label' value='"+$(this).text()+"' style='width:110px'>");
+            $(this).remove();
+            var type=$(".active").attr("type");
+            var currentConfig=typeform(type);
+
+            $(".templabelname").focusout(function(){
+                $(this).parent().prepend("<label class='   layui-form-label'  >"+$(this).val()+"</label>");
+                currentConfig.find("[name=label]").val($(this).val());
+                $(".active").attr("ez-label",$(this).val());
+                $(this).remove();
+            })
+        })
+        $("#centerContainer").click(function(e){
+            console.log(e.target)
+            if(!$(e.target).hasClass("layui-form-label")){
+                $(".templabelname").focusout();
+            }
+
+        })
+
+
     })
+
+
+    function typeform(edittype){
+        if(edittype=='table'
+            ||edittype.indexOf('input-checkbox')>-1||edittype.indexOf('input-radio')>-1
+        ||edittype.indexOf('select')>-1){
+            edittype='select';
+        }
+        if(edittype=='input-span'
+            ||edittype=='input-date'||edittype=='input-daterange'
+            ||edittype=='input-datetime'||edittype=='input-datetimerange'
+        ){
+            edittype='input-text';
+        }
+        if(edittype=='cascader'||edittype=='cascadersql' ){
+            edittype='cascader';
+        }
+
+        return $(".config-"+edittype);
+    }
+
+
 </script>
 </body>
 </html>
