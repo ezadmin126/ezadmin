@@ -203,8 +203,8 @@ public class FormController extends BaseController {
             }else{
                 form.put("core",new HashMap<>());
             }
-            String successurl=Utils.trimNull( core.get("successurl"));
-            String express=   Utils.trimNull( core.get("submit_express"));
+            String successurl=Utils.trimNull( core.get(JsoupUtil.SUCCESS_URL));
+            String express=   Utils.trimNull( core.get(JsoupUtil.SUBMIT_EXPRESS));
             Map<String, Object> paras = new HashMap<>();
             paras.put("ID", ID);
             List<Map<String,Object>> cardList=(List<Map<String,Object>>)form.get("cards");
@@ -244,7 +244,7 @@ public class FormController extends BaseController {
 
             //data.data
             String defaultTo=request.getContextPath()+"/ezadmin/form/form-"+ ENCRYPT_FORM_ID+"?ID="+toFormId(rowId,request);
-            if(form.containsKey(JsoupUtil.SUCCESS_URL) && StringUtils.isNotBlank(successurl)){
+            if(StringUtils.isNotBlank(successurl)){
                  if(StringUtils.contains(successurl,"/")){
                     successurl=request.getContextPath()+successurl;
                 }
