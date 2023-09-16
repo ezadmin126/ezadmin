@@ -2,8 +2,7 @@ package com.ezadmin.biz.form.service.impl;
 
 import com.ezadmin.biz.dao.FormDao;
 import com.ezadmin.biz.form.service.FormService;
-import com.ezadmin.biz.list.emmber.list.DefaultEzList;
-import com.ezadmin.biz.list.emmber.list.EzList;
+ import com.ezadmin.biz.list.emmber.list.EzList;
 import com.ezadmin.biz.list.service.ListService;
 import com.ezadmin.biz.model.ItemInitData;
 import com.ezadmin.common.annotation.EzCacheAnnotation;
@@ -139,9 +138,17 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                         if (StringUtils.isNotBlank(dataConf)) {
                             if (ItemDataSourceType.isEzList(datatype)) {
                                 //获取
-                                EzList list = new DefaultEzList(dataConf, dataSource, requestParamMap, sessionParamMap);
-                                list.renderHtml();
-                                context.setVariable("list", list.getEzListDto());
+                                try {
+                                    Map<String, Object> list = new HashMap<>();
+                                    if (StringUtils.isNotBlank(dataConf)) {
+                                        list = JSONUtils.parseObjectMap(listService.selectAllListById(dataConf));
+                                    }
+                                    listService.fillListById(list, requestParamMap, sessionParamMap);
+                                    context.setVariable("subdata", list);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
                             } else {
                                 try {
                                     DataSource temp = dataSource;

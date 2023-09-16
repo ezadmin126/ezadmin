@@ -239,15 +239,15 @@ public class JsoupUtil {
         } else {
             sb.append(item.tagName() + "-" + type);
         }
-        ITEM_MAP.put("PLUGIN_CODE", sb.toString().toLowerCase());
+      //  ITEM_MAP.put("PLUGIN_CODE", sb.toString().toLowerCase());
         List<Attribute> list=item.attributes().asList();
         for (int i = 0; i < list.size(); i++) {
             Attribute attribute=list.get(i);
-            ITEM_MAP.put(attribute.getKey().toUpperCase(), strip(attribute.getValue()));
+           // ITEM_MAP.put(attribute.getKey().toUpperCase(), strip(attribute.getValue()));
             ITEM_MAP.put(attribute.getKey().toLowerCase(), strip(attribute.getValue()));
-             if (ATTR_KEY_MAPPING.containsKey(attribute.getKey().toLowerCase())) {
-                Utils.putIfAbsent(ITEM_MAP,ATTR_KEY_MAPPING.get(attribute.getKey().toLowerCase()), strip(attribute.getValue()));
-            }
+//             if (ATTR_KEY_MAPPING.containsKey(attribute.getKey().toLowerCase())) {
+//                Utils.putIfAbsent(ITEM_MAP,ATTR_KEY_MAPPING.get(attribute.getKey().toLowerCase()), strip(attribute.getValue()));
+//            }
              if(StringUtils.equalsIgnoreCase(attribute.getKey(),"readonly")){
                  ITEM_MAP.put(attribute.getKey().toLowerCase(), "readonly");
              }

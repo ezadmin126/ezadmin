@@ -8,8 +8,7 @@ import com.ezadmin.plugins.parser.MapParser;
 import com.ezadmin.EzBootstrap;
 import com.ezadmin.biz.base.service.CoreService;
 import com.ezadmin.biz.form.service.FormService;
-import com.ezadmin.biz.list.emmber.list.DefaultEzList;
-import com.ezadmin.biz.list.emmber.list.EzList;
+ import com.ezadmin.biz.list.emmber.list.EzList;
 import com.ezadmin.biz.list.service.ListService;
 import com.ezadmin.biz.model.ItemInitData;
  import com.ezadmin.plugins.express.executor.DefaultExpressExecutor;
@@ -222,7 +221,7 @@ public class DefalutEzFormBuilder implements EzFormBuilder {
             if (StringUtils.isNotBlank(dataConf)) {
                 if(ItemDataSourceType.isEzList(datatype )){
                     //获取
-                    EzList list = new DefaultEzList( dataConf, dataSource, requestParamMap,sessionParamMap);
+                    EzList list =null;// new DefaultEzList( dataConf, dataSource, requestParamMap,sessionParamMap);
                     list.renderHtml();
                     context.setVariable("list",list.getEzListDto());
                 }

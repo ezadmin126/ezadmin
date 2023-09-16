@@ -386,9 +386,7 @@ public class FormDao extends JsoupUtil{
 
     Element card(Document doc,String formId,Object groupN){
         String groupName=Utils.trimNull(groupN);
-        if(StringUtils.isBlank(groupName)){
-            groupName=EZ_DEFAULT_GROUP;
-        }
+
         Element card= doc.selectFirst("[group_name='"+groupName+"']");
         if(card==null){
             Element head=doc.createElement("div");
@@ -522,7 +520,9 @@ public class FormDao extends JsoupUtil{
 
                 Map<String,Object> cardEl=new HashMap<>();
                 cardEl.put("col",Utils.trimEmptyDefault(cardColList.get(i).parent().attr("col"),"12"));
-                cardEl.put("cardname",cardColList.get(i).selectFirst(".layui-card-header").html());
+                try {
+                    cardEl.put("cardname", cardColList.get(i).selectFirst(".layui-card-header").html());
+                }catch(Exception e){}
 
                 List<Map<String,String>> formitemList=new ArrayList<>();
 
@@ -534,7 +534,9 @@ public class FormDao extends JsoupUtil{
                         continue;
                     }
                     Map<String, String> attrMap = JsoupUtil.loadAttrNoChild(plugin);
-                    attrMap.put(JsoupUtil.LABEL,label.text());
+                    if(StringUtils.isNotBlank(label.text())&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,label.text())){
+                        attrMap.put(JsoupUtil.LABEL,label.text());
+                    }
                     attrMap.put(JsoupUtil.COL,Utils.trimEmptyDefault(formitems.get(j).parent().attr("col"),"12"));
                     attrMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(plugin));
                     if(StringUtils.isBlank(attrMap.get(JsoupUtil.URL))){
@@ -556,9 +558,14 @@ public class FormDao extends JsoupUtil{
                 Element label=formitems.get(j).selectFirst(".layui-form-label");
 
                 Element plugin=formitems.get(j) .selectFirst("[item_name]");
-                       ;
+                   if(plugin==null){
+                       log.error("没有找到插件，节点：{}",formitems.get(j));
+                       continue;
+                   }
                 Map<String, String> attrMap = JsoupUtil.loadAttrNoChild(plugin);
-                attrMap.put(JsoupUtil.LABEL,label.text());
+                if(StringUtils.isNotBlank(label.text())&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,label.text())){
+                    attrMap.put(JsoupUtil.LABEL,label.text());
+                }
                 attrMap.put(JsoupUtil.COL,formitems.get(j).parent().attr("col"));
                 attrMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(plugin));
                 if(StringUtils.isBlank(attrMap.get(JsoupUtil.URL))){
@@ -663,13 +670,14 @@ public class FormDao extends JsoupUtil{
 
 
     Element newCard(String label,String col){
-        return Jsoup.parse(" <div class=\"cardcol layui-col-md"+col+"\" col='"+col+"'  ><div class=\"layui-card\"  >\n" +
-                "            <div class=\"layui-card-header\">\n" +
-                label +
-                "            </div>\n" +
-                "            <div class=\"layui-card-body\">\n" +
-                "            </div>\n" +
-                "        </div></div>").body().child(0);
+        StringBuilder sb=new StringBuilder();
+        sb.append(" <div class=\"cardcol layui-col-md"+col+"\" col='"+col+"'  ><div class=\"layui-card\"  >\n");
+        if(StringUtils.isNotBlank(label)&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,label)){
+            sb.append(  " <div class=\"layui-card-header\">\n" +label +"  </div>\n" );
+        }
+        sb.append(  " <div class=\"layui-card-body\"> </div>\n" );
+        sb.append("</div></div>");
+        return Jsoup.parse(sb.toString()).body().child(0);
     }
     Element newFormItem(String label,String col){
         return Jsoup.parse("<div class=\"layui-col-space10  layui-col-md"+col+"\"  col='"+col+"'   >\n" +

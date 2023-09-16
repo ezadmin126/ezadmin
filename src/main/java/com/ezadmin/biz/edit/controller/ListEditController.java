@@ -7,8 +7,7 @@ import com.ezadmin.biz.dao.ListDao;
 import com.ezadmin.biz.dao.PluginsDao;
 import com.ezadmin.biz.edit.service.EditService;
 import com.ezadmin.biz.form.service.FormService;
-import com.ezadmin.biz.list.emmber.list.DefaultEzList;
-import com.ezadmin.biz.list.emmber.list.EzList;
+ import com.ezadmin.biz.list.emmber.list.EzList;
 import com.ezadmin.biz.list.service.ListService;
 import com.ezadmin.common.annotation.EzMapping;
 import com.ezadmin.common.utils.*;
@@ -58,7 +57,7 @@ public class ListEditController extends BaseController {
         requestParamMap.put("IS_DEBUG","1");
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
         requestParamMap.put("ContextPath", request.getContextPath());
-        EzList list = new DefaultEzList( ENCRYPT_LIST_ID, bootstrap.getOriginDataSource(), requestParamMap,sessionParamMap);
+        EzList list = null;//new DefaultEzList( ENCRYPT_LIST_ID, bootstrap.getOriginDataSource(), requestParamMap,sessionParamMap);
         if (list.getEzListDto()==null) {
             if(Utils.getLog()!=null){
                 Utils.addLog("cannot find list where list_id="+listId);

@@ -354,6 +354,45 @@ public class ListDao extends  JsoupUtil{
         return columnList;
     }
 
+    private void insertFirstColObj(Document doc, List<Map<String, Object>> columnList) {
+        Map<String,Object> laydataMap=new HashMap<>();
+        String firstOld=doc.body().attr("firstCol");
+        if(StringUtils.isNotJsBlank(firstOld)){
+            firstOld=firstOld.replace("th-","");
+        }else{
+            return;
+        }
+        Map<String, Object> thMap = new HashMap<>();
+        thMap.put(JsoupUtil.ITEM_NAME,"firstCol");
+        if(ColTypeEnum.isCheckbox(firstOld)
+        ){
+            laydataMap.put("title","<input type=\"checkbox\" class=\"list-head-checkbox\" lay-filter=\"list-head-checkbox\" >");
+
+            laydataMap.put("field","firstcol");
+            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.checkbox.bodycode());
+            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.checkbox.code());
+        }
+        if(ColTypeEnum.isRadio(firstOld) ){
+            laydataMap.put("title","序号");
+            laydataMap.put("field","firstcol");
+
+            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.radio.bodycode());
+            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.radio.code());
+
+        }
+        if(ColTypeEnum.isNumbers(firstOld)){
+            laydataMap.put("title","序号");
+            laydataMap.put("field","firstcol");
+
+            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.numbers.bodycode());
+            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.numbers.code());
+        }
+        if(ColTypeEnum.isFirst(firstOld)){
+            thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
+            columnList.add(thMap);
+        }
+
+    }
     private void insertFirstCol(Document doc, List<Map<String, String>> columnList) {
         Map<String,Object> laydataMap=new HashMap<>();
         String firstOld=doc.body().attr("firstCol");
@@ -399,6 +438,12 @@ public class ListDao extends  JsoupUtil{
         return  "td-pic".equals(plugin)||
                 "td-image".equals(plugin);
     }
+
+    /**
+     * 靠左靠右 排序 宽度
+     * @param laydataMap
+     * @param th
+     */
     private void defaultMap(Map<String, Object> laydataMap, Element th) {
         if(isImageTd(th)){
             Utils.putIfAbsent(laydataMap,"minHeight","110");
@@ -412,6 +457,11 @@ public class ListDao extends  JsoupUtil{
         if(JdbcTypeEnum.isNumberType(th.attr(JsoupUtil.JDBCTYPE))){
             Utils.putIfAbsent(laydataMap,"align","right");
         }
+
+        if(StringUtils.equals(th.attr("order"),"1")){
+            Utils.putIfAbsent(laydataMap,"sort",true);
+        }
+
         //默认宽度设置为110
          //   Utils.putIfAbsent(laydataMap,"width","110");
     }
@@ -540,28 +590,6 @@ public class ListDao extends  JsoupUtil{
     //
     public   Integer updateSearchByListId(String encodeListId, String name, Map<String, String> request) throws IOException {
 
-        Config config = listConfigMap.get(encodeListId.toLowerCase());
-        Document doc=config.getDoc();
-        Element element = StringUtils.isBlank(name) ? null : doc.getElementById("search").selectFirst("["+JsoupUtil.ITEM_NAME+"='" + name + "']");
-        if (element == null) {
-            Element formItem = doc.createElement("div");
-             Element inputItem = doc.createElement("object");
-            inputItem.addClass("   list-search-item ");
-            dealElementByPluginCode(request.get(JsoupUtil.PLUGIN), inputItem);
-            dealSearchElementByForm(inputItem, request);
-
-            formItem.html("<label >" + request.get(JsoupUtil.LABEL) + "</label>\n" +
-                    "     <div  >\n" +
-                    inputItem.toString() +
-                    "     </div>");
-            doc.getElementById("search").append(formItem.toString());
-        } else {
-            Element formItem = element.parent().parent();
-            formItem.child(0).text(request.get(JsoupUtil.LABEL));
-            dealElementByPluginCode(request.get(JsoupUtil.PLUGIN), element);
-            dealSearchElementByForm(element, request);
-        }
-        JsoupUtil.updateConfig(config);
         return 1;
     }
     private static void dealSearchElementByForm(Element element, Map<String, String> request) {
@@ -578,153 +606,23 @@ public class ListDao extends  JsoupUtil{
 
     public   Integer deleteSearchByListId(String encodeListId, String name) throws IOException {
 
-        Config config = listConfigMap.get(encodeListId.toLowerCase());
-        Document doc=config.getDoc();
-        Element element = StringUtils.isBlank(name) ? null : doc.getElementById("search").selectFirst("["+JsoupUtil.ITEM_NAME+"='" + name + "']");
-
-        if (element != null) {
-            element.parent().parent().remove();
-            JsoupUtil.updateConfig(config);
-
-        }
         return 1;
     }
 
     public   void updateListSearchSort(String encodeListId, String addSearch) {
-        try {
 
-            Config config = listConfigMap.get(encodeListId.toLowerCase());
-            Document doc=config.getDoc();
-            Elements items = doc.body().getElementsByClass("list-search-item");
-
-            List<Element> searchList = new ArrayList<>();
-            String[] names = addSearch.split(",");
-            for (String name : names) {
-                for (int i = 0; i < items.size(); i++) {
-                    if (name.equalsIgnoreCase(items.get(i).attr(JsoupUtil.NAME))) {
-                        searchList.add(items.get(i).parent().parent());
-                    }
-                }
-            }
-            doc.body().getElementById("search").html("");
-            for (int i = 0; i < searchList.size(); i++) {
-                doc.body().getElementById("search").append(searchList.get(i).outerHtml());
-            }
-            JsoupUtil.updateConfig(config);
-        } catch (Exception e) {
-//
-            Utils.addLog("", e);
-        }
     }
     public   void updateListColumnSort(String encodeListId, String addSearch) {
-        try {
 
-            Config config = listConfigMap.get(encodeListId.toLowerCase());
-            Document doc=config.getDoc();
-
-            Elements items = doc.body().getElementById("column").children();
-
-            List<Element> searchList = new ArrayList<>();
-            String[] names = addSearch.split(",");
-            for (String name : names) {
-                for (int i = 0; i < items.size(); i++) {
-                    if (name.equalsIgnoreCase(items.get(i).attr(JsoupUtil.ITEM_NAME))) {
-                        searchList.add(items.get(i));
-                    }
-                }
-            }
-            String buttons = "";
-            try {
-                buttons = doc.body().getElementById("rowbutton").outerHtml();
-            } catch (Exception e) {
-                e.printStackTrace();
-                //
-            }
-
-            doc.body().getElementById("column").children().remove();
-            for (int i = 0; i < searchList.size(); i++) {
-                doc.body().getElementById("column").append(searchList.get(i).outerHtml());
-            }
-            //button
-            doc.body().getElementById("column").append(buttons);
-
-            JsoupUtil.updateConfig(config);
-
-        } catch (Exception e) {
-            Utils.addLog("", e);
-        }
     }
     public Integer updateColumnByListId(String encodeListId, String name, Map<String, String> request) throws IOException {
-        String pre = request.get("pre");
-        Config config=listConfigMap.get(encodeListId.toLowerCase());
-        Document doc = config.getDoc();
-        Element body = doc.body();
-        Element express = body.getElementById("column");
-        List<String> itemSortList = new ArrayList<>();
-        boolean has = false;
-        for (int i = 0; i < express.children().size(); i++) {
-            Element item = express.children().get(i);
-            String itemname = item.attr(JsoupUtil.ITEM_NAME);
-            if (StringUtils.isBlank(itemname)) {
-                continue;
-            }
-            if (StringUtils.equalsIgnoreCase(itemname, name)) {
-                item.html(request.get(JsoupUtil.LABEL));
 
-                for (int j = 0; j < colNames.length; j++) {
-                    attr(item,colNames[j], request.get(colNames[j]));
-                }
-                has = true;
-                //如果 td跟th是默认值，去掉属性
-                if(StringUtils.equals(item.attr(JsoupUtil.HEAD_PLUGIN_CODE),DEFAULT_TH)){
-                      item.removeAttr(JsoupUtil.HEAD_PLUGIN_CODE);
-                }
-                if(StringUtils.equals(item.attr(JsoupUtil.BODY_PLUGIN_CODE),DEFAULT_TD)){
-                      item.removeAttr(JsoupUtil.BODY_PLUGIN_CODE);
-                }
-            }
-            itemSortList.add(itemname);
-            if (StringUtils.equalsIgnoreCase(itemname, pre)) {
-                itemSortList.add(request.get(JsoupUtil.ITEM_NAME));
-            }
-
-        }
-        if (!has) {
-            Element item = doc.createElement("th");
-            item.html(request.get(JsoupUtil.LABEL));
-
-            for (int j = 0; j < colNames.length; j++) {
-                attr(item,colNames[j], request.get(colNames[j]));
-            }
-            //如果 td跟th是默认值，去掉属性
-            if(StringUtils.equals(item.attr(JsoupUtil.HEAD_PLUGIN_CODE),DEFAULT_TH)){
-                item.removeAttr(JsoupUtil.HEAD_PLUGIN_CODE);
-            }
-            if(StringUtils.equals(item.attr(JsoupUtil.BODY_PLUGIN_CODE),DEFAULT_TD)){
-                item.removeAttr(JsoupUtil.BODY_PLUGIN_CODE);
-            }
-            express.append("\n" + item.outerHtml());
-        }
-
-        updateConfig(config);
-
-        if (StringUtils.isNotBlank(pre)) {
-            updateListColumnSort(encodeListId, org.apache.commons.lang.StringUtils.join(itemSortList, ","));
-        }
         return 1;
     }
 
     public   Integer deleteColumnByListId(String encodeListId, String name) throws IOException {
 
-        Document doc = listConfigMap.get(encodeListId.toLowerCase()).getDoc();
 
-        Element nav = doc.body().getElementById("column");
-        Element element = StringUtils.isBlank(name) ? null : nav.selectFirst("["+JsoupUtil.ITEM_NAME+"='" + name + "']");
-
-        if (element != null) {
-            element.remove();
-             updateConfig(listConfigMap.get(encodeListId.toLowerCase()));
-        }
 
         return 1;
     }
@@ -732,154 +630,17 @@ public class ListDao extends  JsoupUtil{
 
     public   Integer updateCoreByListId(String encodeListId, String name, Map<String, String> request) throws IOException {
 
-
-        Config config=listConfigMap.get(encodeListId.toLowerCase());
-
-        if (config==null) {
-            Config tempConfig=listConfigMap.get("listtemplate");
-           // path = "ezadmin/config/list/template.html";
-
-            Document doc =tempConfig.getDoc();
-
-
-            String editPath=EzBootstrap.instance().getEditLocation()+File.separator+"list";
-            editPath=editPath+(File.separator+encodeListId+".html");
-            //创建新文件
-            Config c=new Config();
-            c.setFile(new File(editPath));
-            c.setUrl(new File(editPath).toURI().toURL());
-            c.setPath(new File(editPath).toURI().toURL().getPath());
-            c.setProtocol("file");
-            if(!new File(editPath).exists()){
-                Files.createFile(Paths.get(editPath));
-            }
-
-            doc.body().attr("id",encodeListId);
-            c.setDoc(doc);
-            listConfigMap.put(encodeListId.toLowerCase(),c);
-
-            config=c;
-        }
-        Document doc =config.getDoc();
-        Element body = doc.body();
-        attr(body,"id", encodeListId);
-        attr(body,"datasource", request.get("DATASOURCE"));
-        attr(body,"fixedNumber", request.get("FIX_NUMBER"));
-        attr(body,"fixedNumberRight", request.get("FIX_NUMBER_RIGHT"));
-        attr(body,"treegrid", Utils.trimEmptyDefault(request.get("TREEGRID"),"0"));
-        attr(body,"APPEND_COLUMN_URL", request.get("APPEND_COLUMN_URL"));
-        attr(body,"APPEND_ROW_URL", request.get("APPEND_ROW_URL"));
-        attr(body,"EMPTY_SHOW", request.get("EMPTY_SHOW"));
-        attr(body,JsoupUtil.TABLESTYLE, request.get(JsoupUtil.TABLESTYLE));
-        attr(body,"firstCol", StringUtils.isBlank(request.get("FIRSTCOL")) ? "" : request.get("FIRSTCOL"));
-
-        doc.title(Utils.trimNullDefault(request.get("LIST_NAME"),"generate"));
-
-        Element express = body.getElementById("express");
-        express.text(Utils.trimNull(request.get("SELECT_EXPRESS")));
-        attr(express,"orderby", request.get("DEFAULT_ORDER"));
-        attr(express,"groupby", request.get("DEFAULT_GROUP"));
-        body.getElementById("count").text(Utils.trimNull(request.get("COUNT_EXPRESS")));
-
-
-        if (body.getElementById(JsoupUtil.APPEND_HEAD) == null) {
-            Element head = doc.createElement("div");
-            head.attr("id", JsoupUtil.APPEND_HEAD);
-            head.html(Utils.trimNull(request.get(JsoupUtil.APPEND_HEAD)));
-            body.prepend(head.outerHtml());
-        } else {
-            body.getElementById(JsoupUtil.APPEND_HEAD).html(Utils.trimNull(request.get(JsoupUtil.APPEND_HEAD)));
-        }
-        if (body.getElementById(JsoupUtil.APPEND_FOOT) == null) {
-            Element head = doc.createElement("div");
-            head.attr("id", JsoupUtil.APPEND_FOOT);
-            head.html(Utils.trimNull(request.get(JsoupUtil.APPEND_FOOT)));
-            body.prepend(head.outerHtml());
-        } else {
-            body.getElementById(JsoupUtil.APPEND_FOOT).html(Utils.trimNull(request.get(JsoupUtil.APPEND_FOOT)));
-        }
-
-        updateConfig(config);
         return 1;
     }
 
 
     public   Integer updateNavByListId(String encodeListId, String name, Map<String, String> request) throws IOException {
 
-          Config config = listConfigMap.get(encodeListId.toLowerCase());
-        Document doc=config.getDoc();;
-
-        Element body = doc.body();
-
-
-        Element express = body.getElementById("tab");
-        boolean has = false;
-        for (int i = 0; i < express.children().size(); i++) {
-            Element item = express.children().get(i);
-            if (StringUtils.equalsIgnoreCase(item.attr(JsoupUtil.ITEM_NAME), name) ||
-                    name.equalsIgnoreCase(item.text())) {
-                Element a = item.child(0);
-                a.attr(JsoupUtil.HREF, request.get(JsoupUtil.URL));
-                a.text(request.get(JsoupUtil.LABEL));
-                a.attr(JsoupUtil.ITEM_NAME, request.get(JsoupUtil.ITEM_NAME));
-                item.attr(JsoupUtil.ITEM_NAME, request.get(JsoupUtil.ITEM_NAME));
-                has = true;
-            }
-
-        }
-        if (!has) {
-            Element item = doc.createElement("li");
-            Element a = doc.createElement("a");
-            a.attr("href", request.get(JsoupUtil.URL));
-            a.text(request.get(JsoupUtil.LABEL));
-            a.attr(JsoupUtil.ITEM_NAME, request.get(JsoupUtil.ITEM_NAME));
-            item.attr(JsoupUtil.ITEM_NAME, request.get(JsoupUtil.ITEM_NAME));
-
-            item.append(a.outerHtml());
-            express.append(item.outerHtml());
-        }
-      updateConfig(config);
         return 1;
     }
 
     public   void updateListNavSort(String encodeListId, String addSearch) {
-        try {
-            if (org.apache.commons.lang.StringUtils.isBlank(addSearch)) {
-                return;
-            }
-            Config config = listConfigMap.get(encodeListId.toLowerCase());
-            Document doc=config.getDoc();
 
-            Element nav = doc.body().getElementById("tab");
-            if (nav == null) {
-                nav = doc.createElement("div");
-                nav.addClass("layui-tab-title");
-                nav.attr("id", "nav");
-            }
-
-
-            Elements items = nav.children();
-
-            List<Element> searchList = new ArrayList<>();
-            String[] names = addSearch.split(",");
-            for (String name : names) {
-                for (int i = 0; i < items.size(); i++) {
-                    if (name.equalsIgnoreCase(items.get(i).attr(JsoupUtil.ITEM_NAME)) || name.equalsIgnoreCase(items.get(i).text())) {
-                        if (StringUtils.isBlank(items.get(i).attr(JsoupUtil.ITEM_NAME))) {
-                            items.get(i).attr(JsoupUtil.ITEM_NAME, items.get(i).text());
-                        }
-                        searchList.add(items.get(i));
-                    }
-                }
-            }
-            doc.body().getElementById("tab").html("");
-            for (int i = 0; i < searchList.size(); i++) {
-                doc.body().getElementById("tab").append(searchList.get(i).outerHtml());
-            }
-           updateConfig(config);
-        } catch (Exception e) {
-            Utils.addLog("", e);
-        }
 
     }
 
@@ -1133,6 +894,17 @@ public class ListDao extends  JsoupUtil{
             Utils.putIfAbsent(btnMap,names[i], strip(btn.attr(names[i])));
         }
     }
+    private static void initButtonMapObj(Map<String, Object> btnMap, Element btn) {
+        String label = Utils.trimEmptyDefault(JsoupUtil.strip(btn.text()),btn.attr(JsoupUtil.ITEM_NAME));
+        Utils.putIfAbsent(btnMap,JsoupUtil.LABEL, label);
+        String [] names=new String[]{ JsoupUtil.NAME, JsoupUtil.WINDOW_NAME,JsoupUtil.ITEM_NAME
+                ,JsoupUtil.AREA,JsoupUtil.URL,JsoupUtil.OPENTYPE,JsoupUtil.CLASS,JsoupUtil.STYLE,
+                JsoupUtil.EZ_CALLBACK
+        };
+        for (int i = 0; i < names.length; i++) {
+            Utils.putIfAbsent(btnMap,names[i], strip(btn.attr(names[i])));
+        }
+    }
     private static void initButtonByMap(Map<String, String> request, Element item) {
         item.html(StringUtils.isNotBlank(request.get(JsoupUtil.LABEL))?request.get(JsoupUtil.LABEL):request.get(JsoupUtil.ITEM_NAME));
         String [] names=new String[]{ JsoupUtil.NAME, JsoupUtil.WINDOW_NAME,JsoupUtil.ITEM_NAME
@@ -1200,16 +972,254 @@ public class ListDao extends  JsoupUtil{
         }
         JsoupUtil.updateConfig(config);
     }
+    void fillcore(Map<String,Object> coreMap,Config config){
+        Document doc=config.getDoc();
+        coreMap.put("listname", JsoupUtil.strip(doc.title()));
+        coreMap.put("ENCRYPT_LIST_ID", JsoupUtil.strip(doc.body().attr("id")));
+        coreMap.put(JsoupUtil.APPEND_HEAD, doc.getElementById(JsoupUtil.APPEND_HEAD) == null ? "" : doc.getElementById(JsoupUtil.APPEND_HEAD).html());
+        coreMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
 
-    public   Map<String, Object> selectAllFormById(String formCode) {
+        coreMap.putAll(JsoupUtil.loadAttrNoChild(doc.body() ));
+
+        Element express = doc.getElementById("express");
+
+        if (express != null) {
+            coreMap.put("select_express", express.text());
+            coreMap.put("orderby_express", express.attr("orderby"));
+            coreMap.put("groupby_express", express.attr("groupby"));
+        }
+        Element count = doc.getElementById("count");
+        if (count != null) {
+            coreMap.put("count_express", count.text());
+        }
+    }
+    public   Map<String, Object> selectAllListById(String listcode) {
         Map<String, Object> result=new HashMap<>();
-        Config config=listConfigMap.get(formCode.toLowerCase());
+        Config config=listConfigMap.get(listcode.toLowerCase());
+        Map<String,Object> coreMap=new HashMap<>();
+        fillcore(coreMap,config);
+        fillbuttoncol(coreMap,config);
+
+
+        result.put("core",coreMap);
+        List<Map<String,Object>> searchList=new ArrayList<>();
+        fillsearch(searchList,config);
+        List<Map<String,Object>> tabList=new ArrayList<>();
+        filltab(tabList,config);
+        List<Map<String,Object>> tablebtnList=new ArrayList<>();
+        filltablebtn(tablebtnList,config);
+        List<Map<String,Object>> colList=new ArrayList<>();
+        fillcol(colList,config);
+        List<Map<String,Object>> rowbtnList=new ArrayList<>();
+        fillrowbtn(rowbtnList,config);
+
+
+
+        result.put("search",searchList);
+        result.put("tab",tabList);
+        result.put("tablebtn",tablebtnList);
+        result.put("col",colList);
+        result.put("rowbtn",rowbtnList);
+
 
         return result;
     }
+
+    private void fillbuttoncol(Map<String, Object> coreMap, Config config) {
+        Element column = config.getDoc().getElementById("column");
+        boolean haspic=false;
+        if (column != null) {
+            Elements thList=column.getElementsByTag("th");
+            for (int x = 0; x < thList.size(); x++) {
+                Element th=thList.get(x);
+                if (th.id().equalsIgnoreCase("rowbutton")) {
+                    continue;
+                }
+                // Map<String, String> thMap = JsoupUtil.loadplugin(th );
+                if(isImageTd(th)){
+                    haspic=true;break;
+                }
+            }
+        }
+
+
+
+
+
+        Element rowbutton = config.getDoc().getElementById("rowbutton");
+        if(rowbutton!=null) {
+            String Json = Utils.trimEmptyDefault(rowbutton.attr(JsoupUtil.LAYDATA), "{\"field\":\"oper\", \"minWidth\":\"230\", \"fixed\":\"right\"}");
+            coreMap.put(JsoupUtil.LAYDATA, Json);
+            //由于layui没有提供height操作，需要对height做一层处理
+            try {
+                String userStyle= rowbutton.attr("style");
+                Map<String, String> json = JSONUtils.parseMap(Json);
+                if(haspic){
+                    if(StringUtils.isBlank(userStyle) ){
+                        userStyle="height: 110px;white-space: normal";
+                    }else{
+                        userStyle+=";height: 110px;white-space: normal";
+                    }
+                }else{
+
+                    userStyle+=";white-space: normal";
+                }
+                json.put("style",userStyle);
+                coreMap.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json));
+            } catch (Exception e) {
+                log.error("", e);
+            }
+        }
+    }
+
+    void fillcol(List<Map<String, Object>> searchConfigList, Config config){
+        Document doc = config.getDoc();
+        Element column = doc.getElementById("column");
+         if (column != null) {
+             insertFirstColObj(doc,searchConfigList);
+            Elements thList=column.getElementsByTag("th");
+            for (int x = 0; x < thList.size(); x++) {
+                Element th=thList.get(x);
+                if (th.id().equalsIgnoreCase("rowbutton")) {
+                    continue;
+                }
+                Map<String, Object> thMap =new HashMap<>();
+                thMap.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(th));
+
+                for (int i = 0; i < colNames.length; i++) {
+                    Utils.putIfAbsent(thMap,colNames[i], strip(th.attr(colNames[i])));
+                }
+
+                Utils.putIfAbsent(thMap,JsoupUtil.HEAD_PLUGIN_CODE, DEFAULT_TH);
+                Utils.putIfAbsent(thMap,JsoupUtil.BODY_PLUGIN_CODE, DEFAULT_TD);
+
+                thMap.put(JsoupUtil.LABEL, th.html());
+                thMap.put(JsoupUtil.ITEM_NAME, StringUtils.upperCase(th.attr(JsoupUtil.ITEM_NAME)));
+
+
+                //laydata属性
+                String laydata=th.attr(JsoupUtil.LAYDATA);
+                Map<String,Object> laydataMap=JSONUtils.parseObjectMap(laydata);
+                if(laydataMap==null){
+                    laydataMap=new HashMap<>();
+                }
+
+                //最容易理解的是style，因此，用style来生成laydata
+                styleTomap(laydataMap,th);
+
+                defaultMap(laydataMap,th);
+                thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
+                searchConfigList.add(thMap);
+            }
+        }
+    }
+    void fillrowbtn(List<Map<String, Object>> searchConfigList, Config config){
+        Document doc = config.getDoc();
+         Element column = doc.getElementById("rowbutton");
+
+         if (column != null) {
+             Elements buttons=column.getElementsByTag("button");
+
+             for (int i1 = 0; i1 < buttons.size(); i1++) {
+                Element btn=buttons.get(i1);
+                Map<String, Object> btnMap = new HashMap<>();
+                btnMap.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(btn));
+                //JsoupUtil.loadplugin(btn );
+                initButtonMapObj(btnMap, btn);
+                searchConfigList.add(btnMap);
+            }
+        }
+    }
+    void filltablebtn(List<Map<String, Object>> searchConfigList, Config config){
+        Document doc = config.getDoc();
+        Element tableButton=doc.getElementById("tableButton");
+        if(tableButton!=null){
+            Elements buttons=tableButton.getElementsByTag("button");
+            if(buttons!=null){
+                for (int i1 = 0; i1 < buttons.size(); i1++) {
+                    Element btn=buttons.get(i1);
+                    Map<String, Object> btnMap = new HashMap<>();
+                    btnMap.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(btn));
+                    //JsoupUtil.loadplugin(btn );
+                    initButtonMapObj(btnMap, btn);
+                    searchConfigList.add(btnMap);
+                }
+            }
+        }
+    }
+    void filltab(List<Map<String, Object>> searchConfigList, Config config){
+        Document doc = config.getDoc();
+        Element tab = doc.getElementById("tab");
+         if (tab == null || tab.children().size() == 0) {
+            return  ;
+        }
+        List<Element> alist=tab.getElementsByTag("a");
+        for (int i = 0; i < alist.size(); i++) {
+            Element item=alist.get(i);
+            Map<String, Object> listitem = new HashMap<>();
+            Utils.putIfAbsent(listitem,JsoupUtil.LABEL, item.html());
+            Utils.putIfAbsent(listitem,JsoupUtil.URL, Utils.trimNullDefault(item.attr(JsoupUtil.HREF),item.attr(JsoupUtil.URL)));
+            Utils.putIfAbsent(listitem,JsoupUtil.ITEM_NAME, item.attr(JsoupUtil.ITEM_NAME));
+            Utils.putIfAbsent(listitem,JsoupUtil.SELECT, item.attr(JsoupUtil.SELECT));
+            searchConfigList.add(listitem);
+        }
+    }
+
+    private void fillsearch(List<Map<String, Object>> searchConfigList, Config config) {
+        Document doc=config.getDoc();
+        List<Element> searchList=doc.getElementsByClass("list-search-item");
+        if(Utils.isNotEmpty(searchList)){
+            List<Map<String, Object>> list = new ArrayList<>();
+            List<Map<String, Object>> listHidden = new ArrayList<>();
+            for (int x = 0; x < searchList.size(); x++) {
+                Element item=searchList.get(x);
+                 Map<String, Object> listitem = new HashMap<>();//JsoupUtil.loadplugin(item);
+                String [] names=new String[]{ JsoupUtil.NAME, JsoupUtil.ALIAS,JsoupUtil.ITEM_NAME,
+                        JsoupUtil.OPER,JsoupUtil.JDBCTYPE,JsoupUtil.DATA,JsoupUtil.DATATYPE,
+                        JsoupUtil.VALIDATERULES,JsoupUtil.VALIDATEMESSAGES,JsoupUtil.STYLE,JsoupUtil.PLACEHOLDER
+                        ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
+                };
+                for (int i = 0; i < names.length; i++) {
+                    Utils.putIfAbsent(listitem,names[i], strip(item.attr(names[i])));
+                }
+                listitem.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(item));
+
+                listitem.putAll(loadDataAttrNoChild(item));
+                //special
+                Utils.putIfAbsent(listitem,JsoupUtil.LABEL, strip(item.parent().parent().child(0).text()));
+                Utils.putIfAbsent(listitem,"item_id", item.attr(JsoupUtil.NAME).replaceAll(",", "-"));
+                listitem.put(JsoupUtil.ITEM_NAME, StringUtils.upperCase(Utils.trimEmptyDefault(item.attr(JsoupUtil.ITEM_NAME),item.attr(JsoupUtil.NAME))));
+                //如果是xmselect  默认为in
+                if(listitem.get(JsoupUtil.PLUGIN).toString() .equalsIgnoreCase("xmselect")){
+                    if(StringUtils.isBlank(Utils.trimNull(listitem.get(JsoupUtil.OPER)))){
+                        listitem.put(JsoupUtil.OPER, OperatorEnum.IN.getOperC());
+                    }
+                }
+                //如果区间，默认为between
+                if(
+                        listitem.get(JsoupUtil.PLUGIN).toString().equalsIgnoreCase("daterange")||
+                                listitem.get(JsoupUtil.PLUGIN).toString().equalsIgnoreCase("datetimerange")||
+                                listitem.get(JsoupUtil.PLUGIN).toString().equalsIgnoreCase("numberrange")
+                ){
+                    if(StringUtils.isBlank(Utils.trimNull(listitem.get(JsoupUtil.OPER)))){
+                        listitem.put(JsoupUtil.OPER, OperatorEnum.BETWEEN.getOperC());
+                    }
+                }
+                if (StringUtils.equals(item.attr("type"), "hidden")) {
+                    listHidden.add(listitem);
+                } else {
+                    list.add(listitem);
+                }
+            }
+            searchConfigList.addAll(list);
+            searchConfigList.addAll(listHidden);
+            //list.addAll(listHidden);
+        }
+    }
+
     static String[] attr=new String[]{"datasource",
     "fixnumber","fixnumberright",
-    "empty_show",
+    "empty_show","tablestyle",
     "firstcol"
     };
     public void updateList(Map<String, Object> list) throws  Exception {
@@ -1343,7 +1353,7 @@ public class ListDao extends  JsoupUtil{
                 "    <div  class=\"layui-form-item\" >\n" +
                 "        <label class=\"layui-form-label\"  >"+label+"</label>\n" +
                 "        <div class=\"layui-input-block\">\n" +
-                "                <object  item_name=\""+name+"\"></object>\n" +
+                "                <object class=\"list-search-item\" item_name=\""+name+"\"></object>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
                 "</div>").body().child(0);

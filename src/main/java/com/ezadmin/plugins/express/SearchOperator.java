@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class SearchOperator extends AbstractOperator {
 
@@ -27,10 +28,14 @@ public class SearchOperator extends AbstractOperator {
             Page page = operatorParam.getPage();
             StringBuilder where = new StringBuilder(" ");
 
-            List<EzSearchModel> modelList=operatorParam.getListDTO().getSearchItemList();
-            if(Utils.isNotEmpty(modelList)){
-                for (int i = 0; i < modelList.size(); i++) {
-                    where.append(modelList.get(i).sql());
+            Map<String, Object> list= operatorParam.getListDto();
+            List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
+             Map<String,Object>  core=( Map<String,Object>)list.get("core");
+
+             if(Utils.isNotEmpty(searchList)){
+                for (int i = 0; i < searchList.size(); i++) {
+                    Map<String,Object> search=searchList.get(i);
+                    where.append(EzSearchModel.sql(search,operatorParam.getRequestParams()));
                 }
             }
 
@@ -41,7 +46,7 @@ public class SearchOperator extends AbstractOperator {
                 orderByClause = page.getOrderByClause();
             }
 
-              finalSql = SqlUtils.buildPageSql(sql,operatorParam.getListDTO().getCountExpress(),
+              finalSql = SqlUtils.buildPageSql(sql,Utils.getStringByObject(core,"count_express"),
                     where.toString(), orderByClause, groupBy,
                     limit, operatorParam.isCount());
 

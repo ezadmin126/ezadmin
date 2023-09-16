@@ -32,10 +32,14 @@ public class TreeSearchOperator extends AbstractOperator {
             Page page = operatorParam.getPage();
             StringBuilder where = new StringBuilder(" ");
 
-            List<EzSearchModel> modelList=operatorParam.getListDTO().getSearchItemList();
-            if(Utils.isNotEmpty(modelList)){
-                for (int i = 0; i < modelList.size(); i++) {
-                    where.append(modelList.get(i).sql());
+            Map<String, Object> list= operatorParam.getListDto();
+            List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
+            Map<String,Object>  core=( Map<String,Object>)list.get("core");
+
+            if(Utils.isNotEmpty(searchList)){
+                for (int i = 0; i < searchList.size(); i++) {
+                    Map<String,Object> search=searchList.get(i);
+                    where.append(EzSearchModel.sql(search,operatorParam.getRequestParams()));
                 }
             }
          //   String firstWhere=where.toString()+" and "+fieldParentIdName+"="+fieldParentIdRootValue;
@@ -48,7 +52,7 @@ public class TreeSearchOperator extends AbstractOperator {
                 orderByClause = page.getOrderByClause();
             }
 
-            finalSql = SqlUtils.buildPageSql(sql,operatorParam.getListDTO().getCountExpress(),
+            finalSql = SqlUtils.buildPageSql(sql,Utils.getStringByObject(core,"count_express"),
                     where.toString(), orderByClause, groupBy,
                     limit, operatorParam.isCount());
 
@@ -91,7 +95,12 @@ public class TreeSearchOperator extends AbstractOperator {
     void fillChild(Map<String, Object> current,String sql,String fieldName,String fieldIdName, String fieldParentIdName,String orderByClause,String groupBy,OperatorParam operatorParam){
         //子查询不处理where条件
         Object filedId=current.get("ID");
-        String  finalSqlChild = SqlUtils.buildPageSql(sql,operatorParam.getListDTO().getCountExpress(),
+
+        Map<String, Object> list= operatorParam.getListDto();
+        List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
+        Map<String,Object>  core=( Map<String,Object>)list.get("core");
+
+        String  finalSqlChild = SqlUtils.buildPageSql(sql,Utils.getStringByObject(core,"count_express"),
                 " and "+fieldParentIdName+"="+filedId +" ", orderByClause, groupBy,
                 " limit 100000", operatorParam.isCount());
         ResultModel  modelz = CommentsSqlParser.parse(finalSqlChild, operatorParam.getRequestParams());

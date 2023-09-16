@@ -9,8 +9,9 @@ public enum OrderEnum {
         order=i;
     }
     public static String getSort(Object i){
+
         for(OrderEnum e:values()){
-            if(StringUtils.equals(e.order,i+"")){
+            if(StringUtils.equals(e.order,i+"")||StringUtils.equalsIgnoreCase(e.name(),i+"")){
                 return e.name();
             }
         }

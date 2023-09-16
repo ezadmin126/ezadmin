@@ -38,7 +38,7 @@ public class CSVExport implements EzExport {
                 printer.printRecord(data.get(i));
             }
             printer.flush();
-            response.getWriter().flush();
+           // response.getWriter().flush();
         } finally {
             if (printer != null)
                 printer.close();

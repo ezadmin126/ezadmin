@@ -15,16 +15,17 @@ public class OperatorParam {
 
     private EzSearchModel model;
      DataSource ds;
+   private Map<String, Object> listDto;
 
-    public EzListDTO getListDTO() {
-        return listDTO;
-    }
-
-    public void setListDTO(EzListDTO listDTO) {
-        this.listDTO = listDTO;
-    }
-
-    private EzListDTO listDTO;
+//    public EzListDTO getListDTO() {
+//        return listDTO;
+//    }
+//
+//    public void setListDTO(EzListDTO listDTO) {
+//        this.listDTO = listDTO;
+//    }
+//
+//    private EzListDTO listDTO;
     /**
      * 用于配置的搜索参数
      */
@@ -110,4 +111,11 @@ public class OperatorParam {
     }
 
 
+    public Map<String, Object> getListDto() {
+        return listDto;
+    }
+
+    public void setListDto(Map<String, Object> listDto) {
+        this.listDto = listDto;
+    }
 }

@@ -68,7 +68,6 @@ public class FormController extends BaseController {
         request.setAttribute("formUrl",request.getContextPath()+"/ezadmin/form/form-"+ ENCRYPT_FORM_ID);
         //自定义ID
         String ID= getIdInForm(request);
-
         if (StringUtils.isBlank(formId)&&StringUtils.isBlank(ENCRYPT_FORM_ID)) {
            // notFound(false,request,response);
             return "404";
@@ -84,6 +83,7 @@ public class FormController extends BaseController {
             form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
         }
         formService.fillFormById(form,searchParamsValues,sessionMap);
+        request.setAttribute("ID",ID);
         request.setAttribute("form",form);
         return "layui/form/form";
      }
@@ -204,7 +204,7 @@ public class FormController extends BaseController {
                 form.put("core",new HashMap<>());
             }
             String successurl=Utils.trimNull( core.get("successurl"));
-            String express=   Utils.trimNull( core.get("subcode"));
+            String express=   Utils.trimNull( core.get("submit_express"));
             Map<String, Object> paras = new HashMap<>();
             paras.put("ID", ID);
             List<Map<String,Object>> cardList=(List<Map<String,Object>>)form.get("cards");
@@ -230,7 +230,7 @@ public class FormController extends BaseController {
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
                     .addParam(paras)
-                    .addRequestParam(requestToMap(request))
+                    .addRequestParam(searchParamsValues)
                     .addSessionParam(sessionParamMap)
                     .execute();
             Object rowId=result;

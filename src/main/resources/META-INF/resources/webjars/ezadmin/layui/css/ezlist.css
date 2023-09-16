@@ -132,7 +132,7 @@ th a {
 
 
 /*.layui-table-col-special .layui-table-cell {*/
-/*   */
+
 /*    overflow: visible;*/
 /*    text-overflow: inherit;*/
 /*    white-space: normal;*/
@@ -147,12 +147,12 @@ th a {
 
 }
 
-.layui-form-label {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+/*.layui-form-label {*/
+/*    overflow: hidden;*/
+/*    white-space: nowrap;*/
+/*    text-overflow: ellipsis;*/
 
-}
+/*}*/
 
 .layui-table-page {
     text-align: right;
@@ -189,62 +189,43 @@ th a {
 /*.layui-form-label {*/
 /*}*/
 
-.layui-form-select dl {
-    top: 30px
-}
+/* */
 
-.layui-form-selectup dl {
-    top: auto;
-    bottom: 30px;
-}
-
-.btn-group {
-    vertical-align: middle;
-    font-size: 0;
-}
-
-.btn-group .layui-btn:first-child {
-    border-left: none;
-    border-radius: 2px 0 0 2px;
-}
-
-.btn-group .layui-btn {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    border-left: 1px solid rgba(255, 255, 255, .5);
-    border-radius: 0;
-}
-
-.rc-handle-container {
-    position: relative;
-}
-
-.rc-handle {
-    position: absolute;
-    width: 7px;
-    cursor: ew-resize;
-    margin-left: -3px;
-    z-index: 2;
-}
-
-table.rc-table-resizing {
-    cursor: ew-resize;
-}
-
-table.rc-table-resizing thead,
-table.rc-table-resizing thead > th,
-table.rc-table-resizing thead > th > a {
-    cursor: ew-resize;
-}
-
-
-.layui-card-header {
-    height: 34px;
-}
-
-/*.layui-form-item .layui-input-inline {*/
-/*    width: 175px;*/
+/*.btn-group .layui-btn:first-child {*/
+/*    border-left: none;*/
+/*    border-radius: 2px 0 0 2px;*/
 /*}*/
+
+/*.btn-group .layui-btn {*/
+/*    margin-left: 0 !important;*/
+/*    margin-right: 0 !important;*/
+/*    border-left: 1px solid rgba(255, 255, 255, .5);*/
+/*    border-radius: 0;*/
+/*}*/
+
+/*.rc-handle-container {*/
+/*    position: relative;*/
+/*}*/
+
+/*.rc-handle {*/
+/*    position: absolute;*/
+/*    width: 7px;*/
+/*    cursor: ew-resize;*/
+/*    margin-left: -3px;*/
+/*    z-index: 2;*/
+/*}*/
+
+/*table.rc-table-resizing {*/
+/*    cursor: ew-resize;*/
+/*}*/
+
+/*table.rc-table-resizing thead,*/
+/*table.rc-table-resizing thead > th,*/
+/*table.rc-table-resizing thead > th > a {*/
+/*    cursor: ew-resize;*/
+/*}*/
+
+/* */
 
 
 .layui-form-mid {
@@ -488,6 +469,67 @@ table.dataTable thead th {
 
 .dataTables_wrapper.no-footer .dataTables_scrollBody {
     border-bottom: none !important;;
+}
+
+
+/**初始化加载层*/
+.layuimini-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 999999;
+}
+
+.layuimini-loader .layuimini-loader-inner {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #1E9FFF;
+    animation: spin 2s linear infinite;
+}
+
+.layuimini-loader .layuimini-loader-inner:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #1E9FFF;
+    animation: spin 3s linear infinite;
+}
+
+.layuimini-loader .layuimini-loader-inner:after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #1E9FFF;
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(1turn);
+    }
 }
 
 

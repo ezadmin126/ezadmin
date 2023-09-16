@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>自定义</title>
-    <link th:href="${contextName+'/webjars/layui/2.8.10/dist/css/layui.css?v2='+vi}" rel="stylesheet">
+    <link th:href="${contextName+'/webjars/layui/2.8.16/dist/css/layui.css?v2='+vi}" rel="stylesheet">
     <link th:href="${contextName+'/webjars/ezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
 
     <style>
@@ -18,21 +18,23 @@
         /*    margin-bottom: 0px;*/
         /*}*/
 
-        /*.layui-form-item .layui-input-inline {*/
-        /*    width: 30px !important;*/
-        /*}*/
+         .layui-form-item   {
+             border: 1px dashed #d1d1d1;
+
+         }
+
 
         .gu-mirror .layui-input-inline {
             display: none;
         }
 
-        .move {
-            cursor: move
+        .move,.layui-form-label {
+            cursor: move !important;
         }
 
-        /*.layui-form-label {*/
-        /*    width: 110px*/
-        /*}*/
+        .gu-mirror input[type=checkbox], .gu-mirror input[type=radio], .gu-mirror select {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -50,20 +52,19 @@
                    onclick="changeSearchAll(1)"> 全选</a>
                 </span>
             </div>
-            <div class="layui-card-body layui-row layui-col-space5">
-                <div class="layui-col-md3 searchDrage" th:each="item:${fromSearchField}"
-                     th:ITEM_NAME="${item.getConfig('item_name')}">
-                    <div class="layui-form-item ">
-                        <label class="layui-form-label" th:title="${item.getConfig('label')}">[[${item.getConfig('label')}]] </label>
+            <div class="layui-card-body layui-row layui-col-space15 searchDrage">
+                <div class="layui-col-md3  " th:each="item:${fromSearchField}"
+                     th:ITEM_NAME="${item.item_name}" th:classappend="${item.item_name !='firstCol' ?'move':''  }">
+                    <div class="layui-form-item   " >
+                        <label class="layui-form-label" th:title="${item.label}">[[${item.label}]] </label>
                         <div class="layui-input-block">
 
-                            <input th:if="${not (item.getConfig('plugin_code') eq 'input-hidden' or item.getConfig('plugin_code') eq 'hidden'
-                            or item.getConfig('plugin_code') eq '29' or item.getConfig('plugin_code') eq 'search'
+                            <input th:if="${not (item.plugin_code eq 'input-hidden' or item.plugin_code eq 'hidden'
+                            or item.plugin_code eq '29' or item.plugin_code eq 'search'
                             )  }"
-                                   type="checkbox" name="searchId" th:value="${item.getConfig('item_name')}"
+                                   type="checkbox" name="searchId" th:value="${item.item_name}"
                                    lay-skin="primary" lay-filter="changeList">
-                            <i class='searchItem move   layui-form-mid layui-icon-transfer layui-icon   '></i>
-                        </div>
+                         </div>
                     </div>
                 </div>
             </div>
@@ -76,10 +77,10 @@
                 </span>
             </div>
 
-            <div class="layui-card-body layui-row layui-col-space5">
-                <div class="layui-col-md3 columnDrage" th:each="item:${fromColField}"
+            <div class="layui-card-body layui-row layui-col-space15 columnDrage">
+                <div class="layui-col-md3 " th:each="item:${fromColField}" th:classappend="${item.item_name !='firstCol' ?'move':''  }"
                      th:ITEM_NAME="${item.item_name}">
-                    <div class="layui-form-item " >
+                    <div class="layui-form-item "  >
                         <label class="layui-form-label"  th:title="${ item.item_name =='firstCol'?'首列':  item.label}"
                                th:text="${ item.item_name =='firstCol'?'首列':  item.label}">Field E :</label>
                         <div class="layui-input-block">
@@ -87,9 +88,7 @@
                                    lay-skin="primary">
                             <input type="checkbox" name="columnId"  disabled   th:if="${item.item_name =='firstCol'}"  lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
-
-                            <i class='columnItem move layui-form-mid layui-icon-transfer layui-icon   ' th:if="${item.item_name !='firstCol'}"></i>
-                        </div>
+                         </div>
                     </div>
                 </div>
 
@@ -104,14 +103,14 @@
                     <div class="layui-inline">
                         <label class="layui-form-label"> 冻结列数(左)</label>
                         <div class="layui-input-inline">
-                            <input style="width:50px !important;" class="layui-input" type="number" id="fixedNumber"
+                            <input min="0" step="1" max="3" lay-affix="number" class="layui-input" type="number" id="fixedNumber"
                             >
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label"> 冻结列数(右)</label>
                         <div class="layui-input-inline">
-                            <input style="width:50px !important;" class="layui-input" type="number" id="fixNumberRight"
+                            <input min="0" step="1" max="3" lay-affix="number" class="layui-input" type="number" id="fixNumberRight"
                             >
                         </div>
                     </div>
@@ -129,7 +128,7 @@
 </div>
  <script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
 
-<script th:src="${contextName+'/webjars/layui/2.8.10/dist/layui.js?v=202301'}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/layui/2.8.16/dist/layui.js?v=202301'}" type="text/javascript"></script>
 <script th:src="${contextName+'/webjars/ezadmin/plugins/jquery/jquery.form.js?'}"></script>
 <script type='text/javascript' th:src="${contextName+'/webjars/ezadmin/plugins/dragula/dragula.min.js'}"></script>
 
@@ -142,7 +141,7 @@
         revertOnSpill: true,
         moves: function (el, container, handle) {
             // debugger
-            return handle.classList.contains('searchItem');
+            return true;
         }, accepts: function (el, target) {
 
             return target.classList.contains('searchDrage');
@@ -154,7 +153,7 @@
         },
         revertOnSpill: true,
         moves: function (el, container, handle) {
-            return handle.classList.contains('columnItem');
+            return true;
         }, accepts: function (el, target) {
             return target.classList.contains('columnDrage');
         }
@@ -169,8 +168,8 @@
             var json = JSON.parse(jsonconfig);
             var search = json.search;
             var column = json.column;
-            var fixNumber = json.fixNumber
-            var fixNumberRight = json.fixNumberRight
+            var fixNumber = json.fixNumber||0;
+            var fixNumberRight = json.fixNumberRight||0;
 
             for (var i = 0; i < search.length; i++) {
                 $(".searchDrage").find('[item_name="' + search[i] + '"]').detach().appendTo(".searchDrage");

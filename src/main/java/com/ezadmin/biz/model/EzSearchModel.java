@@ -11,35 +11,34 @@ import com.ezadmin.common.utils.Utils;
 
 import java.util.*;
 
-public class EzSearchModel extends  EzModel{
+public class EzSearchModel  {
 
-   private String sql;
-   private String html;
-   private String tableHtml;
 
-    public String sql() {
+
+    public static String sql(Map<String,Object> search,Map<String,Object> request) {
         StringBuilder result=new StringBuilder();
-        String plugin=getConfig(JsoupUtil.PLUGIN);
-        String jdbctype=getConfig(JsoupUtil.JDBCTYPE);
-        String oper=getConfig(JsoupUtil.OPER);
-        String name=getConfig(JsoupUtil.ITEM_NAME);
-        String alias=getConfig(JsoupUtil.ALIAS);
+        String plugin=Utils.getStringByObject(search,JsoupUtil.PLUGIN);
+        String jdbctype=Utils.getStringByObject(search,JsoupUtil.JDBCTYPE);
+        String oper=Utils.getStringByObject(search,JsoupUtil.OPER);
+        String name=Utils.getStringByObject(search,JsoupUtil.ITEM_NAME);
+        String alias=Utils.getStringByObject(search,JsoupUtil.ALIAS);
 
         //普通字段
-        String value=getParam(name);
-        String valueS=getParam(name+"_START");
-        String valueE=getParam(name+"_END");
+        String value=Utils.getStringByObject(request,name);
+        String valueS=Utils.getStringByObject(request,name+"_START");
+        String valueE=Utils.getStringByObject(request,name+"_END");
 
         // 多字段搜索
-        String itemSearchKey=getParam(ParamNameEnum.itemSearchKey.getName() );
-        String itemSearchValue=getParam(ParamNameEnum.itemSearchValue.getName());
+        String itemSearchKey=Utils.getStringByObject(request,ParamNameEnum.itemSearchKey.getName() );
+        String itemSearchValue=Utils.getStringByObject(request,ParamNameEnum.itemSearchValue.getName());
 
         //多字段合并后搜索
-        String itemSearchConcatValue=getParam(ParamNameEnum.itemSearchConcatValue.getName());
+        String itemSearchConcatValue=Utils.getStringByObject(request,ParamNameEnum.itemSearchConcatValue.getName());
 
         //多字段时间搜索
-        String itemSearchDateValueStart=getParam(ParamNameEnum.itemSearchDateValueStart.getName());
-        String itemSearchDateValueEnd=getParam(ParamNameEnum.itemSearchDateValueEnd.getName());
+        String itemSearchDateKey=Utils.getStringByObject(request,ParamNameEnum.itemSearchDateKey.getName());
+        String itemSearchDateValueStart=Utils.getStringByObject(request,ParamNameEnum.itemSearchDateValueStart.getName());
+        String itemSearchDateValueEnd=Utils.getStringByObject(request,ParamNameEnum.itemSearchDateValueEnd.getName());
 
 
         //常规
@@ -53,10 +52,10 @@ public class EzSearchModel extends  EzModel{
                 //选择了type
             if(StringUtils.isNotBlank(itemSearchKey)){
                 //找到对应key的search，然后拼接SQL
-                for (int i = 0; i < getChildren().size(); i++) {
-                    EzModel c=getChildren().get(i);
-                    String cname=c.getConfig("item_name");
-                    String calias=c.getConfig("alias");
+                for (int i = 0; i < ((List<Map<String,Object>>)search.get("children")).size(); i++) {
+                    Map<String,Object> c=((List<Map<String,Object>>)search.get("children")).get(i);
+                    String cname=Utils.getStringByObject(c,"item_name") ;
+                    String calias=Utils.getStringByObject(c,"alias") ;
                     if(StringUtils.equalsIgnoreCase(cname,itemSearchKey)){
                         result.append( SqlUtils.like2(" and ",calias,cname,
                                 OperatorEnum.LIKE , itemSearchValue ) );
@@ -69,10 +68,10 @@ public class EzSearchModel extends  EzModel{
                 Set<String> nameSet=new HashSet<>();
                 String[] ar=name.toUpperCase().split(",");
                 Collections.addAll(Arrays.asList(ar));
-                for (int i = 0; i < getChildren().size(); i++) {
-                    EzModel c=getChildren().get(i);
-                    String cname=c.getConfig("item_name").toUpperCase();
-                    String calias=c.getConfig("alias");
+                for (int i = 0; i < ((List<Map<String,Object>>)search.get("children")).size(); i++) {
+                    Map<String,Object> c=((List<Map<String,Object>>)search.get("children")).get(i);
+                    String cname=Utils.getStringByObject(c,"item_name") ;
+                    String calias=Utils.getStringByObject(c,"alias") ;
                     if(nameSet.contains(cname)){
                         result.append( SqlUtils.like2(" or ",calias,cname,
                                 OperatorEnum.LIKE , itemSearchValue ) );
@@ -85,15 +84,21 @@ public class EzSearchModel extends  EzModel{
 
         }
         //多字段时间搜索
-        if(plugin.equalsIgnoreCase("uniondate")&&StringUtils.isNotBlank(itemSearchValue)){
-                //选择了type
-            if(StringUtils.isNotBlank(itemSearchKey)){
+        if(plugin.equalsIgnoreCase("uniondate") ){
+            //没有搜索值
+            if(StringUtils.isBlank(itemSearchDateValueStart)&&StringUtils.isBlank(itemSearchDateValueEnd)){
+                return "";
+            }
+            if(search.get("children")==null){
+                return "";
+            }
+            //时间区间 确保选择了一项
                 //找到对应key的search，然后拼接SQL
-                for (int i = 0; i < getChildren().size(); i++) {
-                    EzModel c=getChildren().get(i);
-                    String cname=c.getConfig("item_name");
-                    String calias=c.getConfig("alias");
-                    if(StringUtils.equalsIgnoreCase(cname,itemSearchKey)){
+            for (int i = 0; i < ((List<Map<String,Object>>)search.get("children")).size(); i++) {
+                    Map<String,Object> c=((List<Map<String,Object>>)search.get("children")).get(i);
+                    String cname=Utils.getStringByObject(c,"item_name") ;
+                    String calias=Utils.getStringByObject(c,"alias") ;
+                    if(StringUtils.equalsIgnoreCase(cname,itemSearchDateKey)){
                         result.append(   SqlUtils.transToWhere(OperatorEnum.BETWEEN.name(),
                                 cname,calias, JdbcTypeEnum.DATETIME.getName(),//默认日期时间
                                 "",itemSearchDateValueStart,itemSearchDateValueEnd
@@ -101,7 +106,7 @@ public class EzSearchModel extends  EzModel{
                         break;
                     }
                 }
-            }
+
         }
 
         //
@@ -110,13 +115,13 @@ public class EzSearchModel extends  EzModel{
             //选择了type
             if(StringUtils.isNotBlank(itemSearchKey)){
                 //找到对应key的search，然后拼接SQL
-                for (int i = 0; i < getChildren().size(); i++) {
-                    EzModel c=getChildren().get(i);
-                    String cname=c.getConfig("item_name");
-                    String calias=c.getConfig("alias");
+                for (int i = 0; i < ((List<Map<String,Object>>)search.get("children")).size(); i++) {
+                    Map<String,Object> c=((List<Map<String,Object>>)search.get("children")).get(i);
+                    String cname=Utils.getStringByObject(c,"item_name") ;
+                    String calias=Utils.getStringByObject(c,"alias") ;
                     if(StringUtils.equalsIgnoreCase(cname,itemSearchKey)){
                         result.append( SqlUtils.like2(" and ",calias,cname,
-                                OperatorEnum.LIKE , itemSearchValue ) );
+                                OperatorEnum.LIKE , itemSearchConcatValue ) );
                         break;
                     }
                 }
@@ -126,7 +131,7 @@ public class EzSearchModel extends  EzModel{
                 Set<String> nameSet=new HashSet<>();
                 String[] ar=name.toUpperCase().split(",");
                 Collections.addAll(Arrays.asList(ar));
-                String concat=concat_ws(getChildren());
+                String concat=concat_ws(((List<Map<String,Object>>)search.get("children")));
                 String[] values=StringUtils.split(StringUtils.replaceToSearch(itemSearchConcatValue),"%");
                 for (int i = 0; i < values.length; i++) {
                     result.append(" and "+ concat+" like concat('%','"+values[i]+"','%')");
@@ -138,13 +143,13 @@ public class EzSearchModel extends  EzModel{
         return result.toString();
     }
 
-    private static String concat_ws(List<EzModel> list){
+    private static String concat_ws(List<Map<String,Object>> list){
         StringBuilder sb=new StringBuilder();
         sb.append(" concat_ws(' '");
         for (int i = 0; i < list.size(); i++) {
-            EzModel c=list.get(i);
-            String cname=c.getConfig("item_name");
-            String calias=c.getConfig("alias");
+            Map<String,Object> c=list.get(i);
+            String cname=Utils.getStringByObject(c,"item_name") ;
+            String calias=Utils.getStringByObject(c,"alias") ;
 
             sb.append(","+SqlUtils.alias(calias,cname));
         } ;
@@ -154,19 +159,5 @@ public class EzSearchModel extends  EzModel{
 
 
 
-    public String html() {
-        return html;
-    }
 
-    public void setHtml(String html) {
-        this.html = html;
-    }
-
-    public String getTableHtml() {
-        return tableHtml;
-    }
-
-    public void setTableHtml(String tableHtml) {
-        this.tableHtml = tableHtml;
-    }
 }

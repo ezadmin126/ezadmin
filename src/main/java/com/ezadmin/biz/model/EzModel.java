@@ -22,7 +22,9 @@ public class EzModel {
     public Map<String,Object> config(){
         return config;
     }
-
+    public void setConfig(Map<String,Object> c){
+config=c;
+    }
     public String getConfig(String key){
         return Utils.trimNull(config.get(key));
     }

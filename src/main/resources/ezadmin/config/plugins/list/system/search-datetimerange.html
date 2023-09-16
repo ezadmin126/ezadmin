@@ -42,27 +42,27 @@
 
 <div id="content">
      <div class="selector layui-col-md3 list-item " type="input-datetimerange"
-             th:style="${model.getConfig('style')}"
-             th:ITEM_NAME="${model.getConfig('item_name')}"
-             th:ez-name="${model.getConfig('item_name')}"
-             th:classappend="${(model.getConfig('plugin')=='hidden'||model.getConfig('plugin')=='input-hidden')?'list-item-hidden':''}"
+             th:style="${model.style}"
+             th:ITEM_NAME="${model.item_name}"
+             th:ez-name="${model.item_name}"
+             th:classappend="${(model.plugin=='hidden'||model.plugin=='input-hidden')?'list-item-hidden':''}"
         >
     <div  class="layui-form-item" >
-        <label class="layui-form-label" th:for="${'itemId-' + model.getConfig('item_name')}"
-               th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">Date range:</label>
+        <label class="layui-form-label" th:for="${'itemId-' + model.item_name}"
+               th:text="${model.label}" th:title="${model.label}">Date range:</label>
         <div class="ez-daterange-parent ">
         <div class="layui-input-inline ez-range ez-datetimerange " style="margin-right: 0">
             <input autocomplete="off" type="text" class="layui-input layui-datetime"
-                   th:value="${model.getParam(model.getConfig('item_name')+'_START')}"
-                   th:name="${model.getConfig('item_name')+'_START'}"
-                   th:id="${model.getConfig('item_name')+'_START_ID'}"
+                   th:value="${model.itemParamValueStart}"
+                   th:name="${model.item_name+'_START'}"
+                   th:id="${model.item_name+'_START_ID'}"
             >
         </div>
         <div class="layui-form-mid"  >-</div>
         <div class="layui-input-inline ez-range ez-datetimerange" style="margin-right: 0">
             <input autocomplete="off" type="text" class="layui-input layui-datetime"
-                   th:value="${model.getParam(model.getConfig('item_name')+'_END')}"
-                   th:name="${model.getConfig('item_name')+'_END'}" th:id="${model.getConfig('item_name')+'_END_ID'}"
+                   th:value="${model.itemParamValueEnd}"
+                   th:name="${model.item_name+'_END'}" th:id="${model.item_name+'_END_ID'}"
             >
         </div>
     </div>

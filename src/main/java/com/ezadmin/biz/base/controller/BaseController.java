@@ -104,14 +104,12 @@ public class BaseController {
         try {
             Map<String, String> map = (Map<String, String>) session.getAttribute(SessionConstants.EZ_SESSION_PARAM_KEY);
             if (map==null||map.isEmpty()) {
-                map = new HashMap<String, String>();
+                map =  new java.util.HashMap<>();
             }
-            Enumeration<String> keys=session.getAttributeNames();
-
-            while (keys.hasMoreElements()) {
-                String key =keys.nextElement();
-                map.put(key, Utils.trimNull(session.getAttribute(key)));
-            }
+            //默认带入session的 id与name company_id
+            map.put("EZ_SESSION_USER_ID_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));
+            map.put("EZ_SESSION_USER_NAME_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
+            //不再支持自定义key,需要在客户端手动塞入 SessionConstants.EZ_SESSION_PARAM_KEY
             return map;
         }catch (Exception e){
             return  Collections.emptyMap();

@@ -14,39 +14,19 @@
     height: 26px;
     line-height: 26px
 }</style>
-<div th:if="${searchFlag}" th:style="${model.getConfig('style')}" th:ITEM_ID="${model.getConfig('item_name')}"
-     th:item_name="${model.getConfig('item_name')}" style='z-index:101'
+<div   th:style="${model.style}" th:ITEM_ID="${model.item_name}"
+     th:item_name="${model.item_name}" style='z-index:101'
      class=" ">
     <label style="min-width: 110px;"
-           class="layui-form-label" th:for="${'itemName-' + model.getConfig('item_name')}"
-           th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">普通文本</label>
-    <div th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input-inline':'layui-input-inline layui-border-blue' } ">
-        <input th:value="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'':model.getParam(model.getConfig('item_name'))}"
-               type=hidden th:name="${model.getConfig('item_name')}"
+           class="layui-form-label" th:for="${'itemName-' + model.item_name}"
+           th:text="${model.label}" th:title="${model.label}">普通文本</label>
+    <div  class="layui-input-inline ">
+        <input th:value="${#strings.isEmpty(model.itemParamValue)?'':model.itemParamValue}"
+               type=hidden th:name="${model.item_name}"
                class="ez-laycascader" ez_url="/ezadmin/api/category.html"
                ez_value="baseCategoryId" ez_label="baseCategoryName" ez_children="secondCategoryList"
-               th:placeholder="${model.getConfig('placeholder')}" th:id="${'itemName-' + model.getConfig('item_name')}">
+               th:placeholder="${model.placeholder}" th:id="${'itemName-' + model.item_name}">
     </div>
-</div>
-<div th:if="${tableSearchFlag}" th:style="${model.getConfig('style')}" style='z-index:101'
-     class="layui-inline list-item">
-    <label style="min-width: 110px;"
-           class="layui-form-label" th:for="${'itemName-' + model.getConfig('item_name')}"
-           th:text="${model.getConfig('label')}" th:title="${model.getConfig('label')}">普通文本</label>
-    <div style="width:45%"
-         th:class="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'layui-input-inline':'layui-input-inline layui-border-blue' } ">
-        <input class="ez-laycascader-table"
-               ez_url="/ezadmin/api/category.html"
-               ez_value="baseCategoryId" ez_label="baseCategoryName" ez_children="secondCategoryList"
-               th:placeholder="${model.getConfig('placeholder')}"
-               th:value="${#strings.isEmpty(model.getParam(model.getConfig('item_name')))?'':model.getParam(model.getConfig('item_name'))}"
-               type=hidden th:name="${model.getConfig('item_name')}"
-               th:id="${'tableSearch_item_name-' + model.getConfig('item_name')}">
-    </div>
-    <div class="layui-form-mid" style="padding:0 !important;line-height: 30px;margin-right:0; ">
-        <i class="tableSearch layui-icon layui-icon-ok-circle"
-           th:tableSearch_item_name="${model.getConfig('item_name')}" style="color:#1E9FFF;cursor: pointer"></i></div>
-
 </div>
 
 </body>

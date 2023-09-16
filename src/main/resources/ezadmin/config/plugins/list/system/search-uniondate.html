@@ -45,35 +45,35 @@
 </div>
 <div id="content">
     <div class=" layui-col-md3 list-item selector" type="uniondate"
-     th:style="${model.getConfig('style')}"
-     th:ITEM_NAME="${model.getConfig('item_name')}"
-     th:ez-name="${model.getConfig('item_name')}"
-     th:classappend="${(model.getConfig('plugin')=='hidden'||model.getConfig('plugin')=='input-hidden')?'list-item-hidden':''}"
+     th:style="${model.style}"
+     th:ITEM_NAME="${model.item_name}"
+     th:ez-name="${model.item_name}"
+     th:classappend="${(model.plugin=='hidden'||model.plugin=='input-hidden')?'list-item-hidden':''}"
 >
         <div  class="layui-form-item" >
     <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px"
-         th:for="${'ITEM_ID_' + model.getConfig('item_name')}">
-        <select th:id="${'ITEM_ID_' + model.getConfig('item_name')}" style="width: 100%;" name="itemSearchDateKey">
-            <option th:selected="${model.getConfig('itemSearchDateKey')==null?false:#strings.equals(model.getConfig('itemSearchDateKey'),item.getConfig('item_name'))}"
-                    th:value="${item.getConfig('item_name')}" th:text="${item.getConfig('label')}"
+         th:for="${'ITEM_ID_' + model.item_name}">
+        <select th:id="${'ITEM_ID_' + model.item_name}" style="width: 100%;" name="itemSearchDateKey">
+            <option th:selected="${model.itemSearchDateKey==null?false:#strings.equals(model.itemSearchDateKey,item.item_name)}"
+                    th:value="${item.item_name}" th:text="${item.label}"
                     th:each="item:${itemNameList}">Alaska
             </option>
         </select>
     </div>
 
-    <div class="ez-daterange-parent  " TH:ID="${'ITEM_ID_' + model.getConfig('item_name')}">
+    <div class="ez-daterange-parent  " TH:ID="${'ITEM_ID_' + model.item_name}">
         <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0">
             <input autocomplete="off" type="text" class="layui-input layui-date"
-                   th:value="${model.getConfig('itemSearchDateValueStart')}" name="itemSearchDateValueStart"
+                   th:value="${model.itemSearchDateValueStart}" name="itemSearchDateValueStart"
                    id="itemSearchDateValueStart_ID"
-                   th:classappend="${#strings.isEmpty(model.getConfig('itemSearchDateValueStart'))?'':'layui-border-blue' } ">
+                    >
         </div>
         <div class="layui-form-mid">-</div>
         <div class="layui-input-inline ez-range ez-daterange">
             <input autocomplete="off" type="text" class="layui-input layui-date"
-                   th:value="${model.getConfig('itemSearchDateValueEnd')}" name="itemSearchDateValueEnd"
+                   th:value="${model.itemSearchDateValueEnd}" name="itemSearchDateValueEnd"
                    id="itemSearchDateValueEnd_ID"
-                   th:classappend="${#strings.isEmpty(model.getConfig('itemSearchDateValueEnd'))?'':'layui-border-blue' } ">
+                   >
         </div>
     </div>
 

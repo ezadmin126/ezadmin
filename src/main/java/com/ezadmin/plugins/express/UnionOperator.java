@@ -11,6 +11,7 @@ import com.ezadmin.plugins.parser.parse.ResultModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UnionOperator extends AbstractOperator {
 
@@ -68,15 +69,20 @@ public class UnionOperator extends AbstractOperator {
         OperatorParam operatorParam=(OperatorParam)Utils.getParam();
         Page page = operatorParam.getPage();
         StringBuilder where = new StringBuilder(" ");
-        List<EzSearchModel> modelList=operatorParam.getListDTO().getSearchItemList();
-        if(Utils.isNotEmpty(modelList)){
-            for (int i = 0; i < modelList.size(); i++) {
-                where.append(modelList.get(i).sql());
+        Map<String, Object> list= operatorParam.getListDto();
+        List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
+        Map<String,Object>  core=( Map<String,Object>)list.get("core");
+
+        if(Utils.isNotEmpty(searchList)){
+            for (int i = 0; i < searchList.size(); i++) {
+                Map<String,Object> search=searchList.get(i);
+                where.append(EzSearchModel.sql(search,operatorParam.getRequestParams()));
             }
         }
 
 
-        String finalSql = SqlUtils.buildPageSql(sql, operatorParam.getListDTO().getCountExpress(),where.toString(), order, group,
+
+        String finalSql = SqlUtils.buildPageSql(sql,Utils.getStringByObject(core,"count_express"),where.toString(), order, group,
                 " ", false);
 
         ResultModel model = CommentsSqlParser.parse(finalSql, operatorParam.getParams());

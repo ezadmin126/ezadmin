@@ -140,13 +140,13 @@
                             , size: size
                             , multiple: true
                             , done: function (res) {
+                                var respon=JSON.parse(res);
                                 //如果上传失败
-                                if (res.code > 0) {
-                                    return layer.msg('上传失败，原因：' + res.message);
+                                if (respon.code > 0) {
+                                    return layer.msg('上传失败，原因：' + respon.message);
                                 }
                                 //上传成功的一些操作
-                                upload_add(verifyJson,'[[${item_name}]]' , res.data[0].fileId)
-                                ;
+                                upload_add(verifyJson,'[[${item_name}]]' , respon.data[0].fileId);
                             }
                             , error: function () {
                                 layer.alert("上传失败，请重试。");

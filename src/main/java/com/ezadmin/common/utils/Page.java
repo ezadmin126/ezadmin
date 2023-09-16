@@ -49,11 +49,11 @@ public class Page {
     }
 
     public int getPerPageInt() {
-        return perPageInt < 0 ? 0 : perPageInt;
+        return perPageInt <= 0 ? 10 : perPageInt;
     }
 
     public Page setPerPageInt(int perPageInt) {
-        this.perPageInt = perPageInt < 0 ?0 : perPageInt;
+        this.perPageInt = perPageInt <= 0 ?10 : perPageInt;
         calcSplitPage();
         return this;
     }
@@ -95,9 +95,7 @@ public class Page {
     }
 
     public long getTotalPage() {
-        if(getPerPageInt()==0){
-            return 0;
-        }
+
         totalPage = (totalRecord / getPerPageInt() == 0 ? 1
                 : (totalRecord % getPerPageInt() > 0 ? (totalRecord / getPerPageInt() + 1)
                 : totalRecord / getPerPageInt()));

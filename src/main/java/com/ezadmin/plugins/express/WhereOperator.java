@@ -9,6 +9,7 @@ import com.ezadmin.plugins.parser.CommentsSqlParser;
 import com.ezadmin.plugins.parser.parse.ResultModel;
 
 import java.util.List;
+import java.util.Map;
 
 public class WhereOperator extends AbstractOperator {
 
@@ -22,10 +23,14 @@ public class WhereOperator extends AbstractOperator {
 
             Page page = operatorParam.getPage();
             StringBuilder where = new StringBuilder(" ");
-            List<EzSearchModel> modelList=operatorParam.getListDTO().getSearchItemList();
-            if(Utils.isNotEmpty(modelList)){
-                for (int i = 0; i < modelList.size(); i++) {
-                    where.append(modelList.get(i).sql());
+            Map<String, Object> list= operatorParam.getListDto();
+            List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
+            Map<String,Object>  core=( Map<String,Object>)list.get("core");
+
+            if(Utils.isNotEmpty(searchList)){
+                for (int i = 0; i < searchList.size(); i++) {
+                    Map<String,Object> search=searchList.get(i);
+                    where.append(EzSearchModel.sql(search,operatorParam.getRequestParams()));
                 }
             }
             String groupBy = " " + Utils.trimNull(operatorParam.getParams().get("GROUP_BY")) + " ";
@@ -35,7 +40,7 @@ public class WhereOperator extends AbstractOperator {
                 orderByClause = page.getOrderByClause();
             }
 
-            String finalSql = SqlUtils.buildPageSql(sql, operatorParam.getListDTO().getCountExpress(), where.toString(), orderByClause, groupBy,
+            String finalSql = SqlUtils.buildPageSql(sql, Utils.getStringByObject(core,"count_express"), where.toString(), orderByClause, groupBy,
                     limit, operatorParam.isCount());
 
             ResultModel modelY = CommentsSqlParser.parse(finalSql, operatorParam.getParams());

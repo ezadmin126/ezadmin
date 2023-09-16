@@ -28,12 +28,22 @@ $(document).ready(function () {
             , layer = layui.layer;
         if ($(".dataTables_empty").length == 0 && $("#PAGE_LAYUI").length > 0) {
             $.get($("#contextName").val() + "/ezadmin/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
+
+
+                if(data.data.page.currentPage>=data.data.page.totalPage){
+                    $(".nextpage").removeClass("page-button");
+                    $(".nextpage").addClass("layui-btn-disabled");
+                }else{
+                    $(".nextpage").addClass("page-button");
+                    $(".nextpage").removeClass("layui-btn-disabled");
+                }
+
                 laypage.render({
                     elem: 'PAGE_LAYUI',
                     theme: '#1E9FFF'
-                    , count: data.data.totalRecord
-                    , curr: data.data.currentPage
-                    , limit: data.data.perPageInt
+                    , count: data.data.page.totalRecord
+                    , curr: data.data.page.currentPage
+                    , limit: data.data.page.perPageInt
                     , limits: [10, 20, 30, 40, 50, 100]
                     , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
                     , jump: function (obj, first) {
@@ -168,10 +178,16 @@ $(document).ready(function () {
     })
 
     //
-    $('.page-button').not(".disabled").click(function () {
+    $(document).on("click",".page-button:not(layui-btn-disabled)",function(){
+        $(this).addClass(".layui-btn-disabled");
         $("#currentPage").val($(this).attr("page"));
         $("#searchForm").submit();
     })
+
+    // $('.page-button').not(".disabled").click(function () {
+    //     $("#currentPage").val($(this).attr("page"));
+    //     $("#searchForm").submit();
+    // })
 
     $(".jumpPage").keyup(function (event) {
         if (event.keyCode == 13) {
@@ -212,6 +228,13 @@ $(document).ready(function () {
         $("#orderBy").val(value);
         $("#searchForm").submit();
     })
+    $("#export").click(function () {
+        var url="/ezadmin/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams();
+       openBlank(url)
+    })
+
+
+
 
     $(".ITEM_CHECK_BOX").each(function () {
         $(this).change(function (e) {
@@ -307,73 +330,6 @@ $(document).ready(function () {
         }
     }
 
-    $("body").on("click", '.tableSearch', function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var _this = $(this);
-        var itemName = $(this).attr("tableSearch_item_name");
-        var inputThead = $(this).parents('.layui-inline').find("[name=" + itemName + "]");
-        if (inputThead.hasClass("ez-xmselect-table")) {
-            inputThead = $(this).parents('.layui-inline').find("input[name=" + itemName + "]");
-        }
-        var val = inputThead.val();
-        var input = $("#searchForm").find('input[name=' + itemName + ']');//.not(":hidden")
-        var select = $("#searchForm").find('select[name=' + itemName + ']');//.not(":hidden")
-        var inputRangeStart = $("#searchForm").find('input[name=' + itemName + '_START]')
-            .not(":hidden");
-        var inputRangeEnd = $("#searchForm").find('input[name=' + itemName + '_END]')
-            .not(":hidden");
-        var valStart = $(this).parents('.layui-inline').find("[name=" + itemName + "_START]").val();
-        var valEnd = $(this).parents('.layui-inline').find("[name=" + itemName + "_END]").val();
-
-        if (input.length > 0) {
-            input.val(val);
-        } else if (select.length > 0) {
-            select.val(val);
-        } else if (inputRangeStart.length > 0) {
-            inputRangeStart.val(valStart);
-            inputRangeEnd.val(valEnd);
-        } else {
-            //找综合搜索
-            $("input[name=itemSearchConcatValue]").each(function () {
-                if ($(this).attr("item_name").indexOf(itemName) >= 0) {
-                    $(this).val(val);
-                }
-            })
-            //找综合时间搜索
-        }
-        layer.closeAll();
-        $("#submitBtn").click();
-    })
-    $("body").on("click", ".table-head-search", function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var _this = $(this);
-        var _theadSearchFormItem = _this.parents("th").find(".ez-thead-search");
-        let itemName = $(this).attr("table_search_item_name");
-        if (_this.parents("th").hasClass("dtfc-fixed-left")) {
-            return;
-        }
-        var content = _theadSearchFormItem.html();
-        var index = layer.open({
-            type: 4,
-            skin: 'ezadmin-overflowvisible',
-            title: false,
-            tips: 1,
-            isOutAnim: false,
-            shadeClose: true,
-            area: ['350px', '80px'],
-            content: [content, _this.parent().parent()],
-            success: function (layero, index) {
-                $(layero).find(".layui-inline").show();
-                $(layero).find("input").eq(0).focus();
-                renderTableSearchItem($(layero), itemName);
-            }, cancel: function (index, layero) {
-                layer.close(index)
-                return false;
-            }
-        });
-    })
 
     $("body").on("dblclick", ".ez-view-group-parent", function (e) {
         e.stopPropagation();
@@ -597,7 +553,7 @@ function renderTable() {
         var table2 = layui.table;
         var treeTable = layui.treeTable;
         var form=layui.form;
-
+        //实现checkbox 半选效果
         form.on('checkbox(list-head-checkbox)', function(data){
             var elem = data.elem; // 获得 checkbox 原始 DOM 对象
             var checked = elem.checked; // 获得 checkbox 选中状态
@@ -633,12 +589,17 @@ function renderTable() {
             cellMinWidth:110,
             className: $("#mytable").attr("class")
             , limit: $("#perPageInt").val() //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
+            ,initSort: {
+                field: $("#orderBy").attr("name"), // 按 id 字段排序
+                type:  $("#orderBy").attr("value") // 降序排序
+            }
             //支持所有基础参数
             , done: function (res, curr, count) {
                 try {
                     if (typeof (afterAllDataLoad) == "function") {
                         afterAllDataLoad();
                     }
+                    $('.layuimini-loader').fadeOut();
                     $("[name=DISPLAY_ORDER_INPUT]").each(function () {
                         var oldValue = $(this).val()
                         $(this).blur(function () {
@@ -669,6 +630,18 @@ function renderTable() {
                 }
 
             }
+        });
+        laytable.on('sort(mytable)', function(obj){
+            console.log(obj.field); // 当前排序的字段名
+            console.log(obj.type); // 当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+            console.log(this); // 当前排序的 th 对象
+            $("#orderBy").attr("name", obj.field+"_ORDER");
+
+            $("#orderBy").val(obj.type);
+            $("#submitBtn").click();
+            // 尽管我们的 table 自带排序功能，但并没有请求服务端。
+            // 有些时候，你可能需要根据当前排序的字段，重新向后端发送请求，从而实现服务端排序，如：
+
         });
         if($("#coldata").val()!=undefined){
             var json=JSON.parse($("#coldata").val());

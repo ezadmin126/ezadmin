@@ -41,7 +41,8 @@
     </div>
 </div>
 <div id="content">
-<div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" type="table"
+
+    <div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" type="table"
      th:ez-label="${label}"
      th:ez-item_name="${item_name}"
      th:ez-placeholder="${placeholder}"
@@ -74,35 +75,16 @@
                     th:utext="${top_desc}" style="float:none"
                     th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
-            <table lay-size="sm" th:id="${'ITEM_ID_' + item_name}"
-                   class="  layui-table propTable " style=" width:100%">
+            <table  border-spacing="0" th:id="${'ITEM_ID_' + item_name}"
+                   class="  layui-table propTable ez-table" th:lay-filter="${not #strings.equals('pure',subdata.tablestyle)?'mytable':''}" style=" width:100%">
                 <thead style="text-align: center">
-                <tr>
-                    <th style="min-width:30px;max-width:30px" scope="col"
-                        th:if="${not #strings.isEmpty(list.firstCol) and not #strings.equals('firstcol-',list.firstCol)}"
-                        class="text-center fixedCol  ">
-                        <input type="checkbox" class="list-head-checkbox" th:if="${#strings.equals(list.firstCol,'checkbox')
-                        || #strings.equals(list.firstCol,'firstcol-checkbox')}">
-
-                        <span th:if="${#strings.equals(list.firstCol,'radio')
-                        || #strings.equals(list.firstCol,'firstcol-radio')
-                        }">序号</span>
-                        <!--                            <input type="radio" class="list-head-radio" th:if="${#strings.equals(list.firstCol,'radio')-->
-                        <!--                           || #strings.equals(list.firstCol,'firstcol-radio')}">-->
-
-                        <span th:if="${#strings.equals(list.firstCol,'numbers')
-                        || #strings.equals(list.firstCol,'firstcol-numbers')
-                        }">序号</span>
+                <tr   >
+                    <th th:remove="tag" th:each="item:${subdata.col}" th:utext="${item.html}">
                     </th>
-
-                    <th th:remove="tag" th:each="item:${list.columnItemList}" th:utext="${item.html}">
-
-                    </th>
-                    <th style="min-width: 150px">操作</th>
                 </tr>
                 </thead>
                 <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);" class="dragula-container">
-                <tr th:each="row,rowStat:${list.dataRow}" th:classappend="${row.treeClass}" th:data-id="${row.id}">
+                <tr th:each="row,rowStat:${subdata.core.dataList}"   th:data-id="${row.id}">
                     <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
                 </tr>
                 </tbody>
