@@ -82,6 +82,9 @@ public class FormController extends BaseController {
         if(StringUtils.isNotBlank(ENCRYPT_FORM_ID)){
             form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
         }
+        if(form==null||form.isEmpty()){
+            return "404";
+        }
         formService.fillFormById(form,searchParamsValues,sessionMap);
         request.setAttribute("ID",ID);
         request.setAttribute("form",form);

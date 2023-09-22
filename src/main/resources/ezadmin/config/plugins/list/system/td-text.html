@@ -6,13 +6,15 @@
 </head>
 <body id="td-text" alias="26" type="td" >
 <div id="template" >
-    <li class="layui-nav-item selector" type="td-text"> 纯文本 </li>
+    <li class="layui-nav-item selector" type="colcore" ez-type="td-text"> 纯文本 </li>
 </div>
 <table>
     <tr id="content">
         <td th:edit_flag="${editFlag}"
 
-            th:ITEM_NAME="${item_name}" th:title="${dataInDb}" th:ITEM_ID="${item_name}"
+            th:ITEM_NAME="${item_name}"
+            th:title="${dataInDb}"
+            th:ITEM_ID="${item_name}"
             th:class="${ ' tooltips  ezadmin-td ezadmin-td-'+item_name}"
             th:classappend="${editFlag==1?'ez-view-group-parent':''}"
             th:style="${style+(#strings.equals(jdbctype,'NUMBER')?';text-align:right':'')}"

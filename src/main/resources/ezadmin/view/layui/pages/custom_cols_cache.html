@@ -39,7 +39,7 @@
 </head>
 <body>
 <div class="layui-container">
-    <blockquote class="layui-elem-quote">勾选需要展示的搜索项或表格列，拖拽 <i class='layui-icon-transfer layui-icon'></i> 排序</blockquote>
+    <blockquote class="layui-elem-quote">勾选需要展示的搜索项或表格列，拖拽排序</blockquote>
     <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
     <input type="hidden" name="IS_DEBUG" id="IS_DEBUG" th:value="${IS_DEBUG}">
     <form class="layui-form" th:action="${contextName+'/ezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}" method="post"
@@ -53,7 +53,7 @@
                 </span>
             </div>
             <div class="layui-card-body layui-row layui-col-space15 searchDrage">
-                <div class="layui-col-md3  " th:each="item:${fromSearchField}"
+                <div class="layui-col-md3  " th:each="item,idx:${fromSearchField}"
                      th:ITEM_NAME="${item.item_name}" th:classappend="${item.item_name !='firstCol' ?'move':''  }">
                     <div class="layui-form-item   " >
                         <label class="layui-form-label" th:title="${item.label}">[[${item.label}]] </label>
@@ -61,13 +61,20 @@
 
                             <input th:if="${not (item.plugin_code eq 'input-hidden' or item.plugin_code eq 'hidden'
                             or item.plugin_code eq '29' or item.plugin_code eq 'search'
-                            )  }"
-                                   type="checkbox" name="searchId" th:value="${item.item_name}"
+                            )  and  idx.index==0 }"
+                                   type="checkbox" checked disabled name="searchId" th:value="${item.item_name}"
                                    lay-skin="primary" lay-filter="changeList">
-                         </div>
+
+                        <input th:if="${not (item.plugin_code eq 'input-hidden' or item.plugin_code eq 'hidden'
+                            or item.plugin_code eq '29' or item.plugin_code eq 'search'
+                            )  and  idx.index!=0 }"
+                               type="checkbox" name="searchId" th:value="${item.item_name}"
+                               lay-skin="primary" lay-filter="changeList">
+                        </div>
+                    </div>
                     </div>
                 </div>
-            </div>
+
         </div>
         <div class="layui-card">
             <div class="layui-card-header"><span class="layui-breadcrumb" lay-separator="|">
@@ -78,15 +85,15 @@
             </div>
 
             <div class="layui-card-body layui-row layui-col-space15 columnDrage">
-                <div class="layui-col-md3 " th:each="item:${fromColField}" th:classappend="${item.item_name !='firstCol' ?'move':''  }"
+                <div class="layui-col-md3 " th:each="item,idx:${fromColField}" th:classappend="${item.item_name !='firstCol' ?'move':''  }"
                      th:ITEM_NAME="${item.item_name}">
                     <div class="layui-form-item "  >
                         <label class="layui-form-label"  th:title="${ item.item_name =='firstCol'?'首列':  item.label}"
-                               th:text="${ item.item_name =='firstCol'?'首列':  item.label}">Field E :</label>
+                               th:text="${ item.item_name =='firstCol'?'首列':item.label}">Field E :</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="columnId"   th:if="${item.item_name !='firstCol'}"  lay-filter="changeList" th:value="${item.item_name}"
+                            <input type="checkbox" name="columnId"   th:if="${idx.index !=0 &&   #strings.isEmpty(item.fixed) }"  lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
-                            <input type="checkbox" name="columnId"  disabled   th:if="${item.item_name =='firstCol'}"  lay-filter="changeList" th:value="${item.item_name}"
+                            <input type="checkbox" name="columnId" checked disabled th:fixed="${item.fixed}"   th:if="${idx.index ==0 || not #strings.isEmpty(item.fixed)}"  lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
                          </div>
                     </div>
@@ -95,27 +102,27 @@
              </div>
         </div>
         <div class="layui-card">
-            <div class="layui-card-header"><span class="layui-breadcrumb" lay-separator="|">
-                <a href="#">其他配置</a></span>
-            </div>
-            <div class="layui-card-body">
-                <div class="layui-form-item  ">
-                    <div class="layui-inline">
-                        <label class="layui-form-label"> 冻结列数(左)</label>
-                        <div class="layui-input-inline">
-                            <input min="0" step="1" max="3" lay-affix="number" class="layui-input" type="number" id="fixedNumber"
-                            >
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label"> 冻结列数(右)</label>
-                        <div class="layui-input-inline">
-                            <input min="0" step="1" max="3" lay-affix="number" class="layui-input" type="number" id="fixNumberRight"
-                            >
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="layui-card-header"><span class="layui-breadcrumb" lay-separator="|">-->
+<!--                <a href="#">其他配置</a></span>-->
+<!--            </div>-->
+<!--            <div class="layui-card-body">-->
+<!--                <div class="layui-form-item  ">-->
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label"> 冻结列数(左)</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <input min="0" step="1" max="3" lay-affix="number" class="layui-input" type="number" id="fixedNumber"-->
+<!--                            >-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label"> 冻结列数(右)</label>-->
+<!--                        <div class="layui-input-inline">-->
+<!--                            <input min="0" step="1" max="3" lay-affix="number" class="layui-input" type="number" id="fixNumberRight"-->
+<!--                            >-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
         <div class="layui-form-item" th:style="${IS_DEBUG==1?'':'display: none'}">
@@ -129,7 +136,7 @@
  <script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
 
 <script th:src="${contextName+'/webjars/layui/2.8.16/dist/layui.js?v=202301'}" type="text/javascript"></script>
-<script th:src="${contextName+'/webjars/ezadmin/plugins/jquery/jquery.form.js?'}"></script>
+<script th:src="${contextName+'/webjars/jquery-form/3.51/jquery.form.js?'}"></script>
 <script type='text/javascript' th:src="${contextName+'/webjars/ezadmin/plugins/dragula/dragula.min.js'}"></script>
 
 <script>
@@ -298,22 +305,22 @@
 
         json['search'] = search;
         json['column'] = column;
-        json['fixNumber'] = $("#fixedNumber").val();
-        json['fixNumberRight'] = $("#fixNumberRight").val();
-        if($("#IS_DEBUG").val()==1){
-            var url=$(".layui-form").attr("action");
-            json.search = JSON.stringify(search) ;
-            json.column  = JSON.stringify(column) ;
-            json.fixNumber  = $("#fixedNumber").val();
-            json.fixNumberRight  = $("#fixNumberRight").val();
-            $.post(url,  json , function(data) {
-                console.log(data)
-            }, 'json').fail(function() {
-                console.log('请求失败');
-            });
-        }else{
+        // json['fixNumber'] = $("#fixedNumber").val();
+        // json['fixNumberRight'] = $("#fixNumberRight").val();
+        // if($("#IS_DEBUG").val()==1){
+        //     var url=$(".layui-form").attr("action");
+        //     json.search = JSON.stringify(search) ;
+        //     json.column  = JSON.stringify(column) ;
+        //     json.fixNumber  = $("#fixedNumber").val();
+        //     json.fixNumberRight  = $("#fixNumberRight").val();
+        //     $.post(url,  json , function(data) {
+        //         console.log(data)
+        //     }, 'json').fail(function() {
+        //         console.log('请求失败');
+        //     });
+        // }else{
             localStorage.setItem(key, JSON.stringify(json));
-        }
+        //}
         return false;
     })
 

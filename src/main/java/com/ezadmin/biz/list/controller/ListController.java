@@ -206,7 +206,7 @@ public class ListController extends BaseController {
                 //组装col
             List col=new ArrayList();
 
-            col.add(JSONUtils.parseObjectMap("{\"type\": \"checkbox\", \"fixed\": \"left\"}"));
+            col.add(JSONUtils.parseObjectMap("{\"type\": \"checkbox\" }"));
 
             List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
             for (int i = 0; i < colList.size(); i++) {

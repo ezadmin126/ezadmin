@@ -72,10 +72,11 @@
         .active {
             border: 1px solid #009688 !important;
             background-color: #e9f4fd !important;
+           // padding-bottom: 5px !important;
         }
         .selector   {
             border: 1px dashed #d1d1d1;
-            margin-bottom: 5px;
+         //   margin-bottom: 5px;
             border-radius: 3px;
             cursor: pointer;
             position: relative;
@@ -121,7 +122,11 @@
     <script th:src="${contextName+'/webjars/jquery-form/3.51/jquery.form.js?'}"></script>
     <script th:src="${contextName+'/webjars/jquery-validation/1.19.5/jquery.validate.min.js'}"></script>
     <script th:src="${contextName+'/webjars/jquery-validation/1.19.5/localization/messages_zh.min.js'}"></script>
-
+    <style>
+        .ez-range{
+            width:30px!important;
+        }
+    </style>
 
 </head>
 <body>
@@ -148,11 +153,11 @@
                                 <div class="layui-col-xs6 ez-plugin" th:each="item:${searchPlugins}" >
                                     <a href="javascript:;"    >
                                         <i class="layui-icon  " th:classappend="${item.ICON}"></i>
-                                        <span th:text="${item.PLUGIN_NAME}">单行输入框</span>
+                                        <span th:text="${item.PLUGIN_NAME}">搜索</span>
                                         <div style="display: none" class="template" th:utext="${item.TEMPLATE}">
                                             <div class="layui-col-md3 selector" type="input-text" ez-col="3"  >
                                                 <div class="layui-form-item ">
-                                                    <label class="layui-form-label  "  >单行输入框</label>
+                                                    <label class="layui-form-label  "  >搜索</label>
                                                     <div class="layui-input-block">
                                                         <input type="text" name="default" placeholder="请输入" class="layui-input">
                                                     </div>
@@ -190,10 +195,45 @@
                                 <div class="layui-col-xs6 ez-plugin" >
                                     <a href="javascript:;" >
                                         <i class="layui-icon layui-icon-layer"></i>
-                                        <span>按钮</span>
+                                        <span>表头按钮</span>
                                     </a>
                                     <div style="display: none" class="template">
-                                        <button>按钮</button>
+                                        <div class="selector layui-col-md2  " type="buttoncore" ez-type="button-table"  >
+                                            <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头按钮</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6 ez-plugin" >
+                                    <a href="javascript:;" >
+                                        <i class="layui-icon layui-icon-layer"></i>
+                                        <span>表头单选确认</span>
+                                    </a>
+                                    <div style="display: none" class="template">
+                                        <div class="selector layui-col-md2  " type="buttoncore" ez-type="button-tableselectradio"  >
+                                            <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头单选确认</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6 ez-plugin" >
+                                    <a href="javascript:;" >
+                                        <i class="layui-icon layui-icon-layer"></i>
+                                        <span>表头多选确认</span>
+                                    </a>
+                                    <div style="display: none" class="template">
+                                        <div class="selector layui-col-md2  " type="buttoncore" ez-type="button-tableselectcheckbox"  >
+                                            <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头多选确认</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6 ez-plugin" >
+                                    <a href="javascript:;" >
+                                        <i class="layui-icon layui-icon-layer"></i>
+                                        <span>平铺行按钮</span>
+                                    </a>
+                                    <div style="display: none" class="template">
+                                        <div class="selector layui-col-md2  " type="buttoncore" ez-type="button-single"   >
+                                            <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">平铺行按钮</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="layui-col-xs6 ez-plugin" >
@@ -246,38 +286,57 @@
         <div class="layui-col-md8 layui-col-xs6 center">
             <div class="layui-fluid">
                 <div class="layui-row">
-                     <a type="button" class="layui-btn layui-btn-sm   "  href="/ezadmin/form/loadEdit-" target="_blank"><i class="layui-icon layui-icon-add-circle-fine"></i>新增</a>
+                     <a type="button" class="layui-btn layui-btn-sm   "  href="/ezadmin/list/loadEdit-" target="_blank"><i class="layui-icon layui-icon-add-circle-fine"></i>新增</a>
                      <button type="button" class="layui-btn layui-btn-sm layui-btn-save  " ><i class="layui-icon layui-icon-ok-circle"></i>保存</button>
-                    <button type="button" class="layui-btn layui-btn-sm layui-btn-preview  "> <i class="layui-icon layui-icon-component"></i> 预览</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-import  "> <i class="layui-icon layui-icon-component"></i> 导入</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-preview  "> <i class="layui-icon layui-icon-eye"></i> 预览</button>
                  </div>
 
                 <hr>
                 <div class="layui-row"  >
-                    <div id="append_head"   >
+                    <div id="append_head"  th:utext="${data.core.append_head}" >
 
                     </div>
                     <div class="layui-row  layui-col-md12  "  >
                         <div class="layui-tab layui-tab-brief">
-                            <ul class="layui-tab-title dragula-container selector systemfloat" type="tabcore" style="height:50px">
-                                <li class="tip" >标签区</li>
+                            <ul class="layui-tab-title dragula-container   systemfloat" type="tabcore" style="height:50px;border: 1px dashed #d1d1d1;">
+                                <li class="tip" th:if="${#lists.isEmpty(data.tab)}">标签区</li>
+                                <li class="selector " th:if="${not #lists.isEmpty(data.tab)}"
+                                    th:item_name="${item.item_name}"
+                                    th:ez-item_name="${item.item_name}"
+                                    th:ez-name="${item.item_name}"
+                                    th:ez-label="${item.label}"
+                                    th:ez-select="${item.select}"
+                                    th:ez-url="${item.url}"
+                                    type="tab"
+                                    th:classappend="${item.select?'layui-this  ':' '}"
+                                    th:each="item:${data.tab}">
+                                    <a th:ez-item_name="${item.item_name}" th:ez-href="${item.url}"
+
+                                       th:text="${item.label}"></a>
+                                </li>
                             </ul>
                         </div>
                     </div>
-                    <blockquote class="layui-elem-quote selector layui-col-md12 systemfloat"   ez-col="12"
-                                th:ez-datasource="${list.core.datasource}" type="listcore" th:ez-listcode="${list.core.listcode}"
-                                th:ez-list_name="${list.core.list_name}" th:ez-fixnumber="${list.core.fixnumber}"
-                                th:ez-fixnumberright="${list.core.fixnumberright}"
-                                th:ez-empty_show="${list.core.empty_show}"
-                                th:ez-firstcol="${list.core.firstcol}"
+                    <blockquote class="layui-elem-quote selector layui-col-md12 systemfloat"   ez-col="12" id="listCoreContainer"
+                                th:ez-datasource="${data.core.datasource}" type="listcore" th:ez-listcode="${data.core.listcode}"
+                                th:ez-listname="${data.core.listname}" th:ez-fixnumber="${data.core.fixnumber}"
+                                th:ez-fixnumberright="${data.core.fixnumberright}"
+                                th:ez-empty_show="${data.core.empty_show}"
+                                th:ez-firstcol="${data.core.firstcol}"
                     >
-                        <span id="form_name" th:text="${#strings.isEmpty(list.core.list_name)?'列表配置区':list.core.list_name}">列表配置区</span>
-                        <pre style="display: none" id="select_express" th:utext="${list.core.select_express}"></pre>
-                        <pre style="display: none" id="count_express" th:utext="${list.core.count_express}"></pre>
-                        <pre style="display: none" id="orderby_express" th:utext="${list.core.orderby_express}"></pre>
-                        <pre style="display: none" id="groupby_express" th:utext="${list.core.groupby_express}"></pre>
+                        <span id="listname" th:text="${#strings.isEmpty(data.core.listname)?'列表配置区':data.core.listname}">列表配置区</span>
+                        <pre style="display: none" id="select_express" th:utext="${data.core.select_express}"></pre>
+                        <pre style="display: none" id="count_express" th:utext="${data.core.count_express}"></pre>
+                        <pre style="display: none" id="orderby_express" th:utext="${data.core.orderby_express}"></pre>
+                        <pre style="display: none" id="groupby_express" th:utext="${data.core.groupby_express}"></pre>
                     </blockquote>
-                    <div class=" layui-row dragula-container layui-card layui-col-md12 selector systemfloat"  type="searchcore" >
-                        <div class="tip" >搜索区</div>
+                    <div class=" layui-row dragula-container layui-col-space15  layui-card layui-col-md12   systemfloat"  style=";border: 1px dashed #d1d1d1;" type="searchcore" >
+                        <div class="tip" th:if="${  #lists.isEmpty(data.search)}">搜索区</div>
+                        <div    th:remove="tag" th:if="${not #lists.isEmpty(data.search)}"
+                             th:each="item,indexStat:${data.search}" th:utext="${item.html}"
+                        >
+                        </div>
                     </div>
                     <div class="layui-col-space10 layui-row  " style="min-height:50px"  >
                         <div   class="layui-form-item searchButtonRow" style="text-align: center">
@@ -297,25 +356,71 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-row dragula-container layui-col-md12 selector systemfloat"  type="tablebtn">
-                        <div class="tip">表头按钮区</div>
+                    <div class="layui-row dragula-container layui-col-md12   systemfloat" style=";border: 1px dashed #d1d1d1;min-height: 50px"  type="tablebtn">
+                        <div class="tip" th:if="${  #lists.isEmpty(data.tablebtn)}">表头按钮区</div>
+                        <div class="selector layui-col-md2 " th:if="${not #lists.isEmpty(data.tablebtn)}" type="buttoncore"
+                             th:ez-url="${item.url}"
+                             th:ez-type="${item.type}"
+                             th:ez-windowname="${item.windowname}"
+                             th:ez-opentype="${item.opentype}"
+                             th:ez-item_name="${item.item_name}"
+                             th:ez-display="${item.display}"
+                             th:ez-area="${item.area}"
+                             th:ez-label="${item.label}"
+                               th:each="item:${data.tablebtn}" th:utext="${item.html}"></div>
                     </div>
 
                     <div class="layui-col-space10 layui-row    "    >
-                            <div class="layui-row dragula-container layui-col-md2 selector systemfloat" type="treecore" style="min-height: 500px">
-                                <div  class="tip">菜单区</div>
+                            <div class="layui-row dragula-container layui-col-md1 selector systemfloat" type="treecore" style="min-height: 500px">
+                                <div  class="tip">树形菜单区</div>
                             </div>
-                            <div class="layui-row dragula-container  layui-col-md1 selector systemfloat" type="firstcol" style="min-height: 500px">
-                                <div class="tip" >首列区</div>
-                            </div>
-                            <div class=" layui-row    layui-col-md8 "  >
-                                <ul class="layui-nav layui-bg-gray dragula-container selector systemfloat"  lay-filter="demo-filter-nav"  type="colcore" style="min-height: 500px">
-                                    <div  class="tip">列表字段区</div>
+                            <div th:t="${data.core.firstcol!='radio'}" class="layui-row dragula-container   layui-col-md1   systemfloat" type="firstcol" style="min-height: 500px;border: 1px dashed #d1d1d1;">
+                                 <div class="tip"   >首列区</div>
+                                <div class="selector" th:if="${ data.core.firstcol=='numbers'}">
+                                    <span type="number" >首列数字</span>
+                                </div>
+                                <div class="selector layui-form" th:if="${data.core.firstcol=='radio'}"> <input type="radio"   title=""></div>
+                                <div class="selector layui-form" th:if="${data.core.firstcol=='checkbox'}"> <input type="checkbox"   title="" ></div>
 
-                                </ul>
                             </div>
-                            <div class=" layui-row dragula-container   layui-col-md1 selector systemfloat" type="rowbtn" style="min-height: 500px">
-                                <div  class="tip">行按钮区</div>
+                            <div class=" layui-row    layui-col-md8   "  >
+                                <div class="layui-nav layui-bg-gray dragula-container   systemfloat"  lay-filter="demo-filter-nav" id="centerContainer"    style="min-height: 500px;border: 1px dashed #d1d1d1;">
+                                    <div  class="tip" th:if="${  #lists.isEmpty(data.col)}">列表字段区</div>
+                                    <div style="min-height: 42px" class=" layui-col-xs2 ez-plugin selector" type="colcore" th:if="${not #lists.isEmpty(data.col) and item.item_name!='firstCol'}"
+                                          th:ez-body="${item.body}"
+                                          th:ez-head="${item.head}"
+                                          th:ez-label="${item.label}"
+                                          th:ez-item_name="${item.item_name}"
+                                          th:ez-jdbctype="${item.jdbctype}"
+                                          th:ez-data="${item.data}"
+                                          th:ez-datatype="${item.datatype}"
+                                          th:ez-order="${item.order}"
+                                          th:ez-url="${item.url}"
+                                          th:ez-windowname="${item.windowname}"
+                                          th:ez-opentype="${item.opentype}"
+                                          th:ez-style="${item.style}"
+                                          th:ez-width="${item.width}"
+                                          th:ez-emptyshow="${item.emptyshow}"
+
+                                          th:each="item:${data.col}" th:text="${item.label}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" layui-row dragula-container   layui-col-md2   systemfloat" type="rowbtn" style="min-height: 500px;border: 1px dashed #d1d1d1;">
+                                <div  class="tip" th:if="${ #lists.isEmpty(data.rowbtn)}">行按钮区</div>
+                                <div class="layui-col-xs12 selector " th:if="${not #lists.isEmpty(data.rowbtn)}"
+                                     th:each="item:${data.rowbtn}" type="buttoncore"
+                                     th:ez-url="${item.url}"
+                                     th:ez-windowname="${item.windowname}"
+                                     th:ez-opentype="${item.opentype}"
+                                     th:ez-item_name="${item.item_name}"
+                                     th:ez-display="${item.display}"
+                                     th:ez-area="${item.area}"
+                                     th:ez-label="${item.label}"
+                                >
+                                    <button class="layui-btn layui-btn-sm layui-btn-primary"   th:utext="${item.label}">
+                                    </button>
+                                </div>
                             </div>
                     </div>
 
@@ -333,7 +438,7 @@
                 <div class="layui-tab-content righttab">
                     <div class="layui-form config-form config-tabcore layui-fluid" style="display: none;margin-right:20px">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">标签名</label>
+                            <label class="layui-form-label">文案名称</label>
                             <div class="layui-input-block">
                                 <input type="text" name="label" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
@@ -343,7 +448,7 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>name</label>
+                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>标签名称</label>
                             <div class="layui-input-block">
                                 <input type="text" name="item_name" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
@@ -358,8 +463,106 @@
                                 <input type="text" name="url" autocomplete="false" class="layui-input">
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否高亮</label>
+                            <div class="layui-input-block">
+
+                                    <select   name="select"    lay-filter="lay_filter_all"     >
+                                        <option value="">请选择</option>
+                                        <option value="true">是</option>
+                                        <option value="false" selected="selected">否</option>
+                                    </select>
+                                    <small   class="layui-form-mid layui-text-em">
+                                         请选择一个tab配置高亮
+                                    </small>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form config-form config-buttoncore layui-fluid" style="display: none; ">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">文案名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="label" autocomplete="false" class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/form/formitem.html#label"></i>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>按钮名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="item_name" autocomplete="false" class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/form/formitem.html#item_name"></i>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">跳转URL</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="url" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">窗口名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="windowname" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">窗口大小</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="area" autocomplete="false" class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    100或者   300,100
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">打开方式</label>
+                            <div class="layui-input-block">
+                                     <select   name="opentype"    lay-filter="lay_filter_all"     >
+                                        <option value="">请选择</option>
+                                        <option value="MODEL">弹框</option>
+                                        <option value="script">自定义事件</option>
+                                        <option value="CONFIRM_MODEL">带确认的弹窗</option>
+                                        <option value="_BLANK">新浏览器窗口</option>
+                                        <option value="LOCATION">当前窗口</option>
+                                        <option value="PARENT">父窗口打开标签</option>
+                                        <option value="APPEND_PARAM">携带当前搜索参数窗口打开</option>
+                                        <option value="_BLANK_PARAM">携带当前搜索参数新浏览器窗口</option>
+                                        <option value="_BLANK_PARAM_COLUMN">只携带配置显示的参数，用于导出</option>
+                                        <option value="AJAX">异步请求</option>
+                                        <option value="CONFIRM_AJAX">带确认的异步请求</option>
+                                     </select>
+                             </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否展示表达式</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="display" autocomplete="false" class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    ${USER_NAME}=='henry'?'true':'false'
+                                </small>
+                            </div>
+                        </div>
                     </div>
                     <div class="layui-form config-form config-searchcore" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件</label>
+                            <div class="layui-input-block">
+                                <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                                    <option th:value="${item.K}" th:each="item:${searchPlugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+                                <small   class="layui-form-mid layui-text-em">
+                                   保存之后预览效果
+                                </small>
+                            </div>
+                        </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">标签名</label>
                             <div class="layui-input-block">
@@ -471,7 +674,7 @@
                             <label class="layui-form-label"> <span class="layui-badge-dot"  ></span>
                                                         列表编码</label>
                             <div class="layui-input-block">
-                                <input type="text" name="encodelistid" autocomplete="false" class="layui-input">
+                                <input type="text" name="listcode" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
                                     列表的唯一编码 <i class="ez-help layui-icon-tips layui-icon"
                                                       src="/webjars/ezadmin/doc/list/listcore.html#id"></i>
@@ -482,7 +685,7 @@
                             <label class="layui-form-label"><span class="layui-badge-dot"  ></span>
                                                          列表名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="title" autocomplete="false" class="layui-input">
+                                <input type="text" name="listname" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
                                       <i class="ez-help layui-icon-tips layui-icon"
                                                       src="/webjars/ezadmin/doc/list/listcore.html#title"></i>
@@ -507,7 +710,7 @@
                                     <i class="ez-help layui-icon-tips layui-icon"
                                        src="/webjars/ezadmin/doc/list/listcore.html#express"></i>
                                 </small>
-                                <textarea name="select_express" class="layui-textarea" autocomplete="false" style="height:500px"></textarea>
+                                <textarea name="select_express" id="select_express_code" class="layui-textarea" autocomplete="false" style="height:500px"></textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -523,7 +726,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">排序表达式</label>
                             <div class="layui-input-block">
-                                <input type="text" name="orderby" autocomplete="false" class="layui-input">
+                                <input type="text" name="orderby_express" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
                                     <i class="ez-help layui-icon-tips layui-icon"
                                        src="/webjars/ezadmin/doc/list/listcore.html#orderby"></i>
@@ -533,7 +736,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">分组表达式</label>
                             <div class="layui-input-block">
-                                <input type="text" name="groupby" autocomplete="false" class="layui-input">
+                                <input type="text" name="groupby_express" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
                                     <i class="ez-help layui-icon-tips layui-icon"
                                        src="/webjars/ezadmin/doc/list/listcore.html#groupby"></i>
@@ -604,7 +807,162 @@
                             </div>
                         </div>
                     </div>
+                    <div class="layui-form config-form config-colcore" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">表头插件</label>
+                            <div class="layui-input-block">
+                                <select placeholder="" class="layui-input  " lay-filter="lay_filter_all"   name="head" >
+                                    <option value="th">文字</option>
+                                    <option value="th-numbers">序号</option>
+                                    <option value="th-radio">单选</option>
+                                    <option value="th-checkbox">复选</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">表格插件</label>
+                            <div class="layui-input-block">
+                                <select placeholder="" class="layui-input  "  lay-filter="lay_filter_all"    name="body" >
+                                    <option th:value="${item.K}" th:each="item:${tdPlugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>
+                                字段名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="item_name" autocomplete="false" class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    对应接口返回的字段的名称
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">文案名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="label" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否排序</label>
+                            <div class="layui-input-block">
+                                <select placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="order" >
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                             </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据库类型</label>
+                            <div class="layui-input-block">
+                                <select  lay-search="" lay-filter="lay_filter_all"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option> <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option> </select>
+                                <small   class="layui-form-mid layui-text-em">看这里，这里就是下方提示，支持html
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/form/formitem.html#jdbctype"></i>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据源类型</label>
+                            <div class="layui-input-block">
+                                <select   name="datatype"   lay-search="" lay-filter="lay_filter_all"    > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
+                                <small   class="layui-form-mid layui-text-em">
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/form/formitem.html#datatype"></i>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据源</label>
+                            <div class="layui-input-block">
+                                <textarea name="data" class="layui-textarea" autocomplete="false"></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/form/formitem.html#data"></i>
+                                    yesno,status,delete<br>
+                                    sql or url<br>
+                                    换行符<br>
+                                    k:v<br>
+                                    [{"V":"男","K":"1"},{"V":"女","K":"0"}]
+                                </small>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义样式</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="style" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义宽度</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="width" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">空值填充</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="emptyshow" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">跳转URL</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="url" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">窗口名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="windowname" autocomplete="false" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">窗口大小</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="area" autocomplete="false" class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    100或者   300,100
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">打开方式</label>
+                            <div class="layui-input-block">
+                                <select   name="opentype"    lay-filter="lay_filter_all"   >
+                                    <option value="">请选择</option>
+                                    <option value="MODEL">弹框</option>
+                                    <option value="script">自定义事件</option>
+                                    <option value="CONFIRM_MODEL">带确认的弹窗</option>
+                                    <option value="_BLANK">新浏览器窗口</option>
+                                    <option value="LOCATION">当前窗口</option>
+                                    <option value="PARENT">父窗口打开标签</option>
+                                    <option value="APPEND_PARAM">携带当前搜索参数窗口打开</option>
+                                    <option value="_BLANK_PARAM">携带当前搜索参数新浏览器窗口</option>
+                                    <option value="_BLANK_PARAM_COLUMN">只携带配置显示的参数，用于导出</option>
+                                    <option value="AJAX">异步请求</option>
+                                    <option value="CONFIRM_AJAX">带确认的异步请求</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="layui-form config-form config-select" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件</label>
+                            <div class="layui-input-block">
+                                <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                                    <option th:value="${item.K}" th:each="item:${searchPlugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+                                <small   class="layui-form-mid layui-text-em">
+                                    保存之后预览效果
+                                </small>
+                            </div>
+                        </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">标签名</label>
                             <div class="layui-input-block">
@@ -702,26 +1060,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">上方提示</label>
-                            <div class="layui-input-block">
-                                <small   class="layui-form-mid layui-text-em">看这里，这里就是上方提示，支持html
-                                <i class="ez-help layui-icon-tips layui-icon"
-                                   src="/webjars/ezadmin/doc/form/formitem.html#top_desc"></i>
-                            </small>
-                                <textarea name="top_desc" class="layui-textarea" autocomplete="false"></textarea>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">下方提示</label>
-                            <div class="layui-input-block">
-                                <textarea name="item_desc" class="layui-textarea" autocomplete="false"></textarea>
-                                <small   class="layui-form-mid layui-text-em">看这里，这里就是下方提示，支持html
-                                    <i class="ez-help layui-icon-tips layui-icon"
-                                       src="/webjars/ezadmin/doc/form/formitem.html#item_desc"></i>
-                                </small>
-                            </div>
-                        </div>
+
                         <div class="layui-form-item">
                             <label class="layui-form-label">layui验证</label>
                             <div class="layui-input-block">
@@ -772,6 +1111,17 @@
                     </div>
                     <div class="layui-form config-form config-cascader" style="display: none">
                         <div class="layui-form-item">
+                            <label class="layui-form-label">插件</label>
+                            <div class="layui-input-block">
+                                <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                                    <option th:value="${item.K}" th:each="item:${searchPlugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+                                <small   class="layui-form-mid layui-text-em">
+                                    保存之后预览效果
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
                             <label class="layui-form-label">标签名</label>
                             <div class="layui-input-block">
                                 <input type="text" name="label" autocomplete="false" class="layui-input">
@@ -814,7 +1164,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">数据源类型</label>
                             <div class="layui-input-block">
-                                <select   name="datatype"   lay-search="" lay-filter="lay_filter_datatype"    > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
+                                <select   name="datatype"   lay-search="" lay-filter="lay_filter_all"     > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
                                 <small   class="layui-form-mid layui-text-em">
                                     <i class="ez-help layui-icon-tips layui-icon"
                                        src="/webjars/ezadmin/doc/form/formitem.html#datatype"></i>
@@ -903,26 +1253,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">上方提示</label>
-                            <div class="layui-input-block">
-                                <small   class="layui-form-mid layui-text-em">看这里，这里就是上方提示，支持html
-                                <i class="ez-help layui-icon-tips layui-icon"
-                                   src="/webjars/ezadmin/doc/form/formitem.html#top_desc"></i>
-                            </small>
-                                <textarea name="top_desc" class="layui-textarea" autocomplete="false"></textarea>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">下方提示</label>
-                            <div class="layui-input-block">
-                                <textarea name="item_desc" class="layui-textarea" autocomplete="false"></textarea>
-                                <small   class="layui-form-mid layui-text-em">看这里，这里就是下方提示，支持html
-                                    <i class="ez-help layui-icon-tips layui-icon"
-                                       src="/webjars/ezadmin/doc/form/formitem.html#item_desc"></i>
-                                </small>
-                            </div>
-                        </div>
+
                         <div class="layui-form-item">
                             <label class="layui-form-label">layui验证</label>
                             <div class="layui-input-block">
@@ -970,7 +1301,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -978,500 +1308,51 @@
     </div>
 </div>
 
-<input type="hidden" id="fixNumber" name="fixNumber" th:v="${list.core.fixnumber}" th:value="${list.core.fixnumber}">
-<input type="hidden" id="fixNumberRight" name="fixNumberRight" th:v="${list.core.fixnumberright}"
-       th:value="${list.core.fixnumberright}">
-<input type="hidden" id="firstCol" name="firstCol" th:value="${list.core.firstcol}">
+<div style="display:none" id="importForm" >
+    <form class="layui-form " ID="importFormSub"  action="/ezadmin/list/importlist.html" method="POST" >
+        <div class="layui-form-item">
+            <label class="layui-form-label">表单编码</label>
+            <div class="layui-input-block">
+                <input type="text" name="formcode" autocomplete="false" class="layui-input">
+                <small   class="layui-form-mid layui-text-em">
+                     系统自动生成表单，如为空，则不生成,此编码为URL中的唯一值。 /ezadmin/form/form-xxxx
+                </small>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">列表编码</label>
+            <div class="layui-input-block">
+                <input type="text" name="listcode" autocomplete="false" class="layui-input">
+                <small   class="layui-form-mid layui-text-em">
+                     系统自动生成列表，如为空，则不生成，此编码为URL中的唯一值。 /ezadmin/list/list-xxxx
+                </small>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">表达式</label>
+            <div class="layui-input-block">
+                <small   class="layui-form-mid layui-text-em">
+                     SQL:SELECT ID ID,NAME 名称 from T_USER WHERE 1=1 <br>
+                </small>
+                <textarea   name="listexpress" autocomplete="false" class="layui-textarea" style="height:450px"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
 
-<input type="hidden" id='validateRules' name='validateRules' th:value="${list.core.validateRules}">
-<input type="hidden" id='validateMessages' name='validateMessages' th:value="${list.core.validateMessages}">
+<input type="hidden" id="fixNumber" name="fixNumber" th:v="${data.core.fixnumber}" th:value="${data.core.fixnumber}">
+<input type="hidden" id="fixNumberRight" name="fixNumberRight" th:v="${data.core.fixnumberright}" th:value="${data.core.fixnumberright}">
+<input type="hidden" id="firstCol" name="firstCol" th:value="${data.core.firstcol}">
+<input type="hidden" id='validateRules' name='validateRules' th:value="${data.core.validateRules}">
+<input type="hidden" id='validateMessages' name='validateMessages' th:value="${data.core.validateMessages}">
 <input type="hidden" id='contextName' name='contextName' th:value="${contextName}">
 <input type="hidden" id='uploadUrl' name='uploadUrl' th:value="${uploadUrl}">
 <input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
 <input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
 <input type="hidden" id='IS_DEBUG' name='IS_DEBUG' th:value="${IS_DEBUG}">
 <script th:src="${contextName+'/webjars/ezadmin/layui/js/ezlist.js?v='+vi}" type="text/javascript"></script>
-
-<script>
-    let tools=`<div class="layui-component-tools">
-<i class="layui-icon layui-icon-templeate-1" title="复制"></i>
-<i class="layui-icon layui-icon-delete" title="删除"></i>
-</div>`;
-    //表单数据同步
-    layui.use(function(){
-        let form=layui.form;
-        let $=layui.jquery;
-        var slider = layui.slider;
-
-        form.on('radio(radio-filter)', function(data){
-            var elem = data.elem; // 获得 radio 原始 DOM 对象
-            let active=$(".active");
-            active.attr("ez-"+elem.name,data.value);
-            form.render();
-        });
-        form.on('select(lay_filter_jdbctype)',function(data){
-            let active=$(".active");
-            let col=active.attr("ez-jdbctype");
-            active.attr("ez-jdbctype",data.value);
-        });
-        form.on('select(lay_filter_datatype)',function(data){
-            let active=$(".active");
-            let col=active.attr("ez-datatype");
-            active.attr("ez-datatype",data.value);
-        });
-        form.on('select(disabled)',function(data){
-            let active=$(".active");
-            if(data.value=='disabled'){
-                active.attr("ez-disabled","disabled");
-                active.find('[item_name]').attr("disabled","disabled");
-
-            }else{
-                active.removeAttr("ez-disabled");
-                active.find('[item_name]').removeAttr("disabled");
-
-            }
-        });
-        form.on('select(readonly)',function(data){
-            let active=$(".active");
-            if(data.value=='readonly'){
-                active.attr("ez-readonly","readonly");
-                active.find('[item_name]').attr("readonly","readonly");
-
-            }else{
-                active.removeAttr("ez-readonly");
-                active.find('[item_name]').removeAttr("readonly");
-            }
-
-        });
-
-        $(".config-form").find("input,textarea").not("[type=radio]").not("[type=checkbox]").on("change",function(){
-            let name=$(this).attr("name");
-            let active=$(".active");
-            active.attr("ez-"+name,$(this).val());
-            let type=active.attr("type");
-
-            if(name=='append_head'){
-                $('#append_head').html( $(this).val());
-            }
-            if(name=='append_foot'){
-                $('#append_foot').html( $(this).val());
-            }
-            if(type=='tabcore'){
-                 switch (name){
-                     case 'label':
-                         active.find(".tablink").text($(this).val());
-                         break;
-                     case 'name':
-                          break;
-                     case 'url':
-                         active.find(".tablink").text($(this).val());
-                         break;
-                 }
-                 return;
-            }
-            if(type=='cascader'||type=='cascadersql'
-                ||type=='input-daterange'
-                ||type=='input-datetimerange'
-                ||type=='hidden'
-                ||type=='input-text'
-                ||type=='select'
-                ||type=='select-search'
-                ||type=='union'
-                ||type=='uniondate'
-                ||type=='unionor'){
-                switch (name){
-                    case 'label':
-                        active.find('.layui-form-label').text($(this).val());
-                        break;
-                    case 'name':
-                        active.attr("ez-item_name",$(this).val());
-                        break;
-                    case 'url':
-                        active.attr("ez-url",$(this).val());
-                        break;
-                    case 'url':
-                        active.attr("ez-url",$(this).val());
-                        break;
-                    case 'placeholder':
-                        active.find('input,textarea').attr("placeholder",$(this).val());
-                        break;
-                }
-                return;
-            }
+<script th:src="${contextName+'/webjars/ezadmin/js/listedit.js?v='+vi}" type="text/javascript"></script>
 
 
-            if(name=='select_express'){
-                active.find('#select_express').html( $(this).val());
-            }
-            if(name=='count_express'){
-                active.find('#count_express').html( $(this).val());
-            }
-            if(name=='orderby_express'){
-                active.find('#orderby_express').html( $(this).val());
-            }
-            if(name=='groupby_express'){
-                active.find('#groupby_express').html( $(this).val());
-            }
-            // if(name=='form_name'){
-            //     active.find('#form_name').html( $(this).val());
-            // }
-
-        })
-    });
-
-    $(function (){
-
-        dragula({
-            isContainer: function (el) {
-                return $(el).hasClass('dragula-container'); // only elements in drake.containers will be taken into account
-            },
-            moves: function (el, source, handle, sibling) {
-                return true; // elements are always draggable by default
-            },
-            accepts: function (el, target, source, sibling) {
-                return true; // elements can be dropped in any of the `containers` by default
-            },
-            invalid: function (el, handle) {
-                if($(el).hasClass("tip")){
-                    return true;
-                }
-                return false; // don't prevent any drags from initiating by default
-            },
-            copy: true,
-            revertOnSpill: true,
-            copySortSource: true
-        }).on('drop', function (el, target, source, sibling) {
-             if(
-                 $(target).attr("id")=='left-colitem'||
-                 $(target).attr("id")=='left-search'
-             ){
-                 return false;
-             }
-            $(target).attr("title",$(target).find(".tip").text());
-            $(target).find(".tip").remove();
-            if( $(el).find(".template").length>0){
-                // var tmp=$(el).find(".template");
-                // tmp.find('[name=default]').attr("name",Math.random());
-                if($(target).attr('type')=='firstcol'){
-                    $(target).html($(el).find(".template").html());
-                }else{
-                    $(el).replaceWith($(el).find(".template").html());
-                }
-            }else{
-                return false;
-            }
-            layui.element.render('nav', 'demo-filter-nav');
-            layui.form.render()
-        })
-        function rowselect(el){
-            let edittype=el.attr("type");
-            //样式切换
-            $(".active").removeClass("active");
-            $(".layui-component-tools").remove();
-            el.addClass("active");
-            if(!$(el).hasClass("systemfloat")){//表单不允许复制
-                el.append(tools);
-            }
-
-            $(".config-form").hide();//所有配置隐藏
-
-            var currentConfig=typeform(edittype);
-              //  $(".config-"+edittype);
-
-            //清空当前表单
-            var elms = currentConfig.find("[name]"); //formid 包含name属性的所有元素
-            $.each(elms, function (i, item) {
-                var type = $(item).attr("type");
-                if (type != 'hidden' && type != 'radio' &&type != 'checkbox') {
-                    $(item).val("");
-                }
-            });
-
-            //赋值
-            $.each(el[0].attributes,function(i,d){
-                if(d.name.indexOf('ez-')>=0){
-                    var cname=d.name.replace('ez-','');
-                    try{
-                        var item= currentConfig.find("[name="+cname+"]");
-                        //配置表单如果是 radio或者checkbox需要单独处理
-                        var type = $(item).attr("type");
-                        if (type != 'hidden' && type != 'radio' &&type != 'checkbox') {
-                            $(item).val(d.value);
-                        }
-                        if(type == 'radio' ||type == 'checkbox'){
-                            item.each(function(i,it){
-                                if(it.value==d.value){
-                                    $(this).prop("checked","checked")
-                                }
-                            })
-                        }
-                    }catch(e){
-                        console.log(e);
-                    }
-                    layui.form.render();
-                }
-            })
-            let col=el.attr("ez-col")||3;
-            //列设置
-            layui.slider.render({
-                elem: currentConfig.find('.col'),
-                min: 1, // 最小值
-                max: 12, // 最大值
-                step: 1, // 步长
-                showstep: true, // 开启间隔点
-                input: true,
-                value:col,
-                change: function(value){
-                    console.log(value) // 滑块当前值
-                    // do something
-                    let active=$(".active");
-                    let col=active.attr("ez-col")||3;
-                    active.removeClass("layui-col-md"+col)
-                    active.addClass("layui-col-md"+value);
-                    active.attr("ez-col",value);
-                }
-            });
-
-            //其他自定义操作
-            switch (el.attr("type")){
-                case 'input-text':
-                    console.log('input-text');
-                    break;
-                case 'card':
-                    console.log('card');
-                    break;
-                case 'formcore':
-                    currentConfig.find("[name=init_express]").val($("#initcode").html());
-                    currentConfig.find("[name=submit_express]").val($("#subcode").html());
-                    currentConfig.find("[name=delete_express]").val($("#delcode").html());
-                    currentConfig.find("[name=form_name]").val($("#form_name").html());
-                    currentConfig.find("[name=append_head]").val($("#append_head").html());
-                    currentConfig.find("[name=append_foot]").val($("#append_foot").html());
-                    break;
-                default:
-                    break;
-            }
-            layui.form.render();
-            currentConfig.show();
-        }
-        $(document).on("click",".selector",function(e){
-            if(!$(this).hasClass("active")){
-                rowselect($(this));
-            }
-            e.preventDefault();
-            e.stopPropagation();
-        })
-
-        $(document).on("click",".layui-icon-delete",function(e){
-            $(this).parents(".active").remove();
-        })
-        $(document).on("click",".layui-icon-templeate-1",function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            var copy=$(this).parents(".active").clone();
-
-            $.each(copy.find("[name]"),function(i,j){
-                $(this).attr("name",Math.random());
-            });
-
-            $(this).parents(".active").parent().append(copy);
-            $(".active").removeClass("active");
-            $(".layui-component-tools").remove();
-        })
-        //插件配置区
-        layer.open({
-            type: 1,
-            offset: 'l',
-            anim: 5, // 从左往右
-            area: ['17.666667%', '100%'],
-            shade: 0,
-            closeBtn:1,maxmin: true,resize:true,
-            title:'插件',
-            content:$(".lefttab"),
-            success: function(){
-            },end: function(){
-            }
-        });
-        layer.open({
-            type: 1,
-            offset: 'r',
-            anim: 5, // 从左往右
-            area: ['17.666667%', '100%'],
-            shade: 0,
-            closeBtn:1,
-            title:'配置',
-            maxmin: true,
-            resize:true,
-            content:$(".righttab"),
-            success: function(){
-            },end: function(){
-            }
-        });
-
-        $(".layui-btn-save").click(function(){
-            var listData={};
-            var core={};
-            var search=[];
-            var tab=[];
-            var tablebtn=[];
-            var rowbtn=[];
-            var col=[];
-
-            $.each($("[type=listcore]")[0].attributes,function(i,d){
-                if(d.name.indexOf('ez-')>=0){
-                    var cname=d.name.replace('ez-','');
-                    try{
-                        core[cname]=d.value;
-                    }catch(e){
-                        console.log(e);
-                    }
-                }
-            })
-            $("[type=tabcore]").find(".selector").each(function(){
-                var searchitem={};
-                $.each($(this)[0].attributes,function(i,d){
-                    if(d.name.indexOf('ez-')>=0){
-                        var cname=d.name.replace('ez-','');
-                        try{
-                            searchitem[cname]=d.value;
-                        }catch(e){
-                            console.log(e);
-                        }
-                    }
-                })
-                searchitem.type=$(this).attr("type");
-                if(searchitem.item_name==''||searchitem.item_name==undefined){
-                    searchitem.item_name=Math.random();
-                }
-                tab.push(searchitem)
-            })
-            $("[type=searchcore]").find(".selector").each(function(){
-                var searchitem={};
-                $.each($(this)[0].attributes,function(i,d){
-                    if(d.name.indexOf('ez-')>=0){
-                        var cname=d.name.replace('ez-','');
-                        try{
-                            searchitem[cname]=d.value;
-                        }catch(e){
-                            console.log(e);
-                        }
-                    }
-                })
-                searchitem.type=$(this).attr("type");
-                if(searchitem.item_name==''||searchitem.item_name==undefined){
-                    searchitem.item_name=Math.random();
-                }
-                search.push(searchitem)
-            })
-            $("[type=tablebtn]").find(".selector").each(function(){
-                var searchitem={};
-                $.each($(this)[0].attributes,function(i,d){
-                    if(d.name.indexOf('ez-')>=0){
-                        var cname=d.name.replace('ez-','');
-                        try{
-                            searchitem[cname]=d.value;
-                        }catch(e){
-                            console.log(e);
-                        }
-                    }
-                })
-                searchitem.type=$(this).attr("type");
-                if(searchitem.item_name==''||searchitem.item_name==undefined){
-                    searchitem.item_name=Math.random();
-                }
-                tablebtn.push(searchitem)
-            })
-            $("[type=rowbtn]").find(".selector").each(function(){
-                var searchitem={};
-                $.each($(this)[0].attributes,function(i,d){
-                    if(d.name.indexOf('ez-')>=0){
-                        var cname=d.name.replace('ez-','');
-                        try{
-                            searchitem[cname]=d.value;
-                        }catch(e){
-                            console.log(e);
-                        }
-                    }
-                })
-                searchitem.type=$(this).attr("type");
-                if(searchitem.item_name==''||searchitem.item_name==undefined){
-                    searchitem.item_name=Math.random();
-                }
-                rowbtn.push(searchitem)
-            })
-            $("[type=colcore]").find(".selector").each(function(){
-                var searchitem={};
-                $.each($(this)[0].attributes,function(i,d){
-                    if(d.name.indexOf('ez-')>=0){
-                        var cname=d.name.replace('ez-','');
-                        try{
-                            searchitem[cname]=d.value;
-                        }catch(e){
-                            console.log(e);
-                        }
-                    }
-                })
-                searchitem.type=$(this).attr("type");
-                if(searchitem.item_name==''||searchitem.item_name==undefined){
-                    searchitem.item_name=Math.random();
-                }
-                col.push(searchitem)
-            })
-
-            if($("[type=firstcol]").children().eq(0).attr("type")!=undefined){
-                core.firstcol=$("[type=firstcol]").children().eq(0).attr("type");
-            }
-            listData.core=core;
-            listData.search=search;
-            listData.tab=tab;
-            listData.tablebtn=tablebtn;
-            listData.rowbtn=rowbtn;
-            listData.col=col;
-
-            $.post("/ezadmin/list/submitEdit-"+core.listcode,  {data:JSON.stringify(listData)}, function(data) {
-                if(data.success){
-                    layui.layer.confirm('保存成功，重新加载？', {icon: 1, title:'提示'}, function(index){
-                        location.href='/ezadmin/list/loadEdit-'+core.listcode;
-                    });
-                }else{
-                    layui.layer.alert(data.message);
-                }
-
-            }, 'json').fail(function() {
-                layui.layer.alert('请求失败，网络异常');
-            });
-        })
-
-
-
-
-    })
-    function typeform(edittype){
-        if( edittype.indexOf('input-checkbox')>-1||edittype.indexOf('input-radio')>-1
-            ||edittype.indexOf('select')>-1){
-            edittype='select';
-        }else if(edittype=='cascader'||edittype=='cascadersql' ){
-            edittype='cascader';
-        }else{
-            edittype='searchcore';
-        }
-        // if(edittype=='input-span'
-        //     ||edittype=='input-date'||edittype=='input-daterange'
-        //     ||edittype=='input-datetime'||edittype=='input-datetimerange'
-        //     ||edittype=='input-uniondate'
-        //     ||edittype=='union'
-        //     ||edittype=='uniondate'
-        //     ||edittype=='unionor'
-        //     ||edittype=='hidden'
-        // ){
-        //     edittype='searchcore';
-        // }
-        // if(edittype=='cascader'||edittype=='cascadersql' ){
-        //     edittype='cascader';
-        // }
-        return $(".config-"+edittype);
-    }
-
-</script>
 </body>
 </html>

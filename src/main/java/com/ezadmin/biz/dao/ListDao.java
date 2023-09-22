@@ -31,7 +31,7 @@ public class ListDao extends  JsoupUtil{
     private static String DEFAULT_TH = "th";
     private static String DEFAULT_SEARCH = "input-text";
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
-            JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,
+            JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,JsoupUtil.LABEL,
             JsoupUtil.BODY_PLUGIN_CODE, JsoupUtil.ORDER,
             JsoupUtil.DATATYPE,JsoupUtil.DATA
             ,JsoupUtil.AREA, JsoupUtil.OPENTYPE,JsoupUtil.STYLE,
@@ -46,11 +46,12 @@ public class ListDao extends  JsoupUtil{
             JsoupUtil.DATA,JsoupUtil.JDBCTYPE,JsoupUtil.PLACEHOLDER,JsoupUtil.LAYVERIFY
             , JsoupUtil.NAME,
             JsoupUtil.ITEM_NAME,
+            JsoupUtil.ITEM_ID,
             JsoupUtil.OPER
             ,JsoupUtil.STYLE
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
             ,JsoupUtil.TOP_DESC,JsoupUtil.ITEM_DESC,JsoupUtil.RIGHT_DESC
-            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE
+            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE,JsoupUtil.COL,JsoupUtil.PLUGIN
     };
     private ListDao() {
 
@@ -387,7 +388,27 @@ public class ListDao extends  JsoupUtil{
             thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.numbers.bodycode());
             thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.numbers.code());
         }
+        //计算是否包含图片
+        Element column = doc.getElementById("column");
+        boolean haspic=false;
+        if (column != null) {
+            Elements thList=column.getElementsByTag("th");
+            for (int x = 0; x < thList.size(); x++) {
+                Element th=thList.get(x);
+                if (th.id().equalsIgnoreCase("rowbutton")) {
+                    continue;
+                }
+                // Map<String, String> thMap = JsoupUtil.loadplugin(th );
+                if(isImageTd(th)){
+                    haspic=true;break;
+                }
+            }
+        }
         if(ColTypeEnum.isFirst(firstOld)){
+//            laydataMap.put("fixed","left");
+//            if(haspic){
+//                Utils.putIfAbsent(laydataMap,"height","110");
+//            }
             thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
             columnList.add(thMap);
         }
@@ -462,6 +483,7 @@ public class ListDao extends  JsoupUtil{
             Utils.putIfAbsent(laydataMap,"sort",true);
         }
 
+
         //默认宽度设置为110
          //   Utils.putIfAbsent(laydataMap,"width","110");
     }
@@ -524,9 +546,6 @@ public class ListDao extends  JsoupUtil{
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(JSONUtils.parseMap(null));
-    }
 
     public   boolean existHtmlList(String encodeListId) {
         if (StringUtils.isBlank(encodeListId) || encodeListId.equals("T04NiWt5IAI")) {
@@ -899,11 +918,12 @@ public class ListDao extends  JsoupUtil{
         Utils.putIfAbsent(btnMap,JsoupUtil.LABEL, label);
         String [] names=new String[]{ JsoupUtil.NAME, JsoupUtil.WINDOW_NAME,JsoupUtil.ITEM_NAME
                 ,JsoupUtil.AREA,JsoupUtil.URL,JsoupUtil.OPENTYPE,JsoupUtil.CLASS,JsoupUtil.STYLE,
-                JsoupUtil.EZ_CALLBACK
+                JsoupUtil.EZ_CALLBACK,JsoupUtil.ITEM_ID
         };
         for (int i = 0; i < names.length; i++) {
             Utils.putIfAbsent(btnMap,names[i], strip(btn.attr(names[i])));
         }
+        Utils.putIfAbsent(btnMap,JsoupUtil.LABEL, btn.html());
     }
     private static void initButtonByMap(Map<String, String> request, Element item) {
         item.html(StringUtils.isNotBlank(request.get(JsoupUtil.LABEL))?request.get(JsoupUtil.LABEL):request.get(JsoupUtil.ITEM_NAME));
@@ -976,6 +996,7 @@ public class ListDao extends  JsoupUtil{
         Document doc=config.getDoc();
         coreMap.put("listname", JsoupUtil.strip(doc.title()));
         coreMap.put("ENCRYPT_LIST_ID", JsoupUtil.strip(doc.body().attr("id")));
+        coreMap.put("listcode", JsoupUtil.strip(doc.body().attr("id")));
         coreMap.put(JsoupUtil.APPEND_HEAD, doc.getElementById(JsoupUtil.APPEND_HEAD) == null ? "" : doc.getElementById(JsoupUtil.APPEND_HEAD).html());
         coreMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
 
@@ -1093,7 +1114,8 @@ public class ListDao extends  JsoupUtil{
                 Utils.putIfAbsent(thMap,JsoupUtil.HEAD_PLUGIN_CODE, DEFAULT_TH);
                 Utils.putIfAbsent(thMap,JsoupUtil.BODY_PLUGIN_CODE, DEFAULT_TD);
 
-                thMap.put(JsoupUtil.LABEL, th.html());
+
+                thMap.put(JsoupUtil.LABEL, Utils.trimEmptyDefault(thMap.get(JsoupUtil.LABEL),th.html()) );
                 thMap.put(JsoupUtil.ITEM_NAME, StringUtils.upperCase(th.attr(JsoupUtil.ITEM_NAME)));
 
 
@@ -1108,6 +1130,11 @@ public class ListDao extends  JsoupUtil{
                 styleTomap(laydataMap,th);
 
                 defaultMap(laydataMap,th);
+
+                String fixed=Utils.trimNull(laydataMap.get("fixed"));
+                if(StringUtils.isNotBlank(fixed)){
+                    thMap.put("fixed",fixed);
+                }
                 thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
                 searchConfigList.add(thMap);
             }
@@ -1139,9 +1166,11 @@ public class ListDao extends  JsoupUtil{
                 for (int i1 = 0; i1 < buttons.size(); i1++) {
                     Element btn=buttons.get(i1);
                     Map<String, Object> btnMap = new HashMap<>();
+
                     btnMap.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(btn));
-                    //JsoupUtil.loadplugin(btn );
+
                     initButtonMapObj(btnMap, btn);
+                    btnMap.putIfAbsent(JsoupUtil.TYPE,"button-table");
                     searchConfigList.add(btnMap);
                 }
             }
@@ -1164,7 +1193,12 @@ public class ListDao extends  JsoupUtil{
             searchConfigList.add(listitem);
         }
     }
-
+    String [] search_attrs=new String[]{ JsoupUtil.NAME, JsoupUtil.ALIAS,JsoupUtil.ITEM_NAME,
+            JsoupUtil.OPER,JsoupUtil.JDBCTYPE,JsoupUtil.DATA,JsoupUtil.DATATYPE,
+            JsoupUtil.VALIDATERULES,JsoupUtil.VALIDATEMESSAGES,JsoupUtil.STYLE,JsoupUtil.PLACEHOLDER
+            ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS,JsoupUtil.COL,JsoupUtil.LAYVERIFY
+            ,JsoupUtil.TYPE,JsoupUtil.URL
+    };
     private void fillsearch(List<Map<String, Object>> searchConfigList, Config config) {
         Document doc=config.getDoc();
         List<Element> searchList=doc.getElementsByClass("list-search-item");
@@ -1174,13 +1208,9 @@ public class ListDao extends  JsoupUtil{
             for (int x = 0; x < searchList.size(); x++) {
                 Element item=searchList.get(x);
                  Map<String, Object> listitem = new HashMap<>();//JsoupUtil.loadplugin(item);
-                String [] names=new String[]{ JsoupUtil.NAME, JsoupUtil.ALIAS,JsoupUtil.ITEM_NAME,
-                        JsoupUtil.OPER,JsoupUtil.JDBCTYPE,JsoupUtil.DATA,JsoupUtil.DATATYPE,
-                        JsoupUtil.VALIDATERULES,JsoupUtil.VALIDATEMESSAGES,JsoupUtil.STYLE,JsoupUtil.PLACEHOLDER
-                        ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
-                };
-                for (int i = 0; i < names.length; i++) {
-                    Utils.putIfAbsent(listitem,names[i], strip(item.attr(names[i])));
+
+                for (int i = 0; i < search_attrs.length; i++) {
+                    Utils.putIfAbsent(listitem,search_attrs[i], strip(item.attr(search_attrs[i])));
                 }
                 listitem.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(item));
 
@@ -1278,12 +1308,77 @@ public class ListDao extends  JsoupUtil{
             body.attr(attr[i],value);
         }
         //处理tab
-        for (int i = 0; i < tabList.size(); i++) {
-            Map<String,Object> tab= tabList.get(i);
-            Element tabHtml=newTab(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL),tab.get(JsoupUtil.URL));
-            body.getElementById("tab").appendChild(tabHtml);
-        }
+        tab(tabList, body);
         //处理search
+        search(searchList, body);
+        //处理tablebutton
+        tablebtn(tablebtnList, body); 
+        //处理rowbutton
+        rowbtn(rowbtnList, body);
+        //处理列
+        col(colList, body);
+
+        JsoupUtil.updateConfig(config);
+    }
+
+    private void col(List<Map<String, Object>> colList, Element body) {
+        if(Utils.isEmpty(colList)){
+            return;
+        }
+        for (int i = 0; i < colList.size(); i++) {
+            Map<String,Object> tab= colList.get(i);
+            Element tabHtml=newCol();
+            for (int k = 0; k < colNames.length; k++) {
+                String formItemAttrValue=Utils.trimNull(tab.get(colNames[k]));
+                if(StringUtils.isNotBlank(formItemAttrValue)){
+                    tabHtml.getElementsByTag("th").attr(colNames[k],formItemAttrValue);
+                }
+            }
+            tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
+            body.getElementById("column").appendChild(tabHtml);
+        }
+    }
+
+    private void rowbtn(List<Map<String, Object>> rowbtnList, Element body) {
+        if(Utils.isEmpty(rowbtnList)){
+            return;
+        }
+        for (int i = 0; i < rowbtnList.size(); i++) {
+            Map<String,Object> tab= rowbtnList.get(i);
+            Element tabHtml=newButton();
+            for (int k = 0; k < names.length; k++) {
+                String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
+                if(StringUtils.isNotBlank(formItemAttrValue)){
+                    tabHtml.attr(names[k],formItemAttrValue);
+                }
+            }
+            tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
+            body.getElementById("rowbutton").appendChild(tabHtml);
+        }
+    }
+
+    private void tablebtn(List<Map<String, Object>> tablebtnList, Element body) {
+        if(Utils.isEmpty(tablebtnList)){
+            return;
+        }
+        for (int i = 0; i < tablebtnList.size(); i++) {
+            Map<String,Object> tab= tablebtnList.get(i);
+            Element tabHtml=newButton();
+            for (int k = 0; k < names.length; k++) {
+                String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
+                if(StringUtils.isNotBlank(formItemAttrValue)){
+                    tabHtml.attr(names[k],formItemAttrValue);
+                }
+            }
+            tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
+            body.getElementById("tableButton").appendChild(tabHtml);
+        }
+    }
+
+    private void search(List<Map<String, Object>> searchList, Element body) {
+        if(Utils.isEmpty(searchList)){
+            return;
+        }
         for (int i = 0; i < searchList.size(); i++) {
             Map<String,Object> tab= searchList.get(i);
             Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
@@ -1295,55 +1390,33 @@ public class ListDao extends  JsoupUtil{
             }
             body.getElementById("search").appendChild(tabHtml);
         }
-        //处理tablebutton
-        for (int i = 0; i < tablebtnList.size(); i++) {
-            Map<String,Object> tab= tablebtnList.get(i);
-            Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
-            for (int k = 0; k < names.length; k++) {
-                String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
-                if(StringUtils.isNotBlank(formItemAttrValue)){
-                    tabHtml.getElementsByTag("button").attr(names[k],formItemAttrValue);
-                }
-            }
-            body.getElementById("tableButton").appendChild(tabHtml);
+    }
+
+    private void tab(List<Map<String, Object>> tabList, Element body) {
+        if(Utils.isEmpty(tabList)){
+            return;
         }
-        //处理rowbutton
-        for (int i = 0; i < rowbtnList.size(); i++) {
-            Map<String,Object> tab= rowbtnList.get(i);
-            Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
-            for (int k = 0; k < names.length; k++) {
-                String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
-                if(StringUtils.isNotBlank(formItemAttrValue)){
-                    tabHtml.getElementsByTag("button").attr(names[k],formItemAttrValue);
-                }
-            }
-            body.getElementById("rowbutton").appendChild(tabHtml);
-        }
-        //处理列
-        for (int i = 0; i < colList.size(); i++) {
-            Map<String,Object> tab= colList.get(i);
-            Element tabHtml=newCol();
-            for (int k = 0; k < colNames.length; k++) {
-                String formItemAttrValue=Utils.trimNull(tab.get(colNames[k]));
-                if(StringUtils.isNotBlank(formItemAttrValue)){
-                    tabHtml.getElementsByTag("th").attr(colNames[k],formItemAttrValue);
-                }
-            }
-            body.getElementById("column").appendChild(tabHtml);
+        for (int i = 0; i < tabList.size(); i++) {
+            Map<String,Object> tab= tabList.get(i);
+            Element tabHtml=newTab( );
+            tabHtml.getElementsByTag("a").attr(JsoupUtil.SELECT,Utils.trimNull(tab.get(JsoupUtil.SELECT)));
+            tabHtml.getElementsByTag("a").attr(JsoupUtil.ITEM_NAME,Utils.trimNull(tab.get(JsoupUtil.ITEM_NAME)));
+            tabHtml.getElementsByTag("a").attr(JsoupUtil.URL,Utils.trimNull(tab.get(JsoupUtil.URL)));
+            tabHtml.getElementsByTag("a").html(Utils.trimNull(tab.get(JsoupUtil.LABEL)));
+            body.getElementById("tab").appendChild(tabHtml);
         }
     }
 
     private Element newCol() {
-        return Jsoup.parse("<th  >\n" +
-                "</th>").body().child(0);
+        return new Element("th" ) ;
     }
 
-    public Element newTab(Object name,Object label,Object url){
+    public Element newTab( ){
         return Jsoup.parse("<li  >\n" +
-                "   <a item_name=\""+name+"\"class=\"tablink\" href=\""+url+"\"> "+label+"</a>\n" +
+                "   <a     \"class=\"tablink\"  >  </a>\n" +
                 "</li>").body().child(0);
     }
-    public Element newButton(Object name,Object label ){
+    public Element newButton(  ){
         return Jsoup.parse("<button\n" +
                 "        class=\" layui-btn   layui-btn-sm layui-btn-normal  \">\n" +
                 "</button> ").body().child(0);
@@ -1353,10 +1426,14 @@ public class ListDao extends  JsoupUtil{
                 "    <div  class=\"layui-form-item\" >\n" +
                 "        <label class=\"layui-form-label\"  >"+label+"</label>\n" +
                 "        <div class=\"layui-input-block\">\n" +
-                "                <object class=\"list-search-item\" item_name=\""+name+"\"></object>\n" +
+                "                <object class=\"list-search-item\"  item_name=\""+name+"\"></object>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
                 "</div>").body().child(0);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(ListDao.getInstance().newButton( ));
     }
 
 }

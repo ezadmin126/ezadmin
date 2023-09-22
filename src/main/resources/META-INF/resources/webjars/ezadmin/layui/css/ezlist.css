@@ -1,5 +1,9 @@
 
-
+/*@media screen and (min-width: 1200px){*/
+/*    .layui-container {*/
+/*        width: 95%;*/
+/*    }*/
+/*}*/
 .layui-layer-imgnext{
     font-size: 52px !important;
     color: #8890b5;
@@ -65,10 +69,7 @@ th a {
 }
 
 @media (min-width: 100px) {
-    /*.list-item label {*/
-    /*    text-align: left !important;*/
-    /*    min-width: 110px;*/
-    /*}*/
+
     .el-cascader {
         margin-left: 0px;
     }
@@ -82,20 +83,14 @@ th a {
 }
 
 @media (min-width: 992px) {
-    /*.list-item label {*/
-    /*    text-align: right !important;*/
-    /*    min-width: 110px;*/
-    /*}*/
+
 
     .el-cascader {
         margin-left: 0px;
     }
 }
 @media (min-width: 1400px) {
-    /*.list-item label {*/
-    /*    text-align: right !important;*/
-    /*    min-width: 110px;*/
-    /*}*/
+
     .layui-form-item .ez-range {
         width: 102px !important;
     }
@@ -147,12 +142,13 @@ th a {
 
 }
 
-/*.layui-form-label {*/
-/*    overflow: hidden;*/
-/*    white-space: nowrap;*/
-/*    text-overflow: ellipsis;*/
+/**label不期望换行**/
+.layui-form-label {
+   // overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
-/*}*/
+}
 
 .layui-table-page {
     text-align: right;
@@ -350,8 +346,8 @@ ul.dtr-details {
 
 /**下拉框高度**/
 .el-input__inner {
-    height: 26px;
-    line-height: 26px
+    height: 38px !important;
+    line-height: 38px
 }
 
 /**选中颜色**/

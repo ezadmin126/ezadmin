@@ -655,6 +655,7 @@ public class ListServiceImpl implements ListService {
                         m.put(JsoupUtil.LABEL,MapParser.parseDefaultEmpty(Utils.getStringByObject(item,JsoupUtil.LABEL),  dataRow ).getResult());
                         m.put(JsoupUtil.WINDOW_NAME,MapParser.parseDefaultEmpty(Utils.getStringByObject(item,JsoupUtil.WINDOW_NAME),  dataRow ).getResult());
                         m.put(JsoupUtil.ITEM_ID,MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.ITEM_ID),"0"),  dataRow ).getResult());
+                        m.put("rowdataid",dataRow.get("ID"));
                         m.put(JsoupUtil.DISPLAY,MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.DISPLAY),"true"),  dataRow ).getResult());
                         if(BooleanUtils.toBoolean(Utils.getStringByObject(m,JsoupUtil.DISPLAY))){
                             tempRowItem.add(m);
@@ -681,6 +682,7 @@ public class ListServiceImpl implements ListService {
                         String template = Utils.trimNull(buttonPlugin.get("PLUGIN_BODY"));
                         String html = ThymeleafUtils.processString(template, context);
                         if (StringUtils.isNotBlank(html)) {
+                            coreMap.put("rowbtnhtml",html);
                             tds.add(html);
                         }
                     }
@@ -1099,6 +1101,9 @@ public class ListServiceImpl implements ListService {
 
         page(pagination,list,requestParamMap);
     }
+
+
+
     @Override
     public void fillCountById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception {
         Page pagination= loadingPage(list,requestParamMap);
@@ -1121,6 +1126,8 @@ public class ListServiceImpl implements ListService {
         page(pagination,list,requestParamMap);
 
     }
+
+
     void page(Page pagination,Map<String, Object> list,Map<String, Object> requestParamMap) throws Exception {
         Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
         String listcode=getString(coreMap,"listcode");

@@ -87,19 +87,35 @@ public class ListEditController extends BaseController {
         return "layui/list/list";
      }
     @EzMapping("loadEdit.html")
-    public String loadList(HttpServletRequest request, HttpServletResponse response){
+    public String loadList(HttpServletRequest request, HttpServletResponse response) throws Exception {
              List<Map<String, Object>> searchPlugins= PluginsDao.getInstance().allListPlugin("search");
             List<Map<String, Object>> tdPlugins= PluginsDao.getInstance().allListPlugin("td");
             request.setAttribute("searchPlugins",searchPlugins);
             request.setAttribute("tdPlugins",tdPlugins);
-        HashMap list=new HashMap();
-        list.put("core",new HashMap());
-        list.put("search",new HashMap());
-        list.put("tab",new HashMap());
-        list.put("tablebtn",new HashMap());
-        list.put("rowbtn",new HashMap());
-        list.put("col",new HashMap());
-            request.setAttribute("list",list);
+
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+
+        Map<String, Object> requestParamMap =requestToMap(request);
+        Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+
+        requestParamMap.put("loadDataFlag",0);
+        Map<String, Object> list=new HashMap<>();
+        if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
+            list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+        }
+        if(!Utils.isNotEmpty(list)){
+            list=new HashMap();
+            list.put("core",new HashMap());
+            list.put("search",new ArrayList<>());
+            list.put("tab",new ArrayList<>());
+            list.put("tablebtn",new ArrayList<>());
+            list.put("rowbtn",new ArrayList<>());
+            list.put("col",new ArrayList<>());
+        }else{
+            listService.fillListById(list,requestParamMap,sessionParamMap);
+        }
+
+            request.setAttribute("data",list);
 
             return "layui/pages/listedit";
     }
@@ -122,6 +138,22 @@ public class ListEditController extends BaseController {
         sqlToList(fasttext,listId,generateForm);
         EzBootstrap.instance().getCache().clear();
         response.sendRedirect(request.getContextPath()+"/ezadmin/list/listEdit-"+listId);
+    }
+    @EzMapping("importlist.html")
+    public void importlist(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String listcode = request.getParameter("listcode");
+        String formcode = request.getParameter("formcode");
+        String fasttext = request.getParameter("listexpress");
+
+        sqlToList2(fasttext,listcode,formcode);
+        EzBootstrap.instance().getCache().clear();
+        if(StringUtils.isNotBlank(listcode)) {
+            response.sendRedirect(request.getContextPath() + "/ezadmin/list/loadEdit-" + listcode);
+            return;
+        }
+        if(StringUtils.isNotBlank(formcode)) {
+            response.sendRedirect(request.getContextPath() + "/ezadmin/form/loadEdit-" + formcode);
+        }
     }
 
     public static void main(String[] args) throws  Exception {
@@ -269,7 +301,164 @@ public class ListEditController extends BaseController {
             extractedRow("/ezadmin/form/doDelete-"+listId+"?ID=${ID}",listId,"删除","CONFIRM_AJAX","layui-border-red");
          }
     }
+    public   void sqlToList2(String sql, String listId, String formcode) throws Exception {
+        // String sql="select A.username as 用户名,password as 密码 ,from_unixtime(A.add_time/1000,'%y-%m')    from  T_USER A WHERE USER_ID=1 ";
+        Statement statement = CCJSqlParserUtil.parse(sql);
+        Select selectStatement = (Select) statement;
 
+        PlainSelect plainSelect=(PlainSelect)selectStatement.getSelectBody();
+
+        List<SelectItem> selectItemList= plainSelect.getSelectItems();
+
+        TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+        List<String> tableNameList = tablesNamesFinder.getTableList(selectStatement);
+
+        Map<String,Object> core=new HashMap<>();
+
+        core.put("listcode",listId);
+        core.put(JsoupUtil.DATASOURCE,"dataSource");
+
+        List<Map<String, Object>> headList=new ArrayList<>();
+        List<Map<String, Object>> tableBtnList=new ArrayList<>();
+        List<Map<String, Object>> rowBtnList=new ArrayList<>();
+        List<Map<String, Object>> searchList=new ArrayList<>();
+
+
+
+
+        List<String> fieldNameList=new ArrayList<>();
+        List<String> fieldLabelList=new ArrayList<>();
+        for (int i = 0; i < selectItemList.size(); i++) {
+            SelectExpressionItem expressionItem=(SelectExpressionItem)selectItemList.get(i);
+            String colName="";
+            String tableName="";
+            if(expressionItem.getExpression() instanceof Column){
+                Column column=(Column)expressionItem.getExpression();
+                colName=column.getColumnName();
+                tableName=column.getTable()==null?"":column.getTable().getName();
+            }else if(expressionItem.getExpression() instanceof Function){
+                Function function =(Function)expressionItem.getExpression();
+                tableName=function.toString();
+            }
+
+
+            String alias=colName;
+            if(expressionItem.getAlias()!=null){
+                alias=expressionItem.getAlias().getName();
+                try {
+                    if (StringUtils.IsChinese(alias.charAt(0))) {
+                        expressionItem.setAlias(null);
+                    }
+                }catch (Exception e){}
+            }
+
+            fieldNameList.add(colName);
+            fieldLabelList.add(alias);
+            Map<String,Object> head=new HashMap<>();
+            head.put(JsoupUtil.LABEL,alias);
+            if("ID".equalsIgnoreCase(alias)) {
+                head.put(JsoupUtil.ITEM_NAME,"ID");
+            }else{
+                head.put(JsoupUtil.ITEM_NAME, StringUtils.upperCase(colName));
+            }
+            head.put(JsoupUtil.HEAD_PLUGIN_CODE, "th");
+            if(colName.equalsIgnoreCase("COMPANY_ID")){
+                head.put(JsoupUtil.BODY_PLUGIN_CODE, "td-select");
+                head.put(JsoupUtil.DATA, "SELECT COMPANY_ID K,COMPANY_NAME V FROM T_SYS_COMPANY");
+                head.put(JsoupUtil.DATATYPE, "KVSQLCACHE");
+            }
+            else if(alias.contains("是否")){
+                head.put(JsoupUtil.BODY_PLUGIN_CODE, "td-select");
+                head.put(JsoupUtil.DATA, "yesno");
+            }
+            else  if(alias.contains("时间")){
+                head.put(JsoupUtil.JDBCTYPE,"DATETIME");
+            }
+            else{
+                head.put(JsoupUtil.BODY_PLUGIN_CODE, "td-text");
+            }
+
+            headList.add(head);
+            //
+            Map<String,Object> search=new HashMap<>();
+            search.put(JsoupUtil.LABEL,alias);
+            search.put(JsoupUtil.ITEM_NAME,StringUtils.upperCase(colName));
+            search.put(JsoupUtil.NAME,StringUtils.upperCase(colName));
+            //  search.put("ITEM_SORT",i*10+"");
+
+
+
+            if(colName.equalsIgnoreCase("COMPANY_ID")){
+                search.put(JsoupUtil.PLUGIN,"select-search");
+                search.put(JsoupUtil.TYPE,"select-search");
+                search.put(JsoupUtil.DATA, "SELECT COMPANY_ID K,COMPANY_NAME V FROM T_SYS_COMPANY");
+                search.put(JsoupUtil.DATATYPE, "KVSQLCACHE");
+            }
+            else  if(alias.contains("时间")){
+                search.put(JsoupUtil.PLUGIN,"daterange");
+                search.put(JsoupUtil.TYPE,"daterange");
+                search.put(JsoupUtil.OPER, "between");
+            }
+            else{
+                search.put(JsoupUtil.PLUGIN,"input-text");
+                search.put(JsoupUtil.TYPE,"input-text");
+            }
+
+            search.put(JsoupUtil.ALIAS,tableName);
+
+            searchList.add(search);
+        }
+        StringBuilder sqlExpress=new StringBuilder();
+        sqlExpress.append("\r\nStringBuilder sql=new StringBuilder();");
+
+        // sqlExpress.append("\r\ncompanyId=$$(\"COMPANY_ID\");");
+        sqlExpress.append("\r\nsql.append(\""+ FormatStyle.BASIC.getFormatter().format(selectStatement.toString())+"\");");
+//        sqlExpress.append("\r\nif(isNotBlank(\"COMPANY_ID\",\"session\")){" +
+//                "sql.append(\" AND COMPANY_ID=\"+companyId);" +
+//                "}");
+        sqlExpress.append("\r\nreturn search(sql);");
+
+        core.put("select_express", sqlExpress.toString());
+
+
+
+        if(StringUtils.isNotBlank(formcode)){
+            tableBtnList.add(extracted2("/ezadmin/form/form-"+formcode, "新增","PARENT","button-table"));
+            rowBtnList.add( extractedRow2("/ezadmin/form/form-"+formcode+"?ID=${ID}", "编辑","MODEL","layui-border-blue"));
+            rowBtnList.add(extractedRow2("/ezadmin/form/doDelete-"+formcode+"?ID=${ID}", "删除","CONFIRM_AJAX","layui-border-red"));
+            Map<String,Object> form= pureAddForm2( listId,tableNameList.get(0),fieldNameList,fieldLabelList);
+            FormDao.getInstance().updateForm(form);
+        }
+        Map<String,Object> list=new HashMap();
+        list.put("core",core);
+        list.put("search",searchList);
+        list.put("tablebtn",tableBtnList);
+        list.put("rowbtn",rowBtnList);
+        list.put("col",headList);
+        ListDao.getInstance().updateList(list);
+    }
+    private Map<String,Object> extractedRow2(String url, String name,String openType,String CC) throws Exception {
+        Map<String,Object> map=new HashMap<>();
+        map.put(JsoupUtil.URL,url);
+        map.put(JsoupUtil.OPENTYPE,openType);
+        map.put(JsoupUtil.LABEL,name);
+        map.put(JsoupUtil.ITEM_NAME,name);
+        map.put(JsoupUtil.WINDOW_NAME,name);
+         map.put(JsoupUtil.TYPE,"button-single");
+        map.put(JsoupUtil.CLASS,CC);
+        return map;
+    }
+    private  Map<String, Object>  extracted2(String url, String name,String openType,String plugin) throws Exception {
+
+        Map<String,Object> map=new HashMap<>();
+        map.put(JsoupUtil.URL,url);
+        map.put(JsoupUtil.OPENTYPE,openType);
+        map.put(JsoupUtil.LABEL,name);
+        map.put(JsoupUtil.ITEM_NAME,name);
+        map.put(JsoupUtil.WINDOW_NAME,name);
+         map.put(JsoupUtil.TYPE,"button-table");
+         return map;
+    }
     private void extracted(String url,String listId,String name,String openType,String plugin) throws Exception {
 
         List<Map<String, String>> tableBtnList=new ArrayList<>();
@@ -296,15 +485,89 @@ public class ListEditController extends BaseController {
         tableBtnList.add(map);
         JsoupConfigHolder.updateRowButtonByListId(listId,name,map);
      }
+    public Map<String, Object> pureAddForm2(String formId,String table, List<String> fieldNameList,List<String> fieldLabelList) throws  Exception {
+        Map<String, Object> result=new HashMap<>();
+
+        Map<String, String> form=new HashMap<>();
+        result.put("core",form);
+        form.put(JsoupUtil.DATASOURCE, "dataSource");
+        form.put("formcode", formId);
+        form.put(JsoupUtil.FORM_NAME.toLowerCase(), formId);
+        StringBuilder sql=new StringBuilder("select ");
+        String idName="ID";
+        for (int i = 0; i < fieldNameList.size(); i++) {
+            if(fieldLabelList.get(i).equals("ID")){
+                idName=fieldNameList.get(i);
+                continue;
+            }
+            sql.append(fieldNameList.get(i));
+            if(i<fieldNameList.size()-1){
+                sql.append(",");
+            }
+        }
+        sql.append(" from "+table +" where  "+idName+"=${ID}  " );
+
+        StringBuilder sqlExpress=new StringBuilder(" ");
+
+        sqlExpress.append("StringBuilder sql=new StringBuilder();");
+        sqlExpress.append("\nsql.append(\""+sql.toString()+"\");");
+        sqlExpress.append("\nreturn select(sql).get(0);");
+
+
+        form.put("initcode", sqlExpress.toString());
+
+        StringBuilder insertFields=new StringBuilder();
+        StringBuilder insertValues=new StringBuilder();
+        StringBuilder updateValues=new StringBuilder();
+        for (int i = 0; i < fieldNameList.size(); i++) {
+            String name=fieldNameList.get(i).toUpperCase();
+            if(fieldLabelList.get(i).equals("ID")||ignorField(name)  ){
+                continue;
+            }
+            insertFields.append(",\t\t"+fieldNameList.get(i)+"\n");
+            insertValues.append(",\t\t"+"#{"+name+"}"+"\n") ;
+            updateValues.append(",\t\t"+name+ " = #{" +name+"}"+"\n" );
+        }
+
+        String submitEx=generateFormExpress(table,idName,fieldNameList );
+        form.put("subcode", submitEx);
+        form.put("delcode", "\nupdate(\"UPDATE "+table+" set delete_flag=1 where "+idName+"=${ID}\");");
+
+        form.put("successurl","reload");
+        //JsoupConfigHolder.updateFormCoreByFormId(formId,form);
+        List<Map<String,Object>> cardsList=new ArrayList<>();
+        Map<String,Object> card=new HashMap<>();cardsList.add(card);
+        List<Map<String,Object>> items=new ArrayList<>();
+        card.put("items",items);
+
+        for (int i = 0; i < fieldNameList.size(); i++) {
+            Map<String,Object> item=new HashMap<>();
+            String name=fieldNameList.get(i).toUpperCase();
+
+            item.put(JsoupUtil.LABEL, fieldLabelList.get(i));
+            item.put(JsoupUtil.ITEM_NAME, name);
+            item.put(JsoupUtil.NAME, name);
+            if(fieldLabelList.get(i).equals("ID")||ignorField(name)  ){
+                continue;
+            }
+            if(fieldLabelList.get(i).endsWith("时间")){
+                item.put(JsoupUtil.PLUGIN, "input-date");
+            }else{
+                item.put(JsoupUtil.PLUGIN, "input-text");
+            }
+            items.add(item);
+        }
+        result.put("cards",cardsList);
+        return result;
+    }
 
     public void pureAddForm(String formId,String table, List<String> fieldNameList,List<String> fieldLabelList) throws  Exception {
 
 
             Map<String, String> form=new HashMap<>();
-            form.put("datasource", "dataSource");
-            form.put("form_name", formId);
-            form.put("FORM_NAME", formId);
-             StringBuilder sql=new StringBuilder("select ");
+            form.put(JsoupUtil.DATASOURCE, "dataSource");
+            form.put(JsoupUtil.FORM_NAME, formId);
+            StringBuilder sql=new StringBuilder("select ");
             String idName="ID";
             for (int i = 0; i < fieldNameList.size(); i++) {
                 if(fieldLabelList.get(i).equals("ID")){
@@ -354,7 +617,7 @@ public class ListEditController extends BaseController {
             for (int i = 0; i < fieldNameList.size(); i++) {
                 Map<String,String> item=new HashMap<>();
                 String name=fieldNameList.get(i).toUpperCase();
-                item.put("item_label", fieldLabelList.get(i));
+
                 item.put(JsoupUtil.LABEL, fieldLabelList.get(i));
                 item.put(JsoupUtil.ITEM_NAME, name);
                 item.put(JsoupUtil.NAME, name);
@@ -362,9 +625,9 @@ public class ListEditController extends BaseController {
                     continue;
                 }
                 if(fieldLabelList.get(i).endsWith("时间")){
-                    item.put("plugin_code", "input-date");
+                    item.put(JsoupUtil.PLUGIN, "input-date");
                 }else{
-                    item.put("plugin_code", "input-text");
+                    item.put(JsoupUtil.PLUGIN, "input-text");
                 }
                 JsoupConfigHolder.updateFormItemByFormIdAndName(formId,name,item);
             }

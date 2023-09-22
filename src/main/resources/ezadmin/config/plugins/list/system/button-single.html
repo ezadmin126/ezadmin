@@ -8,12 +8,13 @@
 <table>
     <tr id="content">
         <td class=' rowButtons  fixedCol '>
-            <div class="layui-btn-container    ">
+            <div class="layui-btn-container    " >
                 <button th:each="item:${rowButtonItemList}" th:style="${item.style}" th:text="${item.label}"
                         th:if="${not #lists.isEmpty(rowButtonItemList) }"
                         th:url="${item.url}" th:item_name="${item.item_name}" th:name="${item.item_name}"
                         th:opentype="${item.opentype}"
                         th:windowname="${item.windowname}" th:area="${item.area}" th:item_id="${item.item_id}"
+                        th:data-id="${item.rowdataid}"
                         th:if="${item.display}"
                         type="button" editor="button_row"
                         th:classappend="${#strings.equals('script',item.opentype)?item.class:'ezopenbutton '+item.class }"

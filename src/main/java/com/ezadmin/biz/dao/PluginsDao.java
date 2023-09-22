@@ -79,9 +79,11 @@ public class PluginsDao {
 
         }
         p.put("PLUGIN_NAME", doc.title());
+        p.put("V", doc.title());
         p.put("ICON", Utils.trimEmptyDefault(doc.body().attr("icon"),"layui-icon-app") );
         p.put("PLUGIN_TYPE", type);
         p.put("PLUGIN_CODE", id);
+        p.put("K", id);
         return p;
     }
 

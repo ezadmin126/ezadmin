@@ -85,15 +85,17 @@ public class StandardSqlParser {
                     }
                 }
             }
-
+            //默认value,如果有传参，就是参数，如果参数有jdbctype，就做一层转换
             if(!variables.containsKey(key)){
                 model.addParam(p);
                 return startFixStr+content+endFixStr;
             }
-
-            p.setParamValue(Utils.trimNull(variables.get(key)));
-
-            if(keyAndType.length==2){
+            String realv=Utils.trimNull(variables.get(key));
+            if(StringUtils.isNotBlank(realv)){
+                p.setParamValue(Utils.trimNull(variables.get(key)));
+            }
+            String realjv=Utils.trimNull(transJavaType(variables.get(key),p.getJdbcType()));
+            if(keyAndType.length==2&&StringUtils.isNotBlank(realjv)){
                 p.setParamValue(transJavaType(variables.get(key),p.getJdbcType()));
             }
             model.addParam(p);

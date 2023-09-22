@@ -329,62 +329,6 @@ $(document).ready(function () {
             renderDateParent($(layero).find('.ez-daterange-parent'));
         }
     }
-
-
-    $("body").on("dblclick", ".ez-view-group-parent", function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        $(this).find(".ez-view-group").each(function () {
-            if ($(this).is(":hidden")) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        })
-        if (table) {
-            table.draw();
-        }
-    })
-
-    $("body").on("click", ".saverow", function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        let text = $(this).parents("td").find(".td-text");
-        let edit = $(this).parents("td").find(".td-edit");
-        var _name = $(this).parents("td").attr("item_name");
-
-        var editFormItem = $(edit).find("[name=" + _name + "]");
-
-        let url = $(this).attr("editExpress");
-        let data = {};
-        data.ID = $(this).parents("tr").find("input[name='row_data_hidden_ID']").val();
-        data[_name] = editFormItem.val();
-        layer.confirm('确认保存?', {icon: 3, title: '提示'}, function (index) {
-            $.post(url, data, function (re) {
-                var to_show_value = editFormItem.val();
-                if (editFormItem.is("select")) {
-                    to_show_value = editFormItem.find("option:selected").text();
-                }
-                if (re.success) {
-                    if (text.is(":hidden")) {
-                        text.html(to_show_value);
-                        text.show();
-                    } else {
-                        text.hide();
-                    }
-                    if (edit.is(":hidden")) {
-                        edit.show();
-                    } else {
-                        edit.hide();
-                    }
-                } else {
-                    layer.alert("error");
-                }
-            })
-            layer.close(index);
-        });
-
-    })
 });
 
 
@@ -398,7 +342,8 @@ function calculateSearchItemDisplay() {
     //搜索项的排序
     if (search.length > 0) {
         for (var i = search.length; i > 0; i--) {
-            var item = $(".searchcontent").find('[ez-name="' + search[i - 1] + '"]').detach();
+            var name=search[i-1];
+            var item = $(".searchcontent").find('.selector[item_name="' + search[i - 1] + '"]').detach();
             if (!item.hasClass("list-item-hidden")) {
                 item.show();
                 $(".searchcontent").prepend(item);
@@ -409,9 +354,9 @@ function calculateSearchItemDisplay() {
     }
 
     if ($("#_SEARCH_ITEM_DISPLAY").val() == 1) {
-        $(".searchcontent > .list-item").not(".list-item-hidden").each(function () {
+        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
             if (search.length > 0) {
-                if (search.includes($(this).attr("ez-name"))) {
+                if (search.includes($(this).attr("item_name"))) {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -421,9 +366,9 @@ function calculateSearchItemDisplay() {
             }
         })
     } else {
-        $(".searchcontent > .list-item").not(".list-item-hidden").each(function () {
+        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
             if (search.length > 0) {
-                if (count < 8 && search.includes($(this).attr("ez-name"))) {
+                if (count < 8 && search.includes($(this).attr("item_name"))) {
                     count++;
                     $(this).show();
                 } else {
@@ -643,6 +588,25 @@ function renderTable() {
             // 有些时候，你可能需要根据当前排序的字段，重新向后端发送请求，从而实现服务端排序，如：
 
         });
+
+        laytable.on('row(mytable)', function(obj){
+            var data = obj.data; // 获取当前行数据
+            var input=obj.tr.eq(0).find("[name=list-body-checkbox]");
+            if(input!=undefined){
+                input.prop("checked",!input.prop("checked"));
+                console.log(obj.index+'---'+input.attr('type'))
+                // 标注当前点击行的选中状态
+                obj.setRowChecked({
+                    type: input.attr('type') // radio 单选模式；checkbox 复选模式
+                });
+            }else{
+                obj.setRowChecked({
+                    type: 'radio'// radio 单选模式；checkbox 复选模式
+                });
+            }
+            layui.form.render()
+        });
+
         if($("#coldata").val()!=undefined){
             var json=JSON.parse($("#coldata").val());
             var col=[];

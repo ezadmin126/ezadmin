@@ -80,6 +80,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
     @Override
     public void fillFormById(Map<String, Object> form, Map<String, Object> request, Map<String, String> session) throws Exception {
         DataSource dataSource=null;
+        if(form==null){
+            return;
+        }
         Object core=form.get("core");
         if(core!=null){
             dataSource= EzBootstrap.instance().getDataSourceByKey(((Map<String, Object>)form.get("core")).get(JsoupUtil.DATASOURCE));

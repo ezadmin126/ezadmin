@@ -7,7 +7,7 @@
 <body id="xmselect" alias="xm-select" type="search" icon="layui-icon-more">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md3" type="xmselect">
+    <div class="layui-col-space10 selector layui-col-md3" type="xmselect" ez-type="xmselect">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">多选下拉框</label>
             <div class="layui-input-block">
@@ -17,10 +17,28 @@
     </div>
 </div>
 <div id="content">
-<div class=" layui-col-md3 list-item  selector" type="xmselect"
+<div class="   list-item  selector" type="xmselect" ez-type="xmselect"
+     th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
      th:style="${model.style}"
      th:ITEM_NAME="${model.item_name}"
      th:ez-name="${model.item_name}"
+     th:ez-label="${model.label}"
+     th:ez-item_name="${model.item_name}"
+     th:ez-placeholder="${model.placeholder}"
+     th:ez-alias="${model.alias}"
+     th:ez-col="${model.col}"
+     th:ez-url="${model.url}"
+
+     th:ez-data="${model.data}"
+     th:ez-datatype="${model.datatype}"
+     th:ez-item_desc="${model.item_desc}"
+     th:ez-top_desc="${model.top_desc}"
+     th:ez-jdbctype="${model.jdbctype}"
+     th:ez-lay_verify="${#strings.isEmpty(model.lay_verify)?'':model.lay_verify}"
+     th:ez-valid_rule="${model.valid_rule}"
+     th:ez-valid_msg="${model.valid_msg}"
+     th:ez-style="${model.style}"
+
      th:classappend="${(model.plugin=='hidden'||model.plugin=='input-hidden')?'list-item-hidden':''}"
 >
     <div  class="layui-form-item" >
