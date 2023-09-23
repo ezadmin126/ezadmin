@@ -592,8 +592,8 @@ function renderTable() {
         laytable.on('row(mytable)', function(obj){
             var data = obj.data; // 获取当前行数据
             var input=obj.tr.eq(0).find("[name=list-body-checkbox]");
-            if(input!=undefined){
-                input.prop("checked",!input.prop("checked"));
+            if(input!=undefined&&input.length>0){
+                input.prop("checked",!obj.tr.eq(0).hasClass("layui-table-checked"));
                 console.log(obj.index+'---'+input.attr('type'))
                 // 标注当前点击行的选中状态
                 obj.setRowChecked({
