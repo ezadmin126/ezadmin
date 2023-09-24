@@ -17,13 +17,14 @@
     cursor: pointer
 }
 
-/*.layui-card-body {*/
-/*    padding: 0;*/
-/*}*/
+/* 间距太大了*/
+.layui-card-body {
+    padding: 0;
+}
 
-/*.layui-form-item {*/
-/*    margin-bottom: 0;*/
-/*}*/
+.searchWrap,.searchWrap .layui-form-item{
+    margin-bottom: 0;
+}
 
 .layui-tab-content {
     padding: 5px 0;

@@ -16,7 +16,7 @@
                         th:windowname="${item.windowname}" th:area="${item.area}" th:item_id="${item.item_id}"
                         th:data-id="${item.rowdataid}"
                         th:if="${item.display}"
-                        type="button" editor="button_row"
+                        ez-type="button-single" editor="button_row"
                         th:classappend="${#strings.equals('script',item.opentype)?item.class:'ezopenbutton '+item.class }"
                         class=" rowbutton    layui-btn layui-btn-sm layui-btn-primary ">
                 </button>

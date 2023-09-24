@@ -1,19 +1,15 @@
 package com.ezadmin.plugins.express;
 
 
-import com.ezadmin.biz.emmber.list.EzListDTO;
-import com.ezadmin.biz.model.EzSearchModel;
-import com.ezadmin.common.utils.Page;
+ import com.ezadmin.common.utils.Page;
 
-import javax.sql.DataSource;
+ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class OperatorParam {
-
-    private EzSearchModel model;
      DataSource ds;
    private Map<String, Object> listDto;
 

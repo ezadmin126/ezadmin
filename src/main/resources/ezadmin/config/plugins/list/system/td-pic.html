@@ -6,13 +6,13 @@
 </head>
 <body id="td-pic" type="td" icon="layui-icon-picture">
 <div id="template" >
-    <li class="layui-nav-item selector" type="colcore" ez-type="td-image"> 100高度响应式图片 </li>
+    <li class="layui-nav-item selector" config-form-type="colcore" ez-type="td-image"> 100高度响应式图片 </li>
 </div>
 <table>
     <tr id="content">
 
         <td th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}" th:ITEM_ID="${item_name}"
-
+            ez-type="td-image"
             th:class="${'   ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
             <div style=" display: flex;align-items: center;"><img
                     style=" max-height:110px;max-width:110px;margin-top:-6px" class="viewer-image"

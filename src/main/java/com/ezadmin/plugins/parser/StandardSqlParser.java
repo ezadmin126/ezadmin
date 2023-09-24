@@ -4,17 +4,15 @@ import com.ezadmin.plugins.parser.parse.GenericTokenParser;
 import com.ezadmin.plugins.parser.parse.Params;
 import com.ezadmin.plugins.parser.parse.ResultModel;
 import com.ezadmin.plugins.parser.parse.TokenHandler;
-import com.ezadmin.biz.dao.ClobParam;
+import com.ezadmin.dao.ClobParam;
 import com.ezadmin.common.enums.JdbcTypeEnum;
 import com.ezadmin.common.utils.NumberUtils;
 import com.ezadmin.common.utils.Utils;
 import com.ezadmin.common.utils.StringUtils;
 
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * jdbcType=NUMBER 默认为0  如果没有参数，则原样返回

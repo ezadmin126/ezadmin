@@ -1,10 +1,8 @@
 package com.ezadmin.plugins.express;
 
-import com.ezadmin.biz.dao.Dao;
-import com.ezadmin.biz.model.EzSearchModel;
-import com.ezadmin.common.utils.Page;
+import com.ezadmin.dao.Dao;
+ import com.ezadmin.common.utils.Page;
 import com.ezadmin.common.utils.SqlUtils;
-import com.ezadmin.common.utils.StringUtils;
 import com.ezadmin.common.utils.Utils;
 import com.ezadmin.plugins.parser.CommentsSqlParser;
 import com.ezadmin.plugins.parser.parse.ResultModel;
@@ -76,7 +74,7 @@ public class UnionOperator extends AbstractOperator {
         if(Utils.isNotEmpty(searchList)){
             for (int i = 0; i < searchList.size(); i++) {
                 Map<String,Object> search=searchList.get(i);
-                where.append(EzSearchModel.sql(search,operatorParam.getRequestParams()));
+                where.append(SqlUtils.searchToSql(search,operatorParam.getRequestParams()));
             }
         }
 

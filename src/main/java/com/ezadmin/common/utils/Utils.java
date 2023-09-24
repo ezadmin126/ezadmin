@@ -374,6 +374,11 @@ public class Utils {
             source.put(key,value);
         }
     }
+    public static void putIfAbsentExclude0(Map<String, Object> source,String key,Object value){
+        if(!source.containsKey(key)||NumberUtils.toInt(Utils.trimNull(source.get(key)))==0){
+            source.put(key,value);
+        }
+    }
 
 
 }

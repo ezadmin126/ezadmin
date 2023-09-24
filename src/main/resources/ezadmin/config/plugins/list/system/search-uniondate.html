@@ -7,7 +7,7 @@
 <body id="uniondate" alias="search-date" type="search" icon="layui-icon-more">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md3" ez-type="uniondate" type="uniondate">
+    <div class="layui-col-space10 selector layui-col-md3" ez-type="uniondate" config-form-type="searchcore">
         <div class="layui-form-item ">
             <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px">
 
@@ -44,7 +44,7 @@
 
 </div>
 <div id="content">
-    <div class="  list-item selector" type="uniondate" ez-type="uniondate"
+    <div class="  list-item selector" config-form-type="searchcore" ez-type="uniondate"
          th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
      th:style="${model.style}"
      th:ITEM_NAME="${model.item_name}"

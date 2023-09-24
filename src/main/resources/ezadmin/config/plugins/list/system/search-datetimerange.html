@@ -8,7 +8,7 @@
 
 
 <div id="template" >
-    <div class="layui-col-md3   selector" type="datetimerange" ez-type="datetimerange" ez-label="日期时间区间"
+    <div class="layui-col-md3   selector" config-form-type="searchcore" ez-type="datetimerange" ez-label="日期时间区间"
          th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">日期时间区间</label>
@@ -42,7 +42,7 @@
 </div>
 
 <div id="content">
-     <div class="selector layui-col-space10  list-item " type="datetimerange" th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
+     <div class="selector layui-col-space10  list-item " config-form-type="searchcore" th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
           ez-type="datetimerange"
              th:style="${model.style}"
              th:ITEM_NAME="${model.item_name}"

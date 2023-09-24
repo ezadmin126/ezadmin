@@ -10,8 +10,8 @@
         <td th:edit_flag="${editFlag}"
 
             th:ITEM_NAME="${item_name}" th:title="${dataInDb}" th:ITEM_ID="${item_name}"
-            th:class="${ ' tooltips  ezadmin-td ezadmin-td-'+item_name}"
-            th:classappend="${editFlag==1?'ez-view-group-parent':''}"
+            th:class="${ '    ezadmin-td ezadmin-td-'+item_name}"
+
             th:style="${style+(#strings.equals(jdbctype,'NUMBER')?';text-align:right':'')}"
 
 

@@ -3,7 +3,7 @@ package com.ezadmin.common.utils;
 import com.ezadmin.plugins.parser.MapParser;
 import com.ezadmin.plugins.parser.parse.ResultModel;
 import com.ezadmin.common.enums.JdbcTypeEnum;
-import com.ezadmin.biz.dao.ClobParam;
+import com.ezadmin.dao.ClobParam;
 import org.apache.commons.lang.BooleanUtils;
 
 import java.io.InputStream;

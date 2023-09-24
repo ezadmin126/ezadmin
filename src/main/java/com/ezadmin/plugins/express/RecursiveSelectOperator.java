@@ -1,6 +1,6 @@
 package com.ezadmin.plugins.express;
 
-import com.ezadmin.biz.dao.Dao;
+import com.ezadmin.dao.Dao;
 import com.ezadmin.common.utils.StringUtils;
 import com.ezadmin.common.utils.Utils;
 import com.ezadmin.plugins.parser.CommentsSqlParser;

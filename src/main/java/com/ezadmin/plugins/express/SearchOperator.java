@@ -1,14 +1,10 @@
 package com.ezadmin.plugins.express;
 
-import com.ezadmin.biz.dao.Dao;
-import com.ezadmin.biz.model.EzSearchModel;
-import com.ezadmin.common.EzAdminRuntimeException;
-import com.ezadmin.common.utils.*;
+import com.ezadmin.dao.Dao;
+ import com.ezadmin.common.utils.*;
 import com.ezadmin.plugins.parser.CommentsSqlParser;
 import com.ezadmin.plugins.parser.parse.ResultModel;
 import com.ezadmin.plugins.sqlog.format.FormatStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -35,7 +31,7 @@ public class SearchOperator extends AbstractOperator {
              if(Utils.isNotEmpty(searchList)){
                 for (int i = 0; i < searchList.size(); i++) {
                     Map<String,Object> search=searchList.get(i);
-                    where.append(EzSearchModel.sql(search,operatorParam.getRequestParams()));
+                    where.append(SqlUtils.searchToSql(search,operatorParam.getRequestParams()));
                 }
             }
 

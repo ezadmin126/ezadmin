@@ -155,7 +155,7 @@
                                         <i class="layui-icon  " th:classappend="${item.ICON}"></i>
                                         <span th:text="${item.PLUGIN_NAME}">搜索</span>
                                         <div style="display: none" class="template" th:utext="${item.TEMPLATE}">
-                                            <div class="layui-col-md3 selector" type="input-text" ez-col="3"  >
+                                            <div class="layui-col-md3 selector" config-form-type="input-text" ez-col="3"  >
                                                 <div class="layui-form-item ">
                                                     <label class="layui-form-label  "  >搜索</label>
                                                     <div class="layui-input-block">
@@ -177,7 +177,7 @@
                                         <i class="layui-icon  " th:classappend="${item.ICON}"></i>
                                         <span th:text="${item.PLUGIN_NAME}">单行输入框</span>
                                         <div style="display: none" class="template" th:utext="${item.TEMPLATE}">
-                                            <div class="layui-col-md12 selector" type="input-text" ez-col="12"  >
+                                            <div class="layui-col-md12 selector" config-form-type="input-text" ez-col="12"  >
                                                 <div class="layui-form-item ">
                                                     <label class="layui-form-label  "  >单行输入框</label>
                                                     <div class="layui-input-block">
@@ -198,7 +198,7 @@
                                         <span>表头按钮</span>
                                     </a>
                                     <div style="display: none" class="template">
-                                        <div class="selector layui-col-md2  " type="buttoncore" ez-type="button-table"  >
+                                        <div class="selector layui-col-md2  " config-form-type="buttoncore" ez-type="button-table"  >
                                             <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头按钮</button>
                                         </div>
                                     </div>
@@ -209,7 +209,7 @@
                                         <span>表头单选确认</span>
                                     </a>
                                     <div style="display: none" class="template">
-                                        <div class="selector layui-col-md2  " type="buttoncore" ez-type="button-tableselectradio"  >
+                                        <div class="selector layui-col-md2  " config-form-type="buttoncore" ez-type="button-tableselectradio"  >
                                             <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头单选确认</button>
                                         </div>
                                     </div>
@@ -220,7 +220,7 @@
                                         <span>表头多选确认</span>
                                     </a>
                                     <div style="display: none" class="template">
-                                        <div class="selector layui-col-md2  " type="buttoncore" ez-type="button-tableselectcheckbox"  >
+                                        <div class="selector layui-col-md2  " config-form-type="buttoncore" ez-type="button-tableselectcheckbox"  >
                                             <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头多选确认</button>
                                         </div>
                                     </div>
@@ -231,7 +231,7 @@
                                         <span>平铺行按钮</span>
                                     </a>
                                     <div style="display: none" class="template">
-                                        <div class="selector layui-col-md2  " type="buttoncore" ez-type="button-single"   >
+                                        <div class="selector layui-col-md12  " config-form-type="buttoncore" ez-type="button-single"   >
                                             <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">平铺行按钮</button>
                                         </div>
                                     </div>
@@ -242,7 +242,7 @@
                                         <span>标签</span>
                                     </a>
                                     <div style="display: none" class="template">
-                                          <li class="selector " type="tab" ez-label="标签notitle" style="height:49px">
+                                          <li class="selector " config-form-type="tabcore" ez-label="标签notitle" style="height:49px">
                                              <a class="tablink"> 标签notitle</a>
                                           </li>
                                     </div>
@@ -299,7 +299,7 @@
                     </div>
                     <div class="layui-row  layui-col-md12  "  >
                         <div class="layui-tab layui-tab-brief">
-                            <ul class="layui-tab-title dragula-container   systemfloat" type="tabcore" style="height:50px;border: 1px dashed #d1d1d1;">
+                            <ul class="layui-tab-title dragula-container   systemfloat" id="tabCoreContainer"   style="height:50px;border: 1px dashed #d1d1d1;">
                                 <li class="tip" th:if="${#lists.isEmpty(data.tab)}">标签区</li>
                                 <li class="selector " th:if="${not #lists.isEmpty(data.tab)}"
                                     th:item_name="${item.item_name}"
@@ -308,7 +308,7 @@
                                     th:ez-label="${item.label}"
                                     th:ez-select="${item.select}"
                                     th:ez-url="${item.url}"
-                                    type="tab"
+                                    config-form-type="tabcore"
                                     th:classappend="${item.select?'layui-this  ':' '}"
                                     th:each="item:${data.tab}">
                                     <a th:ez-item_name="${item.item_name}" th:ez-href="${item.url}"
@@ -319,7 +319,7 @@
                         </div>
                     </div>
                     <blockquote class="layui-elem-quote selector layui-col-md12 systemfloat"   ez-col="12" id="listCoreContainer"
-                                th:ez-datasource="${data.core.datasource}" type="listcore" th:ez-listcode="${data.core.listcode}"
+                                th:ez-datasource="${data.core.datasource}" config-form-type="listcore" th:ez-listcode="${data.core.listcode}"
                                 th:ez-listname="${data.core.listname}" th:ez-fixnumber="${data.core.fixnumber}"
                                 th:ez-fixnumberright="${data.core.fixnumberright}"
                                 th:ez-empty_show="${data.core.empty_show}"
@@ -331,7 +331,8 @@
                         <pre style="display: none" id="orderby_express" th:utext="${data.core.orderby_express}"></pre>
                         <pre style="display: none" id="groupby_express" th:utext="${data.core.groupby_express}"></pre>
                     </blockquote>
-                    <div class=" layui-row dragula-container layui-col-space15  layui-card layui-col-md12   systemfloat"  style=";border: 1px dashed #d1d1d1;" type="searchcore" >
+                    <div class=" layui-row dragula-container layui-col-space15  layui-card layui-col-md12   systemfloat"  style=";border: 1px dashed #d1d1d1;" config-form-type="searchcore"
+                         id="searchCoreContainer" >
                         <div class="tip" th:if="${  #lists.isEmpty(data.search)}">搜索区</div>
                         <div    th:remove="tag" th:if="${not #lists.isEmpty(data.search)}"
                              th:each="item,indexStat:${data.search}" th:utext="${item.html}"
@@ -356,9 +357,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-row dragula-container layui-col-md12   systemfloat" style=";border: 1px dashed #d1d1d1;min-height: 50px"  type="tablebtn">
+                    <div class="layui-row dragula-container layui-col-md12   systemfloat"
+                         id="tableBtnContainer" style=";border: 1px dashed #d1d1d1;min-height: 50px"  >
                         <div class="tip" th:if="${  #lists.isEmpty(data.tablebtn)}">表头按钮区</div>
-                        <div class="selector layui-col-md2 " th:if="${not #lists.isEmpty(data.tablebtn)}" type="buttoncore"
+                        <div class="selector layui-col-md2 " th:if="${not #lists.isEmpty(data.tablebtn)}" config-form-type="buttoncore"
                              th:ez-url="${item.url}"
                              th:ez-type="${item.type}"
                              th:ez-windowname="${item.windowname}"
@@ -374,7 +376,7 @@
                             <div class="layui-row dragula-container layui-col-md1 selector systemfloat" type="treecore" style="min-height: 500px">
                                 <div  class="tip">树形菜单区</div>
                             </div>
-                            <div th:t="${data.core.firstcol!='radio'}" class="layui-row dragula-container   layui-col-md1   systemfloat" type="firstcol" style="min-height: 500px;border: 1px dashed #d1d1d1;">
+                            <div th:t="${data.core.firstcol!='radio'}" class="layui-row dragula-container   layui-col-md1   systemfloat" id="firstcolContainer"   style="min-height: 500px;border: 1px dashed #d1d1d1;">
                                  <div class="tip"   >首列区</div>
                                 <div class="selector" th:if="${ data.core.firstcol=='numbers'}">
                                     <span type="number" >首列数字</span>
@@ -386,7 +388,7 @@
                             <div class=" layui-row    layui-col-md8   "  >
                                 <div class="layui-nav layui-bg-gray dragula-container   systemfloat"  lay-filter="demo-filter-nav" id="centerContainer"    style="min-height: 500px;border: 1px dashed #d1d1d1;">
                                     <div  class="tip" th:if="${  #lists.isEmpty(data.col)}">列表字段区</div>
-                                    <div style="min-height: 42px" class=" layui-col-xs2 ez-plugin selector" type="colcore" th:if="${not #lists.isEmpty(data.col) and item.item_name!='firstCol'}"
+                                    <div style="min-height: 42px" class=" layui-col-xs2 ez-plugin selector" config-form-type="colcore" th:if="${not #lists.isEmpty(data.col) and item.item_name!='firstCol'}"
                                           th:ez-body="${item.body}"
                                           th:ez-head="${item.head}"
                                           th:ez-label="${item.label}"
@@ -406,10 +408,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class=" layui-row dragula-container   layui-col-md2   systemfloat" type="rowbtn" style="min-height: 500px;border: 1px dashed #d1d1d1;">
+                            <div class=" layui-row dragula-container   layui-col-md2   systemfloat" id="rowbtnContainer" style="min-height: 500px;border: 1px dashed #d1d1d1;">
                                 <div  class="tip" th:if="${ #lists.isEmpty(data.rowbtn)}">行按钮区</div>
                                 <div class="layui-col-xs12 selector " th:if="${not #lists.isEmpty(data.rowbtn)}"
-                                     th:each="item:${data.rowbtn}" type="buttoncore"
+                                     th:each="item:${data.rowbtn}" config-form-type="buttoncore"
                                      th:ez-url="${item.url}"
                                      th:ez-windowname="${item.windowname}"
                                      th:ez-opentype="${item.opentype}"
@@ -417,6 +419,7 @@
                                      th:ez-display="${item.display}"
                                      th:ez-area="${item.area}"
                                      th:ez-label="${item.label}"
+                                     th:ez-type="${item.type}"
                                 >
                                     <button class="layui-btn layui-btn-sm layui-btn-primary"   th:utext="${item.label}">
                                     </button>
@@ -546,7 +549,12 @@
                             <div class="layui-input-block">
                                 <input type="text" name="display" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
-                                    ${USER_NAME}=='henry'?'true':'false'
+                                    ${USER_NAME} 取SQL行参数。
+                                    1.数字1
+                                    2.true不分大小写
+                                    3.yes不缺分大小写
+
+
                                 </small>
                             </div>
                         </div>
@@ -767,30 +775,6 @@
                                 <textarea name="append_foot" class="layui-textarea" autocomplete="false"></textarea>
                                 <small   class="layui-form-mid layui-text-em">
                                     放在尾部的一段html代码
-                                </small>
-                            </div>
-                        </div>
-
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">固定左</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="fixnumber" autocomplete="false" class="layui-input">
-
-                                <small   class="layui-form-mid layui-text-em" style="top:19px">
-                                    <i class="ez-help layui-icon-tips layui-icon"
-                                       src="/webjars/ezadmin/doc/list/listcore.html#fixnumber"></i>
-                                </small>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">固定右</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="fixnumberright" autocomplete="false" class="layui-input">
-
-                                <small   class="layui-form-mid layui-text-em" style="top:19px">
-                                    <i class="ez-help layui-icon-tips layui-icon"
-                                       src="/webjars/ezadmin/doc/list/listcore.html#fixnumberright"></i>
                                 </small>
                             </div>
                         </div>

@@ -8,7 +8,7 @@
       icon="layui-icon-share">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md3" ez-type="select" type="select">
+    <div class="layui-col-space10 selector layui-col-md3" ez-type="select" config-form-type="select">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">原生下拉框</label>
             <div class="layui-input-block">
@@ -20,7 +20,7 @@
     </div>
 </div>
 <div id="content">
- <div class="  list-item selector" type="select" ez-type="select" th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
+ <div class="  list-item selector" config-form-type="select" ez-type="select" th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
       th:style="${model.style}"
      th:ITEM_NAME="${model.item_name}"
      th:ez-name="${model.item_name}"

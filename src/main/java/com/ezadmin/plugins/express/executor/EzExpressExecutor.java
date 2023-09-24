@@ -143,11 +143,11 @@ public   class EzExpressExecutor {
     public EzExpressExecutor addRequestParam(Map  request){
         if(operatorParam.getRequestParams()==null){
             operatorParam.setRequestParams(new HashMap<String, Object>());
+            operatorParam.getRequestParams().putAll(operatorParam.getParams());
+            operatorParam.getRequestParams().putAll(operatorParam.getSessionParams());
         }
         if(request!=null&&request.size()>0){
             operatorParam.getRequestParams().putAll(request);
-            operatorParam.getRequestParams().putAll(operatorParam.getParams());
-            operatorParam.getRequestParams().putAll(operatorParam.getSessionParams());
         }
         return this;
     }

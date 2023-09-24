@@ -201,11 +201,15 @@ layui.define(["element", "laytpl", "jquery"], function (exports) {
                     $('.layuimini-tool [data-side-fold]').attr('class', 'layui-icon layui-icon-spread-left');
                     $('.layui-layout-body').removeClass('layuimini-all');
                     $('.layui-layout-body').addClass('layuimini-mini');
+                  //  $(".layui-nav-item").find("cite").hide();
+
                 } else { // 正常
                     $('.layuimini-tool [data-side-fold]').attr('data-side-fold', 1);
                     $('.layuimini-tool [data-side-fold]').attr('class', 'layui-icon-shrink-right layui-icon');
                     $('.layui-layout-body').removeClass('layuimini-mini');
                     $('.layui-layout-body').addClass('layuimini-all');
+                  //  $(".layui-nav-item").find("cite").show();
+
                     layer.close(window.openTips);
                 }
                 element.init();

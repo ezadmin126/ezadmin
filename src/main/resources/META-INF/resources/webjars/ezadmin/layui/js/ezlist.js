@@ -528,9 +528,10 @@ function renderTable() {
 
         //转换静态表格
         laytable = table2.init('mytable', {
-            // height: $(document).height()-$(".searchWrap").height()-150 , //设置高度
+              height: 'full-220' , //设置高度
             escape: false,
             autoSort: false,
+
             cellMinWidth:110,
             className: $("#mytable").attr("class")
             , limit: $("#perPageInt").val() //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致

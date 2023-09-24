@@ -1,17 +1,14 @@
 package com.ezadmin.plugins.express;
 
-import com.ezadmin.biz.dao.Dao;
+import com.ezadmin.dao.Dao;
 import com.ezadmin.common.utils.JSONUtils;
 import com.ezadmin.common.utils.Utils;
-import com.ezadmin.plugins.express.jdbc.InsertParam;
 import com.ezadmin.plugins.express.jdbc.UpdateParam;
 import com.ezadmin.plugins.parser.CommentsSqlParser;
 import com.ezadmin.plugins.parser.StandardSqlParser;
 import com.ezadmin.plugins.parser.parse.ResultModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.SQLException;
 
 public class UpdateSimpleOperator extends AbstractOperator {
 

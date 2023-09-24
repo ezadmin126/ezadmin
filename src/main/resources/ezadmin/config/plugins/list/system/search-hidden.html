@@ -6,7 +6,7 @@
 </head>
 <body id="hidden" alias="input-hidden" type="search" icon="layui-icon-file">
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md3"   type="hidden" ez-type="hidden">
+    <div class="layui-col-space10 selector layui-col-md3"   config-form-type="searchcore" ez-type="hidden">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">隐藏域</label>
             <div class="layui-input-block">
@@ -16,7 +16,7 @@
     </div>
 </div>
 <div id="content">
-    <div ez-type="hidden"  th:ITEM_ID="${model.item_name}" th:ITEM_NAME="${model.item_name}"
+    <div ez-type="hidden" config-form-type="searchcore" th:ITEM_ID="${model.item_name}" th:ITEM_NAME="${model.item_name}"
            th:ez-label="${model.label}"
            th:ez-item_name="${model.item_name}"
            th:ez-placeholder="${model.placeholder}"

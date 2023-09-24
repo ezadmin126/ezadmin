@@ -98,19 +98,19 @@ layui.use(function(){
             return;
         }
         if(type=='buttoncore'){
-            active.find("button").html($(this).val());
+            switch (name){
+                case 'label':
+                    active.find("button").html($(this).val());
+                    break;
+                case 'display':
+                    break;
+                case 'url':
+                    break;
+            }
+            return;
         }
 
-        if(type=='cascader'||type=='cascadersql'
-        ||type=='daterange'
-        ||type=='datetimerange'
-        ||type=='hidden'
-        ||type=='input-text'
-        ||type=='select'
-        ||type=='select-search'
-        ||type=='union'
-        ||type=='uniondate'
-        ||type=='unionor'){
+        if(type=='searchcore'){
             switch (name){
             case 'label':
             active.find('.layui-form-label').text($(this).val());
@@ -144,7 +144,7 @@ layui.use(function(){
 })
 });
 function rowselect(el){
-    let edittype=el.attr("type");
+    let edittype=el.attr("config-form-type");
     let eztype=el.attr("ez-type");
     //样式切换
     $(".active").removeClass("active");
@@ -156,7 +156,7 @@ function rowselect(el){
 
     $(".config-form").hide();//所有配置隐藏
 
-    var currentConfig=typeform(edittype);
+    var currentConfig=$(".config-"+edittype)  ;
     //  $(".config-"+edittype);
 
     //清空当前表单
@@ -225,9 +225,7 @@ function rowselect(el){
         currentConfig.find("[name=append_head]").val($("#append_head").html());
         currentConfig.find("[name=append_foot]").val($("#append_foot").html());
     }
-    // if(eztype=='daterange'||eztype=='datetimerange'){
-    //     currentConfig.find("[name=label]").val($(".active").find("layui-form-label").text());
-    // }
+
     layui.form.render();
     currentConfig.show();
 }
@@ -297,7 +295,7 @@ $(function (){
         layer.confirm('确定保存？', {
             btn: ['确定', '关闭'] //按钮
         }, function(){
-            $.each($("[type=listcore]")[0].attributes,function(i,d){
+            $.each($("#listCoreContainer")[0].attributes,function(i,d){
                 if(d.name.indexOf('ez-')>=0){
                     var cname=d.name.replace('ez-','');
                     try{
@@ -313,7 +311,7 @@ $(function (){
             core.groupby_express=$("#groupby_express").html();
 
 
-            $("[type=tabcore]").find(".selector").each(function(){
+            $("#tabCoreContainer").find(".selector").each(function(){
                 var searchitem={};
                 $.each($(this)[0].attributes,function(i,d){
                     if(d.name.indexOf('ez-')>=0){
@@ -331,7 +329,7 @@ $(function (){
                 }
                 tab.push(searchitem)
             })
-            $("[type=searchcore]").find(".selector").each(function(){
+            $("#searchCoreContainer").find(".selector").each(function(){
                 var searchitem={};
                 $.each($(this)[0].attributes,function(i,d){
                     if(d.name.indexOf('ez-')>=0){
@@ -349,7 +347,7 @@ $(function (){
                 }
                 search.push(searchitem)
             })
-            $("[type=tablebtn]").find(".selector").each(function(){
+            $("#tableBtnContainer").find(".selector").each(function(){
                 var searchitem={};
                 $.each($(this)[0].attributes,function(i,d){
                     if(d.name.indexOf('ez-')>=0){
@@ -366,7 +364,7 @@ $(function (){
                 }
                 tablebtn.push(searchitem)
             })
-            $("[type=rowbtn]").find(".selector").each(function(){
+            $("#rowbtnContainer").find(".selector").each(function(){
                 var searchitem={};
                 $.each($(this)[0].attributes,function(i,d){
                     if(d.name.indexOf('ez-')>=0){
@@ -378,7 +376,7 @@ $(function (){
                         }
                     }
                 })
-                searchitem.type=$(this).attr("type");
+                //searchitem.type=$(this).attr("type");
                 if(searchitem.item_name==''||searchitem.item_name==undefined){
                     searchitem.item_name=Math.random();
                 }
@@ -402,8 +400,8 @@ $(function (){
                 col.push(searchitem)
             })
 
-            if($("[type=firstcol]").children().eq(0).attr("type")!=undefined){
-                core.firstcol=$("[type=firstcol]").children().eq(0).attr("type");
+            if($("#firstcolContainer").children().eq(0).attr("type")!=undefined){
+                core.firstcol=$("#firstcolContainer").children().eq(0).attr("type");
             }
             listData.core=core;
             listData.search=search;
@@ -453,8 +451,8 @@ $(function (){
         anim: 5, // 从左往右
         area: ['17.666667%', '100%'],
         shade: 0,
-        closeBtn:1,maxmin: true,resize:true,
-        title:'插件',
+        closeBtn:0,maxmin: false,resize:false,
+        title:'',
         content:$(".lefttab"),
         success: function(){
         },end: function(){
@@ -466,7 +464,7 @@ $(function (){
         anim: 5, // 从左往右
         area: ['17.666667%', '100%'],
         shade: 0,
-        closeBtn:1,
+        closeBtn:0,
         title:'配置',
         maxmin: true,
         resize:true,

@@ -24,7 +24,7 @@ public class ControllerFilter extends Filter {
     Logger logger = LoggerFactory.getLogger(ControllerFilter.class);
     public static String includeShow="/ezadmin/(list|form|anon)/([A-Za-z]+)-(.*)";
     Map<String, Map<String, Object>> REQUEST_MAPPING = new HashMap<String, Map<String, Object>> ();
-    String pack = "com.ezadmin.biz";
+    String pack = "com.ezadmin.controller";
     public static String vesion=System.currentTimeMillis()+"";
 
     Pattern pInclude = Pattern.compile(includeShow);

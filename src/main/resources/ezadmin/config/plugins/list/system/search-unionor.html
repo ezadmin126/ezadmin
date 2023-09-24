@@ -7,7 +7,7 @@
 <body id="unionor" type="search" icon="layui-icon-more">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md3" type="unionor" ez-type="unionor">
+    <div class="layui-col-space10 selector layui-col-md3" config-form-type="searchcore" ez-type="unionor">
         <div class="layui-form-item ">
             <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px">
 
@@ -22,7 +22,7 @@
 
 </div>
 <div id="content">
-    <div class="  list-item selector" type="unionor" ez-type="unionor"
+    <div class="  list-item selector" config-form-type="searchcore" ez-type="unionor"
          th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
          th:style="${model.style}"
      th:ITEM_NAME="${model.item_name}"

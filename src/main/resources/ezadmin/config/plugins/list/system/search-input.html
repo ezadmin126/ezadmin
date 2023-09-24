@@ -6,7 +6,7 @@
 </head>
 <body id="input-text" alias="19" alias2="input" type="search" icon="layui-icon-file">
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md3"  ez-type="input-text" type="input-text">
+    <div class="layui-col-space10 selector layui-col-md3"  ez-type="input-text" config-form-type="searchcore">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">单行输入框</label>
             <div class="layui-input-block">
@@ -18,7 +18,7 @@
 <div id="content">
 
 <div class="selector   list-item "  th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
-     type="input-text" ez-type="input-text"
+     config-form-type="searchcore" ez-type="input-text"
      th:style="${model.style}"
      th:item_name="${model.item_name}"
      th:ez-label="${model.label}"
