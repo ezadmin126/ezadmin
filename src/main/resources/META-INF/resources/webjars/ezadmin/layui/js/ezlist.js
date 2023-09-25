@@ -528,7 +528,7 @@ function renderTable() {
 
         //转换静态表格
         laytable = table2.init('mytable', {
-              height: 'full-220' , //设置高度
+              height: 'full-230' , //设置高度
             escape: false,
             autoSort: false,
 
