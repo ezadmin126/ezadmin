@@ -324,6 +324,8 @@
                                 th:ez-fixnumberright="${data.core.fixnumberright}"
                                 th:ez-empty_show="${data.core.empty_show}"
                                 th:ez-firstcol="${data.core.firstcol}"
+                                th:ez-export="${data.core.export}"
+
                     >
                         <span id="listname" th:text="${#strings.isEmpty(data.core.listname)?'列表配置区':data.core.listname}">列表配置区</span>
                         <pre style="display: none" id="select_express" th:utext="${data.core.select_express}"></pre>
@@ -404,7 +406,7 @@
                                           th:ez-width="${item.width}"
                                           th:ez-emptyshow="${item.emptyshow}"
 
-                                          th:each="item:${data.col}" th:text="${item.label}">
+                                          th:each="item:${data.col}" ><div th:text="${item.label}"></div>
                                     </div>
                                 </div>
                             </div>
@@ -626,7 +628,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">数据库类型</label>
                             <div class="layui-input-block">
-                                <select  lay-search="" lay-filter="lay_filter_jdbctype"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option> <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option> </select>
+                                <select  lay-search="" lay-filter="lay_filter_all"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option> <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option> </select>
                                 <small   class="layui-form-mid layui-text-em">看这里，这里就是下方提示，支持html
                                     <i class="ez-help layui-icon-tips layui-icon"
                                        src="/webjars/ezadmin/doc/form/formitem.html#jdbctype"></i>
@@ -698,6 +700,15 @@
                                       <i class="ez-help layui-icon-tips layui-icon"
                                                       src="/webjars/ezadmin/doc/list/listcore.html#title"></i>
                                 </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否包含导出</label>
+                            <div class="layui-input-block">
+                                <select placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="export" >
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -990,7 +1001,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">数据源类型</label>
                             <div class="layui-input-block">
-                                <select   name="datatype"   lay-search="" lay-filter="lay_filter_datatype"    > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
+                                <select   name="datatype"   lay-search="" lay-filter="lay_filter_all"    > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
                                 <small   class="layui-form-mid layui-text-em">
                                     <i class="ez-help layui-icon-tips layui-icon"
                                        src="/webjars/ezadmin/doc/form/formitem.html#datatype"></i>
@@ -1335,8 +1346,13 @@
 <input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
 <input type="hidden" id='IS_DEBUG' name='IS_DEBUG' th:value="${IS_DEBUG}">
 <script th:src="${contextName+'/webjars/ezadmin/layui/js/ezlist.js?v='+vi}" type="text/javascript"></script>
-<script th:src="${contextName+'/webjars/ezadmin/js/listedit.js?v='+vi}" type="text/javascript"></script>
-
+<script th:src="${contextName+'/webjars/ezadmin/js/e-main.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/ezadmin/js/e-nav.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/ezadmin/js/e-col.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/ezadmin/js/e-rowbtn.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/ezadmin/js/e-search.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/ezadmin/js/e-tablebtn.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${contextName+'/webjars/ezadmin/js/e-core.js?v='+vi}" type="text/javascript"></script>
 
 </body>
 </html>

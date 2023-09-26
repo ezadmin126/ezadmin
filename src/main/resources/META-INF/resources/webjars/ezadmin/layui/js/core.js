@@ -915,7 +915,7 @@ function ezopen(openType, title, appendUrl, area) {
             // openTab(title,appendUrl)
             break;
         case 'CONFIRM_AJAX':
-            var title = "确认" + $(this).text() + "操作？"
+            var title = title;
             layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
                 $.getJSON(appendUrl, function (result) {
                     if (result.success) {

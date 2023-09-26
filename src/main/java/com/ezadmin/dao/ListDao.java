@@ -29,6 +29,12 @@ public class ListDao extends  JsoupUtil{
     private static String DEFAULT_TD = "td-text";
     private static String DEFAULT_TH = "th";
     private static String DEFAULT_SEARCH = "input-text";
+
+    static String[] BODY_ATTRS=new String[]{"datasource",
+            "fixnumber","fixnumberright",
+            "empty_show","tablestyle",
+            "firstcol","export" 
+    };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
             JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,JsoupUtil.LABEL,
             JsoupUtil.BODY_PLUGIN_CODE, JsoupUtil.ORDER,
@@ -204,60 +210,6 @@ public class ListDao extends  JsoupUtil{
     }
 
 
-
-    public   List<Map<String, String>> selectListByHtmlConfig(String page, String name, String url) {
-        List<Map<String, String>> list = new ArrayList<>();
-//        for (Map.Entry<String, Config> entry:listConfigMap.entrySet()){
-//            Map<String,Object> item=selectAllListById (entry.getKey());
-//            item.put("E_LIST_ID",item.get("ENCRYPT_LIST_ID"));
-//            if (StringUtils.isNotBlank(name) && StringUtils.isBlank(url)) {
-//                if (item.get("core").get("").toLowerCase().indexOf(name.toLowerCase()) >= 0) {
-//                    list.add(item);
-//                }
-//            } else if (StringUtils.isBlank(name) && StringUtils.isNotBlank(url)) {
-//                if (item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0) {
-//                    list.add(item);
-//                }
-//            } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(url)) {
-//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0 && item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0
-//                ) {
-//                    list.add(item);
-//                }
-//            } else {
-//                list.add(item);
-//            }
-//        }
-//        Page page1 = new Page();
-//        page1.setCurrentPage(NumberUtils.toInt(page));
-      //  return list.subList(page1.getStartRecord(), Math.min(list.size(), page1.getEndRecord()));
-        return list;
-    }
-    public   int listSize(String page, String name, String url) {
-        final AtomicInteger i = new AtomicInteger(0);
-//        for (Map.Entry<String, Config> entry:listConfigMap.entrySet()){
-//            String k=entry.getKey();
-//            Map<String,String> item=selectListById(k);
-//            if (StringUtils.isNotBlank(name) && StringUtils.isBlank(url)) {
-//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0) {
-//                    i.getAndIncrement();
-//                }
-//            } else if (StringUtils.isBlank(name) && StringUtils.isNotBlank(url)) {
-//                if (item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0) {
-//                    i.getAndIncrement();
-//                }
-//            } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(url)) {
-//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0 && item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0
-//                ) {
-//                    i.getAndIncrement();
-//                }
-//            } else {
-//                i.getAndIncrement();
-//            }
-//        } ;
-        return i.get();
-    }
-
-
    public  void loadListFile(File file) throws  Exception {
         Config item=new Config();
         Document doc = Jsoup.parse(file, "UTF-8", "");
@@ -315,61 +267,7 @@ public class ListDao extends  JsoupUtil{
 
     public void clear() {
     }
-
-    public void updateOrder(String code,List<String> search, List<String> col, String fixNumber, String fixNumberRight) throws IOException {
-        if(StringUtils.isBlank(code)){
-            return;
-        }
-        Config config=listConfigMap.get(code.toLowerCase());
-
-        Document doc =config.getDoc();
-        Element body = doc.body();
-        attr(body,"fixedNumber", fixNumber);
-        attr(body,"fixedNumberRight", fixNumberRight);
-
-
-        Elements colItems = doc.body().getElementById("column").children();
-        List<Element> collist = new ArrayList<>();
-
-        for (String name : col) {
-            for (int i = 0; i < colItems.size(); i++) {
-                if (name.equalsIgnoreCase(colItems.get(i).attr(JsoupUtil.ITEM_NAME))) {
-                    collist.add(colItems.get(i));
-                }
-            }
-        }
-        String buttons = "";
-        try {
-            buttons = doc.body().getElementById("rowbutton").outerHtml();
-        } catch (Exception e) {
-        }
-
-        doc.body().getElementById("column").children().remove();
-        for (int i = 0; i < collist.size(); i++) {
-            doc.body().getElementById("column").append(collist.get(i).outerHtml());
-        }
-        //button
-        doc.body().getElementById("column").append(buttons);
-
-        //
-
-        Elements searchItems = doc.body().getElementsByClass("list-search-item");
-
-        List<Element> searchList = new ArrayList<>();
-
-        for (String name : search) {
-            for (int i = 0; i < searchItems.size(); i++) {
-                if (name.equalsIgnoreCase(searchItems.get(i).attr(JsoupUtil.ITEM_NAME))) {
-                    searchList.add(searchItems.get(i).parent().parent());
-                }
-            }
-        }
-        doc.body().getElementById("search").html("");
-        for (int i = 0; i < searchList.size(); i++) {
-            doc.body().getElementById("search").append(searchList.get(i).outerHtml());
-        }
-        JsoupUtil.updateConfig(config);
-    }
+ 
     void fillcore(Map<String,Object> coreMap,Config config){
         Document doc=config.getDoc();
         coreMap.put("listname", JsoupUtil.strip(doc.title()));
@@ -379,6 +277,14 @@ public class ListDao extends  JsoupUtil{
         coreMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
 
         coreMap.putAll(JsoupUtil.loadAttrNoChild(doc.body() ));
+
+
+        for (int i = 0; i < BODY_ATTRS.length; i++) {
+            String attrValue=doc.body().attr(BODY_ATTRS[i]);
+            if(StringUtils.isNotBlank(attrValue)){
+                coreMap.put(BODY_ATTRS[i],attrValue);
+            }
+        }
 
         Element express = doc.getElementById("express");
 
@@ -569,7 +475,7 @@ public class ListDao extends  JsoupUtil{
             Element item=alist.get(i);
             Map<String, Object> listitem = new HashMap<>();
             Utils.putIfAbsent(listitem,JsoupUtil.LABEL, item.html());
-            Utils.putIfAbsent(listitem,JsoupUtil.URL, Utils.trimNullDefault(item.attr(JsoupUtil.HREF),item.attr(JsoupUtil.URL)));
+            Utils.putIfAbsent(listitem,JsoupUtil.URL, Utils.trimEmptyDefault(item.attr(JsoupUtil.HREF),item.attr(JsoupUtil.URL)));
             Utils.putIfAbsent(listitem,JsoupUtil.ITEM_NAME, item.attr(JsoupUtil.ITEM_NAME));
             Utils.putIfAbsent(listitem,JsoupUtil.SELECT, item.attr(JsoupUtil.SELECT));
             searchConfigList.add(listitem);
@@ -629,11 +535,7 @@ public class ListDao extends  JsoupUtil{
         }
     }
 
-    static String[] attr=new String[]{"datasource",
-    "fixnumber","fixnumberright",
-    "empty_show","tablestyle",
-    "firstcol"
-    };
+
     public void updateList(Map<String, Object> list) throws  Exception {
 
         Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
@@ -678,16 +580,16 @@ public class ListDao extends  JsoupUtil{
         //处理主体
         doc.title(listname);
         body.attr("id", listcode);
-        body.getElementById("express").html(select_express);
+        body.getElementById("express").html("\n"+select_express+"\n");
         body.getElementById("express").attr("orderby",orderby_express);
         body.getElementById("express").attr("groupby",groupby_express);
-        body.getElementById("count").html(count_express);
+        body.getElementById("count").html("\n"+count_express+"\n");
         body.getElementById(JsoupUtil.APPEND_HEAD).html(APPEND_HEAD);
         body.getElementById(JsoupUtil.APPEND_FOOT).html(APPEND_FOOT);
 
-        for (int i = 0; i < attr.length; i++) {
-            String value=   Utils.trimNull( coreMap.get(attr[i]));
-            body.attr(attr[i],value);
+        for (int i = 0; i < BODY_ATTRS.length; i++) {
+            String value=   Utils.trimNull( coreMap.get(BODY_ATTRS[i]));
+            body.attr(BODY_ATTRS[i],value);
         }
         //处理tab
         tab(tabList, body);
@@ -717,7 +619,7 @@ public class ListDao extends  JsoupUtil{
                 }
             }
             tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
-            body.getElementById("column").appendChild(tabHtml);
+            body.getElementById("column").append("\n"+tabHtml.outerHtml()+"\n");
         }
     }
 
@@ -735,7 +637,7 @@ public class ListDao extends  JsoupUtil{
                 }
             }
             tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
-            body.getElementById("rowbutton").appendChild(tabHtml);
+            body.getElementById("rowbutton").append("\n"+tabHtml.outerHtml()+"\n");
         }
     }
 
@@ -753,7 +655,7 @@ public class ListDao extends  JsoupUtil{
                 }
             }
             tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
-            body.getElementById("tableButton").appendChild(tabHtml);
+            body.getElementById("tableButton").append("\n"+tabHtml.outerHtml()+"\n");
         }
     }
 
@@ -770,7 +672,7 @@ public class ListDao extends  JsoupUtil{
                     tabHtml.getElementsByTag("object").attr(names[k],formItemAttrValue);
                 }
             }
-            body.getElementById("search").appendChild(tabHtml);
+            body.getElementById("search").append("\n"+tabHtml.outerHtml()+"\n");
         }
     }
 
@@ -785,7 +687,7 @@ public class ListDao extends  JsoupUtil{
             tabHtml.getElementsByTag("a").attr(JsoupUtil.ITEM_NAME,Utils.trimNull(tab.get(JsoupUtil.ITEM_NAME)));
             tabHtml.getElementsByTag("a").attr(JsoupUtil.URL,Utils.trimNull(tab.get(JsoupUtil.URL)));
             tabHtml.getElementsByTag("a").html(Utils.trimNull(tab.get(JsoupUtil.LABEL)));
-            body.getElementById("tab").appendChild(tabHtml);
+            body.getElementById("tab").append("\n"+tabHtml.outerHtml()+"\n");
         }
     }
 
@@ -796,12 +698,12 @@ public class ListDao extends  JsoupUtil{
     public Element newTab( ){
         return Jsoup.parse("<li  >\n" +
                 "   <a     \"class=\"tablink\"  >  </a>\n" +
-                "</li>").body().child(0);
+                "</li>\n").body().child(0);
     }
     public Element newButton(  ){
-        return Jsoup.parse("<button\n" +
+        return Jsoup.parse("\n<button\n" +
                 "        class=\" layui-btn   layui-btn-sm    \">\n" +
-                "</button> ").body().child(0);
+                "</button>\n " ).body().child(0) ;
     }
     public Element newSearch(Object name,Object label ){
         return Jsoup.parse(" <div class=\"selector layui-col-md3 list-item \" type=\"input-text\"  >\n" +
@@ -811,12 +713,66 @@ public class ListDao extends  JsoupUtil{
                 "                <object class=\"list-search-item\"  item_name=\""+name+"\"></object>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
-                "</div>").body().child(0);
+                "</div>\n").body().child(0);
     }
 
     public static void main(String[] args) {
-        System.out.println(ListDao.getInstance().newButton( ));
+
     }
+
+
+    public   List<Map<String, String>> selectListByHtmlConfig(String page, String name, String url) {
+        List<Map<String, String>> list = new ArrayList<>();
+//        for (Map.Entry<String, Config> entry:listConfigMap.entrySet()){
+//            Map<String,Object> item=selectAllListById (entry.getKey());
+//            item.put("E_LIST_ID",item.get("ENCRYPT_LIST_ID"));
+//            if (StringUtils.isNotBlank(name) && StringUtils.isBlank(url)) {
+//                if (item.get("core").get("").toLowerCase().indexOf(name.toLowerCase()) >= 0) {
+//                    list.add(item);
+//                }
+//            } else if (StringUtils.isBlank(name) && StringUtils.isNotBlank(url)) {
+//                if (item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0) {
+//                    list.add(item);
+//                }
+//            } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(url)) {
+//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0 && item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0
+//                ) {
+//                    list.add(item);
+//                }
+//            } else {
+//                list.add(item);
+//            }
+//        }
+//        Page page1 = new Page();
+//        page1.setCurrentPage(NumberUtils.toInt(page));
+        //  return list.subList(page1.getStartRecord(), Math.min(list.size(), page1.getEndRecord()));
+        return list;
+    }
+    public   int listSize(String page, String name, String url) {
+        final AtomicInteger i = new AtomicInteger(0);
+//        for (Map.Entry<String, Config> entry:listConfigMap.entrySet()){
+//            String k=entry.getKey();
+//            Map<String,String> item=selectListById(k);
+//            if (StringUtils.isNotBlank(name) && StringUtils.isBlank(url)) {
+//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0) {
+//                    i.getAndIncrement();
+//                }
+//            } else if (StringUtils.isBlank(name) && StringUtils.isNotBlank(url)) {
+//                if (item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0) {
+//                    i.getAndIncrement();
+//                }
+//            } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(url)) {
+//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0 && item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0
+//                ) {
+//                    i.getAndIncrement();
+//                }
+//            } else {
+//                i.getAndIncrement();
+//            }
+//        } ;
+        return i.get();
+    }
+
 
 }
 

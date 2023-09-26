@@ -439,72 +439,73 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public void fillListById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception {
-        Page pagination= loadingPage(list,requestParamMap);
-        Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
-        List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
-        List<Map<String,Object>> tabList=(List<Map<String,Object>>)list.get("tab");
-        List<Map<String,Object>> tablebtnList=(List<Map<String,Object>>)list.get("tablebtn");
-        List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
-        List<Map<String,Object>> rowList=new ArrayList<>();
-        List<Map<String,Object>> rowbtnList=(List<Map<String,Object>>)list.get("rowbtn");
+        try {
+            Page pagination = loadingPage(list, requestParamMap);
+            Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
+            List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
+            List<Map<String, Object>> tabList = (List<Map<String, Object>>) list.get("tab");
+            List<Map<String, Object>> tablebtnList = (List<Map<String, Object>>) list.get("tablebtn");
+            List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("col");
+            List<Map<String, Object>> rowList = new ArrayList<>();
+            List<Map<String, Object>> rowbtnList = (List<Map<String, Object>>) list.get("rowbtn");
 
 
-        String globalEmptyShow=getString(coreMap,"empty_show");
-        String listcode=getString(coreMap,"listcode");
-        String datasourceCore=getString(coreMap,"datasource");
-        String firstcol=getString(coreMap,"firstcol");
-        DataSource dataSourceVO= EzBootstrap.instance().getDataSourceByKey(datasourceCore);
-        //头部Nav
-        filltab(requestParamMap, tabList, listcode);
-        //搜索项
-        fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
-        //表按钮
-        filltablebtn(requestParamMap, tablebtnList);
-        //表头
-        fillcol(colList);
-        page(pagination,list,requestParamMap);
-        //无需加载数据，比如tree,
-        if(StringUtils.equals("0",Utils.trimNull(requestParamMap.get("loadDataFlag")))){
-            return;
-        }
-        //填充数据
-        List<Map<String, Object>> dataList=getDataListByListId(dataSourceVO, list, requestParamMap,sessionParamMap, pagination);
-        if(Utils.isEmpty(dataList)){
-            return;
-        }
-        for (int i = 0; i <dataList.size() ; i++) {
-            Map<String, Object> dataRow=dataList.get(i);
-            List<String> tds=new ArrayList<>();
-            dataRow.put("tds",tds);
-
-            if(Utils.isEmpty(colList)){
-                rowList.add(dataRow);
-                continue;
+            String globalEmptyShow = getString(coreMap, "empty_show");
+            String listcode = getString(coreMap, "listcode");
+            String datasourceCore = getString(coreMap, "datasource");
+            String firstcol = getString(coreMap, "firstcol");
+            DataSource dataSourceVO = EzBootstrap.instance().getDataSourceByKey(datasourceCore);
+            //头部Nav
+            filltab(requestParamMap, tabList, listcode);
+            //搜索项
+            fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
+            //表按钮
+            filltablebtn(requestParamMap, tablebtnList);
+            //表头
+            fillcol(colList);
+            page(pagination, list, requestParamMap);
+            //无需加载数据，比如tree,
+            if (StringUtils.equals("0", Utils.trimNull(requestParamMap.get("loadDataFlag")))) {
+                return;
             }
-            for (int j = 0; j < colList.size(); j++) {
-                    Map<String,Object> th=colList.get(j);
-                    String itemName=Utils.getStringByObject(th,JsoupUtil.ITEM_NAME);
-                    String bodyPlugin=Utils.getStringByObject(th,JsoupUtil.BODY_PLUGIN_CODE);
-                    String jdbcType=Utils.getStringByObject(th,JsoupUtil.JDBCTYPE);
-                    String url=Utils.getStringByObject(th,JsoupUtil.URL);
-                    String windowname=Utils.getStringByObject(th,JsoupUtil.WINDOW_NAME);
+            //填充数据
+            List<Map<String, Object>> dataList = getDataListByListId(dataSourceVO, list, requestParamMap, sessionParamMap, pagination);
+            if (Utils.isEmpty(dataList)) {
+                return;
+            }
+            for (int i = 0; i < dataList.size(); i++) {
+                Map<String, Object> dataRow = dataList.get(i);
+                List<String> tds = new ArrayList<>();
+                dataRow.put("tds", tds);
+
+                if (Utils.isEmpty(colList)) {
+                    rowList.add(dataRow);
+                    continue;
+                }
+                for (int j = 0; j < colList.size(); j++) {
+                    Map<String, Object> th = colList.get(j);
+                    String itemName = Utils.getStringByObject(th, JsoupUtil.ITEM_NAME);
+                    String bodyPlugin = Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE);
+                    String jdbcType = Utils.getStringByObject(th, JsoupUtil.JDBCTYPE);
+                    String url = Utils.getStringByObject(th, JsoupUtil.URL);
+                    String windowname = Utils.getStringByObject(th, JsoupUtil.WINDOW_NAME);
                     String dataInDb = ObjectUtils.toString(dataRow.get(itemName));
 
-                    String columnEmptyShow= Utils.getStringByObject(th,JsoupUtil.EMPTY_SHOW);
+                    String columnEmptyShow = Utils.getStringByObject(th, JsoupUtil.EMPTY_SHOW);
 
-                    dataInDb=calulateData(dataInDb,globalEmptyShow,columnEmptyShow,jdbcType);
+                    dataInDb = calulateData(dataInDb, globalEmptyShow, columnEmptyShow, jdbcType);
 
-                    Map<String, String> plugin = getDbTemplateByCode(Utils.getStringByObject(th,JsoupUtil.BODY_PLUGIN_CODE),0,"list");
+                    Map<String, String> plugin = getDbTemplateByCode(Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE), 0, "list");
 
                     try {
                         //处理第一列
-                        if(ColTypeEnum.isFirst(Utils.getStringByObject(th,JsoupUtil.HEAD_PLUGIN_CODE))){
+                        if (ColTypeEnum.isFirst(Utils.getStringByObject(th, JsoupUtil.HEAD_PLUGIN_CODE))) {
                             Context context = new Context();
                             context.setVariable("firstCol", firstcol);
                             context.setVariable("count", pagination.getStartRecord() + i + 1);
                             context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
                             context.setVariable("dataRow", dataRow.entrySet());
-                            String template = Utils.trimNull(getDbTemplateByCode(Utils.getStringByObject(th,JsoupUtil.BODY_PLUGIN_CODE), 0, "list")
+                            String template = Utils.trimNull(getDbTemplateByCode(Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE), 0, "list")
                                     .get("PLUGIN_BODY"));
                             String html = ThymeleafUtils.processString(template, context);
                             if (StringUtils.isBlank(html)) {
@@ -515,50 +516,50 @@ public class ListServiceImpl implements ListService {
                             continue;
                         }
                         //处理数据列
-                        else{
-                            if (StringUtils.isNotBlank(bodyPlugin)  ) {
+                        else {
+                            if (StringUtils.isNotBlank(bodyPlugin)) {
                                 Context context = new Context();
                                 context.setVariables(th);
-                                context.setVariable(JsoupUtil.URL,MapParser.parseDefaultEmpty(url, dataRow).getResult());
-                                context.setVariable(JsoupUtil.WINDOW_NAME,MapParser.parseDefaultEmpty(windowname, dataRow).getResult());
+                                context.setVariable(JsoupUtil.URL, MapParser.parseDefaultEmpty(url, dataRow).getResult());
+                                context.setVariable(JsoupUtil.WINDOW_NAME, MapParser.parseDefaultEmpty(windowname, dataRow).getResult());
 
 
-                                context.setVariables( dataRow);
-                                context.setVariable("dataInDb",dataInDb);
-                                context.setVariable("uploadUrl",requestParamMap.get("ContextPath")+EzBootstrap.instance().getUploadUrl());
+                                context.setVariables(dataRow);
+                                context.setVariable("dataInDb", dataInDb);
+                                context.setVariable("uploadUrl", requestParamMap.get("ContextPath") + EzBootstrap.instance().getUploadUrl());
 
-                                if(StringUtils.startsWith(EzBootstrap.instance().getDownloadUrl(),"http")){
+                                if (StringUtils.startsWith(EzBootstrap.instance().getDownloadUrl(), "http")) {
                                     context.setVariable("downloadUrl", EzBootstrap.instance().getDownloadUrl());
 
-                                }else{
-                                    context.setVariable("downloadUrl",requestParamMap.get("ContextPath")+EzBootstrap.instance().getDownloadUrl());
+                                } else {
+                                    context.setVariable("downloadUrl", requestParamMap.get("ContextPath") + EzBootstrap.instance().getDownloadUrl());
                                 }
 
-                                if (StringUtils.isNotBlank(getString(th,JsoupUtil.DATA))) {
+                                if (StringUtils.isNotBlank(getString(th, JsoupUtil.DATA))) {
 
-                                    String columnDs=getString(th,JsoupUtil.DATASOURCE);
-                                    if(StringUtils.isBlank(columnDs)){
-                                        columnDs=datasourceCore;
+                                    String columnDs = getString(th, JsoupUtil.DATASOURCE);
+                                    if (StringUtils.isBlank(columnDs)) {
+                                        columnDs = datasourceCore;
                                     }
-                                    DataSource temp= EzBootstrap.instance().getDataSourceByKey(columnDs);
+                                    DataSource temp = EzBootstrap.instance().getDataSourceByKey(columnDs);
 
-                                    if(ItemDataSourceType.isEzList(getString(th,JsoupUtil.DATATYPE))){
+                                    if (ItemDataSourceType.isEzList(getString(th, JsoupUtil.DATATYPE))) {
                                         //获取
 //                                            EzList listTemp = new DefaultEzList( getString(th,JsoupUtil.DATA), temp, requestParamMap,sessionParamMap);
 //
 //                                            list.renderHtml();
                                         //context.setVariable("data", listTemp.getEzListDto());
-                                    }else {
+                                    } else {
                                         try {
-                                            Map nm=new HashMap();
+                                            Map nm = new HashMap();
                                             nm.putAll(requestParamMap);
                                             nm.putAll(sessionParamMap);
-                                            ItemInitData items =  getSelectItems(temp, getString(th,JsoupUtil.DATA),getString(th,JsoupUtil.DATATYPE),
-                                                    nm );
+                                            ItemInitData items = getSelectItems(temp, getString(th, JsoupUtil.DATA), getString(th, JsoupUtil.DATATYPE),
+                                                    nm);
                                             context.setVariable("items", items.getItems());
                                             context.setVariable("itemsJson", JSONUtils.toJSONString(items.getItems()));
                                         } catch (Exception e) {
-                                            LOG.error("EZADMIN LIST={}  列数据异常{} ",JSONUtils.toJSONString(th),e);
+                                            LOG.error("EZADMIN LIST={}  列数据异常{} ", JSONUtils.toJSONString(th), e);
                                         }
                                     }
                                 }
@@ -568,87 +569,88 @@ public class ListServiceImpl implements ListService {
                                 tds.add(html);
 
                             } else {
-                                tds.add("<td class='  ezadmin-td ezadmin-td-'"+itemName+">" + dataInDb + "</td>");
+                                tds.add("<td class='  ezadmin-td ezadmin-td-'" + itemName + ">" + dataInDb + "</td>");
                             }
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
-            //处理按钮列
-            try {
-                if(Utils.isNotEmpty(rowbtnList)) {
+                //处理按钮列
+                try {
+                    if (Utils.isNotEmpty(rowbtnList)) {
 
-                    List<Map<String,Object>> tempRowItem=new ArrayList<>();
-                    for (int i1 = 0; i1 < rowbtnList.size(); i1++) {
-                        Map<String,Object> item=rowbtnList.get(i1);
-                        Map<String,Object> m=new HashMap<String,Object>();
+                        List<Map<String, Object>> tempRowItem = new ArrayList<>();
+                        for (int i1 = 0; i1 < rowbtnList.size(); i1++) {
+                            Map<String, Object> item = rowbtnList.get(i1);
+                            Map<String, Object> m = new HashMap<String, Object>();
 
-                        m.putAll(item);
-                        m.put(JsoupUtil.URL,MapParser.parseDefaultEmpty(Utils.getStringByObject(item,JsoupUtil.URL),  dataRow ).getResult());
-                        m.put(JsoupUtil.LABEL,MapParser.parseDefaultEmpty(Utils.getStringByObject(item,JsoupUtil.LABEL),  dataRow ).getResult());
-                        m.put(JsoupUtil.WINDOW_NAME,MapParser.parseDefaultEmpty(Utils.getStringByObject(item,JsoupUtil.WINDOW_NAME),  dataRow ).getResult());
-                        m.put(JsoupUtil.ITEM_ID,MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.ITEM_ID),"0"),  dataRow ).getResult());
-                        m.put("rowdataid",dataRow.get("ID"));
-                        String display=Utils.trimNull(item.get(JsoupUtil.DISPLAY));
-                        if(StringUtils.isNotBlank(display)){
-                            String re=MapParser.parseDefaultEmpty(display,dataRow).getResult();
+                            m.putAll(item);
+                            m.put(JsoupUtil.URL, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.URL), dataRow).getResult());
+                            m.put(JsoupUtil.LABEL, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.LABEL), dataRow).getResult());
+                            m.put(JsoupUtil.WINDOW_NAME, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.WINDOW_NAME), dataRow).getResult());
+                            m.put(JsoupUtil.ITEM_ID, MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.ITEM_ID), "0"), dataRow).getResult());
+                            m.put("rowdataid", dataRow.get("ID"));
+                            String display = Utils.trimNull(item.get(JsoupUtil.DISPLAY));
+                            if (StringUtils.isNotBlank(display)) {
+                                String re = MapParser.parseDefaultEmpty(display, dataRow).getResult();
 
 //                            EzExpressExecutor ezExpressExecutor=new EzExpressExecutor();
 //                            ezExpressExecutor.addParam(dataRow);
 //                            ezExpressExecutor.addRequestParam( dataRow);
 //                            Object re=ezExpressExecutor.run(display);
-                            if(BooleanUtils.toBoolean(Utils.trimNull(re))||"1".equals(Utils.trimNull(re))){
+                                if (BooleanUtils.toBoolean(Utils.trimNull(re)) || "1".equals(Utils.trimNull(re))) {
+                                    tempRowItem.add(m);
+                                } else {
+
+                                }
+                            } else {
                                 tempRowItem.add(m);
-                            }else{
-
                             }
-                        }else{
-                            tempRowItem.add(m);
                         }
-                    };
+                        ;
 
 
+                        Context context = new Context();
+                        if (tempRowItem.size() > 0) {
+                            if (tempRowItem.size() > 1) {
+                                context.setVariable("itemsJson", JSONUtils.toJSONString(tempRowItem.subList(1, tempRowItem.size())));
+                            } else {
+                                context.setVariable("itemsJson", JSONUtils.toJSONString(tempRowItem));
+                            }
 
-                    Context context = new Context();
-                    if(tempRowItem.size()>0) {
-                        if (tempRowItem.size() > 1) {
-                            context.setVariable("itemsJson", JSONUtils.toJSONString(tempRowItem.subList(1, tempRowItem.size())));
+                            Map<String, String> buttonPlugin = getDbTemplateByCode(
+                                    StringUtils.isBlank(Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.TYPE)) ?
+                                            TemplateEnum.ROWBUTTON.getCode() : Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.PLUGIN)
+                                    //
+                                    , 0, "list");
+                            context.setVariable("rowButton0", tempRowItem.get(0));
+                            context.setVariable("rowButtonItemList", tempRowItem);
+                            context.setVariable("rowButtons", tempRowItem);
+                            String template = Utils.trimNull(buttonPlugin.get("PLUGIN_BODY"));
+                            String html = ThymeleafUtils.processString(template, context);
+                            if (StringUtils.isNotBlank(html)) {
+                                coreMap.put("rowbtnhtml", html);
+                                tds.add(html);
+                            } else {
+                                tds.add("");
+                            }
                         } else {
-                            context.setVariable("itemsJson", JSONUtils.toJSONString(tempRowItem));
-                        }
-
-                        Map<String, String> buttonPlugin = getDbTemplateByCode(
-                                StringUtils.isBlank(Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.TYPE)) ?
-                                        TemplateEnum.ROWBUTTON.getCode() : Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.PLUGIN)
-                                //
-                                , 0, "list");
-                        context.setVariable("rowButton0", tempRowItem.get(0));
-                        context.setVariable("rowButtonItemList", tempRowItem);
-                        context.setVariable("rowButtons", tempRowItem);
-                        String template = Utils.trimNull(buttonPlugin.get("PLUGIN_BODY"));
-                        String html = ThymeleafUtils.processString(template, context);
-                        if (StringUtils.isNotBlank(html)) {
-                            coreMap.put("rowbtnhtml",html);
-                            tds.add(html);
-                        }else{
                             tds.add("");
                         }
                     }
-                    else{
-                        tds.add("");
-                    }
+                } catch (Exception e) {
+                    LOG.error("EZADMIN LIST={}  初始化第{}行按钮错误{} ", i, dataRow, e);
                 }
-            } catch (Exception e) {
-                LOG.error("EZADMIN LIST={}  初始化第{}行按钮错误{} ",  i,dataRow,e);
+                rowList.add(dataRow);
+                coreMap.put("dataList", rowList);
             }
-            rowList.add(dataRow);
-            coreMap.put("dataList",rowList);
-        }
-
-        if(Utils.getLog()!=null) {
-            Utils.addLog("列表行按钮:", rowbtnList);
+            if(Utils.getLog()!=null) {
+                Utils.addLog("列表行按钮:", rowbtnList);
+            }
+        }catch (Exception e){
+            Utils.addLog("获取列表数据异常:", e);
         }
     }
 
@@ -751,10 +753,10 @@ public class ListServiceImpl implements ListService {
 
             }
             if(Utils.isNotEmpty(validRuleMap)){
-                coreMap.put("validateRules",JSONUtils.toJSONString(validRuleMap));
+                coreMap.put("validateRules",JSONUtils.toJSONString(validRuleMap).replaceAll("\"","'"));
             }
             if(Utils.isNotEmpty(validMsgMap)){
-                coreMap.put("validateMessages",JSONUtils.toJSONString(validMsgMap));
+                coreMap.put("validateMessages",JSONUtils.toJSONString(validMsgMap).replaceAll("\"","'"));
             }
         if(Utils.getLog()!=null) {
             Utils.addLog("列表搜索项:"+coreMap.get("listcode"), searchList);

@@ -351,22 +351,22 @@ public class ListController extends BaseController {
         request.setAttribute("_EZ_SERVER_NAME",  "//"+request.getServerName()+":"+request.getServerPort());
         return "layui/pages/custom_cols_cache";
     }
-    @EzMapping("selectColsSubmit.html")
-    public EzResult selectColsSave(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String ENCRYPT_LIST_ID =Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID")) ;
-        Map<String, Object> requestParamMap =requestToMap(request);
-        Map<String, String> sessionParamMap = sessionToMap(request.getSession());
-
-        List<String> search= JSONUtils.parseArray(request.getParameter("search"),String.class);
-        List<String> col=JSONUtils.parseArray(request.getParameter("column"),String.class);
-        String fixNumber=request.getParameter("fixNumber");
-        String fixNumberRight=request.getParameter("fixNumberRight");
-
-        ListDao.getInstance().updateOrder(ENCRYPT_LIST_ID,search,col,fixNumber,fixNumberRight);
-
-
-        return EzResult.instance();
-    }
+//    @EzMapping("selectColsSubmit.html")
+//    public EzResult selectColsSave(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//        String ENCRYPT_LIST_ID =Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID")) ;
+//        Map<String, Object> requestParamMap =requestToMap(request);
+//        Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+//
+//        List<String> search= JSONUtils.parseArray(request.getParameter("search"),String.class);
+//        List<String> col=JSONUtils.parseArray(request.getParameter("column"),String.class);
+//        String fixNumber=request.getParameter("fixNumber");
+//        String fixNumberRight=request.getParameter("fixNumberRight");
+//
+//        ListDao.getInstance().updateOrder(ENCRYPT_LIST_ID,search,col,fixNumber,fixNumberRight);
+//
+//
+//        return EzResult.instance();
+//    }
 
     @EzMapping("demo.html")
     public String demo(HttpServletRequest request, HttpServletResponse response) throws Exception {

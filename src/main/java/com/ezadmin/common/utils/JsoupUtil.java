@@ -325,6 +325,7 @@ public class JsoupUtil {
 
     public static void updateConfig(Config config) throws IOException {
         try {
+            config.getDoc().outputSettings().prettyPrint(false);
             Files.write(config.getFile().toPath(), config.getDoc().html().getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
         }catch (Exception e){
             logger.error("",e);
