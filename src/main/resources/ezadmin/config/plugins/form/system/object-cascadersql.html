@@ -20,6 +20,7 @@
 <div id="content">
 <div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" type="cascadersql"
      th:ez-label="${label}"
+
      th:ez-item_name="${item_name}"
      th:ez-placeholder="${placeholder}"
      th:ez-alias="${alias}"
@@ -61,7 +62,7 @@
                    ez_value="ID" ez_label="LABEL"
                    th:multi="${multi}"
                    style="display:none"
-
+                   th:label="${label}"
                    th:collapseTags="${collapsetags}"
                    th:showAllLevels="${showalllevels}"
                    th:itemPlaceholder="${itemPlaceholder}">

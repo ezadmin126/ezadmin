@@ -112,8 +112,7 @@ function initForm() {
         form.verify({
             required: function (value, item) { // value 为当前输入框的值，item 为当前输入框的 DOM 对象
                 if (!value) {
-                    debugger
-                    return '请输入' + item.getAttribute("label");
+                    return '请输入' + (item.getAttribute("label")||'');
                 }
             }
         });

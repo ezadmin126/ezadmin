@@ -44,6 +44,6 @@ function createSingleTab(name, url) {
             href: url,
             title: fname,
         });
-
+       // $("[lay-id='/login/login.html?welcome=1']").find(".layui-tab-close").remove();
     });
 }

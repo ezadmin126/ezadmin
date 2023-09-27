@@ -61,9 +61,9 @@
             <input th:value="${#strings.isEmpty(value)?'':value}" th:name="${item_name}" th:id="${'search-itemName-' + item_name}"
                    class="ez-laycascader"
                    th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
-                   th:ezlist_url="${item_url}"
+                   th:ezlist_url="${url}"
                    ez_value="ID" ez_label="LABEL"
-
+                   th:label="${label}"
                    style="display:none"
                    th:multi="${multi}"
                    th:collapseTags="${collapsetags}"
