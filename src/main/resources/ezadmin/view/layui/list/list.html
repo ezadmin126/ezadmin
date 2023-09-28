@@ -22,7 +22,7 @@
 </head>
 <body>
 <!--初始化加载层-->
-<div class="layuimini-loader">
+<div class="layuimini-loader" th:if="${not #strings.equals('pure',data.core.tablestyle)}">
     <div class="layuimini-loader-inner"></div>
 </div>
 <input type="hidden" ID="ENCRYPT_LIST_ID" name="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
@@ -118,7 +118,7 @@
         <div class="layui-card-body" style=" border: 1px solid #eee; margin-top: 5px;height: 100%
 ">
             <div id="table-wrap" style="height: 100%">
-                <table border-spacing="0" th:lay-filter="${not #strings.equals('pure',data.tablestyle)?'mytable':''}"
+                <table border-spacing="0" th:lay-filter="${not #strings.equals('pure',data.core.tablestyle)?'mytable':''}"
                        id="mytable"
                        class="  layui-table ez-table " style=" width:100%">
                     <thead style="text-align: center">
