@@ -304,7 +304,7 @@ public class ListEditController extends BaseController {
         form.put("delcode", "\nupdate(\"UPDATE "+table+" set delete_flag=1 where "+idName+"=${ID}\");");
 
         form.put("successurl","reload");
-        //JsoupConfigHolder.updateFormCoreByFormId(formId,form);
+
         List<Map<String,Object>> cardsList=new ArrayList<>();
         Map<String,Object> card=new HashMap<>();cardsList.add(card);
         List<Map<String,Object>> items=new ArrayList<>();

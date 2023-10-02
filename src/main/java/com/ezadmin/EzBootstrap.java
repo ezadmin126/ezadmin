@@ -8,6 +8,7 @@ import com.ezadmin.dao.FormDao;
 import com.ezadmin.dao.ListDao;
 import com.ezadmin.common.enums.ContentTypeEnum;
 import com.ezadmin.common.utils.*;
+import com.ezadmin.dao.PluginsDao;
 import com.ezadmin.plugins.cache.Callback;
 import com.ezadmin.plugins.cache.EzCache;
 import com.ezadmin.plugins.export.EzExport;
@@ -242,9 +243,14 @@ public class EzBootstrap {
 
     public void init(    ) throws  Exception {
         if (start.compareAndSet(false, true)) {
-//            XmlUtils.loadList();
-//            XmlUtils.loadForm();
-            JsoupConfigHolder.init(sqlCache);
+            log.info("start init ezadmin plugins ");
+            PluginsDao.getInstance().init();
+            log.info("start init ezadmin list ");
+            ListDao.getInstance().init();
+            log.info("start init ezadmin form ");
+            FormDao.getInstance().init();
+            log.info("end init ezadmin   ");
+
             ThymeleafUtils.init(sqlCache );
 
             filter = new TraceLogFilter();

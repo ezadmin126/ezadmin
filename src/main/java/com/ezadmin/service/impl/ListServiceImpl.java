@@ -1,6 +1,7 @@
 package com.ezadmin.service.impl;
 
 import com.ezadmin.dao.ListDao;
+import com.ezadmin.dao.PluginsDao;
 import com.ezadmin.plugins.express.executor.EzExpressExecutor;
 import com.ezadmin.service.ListService;
 import com.ezadmin.dao.model.ItemInitData;
@@ -227,31 +228,24 @@ public class ListServiceImpl implements ListService {
             return data.items(keyvalues);
         }
         if ("plugins4list".equalsIgnoreCase(sql)) {
-            return data.items(JsoupConfigHolder.listPlugin(""));
+            return data.items(  listPlugin(""));
         }
         if ("plugins4td".equalsIgnoreCase(sql)) {
-            return data.items(JsoupConfigHolder.listPlugin("td"));
+            return data.items( listPlugin("td"));
         }
         if ("plugins4th".equalsIgnoreCase(sql)) {
-            return data.items(JsoupConfigHolder.listPlugin("th"));
+            return data.items( listPlugin("th"));
         }
         if ("plugins4search".equalsIgnoreCase(sql)) {
-            return data.items(JsoupConfigHolder.listPlugin("search"));
+            return data.items( listPlugin("search"));
         }
         if ("listbutton".equalsIgnoreCase(sql)) {
-            return data.items(JsoupConfigHolder.listPlugin("listbutton"));
+            return data.items( listPlugin("listbutton"));
         }
         if ("plugins4form".equalsIgnoreCase(sql)) {
-            return data.items(JsoupConfigHolder.formPlugin());
+            return data.items( formPlugin());
         }
-        if("group_data_init".equalsIgnoreCase(sql)){
-            Map<String, String>  form= JsoupConfigHolder.selectFormById(Utils.trimNull(request.get("ID")));
-            try {
-            return     data.items(JSONUtils.parseListMapString(form.get(JsoupUtil.GROUP_DATA)));
-            }catch (Exception e){
 
-            }
-        }
         List<Map<String, Object>> keyvalues = new ArrayList();
         String[] items=sql.split("\n");
         if(items!=null&&items.length>0){
@@ -272,6 +266,12 @@ public class ListServiceImpl implements ListService {
             }
         }
         return data.items(keyvalues);
+    }
+    public  static List<Map<String, Object>> listPlugin(String pre) {
+        return PluginsDao.getInstance().listPlugin(pre);
+    }
+    public static  List<Map<String, Object>> formPlugin() {
+        return PluginsDao.getInstance().formPlugin("");
     }
     ItemInitData kvSqlCache(final String initData,Map<String, Object> params,final DataSource datasource ,String mini){
         ItemInitData data=new ItemInitData();
@@ -403,7 +403,7 @@ public class ListServiceImpl implements ListService {
             if (StringUtils.equalsIgnoreCase("hidden-nowhere", code)) {
                 return Collections.emptyMap();
             }
-            Map<String, String> plugin = JsoupConfigHolder.getDbTemplateByCode(code, fold);
+            Map<String, String> plugin = PluginsDao.getInstance().getDbTemplateByCode(code, fold);
             if (Utils.isNotEmpty(plugin)) {
                 return plugin;
             }

@@ -27,24 +27,12 @@ import java.util.Map;
 
 public class FormServiceImpl implements FormService {
 Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
-    @EzConfig
-    Config config;
-    Dao dao=Dao.getInstance();
-    EzBootstrap bootstrap=EzBootstrap.instance();
+
      ListService listService = EzProxy.singleInstance(ListService.class);
-    @Override
-    @EzCacheAnnotation
-    public String test(String i, Integer j) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return i+j+System.currentTimeMillis();
-    } @EzCacheAnnotation
+   @EzCacheAnnotation
     public Map<String, String> selectFormById(String formId,String encodeId) throws Exception {
         try {
-            Map<String, String> form = JsoupConfigHolder.selectFormById(encodeId);
+            Map<String, String> form = FormDao.getInstance().selectFormById(encodeId);
             if (Utils.isNotEmpty(form)) {
                 return form;
             }
@@ -270,18 +258,15 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
     @Override
     @EzCacheAnnotation
     public List<Map<String, String>> getItemListByFormId(String formId,String encodeId ) throws Exception {
-        if(JsoupConfigHolder.existHtmlForm(encodeId)){
-            return  JsoupConfigHolder.getItemListByFormId(encodeId);
-        }
-        return Collections.emptyList();
+        return FormDao.getInstance().getItemListByFormId(encodeId);
     }
     @Override
     @EzCacheAnnotation
     public List<Map<String, String>> getNavbarListByFormId(String formId,String encodeId) throws Exception {
 
-        if(JsoupConfigHolder.existHtmlForm(encodeId)){
+        if(FormDao.getInstance().existHtmlForm(encodeId.toLowerCase())){
             //暂时不做
-            return  Collections.emptyList();//JsoupConfigHolder.getNavbarListByFormId(encodeId);
+            return  Collections.emptyList();
         }
         return Collections.emptyList();
     }

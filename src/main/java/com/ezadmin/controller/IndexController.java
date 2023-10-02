@@ -2,8 +2,9 @@ package com.ezadmin.controller;
 
 
 import com.ezadmin.common.annotation.EzMapping;
-import com.ezadmin.common.utils.JsoupConfigHolder;
-import com.ezadmin.common.utils.ThymeleafUtils;
+ import com.ezadmin.common.utils.ThymeleafUtils;
+import com.ezadmin.dao.FormDao;
+import com.ezadmin.dao.ListDao;
 import com.ezadmin.web.EzResult;
 import com.ezadmin.EzBootstrap;
 
@@ -62,7 +63,8 @@ public class IndexController extends BaseController {
     @EzMapping("clear.html")
     public EzResult clear(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-            JsoupConfigHolder.clear();
+        ListDao.getInstance().clear();
+        FormDao.getInstance().clear();
         EzBootstrap.instance().getCache().clear();
             ThymeleafUtils.clear();
 

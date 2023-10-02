@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 
 public class IpUtils {
-    private static Logger log = LoggerFactory.getLogger(IpUtils.class);
 
     public final static Pattern IP_V4_PATTERN = Pattern.compile("^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$");
 

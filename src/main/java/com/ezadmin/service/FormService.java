@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface FormService {
-    String test(String i,Integer j);
 
     Map<String, String> selectFormById(String formId,String encodeId) throws Exception;
     String selectAllFormById( String encodeId) throws Exception;
