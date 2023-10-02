@@ -176,187 +176,8 @@ public class FormDao extends JsoupUtil{
     }
 
 
-    //编辑
 
 
-    public   Integer updateFormCoreByFormId(String formCode, Map<String, String> request) throws IOException {
-
-        Config config=formConfigMap.get(formCode.toLowerCase());
-        if (config==null) {
-            Config tempConfig=formConfigMap.get("formtemplate");
-
-            Document doc =tempConfig.getDoc();
-
-            String editPath=EzBootstrap.instance().getEditLocation()+File.separator+"form";
-            editPath=editPath+(File.separator+formCode+".html");
-
-
-
-            //创建新文件
-            Config c=new Config();
-            c.setFile(new File(editPath));
-            c.setUrl(new File(editPath).toURI().toURL());
-            c.setPath(new File(editPath).toURI().toURL().getPath());
-            c.setProtocol("file");
-            if(!new File(editPath).exists()){
-                Files.createFile(Paths.get(editPath));
-            }
-            doc.body().attr("id",formCode.toLowerCase());
-            c.setDoc(doc);
-            formConfigMap.put(formCode.toLowerCase(),c);
-           // stream.close();
-            config=c;
-        }
-       // Element form=config.getDoc().body().getElementById("inputForm");
-        Document doc=config.getDoc();
-        Element body = doc.body();
-        body.attr("id", formCode);
-        body.attr(JsoupUtil.DATASOURCE, request.get(JsoupUtil.DATASOURCE));
-        body.attr(JsoupUtil.SUCCESS_URL, request.get(JsoupUtil.SUCCESS_URL));
-
-        Element card=card(doc,"configForm","表单数据配置");
-        Element cardBody=card.selectFirst(".layui-card-body");
-        Element configForm= doc.getElementById("configForm");
-
-        configFormItem(JsoupUtil.INIT_EXPRESS,"pre","初始表达式",request.get(JsoupUtil.INIT_EXPRESS) , doc, cardBody, configForm);
-        configFormItem(JsoupUtil.SUBMIT_EXPRESS,"pre","提交表达式",request.get(JsoupUtil.SUBMIT_EXPRESS) , doc, cardBody, configForm);
-        configFormItem(JsoupUtil.DELETE_EXPRESS,"pre","删除表达式",request.get(JsoupUtil.DELETE_EXPRESS) , doc, cardBody, configForm);
-        configFormItem(JsoupUtil.STATUS_EXPRESS,"pre","状态表达式",request.get(JsoupUtil.STATUS_EXPRESS) , doc, cardBody, configForm);
-        configFormItem(JsoupUtil.GROUP_DATA,"pre","分组表达式",request.get(JsoupUtil.GROUP_DATA) , doc, cardBody, configForm);
-
-
-        doc.title(Utils.trimEmptyDefault(request.get(JsoupUtil.FORM_NAME),request.get("form_name")));
-
-        head(doc,JsoupUtil.APPEND_HEAD,request.get(JsoupUtil.APPEND_HEAD));
-        foot(doc,JsoupUtil.APPEND_FOOT,request.get(JsoupUtil.APPEND_FOOT));
-
-        updateConfig(config);
-        return 1;
-    }
-
-    private   void configFormItem(String itemName,String pluginCode,String label,String itemValue, Document doc, Element cardBody, Element configForm) {
-        Element INIT_EXPRESS=formitemByNameValue(doc, configForm, cardBody,label,pluginCode,
-                itemName,itemValue);
-
-        configForm.appendChild(INIT_EXPRESS);
-    }
-
-
-    public   void updateFormItemByFormIdAndName(String encodeFormId, String name, Map<String, String> request) throws IOException {
-        Config config=formConfigMap.get(encodeFormId.toLowerCase());
-
-        Document doc = config.getDoc();
-
-
-        Element body = doc.body();
-        Element form = body.getElementById("inputForm");
-        if (form == null) {
-            return;
-        }
-        String groupData= request.get("group_data");
-        //确保card存在
-        Element card=card(doc,"inputForm",groupData);
-        Element cardBody=card.selectFirst(".layui-card-body");
-        //确保formitem存在
-        Element formItem=formitemByNameValue(doc, doc.getElementById("inputForm"),
-                cardBody, request.get("label"),request.get("plugin_code"),name,"");
-        formItem.selectFirst(".layui-form-label").text(request.get("label"));
-        Element item = formItem.selectFirst("["+JsoupUtil.ITEM_NAME+"='" + name + "']");
-        fillFormItemDetail(request, item);
-        attr(item,"lay-verify", request.get(JsoupUtil.LAYVERIFY));
-       updateConfig(config);
-    }
-
-    private   void fillFormItemDetail(Map<String, String> request, Element item) {
-        //兼容
-        for (int i = 0; i < names.length; i++) {
-            attr(item,names[i], request.get(names[i]));
-        }
-    }
-
-
-
-
-    public   void updateFormItemSort(String encodeFormId, String json) throws IOException {
-        Config config1=formConfigMap.get(encodeFormId.toLowerCase());
-
-
-        Document doc = config1.getDoc();
-
-        Element body = doc.body();
-        Element form = body.getElementById("inputForm");
-        if (form == null) {
-            return;
-        }
-        List<Map<String, Object>>  config=JSONUtils.parseListMapString(json);
-
-        for (int i = 0; i < config.size(); i++) {
-            Map<String, Object> group=config.get(i);
-            Element card=card(doc,"inputForm",group.get("group"));
-            Element cardBody=card.selectFirst(".layui-card-body");
-            String items=Utils.trimNull(group.get("items"));
-            String itemArray[]=items.split(",");
-            if(itemArray.length>0){
-                for (int j = 0; j < itemArray.length; j++) {
-                    if(StringUtils.isBlank(itemArray[j])){
-                        continue;
-                    }
-                    Element item = body.selectFirst("["+JsoupUtil.ITEM_NAME+"='" + itemArray[j] + "']");
-                    if(item!=null){
-                        item.attr("group_data",Utils.trimNull(group.get("group")));
-                        cardBody.appendChild(item.parent().parent());
-                    }
-                }
-            }
-            form.appendChild(card);
-        }
-
-        updateConfig(config1);
-    }
-    public static Integer deleteFormItemByItemNameAndId(String encodeFormId, String name) throws IOException {
-        Config config1=formConfigMap.get(encodeFormId.toLowerCase());
-
-
-        Document doc = config1.getDoc();
-
-        Element body = doc.body();
-        Element form = body.getElementById("inputForm");
-        if (form == null) {
-            return 0;
-        }
-        Element item = form.selectFirst("["+JsoupUtil.ITEM_NAME+"='" + name + "']");
-        if (item != null) {
-            item.remove();
-            updateConfig(config1);
-        }
-        return 1;
-    }
-    public   List<Map<String, String>> selectFormByHtmlConfig(String page, String name, String url) {
-        List<Map<String, String>> list = new ArrayList<>();
-        for (Map.Entry<String, Config> entry:formConfigMap.entrySet()){
-            Map<String,String> item=selectFormById(entry.getKey());
-            item.put("E_FORM_ID",item.get("ENCRYPT_FORM_ID"));
-            if (StringUtils.isNotBlank(name) && StringUtils.isBlank(url)) {
-                if (item.get(JsoupUtil.FORM_NAME).toLowerCase().indexOf(name.toLowerCase()) >= 0) {
-                    list.add(item);
-                }
-            } else if (StringUtils.isBlank(name) && StringUtils.isNotBlank(url)) {
-                if (item.get("ENCRYPT_FORM_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0 ) {
-                    list.add(item);
-                }
-            } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(url)) {
-                if (item.get(JsoupUtil.FORM_NAME).toLowerCase().indexOf(name.toLowerCase()) >= 0 && item.get("ENCRYPT_FORM_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0
-                ) {
-                    list.add(item);
-                }
-            } else {
-                list.add(item);
-            }
-        }
-        Page page1 = new Page();
-        page1.setCurrentPage(NumberUtils.toInt(page));
-        return list.subList(page1.getStartRecord(), Math.min(list.size(), page1.getEndRecord()));
-    }
 
     public   int formSize(String page, String name, String url) {
         final AtomicInteger i = new AtomicInteger(0);
@@ -383,35 +204,7 @@ public class FormDao extends JsoupUtil{
     }
 
 
-    Element card(Document doc,String formId,Object groupN){
-        String groupName=Utils.trimNull(groupN);
 
-        Element card= doc.selectFirst("[group_name='"+groupName+"']");
-        if(card==null){
-            Element head=doc.createElement("div");
-            head.addClass("layui-card-header");
-            head.text(groupName);
-            Element body=doc.createElement("div");
-            body.addClass("layui-card-body");
-
-            card=doc.createElement("div");
-            card.addClass("layui-card");
-            card.attr(JsoupUtil.GROUP_NAME,groupName);
-            card.appendChild(head);
-            card.appendChild(body);
-            Element form= doc.getElementById(formId);
-            if(form==null){
-                form=doc.createElement("form");
-                form.attr("id",formId);
-                form.addClass("layui-form");
-                doc.body().selectFirst(".layui-container").appendChild(form);
-            }
-            form.appendChild(card);
-        }else{
-            card.attr(JsoupUtil.GROUP_NAME,groupName);
-        }
-        return card;
-    }
       Element formitemByNameValue(Document doc,Element form,Element cardBody, String  label,
                                        String pluginCode,String name,String value ){
         Element formItem=null;
@@ -599,9 +392,9 @@ public class FormDao extends JsoupUtil{
 
         Config config=null;
         if (config==null) {
-            Config tempConfig=formConfigMap.get("formtemplate");
 
-            Document doc =tempConfig.getDoc().clone();
+
+            Document doc =  JsoupUtil.newform();
 
             String editPath=EzBootstrap.instance().getEditLocation()+File.separator+"form";
             editPath=editPath+(File.separator+formcode+".html");
@@ -689,13 +482,5 @@ public class FormDao extends JsoupUtil{
                 "                    </div>\n" +
                 "                </div>").body().child(0);
     }
-    public static void main(String[] args) {
-        System.out.println(Jsoup.parse("<div class=\"layui-card\"  >\n" +
-                "            <div class=\"layui-card-header\">\n" +
-                "                EZ_DEFAULT_GROUP\n" +
-                "            </div>\n" +
-                "            <div class=\"layui-card-body\">\n" +
-                "            </div>\n" +
-                "        </div>").body().child(0).outerHtml());;
-    }
+
 }

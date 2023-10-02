@@ -555,9 +555,7 @@ public class ListDao extends  JsoupUtil{
         String APPEND_FOOT=  Utils.trimNull( coreMap.get(JsoupUtil.APPEND_FOOT));
         Config config=null;
         if (config==null) {
-            Config tempConfig=listConfigMap.get("listtemplate");
-            // path = "ezadmin/config/list/template.html";
-            Document doc =tempConfig.getDoc().clone();
+            Document doc =JsoupUtil.newlist();
             String editPath=EzBootstrap.instance().getEditLocation()+File.separator+"list";
             editPath=editPath+(File.separator+listcode.toLowerCase()+".html");
             //创建新文件
@@ -569,7 +567,6 @@ public class ListDao extends  JsoupUtil{
             if(!new File(editPath).exists()){
                 Files.createFile(Paths.get(editPath));
             }
-
             doc.body().attr("id",listcode.toLowerCase());
             c.setDoc(doc);
             listConfigMap.put(listcode.toLowerCase(),c);

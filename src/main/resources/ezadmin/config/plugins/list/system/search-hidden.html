@@ -16,7 +16,9 @@
     </div>
 </div>
 <div id="content">
-    <div ez-type="hidden" config-form-type="searchcore" th:ITEM_ID="${model.item_name}" th:ITEM_NAME="${model.item_name}"
+    <div ez-type="hidden" class="selector   list-item "
+         th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
+         config-form-type="searchcore" th:ITEM_ID="${model.item_name}" th:ITEM_NAME="${model.item_name}"
            th:ez-label="${model.label}"
            th:ez-item_name="${model.item_name}"
            th:ez-placeholder="${model.placeholder}"

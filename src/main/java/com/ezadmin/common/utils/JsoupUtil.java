@@ -359,6 +359,97 @@ public class JsoupUtil {
             element.attr("type", pluginArray[1]);
         }
     }
+  static  String list="<!doctype html>\n" +
+            "<html lang=\"en\">\n" +
+            "<head>\n" +
+            "    <meta charset=\"UTF-8\">\n" +
+            "    <title>模版</title>\n" +
+            "    <link rel=\"stylesheet\" href=\"https://unpkg.com/mvp.css\">\n" +
+            "</head>\n" +
+            "<body id=\"listtemplate\">\n" +
+            "<div id=\"append_head\">\n" +
+            "</div>\n" +
+            "<ul id=\"tab\">\n" +
+            "</ul>\n" +
+            "<form id=\"search\">\n" +
+            "</form>\n" +
+            "<div id=\"tableButton\">\n" +
+            "</div>\n" +
+            "<table>\n" +
+            "    <thead>\n" +
+            "    <tr id=\"column\">\n" +
+            "        <th id=\"rowbutton\"></th>\n" +
+            "    </tr>\n" +
+            "    </thead>\n" +
+            "    <tbody>\n" +
+            "    <tr>\n" +
+            "        <td>\n" +
+            "            <pre id=\"express\">  </pre>\n" +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "    <tr>\n" +
+            "        <td>\n" +
+            "            <pre id=\"count\"> </pre>\n" +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "    </tbody>\n" +
+            "</table>\n" +
+            "<div id=\"append_foot\">\n" +
+            "\n" +
+            "</div>\n" +
+            "</body>\n" +
+            "</html>";
+    public static Document newlist(){
+         return Jsoup.parse(list);
+    }
+    public static String form="<!doctype html>\n" +
+            "<html lang=\"en\">\n" +
+            "<head>\n" +
+            "    <meta charset=\"UTF-8\">\n" +
+            "    <title>template</title>\n" +
+            "    <link rel=\"stylesheet\" href=\"https://unpkg.com/mvp.css\">\n" +
+            "</head>\n" +
+            "<body id=\"formtemplate\" datasource=\"datasource\" success_url=\"reload\">\n" +
+            "<div id=\"append_head\" class=\"append\"></div>\n" +
+            "<div >\n" +
+            "    <form id=\"inputForm\" method=\"post\" class=\"layui-form\">\n" +
+            "\n" +
+            "    </form>\n" +
+            "    <form id=\"configForm\" class=\"layui-form\">\n" +
+            "        <div class=\"layui-form-item \">\n" +
+            "            <label >初始表达式</label>\n" +
+            "            <div >\n" +
+            "                <pre    item_name=\"init_express\" type=\"\"></pre>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "        <div class=\"layui-form-item \">\n" +
+            "            <label >提交表达式</label>\n" +
+            "            <div >\n" +
+            "                <pre    item_name=\"submit_express\"  type=\"\"> </pre>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "        <div class=\"layui-form-item \">\n" +
+            "            <label >删除表达式</label>\n" +
+            "            <div >\n" +
+            "                <pre     item_name=\"delete_express\" type=\"\"></pre>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "        <div class=\"layui-form-item \">\n" +
+            "            <label >状态表达式</label>\n" +
+            "            <div >\n" +
+            "                <pre   item_name=\"status_express\" type=\"\"></pre>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "    </form>\n" +
+            "</div>\n" +
+            "\n" +
+            "<div id=\"append_foot\" class=\"append\">\n" +
+            "</div>\n" +
+            "</body>\n" +
+            "</html>";
+    public static Document newform(){
+        return Jsoup.parse(form);
+    }
 
 
 }
