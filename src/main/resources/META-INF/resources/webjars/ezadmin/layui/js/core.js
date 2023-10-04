@@ -241,6 +241,7 @@ function renderCascader(cas) {
             var children = _this.attr("ez_children") || 'CHILDREN';
             var multiple = istrue(_this.attr("multi"));
             var itemsJson = _this.attr("itemsJson");
+            var disable_flag = _this.attr("disable_flag");
 
             var itemPlaceholder = _this.attr("placeholder") || '请选择';
             var paramValue = _this.val() || '[]';
@@ -256,6 +257,7 @@ function renderCascader(cas) {
                     prop.label = label;
                     prop.children = children;
                     prop.multiple = multiple;
+                    //prop.disabled = disable_flag=="true";
 
                     if (ezurl) {
                         res = flatToTree(res, 0);
@@ -279,7 +281,9 @@ function renderCascader(cas) {
                         placeholder: itemPlaceholder,
                         collapseTags: collapseTags,
                         showAllLevels: showAllLevels,
+                        disabled : disable_flag=="true",
                         value: paramValue,
+
                         options: res
                     });
                     if (span) {

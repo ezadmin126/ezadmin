@@ -116,7 +116,29 @@ public class FormController extends BaseController {
 
     @EzMapping(value = "detail.html", name = "view")
     public String detail(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String result=form(request,response);
+        String ENCRYPT_FORM_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
+            //自定义ID
+        String ID= getIdInForm(request);
+        if ( StringUtils.isBlank(ENCRYPT_FORM_ID)) {
+            return "404";
+        }
+        Map<String,Object> searchParamsValues=requestToMap(request );
+        Map<String, String> sessionMap = sessionToMap(request.getSession());
+        searchParamsValues.put("ContextPath", request.getContextPath());
+        searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
+        searchParamsValues.put("ID",ID);
+        Map<String, Object> form=new HashMap<>();
+        if(StringUtils.isNotBlank(ENCRYPT_FORM_ID)){
+            form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
+        }
+        if(form==null||form.isEmpty()){
+            return "404";
+        }
+        searchParamsValues.put(JsoupUtil.PLUGIN_FOLD,"detail");
+        formService.fillFormById(form,searchParamsValues,sessionMap);
+        request.setAttribute("ID",ID);
+        request.setAttribute("form",form);
+
         return "layui/form/detail";
     }
 

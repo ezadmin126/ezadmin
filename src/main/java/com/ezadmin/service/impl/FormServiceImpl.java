@@ -147,13 +147,17 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                                     nm.putAll(requestParamMap);
                                     nm.putAll(sessionParamMap);
                                     nm.putAll(initItemMap);
-                                    ItemInitData selectItems = listService.getSelectItems(temp, dataConf, datatype,
-                                            nm);
+                                    ItemInitData selectItems = listService.getSelectItems(temp, dataConf, datatype, nm);
                                     context.setVariable("items", selectItems.getItems());
                                     context.setVariable("data", dataConf);
-                                  //  context.setVariable("list", selectItems.getEzList());
                                     context.setVariable("childItems", selectItems.getChildItems());
                                     context.setVariable("itemsJson", JSONUtils.toJSONString(selectItems.getItems()));
+
+                                    //计算显示
+
+
+
+
                                 } catch (Exception e) {
                                     logger.error("", e);
                                     if (Utils.getLog() != null) {
@@ -163,6 +167,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             }
                         }
                         try {
+                            if(StringUtils.equals(Utils.trimNull(requestParamMap.get(JsoupUtil.PLUGIN_FOLD)),"detail")){
+                                    context.setVariable("disable_flag",true);
+                            }
                             String template = Utils.trimNull(listService.getDbTemplateByCode(Utils.trimNull(item.get("type")),
                                     0, Utils.trimEmptyDefault(requestParamMap.get(JsoupUtil.PLUGIN_FOLD), "form")).get("PLUGIN_BODY"));
 

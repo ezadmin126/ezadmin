@@ -162,8 +162,8 @@
                 <excludes>
                     <exclude>**.db</exclude>
                     <exclude>**/*.db</exclude>
+                    <exclude>**/ezadmin/doc/**</exclude>
                 </excludes>
-
             </resource>
         </resources>
         <finalName>ezadmin-core</finalName>

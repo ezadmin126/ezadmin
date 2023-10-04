@@ -1,5 +1,7 @@
 .form-block-span {
     line-height: 38px !important;
+    display: block !important;
+    width: 100% !important;
 }
 
 .invalid-feedback {
