@@ -7,7 +7,7 @@
 <body id="input-datetime" alias="DATETIME"  type="form" icon="layui-icon-date">
 
 <div id="template" >
-    <div class="layui-col-md12  layui-col-space10 selector" type="input-datetime">
+    <div class="layui-col-md12  layui-col-space10 selector" ez-type="input-datetime">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">日期</label>
             <div class="layui-input-block">
@@ -25,7 +25,7 @@
 </div>
 
 <div id="content">
-    <div class=" selector" th:classappend="${'layui-col-md'+col}" type="input-datetime"
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="input-datetime"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"

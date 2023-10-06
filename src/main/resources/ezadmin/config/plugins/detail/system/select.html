@@ -7,7 +7,7 @@
 <body id="select" alias="6" type="form" icon="layui-icon-share">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md12" type="select">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="select">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">原生下拉框</label>
             <div class="layui-input-block">
@@ -20,7 +20,7 @@
 </div>
 <div id="content">
 
-    <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}" type="select"
+    <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}" ez-type="select"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"

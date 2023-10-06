@@ -615,6 +615,7 @@ function renderTable() {
 
             var inst = treeTable.render({
                 elem: '#treetable',
+                cellMinWidth:110,
                 url: '/ezadmin/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
                 //maxHeight: '501px',
                 cols: col,

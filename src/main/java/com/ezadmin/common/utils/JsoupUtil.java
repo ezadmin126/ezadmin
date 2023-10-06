@@ -283,6 +283,10 @@ public class JsoupUtil {
         } else {
             sb.append(item.tagName() + "-" + type);
         }
+        //默认 输入框
+        if(StringUtils.isBlank(sb.toString())||StringUtils.equals(sb.toString(),"object")){
+            return "input-text";
+        }
         return sb.toString();
     }
 

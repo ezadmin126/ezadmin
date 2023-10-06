@@ -6,7 +6,7 @@
 </head>
 <body id="textarea" alias="8" type="form" icon="layui-icon-form">
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md12" type="textarea">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="textarea">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">多行文本</label>
             <div class="layui-input-block">
@@ -18,7 +18,7 @@
 
 
     <div id="content">
-        <div class=" selector" th:classappend="${'layui-col-md'+col}" type="textarea"
+        <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="textarea"
              th:ez-label="${label}"
              th:ez-item_name="${item_name}"
              th:ez-placeholder="${placeholder}"

@@ -6,7 +6,7 @@
 </head>
 <body id="table" alias="EZ-TABLE" type="form" icon="layui-icon-list">
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md12" type="table">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="table">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">多行文本</label>
             <div class="layui-input-block">
@@ -42,7 +42,7 @@
 </div>
 <div id="content">
 
-    <div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" type="table"
+    <div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" ez-type="table"
      th:ez-label="${label}"
      th:ez-item_name="${item_name}"
      th:ez-placeholder="${placeholder}"

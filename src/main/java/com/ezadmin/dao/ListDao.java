@@ -372,7 +372,7 @@ public class ListDao extends  JsoupUtil{
                 json.put("style",userStyle);
                 styleTomap(json,rowbutton);
                 json.put("title","操作");
-                coreMap.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json));
+                coreMap.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json).replaceAll("\"","'"));
             } catch (Exception e) {
                 log.error("", e);
             }

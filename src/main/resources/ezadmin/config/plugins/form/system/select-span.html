@@ -7,7 +7,7 @@
 <body id="select-span" type="form" icon="layui-icon-form">
 
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md12" type="select-span">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="select-span">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">纯文字下拉框</label>
             <div class="layui-input-block">
@@ -18,7 +18,7 @@
 </div>
 <div id="content">
 
-    <div class=" selector" th:classappend="${'layui-col-md'+col}" type="select-span"
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="select-span"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"

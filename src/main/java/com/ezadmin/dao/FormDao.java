@@ -472,7 +472,7 @@ public class FormDao extends JsoupUtil{
         return Jsoup.parse(sb.toString()).body().child(0);
     }
     Element newFormItem(String label,String col){
-        return Jsoup.parse("<div class=\"layui-col-space10  layui-col-md"+col+"\"  col='"+col+"'   >\n" +
+        return Jsoup.parse("\n<div class=\"layui-col-space10  layui-col-md"+col+"\"  col='"+col+"'   >\n" +
                 "                    <div class=\"layui-form-item \">\n" +
                 "                        <label class=\"layui-form-label  \">"+label+"</label>\n" +
                 "                        <div class=\"layui-input-block\">\n" +
@@ -480,7 +480,7 @@ public class FormDao extends JsoupUtil{
                 "                            </object>\n" +
                 "                        </div>\n" +
                 "                    </div>\n" +
-                "                </div>").body().child(0);
+                "                </div>\n").body().child(0);
     }
 
 }
