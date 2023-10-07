@@ -17,12 +17,4 @@ public class ArrayUtils {
         return paramsStatic.toArray();
     }
 
-//    public static List<Long>  mapToListLong(String[] array){
-//        if(array==null||array.length==0){
-//            return Collections.emptyList();
-//        }
-//        return Arrays.asList(array).stream().map(item->NumberUtils.toLong(item)).collect(Collectors.toList());
-//    }
-
-
 }

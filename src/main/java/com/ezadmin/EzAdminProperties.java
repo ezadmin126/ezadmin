@@ -28,11 +28,11 @@ public class EzAdminProperties {
     private String uploadPath="/data/upload/ezadmin";
 
     private String editLocation;
-    private String listResourceLocation="classpath*:/ezadmin/config/list/**/*.html";
-    private String formResourceLocation="classpath*:/ezadmin/config/form/**/*.html";
-    private String pluginsFormResourceLocation="classpath*:/ezadmin/config/plugins/form/**/*.html";
-    private String pluginsListResourceLocation="classpath*:/ezadmin/config/plugins/list/**/*.html";
-    private String pluginsDetailResourceLocation="classpath*:/ezadmin/config/plugins/detail/**/*.html";
+    private String listResourceLocation="classpath*:/ezadmin/config/layui/list/**/*.html";
+    private String formResourceLocation="classpath*:/ezadmin/config/layui/form/**/*.html";
+    private String pluginsFormResourceLocation="classpath*:/ezadmin/config/layui/plugins/form/**/*.html";
+    private String pluginsListResourceLocation="classpath*:/ezadmin/config/layui/plugins/list/**/*.html";
+    private String pluginsDetailResourceLocation="classpath*:/ezadmin/config/layui/plugins/detail/**/*.html";
     private String configJson="{\"favicon\":\"/static/favicon.ico\",\"logo\":\"/static/logo.png\"}";
 
 

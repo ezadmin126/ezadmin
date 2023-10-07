@@ -50,7 +50,7 @@ public class FormEditController extends BaseController {
         }
         formService.fillFormById(form,searchParamsValues,sessionMap);
         request.setAttribute("form",form);
-        return "layui/pages/formedit";
+        return "layui/formedit";
     }
 
 

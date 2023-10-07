@@ -26,47 +26,45 @@ public class ListController extends BaseController {
     @EzMapping("list.html")
     public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
         try {
             long start = System.currentTimeMillis();
-
-            logger.info("ezadmin LIST={} START ",ENCRYPT_LIST_ID);
-
-            Map<String, Object> requestParamMap =requestToMap(request);
-            if(NumberUtils.toInt(""+requestParamMap.get("perPageInt"))>5000){
-                requestParamMap.put("perPageInt",5000);
+            if (logger.isInfoEnabled()) {
+                logger.info("ezadmin listUrlCode={} start", listUrlCode);
             }
+            Map<String, Object> requestParamMap = requestToMap(request);
+
             requestParamMap.put("ContextPath", request.getContextPath());
 
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
-            Map<String, Object> list=new HashMap<>();
-            if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-                list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+            Map<String, Object> list = new HashMap<>();
+            if (StringUtils.isNotBlank(listUrlCode)) {
+                list = JSONUtils.parseObjectMap(listService.selectAllListById(listUrlCode));
             }
-            if (list  == null||list.isEmpty()) {
-                EzResult.instance().code("404").setMessage("没有找到配置文件" +ENCRYPT_LIST_ID)
+            if (list == null || list.isEmpty()) {
+                EzResult.instance().code("404").setMessage("没有找到配置文件" + listUrlCode)
                         .setSuccess(false)
                         .printJSONUtils(response);
-                return "404";
+                return EzBootstrap.instance().getAdminStyle() + "/404";
             } else {
                 request.setAttribute(RequestParamConstants._SEARCH_ITEM_DISPLAY, request.getParameter("_SEARCH_ITEM_DISPLAY"));
-                request.setAttribute("_EZ_MOBILE_FLAG",request.getParameter("_EZ_MOBILE_FLAG"));
-                request.setAttribute("listUrl", request.getContextPath()+"/ezadmin/list/list-" + ENCRYPT_LIST_ID);
-                request.setAttribute("_EZ_SERVER_NAME",  "//"+request.getServerName()+":"+request.getServerPort());
-                if(logger.isDebugEnabled()){
-                    logger.debug("EZADMIN LIST={} 结束执行列表  ,总共耗时：{} ms",ENCRYPT_LIST_ID,(System.currentTimeMillis() - start) );
+                request.setAttribute("_EZ_MOBILE_FLAG", request.getParameter("_EZ_MOBILE_FLAG"));
+                request.setAttribute("listUrl", request.getContextPath() + "/ezadmin/list/list-" + listUrlCode);
+                request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("EZADMIN LIST={} 结束执行列表  ,总共耗时：{} ms", listUrlCode, (System.currentTimeMillis() - start));
                 }
-                listService.fillListById(list,requestParamMap,sessionParamMap);
-                request.setAttribute("data",list);
-                return "layui/list/list";
+                listService.fillListById(list, requestParamMap, sessionParamMap);
+                request.setAttribute("data", list);
+                return EzBootstrap.instance().getAdminStyle() + "/list";
             }
-        }catch(Exception e){
-            EzResult.instance().code("500").setMessage("服务器异常" +ExceptionUtils.getFullStackTrace(e))
+        } catch (Exception e) {
+            EzResult.instance().code("500").setMessage("服务器异常" + ExceptionUtils.getFullStackTrace(e))
                     .setSuccess(false)
                     .printJSONUtils(response);
-            logger.error("EZADMIN LIST={} 服务器异常 ",ENCRYPT_LIST_ID,e);
-            return "500";
+            logger.error("EZADMIN LIST={} 服务器异常 ", listUrlCode, e);
+            return EzBootstrap.instance().getAdminStyle() + "/500";
         }
     }
 
@@ -77,24 +75,24 @@ public class ListController extends BaseController {
             if (Utils.getLog() != null) {
                 Utils.addLog("开始执行列表 list_id=" + ENCRYPT_LIST_ID);
             }
-            Map<String, Object> requestParamMap =requestToMap(request);
+            Map<String, Object> requestParamMap = requestToMap(request);
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
-            Map<String, Object> list=new HashMap<>();
-            if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-                list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+            Map<String, Object> list = new HashMap<>();
+            if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
+                list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
             }
 
-            listService.fillCountById(list,requestParamMap,sessionParamMap);
+            listService.fillCountById(list, requestParamMap, sessionParamMap);
 
-            request.setAttribute("_EZ_MOBILE_FLAG",request.getParameter("_EZ_MOBILE_FLAG"));
-            request.setAttribute("listUrl", request.getContextPath()+"/ezadmin/list/list-" + ENCRYPT_LIST_ID);
-            request.setAttribute("_EZ_SERVER_NAME",  "//"+request.getServerName()+":"+request.getServerPort());
+            request.setAttribute("_EZ_MOBILE_FLAG", request.getParameter("_EZ_MOBILE_FLAG"));
+            request.setAttribute("listUrl", request.getContextPath() + "/ezadmin/list/list-" + ENCRYPT_LIST_ID);
+            request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
 
             return EzResult.instance().data(list).count(1000);
-        }catch(Exception e){
-            Utils.addLog("结束执行列表  异常："  ,e);
-            return  EzResult.instance().code("500").setMessage(ExceptionUtils.getFullStackTrace(e));
+        } catch (Exception e) {
+            Utils.addLog("结束执行列表  异常：", e);
+            return EzResult.instance().code("500").setMessage(ExceptionUtils.getFullStackTrace(e));
         }
     }
 
@@ -102,141 +100,145 @@ public class ListController extends BaseController {
     @EzMapping("tree.html")
     public String tree(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
         try {
-            logger.info("ezadmin LIST={} START ",ENCRYPT_LIST_ID);
-            Map<String, Object> requestParamMap =requestToMap(request);
-            if(NumberUtils.toInt(""+requestParamMap.get("perPageInt"))>5000){
-                requestParamMap.put("perPageInt",5000);
+            logger.info("ezadmin LIST={} START ", ENCRYPT_LIST_ID);
+            Map<String, Object> requestParamMap = requestToMap(request);
+            if (NumberUtils.toInt("" + requestParamMap.get("perPageInt")) > 5000) {
+                requestParamMap.put("perPageInt", 5000);
             }
             requestParamMap.put("ContextPath", request.getContextPath());
-            requestParamMap.put("loadDataFlag",0);
+            //是否加载数据，由于是异步加载，所以无需加载数据：：treedata.html
+            requestParamMap.put("loadDataFlag", 0);
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
-            Map<String, Object> list=new HashMap<>();
-            if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-                list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+            Map<String, Object> list = new HashMap<>();
+            if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
+                list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
             }
 
-            listService.fillListById(list,requestParamMap,sessionParamMap);
-            Map<String, Object> core= (Map<String, Object>)  list.get("core");
-                //组装col
-            List col=new ArrayList();
+            listService.fillListById(list, requestParamMap, sessionParamMap);
+            Map<String, Object> core = (Map<String, Object>) list.get("core");
+            //组装col
+            List col = new ArrayList();
             col.add(JSONUtils.parseObjectMap("{\"type\": \"checkbox\" }"));
-            List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
+            List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("col");
             for (int i = 0; i < colList.size(); i++) {
-                String laydata=Utils.getStringByObject(colList.get(i),JsoupUtil.LAYDATA);
+                String laydata = Utils.getStringByObject(colList.get(i), JsoupUtil.LAYDATA);
                 col.add(JSONUtils.parseObjectMap(laydata));
             }
-                String layout=Utils.trimNull(core.get(JsoupUtil.LAYDATA));
-                Map m=JSONUtils.parseObjectMap(layout);
-                m.put("title","操作");
-                m.put("toolbar","#TPL-treeTable-demo-tools");
-                col.add(m);
-                request.setAttribute("data", list);
-                request.setAttribute("coldata",JSONUtils.toJSONString(col));
-                request.setAttribute(RequestParamConstants._SEARCH_ITEM_DISPLAY, request.getParameter("_SEARCH_ITEM_DISPLAY"));
-                request.setAttribute("_EZ_MOBILE_FLAG",request.getParameter("_EZ_MOBILE_FLAG"));
-                request.setAttribute("listUrl", request.getContextPath()+"/ezadmin/list/tree-" + ENCRYPT_LIST_ID);
+            String layout = Utils.trimNull(core.get(JsoupUtil.LAYDATA));
+            Map m = JSONUtils.parseObjectMap(layout);
+            m.put("title", "操作");
+            m.put("toolbar", "#TPL-treeTable-demo-tools");
+            col.add(m);
+            request.setAttribute("data", list);
+            request.setAttribute("coldata", JSONUtils.toJSONString(col));
+            request.setAttribute(RequestParamConstants._SEARCH_ITEM_DISPLAY, request.getParameter("_SEARCH_ITEM_DISPLAY"));
+            request.setAttribute("_EZ_MOBILE_FLAG", request.getParameter("_EZ_MOBILE_FLAG"));
+            request.setAttribute("listUrl", request.getContextPath() + "/ezadmin/list/tree-" + ENCRYPT_LIST_ID);
 
-                request.setAttribute("_EZ_SERVER_NAME",  "//"+request.getServerName()+":"+request.getServerPort());
+            request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
 
-                return "layui/list/treelist";
+            return EzBootstrap.instance().getAdminStyle() + "/treelist";
 
-        }catch(Exception e){
-            EzResult.instance().code("500").setMessage("服务器异常" +ExceptionUtils.getFullStackTrace(e))
+        } catch (Exception e) {
+            EzResult.instance().code("500").setMessage("服务器异常" + ExceptionUtils.getFullStackTrace(e))
                     .setSuccess(false)
                     .printJSONUtils(response);
-            logger.error("EZADMIN LIST={} 服务器异常 ",ENCRYPT_LIST_ID,e);
-            return "500";
+            logger.error("EZADMIN LIST={} 服务器异常 ", ENCRYPT_LIST_ID, e);
+            return EzBootstrap.instance().getAdminStyle() + "/500";
         }
     }
+
     @EzMapping("treedata.html")
     public EzResult treedata(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String listId = Utils.trimNull(request.getAttribute("LIST_ID")) ;
-        String ENCRYPT_LIST_ID =Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID")) ;
+        String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
 
-         if(Utils.getLog()!=null) {
+        if (Utils.getLog() != null) {
             Utils.addLog("开始执行列表 list_id=" + listId);
         }
-        Map<String, Object> requestParamMap =requestToMap(request);
+        Map<String, Object> requestParamMap = requestToMap(request);
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
         String sessionUserId = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY));
-        sessionParamMap.put(SessionConstants.EZ_SESSION_USER_ID_KEY,sessionUserId);
-        Map<String, Object> list=new HashMap<>();
-        if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-            list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+        sessionParamMap.put(SessionConstants.EZ_SESSION_USER_ID_KEY, sessionUserId);
+        Map<String, Object> list = new HashMap<>();
+        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
+            list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
         }
-        listService.fillTreeById(list,requestParamMap,sessionParamMap);
-        Map<String, Object> core= (Map<String, Object>)  list.get("core");
+        listService.fillTreeById(list, requestParamMap, sessionParamMap);
+        Map<String, Object> core = (Map<String, Object>) list.get("core");
         return EzResult.instance().data(core.get("dataList"));
     }
-//
+
+    //
     @EzMapping("trace.html")
     public void trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String listId =Utils.trimNull(request.getAttribute("LIST_ID")) ;
-        String ENCRYPT_LIST_ID =Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID")) ;
-        long start=System.currentTimeMillis();
-        if(Utils.getLog()!=null) {
+        String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        long start = System.currentTimeMillis();
+        if (Utils.getLog() != null) {
             Utils.addLog("开始执行列表 ID=" + ENCRYPT_LIST_ID);
         }
 
-        Map<String, Object> requestParamMap =requestToMap(request);
+        Map<String, Object> requestParamMap = requestToMap(request);
 
 
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
-        Map<String, Object> list=new HashMap<>();
-        if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-            list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+        Map<String, Object> list = new HashMap<>();
+        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
+            list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
         }
-        listService.fillCountById(list,requestParamMap,sessionParamMap);
-        listService.fillListById(list,requestParamMap,sessionParamMap);
-        listService.fillTreeById(list,requestParamMap,sessionParamMap);
+        listService.fillCountById(list, requestParamMap, sessionParamMap);
+        listService.fillListById(list, requestParamMap, sessionParamMap);
+        listService.fillTreeById(list, requestParamMap, sessionParamMap);
 
-        if(Utils.getLog()!=null) {
+        if (Utils.getLog() != null) {
             Utils.addLog("requestParamMap " + requestParamMap);
 
         }
-        if(Utils.getLog()!=null) {
+        if (Utils.getLog() != null) {
             Utils.addLog("sessionParamMap " + JSONUtils.toJSONString(sessionParamMap));
         }
 
-        request.setAttribute("data",list);
-        request.setAttribute("_SEARCH_ITEM_DISPLAY",request.getParameter("_SEARCH_ITEM_DISPLAY"));
+        request.setAttribute("data", list);
+        request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
 
-        request.setAttribute("listUrl",request.getContextPath()+"/ezadmin/list/list-"+ENCRYPT_LIST_ID);
-        if(Utils.getLog()!=null) {
+        request.setAttribute("listUrl", request.getContextPath() + "/ezadmin/list/list-" + ENCRYPT_LIST_ID);
+        if (Utils.getLog() != null) {
             Utils.addLog("结束执行列表 list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
         }
     }
+
     @EzMapping("api.html")
     public EzResult api(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String listId =Utils.trimNull(request.getAttribute("LIST_ID")) ;
-        String ENCRYPT_LIST_ID =Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID")) ;
-        long start=System.currentTimeMillis();
-        if(Utils.getLog()!=null) {
+        String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        long start = System.currentTimeMillis();
+        if (Utils.getLog() != null) {
             Utils.addLog("开始执行列表 list_id=" + listId);
         }
-        Map<String, Object> requestParamMap =requestToMap(request);
+        Map<String, Object> requestParamMap = requestToMap(request);
 
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
-        Map<String, Object> list=new HashMap<>();
-        if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-            list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+        Map<String, Object> list = new HashMap<>();
+        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
+            list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
         }
-         listService.fillListById(list,requestParamMap,sessionParamMap);
+        listService.fillListById(list, requestParamMap, sessionParamMap);
 
-        Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
-        List<Map<String,Object>> dataList=(List<Map<String,Object>>)coreMap.get("dataList");
+        Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>) coreMap.get("dataList");
 
-        request.setAttribute("data",list);
-        request.setAttribute("_SEARCH_ITEM_DISPLAY",request.getParameter("_SEARCH_ITEM_DISPLAY"));
+        request.setAttribute("data", list);
+        request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
 
-        request.setAttribute("listUrl",request.getContextPath()+"/ezadmin/list/list-"+ENCRYPT_LIST_ID);
+        request.setAttribute("listUrl", request.getContextPath() + "/ezadmin/list/list-" + ENCRYPT_LIST_ID);
 
-         if(Utils.getLog()!=null) {
+        if (Utils.getLog() != null) {
             Utils.addLog("结束执行列表 list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
         }
         return EzResult.instance().data(dataList).count(dataList.size());
@@ -244,56 +246,50 @@ public class ListController extends BaseController {
 
     @EzMapping("selectCols.html")
     public String selectCols(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String ENCRYPT_LIST_ID =Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID")) ;
-        Map<String, Object> requestParamMap =requestToMap(request);
-         requestParamMap.put("default_empty","1");
-        Map<String, Object> list=new HashMap<>();
-        if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-            list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        Map<String, Object> requestParamMap = requestToMap(request);
+        requestParamMap.put("default_empty", "1");
+        Map<String, Object> list = new HashMap<>();
+        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
+            list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
         }
-         List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
-         List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
-          request.setAttribute("fromSearchField",searchList);
-         request.setAttribute("fromColField",colList);
-        request.setAttribute("IS_DEBUG",request.getParameter("IS_DEBUG"));
-        request.setAttribute("_EZ_SERVER_NAME",  "//"+request.getServerName()+":"+request.getServerPort());
-        return "layui/pages/custom_cols_cache";
+        List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
+        List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("col");
+        request.setAttribute("fromSearchField", searchList);
+        request.setAttribute("fromColField", colList);
+        request.setAttribute("IS_DEBUG", request.getParameter("IS_DEBUG"));
+        request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
+        return EzBootstrap.instance().getAdminStyle() + "/custom_cols_cache";
     }
 
-    @EzMapping("demo.html")
-    public String demo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return  "layui/pages/demo";
-    }
 
     @EzMapping("navs.html")
     public void navs(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        InitVO vo=new InitVO()  ;
-        List<Info> toproot=new ArrayList<>();
-
-        List<Info> root=new ArrayList<>();
-
-        Info listN=new Info();
+        InitVO vo = new InitVO();
+        List<Info> toproot = new ArrayList<>();
+        List<Info> root = new ArrayList<>();
+        Info listN = new Info();
         listN.setTitle("列表管理");
         listN.setId("1");
         listN.setPid("0");
         listN.setHref("/ezadmin/list/list-listHtml");
         root.add(listN);
 
-        Info listF=new Info();
+        Info listF = new Info();
         listF.setTitle("表单管理");
         listF.setId("2");
         listF.setPid("0");
         listF.setHref("/ezadmin/list/list-formHtml");
         root.add(listF);
 
-        Info TOP=new Info( );
+        Info TOP = new Info();
         TOP.setTitle("系统管理");
         TOP.setChild(root);
         toproot.add(TOP);
-        vo.homeInfo(EzBootstrap.instance().getSystemName(),"").
-                logoInfo("","/ezadmin/index.html",EzBootstrap.instance().getConfig().get("logo")+"")
+        vo.homeInfo(EzBootstrap.instance().getSystemName(), "").
+                logoInfo("", "/ezadmin/index.html", EzBootstrap.instance().getConfig().get("logo") + "")
                 .setMenuInfo(toproot);
-        EzResult.instance().msg("0","ok")
+        EzResult.instance().msg("0", "ok")
                 .data(vo).printJSONUtils(response);
     }
 

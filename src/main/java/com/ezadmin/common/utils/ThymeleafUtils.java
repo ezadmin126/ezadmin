@@ -30,7 +30,7 @@ public class ThymeleafUtils {
         templateResolver.setTemplateMode(TemplateMode.HTML);
         stringEngine.setTemplateResolver(templateResolver);
         ClassLoaderTemplateResolver templateResolverClass = new ClassLoaderTemplateResolver();
-        templateResolverClass.setPrefix("ezadmin/view/");
+        templateResolverClass.setPrefix("ezadmin/config/");
         templateResolverClass.setSuffix(".html");
         templateResolverClass.setTemplateMode(TemplateMode.HTML);
         templateResolverClass.setCacheable(cache);

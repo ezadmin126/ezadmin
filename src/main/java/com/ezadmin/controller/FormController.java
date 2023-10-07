@@ -30,7 +30,7 @@ public class FormController extends BaseController {
     @EzMapping(value = "trace.html", name = "view")
     public String trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
             String result=form(request,response);
-            return "form/form";
+            return EzBootstrap.instance().getAdminStyle()+"/form";
     }
     @EzMapping(value = "form.html", name = "view")
     public String form(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -42,7 +42,7 @@ public class FormController extends BaseController {
         String ID= getIdInForm(request);
         if (StringUtils.isBlank(formId)&&StringUtils.isBlank(ENCRYPT_FORM_ID)) {
            // notFound(false,request,response);
-            return "404";
+            return EzBootstrap.instance().getAdminStyle()+"/404";
         }
         Map<String,Object> searchParamsValues=requestToMap(request );
         Map<String, String> sessionMap = sessionToMap(request.getSession());
@@ -55,12 +55,12 @@ public class FormController extends BaseController {
             form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
         }
         if(form==null||form.isEmpty()){
-            return "404";
+            return EzBootstrap.instance().getAdminStyle()+"/404";
         }
         formService.fillFormById(form,searchParamsValues,sessionMap);
         request.setAttribute("ID",ID);
         request.setAttribute("form",form);
-        return "layui/form/form";
+        return EzBootstrap.instance().getAdminStyle()+"/form";
      }
 
     @EzMapping("upload.html")
@@ -139,7 +139,7 @@ public class FormController extends BaseController {
         request.setAttribute("ID",ID);
         request.setAttribute("form",form);
 
-        return "layui/form/detail";
+        return EzBootstrap.instance().getAdminStyle()+"/detail";
     }
 
     @EzMapping("doSubmitAdd.html")

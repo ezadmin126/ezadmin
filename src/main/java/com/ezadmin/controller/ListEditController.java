@@ -65,7 +65,7 @@ public class ListEditController extends BaseController {
 
             request.setAttribute("data",list);
 
-            return "layui/pages/listedit";
+            return "layui/listedit";
     }
     @EzMapping("submitEdit.html")
     public EzResult edit(HttpServletRequest request, HttpServletResponse response) throws Exception {
