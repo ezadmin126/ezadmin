@@ -332,6 +332,7 @@
                         <pre style="display: none" id="count_express" th:utext="${data.core.count_express}"></pre>
                         <pre style="display: none" id="orderby_express" th:utext="${data.core.orderby_express}"></pre>
                         <pre style="display: none" id="groupby_express" th:utext="${data.core.groupby_express}"></pre>
+                        <pre style="display: none" id="displayorder_express" th:utext="${data.core.displayorder_express}"></pre>
                     </blockquote>
                     <div class=" layui-row dragula-container layui-col-space15  layui-card layui-col-md12   systemfloat"  style=";border: 1px dashed #d1d1d1;" config-form-type="searchcore"
                          id="searchCoreContainer" >
@@ -756,6 +757,16 @@
                             <label class="layui-form-label">分组表达式</label>
                             <div class="layui-input-block">
                                 <input type="text" name="groupby_express" autocomplete="false" class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/list/listcore.html#groupby"></i>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">排序值更新表达式</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="displayorder_express" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em">
                                     <i class="ez-help layui-icon-tips layui-icon"
                                        src="/webjars/ezadmin/doc/list/listcore.html#groupby"></i>

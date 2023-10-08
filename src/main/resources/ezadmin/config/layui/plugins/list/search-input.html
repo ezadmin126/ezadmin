@@ -18,6 +18,7 @@
 <div id="content">
 
 <div class="selector   list-item "  th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
+
      config-form-type="searchcore" ez-type="input-text"
      th:style="${model.style}"
      th:item_name="${model.item_name}"
@@ -33,7 +34,7 @@
      th:ez-valid_rule="${model.valid_rule}"
      th:ez-valid_msg="${model.valid_msg}"
      th:ez-style="${model.style}"
-     th:classappend="${(model.plugin=='hidden'||model.plugin=='input-hidden')?'list-item-hidden':''}"
+
       >
     <div  class="layui-form-item" >
         <label class="layui-form-label" th:for="${'search-itemName-' + model.item_name}"

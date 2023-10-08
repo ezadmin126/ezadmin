@@ -1,8 +1,10 @@
 package com.ezadmin.controller;
 
+import com.ezadmin.dao.Dao;
 import com.ezadmin.dao.model.Info;
 import com.ezadmin.dao.model.InitVO;
 import com.ezadmin.dao.ListDao;
+import com.ezadmin.plugins.express.executor.DefaultExpressExecutor;
 import com.ezadmin.service.ListService;
 import com.ezadmin.common.annotation.EzMapping;
 import com.ezadmin.common.constants.RequestParamConstants;
@@ -16,6 +18,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.util.*;
 
 @EzMapping("/ezadmin/list/")
@@ -291,6 +294,38 @@ public class ListController extends BaseController {
                 .setMenuInfo(toproot);
         EzResult.instance().msg("0", "ok")
                 .data(vo).printJSONUtils(response);
+    }
+
+    @EzMapping("doOrder.html")
+    public EzResult doOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String formId =  Utils.trimNull(request.getAttribute("FORM_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+
+        try {
+            if (StringUtils.isBlank(formId)&&StringUtils.isBlank(ENCRYPT_LIST_ID)) {
+                return EzResult.instance().code("404");
+            }
+            Map<String, Object> listDb = listService.selectAllListMapById( ENCRYPT_LIST_ID);
+            Map<String, Object> core = (Map<String, Object>) listDb.get("core");
+            String orderExpress=Utils.trimNull(core.get(JsoupUtil.DISPLAYORDER_EXPRESS));
+            Map<String,Object> searchParamsValues=requestToMap(request );
+            Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+            DataSource dataSource= EzBootstrap.instance().getDataSourceByKey(StringUtils.lowerCase(Utils.trimNull(core.get(JsoupUtil.DATASOURCE))) );
+
+            //计算初始化表单的参数值
+            Object result = DefaultExpressExecutor.createInstance().datasource(dataSource)
+                    .express(orderExpress)
+                    .addParam(searchParamsValues)
+                    .addRequestParam(searchParamsValues)
+                    .addSessionParam(sessionParamMap)
+                    .execute();
+
+            return EzResult.instance() ;
+        }
+        catch (Exception e) {
+            logger.error("ezform doOrder error {} {}  ",formId,ENCRYPT_LIST_ID ,e);
+            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
+        }
     }
 
 }

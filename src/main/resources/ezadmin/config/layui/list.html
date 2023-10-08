@@ -31,7 +31,8 @@
 <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
 <input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${data.core.emptyname}">
-<div class="layui-container">
+
+<div  th:classappend="${#strings.equals('pure',data.core.tablestyle)?'layui-fluid':'layui-container'}" >
     <div class="layui-tab layui-tab-brief searchWrap">
         <ul class="layui-tab-title" id="tab" th:if="${not #lists.isEmpty(data.tab)}"  >
             <li th:item_id="${item.item_name}" th:item_name="${item.item_name}"
@@ -91,6 +92,7 @@
         </div><!--tab-content-->
     </div><!--tab -->
      <div class="layui-row">
+         <hr class="layui-border-blue">
         <div class="layui-col-xs9">
             <div class="  tableButton  " style="text-align: left">
                 <div th:remove="tag" th:each="item:${data.tablebtn}" th:utext="${item.html}"></div>
@@ -118,9 +120,9 @@
         <div class="layui-card-body" style=" border: 1px solid #eee; margin-top: 5px;height: 100%
 ">
             <div id="table-wrap" style="height: 100%">
-                <table border-spacing="0" th:lay-filter="${not #strings.equals('pure',data.core.tablestyle)?'mytable':''}"
+                <table   th:lay-filter="${not #strings.equals('pure',data.core.tablestyle)?'mytable':''}"
                        id="mytable"
-                       class="  layui-table ez-table " style=" width:100%">
+                       class="  layui-table ez-table " >
                     <thead style="text-align: center">
                     <tr th:f="${data.core.firstcol}">
 
@@ -171,4 +173,8 @@
 <script th:src="${contextName+'/webjars/ezadmin/layui/js/ezlist.js?v='+vi}" type="text/javascript"></script>
 
 [(${data.core.append_foot})]
+
+<script th:if="${#strings.equals('pure',data.core.tablestyle)}">
+    afterAllDataLoad();
+</script>
 </html>

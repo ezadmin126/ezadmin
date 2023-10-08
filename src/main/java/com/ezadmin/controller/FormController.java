@@ -235,35 +235,45 @@ public class FormController extends BaseController {
     }
     @EzMapping("doDelete.html")
     public EzResult doDelete(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String formId =  Utils.trimNull(request.getAttribute("FORM_ID"));
         String ENCRYPT_FORM_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
-        String express="";
+
         try {
             String ID=getIdInForm(request);
-            if (StringUtils.isBlank(formId)&&StringUtils.isBlank(ENCRYPT_FORM_ID)) {
+            if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, String> form = formService.selectFormById(formId,ENCRYPT_FORM_ID);
+            Map<String, Object>   form=    formService.selectAllFormMapById(ENCRYPT_FORM_ID)  ;
 
             if (form == null) {
                 return EzResult.instance().code("404");
             }
-            formId=form.get("FORM_ID");
-            EzSqlogDataSource formDs = EzBootstrap.instance().getDataSourceByKey(form.get("datasource"));
-              express = Utils.trimNull(form.get(JsoupUtil.DELETE_EXPRESS));
-
+            EzSqlogDataSource formDs=null;
+            Map<String, Object> core=(Map<String, Object>)form.get("core");
+            if(core!=null){
+                formDs= EzBootstrap.instance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
+            }else{
+                form.put("core",new HashMap<>());
+            }
+            String express=  Utils.trimNull(core.get(JsoupUtil.DELETE_EXPRESS));
             Map<String, Object> paras = new HashMap<>();
             paras.put("ID", ID);
-            List<Map<String, String>> itemOriginList = formService.getItemListByFormId(formId,ENCRYPT_FORM_ID);
-
-            for (int i = 0; i < itemOriginList.size(); i++) {
-                String itemName = Utils.trimNull(itemOriginList.get(i).get(JsoupUtil.ITEM_NAME));
-                paras.put(itemName, request.getParameter(itemName));
+            List<Map<String,Object>> cardList=(List<Map<String,Object>>)form.get("cards");
+            if(Utils.isNotEmpty(cardList)){
+                for (int i = 0; i < cardList.size(); i++) {
+                    List<Map<String,Object>> items=(List<Map<String,Object>>)cardList.get(i).get("items");
+                    if(Utils.isNotEmpty(items)) {
+                        for (int j = 0; j < items.size(); j++) {
+                            Map<String, Object> item = items.get(j);
+                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME)) ;
+                            paras.put(item_name, request.getParameter(item_name));
+                        }
+                    }
+                }
             }
 
             Map<String,Object> searchParamsValues=requestToMap(request );
             paras.putAll(searchParamsValues);
-            logger.info("保存表单 {}{}{}",  formId,
+            logger.info("保存表单 {}{}{}",  ENCRYPT_FORM_ID,
                     ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
             //计算初始化表单的参数值
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
@@ -271,7 +281,6 @@ public class FormController extends BaseController {
                     .addParam(paras)
                     .addRequestParam(requestToMap(request))
                     .execute();
-
 
             Object rowId=result;
             if(rowId instanceof  EzResult){
@@ -283,40 +292,52 @@ public class FormController extends BaseController {
             }
             return EzResult.instance().data( toFormId(rowId,request) );
         } catch (Exception e) {
-            logger.info("保存表单失败{}{}{}"  , express,formId,ENCRYPT_FORM_ID,e);
+            logger.info("保存表单失败{}"  ,ENCRYPT_FORM_ID,e);
             return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
         }
     }
     @EzMapping("doStatus.html")
     public EzResult doStatus(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String formId =  Utils.trimNull(request.getAttribute("FORM_ID"));
+
         String ENCRYPT_FORM_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
-        String express="";
+
         try {
             String ID=getIdInForm(request);
-            if (StringUtils.isBlank(formId)&&StringUtils.isBlank(ENCRYPT_FORM_ID)) {
+            if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, String> form = formService.selectFormById(formId,ENCRYPT_FORM_ID);
+            Map<String, Object>   form=    formService.selectAllFormMapById(ENCRYPT_FORM_ID)  ;
+
             if (form == null) {
                 return EzResult.instance().code("404");
             }
-            formId=form.get("FORM_ID");
-            EzSqlogDataSource formDs = EzBootstrap.instance().getDataSourceByKey(form.get("datasource"));
-              express = Utils.trimNull(form.get(JsoupUtil.STATUS_EXPRESS));
-
+            EzSqlogDataSource formDs=null;
+            Map<String, Object> core=(Map<String, Object>)form.get("core");
+            if(core!=null){
+                formDs= EzBootstrap.instance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
+            }else{
+                form.put("core",new HashMap<>());
+            }
+            String express=  Utils.trimNull(core.get(JsoupUtil.STATUS_EXPRESS));
             Map<String, Object> paras = new HashMap<>();
             paras.put("ID", ID);
-            List<Map<String, String>> itemOriginList = formService.getItemListByFormId(formId,ENCRYPT_FORM_ID);
-
-            for (int i = 0; i < itemOriginList.size(); i++) {
-                String itemName = Utils.trimNull(itemOriginList.get(i).get(JsoupUtil.ITEM_NAME));
-                paras.put(itemName, request.getParameter(itemName));
+            List<Map<String,Object>> cardList=(List<Map<String,Object>>)form.get("cards");
+            if(Utils.isNotEmpty(cardList)){
+                for (int i = 0; i < cardList.size(); i++) {
+                    List<Map<String,Object>> items=(List<Map<String,Object>>)cardList.get(i).get("items");
+                    if(Utils.isNotEmpty(items)) {
+                        for (int j = 0; j < items.size(); j++) {
+                            Map<String, Object> item = items.get(j);
+                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME)) ;
+                            paras.put(item_name, request.getParameter(item_name));
+                        }
+                    }
+                }
             }
 
             Map<String,Object> searchParamsValues=requestToMap(request );
             paras.putAll(searchParamsValues);
-            logger.info("保存表单 {}{}{}",  formId,
+            logger.info("保存表单 {} {}"   ,
                     ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
             //计算初始化表单的参数值
             Object rowId = DefaultExpressExecutor.createInstance().datasource(formDs)
@@ -326,7 +347,7 @@ public class FormController extends BaseController {
                     .execute();
             return EzResult.instance().data( toFormId(rowId,request) );
         } catch (Exception e) {
-            logger.info("保存表单失败{}{}{}"  , express,formId,ENCRYPT_FORM_ID,e);
+            logger.info("保存表单失败{}  "  ,   ENCRYPT_FORM_ID,e);
             return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
         }
     }

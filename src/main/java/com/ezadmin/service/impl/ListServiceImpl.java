@@ -36,10 +36,6 @@ public class ListServiceImpl implements ListService {
     Dao dao=Dao.getInstance();
     EzBootstrap bootstrap=EzBootstrap.instance();
 
-
-
-
-
     @Override
     public List<Map<String, Object>> getDataListByListId(DataSource dataSource,Map<String, Object> list,
                                                          Map<String, Object> request  , Map<String, String> session, Page page) throws Exception {

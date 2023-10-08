@@ -109,7 +109,6 @@ public class ListDao extends  JsoupUtil{
         }
 
         if(ColTypeEnum.isFirst(firstOld)){
-            Utils.putIfAbsent(laydataMap,"maxWidth",60);
             Utils.putIfAbsent(laydataMap,"width",60);
             thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
             columnList.add(thMap);
@@ -159,6 +158,7 @@ public class ListDao extends  JsoupUtil{
             //fixed
              Utils.putIfAbsent(layDataMap,"fixed", Utils.trimNull(th.attr("fixed")));
             //属性的权重比style高,
+
              Utils.putIfAbsentExclude0(layDataMap,"minWidth", NumberUtils.toInt(Utils.trimNull(th.attr("minwidth"))));
              Utils.putIfAbsentExclude0(layDataMap,"minHeight",NumberUtils.toInt( Utils.trimNull(th.attr("minheight"))));
              Utils.putIfAbsentExclude0(layDataMap,"width",NumberUtils.toInt( Utils.trimNull(th.attr("width"))));
@@ -289,13 +289,18 @@ public class ListDao extends  JsoupUtil{
         Element express = doc.getElementById("express");
 
         if (express != null) {
-            coreMap.put("select_express", express.text());
-            coreMap.put("orderby_express", express.attr("orderby"));
-            coreMap.put("groupby_express", express.attr("groupby"));
+            coreMap.put(JsoupUtil.SELECT_EXPRESS, express.text());
+            coreMap.put(JsoupUtil.ORDERBY_EXPRESS, express.attr("orderby"));
+            coreMap.put(JsoupUtil.GROUPBY_EXPRESS, express.attr("groupby"));
         }
         Element count = doc.getElementById("count");
         if (count != null) {
-            coreMap.put("count_express", count.text());
+            coreMap.put(JsoupUtil.COUNT_EXPRESS, count.text());
+        }
+        //displayorder
+        Element display = doc.getElementById(JsoupUtil.DISPLAYORDER_EXPRESS);
+        if (display != null) {
+            coreMap.put(JsoupUtil.DISPLAYORDER_EXPRESS, display.text());
         }
     }
     public   Map<String, Object> selectAllListById(String listcode) {
@@ -340,17 +345,11 @@ public class ListDao extends  JsoupUtil{
                 if (th.id().equalsIgnoreCase("rowbutton")) {
                     continue;
                 }
-                // Map<String, String> thMap = JsoupUtil.loadplugin(th );
                 if(isImageTd(th)){
                     haspic=true;break;
                 }
             }
         }
-
-
-
-
-
         Element rowbutton = config.getDoc().getElementById("rowbutton");
         if(rowbutton!=null) {
             String Json = Utils.trimEmptyDefault(rowbutton.attr(JsoupUtil.LAYDATA), "{\"field\":\"oper\", \"minWidth\":230, \"fixed\":\"right\"}");
@@ -694,7 +693,7 @@ public class ListDao extends  JsoupUtil{
 
     public Element newTab( ){
         return Jsoup.parse("<li  >\n" +
-                "   <a     \"class=\"tablink\"  >  </a>\n" +
+                "   <a     class=\"tablink\"  >  </a>\n" +
                 "</li>\n").body().child(0);
     }
     public Element newButton(  ){

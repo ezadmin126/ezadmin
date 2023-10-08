@@ -57,7 +57,7 @@ public class JsoupUtil {
     public static final String WIDTH = "width";
     public static final String MIN_WIDTH = "minWidth";
     public static final String MIN_HEIGHT = "minHeight";
-    public static final String ROWBUTTONSTYLE = "rowbuttonstyle";
+
     public static final String ALIGN = "align";
     public static final String TOP_DESC ="top_desc" ;
     public static final String ITEM_DESC ="item_desc" ;
@@ -67,6 +67,14 @@ public class JsoupUtil {
     public static final String INIT_EXPRESS ="init_express" ;
     public static final String DELETE_EXPRESS = "delete_express";
     public static final String STATUS_EXPRESS = "status_express";
+
+
+    public static final String SELECT_EXPRESS = "select_express";
+    public static final String COUNT_EXPRESS = "count_express";
+    public static final String ORDERBY_EXPRESS = "orderby_express";
+    public static final String GROUPBY_EXPRESS = "groupby_express";
+    public static final String DISPLAYORDER_EXPRESS = "displayorder_express";
+
     public static final String GROUP_DATA = "group_data";
     public static final String APPEND_HEAD ="append_head" ;
     public static final String APPEND_FOOT ="append_foot" ;

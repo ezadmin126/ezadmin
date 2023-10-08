@@ -26,6 +26,9 @@ $(function(){
             case 'groupby_express':
                 active.find('#groupby_express').html( $(this).val());
                 break;
+            case 'displayorder_express':
+                active.find('#displayorder_express').html( $(this).val());
+                break;
         }
     });
 })

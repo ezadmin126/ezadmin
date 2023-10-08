@@ -216,6 +216,7 @@ $(function (){
             core.count_express=$("#count_express").html();
             core.orderby_express=$("#orderby_express").html();
             core.groupby_express=$("#groupby_express").html();
+            core.displayorder_express=$("#displayorder_express").html();
 
 
             $("#tabCoreContainer").find(".selector").each(function(){

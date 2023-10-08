@@ -40,7 +40,6 @@
          th:ez-valid_msg="${model.valid_msg}"
          th:ez-style="${model.style}"
 
-         th:classappend="${(model.plugin=='hidden'||model.plugin=='input-hidden')?'list-item-hidden':''}"
 >
     <div  class="layui-form-item" >
         <label class="layui-form-label" th:for="${'search-itemName-' + model.item_name}"

@@ -5,15 +5,12 @@ import com.ezadmin.service.FormService;
 import com.ezadmin.service.ListService;
 import com.ezadmin.dao.model.ItemInitData;
 import com.ezadmin.common.annotation.EzCacheAnnotation;
-import com.ezadmin.common.annotation.EzConfig;
 import com.ezadmin.common.enums.ItemDataSourceType;
 import com.ezadmin.common.enums.ParamNameEnum;
 import com.ezadmin.common.utils.*;
 import com.ezadmin.plugins.express.executor.DefaultExpressExecutor;
 import com.ezadmin.plugins.parser.MapParser;
-import com.ezadmin.web.Config;
 import com.ezadmin.EzBootstrap;
-import com.ezadmin.dao.Dao;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,18 +26,6 @@ public class FormServiceImpl implements FormService {
 Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
 
      ListService listService = EzProxy.singleInstance(ListService.class);
-   @EzCacheAnnotation
-    public Map<String, String> selectFormById(String formId,String encodeId) throws Exception {
-        try {
-            Map<String, String> form = FormDao.getInstance().selectFormById(encodeId);
-            if (Utils.isNotEmpty(form)) {
-                return form;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return Collections.emptyMap();
-    }
 
     @Override
     @EzCacheAnnotation
@@ -258,24 +243,6 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         }catch (Exception e){
             Utils.addLog("解析校验json失败",e);
         }
-    }
-
-
-
-    @Override
-    @EzCacheAnnotation
-    public List<Map<String, String>> getItemListByFormId(String formId,String encodeId ) throws Exception {
-        return FormDao.getInstance().getItemListByFormId(encodeId);
-    }
-    @Override
-    @EzCacheAnnotation
-    public List<Map<String, String>> getNavbarListByFormId(String formId,String encodeId) throws Exception {
-
-        if(FormDao.getInstance().existHtmlForm(encodeId.toLowerCase())){
-            //暂时不做
-            return  Collections.emptyList();
-        }
-        return Collections.emptyList();
     }
 
 }
