@@ -20,7 +20,7 @@ layui.define(["element", "layer", "jquery"], function (exports) {
             options.filter = options.filter || null;
             options.multiModule = options.multiModule || false;
             options.urlHashLocation = options.urlHashLocation || false;
-            options.maxTabNum = options.maxTabNum || 20;
+            options.maxTabNum = options.maxTabNum || 50;
             options.menuList = options.menuList || [];  // todo 后期菜单想改为不操作dom, 而是直接操作初始化传过来的数据
             options.homeInfo = options.homeInfo || {};
             options.listenSwichCallback = options.listenSwichCallback || function () {
@@ -44,7 +44,7 @@ layui.define(["element", "layer", "jquery"], function (exports) {
             options.href = options.href || null;
             options.title = options.title || null;
             options.isIframe = options.isIframe || false;
-            options.maxTabNum = options.maxTabNum || 20;
+            options.maxTabNum = options.maxTabNum || 50;
             if ($(".layuimini-tab .layui-tab-title li").length >= options.maxTabNum) {
                 layer.msg('Tab窗口已达到限定数量，请先关闭部分Tab');
                 return false;
@@ -200,7 +200,7 @@ layui.define(["element", "layer", "jquery"], function (exports) {
          */
         listen: function (options) {
             options = options || {};
-            options.maxTabNum = options.maxTabNum || 20;
+            options.maxTabNum = options.maxTabNum || 50;
 
             /**
              * 打开新窗口
@@ -401,7 +401,7 @@ layui.define(["element", "layer", "jquery"], function (exports) {
          */
         listenHash: function (options) {
             options.urlHashLocation = options.urlHashLocation || false;
-            options.maxTabNum = options.maxTabNum || 20;
+            options.maxTabNum = options.maxTabNum || 50;
             options.homeInfo = options.homeInfo || {};
             options.menuList = options.menuList || [];
             if (!options.urlHashLocation) return false;
