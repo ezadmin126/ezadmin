@@ -396,9 +396,10 @@ public class ListServiceImpl implements ListService {
             if (StringUtils.equalsIgnoreCase("firstcol-", code)) {
                 return Collections.emptyMap();
             }
-            if (StringUtils.equalsIgnoreCase("hidden-nowhere", code)) {
-                return Collections.emptyMap();
-            }
+            //参数需要保留在搜索里面，所以不能置空
+//            if (StringUtils.equalsIgnoreCase("hidden-nowhere", code)) {
+//                return Collections.emptyMap();
+//            }
             Map<String, String> plugin = PluginsDao.getInstance().getDbTemplateByCode(code, fold);
             if (Utils.isNotEmpty(plugin)) {
                 return plugin;
