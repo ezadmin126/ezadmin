@@ -496,7 +496,7 @@ public class ListServiceImpl implements ListService {
 
                     try {
                         //处理第一列
-                        if (ColTypeEnum.isFirst(Utils.getStringByObject(th, JsoupUtil.HEAD_PLUGIN_CODE))) {
+                        if (1==2||ColTypeEnum.isFirst(Utils.getStringByObject(th, JsoupUtil.HEAD_PLUGIN_CODE))) {
                             Context context = new Context();
                             context.setVariable("firstCol", firstcol);
                             context.setVariable("count", pagination.getStartRecord() + i + 1);
@@ -516,6 +516,10 @@ public class ListServiceImpl implements ListService {
                         else {
                             if (StringUtils.isNotBlank(bodyPlugin)) {
                                 Context context = new Context();
+                                context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
+                                context.setVariable("count", pagination.getStartRecord() + i + 1);
+                                context.setVariable("dataRow", dataRow.entrySet());
+
                                 context.setVariables(th);
                                 context.setVariable(JsoupUtil.URL, MapParser.parseDefaultEmpty(url, dataRow).getResult());
                                 context.setVariable(JsoupUtil.WINDOW_NAME, MapParser.parseDefaultEmpty(windowname, dataRow).getResult());

@@ -33,36 +33,6 @@
     padding: 5px 0;
 }
 
-/*.layui-tab {*/
-/*    margin-bottom: 0;*/
-/*    margin-top: 0;*/
-/*}*/
-
-/*.search-content {*/
-/*    border: 1px solid #EDF0F2;*/
-/*    margin-top: 5px;*/
-/*    padding-top: 10px;*/
-/*}*/
-
-/*.nav-active {*/
-/*    border-bottom: 2px solid #007bff;*/
-/*    color: #007bff;*/
-/*}*/
-
-/*.nav-link {*/
-
-/*    color: #6c757d;*/
-/*}*/
-
-/*.nav-link:hover {*/
-/*    border-bottom: 2px solid #007bff;*/
-/*    color: #007bff;*/
-/*}*/
-
-/*.ez-list-card {*/
-/*    border-top: 3px solid #007bff;*/
-/*    border-radius: 0;*/
-/*}*/
 
 .page-link {
     border: 0
@@ -72,29 +42,11 @@ th a {
     color: #212529;
 }
 
-@media (min-width: 100px) {
 
+@media screen and (max-width: 767.98px){
     .el-cascader {
         margin-left: 0px;
     }
-    .layui-form-item .ez-range {
-        width: 22% !important;
-    }
-    .layui-form-item .ez-daterange {
-        width: 22% !important;
-        margin-right: 0px;
-    }
-}
-
-@media (min-width: 992px) {
-
-
-    .el-cascader {
-        margin-left: 0px;
-    }
-}
-@media (min-width: 1400px) {
-
     .layui-form-item .ez-range {
         width: 102px !important;
     }
@@ -102,6 +54,61 @@ th a {
     /**数据库插件做兼容**/
     .layui-form-item .ez-daterange {
         width: 102px !important;
+    }
+
+}
+
+
+@media screen and (min-width: 768px){
+    .layui-form-mid {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+    .layui-form-item .ez-range {
+        width: 101px !important;
+    }
+
+    /**数据库插件做兼容**/
+    .layui-form-item .ez-daterange {
+        width: 101px !important;
+    }
+
+}
+
+
+@media (min-width: 992px) {
+
+    .layui-form-item .ez-range {
+        width: 55px !important;
+    }
+
+    /**数据库插件做兼容**/
+    .layui-form-item .ez-daterange {
+        width: 55px !important;
+    }
+    .el-cascader {
+        margin-left: 0px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .layui-form-item .ez-range {
+        width: 79px !important;
+    }
+
+    /**数据库插件做兼容**/
+    .layui-form-item .ez-daterange {
+        width: 79px !important;
+    }
+}
+@media  screen and (min-width: 1400px) {
+    .layui-form-item .ez-range {
+        width: 101px !important;
+    }
+
+    /**数据库插件做兼容**/
+    .layui-form-item .ez-daterange {
+        width: 101px !important;
     }
 
 }
@@ -121,22 +128,11 @@ th a {
 }
 
 
-/*.layui-form-item {*/
-/*    margin-bottom: 0px;*/
-/*}*/
-
 .layui-card-body {
     padding: 0;
 }
 
 
-/*.layui-table-col-special .layui-table-cell {*/
-
-/*    overflow: visible;*/
-/*    text-overflow: inherit;*/
-/*    white-space: normal;*/
-
-/*}*/
 
 .layui-table-col-special-img .layui-table-cell {
     height: 110px;
@@ -168,70 +164,9 @@ th a {
     top: 1px
 }
 
-/*.layui-table td, .layui-table th, .layui-form-label, .layui-card-header {*/
-/*    font-size: 12px;*/
-/*}*/
-
-/*.layui-input, .layui-select, .layui-textarea {*/
-/*    height: 26px;*/
-/*    margin-top: 2px;*/
-/*}*/
-
-/*.layui-form-label {*/
-/*    padding: 4px 15px;*/
-/*}*/
 
 
-/*.layui-input-inline {*/
-/*    min-height: auto;*/
-/*}*/
 
-/*.layui-form-label {*/
-/*}*/
-
-/* */
-
-/*.btn-group .layui-btn:first-child {*/
-/*    border-left: none;*/
-/*    border-radius: 2px 0 0 2px;*/
-/*}*/
-
-/*.btn-group .layui-btn {*/
-/*    margin-left: 0 !important;*/
-/*    margin-right: 0 !important;*/
-/*    border-left: 1px solid rgba(255, 255, 255, .5);*/
-/*    border-radius: 0;*/
-/*}*/
-
-/*.rc-handle-container {*/
-/*    position: relative;*/
-/*}*/
-
-/*.rc-handle {*/
-/*    position: absolute;*/
-/*    width: 7px;*/
-/*    cursor: ew-resize;*/
-/*    margin-left: -3px;*/
-/*    z-index: 2;*/
-/*}*/
-
-/*table.rc-table-resizing {*/
-/*    cursor: ew-resize;*/
-/*}*/
-
-/*table.rc-table-resizing thead,*/
-/*table.rc-table-resizing thead > th,*/
-/*table.rc-table-resizing thead > th > a {*/
-/*    cursor: ew-resize;*/
-/*}*/
-
-/* */
-
-
-.layui-form-mid {
-    margin-right: 4px;
-    margin-left: 5px;
-}
 .custom-select{
     height: 38px;
     border-width: 1px;

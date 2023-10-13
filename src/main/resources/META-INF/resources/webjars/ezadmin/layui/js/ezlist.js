@@ -528,11 +528,10 @@ function renderTable() {
 
         //转换静态表格
         laytable = table2.init('mytable', {
-              height: 'full-230' , //设置高度
+              height: 'full-251' , //设置高度
             escape: false,
             autoSort: false,
-
-            cellMinWidth:110,
+            cellMinWidth:$("#cellMinWidth").val()||110,
             className: $("#mytable").attr("class")
             , limit: $("#perPageInt").val() //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
             ,initSort: {
@@ -592,11 +591,15 @@ function renderTable() {
 
         laytable.on('row(mytable)', function(obj){
             var data = obj.data; // 获取当前行数据
+
             var input=obj.tr.eq(0).find("[name=list-body-checkbox]");
-            if(input!=undefined&&input.length>0){
-                input.prop("checked",!obj.tr.eq(0).hasClass("layui-table-checked"));
-                console.log(obj.index+'---'+input.attr('type'))
-                // 标注当前点击行的选中状态
+            var fixedInput=obj.tr.eq(1).find("[name=list-body-checkbox]");
+            if(input!=undefined&&input.length>0) {
+                var checked = input.prop("checked");
+                input.prop("checked", !checked);
+                if(fixedInput!=undefined&&fixedInput.length>0) {
+                    fixedInput.prop("checked", !checked);
+                }
                 obj.setRowChecked({
                     type: input.attr('type') // radio 单选模式；checkbox 复选模式
                 });
@@ -615,7 +618,7 @@ function renderTable() {
 
             var inst = treeTable.render({
                 elem: '#treetable',
-                cellMinWidth:110,
+                cellMinWidth:$("#cellMinWidth").val()||110,
                 url: '/ezadmin/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
                 //maxHeight: '501px',
                 cols: col,

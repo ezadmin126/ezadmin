@@ -33,7 +33,7 @@ public class ListDao extends  JsoupUtil{
     static String[] BODY_ATTRS=new String[]{"datasource",
             "fixnumber","fixnumberright",
             "empty_show","tablestyle",
-            "firstcol","export" 
+            "firstcol","export","cellMinWidth"
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
             JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,JsoupUtil.LABEL,
@@ -74,48 +74,6 @@ public class ListDao extends  JsoupUtil{
 
 
 
-    private void insertFirstColObj(Document doc, List<Map<String, Object>> columnList) {
-        Map<String,Object> laydataMap=new HashMap<>();
-        String firstOld=doc.body().attr("firstCol");
-        if(StringUtils.isNotJsBlank(firstOld)){
-            firstOld=firstOld.replace("th-","");
-        }else{
-            return;
-        }
-        Map<String, Object> thMap = new HashMap<>();
-        thMap.put(JsoupUtil.ITEM_NAME,"firstCol");
-        if(ColTypeEnum.isCheckbox(firstOld)
-        ){
-            laydataMap.put("title","<input type=\"checkbox\" class=\"list-head-checkbox\" lay-filter=\"list-head-checkbox\" >");
-
-            laydataMap.put("field","firstcol");
-            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.checkbox.bodycode());
-            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.checkbox.code());
-        }
-        if(ColTypeEnum.isRadio(firstOld) ){
-            laydataMap.put("title","序号");
-            laydataMap.put("field","firstcol");
-
-            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.radio.bodycode());
-            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.radio.code());
-
-        }
-        if(ColTypeEnum.isNumbers(firstOld)){
-            laydataMap.put("title","序号");
-            laydataMap.put("field","firstcol");
-
-            thMap.put(JsoupUtil.BODY_PLUGIN_CODE,  ColTypeEnum.numbers.bodycode());
-            thMap.put(JsoupUtil.HEAD_PLUGIN_CODE,ColTypeEnum.numbers.code());
-        }
-
-        if(ColTypeEnum.isFirst(firstOld)){
-            Utils.putIfAbsent(laydataMap,"width",60);
-            thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
-            columnList.add(thMap);
-        }
-
-    }
-
     private boolean isImageTd(Element th){
         String plugin=Utils.trimNull(th.attr(JsoupUtil.BODY_PLUGIN_CODE));
         return  "td-pic".equals(plugin)||
@@ -145,63 +103,43 @@ public class ListDao extends  JsoupUtil{
             Utils.putIfAbsent(laydataMap,"sort",true);
         }
 
-
-        //默认宽度设置为110
-         //   Utils.putIfAbsent(laydataMap,"width","110");
     }
 
-    private void styleTomap(Map<String, Object> layDataMap,Element th) {
+    private void attrToLayData(Map<String, Object> layDataMap,Element th) {
         try {
             Utils.putIfAbsent(layDataMap,"field", th.attr(JsoupUtil.ITEM_NAME));
             Utils.putIfAbsent(layDataMap,"title", Utils.trimNull(th.html()));
             layDataMap.put("escape", false);
             //fixed
              Utils.putIfAbsent(layDataMap,"fixed", Utils.trimNull(th.attr("fixed")));
-            //属性的权重比style高,
+            Utils.putIfAbsent(layDataMap, "align", Utils.trimNullDefault(th.attr("align"),"left"));
+            if(StringUtils.isNotBlank(th.attr("colspan"))){
+                layDataMap.put("colspan",th.attr("colspan"));
+             }
+            if(StringUtils.isNotBlank(th.attr("rowspan"))){
+                layDataMap.put("rowspan",th.attr("rowspan"));
+             }
 
-             Utils.putIfAbsentExclude0(layDataMap,"minWidth", NumberUtils.toInt(Utils.trimNull(th.attr("minwidth"))));
-             Utils.putIfAbsentExclude0(layDataMap,"minHeight",NumberUtils.toInt( Utils.trimNull(th.attr("minheight"))));
-             Utils.putIfAbsentExclude0(layDataMap,"width",NumberUtils.toInt( Utils.trimNull(th.attr("width"))));
-             Utils.putIfAbsent(layDataMap,"align", Utils.trimNull(th.attr("align")));
+            //属性的权重比style高,
+             int minwidth=NumberUtils.toInt(Utils.trimNull(th.attr("minwidth")));
+             int maxwidth=NumberUtils.toInt(Utils.trimNull(th.attr("maxwidth")));
+             int minheight=NumberUtils.toInt(Utils.trimNull(th.attr("minheight")));
+             int width=NumberUtils.toInt(Utils.trimNull(th.attr("width")));
+             Utils.putIfAbsentExclude0(layDataMap,"minWidth",minwidth );
+             if(maxwidth>0) {
+                 //maxwidth 仅限有滚动条的情况
+                 Utils.putIfAbsentExclude0(layDataMap, "maxWidth",maxwidth);
+             }
+             Utils.putIfAbsentExclude0(layDataMap,"minHeight",minheight);
+             Utils.putIfAbsentExclude0(layDataMap,"width",width);
+
+
+
 
             String style = th.attr(JsoupUtil.STYLE);
             //style会补充到 laydata里面
             if (StringUtils.isNotBlank(style)) {
                 Utils.putIfAbsent(layDataMap,JsoupUtil.STYLE, style);
-                String kvs[] = StringUtils.split(style, ";");
-                if(kvs!=null){
-                    for (int i = 0; i < kvs.length; i++) {
-                        String kv[]=kvs[i].split(":");
-                        if(kv!=null&&kv.length==2){
-                            for (int j = 0; j <kv.length; j++) {
-                                    String k=StringUtils.lowerCase(Utils.trimNull(kv[0]));
-                                    String v=StringUtils.lowerCase(Utils.trimNull(kv[1]));
-                                    switch (k){
-                                        case "width":
-                                            Utils.putIfAbsentExclude0(layDataMap,"width",NumberUtils.toInt(v.replace("px","")));
-                                            break;
-                                        case "min-width":
-                                            Utils.putIfAbsentExclude0(layDataMap,"minWidth",NumberUtils.toInt(v.replace("px","")));
-                                            break;
-                                        case "max-width":
-                                            Utils.putIfAbsentExclude0(layDataMap,"maxWidth",NumberUtils.toInt(
-                                                    Utils.trimNull(v.replace("px","").replace("!important",""))));
-                                            break;
-                                        case "text-align":
-                                            Utils.putIfAbsent(layDataMap,"align",v);
-                                            break;
-                                        case "colspan":
-                                            Utils.putIfAbsentExclude0(layDataMap,"colspan",v);
-                                            break;
-                                        case "rowspan":
-                                            Utils.putIfAbsentExclude0(layDataMap,"rowspan",v);
-                                            break;
-                                        default:;
-                                    }
-                            }
-                        }
-                    }
-                }
             }
 
         }catch (Exception e){
@@ -352,13 +290,16 @@ public class ListDao extends  JsoupUtil{
         }
         Element rowbutton = config.getDoc().getElementById("rowbutton");
         if(rowbutton!=null) {
-            String Json = Utils.trimEmptyDefault(rowbutton.attr(JsoupUtil.LAYDATA), "{\"field\":\"oper\", \"minWidth\":230, \"fixed\":\"right\"}");
-            coreMap.put(JsoupUtil.LAYDATA, Json);
+            Map<String, Object> json=new HashMap<>();
+            json.put("field",Utils.trimEmptyDefault(rowbutton.attr(JsoupUtil.ITEM_NAME),"oper"));
+            attrToLayData(json,rowbutton);
+            //默认两个按钮的宽度，每个按钮两个字
+            json.putIfAbsent("width",150);
+
             //由于layui没有提供height操作，需要对height做一层处理
             try {
                 String userStyle= rowbutton.attr("style");
-                Map<String, Object> json = JSONUtils.parseObjectMap(Json);
-                if(haspic){
+                 if(haspic){
                     if(StringUtils.isBlank(userStyle) ){
                         userStyle="height: 110px;white-space: normal";
                     }else{
@@ -369,7 +310,6 @@ public class ListDao extends  JsoupUtil{
                     userStyle+=";white-space: normal";
                 }
                 json.put("style",userStyle);
-                styleTomap(json,rowbutton);
                 json.put("title","操作");
                 coreMap.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json).replaceAll("\"","'"));
             } catch (Exception e) {
@@ -382,7 +322,6 @@ public class ListDao extends  JsoupUtil{
         Document doc = config.getDoc();
         Element column = doc.getElementById("column");
          if (column != null) {
-             insertFirstColObj(doc,searchConfigList);
             Elements thList=column.getElementsByTag("th");
             for (int x = 0; x < thList.size(); x++) {
                 Element th=thList.get(x);
@@ -411,10 +350,19 @@ public class ListDao extends  JsoupUtil{
                     laydataMap=new HashMap<>();
                 }
 
-                //最容易理解的是style，因此，用style来生成laydata
-                styleTomap(laydataMap,th);
+                // laydata属性
+                attrToLayData(laydataMap,th);
 
                 defaultMap(laydataMap,th);
+
+
+//                //默认宽度设置为110
+//                if(laydataMap.get("width")==null
+//                        &&StringUtils.isBlank(th.attr("width"))
+//                &&!StringUtils.equals(doc.body().attr("autowidth"),"1")
+//                ){
+//                    Utils.putIfAbsent(laydataMap,"width","110");
+//                }
 
                 String fixed=Utils.trimNull(laydataMap.get("fixed"));
                 if(StringUtils.isNotBlank(fixed)){
