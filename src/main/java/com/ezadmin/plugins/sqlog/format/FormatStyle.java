@@ -29,7 +29,7 @@ public enum FormatStyle {
 	/**
 	 * Formatting for DDL (CREATE, ALTER, DROP, etc) statements
 	 */
-	DDL("ddl", DDLFormatterImpl.INSTANCE),
+
 	/**
 	 * No formatting
 	 */
