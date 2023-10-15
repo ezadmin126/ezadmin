@@ -310,25 +310,9 @@ $(document).ready(function () {
         });
     })
 
-    //如下功能 暂时都不需要 1.表头搜索  2 单元格编辑
-    function renderTableSearchItem(layero, itemName) {
-        var theadItemInput = $(layero).find("[name=" + itemName + "]");
-        layui.use('form', function () {
-            var form = layui.form;
-            form.render(theadItemInput);
-
-        });
-        if ($(theadItemInput).hasClass("ez-xmselect-table")) {
-            renderXmselect($(theadItemInput));
-        }
-        if ($(theadItemInput).hasClass("ez-laycascader-table")) {
-            renderCascader($(theadItemInput));
-        }
-        if ($(theadItemInput).length == 0 &&
-            $(layero).find('.ez-daterange-parent').length > 0) {
-            renderDateParent($(layero).find('.ez-daterange-parent'));
-        }
-    }
+    $(window).resize(function(){
+        calculateSearchItemDisplay();
+    })
 });
 
 
@@ -336,53 +320,49 @@ $(document).ready(function () {
 function calculateSearchItemDisplay() {
 
     let search = json.search == undefined ? [] : json.search;
-    //如果配置为展示全部，则优先级最高。
-    var count = 0;
 
     //搜索项的排序
     if (search.length > 0) {
+        //显示隐藏
+        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
+            var _this=$(this);
+            //配置包含
+            if($.inArray(_this.attr("item_name"), search)>-1){
+               // $(".searchcontent").prepend(_this.detach());
+            }else{
+                _this.remove();
+            }
+        })
+        //排序
         for (var i = search.length; i > 0; i--) {
-            var name=search[i-1];
             var item = $(".searchcontent").find('.selector[item_name="' + search[i - 1] + '"]').detach();
             if (!item.hasClass("list-item-hidden")) {
-                item.show();
                 $(".searchcontent").prepend(item);
             } else {
                 $(".searchcontent").append(item);
             }
         }
     }
-
+    // $("#upBtn").show();
+    // $("#downBtn").show();
+    //如果是全部展示
     if ($("#_SEARCH_ITEM_DISPLAY").val() == 1) {
+        $(".searchcontent > .selector").not(".list-item-hidden").show();
+        $("#upBtn").show(); //展示 展开 按钮就行了
+        $("#downBtn").hide();
+    }else{
         $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
-            if (search.length > 0) {
-                if (search.includes($(this).attr("item_name"))) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            } else {
-                $(this).css("display","block");
+            if($(this).offset().top>80){
+                $("#upBtn").hide(); $("#downBtn").show();
+                $(this).hide();
+            }else if($(this).offset().top==0){
+                $("#downBtn").hide(); $("#upBtn").show();
+                $(this).hide();
+            }else{
+                $(this).show();
             }
         })
-    } else {
-        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
-            if (search.length > 0) {
-                if (count < 8 && search.includes($(this).attr("item_name"))) {
-                    count++;
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            } else {
-                if (count < 8) {
-                    count++;
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            }
-        })
+
     }
 }
 
@@ -528,7 +508,7 @@ function renderTable() {
 
         //转换静态表格
         laytable = table2.init('mytable', {
-              height: 'full-251' , //设置高度
+              height: 'full-'+($("#searchForm").height()+43+97) , //设置高度
             escape: false,
             autoSort: false,
             cellMinWidth:$("#cellMinWidth").val()||110,

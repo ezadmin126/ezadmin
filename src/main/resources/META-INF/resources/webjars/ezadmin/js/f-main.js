@@ -59,13 +59,27 @@ $(function (){
             return true; // elements are always draggable by default
         },
         accepts: function (el, target, source, sibling) {
-            // if($(target).attr("id")=='leftContainer'){
-            //     return false;
-            // }
-            if($(target).attr("id")=='centerContainer'&&$(el).find("[type=card]").length==0){
-                return false;
+            //改为正向
+            //中间
+            var iscenter=$(target).attr("id")=='centerContainer';
+
+            var iscard=
+                $(el).find("[ez-type=card]").length>0||//是否是左侧模版
+                $(el).attr("ez-type")=='card';//是否是中间自己挪动
+
+            var targetBody=$(target).parent().hasClass("layui-card-body");
+
+            if(iscenter&&iscard){
+
+                return true;
             }
-            return true; // elements can be dropped in any of the `containers` by default
+            if(targetBody&&!iscard){
+
+                return true;
+            }
+
+            return false;
+          //  return true; // elements can be dropped in any of the `containers` by default
         },
         invalid: function (el, handle) {
             if($(el).hasClass("tip")){
@@ -77,12 +91,29 @@ $(function (){
         revertOnSpill: true,
         copySortSource: true
     }).on('drop', function (el, target, source, sibling) {
-        if($(target).attr("id")=='leftContainer'){
-            return false;
+        console.log('drop::'+el+target);
+        debugger
+
+        var iscenter=$(target).attr("id")=='centerContainer';
+
+        var iscard=
+            $(el).find("[ez-type=card]").length>0||//是否是左侧模版
+            $(el).attr("ez-type")=='card';//是否是中间自己挪动
+
+        var targetBody=$(target).parent().hasClass("layui-card-body");
+
+        if(iscenter&&iscard){
+            dropcall(el,target);
+            return true;
         }
-        if($(target).attr("id")=='centerContainer'&&$(el).find("[type=card]").length==0){
-            return false;
+        if(targetBody&&!iscard){
+            dropcall(el,target);
+            return true;
         }
+
+        return false;
+    })
+    function dropcall(el,target){
         $(target).find(".tip").remove();
 
         if( $(el).find(".template").length>0){
@@ -94,8 +125,7 @@ $(function (){
             return false;
         }
         layui.form.render()
-        //return $(el).find(".template").html();
-    })
+    }
     function rowselect(el){
         let edittype=el.attr("ez-type");
         //样式切换
@@ -279,6 +309,16 @@ $(function (){
         save_link.download = name;
         save_link.click();
     }
+
+    $(".layui-btn-hide").click(function(){
+        if($(".layui-card-body").is(':visible')){
+            $(this).text("显示");
+            $(".layui-card-body").hide();
+        }else{
+            $(this).text("隐藏");
+            $(".layui-card-body").show();
+        }
+    })
 
     //保存
     $(".layui-btn-save").click(function(){

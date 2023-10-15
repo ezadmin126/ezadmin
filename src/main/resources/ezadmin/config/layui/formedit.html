@@ -15,6 +15,9 @@
         #leftContainer{
             margin:10px;
         }
+        #leftContainer .cardcol{
+            margin-top:50px;
+        }
 
         .ez-plugin a i{
             display: inline-block;
@@ -147,9 +150,11 @@
                                 <div style="display: none" class="template">
                                     <div class="layui-col-md12 selector" ez-type="card" ez-col="12"  >
                                         <div class="layui-card  ">
-                                            <div class="layui-card-header  "></div>
+                                            <div class="layui-card-header  ">
+                                                <i class="layui-icon layui-layer-min"   lay-offset="5"></i>
+                                            </div>
                                             <div class="layui-card-body ">
-                                                <div class="layui-row dragula-container"   ez-col="12"  >
+                                                <div class="layui-row  dragula-container"   ez-col="12"  >
 
                                                 </div>
                                             </div>
@@ -189,41 +194,40 @@
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-save  " ><i class="layui-icon layui-icon-ok-circle"></i>保存</button>
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-preview  "> <i class="layui-icon layui-icon-component"></i> 预览</button>
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-export  "> <i class="layui-icon layui-icon-component"></i> 导出</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-hide  ">隐藏</button>
                 </div>
-
+                <blockquote class="layui-elem-quote selector"  ez-col="12"
+                            th:ez-successurl="${form.core.success_url}"
+                            th:ez-datasource="${form.core.datasource}" ez-type="formcore" th:ez-encodeFormId="${form.core.formcode}"
+                            th:ez-form_name="${form.core.form_name}">
+                    <span id="form_name" th:text="${#strings.isEmpty(form.core.form_name)?'表单名称':form.core.form_name}">表单名称</span>
+                    <pre style="display: none" id="initcode" th:utext="${form.core.init_express}"></pre>
+                    <pre style="display: none" id="subcode" th:utext="${form.core.submit_express}"></pre>
+                    <pre style="display: none" id="delcode" th:utext="${form.core.delete_express}"></pre>
+                </blockquote>
                 <hr>
                 <div class="body dragula-container layui-row layui-col-space16  layui-form " id="centerContainer">
                     <div id="append_head" th:utext="${form.core.append_head}" >
 
                     </div>
-                    <blockquote class="layui-elem-quote selector"  ez-col="12"
-                                th:ez-successurl="${form.core.success_url}"
-                                th:ez-datasource="${form.core.datasource}" ez-type="formcore" th:ez-encodeFormId="${form.core.formcode}"
-                                th:ez-form_name="${form.core.form_name}">
-                        <span id="form_name" th:text="${#strings.isEmpty(form.core.form_name)?'表单名称':form.core.form_name}">表单名称</span>
-                        <pre style="display: none" id="initcode" th:utext="${form.core.init_express}"></pre>
-                        <pre style="display: none" id="subcode" th:utext="${form.core.submit_express}"></pre>
-                        <pre style="display: none" id="delcode" th:utext="${form.core.delete_express}"></pre>
-                    </blockquote>
-                    <div class=" layui-col-space10 layui-row ">
-                        <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
-                             th:ez-cardname="${card.cardname}" ez-type="card" th:ez-col="${card.col}">
-                            <div class="layui-card"  >
-                                <div class="layui-card-header" th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
-                                    卡片面板
-                                </div>
-                                <div class="layui-card-body   ">
-                                    <div class="layui-row dragula-container">
-                                        <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
-                                        </div>
+
+                    <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
+                         th:ez-cardname="${card.cardname}" ez-type="card" th:ez-col="${card.col}">
+                        <div class="layui-card"  >
+                            <div class="layui-card-header" th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
+                                卡片面板
+                            </div>
+                            <div class="layui-card-body   ">
+                                <div class="layui-row dragula-container">
+                                    <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class=" selector cardcol layui-col-md12"  th:if="${form.cards==null}"
+                    </div>
+                    <div class=" selector cardcol layui-col-md12"  th:if="${form.cards==null}"
                              ez-type="card" ez-col="12">
                             <div class="layui-card"  >
-
                                 <div class="layui-card-body   ">
                                     <div class="layui-row dragula-container">
 
@@ -231,8 +235,6 @@
                                 </div>
                             </div>
                         </div>
-
-                    </div>
 
                     <div id="append_foot" th:utext="${form.core.append_foot}">
 

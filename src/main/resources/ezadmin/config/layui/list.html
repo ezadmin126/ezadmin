@@ -20,7 +20,7 @@
 
     [(${data.core.append_head})]
 </head>
-<body>
+<body class="layui-bg-gray">
 <!--初始化加载层-->
 <div class="layuimini-loader" th:if="${not #strings.equals('pure',data.core.tablestyle)}">
     <div class="layuimini-loader-inner"></div>
@@ -43,7 +43,9 @@
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <form id="searchForm" lay-filter="searchForm" class="layui-form   " th:action="${listUrl}" method="get">
+                <div class="layui-card" style="padding:10px">
+                    <div class="layui-card-body"  >
+                        <form id="searchForm" lay-filter="searchForm" class="layui-form   " th:action="${listUrl}" method="get">
                     <input type="hidden" id="currentPage" name="currentPage" th:value="${data.page.currentPage}">
                     <input type="hidden" id="perPageInt" name="perPageInt" th:value="${data.page.perPageInt}">
                     <input type="hidden" id="totalPage" name="totalPage" th:value="${data.page.totalPage}">
@@ -69,15 +71,15 @@
                                 重置
                             </button>
 
-                            <button th:if="${#lists.size(data.search)>8}" type="button"
-                                    th:style="${_SEARCH_ITEM_DISPLAY!=1?'':'display:none'}" id="downBtn"
+                            <button   type="button"
+                                     style="display:none" id="downBtn"
                                     class="layui-btn layui-btn-primary layui-btn-sm "
                                     data-placement="top" title="展开">
                                 展开
                                 <i class="layui-icon layui-icon-down"></i>
                             </button>
-                            <button th:if="${#lists.size(data.search)>8}" type="button" id="upBtn"
-                                    th:style="${_SEARCH_ITEM_DISPLAY==1?'':'display:none'}"
+                            <button   type="button" id="upBtn"
+                                      style="display:none"
                                     class="layui-btn layui-btn-primary layui-btn-sm  "
                                     data-placement="top" title="收起">
                                 收起
@@ -88,17 +90,18 @@
 
 
                 </form>
+                    </div>
+                </div>
             </div><!--formitem-->
         </div><!--tab-content-->
     </div><!--tab -->
-     <div class="layui-row">
-         <hr class="layui-border-blue">
-        <div class="layui-col-xs12 layui-col-md9">
-            <div class="  tableButton  " style="text-align: left">
-                <div th:remove="tag" th:each="item:${data.tablebtn}" th:utext="${item.html}"></div>
+     <div class="layui-row ez-table-tool" style="">
+            <div class="layui-col-xs12 layui-col-sm9">
+                <div class="  tableButton  " style="text-align: left">&nbsp;
+                    <div th:remove="tag" th:each="item:${data.tablebtn}" th:utext="${item.html}"></div>
+                </div>
             </div>
-        </div>
-        <div class="layui-col-xs12 layui-col-md3" style="text-align: right;float:right">
+            <div class="layui-col-xs12 layui-col-sm3" style="text-align: right;">
             <button title="上一页" type="button"
                     th:classappend="${data.page.currentPage<2?'layui-btn-disabled ':' page-button '}"
                     th:page="${ data.page.currentPage  - 1}" class=" layui-btn  layui-btn-sm  layui-btn-primary"
@@ -117,9 +120,8 @@
         </div>
     </div>
     <div class="layui-card">
-        <div class="layui-card-body" style=" border: 1px solid #eee; margin-top: 5px;height: 100%
-">
-            <div id="table-wrap" style="height: 100%">
+        <div class="layui-card-body"  >
+            <div id="table-wrap"  >
                 <table   th:lay-filter="${not #strings.equals('pure',data.core.tablestyle)?'mytable':''}"
                        id="mytable"
                        class="  layui-table ez-table " >
@@ -141,12 +143,14 @@
                     </tr>
                     </tbody>
                 </table>
+                <DIV class="layui-table-column layui-table-page">
+                    <div  class="layui-inline layui-table-pageview" style="margin-right: 10px;
+    margin-top: 8px;" th:utext="${data.page.html}"></div>
+                </DIV>
             </div>
 
         </div>
-        <DIV>
-            <div th:remove="tag" th:utext="${data.page.html}"></div>
-        </DIV>
+
     </div>
 </div>
 

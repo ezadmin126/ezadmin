@@ -27,6 +27,7 @@
 
 .searchWrap,.searchWrap .layui-form-item{
     margin-bottom: 0;
+    margin-top:0;
 }
 
 .layui-tab-content {
@@ -93,23 +94,29 @@ th a {
 
 @media screen and (min-width: 1200px) {
     .layui-form-item .ez-range {
-        width: 79px !important;
+        width: 76px !important;
     }
 
     /**数据库插件做兼容**/
     .layui-form-item .ez-daterange {
-        width: 79px !important;
+        width: 76px !important;
+    }
+    .ez-daterange .layui-input{
+        padding-left:0;
     }
 
 }
 @media  screen and (min-width: 1400px) {
     .layui-form-item .ez-range {
-        width: 101px !important;
+        width: 99px !important;
     }
 
     /**数据库插件做兼容**/
     .layui-form-item .ez-daterange {
-        width: 101px !important;
+        width: 99px !important;
+    }
+    .ez-daterange .layui-input{
+        padding-left:10px;
     }
 
 }
@@ -145,7 +152,7 @@ th a {
 
 /**label不期望换行**/
 .layui-form-label {
-   // overflow: hidden;
+
     white-space: nowrap;
     text-overflow: ellipsis;
 
@@ -153,20 +160,14 @@ th a {
 
 .layui-table-page {
     text-align: right;
+    padding:0;
+    border: 1px solid #eee;
 }
 
-.layui-table-tool {
-    min-height: 35px;
-    height: 35px;
-    padding: 3px 15px;
+.ez-table-tool {
+    padding:10px;border:1px solid #eee;border-bottom-width: 0;
+    background: #ffffff;
 }
-
-.layui-table-tool-self {
-    top: 1px
-}
-
-
-
 
 .custom-select{
     height: 38px;
