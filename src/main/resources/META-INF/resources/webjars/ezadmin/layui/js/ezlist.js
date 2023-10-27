@@ -525,6 +525,7 @@ function renderTable() {
                     if (typeof (afterAllDataLoad) == "function") {
                         afterAllDataLoad();
                     }
+                    doOrder();
                     $('.layuimini-loader').fadeOut();
                     $("[name=DISPLAY_ORDER_INPUT]").each(function () {
                         var oldValue = $(this).val()
@@ -610,6 +611,27 @@ function renderTable() {
             });
         }
     });
+}
+function doOrder(){
+    var listid=$("#ENCRYPT_LIST_ID").val();
+    $("[name=DISPLAY_ORDER]").each(function(){
+        $(this).attr("oldValue",$(this).val());
+        $(this).blur(function(){
+            var othis=$(this);
+            var id=othis.attr("data-id");
+            var order=othis.val();
+            var old=othis.attr("oldValue");
+            if(order!=undefined&&order!=''&&old!=order){
+                $.get("/ezadmin/list/doOrder-"+listid+"?orderId="+id+"&displayOrder="+order,function(data){
+                    if(data.success){
+                        location.reload();
+                    }else{
+                        layui.layer.alert("操作失败")
+                    }
+                })
+            }
+        })
+    })
 }
 
 function refreshOrder(item_id) {
