@@ -32,7 +32,7 @@
 <input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${data.core.emptyname}">
 
-<div  th:classappend="${#strings.equals('pure',data.core.tablestyle)?'layui-fluid':'layui-container'}" >
+<div   class="layui-fluid" >
     <div class="layui-tab layui-tab-brief searchWrap">
         <ul class="layui-tab-title" id="tab" th:if="${not #lists.isEmpty(data.tab)}"  >
             <li th:item_id="${item.item_name}" th:item_name="${item.item_name}"

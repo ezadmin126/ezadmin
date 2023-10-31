@@ -36,7 +36,7 @@ public class ListDao extends  JsoupUtil{
             "firstcol","export","cellMinWidth"
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
-            JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,JsoupUtil.LABEL,
+            JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,
             JsoupUtil.BODY_PLUGIN_CODE, JsoupUtil.ORDER,
             JsoupUtil.DATATYPE,JsoupUtil.DATA
             ,JsoupUtil.AREA, JsoupUtil.OPENTYPE,JsoupUtil.STYLE,
@@ -48,10 +48,8 @@ public class ListDao extends  JsoupUtil{
     };
     private static   String [] names=new String[]{ JsoupUtil.VALIDATERULES,JsoupUtil.VALIDATEMESSAGES,JsoupUtil.DATATYPE,
             JsoupUtil.OPENTYPE,JsoupUtil.WINDOW_NAME,JsoupUtil.URL,
-            JsoupUtil.DATA,JsoupUtil.JDBCTYPE,JsoupUtil.PLACEHOLDER,JsoupUtil.LAYVERIFY
-            , JsoupUtil.NAME,
+            JsoupUtil.DATA,JsoupUtil.JDBCTYPE,JsoupUtil.PLACEHOLDER,JsoupUtil.LAYVERIFY,
             JsoupUtil.ITEM_NAME,
-            JsoupUtil.ITEM_ID,
             JsoupUtil.OPER
             ,JsoupUtil.STYLE
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
@@ -436,7 +434,9 @@ public class ListDao extends  JsoupUtil{
     };
     private void fillsearch(List<Map<String, Object>> searchConfigList, Config config) {
         Document doc=config.getDoc();
-        List<Element> searchList=doc.getElementsByClass("list-search-item");
+        Element search=doc.getElementById("search");
+
+        List<Element> searchList=search.select("[item_name]");
         if(Utils.isNotEmpty(searchList)){
             List<Map<String, Object>> list = new ArrayList<>();
             List<Map<String, Object>> listHidden = new ArrayList<>();
@@ -533,7 +533,9 @@ public class ListDao extends  JsoupUtil{
 
         for (int i = 0; i < BODY_ATTRS.length; i++) {
             String value=   Utils.trimNull( coreMap.get(BODY_ATTRS[i]));
-            body.attr(BODY_ATTRS[i],value);
+            if(StringUtils.isNotBlank(value)){
+                body.attr(BODY_ATTRS[i],value);
+            }
         }
         //处理tab
         tab(tabList, body);
@@ -559,11 +561,19 @@ public class ListDao extends  JsoupUtil{
             for (int k = 0; k < colNames.length; k++) {
                 String formItemAttrValue=Utils.trimNull(tab.get(colNames[k]));
                 if(StringUtils.isNotBlank(formItemAttrValue)){
+                    if(colNames[k].equals("body")&&formItemAttrValue.equals("td-text")){
+                        tabHtml.getElementsByTag("th").removeAttr(colNames[k]);
+                        continue;
+                    }
+                    if(colNames[k].equals("head")&&formItemAttrValue.equals("th")){
+                        tabHtml.getElementsByTag("th").removeAttr(colNames[k]);
+                        continue;
+                    }
                     tabHtml.getElementsByTag("th").attr(colNames[k],formItemAttrValue);
                 }
             }
             tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
-            body.getElementById("column").append("\n"+tabHtml.outerHtml()+"\n");
+            body.getElementById("column").append("\n\t\t\t"+tabHtml.outerHtml() );
         }
     }
 
@@ -581,7 +591,7 @@ public class ListDao extends  JsoupUtil{
                 }
             }
             tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
-            body.getElementById("rowbutton").append("\n"+tabHtml.outerHtml()+"\n");
+            body.getElementById("rowbutton").append("\n\t\t\t"+tabHtml.outerHtml());
         }
     }
 
@@ -645,78 +655,19 @@ public class ListDao extends  JsoupUtil{
                 "</li>\n").body().child(0);
     }
     public Element newButton(  ){
-        return Jsoup.parse("\n<button\n" +
-                "        class=\" layui-btn   layui-btn-sm    \">\n" +
+        return Jsoup.parse("\n<button\n" + ">\n" +
                 "</button>\n " ).body().child(0) ;
     }
     public Element newSearch(Object name,Object label ){
-        return Jsoup.parse(" <div class=\"selector layui-col-md3 list-item \" type=\"input-text\"  >\n" +
-                "    <div  class=\"layui-form-item\" >\n" +
-                "        <label class=\"layui-form-label\"  >"+label+"</label>\n" +
-                "        <div class=\"layui-input-block\">\n" +
-                "                <object class=\"list-search-item\"  item_name=\""+name+"\"></object>\n" +
-                "        </div>\n" +
-                "    </div>\n" +
-                "</div>\n").body().child(0);
+        return Jsoup.parse(
+"\t\t\t<div>\n" +
+"\t\t\t\t<label   >"+label+"</label>\n" +
+"\t\t\t\t\t<div  >\n" +
+"\t\t\t\t\t\t<object  item_name=\""+name+"\"></object>\n" +
+"\t\t\t\t\t</div>\n" +
+"\t\t\t\t</div>\n"
+                 ).body().child(0);
     }
-
-    public static void main(String[] args) {
-
-    }
-
-
-    public   List<Map<String, String>> selectListByHtmlConfig(String page, String name, String url) {
-        List<Map<String, String>> list = new ArrayList<>();
-//        for (Map.Entry<String, Config> entry:listConfigMap.entrySet()){
-//            Map<String,Object> item=selectAllListById (entry.getKey());
-//            item.put("E_LIST_ID",item.get("ENCRYPT_LIST_ID"));
-//            if (StringUtils.isNotBlank(name) && StringUtils.isBlank(url)) {
-//                if (item.get("core").get("").toLowerCase().indexOf(name.toLowerCase()) >= 0) {
-//                    list.add(item);
-//                }
-//            } else if (StringUtils.isBlank(name) && StringUtils.isNotBlank(url)) {
-//                if (item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0) {
-//                    list.add(item);
-//                }
-//            } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(url)) {
-//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0 && item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0
-//                ) {
-//                    list.add(item);
-//                }
-//            } else {
-//                list.add(item);
-//            }
-//        }
-//        Page page1 = new Page();
-//        page1.setCurrentPage(NumberUtils.toInt(page));
-        //  return list.subList(page1.getStartRecord(), Math.min(list.size(), page1.getEndRecord()));
-        return list;
-    }
-    public   int listSize(String page, String name, String url) {
-        final AtomicInteger i = new AtomicInteger(0);
-//        for (Map.Entry<String, Config> entry:listConfigMap.entrySet()){
-//            String k=entry.getKey();
-//            Map<String,String> item=selectListById(k);
-//            if (StringUtils.isNotBlank(name) && StringUtils.isBlank(url)) {
-//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0) {
-//                    i.getAndIncrement();
-//                }
-//            } else if (StringUtils.isBlank(name) && StringUtils.isNotBlank(url)) {
-//                if (item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0) {
-//                    i.getAndIncrement();
-//                }
-//            } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(url)) {
-//                if (item.get("LIST_NAME").toLowerCase().indexOf(name.toLowerCase()) >= 0 && item.get("ENCRYPT_LIST_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0
-//                ) {
-//                    i.getAndIncrement();
-//                }
-//            } else {
-//                i.getAndIncrement();
-//            }
-//        } ;
-        return i.get();
-    }
-
 
 }
 

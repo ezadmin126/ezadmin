@@ -27,7 +27,7 @@ public class ConfigUtils {
                     Resource[] rs = re.getResources(paths[i]);
                     for (int j = 0; j < rs.length; j++) {
 
-                       logger.info(" ezadmin 开始加载文件{} ", rs[j].getURL());
+                       logger.debug(" ezadmin 开始加载文件{} ", rs[j].getURL());
 
                         Config c = new Config();
                         String protocol = rs[j].getURL().getProtocol();
@@ -42,7 +42,7 @@ public class ConfigUtils {
                             c.setPath(rs[j].getURL().getPath());
                             c.setProtocol("file");
                         }
-                        logger.info(" ezadmin 结束加载文件{} protocol: {} size:{}", rs[j].getURL(),protocol,listConfig.size());
+                        logger.debug(" ezadmin 结束加载文件{} protocol: {} size:{}", rs[j].getURL(),protocol,listConfig.size());
 
                         listConfig.add(c);
                     }
@@ -60,17 +60,17 @@ public class ConfigUtils {
                     });
                     for (int i1 = 0; i1 < files.size(); i1++) {
                         Config c = new Config();
-                        logger.info(" ezadmin 开始加载文件{} ", files.get(i1).toUri().toURL());
+                        logger.debug(" ezadmin 开始加载文件{} ", files.get(i1).toUri().toURL());
 
                         c.setFile(files.get(i1).toFile());
                         c.setUrl(files.get(i1).toUri().toURL());
                         c.setPath(files.get(i1).toString());
                         c.setProtocol("file");
                         if (logger.isDebugEnabled()) {
-                            logger.info(" ezadmin edit 开始加载文件{} ", files.get(i1).toUri().toURL());
+                            logger.debug(" ezadmin edit 开始加载文件{} ", files.get(i1).toUri().toURL());
                         }
                         listConfig.add(c);
-                        logger.info(" ezadmin 结束加载文件{} ", files.get(i1).toUri().toURL());
+                        logger.debug(" ezadmin 结束加载文件{} ", files.get(i1).toUri().toURL());
 
                     }
                 }

@@ -105,147 +105,7 @@ public class FormDao extends JsoupUtil{
         return formMap;
     }
 
-    public   boolean existHtmlForm(String encodeListId) {
-        if (StringUtils.isBlank(encodeListId)) {
-            return false;
-        }
-        return formConfigMap.containsKey(encodeListId.toLowerCase());
-    }
 
-    public   List<Map<String, String>> getItemListByFormId(String encodeId) {
-        
-        Config config=formConfigMap.get(encodeId.toLowerCase());
-
-        Element form=config.getDoc().body().getElementById("inputForm");
-        List<Map<String, String>> list = new ArrayList<>();
-        if (form == null || form.children().size() == 0) {
-            return list;
-        }
-        Element configForm=config.getDoc().body().getElementById("configForm");
-        Map<String,String> formCore=selectFormById(encodeId.toLowerCase());
-        Elements formitemList=form.getElementsByClass("form-item");
-        for (int x = 0; x < formitemList.size(); x++) {
-            Element item=formitemList.get(x);
-            Map<String, String> itemMap = new HashMap<>();
-            //前台渲染的属性
-            try {
-                Utils.putIfAbsent(itemMap,"label", item.parent().parent().child(0).text());
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            if(StringUtils.isNotBlank(strip(item.attr("readonly")))){
-                Utils.putIfAbsent(itemMap,"readonly", strip(item.attr("readonly")));
-
-            }
-            Utils.putIfAbsent(itemMap,JsoupUtil.LAYVERIFY , strip(item.attr("lay-verify")));
-            Utils.putIfAbsent(itemMap,JsoupUtil.PLACEHOLDER, strip(item.attr(JsoupUtil.PLACEHOLDER)));
-
-
-            for (int i = 0; i < names.length; i++) {
-                Utils.putIfAbsent(itemMap,names[i], strip(item.attr(names[i])));
-            }
-
-            Utils.putIfAbsent(itemMap,"id", strip(item.attr("id")));
-            //兼容
-            Utils.putIfAbsent(itemMap,"item_url",strip(item.attr("item_url")));
-            Utils.putIfAbsent(itemMap,"group_data", strip(Utils.trimNull(item.attr("group_data"))));
-            //
-
-
-            Map<String, String> listitem = JsoupUtil.loadplugin(item);
-
-            listitem.putAll(itemMap);
-
-            Utils.putIfAbsent(listitem,"ITEM_LABEL", item.parent().parent().child(0).text());
-            Utils.putIfAbsent(listitem,"ITEM_LAYOUT", StringUtils.join(item.parent().classNames(), " "));
-            Utils.putIfAbsent(listitem,"layout", StringUtils.join(item.parent().classNames(), " "));
-
-
-             Utils.putIfAbsent(listitem,"item_id", item.attr("item_name"));
-
-
-            String groupData=Utils.trimNull(item.attr("group_data"));
-             Utils.putIfAbsent(listitem,"group_data",groupData);
-            //用于编辑
-            listitem.put("group_data_init", formCore.get("group_data"));
-            Utils.putIfAbsent(listitem,JsoupUtil.NAME, item.attr("item_name"));
-            Utils.putIfAbsent(listitem,JsoupUtil.COL, Utils.trimEmptyDefault(item.attr("col"),"12"));
-            list.add(listitem);
-        }
-        return list;
-    }
-
-
-
-
-
-    public   int formSize(String page, String name, String url) {
-        final AtomicInteger i = new AtomicInteger(0);
-        for (Map.Entry<String, Config> entry:formConfigMap.entrySet()){
-            Map<String,String> item=selectFormById(entry.getKey());
-            if (StringUtils.isNotBlank(name) && StringUtils.isBlank(url)) {
-                if (item.get(JsoupUtil.FORM_NAME).toLowerCase().indexOf(name.toLowerCase()) >= 0) {
-                    i.getAndIncrement();
-                }
-            } else if (StringUtils.isBlank(name) && StringUtils.isNotBlank(url)) {
-                if (item.get("ENCRYPT_FORM_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0) {
-                    i.getAndIncrement();
-                }
-            } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(url)) {
-                if (item.get(JsoupUtil.FORM_NAME.toLowerCase()).indexOf(name.toLowerCase()) >= 0 && item.get("ENCRYPT_FORM_ID").toLowerCase().indexOf(url.toLowerCase()) >= 0
-                ) {
-                    i.getAndIncrement();
-                }
-            } else {
-                i.getAndIncrement();
-            }
-        } ;
-        return i.get();
-    }
-
-
-
-      Element formitemByNameValue(Document doc,Element form,Element cardBody, String  label,
-                                       String pluginCode,String name,String value ){
-        Element formItem=null;
-        //找到对应元素
-        Element item = cardBody.selectFirst("["+JsoupUtil.ITEM_NAME+"='" + name + "']");
-        if(item==null){
-            //有可能是从其他分组挪过来的
-            item=form.selectFirst("["+JsoupUtil.ITEM_NAME+"='" + name + "']");
-            if(item!=null){
-                cardBody.appendChild(item.parent().parent());
-            }
-        }
-        if(item==null){
-            formItem= doc.createElement("div");
-            formItem.addClass("layui-form-item ");
-            Element labelE = doc.createElement("label");
-            labelE.addClass("layui-form-label").text(Utils.trimNull(label));
-
-            Element block = doc.createElement("div");
-            block.addClass("layui-input-block form-group");
-
-            Element input = doc.createElement("object");
-            input.addClass("form-item");
-            input.attr(JsoupUtil.NAME,name);
-            input.attr(JsoupUtil.ITEM_NAME,name);
-            block.appendChild(input);
-            item=input;
-            formItem.appendChild(labelE).appendChild(block);
-            cardBody.appendChild(formItem);
-        }else{
-            formItem=item.parent().parent();
-        }
-        dealElementByPluginCode(Utils.trimNull(pluginCode), item);
-        if(item.tagName().equalsIgnoreCase("pre")){
-            item.text(Utils.trimNull(value));
-            item.addClass("layui-code");
-        }else {
-            item.attr("value", Utils.trimNull(value));
-        }
-        return formItem;
-    }
 
     private   Element foot(Document doc,String appendHead, String append_head) {
         Element el=doc.getElementById(appendHead);
@@ -320,7 +180,7 @@ public class FormDao extends JsoupUtil{
 
                 Elements formitems=cardColList.get(i).select(".layui-form-item");
                 for (int j = 0; j < formitems.size(); j++) {
-                    Element label=formitems.get(j).selectFirst(".layui-form-label");
+                    Element label=formitems.get(j).selectFirst("label");
                     Element plugin=formitems.get(j).selectFirst("[item_name]");
                     if(plugin==null){
                         continue;
@@ -452,7 +312,7 @@ public class FormDao extends JsoupUtil{
                         }
                     }
                      newcardElement.selectFirst(".layui-card-body")
-                            .appendChild(formItemHtmlElement);
+                            .append("\n"+formItemHtmlElement.outerHtml()+"\n");
                 }
                 inputForm.appendChild(newcardElement);
             }
@@ -463,23 +323,23 @@ public class FormDao extends JsoupUtil{
 
     Element newCard(String label,String col){
         StringBuilder sb=new StringBuilder();
-        sb.append(" <div class=\"cardcol layui-col-md"+col+"\" col='"+col+"'  ><div class=\"layui-card\"  >\n");
+        sb.append("\n\t<div   class='layui-card'  col='"+col+"'  > \n");
         if(StringUtils.isNotBlank(label)&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,label)){
-            sb.append(  " <div class=\"layui-card-header\">\n" +label +"  </div>\n" );
+            sb.append(  "\t\t<div class=\"layui-card-header\">\n" +label +"  </div>\n" );
         }
-        sb.append(  " <div class=\"layui-card-body\"> </div>\n" );
-        sb.append("</div></div>");
+        sb.append(  " \t\t<div class=\"layui-card-body\"> </div>\n" );
+        sb.append("\t</div>\n\n");
         return Jsoup.parse(sb.toString()).body().child(0);
     }
     Element newFormItem(String label,String col){
-        return Jsoup.parse("\n<div class=\"layui-col-space10  layui-col-md"+col+"\"  col='"+col+"'   >\n" +
-                "                    <div class=\"layui-form-item \">\n" +
-                "                        <label class=\"layui-form-label  \">"+label+"</label>\n" +
-                "                        <div class=\"layui-input-block\">\n" +
+        return Jsoup.parse("\n\t\t\t<div  class='layui-form-item'  col='"+col+"'   >\n" +
+
+                "                        <label >"+label+"</label>\n" +
+                "                        <div  >\n" +
                 "                            <object   >\n" +
                 "                            </object>\n" +
                 "                        </div>\n" +
-                "                    </div>\n" +
+
                 "                </div>\n").body().child(0);
     }
 
