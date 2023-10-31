@@ -323,10 +323,10 @@ $(function (){
     //保存
     $(".layui-btn-save").click(function(){
 
-        let formcode=$("#centerContainer").find(".layui-elem-quote").attr("ez-encodeformid");
+        let formcode=$("body").find("[ez-type=formcore]").attr("ez-encodeformid");
         let form_name=$("#form_name").text();
-        let successurl=$("#centerContainer").find(".layui-elem-quote").attr("ez-successurl");
-        let datasource=$("#centerContainer").find(".layui-elem-quote").attr("ez-datasource");
+        let successurl=$("body").find("[ez-type=formcore]").attr("ez-successurl");
+        let datasource=$("body").find("[ez-type=formcore]").attr("ez-datasource");
         let initcode=$("#initcode").html();
         let subcode=$("#subcode").html();
         let delcode=$("#delcode").html();

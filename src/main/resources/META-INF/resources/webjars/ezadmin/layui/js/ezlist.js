@@ -505,7 +505,11 @@ function renderTable() {
             }
             form.render();
         });
-
+        var initSort={};
+        if($("#orderBy").attr("name")!=null){
+            initSort.field=$("#orderBy").attr("name");
+            initSort.type=$("#orderBy").attr("value");
+        }
         //转换静态表格
         laytable = table2.init('mytable', {
               height: 'full-'+($("#searchForm").height()+43+97) , //设置高度
@@ -514,16 +518,14 @@ function renderTable() {
             cellMinWidth:$("#cellMinWidth").val()||110,
             className: $("#mytable").attr("class")
             , limit: $("#perPageInt").val() //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
-            ,initSort: {
-                field: $("#orderBy").attr("name"), // 按 id 字段排序
-                type:  $("#orderBy").attr("value") // 降序排序
-            }
+            ,initSort:initSort
             //支持所有基础参数
             , done: function (res, curr, count) {
                 try {
                     if (typeof (afterAllDataLoad) == "function") {
                         afterAllDataLoad();
                     }
+                    doOrder();
                     $('.layuimini-loader').fadeOut();
                     $("[name=DISPLAY_ORDER_INPUT]").each(function () {
                         var oldValue = $(this).val()
@@ -609,6 +611,27 @@ function renderTable() {
             });
         }
     });
+}
+function doOrder(){
+    var listid=$("#ENCRYPT_LIST_ID").val();
+    $("[name=DISPLAY_ORDER]").each(function(){
+        $(this).attr("oldValue",$(this).val());
+        $(this).blur(function(){
+            var othis=$(this);
+            var id=othis.attr("data-id");
+            var order=othis.val();
+            var old=othis.attr("oldValue");
+            if(order!=undefined&&order!=''&&old!=order){
+                $.get("/ezadmin/list/doOrder-"+listid+"?orderId="+id+"&displayOrder="+order,function(data){
+                    if(data.success){
+                        location.reload();
+                    }else{
+                        layui.layer.alert("操作失败")
+                    }
+                })
+            }
+        })
+    })
 }
 
 function refreshOrder(item_id) {
