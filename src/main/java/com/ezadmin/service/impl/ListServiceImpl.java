@@ -414,6 +414,36 @@ public class ListServiceImpl implements ListService {
     }
 
 
+    /**
+     *
+     * @param pluginCode  adminstyle+
+     * @return
+     * @throws Exception
+     */
+    @EzCacheAnnotation
+    public Map<String, String> loadPlugin(String adminstyle,String fold,String pluginCode) throws Exception {
+        try {
+//            if (StringUtils.equalsIgnoreCase("firstcol-", code)) {
+//                return Collections.emptyMap();
+//            }
+//            //参数需要保留在搜索里面，所以不能置空
+//            if (StringUtils.equalsIgnoreCase("hidden-nowhere", code)) {
+//                return Collections.emptyMap();
+//            }
+             Map<String, String> plugin = PluginsDao.getInstance().getPlugin(adminstyle,fold, pluginCode);
+//            if (Utils.isNotEmpty(plugin)) {
+                 return plugin;
+//            }
+//            if (StringUtils.equalsIgnoreCase("firstcol-", code)) {
+//                return plugin;
+//            }
+        }catch (Exception e){
+            LOG.warn("plugin error{} {} {} ",adminstyle,fold,pluginCode,e);
+        }
+        return Collections.emptyMap();
+    }
+
+
     @Override
     @EzCacheAnnotation
     public String selectAllListById(String encodeId) throws Exception {
@@ -451,15 +481,16 @@ public class ListServiceImpl implements ListService {
             String listcode = getString(coreMap, "listcode");
             String datasourceCore = getString(coreMap, "datasource");
             String firstcol = getString(coreMap, "firstcol");
+            String adminstyle = getString(coreMap, "adminstyle");
             DataSource dataSourceVO = EzBootstrap.instance().getDataSourceByKey(datasourceCore);
             //头部Nav
             filltab(requestParamMap, tabList, listcode);
             //搜索项
             fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
             //表按钮
-            filltablebtn(requestParamMap, tablebtnList);
+            filltablebtn(coreMap,requestParamMap, tablebtnList);
             //表头
-            fillcol(colList);
+            fillcol(coreMap,colList);
             page(pagination, list, requestParamMap);
             //无需加载数据，比如tree,
             if (StringUtils.equals("0", Utils.trimNull(requestParamMap.get("loadDataFlag")))) {
@@ -492,7 +523,7 @@ public class ListServiceImpl implements ListService {
 
                     dataInDb = calulateData(dataInDb, globalEmptyShow, columnEmptyShow, jdbcType);
 
-                    Map<String, String> plugin = getDbTemplateByCode(Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE), 0, "list");
+                    Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.BODY_PLUGIN_CODE));
 
                     try {
                         //处理第一列
@@ -502,7 +533,7 @@ public class ListServiceImpl implements ListService {
                             context.setVariable("count", pagination.getStartRecord() + i + 1);
                             context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
                             context.setVariable("dataRow", dataRow.entrySet());
-                            String template = Utils.trimNull(getDbTemplateByCode(Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE), 0, "list")
+                            String template = Utils.trimNull( loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.BODY_PLUGIN_CODE))
                                     .get("PLUGIN_BODY"));
                             String html = ThymeleafUtils.processString(template, context);
                             if (StringUtils.isBlank(html)) {
@@ -621,11 +652,8 @@ public class ListServiceImpl implements ListService {
                                 context.setVariable("itemsJson", JSONUtils.toJSONString(tempRowItem));
                             }
 
-                            Map<String, String> buttonPlugin = getDbTemplateByCode(
-                                    StringUtils.isBlank(Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.TYPE)) ?
-                                            TemplateEnum.ROWBUTTON.getCode() : Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.PLUGIN)
-                                    //
-                                    , 0, "list");
+                            Map<String, String> buttonPlugin =
+                                    loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list", Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.PLUGIN));
                             context.setVariable("rowButton0", tempRowItem.get(0));
                             context.setVariable("rowButtonItemList", tempRowItem);
                             context.setVariable("rowButtons", tempRowItem);
@@ -655,11 +683,12 @@ public class ListServiceImpl implements ListService {
         }
     }
 
-    private void fillcol(List<Map<String, Object>> colList) throws Exception {
+    private void fillcol(Map<String, Object> coreMap,List<Map<String, Object>> colList) throws Exception {
         if(Utils.isNotEmpty(colList)){
             for (int i = 0; i < colList.size(); i++) {
                 Map<String,Object> th= colList.get(i);
-                Map<String, String> plugin =  getDbTemplateByCode(getString(th,JsoupUtil.HEAD_PLUGIN_CODE),0,"list");
+                Map<String, String> plugin =    loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.HEAD_PLUGIN_CODE));
+
                 Context context = new Context();
                 context.setVariables(th);
                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
@@ -677,14 +706,15 @@ public class ListServiceImpl implements ListService {
         }
     }
 
-    private void filltablebtn(Map<String, Object> requestParamMap, List<Map<String, Object>> tablebtnList) throws Exception {
+    private void filltablebtn(Map<String, Object> coreMap,Map<String, Object> requestParamMap, List<Map<String, Object>> tablebtnList) throws Exception {
         if(Utils.isNotEmpty(tablebtnList)){
             for (int i = 0; i < tablebtnList.size(); i++) {
                 Map<String,Object> table= tablebtnList.get(i);
                 table.put(JsoupUtil.URL,MapParser.parseDefaultEmpty(getString(table,JsoupUtil.URL), requestParamMap).getResult());
                 table.put(JsoupUtil.WINDOW_NAME,MapParser.parseDefaultEmpty(getString(table,JsoupUtil.WINDOW_NAME), requestParamMap).getResult());
                 table.put(JsoupUtil.EZ_CALLBACK,Utils.trimNull(requestParamMap.get(JsoupUtil.EZ_CALLBACK)));
-                Map<String, String> plugin = getDbTemplateByCode(getString(table,JsoupUtil.PLUGIN),0,"list");
+                Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(table, JsoupUtil.PLUGIN));
+
                 Context context = new Context();
                 context.setVariables(table);
                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
@@ -712,7 +742,8 @@ public class ListServiceImpl implements ListService {
 
                 updateValidate(search, validRuleMap, validMsgMap);
                 try {
-                    Map<String, String> plugin = getDbTemplateByCode(getString(search, JsoupUtil.PLUGIN), 0, "list");
+                    Map<String, String> plugin = loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(search, JsoupUtil.PLUGIN));
+
                     String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
                     Context context = new Context();
                     context.setVariable("model", search);
@@ -876,12 +907,14 @@ public class ListServiceImpl implements ListService {
         //搜索项
         fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
         //表按钮
-        filltablebtn(requestParamMap, tablebtnList);
+        filltablebtn(coreMap,requestParamMap, tablebtnList);
         //表头
         if(Utils.isNotEmpty(colList)){
             for (int i = 0; i < colList.size(); i++) {
                 Map<String,Object> th=colList.get(i);
-                Map<String, String> plugin =  getDbTemplateByCode(getString(th,JsoupUtil.HEAD_PLUGIN_CODE),0,"list");
+                Map<String, String> plugin =
+                        loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th,JsoupUtil.HEAD_PLUGIN_CODE));
+
                 Context context = new Context();
                 context.setVariables(th);
                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
@@ -914,7 +947,8 @@ public class ListServiceImpl implements ListService {
 
                         dataInDb=calulateData(dataInDb,globalEmptyShow,columnEmptyShow,jdbcType);
 
-                        Map<String, String> plugin = getDbTemplateByCode(Utils.getStringByObject(th,JsoupUtil.BODY_PLUGIN_CODE),0,"list");
+                        Map<String, String> plugin =
+                                loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th,JsoupUtil.BODY_PLUGIN_CODE));
 
                         try {
                             //处理第一列
@@ -924,7 +958,7 @@ public class ListServiceImpl implements ListService {
                                 context.setVariable("count", pagination.getStartRecord() + i + 1);
                                 context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
                                 context.setVariable("dataRow", dataRow.entrySet());
-                                String template = Utils.trimNull(getDbTemplateByCode(Utils.getStringByObject(th,JsoupUtil.BODY_PLUGIN_CODE), 0, "list")
+                                String template =  Utils.trimNull(loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th,JsoupUtil.BODY_PLUGIN_CODE))
                                         .get("PLUGIN_BODY"));
                                 String html = ThymeleafUtils.processString(template, context);
                                 if (StringUtils.isBlank(html)) {
@@ -1025,11 +1059,9 @@ public class ListServiceImpl implements ListService {
                                         } else {
                                             context.setVariable("itemsJson", JSONUtils.toJSONString(tempRowItem));
                                         }
-                                        Map<String, String> buttonPlugin = getDbTemplateByCode(
-                                                StringUtils.isBlank(Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.PLUGIN)) ?
-                                                        TemplateEnum.ROWBUTTON.getCode() : Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.PLUGIN)
-                                                //
-                                                , 0, "list");
+                                        Map<String, String> buttonPlugin =
+                                                loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list", Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.PLUGIN));
+
                                         context.setVariable("rowButton0", tempRowItem.get(0));
                                         context.setVariable("rowButtonItemList", tempRowItem);
                                         context.setVariable("rowButtons", tempRowItem);
@@ -1093,7 +1125,8 @@ public class ListServiceImpl implements ListService {
         map.put("page", pagination);
         context.setVariable("data", map);
         context.setVariable("encodeListId",listcode);
-        String template = Utils.trimNull(getDbTemplateByCode(TemplateEnum.PAGE.getCode(),0,"list")
+        String template = Utils.trimNull(
+                loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",TemplateEnum.PAGE.getCode())
                 .get("PLUGIN_BODY"));
         String html = ThymeleafUtils.processString(template, context);
         Map<String, Object> pagemap = new HashMap<>();

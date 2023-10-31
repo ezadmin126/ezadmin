@@ -26,6 +26,9 @@ public class PluginsDao {
     private static Map<String, Config> pluginsListConfigMap=new HashMap();
     private static Map<String, Config> pluginsDetailConfigMap=new HashMap();
 
+
+    private static Map<String, Config> pluginsAllConfigMap=new HashMap();
+
     /**
      * key:plugintype
      * value:List-config
@@ -164,14 +167,49 @@ public class PluginsDao {
     private   void loadPlugins() {
         for (int i = 0; i < EzBootstrap.instance().getPluginsFormConfigResources().size(); i++) {
             itemToMap(EzBootstrap.instance().getPluginsFormConfigResources().get(i),pluginsFormConfigMap,pluginsFormTypeConfigMap);
+            explainConfig(EzBootstrap.instance().getPluginsFormConfigResources().get(i),pluginsAllConfigMap);
         }
         for (int i = 0; i < EzBootstrap.instance().getPluginsListConfigResources().size(); i++) {
             itemToMap(EzBootstrap.instance().getPluginsListConfigResources().get(i),pluginsListConfigMap,pluginsListTypeConfigMap);
+            explainConfig(EzBootstrap.instance().getPluginsListConfigResources().get(i),pluginsAllConfigMap);
         }
         for (int i = 0; i < EzBootstrap.instance().getPluginsDetailConfigResources().size(); i++) {
             itemToMap(EzBootstrap.instance().getPluginsDetailConfigResources().get(i),pluginsDetailConfigMap,pluginsDetailTypeConfigMap);
+            explainConfig(EzBootstrap.instance().getPluginsDetailConfigResources().get(i),pluginsAllConfigMap);
         }
     }
+
+    private  void explainConfig(Config item, Map<String, Config> configMap  ){
+        try {
+            InputStream stream = null;
+            if(item.isJar()){
+                stream=item.getIn();
+                Document doc = Jsoup.parse(stream, "UTF-8", "");
+                item.setDoc(doc);
+                configMap.put(doc.body().id(),item);
+                configMap.put(doc.body().attr("alias"),item);
+
+                String[] path=item.getPath().substring(item.getPath().indexOf("ezadmin/config")+"ezadmin/config".length()).split("/");
+
+                configMap.put(path[1]+"_"+path[3]+"_"+doc.body().id(),item);
+                //jar包中的流确保只用一次，初始化之后就关闭流
+                stream.close();
+            }else{
+                stream=new FileInputStream(item.getFile());
+                Document doc = Jsoup.parse(stream, "UTF-8", "");
+                item.setDoc(doc);
+                configMap.put(doc.body().id(),item);
+                configMap.put(doc.body().attr("alias"),item);
+                String[] path=item.getPath().substring(item.getPath().indexOf("ezadmin/config")+"ezadmin/config".length()).split("/");
+                configMap.put(path[1]+"_"+path[3]+"_"+doc.body().id(),item);
+                stream.close();
+            }
+        }catch (Exception e){
+            //jar   包中的 无需重新加载
+            throw new RuntimeException(e);
+        }
+    }
+
     private   void itemToMap(Config item, Map<String, Config> configMap,Map<String, List<Config>> pluginsTypeConfigMap){
         try {
             InputStream stream = null;
@@ -206,4 +244,10 @@ public class PluginsDao {
         pluginsTypeConfigMap.get(type).add(config);
     }
 
+    public Map<String, String> getPlugin(String adminstyle, String fold, String pluginCode) {
+            String key=adminstyle+"_"+fold+"_"+pluginCode;
+        Config config=pluginsAllConfigMap.get(key);
+        Document doc =config.getDoc()  ;
+        return docToPluginMap(doc);
+    }
 }

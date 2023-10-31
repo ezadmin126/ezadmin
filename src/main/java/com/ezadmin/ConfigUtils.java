@@ -48,6 +48,10 @@ public class ConfigUtils {
                     }
                 } else {
                     Path path = Paths.get(paths[i]);
+                    if(Files.notExists(path)){
+                        logger.info(" ezadmin 开始加载文件{} 文件不存在 ", path);
+                        continue;
+                    }
                     final List<Path> files = new ArrayList<Path>();
                     Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                         @Override

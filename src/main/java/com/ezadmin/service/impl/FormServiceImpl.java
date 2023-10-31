@@ -1,6 +1,7 @@
 package com.ezadmin.service.impl;
 
 import com.ezadmin.dao.FormDao;
+import com.ezadmin.dao.PluginsDao;
 import com.ezadmin.service.FormService;
 import com.ezadmin.service.ListService;
 import com.ezadmin.dao.model.ItemInitData;
@@ -67,6 +68,8 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
             ,Map<String, String> sessionParamMap , DataSource dataSource ) {
         Map<String,Map<String,Object>> validRuleMap=new HashMap<>();
         Map<String,Map<String,Object>> validMsgMap=new HashMap<>();
+
+        Map<String,Object> core=(Map<String,Object>)form.get("core");
 
         List<Map<String,Object>> cardList=(List<Map<String,Object>>)form.get("cards");
 
@@ -140,9 +143,6 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
 
                                     //计算显示
 
-
-
-
                                 } catch (Exception e) {
                                     logger.error("", e);
                                     if (Utils.getLog() != null) {
@@ -155,8 +155,12 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             if(StringUtils.equals(Utils.trimNull(requestParamMap.get(JsoupUtil.PLUGIN_FOLD)),"detail")){
                                     context.setVariable("disable_flag",true);
                             }
-                            String template = Utils.trimNull(listService.getDbTemplateByCode(Utils.trimNull(item.get("type")),
-                                    0, Utils.trimEmptyDefault(requestParamMap.get(JsoupUtil.PLUGIN_FOLD), "form")).get("PLUGIN_BODY"));
+
+                            Map<String, String> plugin = PluginsDao.getInstance().getPlugin(Utils.trimNull(core.get(JsoupUtil.ADMINSTYLE)),Utils.trimEmptyDefault(requestParamMap.get(JsoupUtil.PLUGIN_FOLD), "form"), Utils.trimNull(item.get("type")));
+                            String template= Utils.trimNull(plugin.get("PLUGIN_BODY"));
+                            //                            String template = Utils.trimNull(
+//                                    listService.getDbTemplateByCode(Utils.trimNull(item.get("type")),
+//                                    0, Utils.trimEmptyDefault(requestParamMap.get(JsoupUtil.PLUGIN_FOLD), "form")).get("PLUGIN_BODY"));
 
                             String html = ThymeleafUtils.processString(template, context);
 
@@ -170,8 +174,6 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                     }
                 }
             }
-
-            Map<String,Object> core=(Map<String,Object>)form.get("core");
 
             if(Utils.isNotEmpty(validRuleMap)){
                 core.put("validaterules",JSONUtils.toJSONString(validRuleMap));

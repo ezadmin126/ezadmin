@@ -60,6 +60,11 @@ public class ListController extends BaseController {
                 }
                 listService.fillListById(list, requestParamMap, sessionParamMap);
                 request.setAttribute("data", list);
+                Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
+                String pagetotaltype = ""+coreMap.getOrDefault("pagesync","0");
+                if(StringUtils.equalsIgnoreCase(pagetotaltype,"1")){
+                    listService.fillCountById(list, requestParamMap, sessionParamMap);
+                }
                 return EzBootstrap.instance().getAdminStyle() + "/list";
             }
         } catch (Exception e) {

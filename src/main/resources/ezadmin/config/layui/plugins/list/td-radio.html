@@ -8,7 +8,7 @@
 <table>
     <tr id="content">
         <td style="max-width:30px"   class="text-center   fixedCol">
-            <input th:_CHECK_ID_VALUE="${_CHECK_ID_VALUE}" type="radio" name="list-body-checkbox"   lay-ignore>
+            <input th:_CHECK_ID_VALUE="${_CHECK_ID_VALUE}" type="radio" name="list-body-checkbox"   >
             <input type="hidden" th:value="${_CHECK_ID_VALUE}" name="row_data_id"
                    th:id="${'row_data_id_'+_CHECK_ID_VALUE}">
             <input type="hidden" th:each="item:${dataRow}"

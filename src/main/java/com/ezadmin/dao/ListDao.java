@@ -32,7 +32,7 @@ public class ListDao extends  JsoupUtil{
 
     static String[] BODY_ATTRS=new String[]{"datasource",
             "fixnumber","fixnumberright",
-            "empty_show","tablestyle",
+            "empty_show","tablestyle","adminstyle","pagesync",
             "firstcol","export","cellMinWidth"
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
@@ -44,7 +44,7 @@ public class ListDao extends  JsoupUtil{
             ,JsoupUtil.JDBCTYPE,JsoupUtil.EMPTY_SHOW,
             JsoupUtil.DATASOURCE,JsoupUtil.EDIT_FLAG,
             JsoupUtil.EDIT_EXPRESS,JsoupUtil.EDIT_PLUGIN,
-            JsoupUtil.WIDTH,JsoupUtil.MIN_WIDTH,MIN_HEIGHT
+            JsoupUtil.WIDTH,JsoupUtil.MIN_WIDTH,JsoupUtil.MIN_HEIGHT,JsoupUtil.FROZEN,JsoupUtil.CLASS
     };
     private static   String [] names=new String[]{ JsoupUtil.VALIDATERULES,JsoupUtil.VALIDATEMESSAGES,JsoupUtil.DATATYPE,
             JsoupUtil.OPENTYPE,JsoupUtil.WINDOW_NAME,JsoupUtil.URL,
@@ -57,7 +57,7 @@ public class ListDao extends  JsoupUtil{
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
             ,JsoupUtil.TOP_DESC,JsoupUtil.ITEM_DESC,JsoupUtil.RIGHT_DESC
             ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE,JsoupUtil.COL,JsoupUtil.PLUGIN
-            ,JsoupUtil.DISPLAY
+            ,JsoupUtil.DISPLAY ,JsoupUtil.CLASS
     };
     private ListDao() {
 
@@ -240,6 +240,9 @@ public class ListDao extends  JsoupUtil{
         if (display != null) {
             coreMap.put(JsoupUtil.DISPLAYORDER_EXPRESS, display.text());
         }
+        //adminstyle
+        String[] path=config.getPath().substring(config.getPath().indexOf("ezadmin/config")+"ezadmin/config".length()).split("/");
+        coreMap.put(JsoupUtil.ADMINSTYLE,path[1]);
     }
     public   Map<String, Object> selectAllListById(String listcode) {
         Map<String, Object> result=new HashMap<>();
@@ -312,6 +315,7 @@ public class ListDao extends  JsoupUtil{
                 json.put("style",userStyle);
                 json.put("title","操作");
                 coreMap.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json).replaceAll("\"","'"));
+                coreMap.put("rowbtnwidth",Utils.trimNull(rowbutton.attr("width")));
             } catch (Exception e) {
                 log.error("", e);
             }
@@ -349,12 +353,9 @@ public class ListDao extends  JsoupUtil{
                 if(laydataMap==null){
                     laydataMap=new HashMap<>();
                 }
-
                 // laydata属性
                 attrToLayData(laydataMap,th);
-
                 defaultMap(laydataMap,th);
-
 
 //                //默认宽度设置为110
 //                if(laydataMap.get("width")==null
@@ -573,15 +574,15 @@ public class ListDao extends  JsoupUtil{
         }
         for (int i = 0; i < rowbtnList.size(); i++) {
             Map<String,Object> tab= rowbtnList.get(i);
-            Element tabHtml=newButton();
+            Element rowbtn=newButton();
             for (int k = 0; k < names.length; k++) {
                 String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
                 if(StringUtils.isNotBlank(formItemAttrValue)){
-                    tabHtml.attr(names[k],formItemAttrValue);
+                    rowbtn.attr(names[k],formItemAttrValue);
                 }
             }
-            tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
-            body.getElementById("rowbutton").append("\n"+tabHtml.outerHtml()+"\n");
+            rowbtn.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
+            body.getElementById("rowbutton").append("\n"+rowbtn.outerHtml()+"\n");
         }
     }
 

@@ -100,7 +100,9 @@ public class FormDao extends JsoupUtil{
         formMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
         formMap.put(JsoupUtil.FORM_NAME, doc.title());
         formMap.put(JsoupUtil.FORM_NAME.toLowerCase(), doc.title());
-
+        //adminstyle
+        String[] path=config.getPath().substring(config.getPath().indexOf("ezadmin/config")+"ezadmin/config".length()).split("/");
+        formMap.put(JsoupUtil.ADMINSTYLE,path[1]);
 
         return formMap;
     }
@@ -298,6 +300,11 @@ public class FormDao extends JsoupUtil{
         formMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
         formMap.put(JsoupUtil.FORM_NAME, doc.title());
          formMap.put(JsoupUtil.FORM_NAME.toLowerCase(), doc.title());
+
+        //adminstyle
+        String[] path=config.getPath().substring(config.getPath().indexOf("ezadmin/config")+"ezadmin/config".length()).split("/");
+        formMap.put(JsoupUtil.ADMINSTYLE,path[1]);
+
 
         result.put("core",formMap);
         List<Map<String,Object>> cardsList=new ArrayList<>();

@@ -22,7 +22,9 @@ public class JsoupUtil {
     protected static final String HREF ="href" ;
     protected static final String COL = "col";
     public static final String TYPE ="type" ;
+    public static final String ADMINSTYLE = "adminstyle";
     public static String TABLESTYLE="tablestyle";
+    protected static String FROZEN="frozen";
     private static  Logger logger= LoggerFactory.getLogger(JsoupUtil.class);
 
     public static final String DATASOURCE = "datasource";

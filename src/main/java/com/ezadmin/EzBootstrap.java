@@ -266,14 +266,16 @@ public class EzBootstrap {
 
                         try {
                             Path dir = Paths.get(getEditLocation()+ File.separator+"list");
-
+                            if(Files.notExists(dir)){
+                                log.warn(dir+" 不存在，无法监听文件更改");
+                                return;
+                            }
                             WatchService watcher = FileSystems.getDefault().newWatchService();
                             // 注册要监听的事件
                             dir.register(watcher, ENTRY_CREATE,   ENTRY_MODIFY);
                             //二级目录添加监听事件
                             for(File childFold:dir.toFile().listFiles()){
                                 if(childFold.isDirectory()){
-                                    System.out.println("监听子文件夹"+childFold);
                                     childFold.toPath().register(watcher, ENTRY_CREATE,   ENTRY_MODIFY);
                                 }
                             }
@@ -290,8 +292,7 @@ public class EzBootstrap {
                                                 ListDao.getInstance().loadListFile(new File(currentDir + File.separator +
                                                                 event.context().toString()
                                                 ));
-                                                System.out.println("文件 " + currentDir + File.separator +
-                                                        event.context().toString() + " 被创建了。");
+                                                log.info("文件 " + currentDir+ File.separator +  event.context().toString() + " 被创建了。");
                                             }
                                         } else if (kind == ENTRY_MODIFY) {
                                             // 处理文件修改事件
@@ -299,10 +300,8 @@ public class EzBootstrap {
                                                 ListDao.getInstance().loadListFile(new File(currentDir+ File.separator +
                                                                 event.context().toString()
                                                 ));
-                                                System.out.println("文件 " + currentDir+ File.separator +
-                                                        event.context().toString() + " 被修改了。");
+                                                log.info("文件 " + currentDir+ File.separator +  event.context().toString() + " 被修改了。");
                                             }
-                                            //  System.out.println("文件 " + event.context() + " 被修改了。");
                                         }
                                     }
                                     // 重置 WatchKey
@@ -311,11 +310,11 @@ public class EzBootstrap {
                                         break;
                                     }
                                 }catch (Exception e){
-                                    e.printStackTrace();
+                                    log.error("",e);
                                 }
                             }
                         }catch(Exception e){
-                            e.printStackTrace();
+                            log.error("",e);
                         }
                     }
                 }.start();
@@ -325,6 +324,10 @@ public class EzBootstrap {
 
                         try {
                             Path dir = Paths.get(getEditLocation()+ File.separator+"form");
+                            if(Files.notExists(dir)){
+                                log.warn(dir+" 不存在，无法监听文件更改");
+                                return;
+                            }
 
                             WatchService watcher = FileSystems.getDefault().newWatchService();
                             // 注册要监听的事件
@@ -332,7 +335,6 @@ public class EzBootstrap {
                             //二级目录添加监听事件
                             for(File childFold:dir.toFile().listFiles()){
                                 if(childFold.isDirectory()){
-                                    System.out.println("找到子文件夹"+childFold);
                                     childFold.toPath().register(watcher, ENTRY_CREATE,   ENTRY_MODIFY);
                                 }
                             }
@@ -356,7 +358,7 @@ public class EzBootstrap {
                                                     currentDir+File.separator+
                                                             event.context().toString()
                                             ));
-                                            System.out.println("文件  " + currentDir+File.separator+
+                                            log.info("文件  " + currentDir+File.separator+
                                                     event.context().toString() + " 被创建了。");
                                         }
                                     } else if (kind == ENTRY_MODIFY) {
@@ -366,7 +368,7 @@ public class EzBootstrap {
                                                     currentDir+File.separator+
                                                             event.context().toString()
                                             ));
-                                            System.out.println("文件 " + currentDir+File.separator+
+                                            log.info("文件  " + currentDir+File.separator+
                                                     event.context().toString() + " 被修改了。");
                                         }
 
@@ -378,7 +380,9 @@ public class EzBootstrap {
                                     break;
                                 }
                             }
-                        }catch(Exception e){e.printStackTrace();}
+                        }catch(Exception e){
+                            log.error("",e);
+                        }
                     }
                 }.start();
 
@@ -401,15 +405,10 @@ public class EzBootstrap {
             response.setCharacterEncoding("UTF-8");
             response.setContentType(ContentTypeEnum.loadContentTypeByUrl(originatingUrl));
 
-
             filter.doFilter(request, response);
         } catch (Exception e) {
             log.error("", e);
-        } finally {
-
         }
-        return;
-
     }
 
     public String getAppName() {
