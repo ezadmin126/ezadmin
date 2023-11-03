@@ -60,6 +60,9 @@ public class ListEditController extends BaseController {
             list.put("rowbtn",new ArrayList<>());
             list.put("col",new ArrayList<>());
         }else{
+
+            Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
+            coreMap.put(JsoupUtil.ADMINSTYLE,"layui");
             listService.fillListById(list,requestParamMap,sessionParamMap);
         }
 
@@ -81,18 +84,22 @@ public class ListEditController extends BaseController {
 
     @EzMapping("importlist.html")
     public void importlist(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String listcode = request.getParameter("listcode");
-        String formcode = request.getParameter("formcode");
-        String fasttext = request.getParameter("listexpress");
+        try {
+            String listcode = request.getParameter("listcode");
+            String formcode = request.getParameter("formcode");
+            String fasttext = request.getParameter("listexpress");
 
-        sqlToList2(fasttext,listcode,formcode);
-        EzBootstrap.instance().getCache().clear();
-        if(StringUtils.isNotBlank(listcode)) {
-            response.sendRedirect(request.getContextPath() + "/ezadmin/list/loadEdit-" + listcode);
-            return;
-        }
-        if(StringUtils.isNotBlank(formcode)) {
-            response.sendRedirect(request.getContextPath() + "/ezadmin/form/loadEdit-" + formcode);
+            sqlToList2(fasttext, listcode, formcode);
+            EzBootstrap.instance().getCache().clear();
+            if (StringUtils.isNotBlank(listcode)) {
+                response.sendRedirect(request.getContextPath() + "/ezadmin/list/loadEdit-" + listcode);
+                return;
+            }
+            if (StringUtils.isNotBlank(formcode)) {
+                response.sendRedirect(request.getContextPath() + "/ezadmin/form/loadEdit-" + formcode);
+            }
+        }catch (Exception e){
+            response.getWriter().write(" error sql");
         }
     }
 
@@ -213,7 +220,7 @@ public class ListEditController extends BaseController {
 //                "}");
         sqlExpress.append("\r\nreturn search(sql);");
 
-        core.put("select_express", sqlExpress.toString());
+        core.put("select_express","\n<![CDATA[ \n"+ sqlExpress.toString() +"\n]]>\n");
 
 
 

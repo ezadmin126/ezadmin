@@ -2,7 +2,7 @@ package com.ezadmin.service.impl;
 
 import com.ezadmin.dao.ListDao;
 import com.ezadmin.dao.PluginsDao;
-import com.ezadmin.plugins.express.executor.EzExpressExecutor;
+
 import com.ezadmin.service.ListService;
 import com.ezadmin.dao.model.ItemInitData;
 import com.ezadmin.common.annotation.EzCacheAnnotation;
@@ -22,6 +22,7 @@ import com.ezadmin.dao.Dao;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.context.Context;
@@ -38,30 +39,35 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public List<Map<String, Object>> getDataListByListId(DataSource dataSource,Map<String, Object> list,
-                                                         Map<String, Object> request  , Map<String, String> session, Page page) throws Exception {
+                   Map<String, Object> request  , Map<String, String> session, Page page) throws Exception {
         //
-        Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
+        try {
+            Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
 
 
-        String select_express=getString(coreMap,"select_express");
+            String select_express = getString(coreMap, "select_express");
 
-        ListExpressExecutor listExpressExecutor = ListExpressExecutor.createInstance();
-        listExpressExecutor.datasource(dataSource)
-                .express(Utils.trimNull(transSqlToQl(select_express)))
-                .page(page);
-        //额外设置listDTO
-        listExpressExecutor.getOperatorParam().setListDto(list);
+            ListExpressExecutor listExpressExecutor = ListExpressExecutor.createInstance();
+            listExpressExecutor.datasource(dataSource)
+                    .express(Utils.trimNull(transSqlToQl(select_express)))
+                    .page(page);
+            //额外设置listDTO
+            listExpressExecutor.getOperatorParam().setListDto(list);
 
-        //计算group by
-        String group=excuteGroup(list,request,session);
+            //计算group by
+            String group = excuteGroup(list, request, session);
 
-        listExpressExecutor.addParam("_CHECKD_IDS",Utils.getStringByObject(request,"_CHECKD_IDS"));
-        listExpressExecutor.addParam("EZ_SUM_FLAG",Utils.getStringByObject(request,"EZ_SUM_FLAG"));
-        listExpressExecutor.addParam("GROUP_BY",group);
-        listExpressExecutor.addSessionParam(session);
-        listExpressExecutor.addRequestParam( request);
-        List<Map<String, Object>> dataList  = (List<Map<String, Object>>)listExpressExecutor.execute();
-        return dataList;
+            listExpressExecutor.addParam("_CHECKD_IDS", Utils.getStringByObject(request, "_CHECKD_IDS"));
+            listExpressExecutor.addParam("EZ_SUM_FLAG", Utils.getStringByObject(request, "EZ_SUM_FLAG"));
+            listExpressExecutor.addParam("GROUP_BY", group);
+            listExpressExecutor.addSessionParam(session);
+            listExpressExecutor.addRequestParam(request);
+            List<Map<String, Object>> dataList = (List<Map<String, Object>>) listExpressExecutor.execute();
+            return dataList;
+        }catch (Exception e){
+            Utils.addLog("获取列表数据异常:", e);
+            return null;
+        }
     }
 
 
@@ -390,28 +396,6 @@ public class ListServiceImpl implements ListService {
         return data;
     }
 
-    @EzCacheAnnotation
-    public Map<String, String> getDbTemplateByCode(String code, int templateId,String fold) throws Exception {
-        try {
-            if (StringUtils.equalsIgnoreCase("firstcol-", code)) {
-                return Collections.emptyMap();
-            }
-            //参数需要保留在搜索里面，所以不能置空
-//            if (StringUtils.equalsIgnoreCase("hidden-nowhere", code)) {
-//                return Collections.emptyMap();
-//            }
-            Map<String, String> plugin = PluginsDao.getInstance().getDbTemplateByCode(code, fold);
-            if (Utils.isNotEmpty(plugin)) {
-                return plugin;
-            }
-            if (StringUtils.equalsIgnoreCase("firstcol-", code)) {
-                return plugin;
-            }
-        }catch (Exception e){
-            LOG.warn("plugin error{}",code,e);
-        }
-        return Collections.emptyMap();
-    }
 
 
     /**
@@ -423,20 +407,7 @@ public class ListServiceImpl implements ListService {
     @EzCacheAnnotation
     public Map<String, String> loadPlugin(String adminstyle,String fold,String pluginCode) throws Exception {
         try {
-//            if (StringUtils.equalsIgnoreCase("firstcol-", code)) {
-//                return Collections.emptyMap();
-//            }
-//            //参数需要保留在搜索里面，所以不能置空
-//            if (StringUtils.equalsIgnoreCase("hidden-nowhere", code)) {
-//                return Collections.emptyMap();
-//            }
-             Map<String, String> plugin = PluginsDao.getInstance().getPlugin(adminstyle,fold, pluginCode);
-//            if (Utils.isNotEmpty(plugin)) {
-                 return plugin;
-//            }
-//            if (StringUtils.equalsIgnoreCase("firstcol-", code)) {
-//                return plugin;
-//            }
+            return PluginsDao.getInstance().getPlugin(adminstyle,fold, pluginCode);
         }catch (Exception e){
             LOG.warn("plugin error{} {} {} ",adminstyle,fold,pluginCode,e);
         }
@@ -505,6 +476,7 @@ public class ListServiceImpl implements ListService {
                 Map<String, Object> dataRow = dataList.get(i);
                 List<String> tds = new ArrayList<>();
                 dataRow.put("tds", tds);
+                dataRow.put("rowjson",JSONUtils.toJSONString(dataRow));
 
                 if (Utils.isEmpty(colList)) {
                     rowList.add(dataRow);
@@ -524,86 +496,57 @@ public class ListServiceImpl implements ListService {
                     dataInDb = calulateData(dataInDb, globalEmptyShow, columnEmptyShow, jdbcType);
 
                     Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.BODY_PLUGIN_CODE));
-
+                    if(StringUtils.isBlank(bodyPlugin)){
+                        tds.add("<td class='  ezadmin-td ezadmin-td-'" + itemName + ">" + dataInDb + "</td>");
+                        continue;
+                    }
                     try {
-                        //处理第一列
-                        if (1==2||ColTypeEnum.isFirst(Utils.getStringByObject(th, JsoupUtil.HEAD_PLUGIN_CODE))) {
+
+
                             Context context = new Context();
-                            context.setVariable("firstCol", firstcol);
-                            context.setVariable("count", pagination.getStartRecord() + i + 1);
                             context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
+                            context.setVariable("count", pagination.getStartRecord() + i + 1);
                             context.setVariable("dataRow", dataRow.entrySet());
-                            String template = Utils.trimNull( loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.BODY_PLUGIN_CODE))
-                                    .get("PLUGIN_BODY"));
-                            String html = ThymeleafUtils.processString(template, context);
-                            if (StringUtils.isBlank(html)) {
-                                tds.add("");
+                            context.setVariables(th);
+                            context.setVariable(JsoupUtil.URL, MapParser.parseDefaultEmpty(url, dataRow).getResult());
+                            context.setVariable(JsoupUtil.WINDOW_NAME, MapParser.parseDefaultEmpty(windowname, dataRow).getResult());
+                            context.setVariables(dataRow);
+                            context.setVariable("dataInDb", dataInDb);
+                            context.setVariable("uploadUrl", requestParamMap.get("ContextPath") + EzBootstrap.instance().getUploadUrl());
+                            if (StringUtils.startsWith(EzBootstrap.instance().getDownloadUrl(), "http")) {
+                                context.setVariable("downloadUrl", EzBootstrap.instance().getDownloadUrl());
                             } else {
-                                tds.add(html);
+                                context.setVariable("downloadUrl", requestParamMap.get("ContextPath") + EzBootstrap.instance().getDownloadUrl());
                             }
-                            continue;
-                        }
-                        //处理数据列
-                        else {
-                            if (StringUtils.isNotBlank(bodyPlugin)) {
-                                Context context = new Context();
-                                context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
-                                context.setVariable("count", pagination.getStartRecord() + i + 1);
-                                context.setVariable("dataRow", dataRow.entrySet());
-
-                                context.setVariables(th);
-                                context.setVariable(JsoupUtil.URL, MapParser.parseDefaultEmpty(url, dataRow).getResult());
-                                context.setVariable(JsoupUtil.WINDOW_NAME, MapParser.parseDefaultEmpty(windowname, dataRow).getResult());
-
-
-                                context.setVariables(dataRow);
-                                context.setVariable("dataInDb", dataInDb);
-                                context.setVariable("uploadUrl", requestParamMap.get("ContextPath") + EzBootstrap.instance().getUploadUrl());
-
-                                if (StringUtils.startsWith(EzBootstrap.instance().getDownloadUrl(), "http")) {
-                                    context.setVariable("downloadUrl", EzBootstrap.instance().getDownloadUrl());
-
-                                } else {
-                                    context.setVariable("downloadUrl", requestParamMap.get("ContextPath") + EzBootstrap.instance().getDownloadUrl());
-                                }
-
-                                if (StringUtils.isNotBlank(getString(th, JsoupUtil.DATA))) {
-
-                                    String columnDs = getString(th, JsoupUtil.DATASOURCE);
-                                    if (StringUtils.isBlank(columnDs)) {
-                                        columnDs = datasourceCore;
-                                    }
-                                    DataSource temp = EzBootstrap.instance().getDataSourceByKey(columnDs);
-
-                                    if (ItemDataSourceType.isEzList(getString(th, JsoupUtil.DATATYPE))) {
-                                        //获取
-//                                            EzList listTemp = new DefaultEzList( getString(th,JsoupUtil.DATA), temp, requestParamMap,sessionParamMap);
-//
-//                                            list.renderHtml();
-                                        //context.setVariable("data", listTemp.getEzListDto());
-                                    } else {
-                                        try {
-                                            Map nm = new HashMap();
-                                            nm.putAll(requestParamMap);
-                                            nm.putAll(sessionParamMap);
-                                            ItemInitData items = getSelectItems(temp, getString(th, JsoupUtil.DATA), getString(th, JsoupUtil.DATATYPE),
-                                                    nm);
-                                            context.setVariable("items", items.getItems());
-                                            context.setVariable("itemsJson", JSONUtils.toJSONString(items.getItems()));
-                                        } catch (Exception e) {
-                                            LOG.error("EZADMIN LIST={}  列数据异常{} ", JSONUtils.toJSONString(th), e);
-                                        }
-                                    }
-                                }
-
+                            if(StringUtils.isBlank(getString(th, JsoupUtil.DATA))){
                                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
                                 String html = ThymeleafUtils.processString(template, context);
                                 tds.add(html);
-
-                            } else {
-                                tds.add("<td class='  ezadmin-td ezadmin-td-'" + itemName + ">" + dataInDb + "</td>");
+                                continue;
                             }
-                        }
+
+
+                            String columnDs = getString(th, JsoupUtil.DATASOURCE);
+                            if (StringUtils.isBlank(columnDs)) {
+                                columnDs = datasourceCore;
+                            }
+                            DataSource temp = EzBootstrap.instance().getDataSourceByKey(columnDs);
+
+                            try {
+                                Map nm = new HashMap();
+                                nm.putAll(requestParamMap);
+                                nm.putAll(sessionParamMap);
+                                ItemInitData items = getSelectItems(temp, getString(th, JsoupUtil.DATA), getString(th, JsoupUtil.DATATYPE),  nm);
+                                context.setVariable("items", items.getItems());
+                                context.setVariable("itemsJson", JSONUtils.toJSONString(items.getItems()));
+                            } catch (Exception e) {
+                                LOG.error("EZADMIN LIST={}  列数据异常{} ", JSONUtils.toJSONString(th), e);
+                            }
+
+                            String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
+                            String html = ThymeleafUtils.processString(template, context);
+                            tds.add(html);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -657,6 +600,7 @@ public class ListServiceImpl implements ListService {
                             context.setVariable("rowButton0", tempRowItem.get(0));
                             context.setVariable("rowButtonItemList", tempRowItem);
                             context.setVariable("rowButtons", tempRowItem);
+                            context.setVariable("rowbtnclass",coreMap.get("rowbtnclass"));
                             String template = Utils.trimNull(buttonPlugin.get("PLUGIN_BODY"));
                             String html = ThymeleafUtils.processString(template, context);
                             if (StringUtils.isNotBlank(html)) {

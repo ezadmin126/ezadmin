@@ -31,9 +31,9 @@ public class ListDao extends  JsoupUtil{
     private static String DEFAULT_SEARCH = "input-text";
 
     static String[] BODY_ATTRS=new String[]{"datasource",
-            "fixnumber","fixnumberright",
+            "fixnumber","fixnumberright","success_url",
             "empty_show","tablestyle","adminstyle","pagesync",
-            "firstcol","export","cellMinWidth"
+            "firstcol","export","cellminwidth","linestyle"
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
             JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,
@@ -166,7 +166,7 @@ public class ListDao extends  JsoupUtil{
                 log.error("文件异常{}",item);
                 continue;
             }
-            log.info("loadAllList:{}",item.getFile());
+           // log.info("loadAllList:{}",item.getFile());
             try {
                 InputStream stream = null;
                 if(item.isJar() ){
@@ -313,7 +313,8 @@ public class ListDao extends  JsoupUtil{
                 json.put("style",userStyle);
                 json.put("title","操作");
                 coreMap.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json).replaceAll("\"","'"));
-                coreMap.put("rowbtnwidth",Utils.trimNull(rowbutton.attr("width")));
+                coreMap.put("rowbtnwidth",Utils.trimEmptyDefault(rowbutton.attr("width"),"175"));
+                coreMap.put("rowbtnclass",Utils.trimNull(rowbutton.attr("class") ));
             } catch (Exception e) {
                 log.error("", e);
             }
@@ -501,6 +502,11 @@ public class ListDao extends  JsoupUtil{
         String groupby_express=  Utils.trimNull( coreMap.get("groupby_express"));
         String APPEND_HEAD=  Utils.trimNull( coreMap.get(JsoupUtil.APPEND_HEAD));
         String APPEND_FOOT=  Utils.trimNull( coreMap.get(JsoupUtil.APPEND_FOOT));
+
+        if(select_express.indexOf("<![CDATA[")==-1){
+            select_express="\n<![CDATA[ \n"+ select_express+"\n]]>\n";
+        }
+
         Config config=null;
         if (config==null) {
             Document doc =JsoupUtil.newlist();
@@ -591,8 +597,8 @@ public class ListDao extends  JsoupUtil{
                     rowbtn.attr(names[k],formItemAttrValue);
                 }
             }
-            tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
-            body.getElementById("rowbutton").append("\n\t\t\t"+tabHtml.outerHtml());
+            rowbtn.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
+            body.getElementById("rowbutton").append("\n\t\t\t"+rowbtn.outerHtml());
         }
     }
 

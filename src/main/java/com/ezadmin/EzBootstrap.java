@@ -242,66 +242,137 @@ public class EzBootstrap {
     }
 
     public void init(    ) throws  Exception {
-        if (start.compareAndSet(false, true)) {
-            log.info("start init ezadmin plugins ");
-            PluginsDao.getInstance().init();
-            log.info("start init ezadmin list ");
-            ListDao.getInstance().init();
-            log.info("start init ezadmin form ");
-            FormDao.getInstance().init();
-            log.info("end init ezadmin   ");
+        try {
+            if (start.compareAndSet(false, true)) {
+                log.info("start init ezadmin plugins ");
+                PluginsDao.getInstance().init();
+                log.info("start init ezadmin list ");
+                ListDao.getInstance().init();
+                log.info("start init ezadmin form ");
+                FormDao.getInstance().init();
+                log.info("end init ezadmin   ");
 
-            ThymeleafUtils.init(sqlCache );
+                ThymeleafUtils.init(sqlCache);
 
-            filter = new TraceLogFilter();
-            filter.next(new ControllerFilter()).next(new NotFoundFilter());
-            //初始化导出 工具
-            ezExport =(EzExport)BeanTools.applicationInstance(getExportClass());
-            cache =(EzCache)BeanTools.applicationInstance(getCacheClass());
-            getCache().cacheFlag(sqlCache);
-            if(StringUtils.isNotBlank(getEditLocation())){
-                //初始化文件监听list
-                new Thread(){
-                    public void run(){
+                filter = new TraceLogFilter();
+                filter.next(new ControllerFilter()).next(new NotFoundFilter());
+                //初始化导出 工具
+                ezExport = (EzExport) BeanTools.applicationInstance(getExportClass());
+                cache = (EzCache) BeanTools.applicationInstance(getCacheClass());
+                getCache().cacheFlag(sqlCache);
+                if (StringUtils.isNotBlank(getEditLocation())) {
+                    //初始化文件监听list
+                    new Thread() {
+                        public void run() {
 
-                        try {
-                            Path dir = Paths.get(getEditLocation()+ File.separator+"list");
-                            if(Files.notExists(dir)){
-                                log.warn(dir+" 不存在，无法监听文件更改");
-                                return;
-                            }
-                            WatchService watcher = FileSystems.getDefault().newWatchService();
-                            // 注册要监听的事件
-                            dir.register(watcher, ENTRY_CREATE,   ENTRY_MODIFY);
-                            //二级目录添加监听事件
-                            for(File childFold:dir.toFile().listFiles()){
-                                if(childFold.isDirectory()){
-                                    childFold.toPath().register(watcher, ENTRY_CREATE,   ENTRY_MODIFY);
+                            try {
+                                Path dir = Paths.get(getEditLocation() + File.separator + "list");
+                                if (Files.notExists(dir)) {
+                                    log.warn(dir + " 不存在，无法监听文件更改");
+                                    return;
                                 }
+                                WatchService watcher = FileSystems.getDefault().newWatchService();
+                                // 注册要监听的事件
+                                dir.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
+                                //二级目录添加监听事件
+                                for (File childFold : dir.toFile().listFiles()) {
+                                    if (childFold.isDirectory()) {
+                                        childFold.toPath().register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
+                                    }
+                                }
+                                while (true) {
+                                    try {
+                                        WatchKey key = watcher.take();
+                                        String currentDir = key.watchable().toString();
+                                        for (WatchEvent<?> event : key.pollEvents()) {
+                                            WatchEvent.Kind<?> kind = event.kind();
+                                            // 处理不同种类的事件
+                                            if (kind == ENTRY_CREATE) {
+                                                // 处理文件创建事件
+                                                if (event.context().toString().endsWith(".html")) {
+                                                    ListDao.getInstance().loadListFile(new File(currentDir + File.separator +
+                                                            event.context().toString()
+                                                    ));
+                                                    log.info("文件 " + currentDir + File.separator + event.context().toString() + " 被创建了。");
+                                                }
+                                            } else if (kind == ENTRY_MODIFY) {
+                                                // 处理文件修改事件
+                                                if (event.context().toString().endsWith(".html")) {
+                                                    ListDao.getInstance().loadListFile(new File(currentDir + File.separator +
+                                                            event.context().toString()
+                                                    ));
+                                                    log.info("文件 " + currentDir + File.separator + event.context().toString() + " 被修改了。");
+                                                }
+                                            }
+                                        }
+                                        // 重置 WatchKey
+                                        boolean valid = key.reset();
+                                        if (!valid) {
+                                            break;
+                                        }
+                                    } catch (Exception e) {
+                                        log.error("", e);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                log.error("", e);
                             }
-                            while (true) {
-                                try {
-                                    WatchKey key = watcher.take();
-                                    String currentDir=key.watchable().toString();
+                        }
+                    }.start();
+                    //初始化文件监听form
+                    new Thread() {
+                        public void run() {
+
+                            try {
+                                Path dir = Paths.get(getEditLocation() + File.separator + "form");
+                                if (Files.notExists(dir)) {
+                                    log.warn(dir + " 不存在，无法监听文件更改");
+                                    return;
+                                }
+
+                                WatchService watcher = FileSystems.getDefault().newWatchService();
+                                // 注册要监听的事件
+                                dir.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
+                                //二级目录添加监听事件
+                                for (File childFold : dir.toFile().listFiles()) {
+                                    if (childFold.isDirectory()) {
+                                        childFold.toPath().register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
+                                    }
+                                }
+                                while (true) {
+                                    WatchKey key;
+                                    try {
+                                        // 获取要处理的 WatchKey
+                                        key = watcher.take();
+                                    } catch (InterruptedException ex) {
+                                        return;
+                                    }
+                                    String currentDir = key.watchable().toString();
+
                                     for (WatchEvent<?> event : key.pollEvents()) {
                                         WatchEvent.Kind<?> kind = event.kind();
                                         // 处理不同种类的事件
                                         if (kind == ENTRY_CREATE) {
                                             // 处理文件创建事件
                                             if (event.context().toString().endsWith(".html")) {
-                                                ListDao.getInstance().loadListFile(new File(currentDir + File.separator +
+                                                FormDao.getInstance().loadFormFile(new File(
+                                                        currentDir + File.separator +
                                                                 event.context().toString()
                                                 ));
-                                                log.info("文件 " + currentDir+ File.separator +  event.context().toString() + " 被创建了。");
+                                                log.info("文件  " + currentDir + File.separator +
+                                                        event.context().toString() + " 被创建了。");
                                             }
                                         } else if (kind == ENTRY_MODIFY) {
                                             // 处理文件修改事件
                                             if (event.context().toString().endsWith(".html")) {
-                                                ListDao.getInstance().loadListFile(new File(currentDir+ File.separator +
+                                                FormDao.getInstance().loadFormFile(new File(
+                                                        currentDir + File.separator +
                                                                 event.context().toString()
                                                 ));
-                                                log.info("文件 " + currentDir+ File.separator +  event.context().toString() + " 被修改了。");
+                                                log.info("文件  " + currentDir + File.separator +
+                                                        event.context().toString() + " 被修改了。");
                                             }
+
                                         }
                                     }
                                     // 重置 WatchKey
@@ -309,86 +380,19 @@ public class EzBootstrap {
                                     if (!valid) {
                                         break;
                                     }
-                                }catch (Exception e){
-                                    log.error("",e);
                                 }
+                            } catch (Exception e) {
+                                log.error("", e);
                             }
-                        }catch(Exception e){
-                            log.error("",e);
                         }
-                    }
-                }.start();
-                //初始化文件监听form
-                new Thread(){
-                    public void run(){
+                    }.start();
 
-                        try {
-                            Path dir = Paths.get(getEditLocation()+ File.separator+"form");
-                            if(Files.notExists(dir)){
-                                log.warn(dir+" 不存在，无法监听文件更改");
-                                return;
-                            }
+                }
 
-                            WatchService watcher = FileSystems.getDefault().newWatchService();
-                            // 注册要监听的事件
-                            dir.register(watcher, ENTRY_CREATE,   ENTRY_MODIFY);
-                            //二级目录添加监听事件
-                            for(File childFold:dir.toFile().listFiles()){
-                                if(childFold.isDirectory()){
-                                    childFold.toPath().register(watcher, ENTRY_CREATE,   ENTRY_MODIFY);
-                                }
-                            }
-                            while (true) {
-                                WatchKey key;
-                                try {
-                                    // 获取要处理的 WatchKey
-                                    key = watcher.take();
-                                } catch (InterruptedException ex) {
-                                    return;
-                                }
-                                String currentDir=key.watchable().toString();
-
-                                for (WatchEvent<?> event: key.pollEvents()) {
-                                    WatchEvent.Kind<?> kind = event.kind();
-                                    // 处理不同种类的事件
-                                    if (kind == ENTRY_CREATE) {
-                                        // 处理文件创建事件
-                                        if(event.context().toString().endsWith(".html")){
-                                            FormDao.getInstance().loadFormFile(new File(
-                                                    currentDir+File.separator+
-                                                            event.context().toString()
-                                            ));
-                                            log.info("文件  " + currentDir+File.separator+
-                                                    event.context().toString() + " 被创建了。");
-                                        }
-                                    } else if (kind == ENTRY_MODIFY) {
-                                        // 处理文件修改事件
-                                        if(event.context().toString().endsWith(".html")){
-                                            FormDao.getInstance().loadFormFile(new File(
-                                                    currentDir+File.separator+
-                                                            event.context().toString()
-                                            ));
-                                            log.info("文件  " + currentDir+File.separator+
-                                                    event.context().toString() + " 被修改了。");
-                                        }
-
-                                    }
-                                }
-                                // 重置 WatchKey
-                                boolean valid = key.reset();
-                                if (!valid) {
-                                    break;
-                                }
-                            }
-                        }catch(Exception e){
-                            log.error("",e);
-                        }
-                    }
-                }.start();
 
             }
-
-
+        }catch (Exception e){
+            //
         }
     }
     static Filter filter;

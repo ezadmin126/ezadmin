@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PluginsDao {
     public static final Logger log = LoggerFactory.getLogger(PluginsDao.class);
@@ -22,9 +23,9 @@ public class PluginsDao {
      * key:plugincode
      * value:config
      */
-    private static Map<String, Config> pluginsFormConfigMap=new HashMap();
-    private static Map<String, Config> pluginsListConfigMap=new HashMap();
-    private static Map<String, Config> pluginsDetailConfigMap=new HashMap();
+//    private static Map<String, Config> pluginsFormConfigMap=new HashMap();
+//    private static Map<String, Config> pluginsListConfigMap=new HashMap();
+//    private static Map<String, Config> pluginsDetailConfigMap=new HashMap();
 
 
     private static Map<String, Config> pluginsAllConfigMap=new HashMap();
@@ -33,9 +34,9 @@ public class PluginsDao {
      * key:plugintype
      * value:List-config
      */
-    private static Map<String, List<Config>> pluginsFormTypeConfigMap=new HashMap();
-    private static Map<String, List<Config>> pluginsDetailTypeConfigMap=new HashMap();
-    private static Map<String, List<Config>> pluginsListTypeConfigMap=new HashMap();
+//    private static Map<String, List<Config>> pluginsFormTypeConfigMap=new HashMap();
+//    private static Map<String, List<Config>> pluginsDetailTypeConfigMap=new HashMap();
+//    private static Map<String, List<Config>> pluginsListTypeConfigMap=new HashMap();
 
     private PluginsDao() {
 
@@ -48,23 +49,23 @@ public class PluginsDao {
     public   void init(){
         loadPlugins();
     }
-    public   Map<String, String> getDbTemplateByCode(String code, String fold) {
-        Config config=null;
-        if (StringUtils.equalsIgnoreCase(fold, "list")) {
-              config= pluginsListConfigMap.get(code);
-        }else if (StringUtils.equalsIgnoreCase(fold, "form")) {
-                config= pluginsFormConfigMap.get(code);
-        }else{
-            config= pluginsDetailConfigMap.get(code);
-        }
-        if(config==null){
-            log.error("plugin is null : {} {}",code,fold);
-            return Collections.emptyMap();
-        }
-        Document doc =config.getDoc()  ;
-
-        return docToPluginMap(doc);
-    }
+//    public   Map<String, String> getDbTemplateByCode(String code, String fold) {
+//        Config config=null;
+//        if (StringUtils.equalsIgnoreCase(fold, "list")) {
+//              config= pluginsListConfigMap.get(code);
+//        }else if (StringUtils.equalsIgnoreCase(fold, "form")) {
+//                config= pluginsFormConfigMap.get(code);
+//        }else{
+//            config= pluginsDetailConfigMap.get(code);
+//        }
+//        if(config==null){
+//            log.error("plugin is null : {} {}",code,fold);
+//            return Collections.emptyMap();
+//        }
+//        Document doc =config.getDoc()  ;
+//
+//        return docToPluginMap(doc);
+//    }
 
     private static Map<String, String> docToPluginMap(Document doc){
         Map<String, String> p = new HashMap<>();
@@ -92,34 +93,39 @@ public class PluginsDao {
 
     public   List<Map<String, Object>> listPlugin(String pre) {
         List<Map<String, Object>> l = new ArrayList<>();
-        for (Map.Entry<String, List<Config>> entry:pluginsListTypeConfigMap.entrySet()){
-            List<Config> configList=entry.getValue();
-            if(StringUtils.isBlank(pre)){
-                for (int i = 0; i < configList.size(); i++) {
-                    Map  v=docToPluginMap(configList.get(i).getDoc());
-                    Map<String, Object> m = new HashMap<>();
-                    m.put("K", v.get("PLUGIN_CODE"));
-                    m.put("V", v.get("PLUGIN_NAME"));
-                    l.add(m);
-                }
-            } else{
-                if(StringUtils.equalsIgnoreCase(entry.getKey(),pre)){
-                    for (int i = 0; i < configList.size(); i++) {
-                        Map  v=docToPluginMap(configList.get(i).getDoc());
-                        Map<String, Object> m = new HashMap<>();
-                        m.put("K", v.get("PLUGIN_CODE"));
-                        m.put("V", v.get("PLUGIN_NAME"));
-                        l.add(m);
-                    }
-                }
-            }
-        }
+//        for (Map.Entry<String, List<Config>> entry:pluginsListTypeConfigMap.entrySet()){
+//            List<Config> configList=entry.getValue();
+//            if(StringUtils.isBlank(pre)){
+//                for (int i = 0; i < configList.size(); i++) {
+//                    Map  v=docToPluginMap(configList.get(i).getDoc());
+//                    Map<String, Object> m = new HashMap<>();
+//                    m.put("K", v.get("PLUGIN_CODE"));
+//                    m.put("V", v.get("PLUGIN_NAME"));
+//                    l.add(m);
+//                }
+//            } else{
+//                if(StringUtils.equalsIgnoreCase(entry.getKey(),pre)){
+//                    for (int i = 0; i < configList.size(); i++) {
+//                        Map  v=docToPluginMap(configList.get(i).getDoc());
+//                        Map<String, Object> m = new HashMap<>();
+//                        m.put("K", v.get("PLUGIN_CODE"));
+//                        m.put("V", v.get("PLUGIN_NAME"));
+//                        l.add(m);
+//                    }
+//                }
+//            }
+//        }
 
         return l;
     }
 
     public   List<Map<String, Object>> allFormPlugin() {
-        List<Config> configList=pluginsFormTypeConfigMap.get("form");
+        String key="layui_form";
+        List<Config>  configList = pluginsAllConfigMap.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().startsWith(key))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
         List<Map<String, Object>> l = new ArrayList<>();
 
         for (int i = 0; i < configList.size(); i++) {
@@ -129,7 +135,12 @@ public class PluginsDao {
         return l;
     }
     public   List<Map<String, Object>> allListPlugin(String type) {
-        List<Config> configList=pluginsListTypeConfigMap.get(type);
+        String key="layui_list_"+type;
+        List<Config>  configList = pluginsAllConfigMap.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().startsWith(key))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
         List<Map<String, Object>> l = new ArrayList<>();
         for (int i = 0; i < configList.size(); i++) {
             Map  v=docToPluginMap(configList.get(i).getDoc());
@@ -139,42 +150,39 @@ public class PluginsDao {
     }
     public   List<Map<String, Object>> formPlugin(String pre) {
         List<Map<String, Object>> l = new ArrayList<>();
-        for (Map.Entry<String, List<Config>> entry:pluginsFormTypeConfigMap.entrySet()){
-            List<Config> configList=entry.getValue();
-            if(StringUtils.isBlank(pre)){
-                for (int i = 0; i < configList.size(); i++) {
-                    Map  v=docToPluginMap(configList.get(i).getDoc());
-                    Map<String, Object> m = new HashMap<>();
-                    m.put("K", v.get("PLUGIN_CODE"));
-                    m.put("V", v.get("PLUGIN_NAME"));
-                    l.add(m);
-                }
-            } else{
-                if(StringUtils.equalsIgnoreCase(entry.getKey(),pre)){
-                    for (int i = 0; i < configList.size(); i++) {
-                        Map  v=docToPluginMap(configList.get(i).getDoc());
-                        Map<String, Object> m = new HashMap<>();
-                        m.put("K", v.get("PLUGIN_CODE"));
-                        m.put("V", v.get("PLUGIN_NAME"));
-                        l.add(m);
-                    }
-                }
-            }
-        }
+//        for (Map.Entry<String, List<Config>> entry:pluginsFormTypeConfigMap.entrySet()){
+//            List<Config> configList=entry.getValue();
+//            if(StringUtils.isBlank(pre)){
+//                for (int i = 0; i < configList.size(); i++) {
+//                    Map  v=docToPluginMap(configList.get(i).getDoc());
+//                    Map<String, Object> m = new HashMap<>();
+//                    m.put("K", v.get("PLUGIN_CODE"));
+//                    m.put("V", v.get("PLUGIN_NAME"));
+//                    l.add(m);
+//                }
+//            } else{
+//                if(StringUtils.equalsIgnoreCase(entry.getKey(),pre)){
+//                    for (int i = 0; i < configList.size(); i++) {
+//                        Map  v=docToPluginMap(configList.get(i).getDoc());
+//                        Map<String, Object> m = new HashMap<>();
+//                        m.put("K", v.get("PLUGIN_CODE"));
+//                        m.put("V", v.get("PLUGIN_NAME"));
+//                        l.add(m);
+//                    }
+//                }
+//            }
+//        }
         return l;
     }
 
     private   void loadPlugins() {
         for (int i = 0; i < EzBootstrap.instance().getPluginsFormConfigResources().size(); i++) {
-            itemToMap(EzBootstrap.instance().getPluginsFormConfigResources().get(i),pluginsFormConfigMap,pluginsFormTypeConfigMap);
             explainConfig(EzBootstrap.instance().getPluginsFormConfigResources().get(i),pluginsAllConfigMap);
         }
         for (int i = 0; i < EzBootstrap.instance().getPluginsListConfigResources().size(); i++) {
-            itemToMap(EzBootstrap.instance().getPluginsListConfigResources().get(i),pluginsListConfigMap,pluginsListTypeConfigMap);
             explainConfig(EzBootstrap.instance().getPluginsListConfigResources().get(i),pluginsAllConfigMap);
         }
         for (int i = 0; i < EzBootstrap.instance().getPluginsDetailConfigResources().size(); i++) {
-            itemToMap(EzBootstrap.instance().getPluginsDetailConfigResources().get(i),pluginsDetailConfigMap,pluginsDetailTypeConfigMap);
             explainConfig(EzBootstrap.instance().getPluginsDetailConfigResources().get(i),pluginsAllConfigMap);
         }
     }
@@ -188,9 +196,7 @@ public class PluginsDao {
                 item.setDoc(doc);
                 configMap.put(doc.body().id(),item);
                 configMap.put(doc.body().attr("alias"),item);
-
                 String[] path=item.getPath().substring(item.getPath().indexOf("ezadmin/config")+"ezadmin/config".length()).split("/");
-
                 configMap.put(path[1]+"_"+path[3]+"_"+doc.body().id(),item);
                 //jar包中的流确保只用一次，初始化之后就关闭流
                 stream.close();

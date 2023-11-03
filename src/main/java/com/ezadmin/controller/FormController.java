@@ -60,7 +60,10 @@ public class FormController extends BaseController {
         formService.fillFormById(form,searchParamsValues,sessionMap);
         request.setAttribute("ID",ID);
         request.setAttribute("form",form);
-        return EzBootstrap.instance().getAdminStyle()+"/form";
+        Map<String, Object>  core= (Map<String, Object>) form.get("core");
+
+
+        return core.get(JsoupUtil.ADMINSTYLE)+"/form";
      }
 
     @EzMapping("upload.html")

@@ -37,6 +37,9 @@ public class ListController extends BaseController {
             }
             Map<String, Object> requestParamMap = requestToMap(request);
 
+            requestParamMap.putIfAbsent("perPageInt",request.getParameter("perPageInt"));
+            requestParamMap.putIfAbsent("currentPage",request.getParameter("page"));
+
             requestParamMap.put("ContextPath", request.getContextPath());
 
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());

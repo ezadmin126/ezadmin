@@ -323,8 +323,12 @@
                                 th:ez-listname="${data.core.listname}" th:ez-fixnumber="${data.core.fixnumber}"
                                 th:ez-fixnumberright="${data.core.fixnumberright}"
                                 th:ez-empty_show="${data.core.empty_show}"
+                                th:ez-pagesync="${data.core.pagesync}"
                                 th:ez-firstcol="${data.core.firstcol}"
                                 th:ez-export="${data.core.export}"
+                                th:ez-success_url="${data.core.success_url}"
+                                th:ez-cellminwidth="${data.core.cellminwidth}"
+                                th:ez-linestyle="${data.core.linestyle}"
 
                     >
                         <span id="listname" th:text="${#strings.isEmpty(data.core.listname)?'列表配置区':data.core.listname}">列表配置区</span>
@@ -430,7 +434,7 @@
                             </div>
                     </div>
 
-                    <div id="append_foot"  >
+                    <div id="append_foot"  th:utext="${data.core.append_foot}">
 
                     </div>
                 </div>
@@ -806,6 +810,16 @@
                             <div class="layui-input-block">
                                 <input type="text" name="empty_show" autocomplete="false" class="layui-input">
 
+                                <small   class="layui-form-mid layui-text-em" style="top:19px">
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezadmin/doc/list/listcore.html#empty_show"></i>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">分页类别</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="pagesync" autocomplete="false" class="layui-input">
                                 <small   class="layui-form-mid layui-text-em" style="top:19px">
                                     <i class="ez-help layui-icon-tips layui-icon"
                                        src="/webjars/ezadmin/doc/list/listcore.html#empty_show"></i>

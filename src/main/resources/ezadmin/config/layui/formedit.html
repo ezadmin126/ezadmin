@@ -197,7 +197,7 @@
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-hide  ">隐藏</button>
                 </div>
                 <blockquote class="layui-elem-quote selector"  ez-col="12"
-                            th:ez-successurl="${form.core.success_url}"
+                            th:ez-success_url="${form.core.success_url}"
                             th:ez-datasource="${form.core.datasource}" ez-type="formcore" th:ez-encodeFormId="${form.core.formcode}"
                             th:ez-form_name="${form.core.form_name}">
                     <span id="form_name" th:text="${#strings.isEmpty(form.core.form_name)?'表单名称':form.core.form_name}">表单名称</span>

@@ -48,6 +48,8 @@ public class FormEditController extends BaseController {
         if(StringUtils.isNotBlank(ENCRYPT_FORM_ID)){
             form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
         }
+        Map<String,Object> core=(Map<String,Object>)form.get("core");
+        core.put(JsoupUtil.ADMINSTYLE,"layui");
         formService.fillFormById(form,searchParamsValues,sessionMap);
         request.setAttribute("form",form);
         return "layui/formedit";

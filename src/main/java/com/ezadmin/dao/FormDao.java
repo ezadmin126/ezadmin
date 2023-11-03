@@ -36,7 +36,7 @@ public class FormDao extends JsoupUtil{
             ,JsoupUtil.STYLE
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
             ,JsoupUtil.TOP_DESC,JsoupUtil.ITEM_DESC,JsoupUtil.RIGHT_DESC
-            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE
+            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE,JsoupUtil.COL
     };
     private FormDao() {
 
@@ -147,7 +147,7 @@ public class FormDao extends JsoupUtil{
         Map<String, String> formMap = JsoupUtil.loadAttrNoChild(body);
         formMap.put("formcode", formCode);
         formMap.put("datasource", strip(body.attr("datasource")));
-        formMap.put("success_url", strip(body.attr("success_url")));
+        formMap.put(JsoupUtil.SUCCESS_URL, strip(body.attr(JsoupUtil.SUCCESS_URL)));
 
         Element configForm=body.getElementById("configForm");
         if(configForm!=null){
@@ -193,10 +193,10 @@ public class FormDao extends JsoupUtil{
                         continue;
                     }
                     Map<String, String> attrMap = JsoupUtil.loadAttrNoChild(plugin);
-                    if(StringUtils.isNotBlank(label.text())&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,label.text())){
+                    if(label!=null&&StringUtils.isNotBlank(label.text())&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,label.text())){
                         attrMap.put(JsoupUtil.LABEL,label.text());
                     }
-                    attrMap.put(JsoupUtil.COL,Utils.trimEmptyDefault(formitems.get(j).parent().attr("col"),"12"));
+                    attrMap.put(JsoupUtil.COL,Utils.trimEmptyDefault(plugin.attr("col"),formitems.get(j).parent().attr("col"),"12"));
                     attrMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(plugin));
                     if(StringUtils.isBlank(attrMap.get(JsoupUtil.URL))){
                         attrMap.put(JsoupUtil.URL,plugin.attr("item_url"));
@@ -225,7 +225,7 @@ public class FormDao extends JsoupUtil{
                 if(StringUtils.isNotBlank(label.text())&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,label.text())){
                     attrMap.put(JsoupUtil.LABEL,label.text());
                 }
-                attrMap.put(JsoupUtil.COL,formitems.get(j).parent().attr("col"));
+                attrMap.put(JsoupUtil.COL,Utils.trimEmptyDefault(plugin.attr("col"),formitems.get(j).parent().attr("col"),"12"));
                 attrMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(plugin));
                 if(StringUtils.isBlank(attrMap.get(JsoupUtil.URL))){
                     attrMap.put(JsoupUtil.URL,plugin.attr("item_url"));
@@ -247,7 +247,7 @@ public class FormDao extends JsoupUtil{
 
         String formcode= Utils.trimNull( coreMap.get("formcode"));
         String formname=  Utils.trimNull( coreMap.get(JsoupUtil.FORM_NAME.toLowerCase()));
-        String successurl=Utils.trimNull( coreMap.get("successurl"));
+        String successurl=Utils.trimNull( coreMap.get(JsoupUtil.SUCCESS_URL));
         String datasource=Utils.trimNull( coreMap.get("datasource"));
         String initcode=  Utils.trimNull( coreMap.get("initcode"));
         String subcode=   Utils.trimNull( coreMap.get("subcode"));

@@ -212,11 +212,14 @@ $(function (){
                     }
                 }
             })
+            debugger;
             core.select_express=$("#select_express").html();
             core.count_express=$("#count_express").html();
             core.orderby_express=$("#orderby_express").html();
             core.groupby_express=$("#groupby_express").html();
             core.displayorder_express=$("#displayorder_express").html();
+            core.append_head=$("#append_head").html();
+            core.append_foot=$("#append_foot").html();
 
 
             $("#tabCoreContainer").find(".selector").each(function(){
