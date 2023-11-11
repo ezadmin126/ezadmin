@@ -135,7 +135,7 @@ public class PluginsDao {
         return l;
     }
     public   List<Map<String, Object>> allListPlugin(String type) {
-        String key="layui_list_"+type;
+        String key="layui_list_";
         List<Config>  configList = pluginsAllConfigMap.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().startsWith(key))
@@ -144,7 +144,9 @@ public class PluginsDao {
         List<Map<String, Object>> l = new ArrayList<>();
         for (int i = 0; i < configList.size(); i++) {
             Map  v=docToPluginMap(configList.get(i).getDoc());
-            l.add(v);
+            if(StringUtils.equals(v.get("PLUGIN_TYPE")+"",type)){
+                l.add(v);
+            }
         }
         return l;
     }
@@ -251,7 +253,7 @@ public class PluginsDao {
     }
 
     public Map<String, String> getPlugin(String adminstyle, String fold, String pluginCode) {
-            String key=adminstyle+"_"+fold+"_"+pluginCode;
+        String key=adminstyle+"_"+fold+"_"+pluginCode;
         Config config=pluginsAllConfigMap.get(key);
         Document doc =config.getDoc()  ;
         return docToPluginMap(doc);

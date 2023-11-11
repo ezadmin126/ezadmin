@@ -325,7 +325,7 @@ $(function (){
 
         let formcode=$("body").find("[ez-type=formcore]").attr("ez-encodeformid");
         let form_name=$("#form_name").text();
-        let successurl=$("body").find("[ez-type=formcore]").attr("ez-successurl");
+        let successurl=$("body").find("[ez-type=formcore]").attr("ez-success_url");
         let datasource=$("body").find("[ez-type=formcore]").attr("ez-datasource");
         let initcode=$("#initcode").html();
         let subcode=$("#subcode").html();
@@ -340,7 +340,7 @@ $(function (){
         var core={};
         core.formcode=formcode;
         core.form_name=form_name;
-        core.successurl=successurl;
+        core.success_url=successurl;
         core.datasource=datasource;
         core.initcode=initcode;
         core.subcode=subcode;
@@ -395,29 +395,6 @@ $(function (){
             layui.layer.alert('请求失败，网络异常');
         });
     })
-
-    // $("#centerContainer").on("click",".layui-form-label:not(input)",function(){
-    //     $(this).parent().prepend("<input class='templabelname layui-input layui-form-label' value='"+$(this).text()+"' style='width:110px'>");
-    //     $(this).remove();
-    //     var type=$(".active").attr("type");
-    //     var currentConfig=typeform(type);
-    //
-    //     $(".templabelname").focusout(function(){
-    //         $(this).parent().prepend("<label class='   layui-form-label'  >"+$(this).val()+"</label>");
-    //         currentConfig.find("[name=label]").val($(this).val());
-    //         $(".active").attr("ez-label",$(this).val());
-    //         $(this).remove();
-    //     })
-    // })
-    // $("#centerContainer").click(function(e){
-    //     console.log(e.target)
-    //     if(!$(e.target).hasClass("layui-form-label")){
-    //         $(".templabelname").focusout();
-    //     }
-    //
-    // })
-
-
 })
 
 

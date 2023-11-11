@@ -176,10 +176,10 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
             }
 
             if(Utils.isNotEmpty(validRuleMap)){
-                core.put("validaterules",JSONUtils.toJSONString(validRuleMap));
+                core.put("validaterules",JSONUtils.toJSONString(validRuleMap) );
             }
             if(Utils.isNotEmpty(validMsgMap)){
-                core.put("validatemessages",JSONUtils.toJSONString(validMsgMap));
+                core.put("validatemessages",JSONUtils.toJSONString(validMsgMap) );
             }
         }
     }

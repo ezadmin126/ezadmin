@@ -116,15 +116,15 @@ public class EzAdminAutoConfiguration implements ApplicationContextAware {
 //        ezBootstrap.addOriginDataSource(properties.getEzDataSource());
 
         try {
-            logger.info(" ezadmin 开始初始化列表");
-            ezBootstrap.setListConfigResources(ConfigUtils.loadFiles(properties.getListResourceLocation()));
-            logger.info(" ezadmin 开始初始化列表插件{}");
-            ezBootstrap.setPluginsListConfigResources(ConfigUtils.loadFiles(properties.getPluginsListResourceLocation()));
-            logger.info(" ezadmin 开始初始化表单");
-            ezBootstrap.setFormConfigResources(ConfigUtils.loadFiles(properties.getFormResourceLocation()));
-            logger.info(" ezadmin 开始初始化表单插件");
-            ezBootstrap.setPluginsFormConfigResources(ConfigUtils.loadFiles(properties.getPluginsFormResourceLocation()));
-            ezBootstrap.setPluginsDetailConfigResources(ConfigUtils.loadFiles(properties.getPluginsDetailResourceLocation()));
+            logger.info(" ezadmin 开始初始化列表"+properties.getListResourceLocation());
+            ezBootstrap.setListConfigResources(ConfigUtils.loadFiles(properties.getListResourceLocation()+";"+listResourceLocation));
+            logger.info(" ezadmin 开始初始化列表插件{}"+properties.getPluginsListResourceLocation());
+            ezBootstrap.setPluginsListConfigResources(ConfigUtils.loadFiles(properties.getPluginsListResourceLocation()+";"+pluginsListResourceLocation));
+            logger.info(" ezadmin 开始初始化表单"+properties.getFormResourceLocation());
+            ezBootstrap.setFormConfigResources(ConfigUtils.loadFiles(properties.getFormResourceLocation()+";"+formResourceLocation));
+            logger.info(" ezadmin 开始初始化表单插件"+properties.getPluginsFormResourceLocation());
+            ezBootstrap.setPluginsFormConfigResources(ConfigUtils.loadFiles(properties.getPluginsFormResourceLocation()+";"+pluginsFormResourceLocation));
+            ezBootstrap.setPluginsDetailConfigResources(ConfigUtils.loadFiles(properties.getPluginsDetailResourceLocation()+";"+pluginsDetailResourceLocation));
             ezBootstrap.init();
             ezBootstrap.setReload(new Callback() {
                 @Override
@@ -152,7 +152,11 @@ public class EzAdminAutoConfiguration implements ApplicationContextAware {
         }
         return ezBootstrap;
     }
-
+    private String listResourceLocation="classpath*:/ezadmin/config/layui/list/**/*.html";
+    private String formResourceLocation="classpath*:/ezadmin/config/layui/form/**/*.html";
+    private String pluginsFormResourceLocation="classpath*:/ezadmin/config/layui/plugins/form/**/*.html";
+    private String pluginsListResourceLocation="classpath*:/ezadmin/config/layui/plugins/list/**/*.html";
+    private String pluginsDetailResourceLocation="classpath*:/ezadmin/config/layui/plugins/detail/**/*.html";
 
 
     @Bean

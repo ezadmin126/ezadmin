@@ -6,7 +6,7 @@
 </head>
 <body id="ueditor" type="form" icon="layui-icon-fonts-html">
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md12" ez-type="tinymce">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="ueditor">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">富文本（可视化不渲染）</label>
             <div class="layui-input-block">
@@ -16,7 +16,7 @@
     </div>
 </div>
 <div id="content">
-    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="tinymce"
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="ueditor"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"

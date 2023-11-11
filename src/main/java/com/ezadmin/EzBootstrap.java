@@ -393,6 +393,7 @@ public class EzBootstrap {
             }
         }catch (Exception e){
             //
+            log.error("start init ezadmin  ",e);
         }
     }
     static Filter filter;

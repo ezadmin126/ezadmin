@@ -315,7 +315,7 @@ public class FormDao extends JsoupUtil{
                     for (int k = 0; k < names.length; k++) {
                         String formItemAttrValue=Utils.trimNull(formItem.get(names[k]));
                         if(StringUtils.isNotBlank(formItemAttrValue)){
-                            formItemHtmlElement.getElementsByTag("object").attr(names[k],formItemAttrValue);
+                            formItemHtmlElement.getElementsByTag("object").attr(names[k],formItemAttrValue.replaceAll("\"","'"));
                         }
                     }
                      newcardElement.selectFirst(".layui-card-body")

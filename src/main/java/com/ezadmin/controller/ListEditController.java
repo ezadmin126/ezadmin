@@ -99,6 +99,7 @@ public class ListEditController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/ezadmin/form/loadEdit-" + formcode);
             }
         }catch (Exception e){
+            e.printStackTrace();
             response.getWriter().write(" error sql");
         }
     }
