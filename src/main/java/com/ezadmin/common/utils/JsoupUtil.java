@@ -23,6 +23,7 @@ public class JsoupUtil {
     protected static final String COL = "col";
     public static final String TYPE ="type" ;
     public static final String ADMINSTYLE = "adminstyle";
+    protected static final String MAXLENGTH = "maxlength";
     public static String TABLESTYLE="tablestyle";
     protected static String FROZEN="frozen";
     private static  Logger logger= LoggerFactory.getLogger(JsoupUtil.class);
@@ -276,6 +277,7 @@ public class JsoupUtil {
             String key=attribute.getKey().toLowerCase();
             if(key.startsWith("data-")){
                 ITEM_MAP.put(key, strip(attribute.getValue()));
+                ITEM_MAP.put(key.replaceFirst("data-",""), strip(attribute.getValue()));
             }
         };
         return ITEM_MAP;

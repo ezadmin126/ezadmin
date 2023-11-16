@@ -432,7 +432,7 @@ public class ListDao extends  JsoupUtil{
             JsoupUtil.OPER,JsoupUtil.JDBCTYPE,JsoupUtil.DATA,JsoupUtil.DATATYPE,
             JsoupUtil.VALIDATERULES,JsoupUtil.VALIDATEMESSAGES,JsoupUtil.STYLE,JsoupUtil.PLACEHOLDER
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS,JsoupUtil.COL,JsoupUtil.LAYVERIFY
-            ,JsoupUtil.TYPE,JsoupUtil.URL
+            ,JsoupUtil.TYPE,JsoupUtil.URL,JsoupUtil.MAXLENGTH
     };
     private void fillsearch(List<Map<String, Object>> searchConfigList, Config config) {
         Document doc=config.getDoc();
@@ -455,7 +455,7 @@ public class ListDao extends  JsoupUtil{
                 //special
                 Utils.putIfAbsent(listitem,JsoupUtil.LABEL, strip(item.parent().parent().child(0).text()));
                 Utils.putIfAbsent(listitem,"item_id", item.attr(JsoupUtil.NAME).replaceAll(",", "-"));
-                listitem.put(JsoupUtil.ITEM_NAME, StringUtils.upperCase(Utils.trimEmptyDefault(item.attr(JsoupUtil.ITEM_NAME),item.attr(JsoupUtil.NAME))));
+                listitem.put(JsoupUtil.ITEM_NAME, Utils.trimEmptyDefault(item.attr(JsoupUtil.ITEM_NAME)));
                 //如果是xmselect  默认为in
                 if(listitem.get(JsoupUtil.PLUGIN).toString() .equalsIgnoreCase("xmselect")){
                     if(StringUtils.isBlank(Utils.trimNull(listitem.get(JsoupUtil.OPER)))){

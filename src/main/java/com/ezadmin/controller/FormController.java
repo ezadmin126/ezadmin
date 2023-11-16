@@ -348,6 +348,14 @@ public class FormController extends BaseController {
                     .addParam(paras)
                     .addRequestParam(requestToMap(request))
                     .execute();
+
+            if(rowId instanceof  EzResult){
+                EzResult  r= (EzResult)rowId;
+                rowId= r.getData();
+                if(!r.isSuccess()){
+                    return r;
+                }
+            }
             return EzResult.instance().data( toFormId(rowId,request) );
         } catch (Exception e) {
             logger.info("保存表单失败{}  "  ,   ENCRYPT_FORM_ID,e);
