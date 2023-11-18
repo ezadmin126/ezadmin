@@ -477,7 +477,7 @@ public class ListServiceImpl implements ListService {
                 List<String> tds = new ArrayList<>();
                 dataRow.put("tds", tds);
                 dataRow.put("rowjson",JSONUtils.toJSONString(dataRow));
-
+                dataRow.put("dataRow",dataRow);
                 if (Utils.isEmpty(colList)) {
                     rowList.add(dataRow);
                     continue;
@@ -1134,7 +1134,7 @@ public class ListServiceImpl implements ListService {
     }
     private String calulateData(String dataInDb, String globalEmptyShow, String columnEmptyShow,String jdbcType) {
         if(StringUtils.isBlank(dataInDb)){
-            return Utils.trimNullDefault(dataInDb,columnEmptyShow,globalEmptyShow);
+            return Utils.trimEmptyDefault(dataInDb,columnEmptyShow,globalEmptyShow);
         }
         switch (JdbcTypeEnum.get(jdbcType)){
             case NUMBER:

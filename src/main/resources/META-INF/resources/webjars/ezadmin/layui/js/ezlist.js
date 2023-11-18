@@ -634,12 +634,12 @@ function doOrder(){
     })
 }
 
-function refreshOrder(item_id) {
-    $.get("/ezadmin/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + item_id + "&displayOrder=0", function (data) {
+function refreshOrder(item_id,order,oldOrder) {
+    $.get("/ezadmin/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + item_id + "&displayOrder="+order+"&oldOrder="+oldOrder, function (data) {
         if (data.success) {
             location.reload();
         } else {
-            layui.layer.alert('重新计算排序失败')
+             alert('重新计算排序失败')
         }
     })
 }
