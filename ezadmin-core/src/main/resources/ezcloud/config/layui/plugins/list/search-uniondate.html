@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>合并时间搜索</title>
+</head>
+<body id="uniondate" alias="search-date" type="search" icon="layui-icon-more">
+
+<div id="template" >
+    <div class="layui-col-space10 selector layui-col-md3" ez-type="uniondate" config-form-type="searchcore">
+        <div class="layui-form-item ">
+            <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px">
+
+            <select name="default" class=""><option value="">请选择</option></select>
+            </div>
+            <div class="layui-input-inline"  >
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input  PLACEHOLDER="开始时间"  autocomplete="off" type="text"
+                            class="layui-input daterangeinput"
+                            name="default" >
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+<div id="content">
+    <div class="  list-item selector" config-form-type="searchcore" ez-type="uniondate"
+         th:classappend="${'layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3'}"
+      th:style="${model.style}"
+     th:ITEM_NAME="${model.item_name}"
+     th:ez-name="${model.item_name}"
+         th:ez-label="${model.label}"
+         th:ez-item_name="${model.item_name}"
+         th:ez-placeholder="${model.placeholder}"
+         th:ez-alias="${model.alias}"
+         th:ez-col="${model.col}"
+         th:ez-url="${model.url}"
+
+         th:ez-data="${model.data}"
+         th:ez-datatype="${model.datatype}"
+         th:ez-item_desc="${model.item_desc}"
+         th:ez-top_desc="${model.top_desc}"
+         th:ez-jdbctype="${model.jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(model.lay_verify)?'':model.lay_verify}"
+         th:ez-valid_rule="${model.valid_rule}"
+         th:ez-valid_msg="${model.valid_msg}"
+         th:ez-style="${model.style}"
+
+>
+        <div  class="layui-form-item" >
+            <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px"
+                 th:for="${'ITEM_ID_' + model.item_name}">
+                <select th:id="${'ITEM_ID_' + model.item_name}" style="width: 100%;" name="itemSearchDateKey">
+                    <option th:selected="${model.itemSearchDateKey==null?false:#strings.equals(model.itemSearchDateKey,item.item_name)}"
+                            th:value="${item.item_name}" th:text="${item.label}"
+                            th:each="item:${itemNameList}">Alaska
+                    </option>
+                </select>
+            </div>
+            <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-date"></i>
+                </div>
+                <input  PLACEHOLDER="开始时间"  autocomplete="off" type="text"
+                        class="layui-input daterangeinput"  autocomplete="off"  th:maxlength="${model.maxlength}"
+                        name="itemSearchDateValue" th:value="${model.itemSearchDateValue}">
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>图标链接</title>
+</head>
+<body id="td-spanlink" alias="td-link-color" type="td" icon="layui-icon-fonts-code">
+<div id="template" >
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-spanlink">
+        <div class="   td-text  " >图标链接</div>  </div>
+</div>
+<table>
+    <tr id="content">
+        <td th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}" th:ITEM_ID="${item_name}"
+            class="layui-text   ezadmin-td" th:style="${style}"
+          ez-type="td-spanlink">
+            <span th:class="${COLOR_RISK}" th:if="${not #strings.isEmpty('COLOR_RISK')}"></span>
+            <span th:class="${COLOR_CIRCLE}" th:if="${not #strings.isEmpty(COLOR_CIRCLE)}"></span>
+            <a href="#" th:tab-id="${item_name+'-'+item_name}" th:ITEM_ID="${item_name+''+item_name}"
+               th:ITEM_URL="${url}" th:windowname="${windowname}" th:ITEM_OPEN_TYPE="${opentype}"
+               th:ITEM_OPEN_TITLE="${windowname}" class="ezopenbutton">
+                [[${dataInDb}]]
+            </a>
+
+        </td>
+    </tr>
+</table>
+</body>
+</html>

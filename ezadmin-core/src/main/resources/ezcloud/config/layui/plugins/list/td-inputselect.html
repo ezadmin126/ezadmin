@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表格-下拉选择框</title>
+</head>
+<body id="td-inputselect"  >
+<table>
+    <tr id="content">
+        <td   th:ITEM_NAME="${item_name}" th:ITEM_ID="${item_name}"
+            th:class="${' ezadmin-td ezadmin-td-'+item_name}" th:style="${style}"
+        >
+            <div class="  td-text">
+                <select lay-search="" th:id="${'td-itemName-' + item_name}"
+                        th:lay-filter="${'lay_filter_'+item_name}"
+                        style="width: 100%;" th:name="${item_name}">
+                    <option value="">请选择</option>
+                    <option th:selected="${dataInDb==null?false:#strings.equals(dataInDb+'',item.K+'')}"
+                            th:value="${item.K}" th:text="${item.V}" th:each="item:${items}">Alaska
+                    </option>
+                </select>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,55 @@
+package com.ezcloud.plugins.express;
+
+ import com.ezcloud.common.utils.Page;
+import com.ezcloud.common.utils.SqlUtils;
+import com.ezcloud.common.utils.Utils;
+import com.ezcloud.plugins.parser.CommentsSqlParser;
+import com.ezcloud.plugins.parser.parse.ResultModel;
+
+import java.util.List;
+import java.util.Map;
+
+public class WhereOperator extends AbstractOperator {
+
+
+
+    @Override
+    public Object executeInner(Object[] objects) throws Exception {
+        String sql = objects[0].toString();
+        try {
+            OperatorParam operatorParam=(OperatorParam)Utils.getParam();
+
+            Page page = operatorParam.getPage();
+            StringBuilder where = new StringBuilder(" ");
+            Map<String, Object> list= operatorParam.getListDto();
+            List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
+            Map<String,Object>  core=( Map<String,Object>)list.get("core");
+
+            if(Utils.isNotEmpty(searchList)){
+                for (int i = 0; i < searchList.size(); i++) {
+                    Map<String,Object> search=searchList.get(i);
+                    where.append(SqlUtils.searchToSql(search,operatorParam.getRequestParams()));
+                }
+            }
+            String groupBy = " " + Utils.trimNull(operatorParam.getParams().get("GROUP_BY")) + " ";
+            String limit = " ", orderByClause = " ";
+            if (page != null) {
+                limit = " limit " + page.getStartRecord() + "," + page.getPerPageInt();
+                orderByClause = page.getOrderByClause();
+            }
+
+            String finalSql = SqlUtils.buildPageSql(sql, Utils.getStringByObject(core,"count_express"), where.toString(), orderByClause, groupBy,
+                    limit, operatorParam.isCount());
+
+            ResultModel modelY = CommentsSqlParser.parse(finalSql, operatorParam.getParams());
+
+//            if (Utils.getLog() != null) {
+//                Utils.addLog("生成解析完成的Sql #######################" + model.getResult());
+//            }
+            return modelY;
+        } catch (Exception e) {
+            Utils.addLog(sql, e);
+            throw e;
+        }
+    }
+}

@@ -1,0 +1,122 @@
+<!-- header.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <div th:fragment="core">
+        <div class="layui-form config-form config-uploadimage" style="display: none">
+            <div class="layui-form-item">
+                <label class="layui-form-label">插件：</label>
+                <div class="layui-input-block">
+                    <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                        <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">栅格：</label>
+                <div class="layui-input-block">
+                    <div class="col" style="top:40px"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签名：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Placeholder：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="placeholder"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="layui-badge-dot"  ></span>字段名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">别名：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="alias"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">上方提示：</label>
+                <div class="layui-input-block">
+                    <textarea name="top_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">下方提示：</label>
+                <div class="layui-input-block">
+                    <textarea name="item_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small   class="layui-form-mid layui-text-em">看这里，这里就是下方提示，支持html
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据库类型：</label>
+                <div class="layui-input-block">
+                    <select  lay-search="" lay-filter="lay_filter_all"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option> <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option> </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">layui验证：</label>
+                <div class="layui-input-block">
+                    <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small   class="layui-form-mid layui-text-em">
+                        参考layui上传验证：
+                        {"acceptMime": "image/*",
+                        "exts":"jpg|png|gif|bmp|jpeg",
+                        "max":1,"min":1}
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">jquery验证：</label>
+                <div class="layui-input-block">
+                    <textarea name="valid_rule" class="layui-textarea"  autocomplete="off" ></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">jquery提示：</label>
+                <div class="layui-input-block">
+                    <textarea name="valid_msg" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small   class="layui-form-mid layui-text-em">{"required": true,
+                        "minlength": "长度{0}"}
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">自定义样式：</label>
+                <div class="layui-input-block">
+                    <textarea name="style" class="layui-textarea"  autocomplete="off" ></textarea>
+                </div>
+            </div>
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">自定义上传URL：</label>-->
+<!--                <div class="layui-input-block">-->
+<!--                    <input type="text" name="uploadUrl"  autocomplete="off"  class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">自定义下载URL：</label>-->
+<!--                <div class="layui-input-block">-->
+<!--                    <input type="text" name="downloadUrl"  autocomplete="off"  class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+    </div>
+</header>
+</body>
+</html>

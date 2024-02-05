@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表头按钮</title>
+</head>
+<body id="button-table" alias="22" type="listbutton">
+<button
+        th:name="${name}" th:item_name="${item_name}" th:text="${label}"
+        type="button" editor="button" th:area="${area}"
+        th:url="${url}" th:opentype="${opentype}"
+        th:windowname="${windowname}"
+        th:classappend="${  #strings.equals('script',opentype)?'':'ezopenbutton' }"
+        class=" layui-btn   layui-btn-sm layui-btn-normal  ">
+</button>
+</body>
+</html>

@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>表单编辑</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link th:href="${'/webjars/layui/2.8.18/dist/css/layui.css'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"   />
+    <link th:href="${'/webjars/ezcloud/layui/css/ezform.css?v='+vi}" rel="stylesheet">
+    <link th:href="${'/webjars/ezcloud/plugins/cascader/cascader.css'}" rel="stylesheet">
+    <style>
+
+
+        #leftContainer{
+            margin:10px;
+        }
+        #leftContainer .cardcol{
+            margin-top:50px;
+        }
+
+        .ez-plugin a i{
+            display: inline-block;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            border-radius: 2px;
+            font-size: 30px;
+            background-color: #F8F8F8;
+            color: #333;
+        }
+        .ez-plugin a i:hover{
+
+            box-shadow: 2px 0 8px 0 lightgray !important;
+        }
+        .ez-plugin a span {
+            position: relative;
+            top: 2px;
+            display: block;
+            color: #666;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .left{
+            border-right: 1px solid #f6f6ff;
+            max-height: 768px;
+            overflow: scroll;
+        }
+        .center,.right{
+            border-right: 1px solid #f6f6ff;
+            min-height: 768px;
+        }
+        .center .body{
+            border: 1px dashed #ccc;
+            min-height: 768px;
+            padding-bottom: 80px;
+        }
+        .layui-form-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            box-shadow: 0 -1px 5px rgba(0,0,0,.15);
+            padding: 15px;
+            z-index: 9999;
+            margin-bottom: 0px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .active {
+            border: 1px solid #009688 !important;
+            background-color: #e9f4fd !important;
+        }
+        .selector   {
+            border: 1px dashed #d1d1d1;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            padding: 10px;
+        }
+        #centerContainer .dragula-container{
+            background-color: #f1f1f1;
+            min-height: 50px;
+            border: 1px dashed #ccc;
+        }
+
+
+        .layui-component-tools {
+            position: absolute;
+            background: #009688;
+            right: 0;
+            bottom: 0;
+            padding: 1px 5px;
+            cursor: pointer;
+            z-index: 21;
+            color: #fff;
+            width: 32px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+        }
+        .layui-component-tools i, .layui-component-move i {
+            font-size: 12px;
+        }
+        .righttab .layui-form-item .layui-form-label {
+            text-align: left !important;
+            width: 100%  !important;
+        }
+        .righttab .layui-input-block {
+            margin-left:5px !important ;
+        }
+        .righttab .layui-form-select .layui-edge {
+            margin-top:16px;
+        }
+
+    </style>
+    <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+    <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
+    <script th:src="${'/webjars/layui/2.8.18/dist/layui.js'}" type="text/javascript"></script>
+    <script src="/webjars/dragula/3.7.3/dist/dragula.min.js"   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script th:src="${'/webjars/ezcloud/plugins/cascader/cascader.js'}" type="text/javascript"></script>
+    <script th:src="${'/webjars/ezcloud/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
+
+    <script th:src="${'/webjars/ezcloud/layui/js/core.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/jqueryform/jquery.form.js?'}"></script>
+    <script th:src="${'/webjars/jquery-validation/1.19.5/jquery.validate.min.js'}"></script>
+    <script th:src="${'/webjars/jquery-validation/1.19.5/localization/messages_zh.min.js'}"></script>
+
+    <script th:src="${'/webjars/tinymce/5.10.7/tinymce.min.js'}" type="text/javascript"></script>
+
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space5">
+        <div class="layui-col-md2 layui-col-xs3 left">
+            <div class="layui-tab layui-tab-brief " lay-filter="test-hash">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" lay-id="11">系统</li>
+                </ul>
+                <div class="layui-tab-content lefttab">
+                    <div class="layui-tab-item layui-show ">
+                        <div class="layui-row layui-col-space5  dragula-container " id="leftContainer">
+                            <div class="layui-col-xs6 ez-plugin" >
+                                <a href="javascript:;" >
+                                    <i class="layui-icon layui-icon-layer"></i>
+                                    <span>面板</span>
+                                </a>
+                                <div style="display: none" class="template">
+                                    <div class="layui-col-md12 selector" ez-type="card" ez-col="12"  >
+                                        <div class="layui-card  ">
+                                            <div class="layui-card-header  ">
+                                                <i class="layui-icon layui-layer-min"   lay-offset="5"></i>
+                                            </div>
+                                            <div class="layui-card-body ">
+                                                <div class="layui-row  dragula-container"   ez-col="12"  >
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="layui-col-xs6 ez-plugin" th:each="item:${plugins}" >
+                                <a href="javascript:;"    >
+                                    <i class="layui-icon  " th:classappend="${item.ICON}"></i>
+                                    <span th:text="${item.PLUGIN_NAME}">单行输入框</span>
+                                    <div style="display: none" class="template" th:utext="${item.TEMPLATE}">
+                                        <div class="layui-col-md12 selector" type="input-text" ez-col="12"  >
+                                            <div class="layui-form-item ">
+                                                <label class="layui-form-label  "  >单行输入框</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="default" placeholder="请输入" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <button class="layui-btn">在线开发组件</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md8 layui-col-xs6 center">
+            <div class="layui-card-header">
+                <div class="layui-row">
+                    <a type="button" class="layui-btn layui-btn-sm   "  href="/ezcloud/form/loadEdit-" target="_blank"><i class="layui-icon layui-icon-add-circle-fine"></i>新增</a>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-save  " ><i class="layui-icon layui-icon-ok-circle"></i>保存</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-preview  "> <i class="layui-icon layui-icon-component"></i> 预览</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-export  "> <i class="layui-icon layui-icon-component"></i> 导出</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-hide  ">隐藏</button>
+                </div>
+                <blockquote class="layui-elem-quote selector"  ez-col="12"
+                            th:ez-success_url="${form.core.success_url}"
+                            th:ez-formsubmiturl="${form.core.formsubmiturl}"
+                            th:ez-datasource="${form.core.datasource}" ez-type="formcore" th:ez-encodeFormId="${form.core.formcode}"
+                            th:ez-form_name="${form.core.form_name}">
+                    <span id="form_name" th:text="${#strings.isEmpty(form.core.form_name)?'表单名称':form.core.form_name}">表单名称</span>
+                    <pre style="display: none" id="initcode" th:utext="${form.core.init_express}"></pre>
+                    <pre style="display: none" id="subcode" th:utext="${form.core.submit_express}"></pre>
+                    <pre style="display: none" id="delcode" th:utext="${form.core.delete_express}"></pre>
+                </blockquote>
+                <hr>
+                <div class="body dragula-container layui-row layui-col-space16  layui-form " id="centerContainer">
+                    <div id="append_head" th:utext="${form.core.append_head}" >
+
+                    </div>
+
+                    <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
+                         th:ez-cardname="${card.cardname}" ez-type="card" th:ez-col="${card.col}">
+                        <div class="layui-card"  >
+                            <div class="layui-card-header" th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
+                                卡片面板
+                            </div>
+                            <div class="layui-card-body   ">
+                                <div class="layui-row dragula-container">
+                                    <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" selector cardcol layui-col-md12"  th:if="${form.cards==null}"
+                             ez-type="card" ez-col="12">
+                            <div class="layui-card"  >
+                                <div class="layui-card-body   ">
+                                    <div class="layui-row dragula-container">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <div id="append_foot" th:utext="${form.core.append_foot}">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md2 layui-col-xs3 right">
+            <div class="layui-tab layui-tab-brief " lay-filter="test-hash">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" >配置</li>
+                </ul>
+                <div class="layui-tab-content righttab">
+                    <div class="layui-form config-form config-formcore layui-fluid" style="display: none;margin-right:20px">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                <span class="layui-badge-dot"  ></span>
+                                表单编码：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="encodeformid"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">表单名称：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="form_name"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据源：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="datasource"  autocomplete="off"  class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    应用中数据源的springbean名称，区分大小写
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">初始表达式：</label>
+                            <div class="layui-input-block">
+                                <textarea name="init_express" class="layui-textarea"  autocomplete="off"   ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">提交表达式：</label>
+                            <div class="layui-input-block">
+                                <textarea name="submit_express" class="layui-textarea"  autocomplete="off"   ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">删除表达式：</label>
+                            <div class="layui-input-block">
+                                <textarea name="delete_express" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">状态表达式：</label>
+                            <div class="layui-input-block">
+                                <textarea name="status_express" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义css：</label>
+                            <div class="layui-input-block">
+                                <textarea name="append_head" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义脚本：</label>
+                            <div class="layui-input-block">
+                                <textarea name="append_foot" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义表单提交URL：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="formsubmiturl"  autocomplete="off"  class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    eg:/admin/form/doSubmit 注意是ajax提交，返回标准json,
+                                    data为#success_url 字段 <br>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义成功URL：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="success_url"  autocomplete="off"  class="layui-input">
+                                <small   class="layui-form-mid layui-text-em">
+                                    reload:全局刷新<br>
+                                    script:自定义js处理<br>
+                                    reloadlocal: 仅限跳转当前页面<br>
+                                    http://xxx:跳转到其他页面<br>
+                                    表单提交之后的跳转URl
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form config-form config-input-text" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件(保存之后预览效果)：</label>
+                            <div class="layui-input-block">
+                                <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                                    <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">栅格：</label>
+                            <div class="layui-input-block">
+                                <div class="col" style="top:40px"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标签名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="label"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Placeholder：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="placeholder"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>字段名（数据库字段名）： </label>
+                            <div class="layui-input-block">
+                                <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否禁用： </label>
+                            <div class="layui-input-block">
+                                <select  lay-filter="disabled"  name="disabled">
+                                    <option>否</option>
+                                    <option value="disabled">是</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否只读： </label>
+                            <div class="layui-input-block">
+                                <select lay-filter="readonly"  name="readonly">
+                                    <option>否</option>
+                                    <option value="readonly">是</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">上方提示（富文本）：</label>
+                            <div class="layui-input-block">
+                                <textarea name="top_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">下方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="item_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据库类型：</label>
+                            <div class="layui-input-block">
+                                <select  lay-search="" lay-filter="lay_filter_all"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option> <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option> </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">layui验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small id="DESC_lay_verify" class="layui-form-mid layui-text-em">
+                                    required|phone|number
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_rule" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small id="DESC_valid_rule" class="layui-form-mid layui-text-em">{"required": true,
+                                    "minlength": 2}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_msg" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small id="DESC_valid_msg" class="layui-form-mid layui-text-em">{"required": true,
+                                    "minlength": "长度{0}"}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义style：</label>
+                            <div class="layui-input-block">
+                                <textarea name="style" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义class：</label>
+                            <div class="layui-input-block">
+                                <input name="class" class="layui-input"  autocomplete="off" >
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-form config-form config-card" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">卡片名称（失焦看效果）</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="cardname"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">栅格：</label>
+                            <div class="layui-input-block">
+                                <div class="col" style="top:40px"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form config-form config-textarea" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件：</label>
+                            <div class="layui-input-block">
+                                <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                                    <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">栅格：</label>
+                            <div class="layui-input-block">
+                                <div class="col" style="top:40px"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标签名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="label"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Placeholder：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="placeholder"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>字段名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">别名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="alias"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">上方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="top_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">下方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="item_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">layui验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    required|phone|number
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_rule" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    {"required": true, "minlength": 2}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_msg" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    {"required": true,"minlength": "长度{0}"}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义style：</label>
+                            <div class="layui-input-block">
+                                <textarea name="style" class="layui-textarea" placeholder="height:300px;"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义class：</label>
+                            <div class="layui-input-block">
+                                <input name="class" class="layui-input"    autocomplete="off" >
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-form config-form config-select" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件：</label>
+                            <div class="layui-input-block">
+                                <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                                    <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">栅格：</label>
+                            <div class="layui-input-block">
+                                <div class="col" style="top:40px"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标签名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="label"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Placeholder：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="placeholder"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>字段名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">别名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="alias"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据源类型：</label>
+                            <div class="layui-input-block">
+                                <select   name="datatype"   lay-search="" lay-filter="lay_filter_all"    > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据源：</label>
+                            <div class="layui-input-block">
+                                <textarea name="data" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    <i class="ez-help layui-icon-tips layui-icon"
+                                       src="/webjars/ezcloud/doc/form/formitem.html#data"></i>
+                                    yesno,status,delete<br>
+                                    sql or url<br>
+                                    换行符<br>
+                                    k:v<br>
+                                    [{"V":"男","K":"1"},{"V":"女","K":"0"}]
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">远程数据：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="url"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">上方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="top_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">下方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="item_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">看这里，这里就是下方提示，支持html
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">layui验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    required|phone|number
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_rule" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    {"required": true, "minlength": 2}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_msg" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    {"required": true,"minlength": "长度{0}"}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义style：</label>
+                            <div class="layui-input-block">
+                                <textarea name="style" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    height:300px;
+                                </small>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-form config-form config-cascader" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件：</label>
+                            <div class="layui-input-block">
+                                <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                                    <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">栅格：</label>
+                            <div class="layui-input-block">
+                                <div class="col" style="top:40px"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标签名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="label"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Placeholder：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="placeholder"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>字段名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">别名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="alias"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据源类型：</label>
+                            <div class="layui-input-block">
+                                <select   name="datatype"   lay-search="" lay-filter="lay_filter_all"    > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据源：</label>
+                            <div class="layui-input-block">
+                                <textarea name="data" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    yesno,status,delete<br>
+                                    sql or url<br>
+                                    换行符<br>
+                                    k:v<br>
+                                    [{"V":"男","K":"1"},{"V":"女","K":"0"}]
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">远程数据：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="url"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否多选：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="multi" lay-filter="radio-filter" value="false" title="否">
+                                <input type="radio" name="multi" lay-filter="radio-filter" value="true" title="是" checked>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">完整路径：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="showalllevels" lay-filter="radio-filter" value="false" title="否" checked>
+                                <input type="radio" name="showalllevels" lay-filter="radio-filter" value="true" title="是" >
+                                <small   class="layui-form-mid layui-text-em" >
+                                    输入框中是否显示选中值的完整路径
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">折叠选项：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="collapsetags" lay-filter="radio-filter" value="false" title="否" >
+                                <input type="radio" name="collapsetags" lay-filter="radio-filter" value="true" title="是" checked>
+                                <small   class="layui-form-mid layui-text-em" >
+                                    多选模式下是否折叠Tag
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">上方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="top_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">下方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="item_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">看这里，这里就是下方提示，支持html
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">layui验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    required|phone|number
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_rule" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    {"required": true, "minlength": 2}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_msg" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    {"required": true,"minlength": "长度{0}"}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义style：</label>
+                            <div class="layui-input-block">
+                                <textarea name="style" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义class：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="class"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form config-form config-uploadimage" style="display: none">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件：</label>
+                            <div class="layui-input-block">
+                                <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                                    <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">栅格：</label>
+                            <div class="layui-input-block">
+                                <div class="col" style="top:40px"></div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标签名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="label"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Placeholder：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="placeholder"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><span class="layui-badge-dot"  ></span>字段名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">别名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="alias"  autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">上方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="top_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">下方提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="item_desc" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">看这里，这里就是下方提示，支持html
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">数据库类型：</label>
+                            <div class="layui-input-block">
+                                <select  lay-search="" lay-filter="lay_filter_all"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option> <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option> </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">layui验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">
+                                    参考layui上传验证：
+                                    {"acceptMime": "image/*",
+                                    "exts":"jpg|png|gif|bmp|jpeg",
+                                    "max":1,"min":1}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery验证：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_rule" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">jquery提示：</label>
+                            <div class="layui-input-block">
+                                <textarea name="valid_msg" class="layui-textarea"  autocomplete="off" ></textarea>
+                                <small   class="layui-form-mid layui-text-em">{"required": true,
+                                    "minlength": "长度{0}"}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">自定义样式：</label>
+                            <div class="layui-input-block">
+                                <textarea name="style" class="layui-textarea"  autocomplete="off" ></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" id='validateRules' name='validateRules' th:value="${form.validaterules}">
+<input type="hidden" id='validateMessages' name='validateMessages' th:value="${form.validatemessages}">
+<input type="hidden" id='formSubmitUrl' name='formSubmitUrl' th:value="${formSubmitUrl}">
+<input type="hidden" id='formUrl' name='formUrl' th:value="${formUrl}">
+<input type="hidden" id='contextName' name='contextName' th:value="${contextName}">
+<input type="hidden" id='uploadUrl' name='uploadUrl' th:value="${uploadUrl}">
+<input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
+<input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
+
+<script th:src="${'/webjars/ezcloud/layui/js/ezform.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${'/webjars/ezcloud/js/f-main.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${'/webjars/ezcloud/js/f-item.js?v='+vi}" type="text/javascript"></script>
+
+
+<template id="export">
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>表单编辑</title>
+        <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+        <link href="https://unpkg.com/layui@2.8.12/dist/css/layui.css" rel="stylesheet">
+        <script src="https://unpkg.com/layui@2.8.12/dist/layui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"   ></script>
+    </head>
+    <body>
+    <div class="layui-container">
+        <div class="layui-row layui-form layui-col-space5">
+            ##replace##
+        </div>
+    </div>
+    </body>
+    </html>
+</template>
+
+</body>
+</html>

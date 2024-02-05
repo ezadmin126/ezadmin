@@ -1,0 +1,111 @@
+<html>
+ <head>
+  <title>演示插件与布局</title>
+ </head>
+ <body id="test" datasource="dataSource" success_url="" formsubmiturl="">
+  <div id="append_head"></div>
+  <form id="inputForm">
+   <div class="layui-card" col="12">
+    <div class="layui-card-body">
+     <div class="layui-form-item" col="6">
+      <label>姓名</label>
+      <div>
+       <object lay_verify="required" item_name="name" type="input-text" col="6"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="6">
+      <label>年龄</label>
+      <div>
+       <object lay_verify="required|number" item_name="0.913576745371347" type="input-number" col="6"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="12">
+      <label>头像</label>
+      <div>
+       <object item_name="pic" type="uploadimage" col="12"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="10">
+      <label>性别</label>
+      <div>
+       <object datatype="JSON" data="[{&quot;V&quot;:&quot;男&quot;,&quot;K&quot;:&quot;1&quot;},{&quot;V&quot;:&quot;女&quot;,&quot;K&quot;:&quot;0&quot;}]" item_name="sex" type="select-search" col="10"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="4">
+      <label>标签</label>
+      <div>
+       <object datatype="JSON" data="[{&quot;V&quot;:&quot;A&quot;,&quot;K&quot;:&quot;1&quot;},{&quot;V&quot;:&quot;B&quot;,&quot;K&quot;:&quot;0&quot;}]" item_name="0.48982547385391007" type="input-checkbox-tag" col="4"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="4">
+      <label>标签32</label>
+      <div>
+       <object datatype="JSON" data="[{&quot;V&quot;:&quot;A&quot;,&quot;K&quot;:&quot;1&quot;},{&quot;V&quot;:&quot;B&quot;,&quot;K&quot;:&quot;0&quot;}]" item_name="car" type="input-checkbox" col="4"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="4">
+      <label>来源</label>
+      <div>
+       <object datatype="JSON" data="[{&quot;V&quot;:&quot;男&quot;,&quot;K&quot;:&quot;1&quot;},{&quot;V&quot;:&quot;女&quot;,&quot;K&quot;:&quot;0&quot;}]" item_name="0.9884159102733061" type="input-radio" col="4"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="10">
+      <label>地址</label>
+      <div>
+       <object item_name="add" type="textarea" col="10"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="12">
+      <label>简单描述</label>
+      <div>
+       <object item_name="rich1" type="ueditor" col="12"> </object>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="layui-card" col="12">
+    <div class="layui-card-header">
+     详情
+    </div>
+    <div class="layui-card-body">
+     <div class="layui-form-item" col="12">
+      <label></label>
+      <div>
+       <object item_name="riche" type="tinymce" col="12"> </object>
+      </div>
+     </div>
+    </div>
+   </div>
+  </form>
+  <form id="configForm">
+   <pre item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+sql.append("select NAME from T_USER where  ID=${ID}  ");
+return select(sql).get(0);</pre>
+   <pre item_name="submit_express" type="">import com.ezadmin.plugins.express.jdbc.UpdateParam;
+import com.ezadmin.plugins.express.jdbc.InsertParam;                  		
+import com.ezadmin.web.EzResult;                  		
+if(!isNotBlank("ID")){                  		
+    param=new InsertParam();                		
+    param.table("T_USER");               		
+    param.add("#{ID}");               		
+    param.add("#{NAME}");               		
+id=insertSimple(param);
+return id; 
+}else{                 								
+    param=new UpdateParam();
+    param.table("T_USER");               		
+    param.add("#{ID}");               		
+    param.add("#{NAME}");               		
+  StringBuilder updateSql=new StringBuilder();
+  updateSql.append(" where ID=#{ID} ");
+ param.where(updateSql.toString());
+ updateSimple(param);
+ return ID;
+}</pre>
+   <pre item_name="delete_express" type="">update("UPDATE T_USER set delete_flag=1 where ID=${ID}");</pre>
+   <pre item_name="status_express" type=""></pre>
+   <pre item_name="displayorder_express" type=""></pre>
+  </form>
+  <div id="append_foot"></div>
+ </body>
+</html>

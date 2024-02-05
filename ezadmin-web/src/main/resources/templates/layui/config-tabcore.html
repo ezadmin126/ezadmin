@@ -1,0 +1,52 @@
+<!-- header.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <div th:fragment="core">
+        <div class="layui-form config-form config-tabcore layui-fluid" style="display: none;margin-right:20px">
+            <div class="layui-form-item">
+                <label class="layui-form-label">文案名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label"  autocomplete="off"  class="layui-input">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="layui-badge-dot"  ></span>标签名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">跳转URL</label>
+                <div class="layui-input-block">
+                    <input type="text" name="url"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否高亮</label>
+                <div class="layui-input-block">
+
+                    <select   name="select"    lay-filter="lay_filter_all"     >
+                        <option value="">请选择</option>
+                        <option value="true">是</option>
+                        <option value="false" selected="selected">否</option>
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        请选择一个tab配置高亮
+                    </small>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

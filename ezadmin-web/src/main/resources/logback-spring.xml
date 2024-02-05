@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration> 
+    <appender name="fileAppend" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/data/logs/ez/ez.log</file>
+        <encoder>
+            <pattern> %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [erp] [%thread] %logger Line:%-3L - %msg%n </pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/data/logs/history/ez/ez2-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>200MB</totalSizeCap>
+            <maxFileSize>30MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%d [%thread] %level %logger Line:%-3L - %m%n</Pattern>
+    </layout>
+  </appender>
+  
+  <root level="info"  >
+    <appender-ref ref="fileAppend"/>
+      <appender-ref ref="CONSOLE"/>
+  </root>
+
+</configuration>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>弹框多选按钮</title>
+</head>
+<body id="button-tableselectcheckbox" type="listbutton">
+<button th:item_name="${item_name}" th:name="${'TABLE_BTN_'+item_name}" th:fname="${item_name}" type="button"
+        editor="button"
+        th:ez_callback="${ez_callback}" th:url="${url}" th:id="${'check_click_'+item_name}"
+        class="ezcheckbutton  btn   btn-xs btn-outline-primary">
+    <label th:text="${label}" style="margin-bottom: 0px;"></label>
+</button>
+
+<script>
+    $(function () {
+
+        $('[[${'
+        #check_click_
+        '+item_name}]]'
+    ).
+        click(function () {
+
+            var id = $(this).attr("id");
+            var name = $(this).attr("fname");
+            //  debugger;
+
+            var ezcallback = $(this).attr("ez_callback") || $(this).attr("url");
+            var doc = $(ezcallback, window.parent.document);
+
+            var selectJson = doc.find("input[name='selectJson']");
+            var selectId = doc.find("input[name='selectId']");
+
+            if (selectJson == undefined || selectJson.length == 0) {
+                selectJson = $("<input type=hidden name='selectJson' >");
+                doc.append(selectJson);
+            }
+            if (selectId == undefined || selectId.length == 0) {
+                selectId = $("<input type=hidden name='selectId'>");
+                doc.append(selectId);
+            }
+
+
+            var oldid = selectId.val() == '' ? [] : JSON.parse(selectId.val());
+            var oldjson = selectJson.val() == '' ? [] : JSON.parse(selectJson.val());
+
+
+            var newid = JSON.parse(getJsonCheckIds());
+            var newjson = JSON.parse(getJsonCheckIdAndNames(name));
+
+
+            for (var i = 0; i < newid.length; i++) {
+                oldid.push(newid[i])
+            }
+
+            for (var i = 0; i < newjson.length; i++) {
+                oldjson.push(newjson[i])
+            }
+
+
+            selectId.val(JSON.stringify(oldid));
+            selectJson.val(JSON.stringify(oldjson));
+            window.parent[ezcallback] && window.parent[ezcallback](selectId, selectJson);
+        })
+
+    })
+
+</script>
+
+</body>
+</html>

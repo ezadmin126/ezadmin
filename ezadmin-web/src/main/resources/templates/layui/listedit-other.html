@@ -1,0 +1,84 @@
+<!-- header.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <!-- Define a fragment named 'navigation' -->
+    <div th:fragment="other">
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+             <i class="layui-icon  layui-icon-component"  ></i>
+            <span>表头按钮</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="buttoncore" ez-type="button-table">
+                    <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头按钮</button>
+                </div>
+            </script>
+        </button>
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>表头纯文本</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="buttoncore" ez-type="button-span">
+                    <span  class="layui-text">表头纯文本</span>
+                </div>
+            </script>
+        </button>
+
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>表头单选确认</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="buttoncore" ez-type="button-tableselectradio">
+                    <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头单选确认</button>
+                </div>
+            </script>
+        </button>
+
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>表头多选确认</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="buttoncore" ez-type="button-tableselectcheckbox">
+                    <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">表头多选确认</button>
+                </div>
+            </script>
+        </button>
+        <hr>
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>行按钮</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs6 ez-plugin selector" config-form-type="buttoncore" ez-type="button-single">
+                    <button class=" layui-btn   layui-btn-sm layui-btn-normal  ">行按钮</button>
+                </div>
+            </script>
+        </button>
+        <hr>
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>Tab标签</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <li class="selector layui-this"
+                    ez-label="Tab标签"
+                    ez-item_name="Tab"
+                    ez-url="跳转链接"
+                    config-form-type="tabcore" ez-type="button-single"
+                >Tab标签</li>
+            </script>
+        </button>
+
+    </div>
+</header>
+</body>
+</html>
