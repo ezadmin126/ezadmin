@@ -81,6 +81,7 @@ public class EzClientBootstrap {
     private EzCache ezCache;
     private EzExport ezExport;
     private EzRefresh ezRefresh;
+    private String layout;//container fluid
 
     private EzClientBootstrap() {
     }
@@ -464,5 +465,13 @@ public class EzClientBootstrap {
 
     public void setRefreshClass(String refreshClass) {
         this.refreshClass = refreshClass;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 }

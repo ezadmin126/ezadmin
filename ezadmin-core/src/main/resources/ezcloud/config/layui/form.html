@@ -29,7 +29,7 @@
 </head>
 <body class="layui-bg-gray">
 
-<div class="layui-container">
+<div th:class="${'layui-'+layout}">
     [(${form.core.append_head})]
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 

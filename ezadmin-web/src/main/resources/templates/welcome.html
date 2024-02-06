@@ -103,6 +103,12 @@
                         </td>
                         <td>com.ezcloud.plugins.refresh.DefaultRefresh</td>
                     </tr>
+                    <tr>
+                        <td>ezcloud.layout</td>
+                        <td>container：响应式宽度，  fluid 100%宽度
+                        </td>
+                        <td>container</td>
+                    </tr>
 
                     <tr>
                         <td>ezcloud.holiday</td>
@@ -280,20 +286,19 @@ return SELECT(sql);
                         </td>
                         <td>
 <pre class="layui-code code-demo" lay-options="{}" >
-import com.ezadmin.plugins.express.jdbc.UpdateParam;
-import com.ezadmin.plugins.express.jdbc.InsertParam;
-import com.ezadmin.web.EzResult;
-if(!isNotBlank("ID")){
+import com.ezcloud.plugins.express.jdbc.UpdateParam;
+import com.ezcloud.plugins.express.jdbc.InsertParam;
+import com.ezcloud.web.EzResult;
+ID=$("ID");
+if(isBlank("ID")){
     param=new InsertParam();
     param.table("T_USER");
-    param.add("#{ID}");
     param.add("#{NAME}");
     id=insertSimple(param);
     return id;
 }else{
     param=new UpdateParam();
     param.table("T_USER");
-    param.add("#{ID}");
     param.add("#{NAME}");
     StringBuilder updateSql=new StringBuilder();
     updateSql.append(" where ID=#{ID} ");

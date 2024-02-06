@@ -499,6 +499,7 @@ function initExpress(id,btn,title,model) {
                 var v = select_expresseditor.getValue();
                 $("#" + id.replace("1", "")).val(v);
                 layer.close(index);
+                $(".layui-btn-save").click();
             },
             cancel: function (index, layero, that) {
                 return true; // 点击该按钮后不关闭弹层

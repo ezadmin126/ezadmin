@@ -40,6 +40,8 @@ public class EzClientProperties {
     private String refreshClass;
     private String holiday;
 
+    private String layout="container";//container fluid
+
 
     public String getAppName() {
         return appName;
@@ -279,5 +281,13 @@ public class EzClientProperties {
 
     public void setRefreshClass(String refreshClass) {
         this.refreshClass = refreshClass;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 }

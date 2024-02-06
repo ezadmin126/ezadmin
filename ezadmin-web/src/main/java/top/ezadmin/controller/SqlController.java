@@ -339,12 +339,6 @@ public class SqlController {
 		return sqlinner;
 	}
 
-
-	public static void main(String[] args) throws  Exception {
-			File fold = new File(JsoupUtil.editPath("ezadmin"+File.separator+"config"));
-			System.out.println(fold);
-			System.out.println(JsoupUtil.editPath("ezadmin"));
-	}
 	static String shortSql(String sql) throws JSQLParserException {
 		if(StringUtils.isBlank(sql)){
 			return "";

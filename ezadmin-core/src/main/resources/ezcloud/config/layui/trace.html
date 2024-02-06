@@ -21,7 +21,7 @@
 <div   class="layui-fluid" >
      <div class="layui-row " style="">
          <div th:each="item,index:${list}"  class="layui-panel">
-                 <pre  class="layui-code code-demo" th:text="${item}">面板任意内容</pre>
+                 <pre  class="layui-code code-demo" th:utext="${item}">面板任意内容</pre>
          </div>
     </div>
 </div>

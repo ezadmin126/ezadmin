@@ -12,6 +12,7 @@ import com.ezcloud.common.EzAdminRuntimeException;
 import com.ezcloud.common.enums.ExceptionCode;
 import com.ezcloud.plugins.express.executor.DefaultExpressExecutor;
 import com.ezcloud.web.EzResult;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,6 +68,12 @@ public class FormController extends BaseController {
         }else{
             request.setAttribute("formSubmitUrl",request.getContextPath()+"/ezcloud/form/doSubmit-"+ ENCRYPT_FORM_ID);
         }
+
+        String layout = ""+core.getOrDefault("layout",EzClientBootstrap.instance().getLayout());
+
+        request.setAttribute("layout",layout);
+
+
         return core.get(JsoupUtil.ADMINSTYLE)+"/form";
      }
 
@@ -237,7 +244,7 @@ public class FormController extends BaseController {
         }
         catch (Exception e) {
             logger.error("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID,ID,e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
+            return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(e));
         }
     }
     @EzMapping("doDelete.html")

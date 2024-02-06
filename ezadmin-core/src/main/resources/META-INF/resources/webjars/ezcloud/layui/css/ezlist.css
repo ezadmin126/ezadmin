@@ -94,7 +94,9 @@ th a {
     width: 100%;
     text-align: left;
     margin-left: 13px;
-
+}
+.tableButton  span{
+    margin-left:13px
 }
 
 .card-header .center {

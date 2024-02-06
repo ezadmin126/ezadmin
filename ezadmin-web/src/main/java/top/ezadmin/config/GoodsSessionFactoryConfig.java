@@ -20,7 +20,7 @@ public class GoodsSessionFactoryConfig {
     private static String MYBATIS_CONFIG_GOODS = "mybatis-config-goods.xml";
 
     @Autowired
-    @Qualifier("dataSource")
+    @Qualifier("ez-dataSource")
     private DataSource datasource;
     @Bean(name = "goodsSqlSessionFactory")
     public SqlSessionFactoryBean createSqlSessionFactoryBean() throws Exception {

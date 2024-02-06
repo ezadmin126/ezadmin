@@ -53,7 +53,7 @@ public class EzFormEditController extends BaseController {
             record.setEzName(formName);
             record.setEzConfig(html);
             record.setDatasource(datasource);
-
+            record.setUpdateName(IpUtils.getRealIp(request));
             if(cloudId!=null){
                 record.setId(cloudId);
                 ezCloudMapper.updateByPrimaryKeySelective(record);

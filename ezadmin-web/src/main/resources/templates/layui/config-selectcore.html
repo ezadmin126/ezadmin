@@ -50,6 +50,39 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label">数据库类型</label>
+                <div class="layui-input-block">
+                    <select  lay-search="" lay-filter="lay_filter_all"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option>
+                        <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option>
+
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        NUMBER,NUMBER2:格式化小数位<br>
+                        DATETIME,DATE: 格式化日期<br>
+                        BODY: 不拼接where条件
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">SQL操作符</label>
+                <div class="layui-input-block">
+                    <select  lay-search="" lay-filter="lay_filter_all"  name="oper" item_name="oper">
+                        <option value="">请选择</option>
+                        <option value="EQ">等于=</option>
+                        <option value="NE">不等于!=</option>
+                        <option value="BETWEEN">区间BETWEEN</option>
+                        <option value="LIKE">包含LIKE</option>
+                        <option value="NOTLIKE">不包含NOTLIKE</option>
+                        <option value="IN">之中IN</option>
+                        <option value="NOT_IN">不在之中NOT IN</option>
+                        <option value="ALL_FIND_IN_SET">ALL_FIND_IN_SET</option>
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        默认LIKE
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label">数据源类型</label>
                 <div class="layui-input-block">
                     <select   name="datatype"   lay-search="" lay-filter="lay_filter_all"    > <option value="">请选择</option> <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>

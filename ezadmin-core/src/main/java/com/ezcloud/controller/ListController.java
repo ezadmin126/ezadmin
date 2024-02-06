@@ -54,6 +54,10 @@ public class ListController extends BaseController {
         request.setAttribute("data", list);
         Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
         String pagetotaltype = ""+coreMap.getOrDefault("pagesync","0");
+        String layout = ""+coreMap.getOrDefault("layout",EzClientBootstrap.instance().getLayout());
+
+        request.setAttribute("layout",layout);
+
         if(StringUtils.equalsIgnoreCase(pagetotaltype,"1")){
             listService.fillCountById(list, requestParamMap, sessionParamMap);
         }
@@ -178,11 +182,35 @@ public class ListController extends BaseController {
 
         Map<String, Object> list = new HashMap<>();
         if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
-            list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
+            try {
+                list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
+            }catch (Exception e){
+                if (Utils.getLog() != null) {
+                    Utils.addLog("加载列表异常",e);
+                }
+            }
         }
-        listService.fillCountById(list, requestParamMap, sessionParamMap);
-        listService.fillListById(list, requestParamMap, sessionParamMap);
+        try {
+            listService.fillCountById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("加载总数异常",e);
+            }
+        }
+        try{
+            listService.fillListById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("查询数据异常",e);
+            }
+        }
+        try{
         listService.fillTreeById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("查询树数据异常",e);
+            }
+        }
         request.setAttribute("data", list);
         request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
 

@@ -89,12 +89,13 @@ $(function () {
                            })
                        } else {
                            canEzFormSubmit = true;
-                           layer.alert(data.message || "保存失败")
+                           layer.alert( "保存失败");
+                           console.log(data.message )
                        }
                    },
                    error: function (e) {
                        canEzFormSubmit = true;
-                       layer.alert("保存失败" + e);
+                       layer.alert("保存失败,网络异常" + e);
                    }
                });
            }catch (e) {

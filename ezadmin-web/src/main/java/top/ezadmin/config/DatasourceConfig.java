@@ -60,7 +60,7 @@ public class DatasourceConfig {
 		return null;
 	}
 
-	@Bean(name = "op-datasource")
+	@Bean(name = "dataSource")
 	@DependsOn("h2server")
 	public DataSource gomanager () {
 		DruidDataSource dds=new DruidDataSource();// DruidDataSourceFactory.createDataSource(propsTemp);
@@ -117,7 +117,7 @@ public class DatasourceConfig {
 	@Value("${spring.datasource.druid.db3.password}")
 	private String db3password;
 
-	@Bean(name = "dataSource")
+	@Bean(name = "ez-dataSource")
 	@DependsOn("h2server")
 	public DataSource ez() {
 		DruidDataSource dds=new DruidDataSource();// DruidDataSourceFactory.createDataSource(propsTemp);

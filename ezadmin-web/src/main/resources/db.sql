@@ -9,6 +9,7 @@ CREATE TABLE t_ez_cloud (
                             IS_DEL INT,
                             DATASOURCE VARCHAR(100),
                             EZ_NAME VARCHAR(255),
+                            UPDATE_NAME varchar(100) NULL,
                             PRIMARY KEY (ID)
 );
 

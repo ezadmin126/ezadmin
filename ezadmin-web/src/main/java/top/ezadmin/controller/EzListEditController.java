@@ -116,6 +116,7 @@ public class EzListEditController extends BaseController {
                 record.setEzName(listname);
                 record.setEzConfig(html);
                 record.setDatasource(DATASOURCE);
+                record.setUpdateName(IpUtils.getRealIp(request));
                 if(cloudId!=null){
                     record.setId(cloudId);
                     ezCloudMapper.updateByPrimaryKeySelective(record);
@@ -175,6 +176,7 @@ public class EzListEditController extends BaseController {
             record.setEzName(listname);
             record.setEzConfig(html);
             record.setDatasource(DATASOURCE);
+            record.setUpdateName(IpUtils.getRealIp(request));
             if(cloudId!=null){
                 record.setId(cloudId);
                 ezCloudMapper.updateByPrimaryKeySelective(record);
@@ -205,14 +207,6 @@ public class EzListEditController extends BaseController {
 
             EzResult result= sqlToList2(fasttext, listcode, formcode,datasource);
             EzClientBootstrap.instance().getCache().clear();
-//            if (StringUtils.isNotBlank(listcode)) {
-//
-////                response.sendRedirect( "/ezlist/loadEdit.html?ENCRYPT_LIST_ID=" + listcode);
-////                return;
-//            }
-//            if (StringUtils.isNotBlank(formcode)) {
-//                response.sendRedirect(  "/ezform/loadEdit.html?ENCRYPT_FORM_ID=" + formcode);
-//            }
             return result;
         }
         catch (Exception e){
@@ -536,11 +530,11 @@ public class EzListEditController extends BaseController {
 
     private String generateFormExpress(String table,String idName,List<String> fieldNameList){
         StringBuilder ex=new StringBuilder();
-        ex.append("\nimport com.ezadmin.plugins.express.jdbc.UpdateParam;\n");
-        ex.append("import com.ezadmin.plugins.express.jdbc.InsertParam;                  		\n");
-        ex.append("import com.ezadmin.web.EzResult;                  		\n");
+        ex.append("\nimport com.ezcloud.plugins.express.jdbc.UpdateParam;\n");
+        ex.append("import com.ezcloud.plugins.express.jdbc.InsertParam;                  		\n");
+        ex.append("import com.ezcloud.web.EzResult;                  		\n");
 
-
+        ex.append("ID=$(\"ID\");                  		\n");
         ex.append("if(!isNotBlank(\"ID\")){                  		\n");
         ex.append("    param=new InsertParam();                		\n");
         ex.append("    param.table(\""+table+"\");               		\n");

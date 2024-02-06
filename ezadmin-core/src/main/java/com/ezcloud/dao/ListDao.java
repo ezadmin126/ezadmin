@@ -31,7 +31,7 @@ public class ListDao extends  JsoupUtil{
     static String[] BODY_ATTRS=new String[]{"datasource",
             "fixnumber","fixnumberright","success_url",
             "empty_show","tablestyle","adminstyle","pagesync",
-            "firstcol","export","cellminwidth","linestyle","rowbuttonwidth"
+            "firstcol","export","cellminwidth","linestyle","rowbuttonwidth","layout"
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
             JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,

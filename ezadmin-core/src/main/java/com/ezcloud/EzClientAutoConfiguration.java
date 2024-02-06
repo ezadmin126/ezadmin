@@ -66,6 +66,9 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
 
         ezBootstrap.setChatUrl(ezClientProperties.getChatUrl());
         ezBootstrap.setAdminStyle(ezClientProperties.getAdminStyle());
+        //布局 默认container
+        ezBootstrap.setLayout(ezClientProperties.getLayout());
+
 
 //        if(StringUtils.isNotBlank(properties.getEditLocation())){
 //            ezBootstrap.setEditLocation(properties.getEditLocation());
