@@ -162,7 +162,7 @@
                 </includes>
                 <excludes>
                     <exclude>**.sql</exclude>
-                    <exclude>**.yml</exclude>
+<!--                    <exclude>**.yml</exclude>-->
                 </excludes>
             </resource>
         </resources>
