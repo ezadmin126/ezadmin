@@ -1,3 +1,4 @@
+
 logging:
   config: classpath:logback-spring.xml
 spring:
@@ -48,12 +49,12 @@ spring:
       content-type: text/html
     # 开发时关闭缓存,不然没法看到实时页面
     cache: false
-h2Server: '-web,-tcpAllowOthers,-webAllowOthers,-tcp,-ifNotExists,-baseDir, '
+h2Server: '-web,-tcpAllowOthers,-webAllowOthers,-tcp,-ifNotExists,-baseDir,'
 ezcloud:
   # 默认true 开发时配置为false
   cacheFlag: false
   # 默认dataSource springboot中配置的名字，如果有多个，逗号隔开
-  datasourceBeanNames: 'ez-dataSource,op-datasource,erp-datasourcetarget'
+  datasourceBeanNames: 'ez-dataSource,op-dataSource,erp-dataSourceTarget'
   # 1000 打印完整SQL日志
   logType: 1000-10000
   adminStyle: layui

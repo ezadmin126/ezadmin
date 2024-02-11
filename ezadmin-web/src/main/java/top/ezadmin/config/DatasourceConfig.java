@@ -52,7 +52,9 @@ public class DatasourceConfig {
 			if(StringUtils.isBlank(h2Server)){
 				return server;
 			}
-			server.runTool((h2Server+ JsoupUtil.projectRootPath()).split(","));
+			String baseDir=JsoupUtil.projectRootPath().substring(0,JsoupUtil.projectRootPath().indexOf("target"));
+			System.out.println("basedir:"+baseDir);
+			server.runTool((h2Server+ baseDir).split(","));
 
 			return server;
 		} catch (Exception e) {
