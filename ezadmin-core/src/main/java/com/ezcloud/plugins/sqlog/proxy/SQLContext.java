@@ -25,7 +25,7 @@ public class SQLContext {
 				Utils.addLog("ezsql\tinfo：： "+ monitor.sqlTime());
 			}
 			if (monitor.getParams().log()) {
-				log.info(Utils.getRequestUrl()+monitor.toString());
+				log.info("{} {}",Utils.getRequestUrl(),monitor.toString());
 			}
 			if (monitor.getParams().logOverTime() ) {
 				int overTime = Integer.parseInt(monitor.getParams().getLogType().split("-")[1]);

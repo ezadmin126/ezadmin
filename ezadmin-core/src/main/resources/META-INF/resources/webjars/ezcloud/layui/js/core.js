@@ -4,7 +4,7 @@
 var holiday = [[], []];
 if ($("#holiday") != null && $("#holiday").val() != null) {
     try{
-    holiday = JSON.parse($("#holiday").val());
+        holiday = JSON.parse($("#holiday").val());
     }catch (e) {
         console.log(e)
     }
@@ -753,9 +753,9 @@ function openForm(url, name, area) {
         btn1: function(index111, layero, that){
             var body = layer.getChildFrame('body', index111);
 
-                $(body).find('#submitbtn').click();
+            $(body).find('#submitbtn').click();
 
-          //  layer.close(index111); // 关闭弹层
+            //  layer.close(index111); // 关闭弹层
         },
         btn2: function(index222, layero, that){
             layer.close(index222);
@@ -826,6 +826,8 @@ function openBlank(appendUrl) {
     a.click();
     a.remove();
 }
+
+
 
 //parentid,id,name
 
@@ -969,6 +971,10 @@ $(document).on('click', '.ezopenbutton', function () {
     var title = btn.attr("ITEM_OPEN_TITLE") || btn.attr("windowname") || "打开";
     ezopen(openType, title, url, area);
 })
+$(document).on("click",".ezopenredirect",function(e){
+    openBlank("/ezredirect.html?url="+encodeURIComponent($(this).attr("item_url")));
+})
+
 
 $(document).on('click', '.viewer-image', function () {
     var _this = $(this);
@@ -979,6 +985,7 @@ $(document).on('click', '.viewer-image', function () {
     item.alt = _this.attr("alt");
     item.pid = _this.attr("pid");
     item.src = _this.attr("src");
+    item.thumb = _this.attr("src");
     data.push(item);
     layer.photos({
         shade: 0.5,
@@ -988,6 +995,16 @@ $(document).on('click', '.viewer-image', function () {
             "data": data
         },
         hideFooter: false // 是否隐藏底部栏 --- 2.8+
+        ,success:function(){
+            if($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height()>500){
+                $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height","500px");
+                $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width","auto");
+
+                $(".layui-layer-photos").eq(0).css("top",$(window).height()/2-250)
+
+
+            }
+        }
     });
 })
 
