@@ -49,8 +49,7 @@ $(function(){
         $("#col_type_select").append("<option value="+value+">"+name+"</option>");
     })
 
-
-
-
+    $(".list-item-hidden").show()
+    $(".list-item-hidden").css("color","red");
 
 })

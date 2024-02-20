@@ -63,7 +63,7 @@ public class DatasourceConfig {
 		return null;
 	}
 
-	@Bean(name = "op-dataSource")
+	@Bean(name = "dataSource")
 	@DependsOn("h2server")
 	public DataSource gomanager () {
 		DruidDataSource dds=new DruidDataSource();// DruidDataSourceFactory.createDataSource(propsTemp);

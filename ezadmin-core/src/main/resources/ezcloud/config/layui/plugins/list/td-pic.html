@@ -6,14 +6,14 @@
 </head>
 <body id="td-pic" type="td" icon="layui-icon-picture">
 <div id="template" >
-    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-image">
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-pic">
         <div class="   td-text  " >响应式图片</div> </div>
 </div>
 <table>
     <tr id="content">
 
         <td th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}" th:ITEM_ID="${item_name}"
-            ez-type="td-image"
+            ez-type="td-pic"
             th:class="${'   ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
             <div style=" display: flex;align-items: center;"><img onerror="this.src='/webjars/ezcloud/error.svg'"
                     style=" max-height:110px;max-width:110px;margin-top:-6px" class="viewer-image"
