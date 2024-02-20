@@ -1,6 +1,7 @@
 package top.ezadmin.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.ezcloud.common.utils.JsoupUtil;
 import org.apache.commons.lang.StringUtils;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
@@ -51,7 +52,9 @@ public class DatasourceConfig {
 			if(StringUtils.isBlank(h2Server)){
 				return server;
 			}
-			server.runTool(h2Server.split(","));
+			String baseDir=JsoupUtil.projectRootPath().substring(0,JsoupUtil.projectRootPath().indexOf("target"));
+			System.out.println("basedir:"+baseDir);
+			server.runTool((h2Server+ baseDir).split(","));
 
 			return server;
 		} catch (Exception e) {
@@ -60,7 +63,7 @@ public class DatasourceConfig {
 		return null;
 	}
 
-	@Bean(name = "dataSource")
+	@Bean(name = "op-dataSource")
 	@DependsOn("h2server")
 	public DataSource gomanager () {
 		DruidDataSource dds=new DruidDataSource();// DruidDataSourceFactory.createDataSource(propsTemp);
@@ -91,7 +94,7 @@ public class DatasourceConfig {
 	@Value("${spring.datasource.druid.db2.password}")
 	private String db2password;
 
-	@Bean(name = "erp-datasourcetarget")
+	@Bean(name = "erp-dataSourceTarget")
 	@DependsOn("h2server")
 	public DataSource erp() {
 		DruidDataSource dds=new DruidDataSource();// DruidDataSourceFactory.createDataSource(propsTemp);
