@@ -114,7 +114,8 @@ public class ListDao extends  JsoupUtil{
                 //不能加默认值，因为如果整个table宽度不足，会留空白
                 // Utils.putIfAbsent(layDataMap,"minWidth",110);
             }else{
-                layDataMap.put("width",Math.max(200,NumberUtils.toInt(""+layDataMap.get("width"))));
+                //160+15+15
+                layDataMap.put("width",Math.max(190,NumberUtils.toInt(""+layDataMap.get("width"))));
             }
             String style = th.attr(JsoupUtil.STYLE);
             //style会补充到 laydata里面
@@ -243,7 +244,8 @@ public class ListDao extends  JsoupUtil{
             }
         }
         if(haspic&&!coreMap.containsKey("linestyle")){
-            coreMap.put("linestyle","height:111px");
+            //100+6+6
+            coreMap.put("linestyle","height:112px");
         }
     }
 

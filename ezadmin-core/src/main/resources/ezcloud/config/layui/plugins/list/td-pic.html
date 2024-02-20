@@ -15,8 +15,10 @@
         <td th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}" th:ITEM_ID="${item_name}"
             ez-type="td-pic"
             th:class="${'   ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
-            <div style=" display: flex;align-items: center;"><img onerror="this.src='/webjars/ezcloud/error.svg'"
-                    style=" max-height:110px;max-width:110px;margin-top:-6px" class="viewer-image"
+            <div style="border: 1px solid #E6ECF2;
+ align-items: center;text-align: center;background-color: #f8f8f8;">
+                <img onerror="this.src='/webjars/ezcloud/error.svg'"
+                    style=" max-height:100px;max-width:160px !important;" class="viewer-image"
                     th:ITEM_ID="${item_name+''+item_name}"
                     th:data-original="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"
                     th:src="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"
