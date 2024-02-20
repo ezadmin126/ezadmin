@@ -12,8 +12,8 @@
     <artifactId>ezadmin-web</artifactId>
     <version>1.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>ez-web</name>
-    <description>ez-web</description>
+    <name>ezadmin-web</name>
+    <description>ezadmin-web</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -145,7 +145,7 @@
         </dependencies>
     </dependencyManagement>
     <build>
-        <finalName>ez</finalName>
+        <finalName>ezadmin-web</finalName>
         <testResources>
             <testResource>
                 <directory>src/test/java</directory>
