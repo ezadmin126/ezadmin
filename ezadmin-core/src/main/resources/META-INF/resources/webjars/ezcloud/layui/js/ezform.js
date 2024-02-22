@@ -87,7 +87,10 @@ $(function () {
                                }
                                return false;
                            })
-                       } else {
+                       }else if(data.code=='200'){
+                           canEzFormSubmit = true;
+                           layer.alert(data.message);
+                       }  else {
                            canEzFormSubmit = true;
                            layer.alert( "保存失败");
                            console.log(data.message )

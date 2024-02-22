@@ -31,7 +31,7 @@ public class EzDateUtils{
         calendar.set(Calendar.HOUR_OF_DAY,0);
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
-        return simple.format(calendar.getTime());
+        return simple.format(calendar.getTime())+" - "+simple.format(new Date());
     }
     /**
      * 第i天后的日期  23:59:59
@@ -56,7 +56,7 @@ public class EzDateUtils{
         calendar.set(Calendar.HOUR_OF_DAY,0);
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
-        return simple.format(calendar.getTime());
+        return simple.format(calendar.getTime())+" - "+simple.format(new Date());
     }
 
     public static String monthEnd() {
@@ -69,7 +69,7 @@ public class EzDateUtils{
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
         calendar.add(Calendar.SECOND,-1);
-        return simple.format(calendar.getTime());
+        return simple.format(calendar.getTime())+" - "+simple.format(new Date());
     }
 
     public static String trimDateStart(String date){
@@ -146,7 +146,7 @@ public class EzDateUtils{
 
     public static String todayDate() {
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
-        return simple.format(new Date());
+        return simple.format(new Date())+" - "+simple.format(new Date());
     }
     public static String todayDatetime() {
         SimpleDateFormat simple = new SimpleDateFormat(DATETIME);

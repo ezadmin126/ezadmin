@@ -821,7 +821,10 @@ public class ListServiceImpl implements ListService {
             search.put(ParamNameEnum.itemParamValueEnd.getName(),Utils.trimNull(requestParamMap.get(currentItemname+ "_END")));
             //联动日期区间  -
             if(type.contains("daterange")&&StringUtils.isNotBlank(orgValue)){
+                orgValue=DefaultParamEnum.getValue(orgValue);
                 String[] valueSplit=orgValue.split(" - ");
+                search.put(currentItemname,orgValue);
+                search.put(ParamNameEnum.itemParamValue.getName(),orgValue);
                 search.put(ParamNameEnum.itemParamValueStart.getName(),valueSplit[0]);
                 search.put(ParamNameEnum.itemParamValueEnd.getName(),valueSplit[1]);
             }
@@ -842,8 +845,11 @@ public class ListServiceImpl implements ListService {
             //联动日期区间  -
             String itemSearchDateValue=Utils.trimNull(requestParamMap.get("itemSearchDateValue"));
             if(StringUtils.isNotBlank(itemSearchDateValue)){
+                itemSearchDateValue=DefaultParamEnum.getValue(itemSearchDateValue);
                 search.put("itemSearchDateValue",itemSearchDateValue);
                 String[] valueSplit=itemSearchDateValue.split(" - ");
+                search.put(currentItemname,itemSearchDateValue);
+                search.put(ParamNameEnum.itemParamValue.getName(),orgValue);
                 search.put(ParamNameEnum.itemSearchDateValueStart.getName(),valueSplit[0]);
                 search.put(ParamNameEnum.itemSearchDateValueEnd.getName(),valueSplit[1]);
             }

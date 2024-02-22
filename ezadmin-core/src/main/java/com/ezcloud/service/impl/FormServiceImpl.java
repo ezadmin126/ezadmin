@@ -223,7 +223,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                     }
                 }
             } catch (Exception e) {
-                logger.error("",e);
+                logger.error(JSONUtils.toJSONString(form.get("core")),e);
                 Utils.addLog(ID,e);
             }
 //        }else{

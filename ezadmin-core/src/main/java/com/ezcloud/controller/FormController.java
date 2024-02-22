@@ -51,7 +51,7 @@ public class FormController extends BaseController {
         searchParamsValues.put("ContextPath", request.getContextPath());
         searchParamsValues.put("FORM_ID",formId);
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
-        searchParamsValues.put("ID",ID);
+        searchParamsValues.put("ID",Utils.trimNull(ID));
         Map<String, Object> form=new HashMap<>();
         if(StringUtils.isNotBlank(ENCRYPT_FORM_ID)){
             form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
@@ -223,6 +223,7 @@ public class FormController extends BaseController {
                 EzResult  r= (EzResult)result;
                 rowId= r.getData();
                 if(!r.isSuccess()){
+                    r.code("200");
                     return r;
                 }
             }
@@ -301,13 +302,14 @@ public class FormController extends BaseController {
                 EzResult  r= (EzResult)result;
                 rowId= r.getData();
                 if(!r.isSuccess()){
+                    r.code("200");
                     return r;
                 }
             }
             return EzResult.instance().data( toFormId(rowId,request) );
         } catch (Exception e) {
             logger.info("保存表单失败{}"  ,ENCRYPT_FORM_ID,e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
+            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常"+ExceptionUtils.getFullStackTrace(e));
         }
     }
     @EzMapping("doStatus.html")
@@ -359,6 +361,15 @@ public class FormController extends BaseController {
                     .addParam(paras)
                     .addRequestParam(requestToMap(request))
                     .execute();
+            if(rowId instanceof  EzResult){
+                EzResult  r= (EzResult)rowId;
+                rowId= r.getData();
+                if(!r.isSuccess()){
+                    r.code("200");
+                    return r;
+                }
+            }
+
             return EzResult.instance().data( toFormId(rowId,request) );
         } catch (Exception e) {
             logger.info("保存表单失败{}  "  ,   ENCRYPT_FORM_ID,e);
