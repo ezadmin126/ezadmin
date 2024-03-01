@@ -54,8 +54,11 @@ public class DatasourceConfig {
 			}
 			String baseDir=JsoupUtil.projectRootPath().substring(0,JsoupUtil.projectRootPath().indexOf("target"));
 			System.out.println("basedir:"+baseDir);
-			server.runTool((h2Server+ baseDir).split(","));
-
+			if(h2Server.endsWith(",")){
+				server.runTool((h2Server+ baseDir).split(","));
+			}else{
+				server.runTool((h2Server).split(","));
+			}
 			return server;
 		} catch (Exception e) {
 			e.printStackTrace();
