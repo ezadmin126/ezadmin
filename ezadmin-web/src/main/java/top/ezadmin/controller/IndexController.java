@@ -1,9 +1,11 @@
 package top.ezadmin.controller;
 
 import com.ezcloud.EzClientBootstrap;
+import com.ezcloud.common.utils.StringUtils;
 import com.ezcloud.dao.model.Info;
 import com.ezcloud.dao.model.InitVO;
 import com.ezcloud.web.EzResult;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,10 +28,16 @@ public class IndexController {
 		return"welcome";
 	}
 
+	@Value("${ezcloud.indexUrl:}")
+	private String indexUrl;
+
 
 	@RequestMapping("/")
 	public String index()  {
-		return"redirect:/ezcloud/index.html";
+		if(StringUtils.isBlank(indexUrl)){
+			return"redirect:/ezcloud/index.html";
+		}
+		return"forward:"+indexUrl;
 	}
 	@RequestMapping("eznavs.html")
 	public void navs(HttpServletRequest request, HttpServletResponse response) throws Exception {

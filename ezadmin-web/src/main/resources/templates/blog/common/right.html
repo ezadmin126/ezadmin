@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="right">
+    <style>
+        .layuimini-notice:hover {background:#f6f6f6;}
+        .layuimini-notice {padding:7px 16px;clear:both;font-size:12px !important;cursor:pointer;position:relative;transition:background 0.2s ease-in-out;}
+        .layuimini-notice-title,.layuimini-notice-label {
+            padding-right: 70px !important;text-overflow:ellipsis!important;overflow:hidden!important;white-space:nowrap!important;}
+        .layuimini-notice-title {line-height:28px;font-size:14px;}
+        .layuimini-notice-extra {position:absolute;top:50%;margin-top:-8px;right:16px;display:inline-block;height:16px;color:#999;}
+    </style>
+    <div class="layui-card">
+        <div class="layui-card-header"><i class="fa fa-bullhorn icon icon-tip"></i>系统公告</div>
+        <div class="layui-card-body layui-text">
+            <div class="layuimini-notice">
+                <div class="layuimini-notice-title" id="1">组件支持</div>
+                <div class="layuimini-notice-extra">2020-11-8 23:06</div>
+                <div class="layuimini-notice-content layui-hide">
+                    增加in搜索的组件。<br>
+                    重构代码，组件增加一步到位。<br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header"><i class="fa fa-paper-plane-o icon"></i>更新日志</div>
+        <div class="layui-card-body layui-text layadmin-text">
+            <p>本模板基于layui2.5.7以及font-awesome-4.7.0进行实现。layui开发文档地址：<a class="layui-btn layui-btn-xs layui-btn-danger" target="_blank" rel="nofollow" href="http://www.layui.com/doc">layui文档</a></p>
+
+            <p><a  href="/sys/welcome"  >更新日志</a></p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+</html>

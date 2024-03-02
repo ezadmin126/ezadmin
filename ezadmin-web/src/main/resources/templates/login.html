@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录</title>
+     <!-- Font Awesome -->
+    <link  th:href="${'/webjars/ezadmin/plugins/font-awesome/css/all.min.css'}"   rel="stylesheet">
+    <!-- icheck bootstrap -->
+   <link rel="stylesheet" href="/webjars/ezadmin/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet"  href="/webjars/ezadmin/plugins/adminlte/css/adminlte.min.css" />
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+    <!-- /.login-logo -->
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <a href="#" class="h1">后台管理系统</a>
+        </div>
+        <div class="card-body">
+            <p class="login-box-msg" th:if="${not #strings.isEmpty(error)}" th:text="${error}">登录系统</p>
+            <form action="/login/doLogin.html" method="post">
+                <div class="input-group mb-3">
+                    <input type="text" value="" class="form-control" required name="userName" placeholder="用户名">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" value="" name="password" required class="form-control" placeholder="密码">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <select class="form-control" name="companyId">
+                        <option th:value="${company.COMPANY_ID}" th:each="company:${lanList}" th:text="${company.COMPANY_NAME}">option 1</option>
+                    </select>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fa fa-globe-asia"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-9 ">
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-primary btn-block">登录</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script th:src="${'/webjars/ezadmin/plugins/jquery/jquery.min.js'}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="${'/webjars/ezadmin/plugins/bootstrap/js/bootstrap.bundle.min.js'}"/>
+<script th:src="${'/webjars/ezadmin/plugins/adminlte/js/adminlte.min.js'}"/>
+
+</body>
+</html>

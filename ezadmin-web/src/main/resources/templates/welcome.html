@@ -318,7 +318,7 @@ if(isBlank("ID")){
                     <tr>
                         <td>状态表达式</td>
                         <td>/ezloud/form/doStatus-FORMNAME?ID=1  用于快速实现列表的上下架或启用禁用</td>
-                        <td>update from xxx set status=0 where id=${ID}</td>
+                        <td>update from xxx set status=abs(AD_STATUS-1) where id=${ID}</td>
                     </tr>
                     </tbody>
                 </table>
