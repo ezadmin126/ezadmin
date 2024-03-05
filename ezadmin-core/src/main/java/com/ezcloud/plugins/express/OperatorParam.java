@@ -35,6 +35,8 @@ public class OperatorParam {
      */
     private Map<String,Object> requestParams=new HashMap<>();
 
+    private Map<String,Object> envParams=new HashMap<>();
+
 
 
     public Map<String, Object> getSessionParams() {
@@ -113,5 +115,13 @@ public class OperatorParam {
 
     public void setListDto(Map<String, Object> listDto) {
         this.listDto = listDto;
+    }
+
+
+    public void setEnv(Map<String, Object> e) {
+        envParams=e;
+    }
+    public Object getEnv(String k){
+        return envParams.get(k);
     }
 }

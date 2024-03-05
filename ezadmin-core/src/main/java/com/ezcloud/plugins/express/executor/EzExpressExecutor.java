@@ -41,6 +41,8 @@ public   class EzExpressExecutor {
      *
      */
     private OperatorParam operatorParam=new OperatorParam();
+    //全局配置参数
+    private static Map<String,Object> envParams=new HashMap<>();
 
     public OperatorParam getOperatorParam(){
         return operatorParam;
@@ -88,6 +90,9 @@ public   class EzExpressExecutor {
             runner.addFunction("spring",operator);
         }
     }
+    public static void initEnv(String k,Object v){
+        envParams.put(k,v);
+    }
 
     static{
         runner.addFunction("select",new SelectOperator());
@@ -102,7 +107,6 @@ public   class EzExpressExecutor {
         runner.addFunction("isNotBlank",new NotBlankRequestParamOperator( ));
         runner.addFunction("isBlank",new BlankRequestParamOperator( ));
          runner.addFunction("encode",new EncodeOperator());
-//        runner.addFunction("decode",new DecryptOperator(operatorParam));
         runner.addFunction("logger",new LogOperator());
         runner.addFunction("update",new UpdateOperator( ));
         runner.addFunction("insert",new InsertOperator( ));
@@ -112,11 +116,14 @@ public   class EzExpressExecutor {
         runner.addFunction("prepareUpdate",new PrepareUpdateOperator( ));
         runner.addFunction("unionall",new UnionOperator( ));
         runner.addFunction("split",new SplitOperator( ));
+        runner.addFunction("env",new EnvOperator( ));
     }
     public Object run( String express) throws Exception {
         if(StringUtils.isBlank(express) ){
             return null;
         }
+
+        operatorParam.setEnv(envParams);
         Utils.addParam(operatorParam);
         IExpressContext<String, Object> context = new DefaultContext<String, Object>();
         if(operatorParam.getParams()!=null){
