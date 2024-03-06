@@ -1,7 +1,7 @@
 package top.ezadmin.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.ezcloud.common.utils.JsoupUtil;
+import top.ezadmin.common.utils.JsoupUtil;
 import org.apache.commons.lang.StringUtils;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import top.ezadmin.plugins.sqlog.EzSqlogDataSource;
 
 import javax.sql.DataSource;
 
@@ -80,7 +81,7 @@ public class DatasourceConfig {
 		dds.setInitialSize(db1initialSize);
 		dds.setTestOnBorrow(testOnBorrow);
 
-		com.ezcloud.plugins.sqlog.EzSqlogDataSource ezSqlogDataSource=new com.ezcloud.plugins.sqlog.EzSqlogDataSource();
+		EzSqlogDataSource ezSqlogDataSource=new EzSqlogDataSource();
 		ezSqlogDataSource.setRealDataSource(dds);
 		ezSqlogDataSource.setLogType(logType);
 		//ezSqlogDataSource.setCallback(ezSqlogCallBackERP);
@@ -110,7 +111,7 @@ public class DatasourceConfig {
 		dds.setMinIdle(db1minIdle);
 		dds.setInitialSize(db1initialSize);
 		dds.setTestOnBorrow(testOnBorrow);
-		com.ezcloud.plugins.sqlog.EzSqlogDataSource ezSqlogDataSource=new com.ezcloud.plugins.sqlog.EzSqlogDataSource();
+		EzSqlogDataSource ezSqlogDataSource=new EzSqlogDataSource();
 		ezSqlogDataSource.setRealDataSource(dds);
 		ezSqlogDataSource.setLogType(logType);
 		//ezSqlogDataSource.setCallback(ezSqlogCallBackERP);
@@ -136,7 +137,7 @@ public class DatasourceConfig {
 		dds.setMinIdle(db1minIdle);
 		dds.setInitialSize(db1initialSize);
 		dds.setTestOnBorrow(testOnBorrow);
-		com.ezcloud.plugins.sqlog.EzSqlogDataSource ezSqlogDataSource=new com.ezcloud.plugins.sqlog.EzSqlogDataSource();
+		EzSqlogDataSource ezSqlogDataSource=new EzSqlogDataSource();
 		ezSqlogDataSource.setRealDataSource(dds);
 		ezSqlogDataSource.setLogType(logType);
 		return ezSqlogDataSource;

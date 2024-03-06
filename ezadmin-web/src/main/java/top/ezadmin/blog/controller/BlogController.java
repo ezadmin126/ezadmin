@@ -1,10 +1,10 @@
 package top.ezadmin.blog.controller;
 
 
-import com.ezcloud.common.constants.SessionConstants;
-import com.ezcloud.common.utils.EzPage;
-import com.ezcloud.common.utils.IpUtils;
-import com.ezcloud.web.EzResult;
+import top.ezadmin.common.constants.SessionConstants;
+import top.ezadmin.common.utils.EzPage;
+import top.ezadmin.common.utils.IpUtils;
+import top.ezadmin.web.EzResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import top.ezadmin.blog.model.BlogMessage;
@@ -17,8 +17,6 @@ import top.ezadmin.blog.vo.BlogVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import java.util.Date;
 import java.util.List;
 

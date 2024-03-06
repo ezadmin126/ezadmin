@@ -85,23 +85,23 @@
                     </tr>
                     <tr>
                         <td>ezcloud.exportClass</td>
-                        <td>实现 com.ezcloud.plugins.export.EzExport 接口 实现自定义的导出，默认CSV格式
+                        <td>实现 top.ezadmin.plugins.export.EzExport 接口 实现自定义的导出，默认CSV格式
                         </td>
-                        <td>com.ezcloud.plugins.export.CSVExport</td>
+                        <td>top.ezadmin.plugins.export.CSVExport</td>
                     </tr>
 
                     <tr>
                         <td>ezcloud.cacheClass</td>
-                        <td>实现 com.ezcloud.plugins.cache.EzCache 接口  实现自定义的缓存，默认Caffeine
+                        <td>实现 top.ezadmin.plugins.cache.EzCache 接口 实现自定义的缓存，默认Caffeine
                         </td>
-                        <td>com.ezcloud.plugins.cache.CaffeineCache</td>
+                        <td>top.ezadmin.plugins.cache.CaffeineCache</td>
                     </tr>
 
                     <tr>
                         <td>ezcloud.refreshClass</td>
-                        <td>实现 com.ezcloud.plugins.refresh.EzRefresh 接口  实现自定义的文件监听，注意ezcloud.cacheFlag=false才会生效
+                        <td>实现 top.ezadmin.plugins.refresh.EzRefresh 接口 实现自定义的文件监听，注意ezcloud.cacheFlag=false才会生效
                         </td>
-                        <td>com.ezcloud.plugins.refresh.DefaultRefresh</td>
+                        <td>top.ezadmin.plugins.refresh.DefaultRefresh</td>
                     </tr>
                     <tr>
                         <td>ezcloud.layout</td>
@@ -286,9 +286,9 @@ return SELECT(sql);
                         </td>
                         <td>
 <pre class="layui-code code-demo" lay-options="{}" >
-import com.ezcloud.plugins.express.jdbc.UpdateParam;
-import com.ezcloud.plugins.express.jdbc.InsertParam;
-import com.ezcloud.web.EzResult;
+import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.express.jdbc.InsertParam;
+import top.ezadmin.web.EzResult;
 ID=$("ID");
 if(isBlank("ID")){
     param=new InsertParam();

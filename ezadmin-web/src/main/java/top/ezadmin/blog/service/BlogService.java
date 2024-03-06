@@ -1,6 +1,6 @@
 package top.ezadmin.blog.service;
 
-import com.ezcloud.common.utils.StringUtils;
+import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.domain.mapper.BlogCategoryMapper;
 import top.ezadmin.domain.mapper.BlogMapper;
 import top.ezadmin.domain.mapper.BlogMessageMapper;

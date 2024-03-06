@@ -1,10 +1,10 @@
 package top.ezadmin.controller;
 
-import com.ezcloud.EzClientBootstrap;
-import com.ezcloud.common.utils.StringUtils;
-import com.ezcloud.dao.model.Info;
-import com.ezcloud.dao.model.InitVO;
-import com.ezcloud.web.EzResult;
+import top.ezadmin.EzClientBootstrap;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.dao.model.Info;
+import top.ezadmin.dao.model.InitVO;
+import top.ezadmin.web.EzResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,14 +28,14 @@ public class IndexController {
 		return"welcome";
 	}
 
-	@Value("${ezcloud.indexUrl:}")
+	@Value("${topezadmin.indexUrl:}")
 	private String indexUrl;
 
 
 	@RequestMapping("/")
 	public String index()  {
 		if(StringUtils.isBlank(indexUrl)){
-			return"redirect:/ezcloud/index.html";
+			return"redirect:/topezadmin/index.html";
 		}
 		return"forward:"+indexUrl;
 	}
@@ -55,14 +55,14 @@ public class IndexController {
 		listN.setTitle("列表管理");
 		listN.setId("1");
 		listN.setPid("0");
-		listN.setHref("/ezcloud/list/list-listmanage?perPageInt=20");
+		listN.setHref("/topezadmin/list/list-listmanage?perPageInt=20");
 		root.add(listN);
 
 		Info listF = new Info();
 		listF.setTitle("表单管理");
 		listF.setId("2");
 		listF.setPid("0");
-		listF.setHref("/ezcloud/list/list-formmanage?perPageInt=20");
+		listF.setHref("/topezadmin/list/list-formmanage?perPageInt=20");
 		root.add(listF);
 
 		Info sql = new Info();
@@ -76,7 +76,7 @@ public class IndexController {
 		testsq.setTitle("SQL统计");
 		testsq.setId("4");
 		testsq.setPid("0");
-		testsq.setHref("/ezadmin/list/list-sqlog?perPageInt=20");
+		testsq.setHref("/topezadmin/list/list-sqlog?perPageInt=20");
 		root.add(testsq);
 
 		Info TOP = new Info();
@@ -84,7 +84,7 @@ public class IndexController {
 		TOP.setChild(root);
 		toproot.add(TOP);
 		vo.homeInfo(EzClientBootstrap.instance().getSystemName(), "").
-				logoInfo("", "/ezcloud/index.html", EzClientBootstrap.instance().getConfig().get("logo") + "")
+				logoInfo("", "/topezadmin/index.html", EzClientBootstrap.instance().getConfig().get("logo") + "")
 				.setMenuInfo(toproot);
 		EzResult.instance().msg("0", "ok")
 				.data(vo).printJSONUtils(response);
