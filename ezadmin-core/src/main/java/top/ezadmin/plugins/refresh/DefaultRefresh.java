@@ -57,7 +57,9 @@ public class DefaultRefresh extends EzRefresh {
                                 }
                                 File currentFile=new File(currentDir + File.separator +fileName);
                                 WatchEvent.Kind<?> kind = event.kind();
-                                if(currentDir.contains("list")&&fileName.contains(".html")){
+                                 if(currentDir.contains("plugins")&&fileName.contains(".html")){
+                                    refreshPlugins(currentFile);
+                                }else if(currentDir.contains("list")&&fileName.contains(".html")){
                                     refreshList(currentFile);
                                 }else if(currentDir.contains("form")&&fileName.contains(".html")){
                                     refreshForm(currentFile);
@@ -85,5 +87,4 @@ public class DefaultRefresh extends EzRefresh {
             }.start();
         }
     }
-
 }

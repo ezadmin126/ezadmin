@@ -486,7 +486,7 @@ function renderTable() {
         });
 
         tableConfig={
-            height: 'full-'+(($("#tab").size()>0?$("#tab").height():0)+$("#searchForm").height()+43+97)  //设置高度
+            height: 'full-'+(($("#tab").size()>0?$("#tab").height():0)+$("#searchForm").offset().top+$("#searchForm").height()+43+97)  //设置高度
             ,escape: false
             ,autoSort: false
             ,cellExpandedMode: "tips"
