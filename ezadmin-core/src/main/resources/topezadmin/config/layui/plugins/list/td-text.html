@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>普通文本</title>
+</head>
+<body id="td-text" alias="26" type="td" >
+<div id="template" >
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-text">
+        <div class="   td-text  " >普通文本</div>
+    </div>
+</div>
+<table>
+    <tr id="content">
+        <td  ez-type="td-text"
+
+            th:ITEM_NAME="${item_name}"
+            th:title="${dataInDb}"
+            th:ITEM_ID="${item_name}"
+            th:class="${ '    ezadmin-td ezadmin-td-'+item_name}"
+
+            th:style="${style+(#strings.equals(jdbctype,'NUMBER')?';text-align:right':'')}"
+        >
+            <div class="   td-text  " >[[${dataInDb}]]</div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
