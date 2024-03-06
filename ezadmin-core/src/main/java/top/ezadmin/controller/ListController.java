@@ -285,14 +285,14 @@ public class ListController extends BaseController {
         listN.setTitle("新增列表");
         listN.setId("1");
         listN.setPid("0");
-        listN.setHref("/ezcloud/list/loadEdit-");
+        listN.setHref("/topezadmin/list/loadEdit-");
         root.add(listN);
 
         Info listF = new Info();
         listF.setTitle("新增表单");
         listF.setId("2");
         listF.setPid("0");
-        listF.setHref("/ezcloud/form/loadEdit-");
+        listF.setHref("/topezadmin/form/loadEdit-");
         root.add(listF);
 
         Info TOP = new Info();
@@ -300,7 +300,7 @@ public class ListController extends BaseController {
         TOP.setChild(root);
         toproot.add(TOP);
         vo.homeInfo(EzClientBootstrap.instance().getSystemName(), "").
-                logoInfo("", "/ezcloud/index.html", EzClientBootstrap.instance().getConfig().get("logo") + "")
+                logoInfo("", "/topezadmin/index.html", EzClientBootstrap.instance().getConfig().get("logo") + "")
                 .setMenuInfo(toproot);
         EzResult.instance().msg("0", "ok")
                 .data(vo).printJSONUtils(response);

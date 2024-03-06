@@ -355,7 +355,7 @@ public class ListDao extends JsoupUtil {
 
                 Utils.putIfAbsent(thMap,JsoupUtil.HEAD_PLUGIN_CODE, DEFAULT_TH);
                 Utils.putIfAbsent(thMap,JsoupUtil.BODY_PLUGIN_CODE, DEFAULT_TD);
-                thMap.put(JsoupUtil.LABEL, Utils.trimEmptyDefault(thMap.get(JsoupUtil.LABEL),th.ownText()) );
+                thMap.put(JsoupUtil.LABEL, Utils.trimEmptyDefault(thMap.get(JsoupUtil.LABEL),th.html()) );
                 thMap.put(JsoupUtil.ITEM_NAME, StringUtils.upperCase(th.attr(JsoupUtil.ITEM_NAME)));
 
                 //laydata属性

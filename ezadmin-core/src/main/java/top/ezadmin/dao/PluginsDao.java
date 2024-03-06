@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
@@ -242,5 +243,24 @@ public class PluginsDao {
            Document doc = config.getDoc();
            return docToPluginMap(doc);
 
+    }
+
+    public void loadPluginFile(File file)  throws  Exception{
+        Config item=new Config();
+        Document doc = Jsoup.parse(file, "UTF-8", "");
+        item.setUrl(file.toURI().toURL());
+        item.setPath(file.toURI().toURL().getPath());
+        item.setProtocol("file");
+        item.setDoc(doc);
+        item.setFile(file);
+
+        String key = "layui_list_" + doc.body().id().toLowerCase();
+        if(pluginsAllConfigMap.containsKey(key)){
+            pluginsAllConfigMap.put(key,item);
+        }
+        key = "layui_form_" + doc.body().id().toLowerCase();
+        if(pluginsAllConfigMap.containsKey(key)){
+            pluginsAllConfigMap.put(key,item);
+        }
     }
 }

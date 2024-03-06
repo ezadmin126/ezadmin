@@ -32,7 +32,7 @@ public class FormDao extends JsoupUtil {
             JsoupUtil.OPENTYPE,JsoupUtil.WINDOW_NAME,JsoupUtil.URL,
             JsoupUtil.DATA,JsoupUtil.JDBCTYPE,JsoupUtil.PLACEHOLDER,JsoupUtil.LAYVERIFY
             , JsoupUtil.NAME,
-            JsoupUtil.ITEM_NAME,
+            JsoupUtil.ITEM_NAME, JsoupUtil.ITEM_ID,
             JsoupUtil.OPER
             ,JsoupUtil.STYLE
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
@@ -332,7 +332,6 @@ public class FormDao extends JsoupUtil {
                             formItemHtmlElement.getElementsByTag("object").attr(names[k],formItemAttrValue);
                         }
                     }
-
                      newcardElement.selectFirst(".layui-card-body")
                             .append("\n"+formItemHtmlElement.outerHtml()+"\n");
                 }
