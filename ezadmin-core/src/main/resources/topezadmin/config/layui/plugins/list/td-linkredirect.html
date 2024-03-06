@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>文本链接</title>
+</head>
+<body id="td-linkredirect"   type="td" icon="layui-icon-fonts-code">
+<div id="template" >
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-linkredirect">
+        <div class="   td-text  " >文本链接</div>
+    </div>
+</div>
+<table>
+    <tr id="content">
+        <td th:title="${dataInDb}" th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}"
+            th:ITEM_ID="${item_name}"  ez-type="td-linkredirect"
+            th:class="${'layui-text   ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
+            <a href="#" th:tab-id="${item_name+'-'+item_name}"
+               th:ID="${'link-'+item_name+'-'+item_name}" th:if="${not #strings.isEmpty(url)}"
+               th:ITEM_URL="${url}" th:url="${url}"  style="color: #01aaed;"
+               th:ITEM_OPEN_TYPE="${opentype}" th:windowname="${windowname}"
+               th:ITEM_OPEN_TITLE="${windowname}" class="ezopenredirect">
+                点击访问
+            </a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

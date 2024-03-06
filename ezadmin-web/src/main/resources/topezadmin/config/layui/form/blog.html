@@ -1,0 +1,85 @@
+<html>
+ <head>
+  <title>blog</title>
+ </head>
+ <body id="blog" datasource="dataSource" success_url="" formsubmiturl="">
+  <div id="append_head"></div>
+  <form id="inputForm">
+   <div class="layui-card" col="">
+    <div class="layui-card-body">
+     <div class="layui-form-item" col="12">
+      <label>标题</label>
+      <div>
+       <object name="BLOG_TITLE" item_name="BLOG_TITLE"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="12">
+      <label>副标题</label>
+      <div>
+       <object name="BLOG_SUB_TITLE" item_name="BLOG_SUB_TITLE"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="12">
+      <label>STATUS</label>
+      <div>
+       <object name="STATUS" item_name="STATUS"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="12">
+      <label>分类</label>
+      <div>
+       <object name="CATEGORY_ID" item_name="CATEGORY_ID"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item" col="12">
+      <label>内容</label>
+      <div>
+       <object name="BLOG_CONTENT" item_name="BLOG_CONTENT"> </object>
+      </div>
+     </div>
+    </div>
+   </div>
+  </form>
+  <form id="configForm">
+   <pre item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+sql.append("select BLOG_TITLE,BLOG_SUB_TITLE,STATUS,CATEGORY_ID,BLOG_CONTENT,ADD_TIME from T_BLOG where  BLOG_ID=${ID}  ");
+return select(sql).get(0);</pre>
+   <pre item_name="submit_express" type="">import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.express.jdbc.InsertParam;
+import top.ezadmin.web.EzResult;
+ID=$("ID");                  		
+if(!isNotBlank("ID")){                  		
+    param=new InsertParam();                		
+    param.table("T_BLOG");               		
+    param.add("#{BLOG_ID}");               		
+    param.add("#{BLOG_TITLE}");               		
+    param.add("#{BLOG_SUB_TITLE}");               		
+    param.add("#{STATUS}");               		
+    param.add("#{CATEGORY_ID}");               		
+    param.add("#{BLOG_CONTENT}");               		
+    param.add("#{ADD_TIME}");               		
+id=insertSimple(param);
+return id; 
+}else{                 								
+    param=new UpdateParam();
+    param.table("T_BLOG");               		
+    param.add("#{BLOG_ID}");               		
+    param.add("#{BLOG_TITLE}");               		
+    param.add("#{BLOG_SUB_TITLE}");               		
+    param.add("#{STATUS}");               		
+    param.add("#{CATEGORY_ID}");               		
+    param.add("#{BLOG_CONTENT}");               		
+    param.add("#{ADD_TIME}");               		
+  StringBuilder updateSql=new StringBuilder();
+  updateSql.append(" where BLOG_ID=#{ID} ");
+ param.where(updateSql.toString());
+ updateSimple(param);
+ return ID;
+}</pre>
+   <pre item_name="delete_express" type="">update("UPDATE T_BLOG set delete_flag=1 where BLOG_ID=${ID}");</pre>
+   <pre item_name="status_express" type="">reload</pre>
+   <pre item_name="displayorder_express" type=""></pre>
+  </form>
+  <div id="append_foot"></div>
+ </body>
+</html>

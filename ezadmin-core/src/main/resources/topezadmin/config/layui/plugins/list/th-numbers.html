@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表头</title>
+</head>
+<body id="th-numbers"   type="th">
+<table>
+    <thead>
+    <tr id="content">
+        <th thead   scope="col" th:style="${'color:black;'+style}"
+            th:classappend="${'list-item-'+item_name}"
+            class=" ez-view-group-parent1     list-item  " th:item_name="${item_name}"
+            th:lay-options='${laydata}'
+        >
+           序号
+        </th>
+
+    </tr>
+    </thead>
+</table>
+</body>
+</html>

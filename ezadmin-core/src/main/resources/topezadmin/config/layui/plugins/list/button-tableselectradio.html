@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表头按钮-弹框单选按钮</title>
+</head>
+<body id="button-tableselectradio" type="listbutton">
+<button th:item_name="${item_name}" th:name="${'TABLE_BTN_'+item_name}" th:fname="${item_name}" type="button"
+        editor="button" th:url="${url}"
+        th:ez_callback="${ez_callback}"
+        th:id="${'check_click_'+item_name}" class="ezcheckbutton  layui-btn layui-btn-normal layui-btn-sm btn-sm">
+    <label th:text="${label}" style="margin-bottom: 0px;"></label>
+</button>
+
+</body>
+</html>

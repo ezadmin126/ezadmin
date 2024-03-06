@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表格-隐藏域</title>
+</head>
+<body id="td-hidden" alias="TD-ID"   icon="layui-icon-picture">
+<div id="template" >
+    <li class="layui-nav-item selector" type="colcore" ez-type="td-hidden"> 隐藏域  </li>
+</div>
+<table>
+    <tr id="content">
+        <td th:ITEM_NAME="${item_name}" th:title="${dataInDb}" th:ITEM_ID="${item_name}"
+            th:class="${'   ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
+            [[${dataInDb}]]<INPUT type=hidden th:name="${'ROW_ID_'+item_name}" th:value="${dataInDb}">
+        </td>
+    </tr>
+</table>
+</body>
+</html>

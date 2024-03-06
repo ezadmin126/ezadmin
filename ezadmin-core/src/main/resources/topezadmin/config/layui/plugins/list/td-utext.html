@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>富文本</title>
+</head>
+<body id="td-utext" type="td" icon="layui-icon-fonts-html">
+<div id="template" >
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-utext">
+        <div class="   td-text  " >富文本</div>  </div>
+</div>
+<table>
+    <tr id="content">
+        <td
+            ez-type="td-utext"
+            th:ITEM_NAME="${item_name}" th:ITEM_ID="${item_name}"
+            th:class="${ ' tooltips  ezadmin-td ezadmin-td-'+item_name}"
+
+            th:style="${style+(#strings.equals(jdbctype,'NUMBER')?';text-align:right':'')}"
+        >
+            <div class=" td-text utext "   >[(${dataInDb})]</div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

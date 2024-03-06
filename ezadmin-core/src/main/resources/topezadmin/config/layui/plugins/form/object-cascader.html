@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>级联下拉</title>
+</head>
+<body id="cascader" type="form" icon="layui-icon-share">
+<div id="template" >
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="cascader">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">原生下拉框</label>
+            <div class="layui-input-block">
+                <select name="default" class="custom-select" lay-ignore>
+                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+<div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" ez-type="cascader"
+     th:ez-label="${label}"
+     th:ez-item_name="${item_name}"
+     th:ez-placeholder="${placeholder}"
+     th:ez-alias="${alias}"
+     th:ez-col="${col}"
+     th:ez-url="${url}"
+     th:ez-data="${data}"
+     th:ez-datatype="${datatype}"
+     th:ez-item_desc="${item_desc}"
+     th:ez-top_desc="${top_desc}"
+     th:ez-jdbctype="${jdbctype}"
+     th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+     th:ez-valid_rule="${valid_rule}"
+     th:ez-valid_msg="${valid_msg}"
+     th:ez-style="${style}"
+     th:ez-help="${help}"
+
+     th:ez-multi="${multi}"
+     th:ez-collapsetags="${collapsetags}"
+     th:ez-showalllevels="${showalllevels}"
+     th:ez-class="${class}"
+
+
+>
+    <div class="layui-form-item ">
+        <label class="layui-form-label  "   >
+            <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+            <i th:if="${not #strings.isEmpty(help)}"
+               th:id="${'ez-help-'+item_name}"
+               class="ez-help layui-icon-help layui-icon"
+               th:src="${help}"></i>
+            [[${#strings.isEmpty(label)?'':label+'：' }]]
+        </label>
+        <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+            <small
+                    class="layui-form-mid layui-text-em top_desc"
+                    th:utext="${top_desc}" style="float:none"
+                    th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+            <input th:value="${#strings.isEmpty(value)?'':value}" th:name="${item_name}" th:id="${'search-itemName-' + item_name}"
+                   class="ez-laycascader"
+                   th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                   th:ezlist_url="${url}"
+                   ez_value="ID" ez_label="LABEL"
+                   th:label="${label}"
+                   style="display:none"
+                   th:multi="${multi}"
+                   th:collapseTags="${collapsetags}"
+                   th:showAllLevels="${showalllevels}"
+                   th:classappend="${class}"  th:placeholder="${placeholder}">
+
+
+            <small
+                    class="layui-form-mid layui-text-em item_desc"
+                    th:utext="${item_desc}"
+                    th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+        </div>
+    </div>
+</div>
+
+
+</div>
+</body>
+</html>

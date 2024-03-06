@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>右侧按钮</title>
+</head>
+<body id="button-single">
+<input type="hidden" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" th:item_name="${'hidden-'+item_name}"
+       th:name="${item_name}" th:value="${value}">
+<span class="layui-input" style="line-height:40px" th:item_name="${'span-'+item_name}"></span>
+<button
+        th:ITEM_URL="${item_url}" th:item_name="${item_name}" th:ITEM_OPEN_TYPE="${opentype}"
+        th:ITEM_OPEN_TITLE="${window_name}" th:area="${area}"
+        style="margin-left: 5px;" type="button"
+        class="  ezopenbutton  layui-btn layui-btn-sm  ">选择
+</button>
+
+</body>
+</html>
