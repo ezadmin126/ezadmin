@@ -1,11 +1,10 @@
 package top.ezadmin.controller;
 
-import com.ezcloud.common.utils.*;
-import com.ezcloud.controller.BaseController;
-import com.ezcloud.dao.FormDao;
-import com.ezcloud.dao.PluginsDao;
-import com.ezcloud.service.FormService;
-import com.ezcloud.web.EzResult;
+import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.FormDao;
+import top.ezadmin.dao.PluginsDao;
+import top.ezadmin.service.FormService;
+import top.ezadmin.web.EzResult;
 import top.ezadmin.domain.mapper.EzCloudMapper;
 import top.ezadmin.domain.model.EzCloud;
 import top.ezadmin.domain.model.EzCloudExample;

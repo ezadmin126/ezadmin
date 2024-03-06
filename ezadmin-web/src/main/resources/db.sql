@@ -1,3 +1,5 @@
+
+SET MODE MySQL;
 CREATE TABLE t_ez_cloud (
                             ID BIGINT AUTO_INCREMENT,
                             EZ_CODE VARCHAR(100),
