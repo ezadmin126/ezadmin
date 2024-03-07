@@ -17,7 +17,7 @@ public class LogOperator extends AbstractOperator {
         if(Utils.getLog()!=null){
             Utils.addLog(JSONUtils.toJSONString(objects));
         }
-        logger.info(JSONUtils.toJSONString(objects));
+        logger.info(objects[0]+"\t"+objects[0].getClass()+"\t"+JSONUtils.toJSONString(objects));
        return null;
     }
 }

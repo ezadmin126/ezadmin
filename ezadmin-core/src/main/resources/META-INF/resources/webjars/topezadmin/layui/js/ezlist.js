@@ -20,61 +20,7 @@ $(document).ready(function () {
         });
         return obj;
     }
-
     initForm();
-
-    layui.use(['laypage', 'layer', 'form'], function () {
-        var laypage = layui.laypage
-            , layer = layui.layer;
-        if ($(".dataTables_empty").length == 0 && $("#PAGE_LAYUI").length > 0) {
-            $.get($("#contextName").val() + "/topezadmin/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
-
-
-                if(data.data.page.currentPage>=data.data.page.totalPage){
-                    $(".nextpage").removeClass("page-button");
-                    $(".nextpage").addClass("layui-btn-disabled");
-                }else{
-                    $(".nextpage").addClass("page-button");
-                    $(".nextpage").removeClass("layui-btn-disabled");
-                }
-
-                laypage.render({
-                    elem: 'PAGE_LAYUI',
-                    theme: '#1E9FFF'
-                    , count: data.data.page.totalRecord
-                    , curr: data.data.page.currentPage
-                    , limit: data.data.page.perPageInt
-                    , limits: [10, 20, 30, 40, 50, 100]
-                    , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
-                    , jump: function (obj, first) {
-                        if (!first) {
-                            $("#perPageInt").val(obj.limit)
-                            $("#currentPage").val(obj.curr)
-                            $("#searchForm").submit();
-                        }
-                    }
-                });
-            })
-        } else {
-            laypage.render({
-                elem: 'PAGE_LAYUI',
-                theme: '#1E9FFF'
-                , count: 0
-                , curr: 1
-                , limit: 10
-                , limits: [10, 20, 30, 40, 50, 100]
-                , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
-                , jump: function (obj, first) {
-                    if (!first) {
-                        $("#perPageInt").val(obj.limit)
-                        $("#currentPage").val(obj.curr)
-                        $("#searchForm").submit();
-                    }
-                }
-            });
-        }
-    });
-
     $('body').on('click', function (e) {
         if (($(e.target).attr('id') != 'custom-cols-span')
             && !$(e.target).hasClass('custom-cols')) {
@@ -183,24 +129,6 @@ $(document).ready(function () {
         $("#currentPage").val($(this).attr("page"));
         $("#searchForm").submit();
     })
-
-    // $('.page-button').not(".disabled").click(function () {
-    //     $("#currentPage").val($(this).attr("page"));
-    //     $("#searchForm").submit();
-    // })
-
-    $(".jumpPage").keyup(function (event) {
-        if (event.keyCode == 13) {
-            $("#currentPage").val($("#jumpPage").val())
-            $("#searchForm").submit();
-        }
-    });
-
-    $(".perPageIntSelect").change(function (event) {
-        $("#currentPage").val(1)
-        $("#perPageInt").val($(this).val())
-        $("#submitBtn").click();
-    });
 
     //回车搜索
     $("#searchForm").find('input').each(function () {
@@ -500,6 +428,7 @@ function renderTable() {
                     }
                     doDropdown();
                     doOrder();
+                    doPage();
                     doSystem();
                 } catch (e) {
                     console.log(e)
@@ -577,6 +506,7 @@ function renderTable() {
                 },
                 done: function (res, curr, count) {
                     watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});
+                    doPage();
                 }
             });
         }
@@ -644,6 +574,71 @@ function doOrder(){
     //         }
     //     })
     // })
+}
+
+function doPage(){
+    layui.use(['laypage', 'layer', 'form'], function () {
+        var laypage = layui.laypage
+            , layer = layui.layer;
+        if ($(".dataTables_empty").length == 0 && $("#PAGE_LAYUI").length > 0) {
+            $.get($("#contextName").val() + "/topezadmin/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
+
+
+                if(data.data.page.currentPage>=data.data.page.totalPage){
+                    $(".nextpage").removeClass("page-button");
+                    $(".nextpage").addClass("layui-btn-disabled");
+                }else{
+                    $(".nextpage").addClass("page-button");
+                    $(".nextpage").removeClass("layui-btn-disabled");
+                }
+
+                laypage.render({
+                    elem: 'PAGE_LAYUI',
+                    theme: '#1E9FFF'
+                    , count: data.data.page.totalRecord
+                    , curr: data.data.page.currentPage
+                    , limit: data.data.page.perPageInt
+                    , limits: [10, 20, 30, 40, 50, 100]
+                    , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            $("#perPageInt").val(obj.limit)
+                            $("#currentPage").val(obj.curr)
+                            $("#searchForm").submit();
+                        }
+                    }
+                });
+            })
+        } else {
+            laypage.render({
+                elem: 'PAGE_LAYUI',
+                theme: '#1E9FFF'
+                , count: 0
+                , curr: 1
+                , limit: 10
+                , limits: [10, 20, 30, 40, 50, 100]
+                , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                , jump: function (obj, first) {
+                    if (!first) {
+                        $("#perPageInt").val(obj.limit)
+                        $("#currentPage").val(obj.curr)
+                        $("#searchForm").submit();
+                    }
+                }
+            });
+        }
+    });
+    $(".jumpPage").keyup(function (event) {
+        if (event.keyCode == 13) {
+            $("#currentPage").val($("#jumpPage").val())
+            $("#searchForm").submit();
+        }
+    });
+    $(".perPageIntSelect").change(function (event) {
+        $("#currentPage").val(1)
+        $("#perPageInt").val($(this).val())
+        $("#submitBtn").click();
+    });
 }
 
 function doSystem() {

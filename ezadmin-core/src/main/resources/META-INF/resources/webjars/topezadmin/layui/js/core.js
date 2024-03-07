@@ -646,7 +646,8 @@ function getJsonCheckIds() {
             lines.push($(this).attr("_CHECK_ID_VALUE"));
         }
     })
-    return JSON.stringify(lines);
+    const uniqueArray = [...new Set(lines)];
+    return JSON.stringify(uniqueArray);
 }
 
 function getJsonCheckIdAndNames() {
