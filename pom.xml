@@ -26,28 +26,28 @@
         </developer>
     </developers>
 	
-<!--    <distributionManagement>-->
-<!--        <snapshotRepository>-->
-<!--            <id>ossrh</id>-->
-<!--            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
-<!--        </snapshotRepository>-->
-<!--        <repository>-->
-<!--            <id>ossrh</id>-->
-<!--            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-<!--        </repository>-->
-<!--    </distributionManagement>-->
     <distributionManagement>
-        <repository>
-            <id>vedeng-release</id>
-            <name>maven-releases</name>
-            <url>http://nexus.ivedeng.com/repository/maven-releases/</url>
-        </repository>
         <snapshotRepository>
-            <id>vedeng-snapshot</id>
-            <name>maven-snapshots</name>
-            <url>http://nexus.ivedeng.com/repository/maven-snapshots/</url>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>vedeng-release</id>-->
+<!--            <name>maven-releases</name>-->
+<!--            <url>http://nexus.ivedeng.com/repository/maven-releases/</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>vedeng-snapshot</id>-->
+<!--            <name>maven-snapshots</name>-->
+<!--            <url>http://nexus.ivedeng.com/repository/maven-snapshots/</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
 
     <licenses>
         <license>
