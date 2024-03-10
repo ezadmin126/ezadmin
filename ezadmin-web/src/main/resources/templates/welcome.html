@@ -24,8 +24,8 @@
             <version>1.0.8-SNAPSHOT</version>
         </dependency>
             2.通过此系统设计列表或表单，并将设计好的页面导入到自己的应用。
-            classpath:/ezcloud/config/layui/list  （列表）
-            classpath:/ezcloud/config/layui/form  （表单）
+            classpath:/topezadmin/config/layui/list  （列表）
+            classpath:/topezadmin/config/layui/form  （表单）
 
             3.启动自己的应用，查看页面。非springboot应用可以参考EzClientAutoConfiguration 初始化
             </textarea>
@@ -65,18 +65,18 @@
                     </tr>
                     <tr>
                         <td>ezcloud.adminStyle</td>
-                        <td>页面样式，可以自定义其他样式，参考 classpath:/ezcloud/config/layui更改layui文件夹名称即可</td>
+                        <td>页面样式，可以自定义其他样式，参考 classpath:/topezadmin/config/layui更改layui文件夹名称即可</td>
                         <td>layui</td>
                     </tr>
                     <tr>
                         <td>ezcloud.uploadUrl</td>
                         <td>上传URL，需要返回 resourceId 字段</td>
-                        <td>/ezcloud/form/upload.html</td>
+                        <td>/topezadmin/form/upload.html</td>
                     </tr>
                     <tr>
                         <td>ezcloud.downloadUrl</td>
                         <td>下载URL前缀 + 上传URL返回的resourceId，展示为图片的SRC</td>
-                        <td>/ezcloud/form/download.html?fileId=</td>
+                        <td>/topezadmin/form/download.html?fileId=</td>
                     </tr>
                     <tr>
                         <td>ezcloud.uploadPath</td>
@@ -126,7 +126,7 @@
                     <tr>
                         <td>ezcloud.navUrl</td>
                         <td>admin框架的菜单接口</td>
-                        <td>/ezcloud/list/navs.html</td>
+                        <td>/topezadmin/list/navs.html</td>
                     </tr>
                     <tr>
                         <td>ezcloud.config</td>

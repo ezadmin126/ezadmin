@@ -59,7 +59,8 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         }else{
             form.put("core",new HashMap<>());
         }
-        Map<String, Object> initMap= Collections.unmodifiableMap(initMap(request,form,dataSource));
+
+        Map<String, Object> initMap= Collections.unmodifiableMap(initMap(request,session,form,dataSource));
 
         fillItem(request,initMap,form,session,dataSource );
     }
@@ -196,7 +197,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         }
     }
 
-    public Map<String, Object> initMap( Map<String,Object> requestParamMap,Map<String, Object> form,DataSource datasource){
+    public Map<String, Object> initMap( Map<String,Object> requestParamMap,Map<String,String> session,Map<String, Object> form,DataSource datasource){
         String ID=Utils.getStringByObject(requestParamMap,"ID");
         if(StringUtils.isJsBlank(ID)){
             ID=Utils.getStringByObject(requestParamMap,"INIT_ID");
@@ -206,7 +207,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         }
         Map<String, Object> initItemMap=new HashMap<>() ;
         initItemMap.putAll(requestParamMap);
-       // if ( StringUtils.isNotJsBlank(ID)) {
+        if ( StringUtils.isNotJsBlank(ID)) {
+            ID="0";
+        }
             try {
                 DefaultExpressExecutor expressExecutor=DefaultExpressExecutor.createInstance();
                 expressExecutor.datasource(datasource);
@@ -215,6 +218,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                 }
                 expressExecutor.addParam(requestParamMap);
                 expressExecutor.addRequestParam( requestParamMap);
+                expressExecutor.addSessionParam( session);
                 Map<String, Object> resultMap=expressExecutor.executeAndReturnMap();
                 for (Map.Entry<String, Object> entry:resultMap.entrySet()){
                     if(StringUtils.isNotBlank(Utils.trimNull(entry.getValue()))){

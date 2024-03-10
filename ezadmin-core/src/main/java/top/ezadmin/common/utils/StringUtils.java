@@ -6,6 +6,8 @@ import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.dao.ClobParam;
 import org.apache.commons.lang.BooleanUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
@@ -106,13 +108,24 @@ public class StringUtils {
     }
 
 
-    public static byte[] parseToByte(final InputStream in) throws Exception {
-        final java.io.ByteArrayOutputStream swapStream = new java.io.ByteArrayOutputStream();
-        int ch;
-        while ((ch = in.read()) != -1) {
-            swapStream.write(ch);
+    public static byte[] parseToByte(final InputStream inputStream) throws Exception {
+        try {
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            return result.toByteArray();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return swapStream.toByteArray();
     }
 
     public static String safeDb(String searchFieldValue) {

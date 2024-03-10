@@ -43,6 +43,8 @@ public class ListDao extends JsoupUtil {
             JsoupUtil.EDIT_EXPRESS,JsoupUtil.EDIT_PLUGIN,
             JsoupUtil.WIDTH,JsoupUtil.MIN_WIDTH,JsoupUtil.MIN_HEIGHT,JsoupUtil.FROZEN,JsoupUtil.CLASS
             ,JsoupUtil.FIXED
+            //原图
+            , JsoupUtil.ORGSRC
     };
     private static   String [] names=new String[]{ JsoupUtil.VALIDATERULES,JsoupUtil.VALIDATEMESSAGES,JsoupUtil.DATATYPE,
             JsoupUtil.OPENTYPE,JsoupUtil.WINDOW_NAME,JsoupUtil.URL,
@@ -70,7 +72,7 @@ public class ListDao extends JsoupUtil {
 
 
 
-    private boolean isImageTd(Element th){
+    public static  boolean isImageTd(Element th){
         String plugin= Utils.trimNull(th.attr(JsoupUtil.BODY_PLUGIN_CODE));
         return  "td-pic".equals(plugin)||
                 "td-image".equals(plugin);

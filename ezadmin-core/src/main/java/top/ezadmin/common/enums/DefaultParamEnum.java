@@ -5,6 +5,7 @@ import top.ezadmin.common.utils.StringUtils;
 
 public enum DefaultParamEnum {
     EZ_TODAY_DATE,
+    EZ_TODAY_DATE_NORMAL,
     EZ_PRE_30_DAY //前30天的00:00:00
     ,EZ_TODAY_END     //今天的23:59:59
     ,EZ_MONTH_START//当月第一天的  00:00:00
@@ -24,6 +25,8 @@ public enum DefaultParamEnum {
                 switch (e){
                     case EZ_TODAY_DATE:
                         return   EzDateUtils.todayDate();
+                    case EZ_TODAY_DATE_NORMAL:
+                        return EzDateUtils.todayDateNormal();
                     case EZ_PRE_30_DAY:
                         return EzDateUtils.preDay(30);
                     case EZ_TODAY_END:

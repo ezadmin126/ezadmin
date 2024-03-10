@@ -23,7 +23,7 @@
     <div  class="layui-input-inline ">
         <input th:value="${#strings.isEmpty(model.itemParamValue)?'':model.itemParamValue}"
                type=hidden th:name="${model.item_name}"
-               class="ez-laycascader" ez_url="/ezcloud/api/category.html"
+               class="ez-laycascader" ez_url="/topezadmin/api/category.html"
                ez_value="baseCategoryId" ez_label="baseCategoryName" ez_children="secondCategoryList"
                th:placeholder="${model.placeholder}" th:id="${'itemName-' + model.item_name}">
     </div>

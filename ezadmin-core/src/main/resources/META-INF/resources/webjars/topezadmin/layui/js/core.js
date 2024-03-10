@@ -993,8 +993,8 @@ $(document).on('click', '.viewer-image', function () {
     var item = {};
     item.alt = _this.attr("alt");
     item.pid = _this.attr("pid");
-    item.src = _this.attr("src");
-    item.thumb = _this.attr("src");
+    item.src = _this.attr("orgsrc")||_this.attr("src");
+    item.thumb = _this.attr("orgsrc");
     data.push(item);
     layer.photos({
         shade: 0.5,
@@ -1003,7 +1003,7 @@ $(document).on('click', '.viewer-image', function () {
             "start": 0,
             "data": data
         },
-        hideFooter: false // 是否隐藏底部栏 --- 2.8+
+        footer: false // 是否隐藏底部栏 --- 2.8+
         ,success:function(){
             if($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height()>500){
                 $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height","500px");

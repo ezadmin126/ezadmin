@@ -11,7 +11,7 @@
 <script>
     layui.use('layCascader', function () {
         var layCascader = layui.layCascader;
-        $.get("/ezcloud/api/region.html?level=3", function (data) {
+        $.get("/topezadmin/api/region.html?level=3", function (data) {
             layCascader({
                 elem: '[[${"#itemId-" + item_name}]]',
                 props: {
