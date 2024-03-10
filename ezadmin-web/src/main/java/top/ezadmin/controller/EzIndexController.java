@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
-public class IndexController {
+public class EzIndexController {
 	@RequestMapping("/checkpreload.html")
 	@ResponseBody
 	public String checkpreload()  {

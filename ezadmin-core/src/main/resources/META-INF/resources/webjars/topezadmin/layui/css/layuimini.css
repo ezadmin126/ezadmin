@@ -350,6 +350,7 @@
     height: 40px;
     line-height: 40px;
     padding-right: 30px;
+    text-overflow: clip;
 }
 
 .layuimini-menu-left .layui-nav .layui-nav-item > a {
