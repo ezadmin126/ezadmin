@@ -229,7 +229,7 @@ public class FormController extends BaseController {
             }
 
             //data.data
-            String defaultTo=request.getContextPath()+"/ezcloud/form/form-"+ ENCRYPT_FORM_ID+"?ID="+toFormId(rowId,request);
+            String defaultTo=request.getContextPath()+"/topezadmin/form/form-"+ ENCRYPT_FORM_ID+"?ID="+toFormId(rowId,request);
             if(StringUtils.isNotBlank(successurl)){
                  if(StringUtils.contains(successurl,"/")){
                     successurl=request.getContextPath()+successurl;

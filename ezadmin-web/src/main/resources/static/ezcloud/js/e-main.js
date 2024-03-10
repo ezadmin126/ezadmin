@@ -434,7 +434,7 @@ function  initSettingsAll(){
         if($("#listCoreContainer").attr("ez-listcode")==''||$("#listCoreContainer").attr("ez-listcode")==undefined){
             layui.layer.alert("请先保存列表");
         }else{
-            openBlank("/ezcloud/list/list-"+$("#listCoreContainer").attr("ez-listcode"));
+            openBlank("/topezadmin/list/list-"+$("#listCoreContainer").attr("ez-listcode"));
         }
     })
 

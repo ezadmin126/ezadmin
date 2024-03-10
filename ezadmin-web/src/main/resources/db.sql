@@ -69,7 +69,7 @@ VALUES(1, 'listmanage', 1, 'EZ', '<html>
       <button opentype="_BLANK" url="/ezlist/export.html?cloudId=${ID}&amp;ezType=1" item_name="export" type="button-single" plugin_code="button-single" class="layui-border-orange">源码编辑</button>
      </th>
      <th item_name="ID" head="th-numbers" width="60" fixed="left">ID</th>
-     <th item_name="EZ_CODE" url="/ezcloud/list/list-${EZ_CODE}" body="td-link" opentype="_BLANK" fixed="left">列表编码</th>
+     <th item_name="EZ_CODE" url="/topezadmin/list/list-${EZ_CODE}" body="td-link" opentype="_BLANK" fixed="left">列表编码</th>
      <th item_name="APP_NAME">应用名称</th>
      <th item_name="EZ_NAME">列表名称</th>
      <th item_name="ADD_TIME" jdbctype="DATETIME">添加时间</th>

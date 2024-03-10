@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"   />
     <link th:href="${'/webjars/topezadmin/layui/css/ezform.css?v='+vi}" rel="stylesheet">
     <link th:href="${'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
-    <link th:href="${'/static/ezcloud/css/formedit.css'}" rel="stylesheet">
+    <link th:href="${'/static/topezadmin/css/formedit.css'}" rel="stylesheet">
 
     <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
     <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
@@ -574,7 +574,7 @@
 
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-save  " ><i class="layui-icon layui-icon-ok-circle"></i>保存</button>
                     <button type="button" opentype="_BLANK" class="layui-btn layui-btn-sm  ezopenbutton  "
-                            th:url="${'/ezcloud/form/form-'+form.core?.get('formcode')}"> <i class="layui-icon layui-icon-component"></i> 预览</button>
+                            th:url="${'/topezadmin/form/form-'+form.core?.get('formcode')}"> <i class="layui-icon layui-icon-component"></i> 预览</button>
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-core   "
                     > <i class="layui-icon layui-icon-fonts-code"></i> 表单配置</button>
                     <button type="button"  help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-head  "> <i class="layui-icon layui-icon-fonts-code"></i> 页头html</button>
@@ -653,8 +653,8 @@
 <input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
 
 <script th:src="${'/webjars/topezadmin/layui/js/ezform.js?v='+vi}" type="text/javascript"></script>
-<script th:src="${'/static/ezcloud/js/f-main.js?v='+vi}" type="text/javascript"></script>
-<script th:src="${'/static/ezcloud/js/f-item.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${'/static/topezadmin/js/f-main.js?v='+vi}" type="text/javascript"></script>
+<script th:src="${'/static/topezadmin/js/f-item.js?v='+vi}" type="text/javascript"></script>
 
 
 </body>

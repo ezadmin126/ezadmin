@@ -23,6 +23,7 @@ public class JsoupUtil {
     public static final String ADMINSTYLE = "adminstyle";
     protected static final String MAXLENGTH = "maxlength";
     protected static final String FIXED = "fixed";
+    public static final String ORGSRC = "orgsrc";
     public static String TABLESTYLE="tablestyle";
     protected static String FROZEN="frozen";
     private static  Logger logger= LoggerFactory.getLogger(JsoupUtil.class);

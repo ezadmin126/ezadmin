@@ -157,7 +157,7 @@ $(document).ready(function () {
         $("#searchForm").submit();
     })
     $("#export").click(function () {
-        var url="/ezcloud/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams();
+        var url="/topezadmin/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams();
        openBlank(url)
     })
 
@@ -197,7 +197,7 @@ $(document).ready(function () {
             shade: 0.1,
             shadeClose: true,
             anim: 0,
-            content: $("#contextName").val() + "/ezcloud/list/selectCols-" + $("#ENCRYPT_LIST_ID").val()+"?IS_DEBUG="+$("#IS_DEBUG").val(),
+            content: $("#contextName").val() + "/topezadmin/list/selectCols-" + $("#ENCRYPT_LIST_ID").val()+"?IS_DEBUG="+$("#IS_DEBUG").val(),
             moveOut: true,
             btnAlign: 'c',
             closeBtn: 1,
@@ -414,7 +414,7 @@ function renderTable() {
         });
 
         tableConfig={
-            height: 'full-'+(($("#tab").size()>0?$("#tab").height():0)+$("#searchForm").offset().top+$("#searchForm").height()+43+97)  //设置高度
+            height: 'full-'+($("#tab").height()+$("#searchForm").offset().top+$("#searchForm").height()+43+97)  //设置高度
             ,escape: false
             ,autoSort: false
             ,cellExpandedMode: "tips"
@@ -494,7 +494,7 @@ function renderTable() {
             var inst = treeTable.render({
                 elem: '#treetable',
                 cellMinWidth:$("#cellMinWidth").val()||110,
-                url: '/ezcloud/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
+                url: '/topezadmin/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
                 //maxHeight: '501px',
                 cols: col,
                 defaultToolbar:'',
@@ -564,7 +564,7 @@ function doOrder(){
     //             return;
     //         }
     //         if (order != undefined && order != '' && oldValue != order) {
-    //             $.get("/ezcloud/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + id + "&displayOrder=" + order, function (data) {
+    //             $.get("/topezadmin/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + id + "&displayOrder=" + order, function (data) {
     //                 if (data.success) {
     //                     location.reload();
     //                 } else {
@@ -663,7 +663,7 @@ function doSystem() {
 
 
 function refreshOrder(item_id,order,oldOrder) {
-    $.get("/ezcloud/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + item_id + "&displayOrder="+order+"&oldOrder="+oldOrder, function (data) {
+    $.get("/topezadmin/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + item_id + "&displayOrder="+order+"&oldOrder="+oldOrder, function (data) {
         if (data.success) {
             location.reload();
         } else {

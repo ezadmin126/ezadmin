@@ -249,7 +249,7 @@ public class ListController extends BaseController {
         request.setAttribute("data", list);
         request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
 
-        request.setAttribute("listUrl", request.getContextPath() + "/ezcloud/list/list-" + ENCRYPT_LIST_ID);
+        request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + ENCRYPT_LIST_ID);
 
         if (Utils.getLog() != null) {
             Utils.addLog("结束执行列表 list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");

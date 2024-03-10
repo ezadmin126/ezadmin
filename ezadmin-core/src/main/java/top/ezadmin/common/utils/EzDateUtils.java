@@ -148,6 +148,10 @@ public class EzDateUtils{
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
         return simple.format(new Date())+" - "+simple.format(new Date());
     }
+    public static String todayDateNormal() {
+        SimpleDateFormat simple = new SimpleDateFormat(DATE);
+        return simple.format(new Date());
+    }
     public static String todayDatetime() {
         SimpleDateFormat simple = new SimpleDateFormat(DATETIME);
         return simple.format(new Date());

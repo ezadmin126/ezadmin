@@ -477,6 +477,7 @@ public class ListServiceImpl implements ListService {
                     String bodyPlugin = Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE);
                     String jdbcType = Utils.getStringByObject(th, JsoupUtil.JDBCTYPE);
                     String url = Utils.getStringByObject(th, JsoupUtil.URL);
+                    String ORGSRC = Utils.getStringByObject(th, JsoupUtil.ORGSRC);
                     String windowname = Utils.getStringByObject(th, JsoupUtil.WINDOW_NAME);
                     String dataInDb = ObjectUtils.toString(dataRow.get(itemName));
 
@@ -498,6 +499,7 @@ public class ListServiceImpl implements ListService {
                             context.setVariable("dataRow", dataRow.entrySet());
                             context.setVariables(th);
                             context.setVariable(JsoupUtil.URL, MapParser.parseDefaultEmpty(url, dataRow).getResult());
+                            context.setVariable(JsoupUtil.ORGSRC, MapParser.parseDefaultEmpty(ORGSRC, dataRow).getResult());
                             context.setVariable(JsoupUtil.WINDOW_NAME, MapParser.parseDefaultEmpty(windowname, dataRow).getResult());
                             context.setVariables(dataRow);
                             context.setVariable("dataInDb", dataInDb);
@@ -649,9 +651,15 @@ public class ListServiceImpl implements ListService {
                     Map<String, Object> th = colList.get(j);
                     String itemName = Utils.getStringByObject(th, JsoupUtil.ITEM_NAME);
                     String bodyPlugin = Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE);
+
                     String jdbcType = Utils.getStringByObject(th, JsoupUtil.JDBCTYPE);
                     String dataInDb = ObjectUtils.toString(dataRow.get(itemName));
                     String columnEmptyShow = Utils.getStringByObject(th, JsoupUtil.EMPTY_SHOW);
+                    if( "td-pic".equals(bodyPlugin)||
+                            "td-image".equals(bodyPlugin)){
+                        tds.add(EzClientBootstrap.instance().getDownloadUrl()+dataInDb);
+                        continue;
+                    }
                     dataInDb = calulateData(dataInDb, globalEmptyShow, columnEmptyShow, jdbcType);
                     Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.BODY_PLUGIN_CODE));
                     if(StringUtils.isBlank(bodyPlugin)||StringUtils.isBlank("td-text")||StringUtils.isBlank(getString(th, JsoupUtil.DATA))){
