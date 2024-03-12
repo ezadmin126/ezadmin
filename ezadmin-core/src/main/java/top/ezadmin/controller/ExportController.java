@@ -123,10 +123,10 @@ import java.util.Map;
             head.add(head0);
             for (int i = 0; i < colList.size(); i++) {
                 Map<String,Object> col=(Map<String,Object>)colList.get(i);
-                if( "td-pic".equals(col.get(JsoupUtil.BODY_PLUGIN_CODE))||
-                        "td-image".equals(col.get(JsoupUtil.BODY_PLUGIN_CODE))){
-                    continue;
-                }
+//                if( "td-pic".equals(col.get(JsoupUtil.BODY_PLUGIN_CODE))||
+//                        "td-image".equals(col.get(JsoupUtil.BODY_PLUGIN_CODE))){
+//                    continue;
+//                }
 
                 if(StringUtils.equalsIgnoreCase(col.get(JsoupUtil.ITEM_NAME)+"","firstcol")){
                     continue;
