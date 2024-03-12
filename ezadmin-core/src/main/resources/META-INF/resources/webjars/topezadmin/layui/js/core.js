@@ -779,6 +779,35 @@ function openForm(url, name, area) {
     return index;
 }
 
+function openFull(url, name,yestxt,yesfunc,notxt,nofunc) {
+    var json = ['100%', '100%'];
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        btnAlign:'c',
+        shadeClose: true,
+        area: json,
+        content: url,
+        moveOut: true,
+        btn: [yestxt, notxt],
+        // 按钮1 的回调
+        btn1: function(index111, layero, that){
+            yesfunc(index111, layero, that);
+        },
+        btn2: function(index222, layero, that){
+            nofunc(index222, layero, that);
+        },
+        success: function(layero, indexyyy, that){
+            var body = layer.getChildFrame('body', indexyyy);
+            $(body).find('#submitButtonContainer').html('');
+        }
+    });
+    return index;
+}
+
 function openModelSelect(url, name ) {
     name = name == undefined ? "窗口" : name;
     var index = layer.open({
@@ -1033,6 +1062,16 @@ function ezopen(openType, title, appendUrl, area) {
             break;
         case 'FORM':
             openForm(appendUrl, title, area);
+            break;
+        case 'FULL':
+            openFull(appendUrl, title ,'确定', function(index111, layero, that){
+            var body = layer.getChildFrame('body', index111);
+
+            $(body).find('#submitbtn').click();
+        },'取消',
+           function(index222, layero, that){
+                layer.close(index222);
+            });
             break;
         case 'CONFIRM_MODEL':
             layer.confirm('确认操作?', {icon: 3, title: '提示'}, function (index) {
