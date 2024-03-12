@@ -1,5 +1,6 @@
 package top.ezadmin.controller;
 
+import com.ql.util.express.exception.QLCompileException;
 import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.annotation.EzMapping;
 import top.ezadmin.common.enums.ContentTypeEnum;
@@ -237,7 +238,12 @@ public class FormController extends BaseController {
                 defaultTo= MapParser.parseDefaultEmpty(successurl, paras).getResult();
             }
             return EzResult.instance().data( defaultTo);
-        }catch (EzAdminRuntimeException e2){
+        }catch (QLCompileException ex){
+            logger.error("",ex);
+            return EzResult.instance().setSuccess(false).code("500").setMessage("表达式配置错误");
+        }
+        catch (EzAdminRuntimeException   e2){
+            logger.error("",e2);
             if(ExceptionCode.QLBIZ.name().equalsIgnoreCase(e2.code())){
                 return EzResult.instance().setSuccess(false).code("500").setMessage("表达式执行错误");
             }

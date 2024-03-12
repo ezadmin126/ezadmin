@@ -417,10 +417,11 @@ function renderTable() {
             height: 'full-'+($("#tab").height()+$("#searchForm").offset().top+$("#searchForm").height()+43+97)  //设置高度
             ,escape: false
             ,autoSort: false
-            ,cellExpandedMode: "tips"
+            ,cellExpandedMode: $("#expandedMode").val()||''
             ,limit: $("#perPageInt").val() //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
             //  ,cellExpandedMode:'tips'
             //支持所有基础参数
+            ,text: {none: '暂无数据'}
             ,done: function (res, curr, count) {
                 try {
                     if (typeof (afterAllDataLoad) == "function") {

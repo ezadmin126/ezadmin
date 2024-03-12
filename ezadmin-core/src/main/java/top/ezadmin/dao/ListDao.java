@@ -31,6 +31,7 @@ public class ListDao extends JsoupUtil {
             "fixnumber","fixnumberright","success_url",
             "empty_show","tablestyle","adminstyle","pagesync",
             "firstcol","export","cellminwidth","linestyle","rowbuttonwidth","layout"
+            ,"expandedMode"
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
             JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,
