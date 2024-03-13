@@ -8,7 +8,7 @@ import top.ezadmin.web.SpringBeanOperator;
 import top.ezadmin.web.SpringContextHolder;
 
 
-import top.ezadmin.web.filters.EzClientDemoFilter;
+import top.ezadmin.web.filters.EzClientServletFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -69,13 +69,6 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
         //布局 默认container
         ezBootstrap.setLayout(ezClientProperties.getLayout());
 
-
-//        if(StringUtils.isNotBlank(properties.getEditLocation())){
-//            ezBootstrap.setEditLocation(properties.getEditLocation());
-//            properties.setListResourceLocation(properties.getListResourceLocation()+";"+properties.getEditLocation()+File.separator+"list");
-//            properties.setFormResourceLocation(properties.getFormResourceLocation()+";"+properties.getEditLocation()+File.separator+"form");
-//        }
-
         if (StringUtils.isNotBlank(ezClientProperties.getExportClass())) {
             ezBootstrap.setExportClass(ezClientProperties.getExportClass());
         }
@@ -88,7 +81,6 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
         if (StringUtils.isBlank(ezClientProperties.getDatasourceBeanNames())) {
             ezClientProperties.setDatasourceBeanNames("dataSource,"+ ezClientProperties.getDatasourceBeanNames());//springboot 默认值
         }
-
         String beanNames[] = org.apache.commons.lang.StringUtils.split(ezClientProperties.getDatasourceBeanNames(), ",");
         for (int i = 0; i < beanNames.length; i++) {
             DataSource dataSource = (DataSource) applicationContext.getBean(beanNames[i]);
@@ -126,7 +118,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
     @Bean
     public FilterRegistrationBean  ezClientFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        EzClientDemoFilter customURLFilter = new EzClientDemoFilter();
+        EzClientServletFilter customURLFilter = new EzClientServletFilter();
         customURLFilter.setEzBootstrap(ezClientBootstrap());
         registrationBean.setFilter(customURLFilter);
         registrationBean.addUrlPatterns("/topezadmin/*","/ezadmin/*","/ezcloud/*");

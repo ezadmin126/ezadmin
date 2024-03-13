@@ -13,7 +13,8 @@ public class MyWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/").setCacheControl( CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic() );
+                .addResourceLocations("classpath:/META-INF/resources/webjars/")
+                .setCacheControl( CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic() );
 //        registry.addResourceHandler("/common/**")
 //                .addResourceLocations("classpath:/static/common/").setCacheControl( CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic() );
 

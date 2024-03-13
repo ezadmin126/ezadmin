@@ -201,15 +201,11 @@ public class ListDao extends JsoupUtil {
         coreMap.put(JsoupUtil.APPEND_HEAD, doc.getElementById(JsoupUtil.APPEND_HEAD) == null ? "" : doc.getElementById(JsoupUtil.APPEND_HEAD).html());
         coreMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
 
-        coreMap.putAll(JsoupUtil.loadAttrNoChild(doc.body() ));
+       // coreMap.putAll(JsoupUtil.loadAttrNoChild(doc.body() ));
+        //body
+        coreMap.put("configJson",JsoupUtil.attr2Json(doc.body()));
+        coreMap.putAll(JsoupUtil.attr2Map(doc.body()));
 
-
-        for (int i = 0; i < BODY_ATTRS.length; i++) {
-            String attrValue=doc.body().attr(BODY_ATTRS[i]);
-            if(StringUtils.isNotBlank(attrValue)){
-                coreMap.put(BODY_ATTRS[i],attrValue);
-            }
-        }
 
         Element express = doc.getElementById("express");
 

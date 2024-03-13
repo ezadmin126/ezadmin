@@ -116,6 +116,25 @@ public class JsoupUtil {
             };
         }
     }
+    public static String attr2Json(Element item) {
+        return JSONUtils.toJSONString(attr2Map(item));
+    }
+    public static Map<String,String> attr2Map(Element item) {
+        List<Attribute> list=item.attributes().asList();
+        Map<String,String> at=new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            Attribute attribute=list.get(i);
+            at.put(attribute.getKey(),strip(Utils.trimNull(attribute.getValue())));
+        }
+        return at;
+    }
+    public static void json2Attr(Element item,String json) {
+        Map<String,String> at=JSONUtils.parseMap(json);
+        attrAll(item,at);
+    }
+
+
+
     public static void text(Element item, String values) {
         if (item!=null) {
             item.text(Utils.trimNull(values));
