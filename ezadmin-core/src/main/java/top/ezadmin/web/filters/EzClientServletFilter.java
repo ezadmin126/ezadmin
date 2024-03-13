@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class EzClientDemoFilter implements Filter {
-    private static final Logger LOGGE = LoggerFactory.getLogger(EzClientDemoFilter.class);
+public class EzClientServletFilter implements Filter {
+    private static final Logger LOGGE = LoggerFactory.getLogger(EzClientServletFilter.class);
 
 
     private Map<String, DataSource> appDatasource = new HashMap<String, DataSource>();

@@ -14,7 +14,7 @@ public class NotFoundFilter extends Filter {
          if(StringUtils.startsWith(request.getRequestURL().toString(),"/topezadmin")){
              filterChain.doFilter(request,response);
          }else{
-             System.out.println(request.getRequestURL().toString());
+             System.out.println("404 url "+request.getRequestURL().toString());
              response.getWriter().println("404");
              response.getWriter().flush();
          }

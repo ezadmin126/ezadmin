@@ -16,26 +16,26 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@Component
+
 public class EzClientBootFilter extends OncePerRequestFilter {
     private static final Logger LOGGE = LoggerFactory.getLogger(EzClientBootFilter.class);
 
-  @Autowired
-  EzClientBootstrap ezBootstrap;
+//  @Autowired
+//  EzClientBootstrap ezBootstrap;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            MDC.put("tid",System.nanoTime()+"");
-            ezBootstrap.doFilter(request, response,filterChain);
-        } catch (Exception e) {
-            LOGGE.error("", e);
-            response.getWriter().println(e.getMessage());
-        } finally {
-            MDC.clear();
-            Utils.clearLog();
-        }
+//        try {
+//            MDC.put("tid",System.nanoTime()+"");
+//            ezBootstrap.doFilter(request, response,filterChain);
+//        } catch (Exception e) {
+//            LOGGE.error("", e);
+//            response.getWriter().println(e.getMessage());
+//        } finally {
+//            MDC.clear();
+//            Utils.clearLog();
+//        }
     }
 
 
