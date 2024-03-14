@@ -2,6 +2,7 @@ package top.ezadmin.service.impl;
 
 import top.ezadmin.common.enums.*;
 import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.FormDao;
 import top.ezadmin.dao.ListDao;
 import top.ezadmin.dao.PluginsDao;
 
@@ -424,6 +425,47 @@ public class ListServiceImpl implements ListService {
             return new HashMap<>();
         }
     }
+
+
+
+    public Map<String,Object>  selectConfigEditList(String code  ) throws Exception {
+        String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_EDIT where   EZ_CODE=? and EZ_TYPE=1 " +
+                "";
+        Map<String, Object> listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                sql,new Object[]{ code });
+        if(Utils.isEmpty(listMap)){
+            return listMap;
+        }
+        String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
+        Map<String,Object>c= ListDao.getInstance().selectAllListByHtml(html);
+        c.put("EZ_CONFIG",html);
+        c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
+        c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
+        c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
+        return c;
+    }
+
+
+    @EzCacheAnnotation
+    public Map<String,Object>  selectConfigPublishList(String code) throws Exception {
+        String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=1 " +
+                "";
+        Map<String, Object> listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                sql,new Object[]{ code});
+        if(Utils.isEmpty(listMap)){
+            return listMap;
+        }
+        String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
+        Map<String,Object>c= ListDao.getInstance().selectAllListByHtml(html);
+        c.put("EZ_CONFIG",html);
+        c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
+        c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
+        c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
+        return c;
+
+    }
+
+
 
     @Override
     public void fillListById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception {
@@ -1177,7 +1219,9 @@ public class ListServiceImpl implements ListService {
         Page  pagination=new Page(requestParamMap);
         List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
          Map<String,Object>  coreMap= (Map<String,Object> )list.get("core");
-
+        if(Utils.isEmpty(colList)){
+            return pagination;
+        }
         for (int i = 0; i < colList.size(); i++) {
             Map<String,Object> item = colList.get(i);
             if (!StringUtils.equals(Utils.getStringByObject(item,JsoupUtil.ORDER), "1")) {

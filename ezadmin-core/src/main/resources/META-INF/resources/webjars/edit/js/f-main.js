@@ -336,10 +336,10 @@ $(function (){
         })
         formData.cards=cards;
         var cloudId=$("#cloudId").val();
-        $.post("/ezform/submitEdit.html?cloudId="+cloudId,  {data:JSON.stringify(formData)}, function(data) {
+        $.post("/topezadmin/formEdit/submitEdit-"+formcode,  {data:JSON.stringify(formData)}, function(data) {
             if(data.success){
                 layui.layer.confirm('保存成功，重新加载？', {icon: 1, title:'提示'}, function(index){
-                    location.href='/ezform/loadEdit.html?cloudId='+data.data.cloudId;
+                    location.href='/topezadmin/formEdit/loadEdit-'+data.data.EZ_CODE;
                 });
             }else{
                 layui.layer.alert(data.message);

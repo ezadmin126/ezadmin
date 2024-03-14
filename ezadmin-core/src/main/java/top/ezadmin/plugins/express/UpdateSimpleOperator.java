@@ -33,22 +33,13 @@ public class UpdateSimpleOperator extends AbstractOperator {
     }
     private ResultModel generateSql(UpdateParam updateParam){
         OperatorParam operatorParam=(OperatorParam) Utils.getParam();
-
-
         StringBuilder fieldsvalues=new StringBuilder( );
-
+        //也就是只要在param里面add了，就一定在sql中存在
         for (int i = 0; i < updateParam.getList().size() ; i++) {
             String fieldString=updateParam.getList().get(i).toString();//#{username}
-            ResultModel model = StandardSqlParser.parse(fieldString);
-            String field=model.getParams().get(0).getParamKey();//username
-            Object value=model.getParams().get(0).getParamValue();;
-            if(operatorParam!=null&&operatorParam.getParams()!=null&&operatorParam.getParams().containsKey(field)){
-                fieldsvalues.append(","+field);
-                fieldsvalues.append("="+fieldString);
-            }else if(value!=null){
-                fieldsvalues.append(","+field);
-                fieldsvalues.append("="+value);
-            }
+            String key=StandardSqlParser.getKey(fieldString);
+            fieldsvalues.append(","+key);
+            fieldsvalues.append("="+fieldString);
         }
         StringBuilder sql=new StringBuilder("update  ");
         sql.append(updateParam.getTable());

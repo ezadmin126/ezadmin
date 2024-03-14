@@ -17,7 +17,7 @@ public class EzClientProperties {
     private String datasourceBeanNames="dataSource";
     private String systemName="System";
     private String logoUrl="/static/logo.png" ;
-    private String navUrl="/topezadmin/list/navs.html" ;
+    private String navUrl="/topezadmin/navs.html" ;
     private String appendJs ;
     private String searchUrl ;
     private String indexUrl;

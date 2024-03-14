@@ -1,6 +1,7 @@
 package top.ezadmin.service.impl;
 
 import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.Dao;
 import top.ezadmin.dao.FormDao;
 import top.ezadmin.dao.PluginsDao;
 import top.ezadmin.service.FormService;
@@ -261,6 +262,39 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         }catch (Exception e){
             Utils.addLog("解析校验json失败",e);
         }
+    }
+    @EzCacheAnnotation
+    public Map<String,Object>  selectConfigPublishForm(String code) throws Exception {
+        String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=2 " +
+                "";
+        Map<String, Object> listMap= Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                sql,new Object[]{ code});
+        if(Utils.isEmpty(listMap)){
+            return listMap;
+        }
+        String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
+        Map<String,Object>c= FormDao.getInstance().selectAllFormByHtml(html);
+        c.put("EZ_CONFIG",html);
+        c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
+        c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
+        c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
+        return c;
+    }
+    public Map<String,Object>  selectConfigEditForm(String code  ) throws Exception {
+        String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_EDIT where   EZ_CODE=? and EZ_TYPE=2 " +
+                "";
+        Map<String, Object> listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                sql,new Object[]{ code });
+        if(Utils.isEmpty(listMap)){
+            return listMap;
+        }
+        String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
+        Map<String,Object>c= FormDao.getInstance().selectAllFormByHtml(html);
+        c.put("EZ_CONFIG",html);
+        c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
+        c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
+        c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
+        return c;
     }
 
 }

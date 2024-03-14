@@ -359,15 +359,16 @@ public class JsoupUtil {
     }
 
     public static String updateConfig(Config config) throws IOException {
+        config.getDoc().outputSettings().prettyPrint(true).outline(true).escapeMode();
+        String html=config.getDoc().html();
         try {
-            config.getDoc().outputSettings().prettyPrint(true).outline(true).escapeMode();
-            String html=config.getDoc().html();
+
             Files.write(config.getFile().toPath(), html.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
             return html;
         }catch (Exception e){
             logger.error("",e);
         }
-        return "";
+        return html;
     }
 
     public static    void dealElementByPluginCode(String plugin_code, Element element) {

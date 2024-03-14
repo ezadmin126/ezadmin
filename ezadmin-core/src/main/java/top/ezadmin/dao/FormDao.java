@@ -265,41 +265,11 @@ public class FormDao extends JsoupUtil {
 
 
 
-        Config config=null;
-        if (config==null) {
-            Document doc =  JsoupUtil.newform();
-            String editPath="/data";
-            try {
-                editPath=JsoupUtil.editPath("topezadmin" + File.separator + "config") + File.separator +
-                        EzClientBootstrap.instance().getAdminStyle() + File.separator + "form" +
-                        File.separator + formcode.toLowerCase() + ".html";
-            }catch (Exception e){
-                String rootPath=editPath + File.separator+"topezadmin" + File.separator + "config"+ File.separator +
-                        EzClientBootstrap.instance().getAdminStyle() + File.separator + "form"   ;
-                if(Files.notExists(Paths.get(rootPath))){
-                    Files.createDirectories(Paths.get(rootPath));
-                }
-                editPath=rootPath+ File.separator + formcode.toLowerCase() + ".html";
-            }
-            //创建新文件
-            Config c=new Config();
-            c.setFile(new File(editPath));
-            c.setUrl(new File(editPath).toURI().toURL());
-            c.setPath(new File(editPath).toURI().toURL().getPath());
-            c.setProtocol("file");
-            if(!new File(editPath).exists()){
-                Files.createFile(Paths.get(editPath));
-            }
-            doc.body().attr("id",formcode.toLowerCase());
-            c.setDoc(doc);
-            formConfigMap.put(formcode.toLowerCase(),c);
-            // stream.close();
-            config=c;
-        }
-        Document doc=config.getDoc();
+
+        Document doc =  JsoupUtil.newform();
         Element body = doc.body();
+        body.attr("id",formcode.toLowerCase());
         //处理主体
-        body.attr("id", formcode);
         body.attr(JsoupUtil.DATASOURCE,datasource);
         body.attr(JsoupUtil.SUCCESS_URL, successurl);
         body.attr("formSubmitUrl", formSubmitUrl);
@@ -338,7 +308,9 @@ public class FormDao extends JsoupUtil {
                 inputForm.appendChild(newcardElement);
             }
         }
-       return updateConfig(config);
+        doc.outputSettings().prettyPrint(true).outline(true).escapeMode();
+        String html=doc.html();
+       return html;
     }
 
 

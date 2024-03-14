@@ -53,8 +53,9 @@ public class FormController extends BaseController {
         searchParamsValues.put("FORM_ID",formId);
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",Utils.trimNull(ID));
-        Map<String, Object> form=new HashMap<>();
-        if(StringUtils.isNotBlank(ENCRYPT_FORM_ID)){
+        Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
+        //   new HashMap<>();
+        if(Utils.isEmpty(form)){
             form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
         }
         if(form==null||form.isEmpty()){
@@ -142,8 +143,9 @@ public class FormController extends BaseController {
         searchParamsValues.put("ContextPath", request.getContextPath());
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",ID);
-        Map<String, Object> form=new HashMap<>();
-        if(StringUtils.isNotBlank(ENCRYPT_FORM_ID)){
+        Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
+        //   new HashMap<>();
+        if(Utils.isEmpty(form)){
             form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
         }
         if(form==null||form.isEmpty()){
@@ -176,8 +178,11 @@ public class FormController extends BaseController {
             if ( StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, Object>   form=    formService.selectAllFormMapById(ENCRYPT_FORM_ID)  ;
-
+            Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
+            //   new HashMap<>();
+            if(Utils.isEmpty(form)){
+                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
+            }
             if (form==null||form.isEmpty() ) {
                 return EzResult.instance().code("404");
             }
@@ -263,8 +268,11 @@ public class FormController extends BaseController {
             if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, Object>   form=    formService.selectAllFormMapById(ENCRYPT_FORM_ID)  ;
-
+            Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
+            //   new HashMap<>();
+            if(Utils.isEmpty(form)){
+                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
+            }
             if (form == null) {
                 return EzResult.instance().code("404");
             }
@@ -328,8 +336,11 @@ public class FormController extends BaseController {
             if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, Object>   form=    formService.selectAllFormMapById(ENCRYPT_FORM_ID)  ;
-
+            Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
+            //   new HashMap<>();
+            if(Utils.isEmpty(form)){
+                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
+            }
             if (form == null) {
                 return EzResult.instance().code("404");
             }
