@@ -21,11 +21,11 @@
         <dependency>
             <groupId>top.ezadmin</groupId>
             <artifactId>ezadmin-core</artifactId>
-            <version>1.0.8-SNAPSHOT</version>
+            <version>1.0.9</version>
         </dependency>
             2.通过此系统设计列表或表单，并将设计好的页面导入到自己的应用。
-            classpath:/ezcloud/config/layui/list  （列表）
-            classpath:/ezcloud/config/layui/form  （表单）
+            classpath:/topezadmin/config/layui/list  （列表）
+            classpath:/topezadmin/config/layui/form  （表单）
 
             3.启动自己的应用，查看页面。非springboot应用可以参考EzClientAutoConfiguration 初始化
             </textarea>
@@ -49,112 +49,112 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>ezcloud.cacheFlag</td>
+                        <td>topezadmin.cacheFlag</td>
                         <td>是否开启缓存，开启后，页面配置将会加载至缓存</td>
                         <td>true</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.datasourceBeanNames</td>
+                        <td>topezadmin.datasourceBeanNames</td>
                         <td>页面所使用的springdatasource数据库连接池</td>
                         <td>dataSource</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.logType</td>
+                        <td>topezadmin.logType</td>
                         <td>1 是否打印SQL 1000  2  是否打印无where删除 0100  3 是否拒绝无where删除 0010 4 打印超过10000毫秒的 0001-10000</td>
                         <td>0000-10000</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.adminStyle</td>
-                        <td>页面样式，可以自定义其他样式，参考 classpath:/ezcloud/config/layui更改layui文件夹名称即可</td>
+                        <td>topezadmin.adminStyle</td>
+                        <td>页面样式，可以自定义其他样式，参考 classpath:/topezadmin/config/layui更改layui文件夹名称即可</td>
                         <td>layui</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.uploadUrl</td>
+                        <td>topezadmin.uploadUrl</td>
                         <td>上传URL，需要返回 resourceId 字段</td>
-                        <td>/ezcloud/form/upload.html</td>
+                        <td>/topezadmin/form/upload.html</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.downloadUrl</td>
+                        <td>topezadmin.downloadUrl</td>
                         <td>下载URL前缀 + 上传URL返回的resourceId，展示为图片的SRC</td>
-                        <td>/ezcloud/form/download.html?fileId=</td>
+                        <td>/topezadmin/form/download.html?fileId=</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.uploadPath</td>
+                        <td>topezadmin.uploadPath</td>
                         <td>默认是上传到文件夹的，需要配置一个上传路径</td>
                         <td>/data/upload/ezadmin</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.exportClass</td>
-                        <td>实现 com.ezcloud.plugins.export.EzExport 接口 实现自定义的导出，默认CSV格式
+                        <td>topezadmin.exportClass</td>
+                        <td>实现 top.ezadmin.plugins.export.EzExport 接口 实现自定义的导出，默认CSV格式
                         </td>
-                        <td>com.ezcloud.plugins.export.CSVExport</td>
+                        <td>top.ezadmin.plugins.export.CSVExport</td>
                     </tr>
 
                     <tr>
-                        <td>ezcloud.cacheClass</td>
-                        <td>实现 com.ezcloud.plugins.cache.EzCache 接口  实现自定义的缓存，默认Caffeine
+                        <td>topezadmin.cacheClass</td>
+                        <td>实现 top.ezadmin.plugins.cache.EzCache 接口 实现自定义的缓存，默认Caffeine
                         </td>
-                        <td>com.ezcloud.plugins.cache.CaffeineCache</td>
+                        <td>top.ezadmin.plugins.cache.CaffeineCache</td>
                     </tr>
 
                     <tr>
-                        <td>ezcloud.refreshClass</td>
-                        <td>实现 com.ezcloud.plugins.refresh.EzRefresh 接口  实现自定义的文件监听，注意ezcloud.cacheFlag=false才会生效
+                        <td>topezadmin.refreshClass</td>
+                        <td>实现 top.ezadmin.plugins.refresh.EzRefresh 接口 实现自定义的文件监听，注意topezadmin.cacheFlag=false才会生效
                         </td>
-                        <td>com.ezcloud.plugins.refresh.DefaultRefresh</td>
+                        <td>top.ezadmin.plugins.refresh.DefaultRefresh</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.layout</td>
+                        <td>topezadmin.layout</td>
                         <td>container：响应式宽度，  fluid 100%宽度
                         </td>
                         <td>container</td>
                     </tr>
 
                     <tr>
-                        <td>ezcloud.holiday</td>
+                        <td>topezadmin.holiday</td>
                         <td>日期选择器，展示假期
                         </td>
                         <td>
                             [[${'[["2024-1-1","2024-2-10","2024-2-11","2024-2-12","2024-2-13","2024-2-14","2024-2-15","2024-2-16","2024-2-17","2024-4-4","2024-4-5","2024-4-6","2024-5-1","2024-5-2","2024-5-3","2024-5-4","2024-5-5","2024-6-8","2024-6-9","2024-6-10","2024-9-15","2024-9-16","2024-9-17","2024-10-1","2024-10-2","2024-10-3","2024-10-4","2024-10-5","2024-10-6","2024-10-7"],["2024-2-4","2023-2-18","2024-4-7","2024-4-28","2024-5-11","2024-9-14","2024-9-29","2024-10-12"]]'}]] </td>
                     </tr>
                     <tr>
-                        <td>ezcloud.signoutUrl</td>
+                        <td>topezadmin.signoutUrl</td>
                         <td>登出URL
                         </td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>ezcloud.navUrl</td>
+                        <td>topezadmin.navUrl</td>
                         <td>admin框架的菜单接口</td>
-                        <td>/ezcloud/list/navs.html</td>
+                        <td>/topezadmin/list/navs.html</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.config</td>
+                        <td>topezadmin.config</td>
                         <td>透传到首页的JSON配置</td>
                         <td>{}</td>
                     </tr>
                     <tr>
-                        <td>ezcloud.logoUrl</td>
+                        <td>topezadmin.logoUrl</td>
                         <td>Logo</td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>ezcloud.systemName</td>
+                        <td>topezadmin.systemName</td>
                         <td>首页的标题</td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>ezcloud.appendJs</td>
+                        <td>topezadmin.appendJs</td>
                         <td>首页自定义JS</td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>ezcloud.messageUrl</td>
+                        <td>topezadmin.messageUrl</td>
                         <td>首页右上角消息通知URL</td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>ezcloud.appendJs</td>
+                        <td>topezadmin.appendJs</td>
                         <td>首页自定义JS</td>
                         <td></td>
                     </tr>
@@ -286,9 +286,9 @@ return SELECT(sql);
                         </td>
                         <td>
 <pre class="layui-code code-demo" lay-options="{}" >
-import com.ezcloud.plugins.express.jdbc.UpdateParam;
-import com.ezcloud.plugins.express.jdbc.InsertParam;
-import com.ezcloud.web.EzResult;
+import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.express.jdbc.InsertParam;
+import top.ezadmin.web.EzResult;
 ID=$("ID");
 if(isBlank("ID")){
     param=new InsertParam();

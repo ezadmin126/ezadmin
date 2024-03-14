@@ -1,0 +1,142 @@
+<!-- header.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <!-- Define a fragment named 'navigation' -->
+    <div th:fragment="col">
+
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+             <i class="layui-icon  layui-icon-component"  ></i>
+            <span>普通文本</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-text">
+                    <div class="   td-text  " >普通文本</div>
+                </div>
+            </script>
+        </button>
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+             <i class="layui-icon  layui-icon-component"  ></i>
+            <span>下拉文本</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-select">
+                    <div class="   td-text  " >下拉文本</div>
+                </div>
+            </script>
+        </button>
+        <button type="button" class="  ez-plugin layui-btn  layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>富文本</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-utext">
+                    <div class="   td-text  " >html文本</div>
+                </div>
+            </script>
+        </button>
+        <hr>
+        <button type="button" class=" ez-plugin layui-btn    layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>图片100*100</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+
+            <script type="text/x-template" class="template" >
+
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-image">
+                    <div class="   td-text  " >100*100图片</div>
+                </div>
+            </script>
+        </button>
+        <button type="button" class=" ez-plugin layui-btn    layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>图片100高度</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-pic">
+                    <div class="   td-text  " >响应式图片</div> </div>
+            </script>
+        </button>
+        <hr>
+        <button type="button" class=" ez-plugin layui-btn    layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>文本链接</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+
+            <script type="text/x-template" class="template" >
+
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-link">
+                    <div class="   td-text  " >文本链接</div>
+                </div>
+            </script>
+        </button>
+        <button type="button" class=" ez-plugin layui-btn    layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>点击访问文字</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-linkclick">
+                    <div class="   td-text  " >点击访问文字</div>
+                </div>
+            </script>
+        </button>
+        <hr>
+        <button type="button" class=" ez-plugin layui-btn    layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>输入框（列表排序）</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+            <script type="text/x-template" class="template" >
+
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-inputtext">
+                    <input type="text" name="default" placeholder="请输入" class="layui-input">
+                </div>
+            </script>
+        </button>
+        <hr>
+        首列
+        <hr>
+        <button type="button" class=" ez-plugin layui-btn    layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>数字</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="firstcol-numbers">
+                    <span type="number">序号</span>                </div>
+            </script>
+        </button>
+        <button type="button" class=" ez-plugin layui-btn    layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>复选框</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-checkbox">
+                    <input type="checkbox">
+                </div>
+            </script>
+        </button>
+        <button type="button" class=" ez-plugin layui-btn    layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"  ></i>
+            <span>单选框</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+
+            <script type="text/x-template" class="template" >
+                <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-radio">
+                    <input type="radio">
+                </div>
+            </script>
+        </button>
+        <hr>
+    </div>
+</header>
+</body>
+</html>

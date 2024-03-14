@@ -15,8 +15,8 @@
         <property name="endingDelimiter" value="`"/>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/ezadmin"
-                        userId="root" password="123456">
+                        connectionURL="jdbc:mysql://192.168.2.54:3306/ez?utinyInt1isBit=false"
+                        userId="fatwrite" password="fatwrite">
         </jdbcConnection>
 
         <javaModelGenerator targetPackage="top.ezadmin.domain.model" targetProject="src/main/java">
@@ -36,22 +36,22 @@
         <javaClientGenerator targetPackage="top.ezadmin.domain.mapper" type="XMLMAPPER" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
-        <table tableName="t_sql" domainObjectName="CoreSql">
-            <property name="constructorBased" value="false"/>
-            <property name="ignoreQualifiersAtRuntime" value="false"/>
-            <property name="immutable" value="false"/>
-            <property name="modelOnly" value="false"/>
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
-        </table>
-        <table tableName="t_slowlog" domainObjectName="CoreSlowLog">
-            <property name="constructorBased" value="false"/>
-            <property name="ignoreQualifiersAtRuntime" value="false"/>
-            <property name="immutable" value="false"/>
-            <property name="modelOnly" value="false"/>
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="t_sql" domainObjectName="CoreSql">-->
+<!--            <property name="constructorBased" value="false"/>-->
+<!--            <property name="ignoreQualifiersAtRuntime" value="false"/>-->
+<!--            <property name="immutable" value="false"/>-->
+<!--            <property name="modelOnly" value="false"/>-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+<!--        <table tableName="t_slowlog" domainObjectName="CoreSlowLog">-->
+<!--            <property name="constructorBased" value="false"/>-->
+<!--            <property name="ignoreQualifiersAtRuntime" value="false"/>-->
+<!--            <property name="immutable" value="false"/>-->
+<!--            <property name="modelOnly" value="false"/>-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 
         <table tableName="t_ez_cloud" domainObjectName="EzCloud">
             <property name="constructorBased" value="false"/>

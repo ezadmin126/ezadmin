@@ -6,7 +6,7 @@
 
     <groupId>top.ezadmin</groupId>
     <artifactId>ezadmin</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>1.0.9-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ezadmin</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
@@ -26,15 +26,27 @@
         </developer>
     </developers>
 	
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 <!--    <distributionManagement>-->
-<!--        <snapshotRepository>-->
-<!--            <id>ossrh</id>-->
-<!--            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
-<!--        </snapshotRepository>-->
 <!--        <repository>-->
-<!--            <id>ossrh</id>-->
-<!--            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--            <id>vedeng-release</id>-->
+<!--            <name>maven-releases</name>-->
+<!--            <url>http://nexus.ivedeng.com/repository/maven-releases/</url>-->
 <!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>vedeng-snapshot</id>-->
+<!--            <name>maven-snapshots</name>-->
+<!--            <url>http://nexus.ivedeng.com/repository/maven-snapshots/</url>-->
+<!--        </snapshotRepository>-->
 <!--    </distributionManagement>-->
 
     <licenses>
@@ -51,6 +63,7 @@
     </scm>
     <modules>
         <module>ezadmin-core</module>
+        <module>ezadmin-resource</module>
         <module>ezadmin-web</module>
     </modules>
 

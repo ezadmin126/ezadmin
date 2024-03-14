@@ -1,0 +1,106 @@
+package top.ezadmin.web.filters;
+
+
+import top.ezadmin.common.utils.JSONUtils;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.common.utils.Utils;
+import top.ezadmin.EzClientBootstrap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+
+public class EzClientServletFilter implements Filter {
+    private static final Logger LOGGE = LoggerFactory.getLogger(EzClientServletFilter.class);
+
+
+    private Map<String, DataSource> appDatasource = new HashMap<String, DataSource>();
+
+
+    EzClientBootstrap ezBootstrap;
+
+    public void setEzBootstrap(EzClientBootstrap bootstrap) {
+        if(ezBootstrap==null){
+            ezBootstrap = bootstrap;
+        }
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        LOGGE.info("start init EzAdminFilter" + filterConfig.getInitParameterNames());
+        if (ezBootstrap == null) {
+            ezBootstrap = EzClientBootstrap.instance();
+            String configJson=filterConfig.getInitParameter("configJson");
+            Map<String, Object> configMap=JSONUtils.parseObjectMap(configJson);
+            ezBootstrap.setConfig(configMap);
+
+            ezBootstrap.setAppName(filterConfig.getInitParameter("appName"));
+            ezBootstrap.setSqlCache(StringUtils.toBoolean(filterConfig.getInitParameter("cacheFlag")));
+            if(StringUtils.isNotBlank(filterConfig.getInitParameter("uploadUrl"))){
+                ezBootstrap.setUploadUrl(filterConfig.getInitParameter("uploadUrl"));
+            }
+            if(StringUtils.isNotBlank(filterConfig.getInitParameter("downloadUrl"))){
+                ezBootstrap.setDownloadUrl(filterConfig.getInitParameter("downloadUrl"));
+            }
+            ezBootstrap.setLogType(filterConfig.getInitParameter("logType"));
+            ezBootstrap.setRegionUrl(filterConfig.getInitParameter("regionUrl"));
+            ezBootstrap.setCategoryUrl(filterConfig.getInitParameter("categoryUrl"));
+            ezBootstrap.setOrgUrl(filterConfig.getInitParameter("orgUrl"));
+            ezBootstrap.setSystemName(filterConfig.getInitParameter("systemName"));
+            ezBootstrap.setNavUrl(filterConfig.getInitParameter("navUrl"));
+            ezBootstrap.setLogoUrl(filterConfig.getInitParameter("logoUrl"));
+            ezBootstrap.setSearchUrl(filterConfig.getInitParameter("searchUrl"));
+            ezBootstrap.setAppendJs(filterConfig.getInitParameter("appendJs"));
+            ezBootstrap.setIndexUrl(filterConfig.getInitParameter("indexUrl"));
+            ezBootstrap.setSignoutUrl(filterConfig.getInitParameter("signoutUrl"));
+            ezBootstrap.setMessageUrl(filterConfig.getInitParameter("messageUrl"));
+            ezBootstrap.setChatUrl(filterConfig.getInitParameter("chatUrl"));
+            ezBootstrap.setAdminStyle(filterConfig.getInitParameter("adminStyle"));
+            for (Map.Entry<String, DataSource> entry:appDatasource.entrySet()){
+                ezBootstrap.addBizDataSource(entry.getKey(), entry.getValue());
+            }
+            try {
+                ezBootstrap.init();
+            } catch (Exception throwables) {
+                throw new ServletException(throwables);
+            }
+        }
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        try {
+            MDC.put("tid",System.nanoTime()+"");
+            ezBootstrap.doFilter(httpServletRequest, httpServletResponse,filterChain);
+        } catch (Exception e) {
+            LOGGE.error("", e);
+            httpServletResponse.getWriter().println(e.getMessage());
+        } finally {
+            MDC.clear();
+            Utils.clearLog();
+        }
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+
+
+    public void addAppDatasource(String key, DataSource appDatasource) {
+        this.appDatasource.put(key, appDatasource);
+    }
+
+
+}

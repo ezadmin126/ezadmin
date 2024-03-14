@@ -1,19 +1,18 @@
 package top.ezadmin.controller;
 
 
-import com.ezcloud.EzClientBootstrap;
-import com.ezcloud.common.utils.*;
-import com.ezcloud.controller.BaseController;
-import com.ezcloud.dao.FormDao;
-import com.ezcloud.dao.ListDao;
-import com.ezcloud.plugins.sqlog.format.FormatStyle;
-import com.ezcloud.service.ListService;
-import com.ezcloud.web.EzResult;
+
+import top.ezadmin.EzClientBootstrap;
+import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.FormDao;
+import top.ezadmin.dao.ListDao;
+import top.ezadmin.plugins.sqlog.format.FormatStyle;
+import top.ezadmin.service.ListService;
+import top.ezadmin.web.EzResult;
 
 import top.ezadmin.domain.mapper.EzCloudMapper;
 import top.ezadmin.domain.model.EzCloud;
 import top.ezadmin.domain.model.EzCloudExample;
-import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
@@ -163,7 +162,7 @@ public class EzListEditController extends BaseController {
     @ResponseBody
     public EzResult edit(Long cloudId,String appName,HttpServletRequest request, HttpServletResponse response) throws Exception {
         //所有表单类型的插件
-        Map<String, Object> list=JSONUtils.parseObjectMap(request.getParameter("data"));
+        Map<String, Object> list= JSONUtils.parseObjectMap(request.getParameter("data"));
         String html= ListDao.getInstance().updateList(list);
         if(StringUtils.isNotBlank(html)){
             Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
@@ -210,6 +209,7 @@ public class EzListEditController extends BaseController {
             return result;
         }
         catch (Exception e){
+            logger.error("e",e);
             return EzResult.instance().fail().message("SQL错误");
         }
     }
@@ -370,9 +370,9 @@ public class EzListEditController extends BaseController {
         sqlExpress.append("\r\nreturn search(sql);");
         core.put("select_express","\n<![CDATA[ \n"+ sqlExpress.toString() +"\n]]>\n");
         if(StringUtils.isNotBlank(formcode)){
-            tableBtnList.add(extracted2("/ezcloud/form/form-"+formcode, "新增","PARENT","button-table"));
-            rowBtnList.add( extractedRow2("/ezcloud/form/form-"+formcode+"?ID=${ID}", "编辑","MODEL","layui-border-blue"));
-            rowBtnList.add(extractedRow2("/ezcloud/form/doDelete-"+formcode+"?ID=${ID}", "删除","CONFIRM_AJAX","layui-border-red"));
+            tableBtnList.add(extracted2("/topezadmin/form/form-"+formcode, "新增","PARENT","button-table"));
+            rowBtnList.add( extractedRow2("/topezadmin/form/form-"+formcode+"?ID=${ID}", "编辑","MODEL","layui-border-blue"));
+            rowBtnList.add(extractedRow2("/topezadmin/form/doDelete-"+formcode+"?ID=${ID}", "删除","CONFIRM_AJAX","layui-border-red"));
             Map<String,Object> form= pureAddForm2( formcode,tableNameList.get(0),fieldNameList,fieldLabelList);
            String html= FormDao.getInstance().updateForm(form);
             if(StringUtils.isNotBlank(html)){
@@ -530,9 +530,9 @@ public class EzListEditController extends BaseController {
 
     private String generateFormExpress(String table,String idName,List<String> fieldNameList){
         StringBuilder ex=new StringBuilder();
-        ex.append("\nimport com.ezcloud.plugins.express.jdbc.UpdateParam;\n");
-        ex.append("import com.ezcloud.plugins.express.jdbc.InsertParam;                  		\n");
-        ex.append("import com.ezcloud.web.EzResult;                  		\n");
+        ex.append("\nimport top.ezadmin.plugins.express.jdbc.UpdateParam;\n");
+        ex.append("import top.ezadmin.plugins.express.jdbc.InsertParam;                  		\n");
+        ex.append("import top.ezadmin.web.EzResult;                  		\n");
 
         ex.append("ID=$(\"ID\");                  		\n");
         ex.append("if(!isNotBlank(\"ID\")){                  		\n");

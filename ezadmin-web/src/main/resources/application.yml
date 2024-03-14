@@ -50,7 +50,7 @@ spring:
     # 开发时关闭缓存,不然没法看到实时页面
     cache: false
 h2Server: '-web,-tcpAllowOthers,-webAllowOthers,-tcp,-ifNotExists,-baseDir,'
-ezcloud:
+topezadmin:
   # 默认true 开发时配置为false
   cacheFlag: false
   # 默认dataSource springboot中配置的名字，如果有多个，逗号隔开

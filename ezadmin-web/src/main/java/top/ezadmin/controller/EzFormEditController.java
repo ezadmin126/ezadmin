@@ -1,11 +1,11 @@
 package top.ezadmin.controller;
 
-import com.ezcloud.common.utils.*;
-import com.ezcloud.controller.BaseController;
-import com.ezcloud.dao.FormDao;
-import com.ezcloud.dao.PluginsDao;
-import com.ezcloud.service.FormService;
-import com.ezcloud.web.EzResult;
+
+
+import org.apache.commons.lang.StringUtils;
+import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.FormDao;
+import top.ezadmin.dao.PluginsDao;
 import top.ezadmin.domain.mapper.EzCloudMapper;
 import top.ezadmin.domain.model.EzCloud;
 import top.ezadmin.domain.model.EzCloudExample;
@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.ezadmin.service.FormService;
+import top.ezadmin.web.EzResult;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +34,7 @@ public class EzFormEditController extends BaseController {
     EzCloudMapper ezCloudMapper;
     @RequestMapping("submitEdit.html")
     @ResponseBody
-    public EzResult edit(Long cloudId,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public EzResult edit(Long cloudId, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //所有表单类型的插件
         System.out.println(request.getParameter("data"));
         Map<String, Object> form= JSONUtils.parseObjectMap(request.getParameter("data"));

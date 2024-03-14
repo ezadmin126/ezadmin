@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索-分类搜索</title>
+</head>
+<body id="search-category"  >
+<style>.el-cascader__search-input {
+    margin-bottom: 1px;
+    height: 23px;
+}
+
+.el-input__inner {
+    height: 26px;
+    line-height: 26px
+}</style>
+<div   th:style="${model.style}" th:ITEM_ID="${model.item_name}"
+     th:item_name="${model.item_name}" style='z-index:101'
+     class=" ">
+    <label style="min-width: 110px;"
+           class="layui-form-label" th:for="${'itemName-' + model.item_name}"
+           th:text="${model.label+'：'}" th:title="${model.label}">普通文本</label>
+    <div  class="layui-input-inline ">
+        <input th:value="${#strings.isEmpty(model.itemParamValue)?'':model.itemParamValue}"
+               type=hidden th:name="${model.item_name}"
+               class="ez-laycascader" ez_url="/topezadmin/api/category.html"
+               ez_value="baseCategoryId" ez_label="baseCategoryName" ez_children="secondCategoryList"
+               th:placeholder="${model.placeholder}" th:id="${'itemName-' + model.item_name}">
+    </div>
+</div>
+
+</body>
+</html>
