@@ -86,6 +86,8 @@ public class EzClientBootstrap {
     private EzRefresh ezRefresh;
     private String layout;//container fluid
 
+    private  DataSource ezDataSource;
+
     private EzClientBootstrap() {
     }
 
@@ -201,9 +203,23 @@ public class EzClientBootstrap {
         }
         return queryDatasourceMap.get(StringUtils.lowerCase(Utils.trimNull(key)));
     }
-    public EzSqlogDataSource getOriginDataSource ( ){
-        return queryDatasourceMap.get("datasource");
+    public  DataSource getEzDataSource ( ){
+        if(ezDataSource!=null){
+            return ezDataSource;
+        }
+        return queryDatasourceMap.get(datasourceKey("dataSource"));
     }
+    public  void setEzDataSource (DataSource source ){
+        if(source instanceof EzSqlogDataSource){
+            ezDataSource =source;
+        }else{
+            EzSqlogDataSource source2 = new EzSqlogDataSource();
+            source2.setRealDataSource(source);
+            source2.setLogType(logType);
+            ezDataSource=source2;
+        }
+    }
+
 
     public void addBizDataSource(String key, DataSource ezSqlogDataSource){
 

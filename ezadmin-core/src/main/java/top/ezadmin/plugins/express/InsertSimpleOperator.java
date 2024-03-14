@@ -35,17 +35,20 @@ public class InsertSimpleOperator extends AbstractOperator {
 
         for (int i = 0; i < param.getList().size(); i++) {
             String fieldString=param.getList().get(i).toString();
-            ResultModel model = StandardSqlParser.parse(fieldString);
-            String field=model.getParams().get(0).getParamKey();
-            if(operatorParam!=null&&operatorParam.getParams()!=null&&operatorParam.getParams().containsKey(field)
-                  && StringUtils.isNotBlank(Utils.trimNull(operatorParam.getParams().get(field)))
-            ){
-                fields.append(","+field);
-                values.append(","+fieldString );
-            }else if(StringUtils.isNotBlank(Utils.trimNull(model.getParams().get(0).getParamValue())) ){
-                fields.append(","+field);
-                values.append(","+model.getParams().get(0).getParamValue() );
-            }
+            String key=StandardSqlParser.getKey(fieldString);
+            fields.append(","+key);
+            values.append(","+fieldString);
+//            ResultModel model = StandardSqlParser.parse(fieldString);
+//            String field=model.getParams().get(0).getParamKey();
+//            if(operatorParam!=null&&operatorParam.getParams()!=null&&operatorParam.getParams().containsKey(field)
+//                  && StringUtils.isNotBlank(Utils.trimNull(operatorParam.getParams().get(field)))
+//            ){
+//                fields.append(","+field);
+//                values.append(","+fieldString );
+//            }else if(StringUtils.isNotBlank(Utils.trimNull(model.getParams().get(0).getParamValue())) ){
+//                fields.append(","+field);
+//                values.append(","+model.getParams().get(0).getParamValue() );
+//            }
         }
         StringBuilder sql=new StringBuilder("insert into ");
         sql.append(param.getTable());

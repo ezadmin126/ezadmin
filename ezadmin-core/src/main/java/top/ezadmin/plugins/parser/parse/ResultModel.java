@@ -31,18 +31,21 @@ public class ResultModel {
         if(p==null ){
             return;
         }
-        if(StringUtils.isBlank(Utils.trimNull(p.getParamValue()))){
-            if(JdbcTypeEnum.NUMBER.getName().equals(p.getJdbcType())){
-                p.setParamValue(0);
-            }
-            else if (JdbcTypeEnum.DATE.getName().equalsIgnoreCase(p.getJdbcType())
-                    ||JdbcTypeEnum.DATETIME.getName().equalsIgnoreCase(p.getJdbcType())) {
-                 //不处理
-            }
-            else{
-                p.setParamValue("");
-            }
-        }
+//        if(StringUtils.isBlank(Utils.trimNull(p.getParamValue()))){
+//            if(JdbcTypeEnum.NUMBERNULL.getName().equals(p.getJdbcType())){
+//                p.setParamValue(null);
+//            }else
+//            if(JdbcTypeEnum.NUMBER.getName().equals(p.getJdbcType())){
+//                p.setParamValue(0);
+//            }
+//            else if (JdbcTypeEnum.DATE.getName().equalsIgnoreCase(p.getJdbcType())
+//                    ||JdbcTypeEnum.DATETIME.getName().equalsIgnoreCase(p.getJdbcType())) {
+//                 //不处理
+//            }
+//            else{
+//                p.setParamValue("");
+//            }
+//        }
 
         params.add(p);
         paramsStatic.add(p.getParamValue());

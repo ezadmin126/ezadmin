@@ -52,6 +52,24 @@ public class StandardSqlParser {
         }
         return model2;
     }
+    public static String getKey(String content){
+        int s=StringUtils.strip(content).indexOf(startFixStr);
+        if(s>=0){
+
+            int last=content.indexOf(",");
+            if(last<=0){
+                last=content.indexOf(endFixStr);
+            }
+            return content.substring(s+startFixStr.length(),last);
+        }
+        return "";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getKey("#{u,jdbc=a,v=ss}"));
+        System.out.println(getKey("#{u}"));
+        System.out.println(getKey("#{u,jdbc=a,v=ss}"));
+    }
 
     private static class ParameterMappingTokenHandler  implements TokenHandler {
 
@@ -63,17 +81,27 @@ public class StandardSqlParser {
             this.model=model2;
         }
 
+        /**
+         *
+         * @param content
+         * @return
+         */
 
         @Override
         public String handleToken(String content) {
             //#{user_id,jdbcType=VARCHAR,value='VARCHAR'}
-            String keyAndType[]= StringUtils.split(content,",",2);
+            String keyAndType[]= StringUtils.split(content,",",3);
+            if(keyAndType.length==0){
+                return content;
+            }
             String key=StringUtils.trimEmpty(keyAndType[0]);
             Params p=new Params();
             p.setParamKey(key);
-            if(keyAndType.length==2){
-                if(keyAndType[1].contains("=")){
-                    String[] kv=StringUtils.split(keyAndType[1],"=",2);
+            //解析jdbctype与 value
+            for (int i = 1; i <keyAndType.length ; i++) {
+                String kvtype=StringUtils.strip(keyAndType[i]);
+                if(kvtype.contains("=")){
+                    String[] kv=StringUtils.split(kvtype,"=",2);
                     if(Utils.trimNull(kv[0]).equalsIgnoreCase("jdbctype")){
                         p.setJdbcType(kv[1].toUpperCase());
                     }
@@ -82,39 +110,45 @@ public class StandardSqlParser {
                     }
                 }
             }
-            //默认value,如果有传参，就是参数，如果参数有jdbctype，就做一层转换
+            //无传参
             if(!variables.containsKey(key)){
-                model.addParam(p);
-                return startFixStr+content+endFixStr;
+                if(p.getParamValue()==null){
+                    return null;
+                }else{ //有设置value
+                    return  Utils.trimNull(p.getParamValue());
+                }
             }
-            String realv=Utils.trimNull(variables.get(key));
-            if(StringUtils.isNotBlank(realv)){
-                p.setParamValue(Utils.trimNull(variables.get(key)));
+            Object value= transJavaType(variables.get(key),p.getJdbcType());
+            if(value==null){
+                if(p.getParamValue()==null){
+                    return null;
+                }else{ //有设置value
+                    return  Utils.trimNull(p.getParamValue());
+                }
             }
-            String realjv=Utils.trimNull(transJavaType(variables.get(key),p.getJdbcType()));
-            if(keyAndType.length==2&&StringUtils.isNotBlank(realjv)){
-                p.setParamValue(transJavaType(variables.get(key),p.getJdbcType()));
-            }
-            model.addParam(p);
+            //传了参数
+            p.setParamValue(value);
+            model.addParam(p); //jdbc参数用了null
             return "?";
         }
         public static Object transJavaType(Object obj, String type) {
+            if(obj==null){
+                return null;
+            }
             if (obj instanceof ClobParam) {
                 return obj;
             }
             if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(type)) {
+                if(StringUtils.isBlank(obj+"")){
+                    return null;
+                }
                 return NumberUtils.createNumber( Utils.trimEmptyDefault(obj,"0"));
             } else if (JdbcTypeEnum.CLOB.getName().equalsIgnoreCase(type)) {
                 ClobParam clob=new ClobParam();
                 clob.setClob(Utils.trimNull(obj));
                 return clob;
-            } else if (JdbcTypeEnum.VARCHAR.getName().equalsIgnoreCase(type)) {
-                return obj == null ? "" : String.valueOf(obj);
-            }else if (JdbcTypeEnum.DATE.getName().equalsIgnoreCase(type)
-        ||JdbcTypeEnum.DATETIME.getName().equalsIgnoreCase(type)) {
-                return StringUtils.isBlank(Utils.trimNull(obj))? null : String.valueOf(obj);
             }
-            return String.valueOf(obj);
+            return StringUtils.isBlank(Utils.trimNull(obj))? null : String.valueOf(obj);
         }
     }
 }

@@ -29,7 +29,7 @@ public class IpUtils {
         if (isIpUnknown(ip)) {
             ip = cut(request.getHeader(WL_PROXY_CLIENT_IP));
         }
-        return ip;
+        return Utils.trimNull(ip);
     }
 
     private static String cut(String ip) {

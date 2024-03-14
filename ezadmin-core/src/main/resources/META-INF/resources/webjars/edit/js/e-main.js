@@ -311,16 +311,14 @@ $(function (){
             listData.tablebtn=tablebtn;
             listData.rowbtn=rowbtn;
             listData.col=col;
-            var id=$("#cloudId").val();
-
-            $.post("/ezlist/submitEdit.html",  {data:JSON.stringify(listData),cloudId:id}, function(data) {
+            $.post("/topezadmin/listEdit/submitEdit.html",  {data:JSON.stringify(listData)}, function(data) {
                 if(data.success){
                     //保存到数据库
                     layui.layer.confirm('保存成功，重新加载？', {icon: 1, title:'提示'}, function(index){
-                        location.href='/ezlist/loadEdit.html?cloudId='+data.data.cloudId;
+                        location.href='/topezadmin/listEdit/loadEdit-'+data.data.EZ_CODE;
                     });
                 }else{
-                    layui.layer.alert(data.message);
+                    layui.layer.alert("保存失败："+data.message);
                 }
             }, 'json').fail(function() {
                 layui.layer.alert('请求失败，网络异常');
@@ -434,7 +432,7 @@ function  initSettingsAll(){
         if($("#listCoreContainer").attr("ez-listcode")==''||$("#listCoreContainer").attr("ez-listcode")==undefined){
             layui.layer.alert("请先保存列表");
         }else{
-            openBlank("/topezadmin/list/list-"+$("#listCoreContainer").attr("ez-listcode"));
+            openBlank("/topezadmin/listEdit/list-"+$("#listCoreContainer").attr("ez-listcode"));
         }
     })
 

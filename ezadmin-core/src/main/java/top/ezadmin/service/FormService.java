@@ -10,4 +10,6 @@ public interface FormService {
     ) throws Exception;
 
     Map<String, Object> selectAllFormByHtml(String ezConfig,String adminStyle);
+    public Map<String,Object>  selectConfigPublishForm(String code) throws Exception;
+    public Map<String,Object>  selectConfigEditForm(String code ) throws Exception;
 }

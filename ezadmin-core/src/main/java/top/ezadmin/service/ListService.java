@@ -13,6 +13,16 @@ public interface ListService {
 
     long getDataCountByListId(DataSource dataSource,Map<String, Object> list, Map<String, Object> request, Map<String, String> session) throws Exception;
 
+    /**
+     * 获取编辑状态下的配置
+     * @param code
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public Map<String,Object>  selectConfigEditList(String code ) throws Exception;
+    public Map<String,Object>  selectConfigPublishList(String code) throws Exception;
+
 
       ItemInitData getSelectItems(DataSource datasource, String initData, String initType, Map<String, Object> params
     ) throws Exception;

@@ -31,7 +31,7 @@ public class ListController extends BaseController {
     public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
-        if(StringUtils.isBlank(listUrlCode)||!ListDao.getInstance().exist(listUrlCode)){
+        if(StringUtils.isBlank(listUrlCode)){
             throw new NotExistException();
         }
         Map<String, Object> requestParamMap = requestToMap(request);
@@ -42,8 +42,14 @@ public class ListController extends BaseController {
         requestParamMap.put("ContextPath", request.getContextPath());
 
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+        Map<String, Object>  list = listService.selectConfigPublishList(listUrlCode) ;
 
-        Map<String, Object> list =  JSONUtils.parseObjectMap(listService.selectAllListById(listUrlCode));
+        if(!Utils.isNotEmpty(list)){
+            list=JSONUtils.parseObjectMap(listService.selectAllListById(listUrlCode));
+        }
+        if(!Utils.isNotEmpty(list)){
+            throw new NotExistException();
+        }
 
         request.setAttribute(RequestParamConstants._SEARCH_ITEM_DISPLAY, request.getParameter("_SEARCH_ITEM_DISPLAY"));
 
@@ -69,21 +75,24 @@ public class ListController extends BaseController {
     @EzMapping("count.html")
     public EzResult count(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+            String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
             if (Utils.getLog() != null) {
-                Utils.addLog("start  id=" + ENCRYPT_LIST_ID);
+                Utils.addLog("start  id=" + listUrlCode);
             }
             Map<String, Object> requestParamMap = requestToMap(request);
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
-            Map<String, Object> list = new HashMap<>();
-            if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
-                list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
+             Map<String, Object> list =     listService.selectConfigPublishList(listUrlCode) ;
+            if(!Utils.isNotEmpty(list)){
+                list=JSONUtils.parseObjectMap(listService.selectAllListById(listUrlCode));
+            }
+            if(!Utils.isNotEmpty(list)){
+                throw new NotExistException();
             }
 
             listService.fillCountById(list, requestParamMap, sessionParamMap);
 
-            request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + ENCRYPT_LIST_ID);
+            request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
             request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
 
             return EzResult.instance().data(list).count(1000);

@@ -130,6 +130,9 @@ public class Utils {
     public static boolean isNotEmpty(Map coll) {
         return coll != null && !coll.isEmpty();
     }
+    public static boolean isEmpty(Map coll) {
+        return coll == null ||coll.isEmpty();
+    }
 
     public static boolean isTimeField(String field) {
         return StringUtils.endsWithIgnoreCase(field, "time");

@@ -448,7 +448,9 @@ public class ListDao extends JsoupUtil {
     private void fillsearch(List<Map<String, Object>> searchConfigList,  Document doc) {
 //        Document doc=config.getDoc();
         Element search=doc.getElementById("search");
-
+        if(search==null){
+            return;
+        }
         List<Element> searchList=search.select("[item_name]");
         if(Utils.isNotEmpty(searchList)){
             List<Map<String, Object>> list = new ArrayList<>();
@@ -526,40 +528,8 @@ public class ListDao extends JsoupUtil {
         if(displayorder_express.indexOf("<![CDATA[")==-1){
             displayorder_express="\n<![CDATA[ \n"+ displayorder_express+"\n]]>\n";
         }
-
-        Config config=null;
-        if (config==null) {
-            Document doc =JsoupUtil.newlist();
-
-
-            String editPath="/data";
-            try {
-                editPath=JsoupUtil.editPath("topezadmin" + File.separator + "config") + File.separator +
-                        EzClientBootstrap.instance().getAdminStyle() + File.separator + "list" +
-                        File.separator + listcode.toLowerCase() + ".html";
-            }catch (Exception e){
-               String rootPath=editPath + File.separator+"topezadmin" + File.separator + "config"+ File.separator +
-                        EzClientBootstrap.instance().getAdminStyle() + File.separator + "list"   ;
-                if(Files.notExists(Paths.get(rootPath))){
-                    Files.createDirectories(Paths.get(rootPath));
-                }
-                editPath=rootPath+ File.separator + listcode.toLowerCase() + ".html";
-            }
-            //创建新文件
-            Config c=new Config();
-            c.setFile(new File(editPath));
-            c.setUrl(new File(editPath).toURI().toURL());
-            c.setPath(new File(editPath).toURI().toURL().getPath());
-            c.setProtocol("file");
-            if(!new File(editPath).exists()){
-                Files.createFile(Paths.get(editPath));
-            }
-            doc.body().attr("id",listcode.toLowerCase());
-            c.setDoc(doc);
-            listConfigMap.put(listcode.toLowerCase(),c);
-            config=c;
-        }
-        Document doc=listConfigMap.get(listcode.toLowerCase()).getDoc();
+        Document doc =JsoupUtil.newlist();
+        doc.body().attr("id",listcode.toLowerCase());
         Element body = doc.body();
         //处理主体
         doc.title(listname);
@@ -590,8 +560,8 @@ public class ListDao extends JsoupUtil {
         rowbtn(rowbtnList, body,rowbuttonwidth,rowbuttonfixed);
         //处理列
         col(colList, body);
-
-       return JsoupUtil.updateConfig(config);
+        doc.outputSettings().prettyPrint(true).outline(true).escapeMode();
+       return doc.html();
     }
 
     private void col(List<Map<String, Object>> colList, Element body) {

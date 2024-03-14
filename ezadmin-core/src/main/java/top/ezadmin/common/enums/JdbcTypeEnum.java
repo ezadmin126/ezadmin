@@ -4,6 +4,7 @@ import top.ezadmin.common.utils.StringUtils;
 
 public enum JdbcTypeEnum {
      NUMBER("NUMBER"),
+    NUMBERNULL("NUMBERNULL"),
     DATE_TO_NUMBER("DATE_TO_NUMBER"),
     VARCHAR("VARCHAR"),
     DATE("DATE"),

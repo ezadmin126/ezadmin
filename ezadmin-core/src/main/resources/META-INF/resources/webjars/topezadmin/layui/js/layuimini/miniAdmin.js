@@ -87,8 +87,12 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
          * @param data
          */
         renderLogo: function (data) {
+            try{
             var html = '<a href="' + data.href + '"><img src="' + data.image + '" alt="logo"><h1>' + data.title + '</h1></a>';
             $('.layuimini-logo').html(html);
+            }catch (e) {
+                
+            }
         },
 
         /**
@@ -96,14 +100,18 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
          * @param data
          */
         renderHome: function (data) {
-            if (data.href) {
-                sessionStorage.setItem('layuiminiHomeHref', data.href);
-                $('#layuiminiHomeTabId').html('<span class="layuimini-tab-active layui-icon-refresh layui-icon"></span><span class="disable-close">' + data.title + '</span><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>');
-                $('#layuiminiHomeTabId').attr('lay-id', data.href);
-                $('#layuiminiHomeTabIframe').html('<iframe width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0"  src="' + data.href + '"></iframe>');
-            } else {
-                $('#layuiminiHomeTabIframe').remove()
-                $('#layuiminiHomeTabId').remove()
+            try{
+                if (data.href) {
+                    sessionStorage.setItem('layuiminiHomeHref', data.href);
+                    $('#layuiminiHomeTabId').html('<span class="layuimini-tab-active layui-icon-refresh layui-icon"></span><span class="disable-close">' + data.title + '</span><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>');
+                    $('#layuiminiHomeTabId').attr('lay-id', data.href);
+                    $('#layuiminiHomeTabIframe').html('<iframe width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0"  src="' + data.href + '"></iframe>');
+                } else {
+                    $('#layuiminiHomeTabIframe').remove()
+                    $('#layuiminiHomeTabId').remove()
+                }
+            }catch (e) {
+                
             }
         },
 
