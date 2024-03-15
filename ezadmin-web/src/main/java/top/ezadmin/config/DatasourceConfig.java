@@ -21,10 +21,7 @@ public class DatasourceConfig {
 	private Logger logger = LoggerFactory.getLogger(DatasourceConfig.class.getName());
 	@Value("${spring.datasource.druid.db1.driver-class-name}")
 	private String driver1 ;
-	@Value("${spring.datasource.druid.db2.driver-class-name}")
-	private String driver2 ;
-	@Value("${spring.datasource.druid.db3.driver-class-name}")
-	private String driver3 ;
+
 
 	@Value("${spring.datasource.druid.db1.url}")
 	private String db1Url;
@@ -68,7 +65,6 @@ public class DatasourceConfig {
 		}
 		return null;
 	}
-
 	@Bean(name = "dataSource")
 	@DependsOn("h2server")
 	public DataSource gomanager () {
@@ -89,61 +85,5 @@ public class DatasourceConfig {
 		//ezSqlogDataSource.setCallback(ezSqlogCallBackERP);
 		return ezSqlogDataSource;
 	}
-
-
-
-
-	@Value("${spring.datasource.druid.db2.url}")
-	private String db2Url;
-	@Value("${spring.datasource.druid.db2.username}")
-	private String db2username;
-	@Value("${spring.datasource.druid.db2.password}")
-	private String db2password;
-
-	@Bean(name = "erp-dataSourceTarget")
-	@DependsOn("h2server")
-	public DataSource erp() {
-		DruidDataSource dds=new DruidDataSource();// DruidDataSourceFactory.createDataSource(propsTemp);
-		dds.setDriverClassName(driver2);
-		dds.setUrl(db2Url);
-		dds.setUsername(db2username);
-		dds.setPassword(db2password);
-		dds.setValidationQuery(validationQuery);
-		dds.setMaxActive(db1maxActive);
-		dds.setMinIdle(db1minIdle);
-		dds.setInitialSize(db1initialSize);
-		dds.setTestOnBorrow(testOnBorrow);
-		EzSqlogDataSource ezSqlogDataSource=new EzSqlogDataSource();
-		ezSqlogDataSource.setRealDataSource(dds);
-		ezSqlogDataSource.setLogType(logType);
-		//ezSqlogDataSource.setCallback(ezSqlogCallBackERP);
-		return ezSqlogDataSource;
-	}
-	@Value("${spring.datasource.druid.db3.url}")
-	private String db3Url;
-	@Value("${spring.datasource.druid.db3.username}")
-	private String db3username;
-	@Value("${spring.datasource.druid.db3.password}")
-	private String db3password;
-
-	@Bean(name = "ez-dataSource")
-	@DependsOn("h2server")
-	public DataSource ez() {
-		DruidDataSource dds=new DruidDataSource();// DruidDataSourceFactory.createDataSource(propsTemp);
-		dds.setDriverClassName(driver3);
-		dds.setUrl(db3Url);
-		dds.setUsername(db3username);
-		dds.setPassword(db3password);
-		dds.setValidationQuery(validationQuery);
-		dds.setMaxActive(db1maxActive);
-		dds.setMinIdle(db1minIdle);
-		dds.setInitialSize(db1initialSize);
-		dds.setTestOnBorrow(testOnBorrow);
-		EzSqlogDataSource ezSqlogDataSource=new EzSqlogDataSource();
-		ezSqlogDataSource.setRealDataSource(dds);
-		ezSqlogDataSource.setLogType(logType);
-		return ezSqlogDataSource;
-	}
-
 
 }
