@@ -1,5 +1,6 @@
 package top.ezadmin.service.impl;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import top.ezadmin.common.enums.*;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.FormDao;
@@ -803,7 +804,7 @@ public class ListServiceImpl implements ListService {
             for (int i = 0; i < searchList.size(); i++) {
                 Map<String,Object> search= searchList.get(i);
                 String item_name=getString(search,JsoupUtil.ITEM_NAME);
-
+                String pluginCode=getString(search, JsoupUtil.PLUGIN);
                 updateValidate(search, validRuleMap, validMsgMap);
                 try {
                     Map<String, String> plugin = loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(search, JsoupUtil.PLUGIN));
@@ -840,6 +841,30 @@ public class ListServiceImpl implements ListService {
                         }
                     }
                     //初始化值
+                    if(pluginCode.equalsIgnoreCase("input-text")){
+                        Map<String,String> attrMap= (Map<String,String>)search.get("attrMap");
+                        StringBuilder sb=new StringBuilder("<input ");
+                        attrMap.forEach((k,v)->{
+                            sb.append(k);
+                            sb.append("='");
+                            sb.append(v);
+                            sb.append("'  ");
+                        });
+                        Map<String,String> attrExtMap=new HashMap<>();
+                        attrExtMap.put("value",StringEscapeUtils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName())+""));
+                        attrExtMap.put("name",search.get(JsoupUtil.ITEM_NAME)+"");
+                        attrExtMap.putIfAbsent("id","search-itemName-"+search.get(JsoupUtil.ITEM_NAME)+"");
+                        attrExtMap.putIfAbsent("lay-affix","clear" );
+                        attrExtMap.putIfAbsent("class","layui-input" );
+                        attrExtMap.forEach((k,v)->{
+                            sb.append(k);
+                            sb.append("='");
+                            sb.append(v);
+                            sb.append("'  ");
+                        });
+                        sb.append(">");
+                        context.setVariable("searchTag",sb.toString());
+                    }
                     String html = ThymeleafUtils.processString(template, context);
                     search.put("html",html);
                 } catch (Exception e) {

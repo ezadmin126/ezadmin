@@ -20,7 +20,8 @@
 
     [(${data.core.append_head})]
 </head>
-<body class="layui-bg-gray">
+
+<body th:utext="${data.core.bodyTag}" th:remove="tag"> </body>
 <!--初始化加载层-->
 <div class="layuimini-loader" th:if="${not #strings.equals('pure',data.core.tablestyle)}">
     <div class="layuimini-loader-inner"></div>
