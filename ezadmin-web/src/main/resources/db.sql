@@ -1,4 +1,4 @@
-
+SET MODE MySQL;
 create table if not exists T_EZADMIN_EDIT
 (
     ID          bigint auto_increment

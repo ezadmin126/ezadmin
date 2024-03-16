@@ -193,6 +193,20 @@ public class ListDao extends JsoupUtil {
 
     public void clear() {
     }
+
+    public String eleToString(Element e,String tag){
+        Map<String,String> m=JsoupUtil.attr2Map(e);
+        m.putIfAbsent("class","layui-bg-gray");
+        m.putIfAbsent(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(e));
+        StringBuilder sb=new StringBuilder();
+        m.forEach((k,v)->{
+            sb.append(k);
+            sb.append("='");
+            sb.append(v);
+            sb.append("'  ");
+        });
+        return "<"+tag+"  "+sb.toString()+">" ;
+    }
  
     void fillcore(Map<String,Object> coreMap,Document doc ){
         coreMap.put("listname", JsoupUtil.strip(doc.title()));
@@ -201,10 +215,18 @@ public class ListDao extends JsoupUtil {
         coreMap.put(JsoupUtil.APPEND_HEAD, doc.getElementById(JsoupUtil.APPEND_HEAD) == null ? "" : doc.getElementById(JsoupUtil.APPEND_HEAD).html());
         coreMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
 
-       // coreMap.putAll(JsoupUtil.loadAttrNoChild(doc.body() ));
-        //body
-        coreMap.put("configJson",JsoupUtil.attr2Json(doc.body()));
-        coreMap.putAll(JsoupUtil.attr2Map(doc.body()));
+      //  Map<String,String> m=JsoupUtil.attr2Map(doc.body());
+//        m.putIfAbsent("class","layui-bg-gray");
+      //  m.putIfAbsent(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(doc.body()));
+//        StringBuilder sb=new StringBuilder();
+//        m.forEach((k,v)->{
+//            sb.append(k);
+//            sb.append("='");
+//            sb.append(v);
+//            sb.append("'  ");
+//        });
+        coreMap.put("bodyTag",eleToString(doc.body(),"body"));
+        //coreMap.putAll(JsoupUtil.attr2Map(doc.body()));
 
 
         Element express = doc.getElementById("express");
@@ -462,8 +484,11 @@ public class ListDao extends JsoupUtil {
                 for (int i = 0; i < search_attrs.length; i++) {
                     Utils.putIfAbsent(listitem,search_attrs[i], strip(item.attr(search_attrs[i])));
                 }
-                listitem.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(item));
+                Map<String,String>  attrMap=JsoupUtil.attr2Map(item);
+                listitem.put("attrMap",attrMap);
+                listitem.put(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(item));
 
+                listitem.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(item));
                 listitem.putAll(loadDataAttrNoChild(item));
                 //special
                 Utils.putIfAbsent(listitem,JsoupUtil.LABEL, strip(item.parent().parent().child(0).text()));
@@ -635,6 +660,20 @@ public class ListDao extends JsoupUtil {
         for (int i = 0; i < searchList.size(); i++) {
             Map<String,Object> tab= searchList.get(i);
             Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
+            try {
+                String config = Utils.trimNull(tab.get("config"));
+                if(StringUtils.isNotBlank(config)){
+                        Map<String,String> attrs=JSONUtils.parseMap(config);
+                        attrs.forEach((k,v)->{
+                             Elements obj=tabHtml.getElementsByTag("object");
+                             if(!obj.hasAttr(k)){
+                                 obj.attr(k,v);
+                             }
+                        });
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             for (int k = 0; k < names.length; k++) {
                 String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
                 if(StringUtils.isNotBlank(formItemAttrValue)){

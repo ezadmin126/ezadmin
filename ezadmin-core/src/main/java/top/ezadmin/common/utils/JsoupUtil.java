@@ -82,6 +82,7 @@ public class JsoupUtil {
     public static final String APPEND_HEAD ="append_head" ;
     public static final String APPEND_FOOT ="append_foot" ;
     public static final String FORM_NAME ="FORM_NAME" ;
+    public static final String EZCONFIG ="ezconfig" ;
     public static final String SUCCESS_URL = "success_url";
     public static final String GROUP_NAME ="group_name" ;
     public static final String ITEM_ID ="item_id";

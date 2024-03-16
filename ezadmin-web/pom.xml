@@ -4,13 +4,13 @@
     <parent>
         <groupId>top.ezadmin</groupId>
         <artifactId>ezadmin</artifactId>
-        <version>1.0.9-SNAPSHOT</version>
+        <version>1.1.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>top.ezadmin</groupId>
     <artifactId>ezadmin-web</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ezadmin-web</name>
     <description>ezadmin-web</description>
@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <ezadmin.version>1.0.9-SNAPSHOT</ezadmin.version>
+        <ezadmin.version>1.1.1-SNAPSHOT</ezadmin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -106,7 +106,7 @@
         <dependency>
             <groupId>top.ezadmin</groupId>
             <artifactId>ezadmin-core</artifactId>
-            <version>1.0.9-SNAPSHOT</version>
+            <version>${ezadmin.version}</version>
         </dependency>
     </dependencies>
 
@@ -159,10 +159,10 @@
                 <includes>
                     <include>**/*</include>
                 </includes>
-                <excludes>
-                    <exclude>**.sql</exclude>
-                    <exclude>**.yml</exclude>
-                </excludes>
+<!--                <excludes>-->
+<!--                    <exclude>**.sql</exclude>-->
+<!--                    <exclude>**.yml</exclude>-->
+<!--                </excludes>-->
             </resource>
         </resources>
         <plugins>
