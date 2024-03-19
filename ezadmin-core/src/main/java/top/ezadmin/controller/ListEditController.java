@@ -354,7 +354,7 @@ public class ListEditController extends BaseController {
         request.setAttribute("data", list);
         request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
 
-        request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + ENCRYPT_LIST_ID);
+        request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/listEdit/list-" + ENCRYPT_LIST_ID);
         if (Utils.getLog() != null) {
             Utils.addLog("end list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
         }
