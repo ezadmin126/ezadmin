@@ -14,7 +14,7 @@
 <ul th:id="${'TREE_ID_' + item_name}" class="ztree"></ul>
 <input type="hidden" th:itemsJson="${itemsJson}" th:value="${value}" th:name="${item_name}"
        th:id="${'ITEM_ID_' + item_name}"
-       th:aria-describedby="${'DESC_'+item_name}">
+      >
 </div>
 <script>
     $(function () {

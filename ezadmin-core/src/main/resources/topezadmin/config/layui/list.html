@@ -77,6 +77,9 @@
                             <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/listEdit/sourceEdit-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
                                 源码编辑
                             </button>
+                            <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/listEdit/trace-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                查看SQL
+                            </button>
 
                             <button   type="button"
                                      style="display:none" id="downBtn"

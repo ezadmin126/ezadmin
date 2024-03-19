@@ -2,6 +2,7 @@
 //
 //
 import com.alibaba.fastjson.JSON;
+import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.ListDao;
 import top.ezadmin.service.ListService;
@@ -14,14 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
  @EzMapping("/topezadmin")
  public class ExportController extends BaseController {
@@ -62,12 +59,17 @@ import java.util.Map;
             requestParamMap.put("currentPage", "1");
             requestParamMap.put("perPageInt", EZ_PER_PAGE_SIZE);
 
-            Map<String, Object> list=new HashMap<>();
-            if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-                list=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+             Map<String, Object> list = listService.selectConfigPublishList(ENCRYPT_LIST_ID) ;
+            if(!Utils.isNotEmpty(list)){
+                list=JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
             }
-            listService.exportListById(list,requestParamMap,sessionParamMap);
-            log.info("start finish load ez   list_id=" + listId);
+            if(!Utils.isNotEmpty(list)){
+                throw new NotExistException();
+            }
+
+
+
+
             Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
             List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
             if(orderedColumn!=null&&orderedColumn.length>0){
@@ -85,7 +87,18 @@ import java.util.Map;
                 colList=orderedColList;
                 list.put("col",orderedColList);
             }
-
+              Iterator<Map<String,Object>> it= colList.iterator();
+              while(it.hasNext()){
+                  Map<String,Object> col= it.next();
+                  if(StringUtils.equalsIgnoreCase(col.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-checkbox")
+                    ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-pic")
+                          ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-image")
+                  ){
+                      it.remove();
+                  }
+              }
+            listService.exportListById(list,requestParamMap,sessionParamMap);
+            log.info("start finish load ez   list_id=" + listId);
             List<Map<String, Object>> dataList=(List<Map<String, Object>>)coreMap.get("dataList");
             if(CollectionUtils.isEmpty(dataList)){
                 response.setContentType("application/json");
@@ -102,11 +115,11 @@ import java.util.Map;
             fillExcelData(data,dataList,colList);
             log.info("ezadmin finishfill page:{} export {} {} {} {}",1,sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
             int currentPage=2;
-            while (Utils.isNotEmpty(dataList)) {
+            while (Utils.isNotEmpty(dataList)&&dataList.size()>=NumberUtils.toInt(EZ_PER_PAGE_SIZE)) {
                 requestParamMap.put("currentPage", currentPage++);
-                Map<String, Object> listTemp=new HashMap<>();
-                if(StringUtils.isNotBlank(ENCRYPT_LIST_ID)){
-                    listTemp=   JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID))  ;
+                Map<String, Object> listTemp = listService.selectConfigPublishList(ENCRYPT_LIST_ID) ;
+                if(!Utils.isNotEmpty(listTemp)){
+                    listTemp=JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
                 }
                 listService.exportListById(listTemp,requestParamMap,sessionParamMap);
                 Map<String,Object> coreMapTemp=(Map<String,Object>)listTemp.get("core");
@@ -123,12 +136,10 @@ import java.util.Map;
             head.add(head0);
             for (int i = 0; i < colList.size(); i++) {
                 Map<String,Object> col=(Map<String,Object>)colList.get(i);
-//                if( "td-pic".equals(col.get(JsoupUtil.BODY_PLUGIN_CODE))||
-//                        "td-image".equals(col.get(JsoupUtil.BODY_PLUGIN_CODE))){
-//                    continue;
-//                }
-
-                if(StringUtils.equalsIgnoreCase(col.get(JsoupUtil.ITEM_NAME)+"","firstcol")){
+                if(StringUtils.equalsIgnoreCase(col.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-checkbox")
+                        ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-pic")
+                        ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-image")
+                ){
                     continue;
                 }
 

@@ -578,6 +578,7 @@ public class ListDao extends JsoupUtil {
         //处理列
         col(colList, body);
         doc.outputSettings().prettyPrint(true).outline(true).escapeMode();
+        EzClientBootstrap.instance().getEzCache().clear();
        return doc.html();
     }
 
@@ -653,7 +654,7 @@ public class ListDao extends JsoupUtil {
             Map<String,Object> tab= searchList.get(i);
             Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
             try {
-                String config = Utils.trimNull(tab.get("config"));
+                String config = Utils.trimNull(tab.get(JsoupUtil.EZCONFIG));
                 if(StringUtils.isNotBlank(config)){
                         Map<String,String> attrs=JSONUtils.parseMap(config);
                         attrs.forEach((k,v)->{

@@ -221,6 +221,7 @@ public class ListEditController extends BaseController {
             o.executeInner(new Object[]{param});
         }
         //3.刷新缓存
+        EzClientBootstrap.instance().getEzCache().clear();
         request.setAttribute("EZ_TYPE",request.getParameter("EZ_TYPE"));
         return  EzResult.instance();
     }
@@ -291,6 +292,74 @@ public class ListEditController extends BaseController {
         request.setAttribute("EZ_TYPE",request.getParameter("EZ_TYPE"));
         return  "layui/edit/export";
     }
+    @EzMapping("trace.html")
+    public void trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        long start = System.currentTimeMillis();
+        if (Utils.getLog() != null) {
+            Utils.addLog("start ID=" + ENCRYPT_LIST_ID);
+        }
+
+        Map<String, Object> requestParamMap = requestToMap(request);
+
+
+        Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+
+        if (Utils.getLog() != null) {
+            Utils.addLog("requestParamMap " + requestParamMap);
+        }
+        if (Utils.getLog() != null) {
+            Utils.addLog("sessionParamMap " + JSONUtils.toJSONString(sessionParamMap));
+        }
+
+
+        Map<String, Object> list = new HashMap<>();
+        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
+            try {
+                list = listService.selectConfigPublishList(ENCRYPT_LIST_ID) ;
+                if(!Utils.isNotEmpty(list)){
+                    list=JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
+                }
+                if(!Utils.isNotEmpty(list)){
+                    throw new NotExistException();
+                }
+            }catch (Exception e){
+                if (Utils.getLog() != null) {
+                    Utils.addLog("加载列表异常",e);
+                }
+            }
+        }
+        try {
+            listService.fillCountById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("加载总数异常",e);
+            }
+        }
+        try{
+            listService.fillListById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("查询数据异常",e);
+            }
+        }
+        try{
+            listService.fillTreeById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("查询树数据异常",e);
+            }
+        }
+        request.setAttribute("data", list);
+        request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
+
+        request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + ENCRYPT_LIST_ID);
+        if (Utils.getLog() != null) {
+            Utils.addLog("end list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
+        }
+    }
+
 
 
     @EzMapping("importSql.html")

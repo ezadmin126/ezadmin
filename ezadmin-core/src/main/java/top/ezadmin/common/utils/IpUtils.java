@@ -29,6 +29,9 @@ public class IpUtils {
         if (isIpUnknown(ip)) {
             ip = cut(request.getHeader(WL_PROXY_CLIENT_IP));
         }
+        if (isIpUnknown(ip)) {
+            ip = cut(request.getRemoteAddr());
+        }
         return Utils.trimNull(ip);
     }
 

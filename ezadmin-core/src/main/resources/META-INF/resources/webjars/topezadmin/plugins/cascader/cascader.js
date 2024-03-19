@@ -169,7 +169,7 @@ layui.define(["jquery"], function (exports) {
             if (!this.leaf) {
                 icon = rightIcon;
             }
-            this.$li = $('<li role="menuitem" id="cascader-menu" tabindex="-1" class="el-cascader-node" aria-haspopup="true" aria-owns="cascader-menu"><span class="el-cascader-node__label">' + label + '</span><i class="' + fromIcon + ' ' + icon + '"></i></li>');
+            this.$li = $('<li role="menuitem" id="cascader-menu" tabindex="-1" class="el-cascader-node"  ><span class="el-cascader-node__label">' + label + '</span><i class="' + fromIcon + ' ' + icon + '"></i></li>');
 
             // 节点渲染
             if (!multiple && !checkStrictly) {
@@ -308,7 +308,7 @@ layui.define(["jquery"], function (exports) {
 
             $li.addClass('is-selectable');
             // 任意一级单选
-            var $radio = $('<label role="radio" tabindex="0" class="el-radio"><span class="el-radio__input"><span class="el-radio__inner"></span><input type="radio" aria-hidden="true" tabindex="-1" class="el-radio__original" value="' + nodeId + '"></span><span class="el-radio__label"><span></span></span></label>');
+            var $radio = $('<label role="radio" tabindex="0" class="el-radio"><span class="el-radio__input"><span class="el-radio__inner"></span><input type="radio"   tabindex="-1" class="el-radio__original" value="' + nodeId + '"></span><span class="el-radio__label"><span></span></span></label>');
             this.$radio = $radio;
             $li.prepend($radio);
 
@@ -362,7 +362,7 @@ layui.define(["jquery"], function (exports) {
             $li.addClass('el-cascader-node');
 
             // 多选框
-            var $checked = $('<label class="el-checkbox"><span class="el-checkbox__input"><span class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false" class="el-checkbox__original" value=""></span></label>');
+            var $checked = $('<label class="el-checkbox"><span class="el-checkbox__input"><span class="el-checkbox__inner"></span><input type="checkbox"   class="el-checkbox__original" value=""></span></label>');
             this.$checked = $checked;
             $li.prepend($checked);
 
@@ -418,7 +418,7 @@ layui.define(["jquery"], function (exports) {
             $li.addClass('el-cascader-node is-selectable');
 
             // 多选框
-            var $checked = $('<label class="el-checkbox"><span class="el-checkbox__input"><span class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false" class="el-checkbox__original" value=""></span></label>');
+            var $checked = $('<label class="el-checkbox"><span class="el-checkbox__input"><span class="el-checkbox__inner"></span><input type="checkbox"   class="el-checkbox__original" value=""></span></label>');
             this.$checked = $checked;
             $li.prepend($checked);
 

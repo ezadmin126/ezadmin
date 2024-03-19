@@ -310,6 +310,7 @@ public class FormDao extends JsoupUtil {
         }
         doc.outputSettings().prettyPrint(true).outline(true).escapeMode();
         String html=doc.html();
+        EzClientBootstrap.instance().getEzCache().clear();
        return html;
     }
 

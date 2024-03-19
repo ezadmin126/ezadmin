@@ -243,6 +243,7 @@ public class FormEditController extends BaseController {
             o.executeInner(new Object[]{param});
         }
         //3.刷新缓存
+        EzClientBootstrap.instance().getEzCache().clear();
         request.setAttribute("EZ_TYPE",request.getParameter("EZ_TYPE"));
         return  EzResult.instance();
     }
