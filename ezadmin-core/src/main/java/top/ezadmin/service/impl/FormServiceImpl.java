@@ -30,9 +30,26 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
 
     @Override
     @EzCacheAnnotation
-    public String selectAllFormById(String encodeId) throws Exception {
+    public String selectPublishFormById(String encodeId) throws Exception {
         try {
-            return JSONUtils.toJSONString(FormDao.getInstance().selectAllFormById(encodeId));
+            String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=2 " +
+                    "";
+            Map<String, Object> listMap=null;
+            try {
+                listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                        sql,new Object[]{ encodeId});
+            }catch (Exception ee){
+            }
+            if(Utils.isEmpty(listMap)){
+                return JSONUtils.toJSONString(FormDao.getInstance().selectAllFormById(encodeId));
+            }
+            String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
+            Map<String,Object>c= FormDao.getInstance().selectAllFormByHtml(html);
+            c.put("EZ_CONFIG",html);
+            c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
+            c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
+            c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
+            return JSONUtils.toJSONString(c);
         }catch (Exception e){
             logger.error(""+encodeId,e);
             throw e;
@@ -131,7 +148,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                                     throw new IllegalArgumentException("列表类型，必须配置数据源为列表的编码");
                                 }
                                 if (StringUtils.isNotBlank(dataConf)) {
-                                    list = JSONUtils.parseObjectMap(listService.selectAllListById(dataConf));
+                                    list = JSONUtils.parseObjectMap(listService.selectPublishListById(dataConf));
                                 }
                                 listService.fillListById(list, requestParamMap, sessionParamMap);
                                 context.setVariable("subdata", list);
@@ -262,23 +279,6 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         }catch (Exception e){
             Utils.addLog("解析校验json失败",e);
         }
-    }
-    @EzCacheAnnotation
-    public Map<String,Object>  selectConfigPublishForm(String code) throws Exception {
-        String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=2 " +
-                "";
-        Map<String, Object> listMap= Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
-                sql,new Object[]{ code});
-        if(Utils.isEmpty(listMap)){
-            return listMap;
-        }
-        String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
-        Map<String,Object>c= FormDao.getInstance().selectAllFormByHtml(html);
-        c.put("EZ_CONFIG",html);
-        c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
-        c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
-        c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
-        return c;
     }
     public Map<String,Object>  selectConfigEditForm(String code  ) throws Exception {
         String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_EDIT where   EZ_CODE=? and EZ_TYPE=2 " +

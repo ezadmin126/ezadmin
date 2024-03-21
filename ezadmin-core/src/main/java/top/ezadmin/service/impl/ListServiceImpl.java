@@ -400,9 +400,27 @@ public class ListServiceImpl implements ListService {
 
     @Override
     @EzCacheAnnotation
-    public String selectAllListById(String encodeId) throws Exception {
+    public String selectPublishListById(String encodeId) throws Exception {
         try {
-            return JSONUtils.toJSONString(ListDao.getInstance().selectAllListById(encodeId));
+            String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=1 " +
+                    "";
+            Map<String, Object> listMap=null;
+            try {
+                listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                        sql, new Object[]{encodeId});
+            }catch (Exception e){
+                LOG.error(""+encodeId,e);
+            }
+            if(Utils.isEmpty(listMap)){
+                return JSONUtils.toJSONString(ListDao.getInstance().selectAllListById(encodeId));
+            }
+            String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
+            Map<String,Object>c= ListDao.getInstance().selectAllListByHtml(html);
+            c.put("EZ_CONFIG",html);
+            c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
+            c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
+            c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
+            return JSONUtils.toJSONString(c);
         }catch (Exception e){
             LOG.error(""+encodeId,e);
             throw e;
@@ -447,24 +465,6 @@ public class ListServiceImpl implements ListService {
     }
 
 
-    @EzCacheAnnotation
-    public Map<String,Object>  selectConfigPublishList(String code) throws Exception {
-        String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=1 " +
-                "";
-        Map<String, Object> listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
-                sql,new Object[]{ code});
-        if(Utils.isEmpty(listMap)){
-            return listMap;
-        }
-        String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
-        Map<String,Object>c= ListDao.getInstance().selectAllListByHtml(html);
-        c.put("EZ_CONFIG",html);
-        c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
-        c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
-        c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
-        return c;
-
-    }
 
 
 

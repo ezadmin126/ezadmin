@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class TraceLogFilter  extends Filter {
 
-    String include="(/(ezadmin|topezadmin)/(list|form))/(trace-).*";
+    String include="(/(ezadmin|topezadmin)/(list|form|listEdit|formEdit))/(trace-).*";
 
     public TraceLogFilter(){
         setInclude(include);

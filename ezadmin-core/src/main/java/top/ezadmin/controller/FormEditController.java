@@ -157,6 +157,98 @@ public class FormEditController extends BaseController {
 
 
 
+
+    @EzMapping("publish.html")
+    public EzResult publish(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
+        Map<String,Object>  c=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_LIST_ID)) ;
+        //生成如果有数据 //1.把生产的复制到历史表
+        if(Utils.isNotEmpty(c)){
+            String config=c.get("EZ_CONFIG")+"";
+            String DATASOURCE=c.get("DATASOURCE")+"";
+            String name=c.get("EZ_NAME")+"";
+            String code=ENCRYPT_LIST_ID;
+            Map<String, Object> requestParamMap = requestToMap(request);
+            requestParamMap.put("EZ_CONFIG",config);
+            requestParamMap.put("DATASOURCE",DATASOURCE);
+            requestParamMap.put("EZ_NAME",name);
+            requestParamMap.put("EZ_CODE",code);
+            requestParamMap.put("EZ_TYPE",2);
+            OperatorParam op=new OperatorParam();
+            op.setParams(requestParamMap);
+            op.setDs(EzClientBootstrap.instance().getEzDataSource());
+            Utils.addParam(op);
+            InsertSimpleOperator o=new InsertSimpleOperator();
+            InsertParam param=new InsertParam();
+            param.table("T_EZADMIN_HISTORY");
+            param.add("#{EZ_CODE}");
+            param.add("#{DATASOURCE}");
+            param.add("#{EZ_NAME}");
+            param.add("#{EZ_TYPE,value=2}");
+            param.add("#{EZ_CONFIG}");
+            param.add("#{ADD_TIME,value=NOW()}");
+            param.add("#{UPDATE_TIME,value=NOW()}");
+            param.add("#{IS_DEL,value=0}");
+            o.executeInner(new Object[]{param});
+        }
+
+        //2.把edit复制到生产
+        Map<String,Object> edit=formService.selectConfigEditForm(ENCRYPT_LIST_ID);
+        String config=edit.get("EZ_CONFIG")+"";
+        String DATASOURCE=edit.get("DATASOURCE")+"";
+        String name=edit.get("EZ_NAME")+"";
+        String code=ENCRYPT_LIST_ID;
+        if(Utils.isEmpty(c)){
+            Map<String, Object> requestParamMap = requestToMap(request);
+            requestParamMap.put("EZ_CONFIG",config);
+            requestParamMap.put("DATASOURCE",DATASOURCE);
+            requestParamMap.put("EZ_NAME",name);
+            requestParamMap.put("EZ_CODE",code);
+            requestParamMap.put("EZ_TYPE",2);
+            OperatorParam op=new OperatorParam();
+            op.setParams(requestParamMap);
+            op.setDs(EzClientBootstrap.instance().getEzDataSource());
+            Utils.addParam(op);
+            InsertSimpleOperator o=new InsertSimpleOperator();
+            InsertParam param=new InsertParam();
+            param.table("T_EZADMIN_PUBLISH");
+            param.add("#{EZ_CODE}");
+            param.add("#{DATASOURCE}");
+            param.add("#{EZ_NAME}");
+            param.add("#{EZ_TYPE,value=2}");
+            param.add("#{EZ_CONFIG}");
+            param.add("#{ADD_TIME,value=NOW()}");
+            param.add("#{IS_DEL,value=0}");
+            o.executeInner(new Object[]{param});
+        }else{
+            Map<String, Object> requestParamMap = requestToMap(request);
+            requestParamMap.put("EZ_CONFIG",config);
+            requestParamMap.put("DATASOURCE",DATASOURCE);
+            requestParamMap.put("EZ_NAME",name);
+            requestParamMap.put("EZ_CODE",code);
+            requestParamMap.put("EZ_TYPE",2);
+            OperatorParam op=new OperatorParam();
+            op.setParams(requestParamMap);
+            op.setDs(EzClientBootstrap.instance().getEzDataSource());
+            Utils.addParam(op);
+            UpdateSimpleOperator o=new UpdateSimpleOperator();
+            UpdateParam param=new UpdateParam();
+            param.table("T_EZADMIN_PUBLISH");
+            param.add("#{EZ_CODE}");
+            param.add("#{DATASOURCE}");
+            param.add("#{EZ_NAME}");
+            param.add("#{EZ_CONFIG}");
+            param.add("#{UPDATE_TIME,value=NOW()}");
+            param.where(" where EZ_CODE=#{EZ_CODE} and EZ_TYPE=2");
+            o.executeInner(new Object[]{param});
+        }
+        //3.刷新缓存
+        EzClientBootstrap.instance().getEzCache().clear();
+        request.setAttribute("EZ_TYPE",request.getParameter("EZ_TYPE"));
+        return  EzResult.instance();
+    }
+
+
     @EzMapping(value = "form.html", name = "view")
     public String form(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String formId = Utils.trimNull(request.getAttribute("FORM_ID"));
@@ -175,12 +267,9 @@ public class FormEditController extends BaseController {
         searchParamsValues.put("FORM_ID",formId);
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",Utils.trimNull(ID));
-        Map<String, Object> form=formService.selectConfigEditForm(ENCRYPT_FORM_ID);
+        Map<String,Object>  form=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID)) ;
              //   new HashMap<>();
         if(Utils.isEmpty(form)){
-            form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-        }
-        if(form==null||form.isEmpty()){
             return EzClientBootstrap.instance().getAdminStyle()+"/404";
         }
         formService.fillFormById(form,searchParamsValues,sessionMap);
@@ -213,15 +302,9 @@ public class FormEditController extends BaseController {
                 return EzResult.instance().code("404");
             }
             Map<String, Object> form=formService.selectConfigEditForm(ENCRYPT_FORM_ID);
-            //   new HashMap<>();
-            if(Utils.isEmpty(form)){
-                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-            }
-
             if (form==null||form.isEmpty() ) {
                 return EzResult.instance().code("404");
             }
-
             DataSource formDs=null;
             Map<String, Object> core=(Map<String, Object>)form.get("core");
             if(core!=null){
@@ -304,10 +387,6 @@ public class FormEditController extends BaseController {
                 return EzResult.instance().code("404");
             }
             Map<String, Object> form=formService.selectConfigEditForm(ENCRYPT_FORM_ID);
-            //   new HashMap<>();
-            if(Utils.isEmpty(form)){
-                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-            }
 
             if (form == null) {
                 return EzResult.instance().code("404");
@@ -373,10 +452,6 @@ public class FormEditController extends BaseController {
                 return EzResult.instance().code("404");
             }
             Map<String, Object> form=formService.selectConfigEditForm(ENCRYPT_FORM_ID);
-            //   new HashMap<>();
-            if(Utils.isEmpty(form)){
-                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-            }
 
             if (form == null) {
                 return EzResult.instance().code("404");
@@ -446,10 +521,7 @@ public class FormEditController extends BaseController {
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",ID);
         Map<String, Object> form=formService.selectConfigEditForm(ENCRYPT_FORM_ID);
-        //   new HashMap<>();
-        if(Utils.isEmpty(form)){
-            form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-        }
+
         if(form==null||form.isEmpty()){
             return "404";
         }

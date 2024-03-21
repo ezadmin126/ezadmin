@@ -16,20 +16,16 @@ public interface ListService {
     /**
      * 获取编辑状态下的配置
      * @param code
-     * @param id
      * @return
      * @throws Exception
      */
     public Map<String,Object>  selectConfigEditList(String code ) throws Exception;
-    public Map<String,Object>  selectConfigPublishList(String code) throws Exception;
-
 
       ItemInitData getSelectItems(DataSource datasource, String initData, String initType, Map<String, Object> params
     ) throws Exception;
 
-      String selectAllListById(String encodeId) throws Exception;
+      String selectPublishListById(String encodeId) throws Exception;
 
-      Map<String, Object> selectAllListMapById(String encodeId) throws Exception;
     Map<String, Object> selectAllListByHtml(String html) throws Exception;
 
     void fillListById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception;

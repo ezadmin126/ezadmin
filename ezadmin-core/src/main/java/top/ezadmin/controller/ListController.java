@@ -42,11 +42,7 @@ public class ListController extends BaseController {
         requestParamMap.put("ContextPath", request.getContextPath());
 
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
-        Map<String, Object>  list = listService.selectConfigPublishList(listUrlCode) ;
-
-        if(!Utils.isNotEmpty(list)){
-            list=JSONUtils.parseObjectMap(listService.selectAllListById(listUrlCode));
-        }
+        Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(listUrlCode)) ;
         if(!Utils.isNotEmpty(list)){
             throw new NotExistException();
         }
@@ -68,6 +64,8 @@ public class ListController extends BaseController {
         if(StringUtils.equalsIgnoreCase(pagetotaltype,"1")){
             listService.fillCountById(list, requestParamMap, sessionParamMap);
         }
+        String username = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY));
+        request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
         return EzClientBootstrap.instance().getAdminStyle() + "/list";
 
     }
@@ -82,11 +80,8 @@ public class ListController extends BaseController {
             Map<String, Object> requestParamMap = requestToMap(request);
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
-             Map<String, Object> list =     listService.selectConfigPublishList(listUrlCode) ;
-            if(!Utils.isNotEmpty(list)){
-                list=JSONUtils.parseObjectMap(listService.selectAllListById(listUrlCode));
-            }
-            if(!Utils.isNotEmpty(list)){
+            Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(listUrlCode)) ;
+            if(Utils.isEmpty(list)){
                 throw new NotExistException();
             }
 
@@ -116,10 +111,10 @@ public class ListController extends BaseController {
             requestParamMap.put("loadDataFlag", 0);
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
-            Map<String, Object> list = new HashMap<>();
-            if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
-                list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
-            }
+        Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+        if(Utils.isEmpty(list)){
+            throw new NotExistException();
+        }
 
             listService.fillListById(list, requestParamMap, sessionParamMap);
             Map<String, Object> core = (Map<String, Object>) list.get("core");
@@ -158,9 +153,9 @@ public class ListController extends BaseController {
 
         String sessionUserId = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY));
         sessionParamMap.put(SessionConstants.EZ_SESSION_USER_ID_KEY, sessionUserId);
-        Map<String, Object> list = new HashMap<>();
-        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
-            list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
+        Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+        if(Utils.isEmpty(list)){
+            throw new NotExistException();
         }
         listService.fillTreeById(list, requestParamMap, sessionParamMap);
         Map<String, Object> core = (Map<String, Object>) list.get("core");
@@ -193,7 +188,10 @@ public class ListController extends BaseController {
         Map<String, Object> list = new HashMap<>();
         if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
             try {
-                list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
+                  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+                if(Utils.isEmpty(list)){
+                    throw new NotExistException();
+                }
             }catch (Exception e){
                 if (Utils.getLog() != null) {
                     Utils.addLog("加载列表异常",e);
@@ -242,9 +240,9 @@ public class ListController extends BaseController {
 
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
-        Map<String, Object> list = new HashMap<>();
-        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
-            list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
+        Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+        if(Utils.isEmpty(list)){
+            throw new NotExistException();
         }
         listService.fillListById(list, requestParamMap, sessionParamMap);
 
@@ -271,9 +269,9 @@ public class ListController extends BaseController {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
         Map<String, Object> requestParamMap = requestToMap(request);
         requestParamMap.put("default_empty", "1");
-        Map<String, Object> list = new HashMap<>();
-        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
-            list = JSONUtils.parseObjectMap(listService.selectAllListById(ENCRYPT_LIST_ID));
+        Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+        if(Utils.isEmpty(list)){
+            throw new NotExistException();
         }
         List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
         List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("col");
@@ -324,7 +322,7 @@ public class ListController extends BaseController {
             if (StringUtils.isBlank(formId)&&StringUtils.isBlank(ENCRYPT_LIST_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, Object> listDb = listService.selectAllListMapById( ENCRYPT_LIST_ID);
+            Map<String, Object>  listDb =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
             Map<String, Object> core = (Map<String, Object>) listDb.get("core");
             String orderExpress=Utils.trimNull(core.get(JsoupUtil.DISPLAYORDER_EXPRESS));
             Map<String,Object> searchParamsValues=requestToMap(request );

@@ -1134,7 +1134,9 @@ function ezopen(openType, title, appendUrl, area) {
         case 'CONFIRM_AJAX':
             var title = title;
             layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
+                $(".layuimini-loader").show();
                 $.getJSON(appendUrl, function (result) {
+                    $(".layuimini-loader").hide();
                     if (result.success) {
                         layer.alert("操作成功", function (index) {
                             location.reload();

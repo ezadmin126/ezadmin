@@ -87,13 +87,13 @@
                 <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);" class="dragula-container">
                 <tr th:each="row,rowStat:${subdata.core.dataList}"   th:data-id="${row.id}">
                     <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
-                    <td style="min-width: 150px"> <button type="button" class="rowdelete layui-btn layui-btn-sm layui-btn-primary" aria-invalid="false">
+                    <td style="min-width: 150px"> <button type="button" class="rowdelete layui-btn layui-btn-sm layui-btn-primary"  >
                         <i class="layui-icon layui-icon-delete"></i>
                     </button>
                         <button type="button" class="rowadd layui-btn layui-btn-sm layui-btn-primary">
                             <i class="layui-icon layui-icon-addition"></i>
                         </button>
-                        <button style='float:right;cursor: move' type="button" class="rowmove layui-btn layui-btn-sm layui-btn-primary" aria-invalid="false">
+                        <button style='float:right;cursor: move' type="button" class="rowmove layui-btn layui-btn-sm layui-btn-primary"  >
                             <i class="rowmove layui-icon layui-icon-transfer"></i>
                         </button></td>
                 </tr>

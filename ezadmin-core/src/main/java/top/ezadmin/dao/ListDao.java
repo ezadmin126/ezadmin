@@ -1,22 +1,23 @@
 package top.ezadmin.dao;
 
-import top.ezadmin.EzClientBootstrap;
-import top.ezadmin.common.enums.JdbcTypeEnum;
-import top.ezadmin.common.enums.OperatorEnum;
- import top.ezadmin.web.Config;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.EzClientBootstrap;
+import top.ezadmin.common.enums.JdbcTypeEnum;
+import top.ezadmin.common.enums.OperatorEnum;
 import top.ezadmin.common.utils.*;
+import top.ezadmin.web.Config;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ListDao extends JsoupUtil {
     public static final Logger log = LoggerFactory.getLogger(ListDao.class);
@@ -30,7 +31,7 @@ public class ListDao extends JsoupUtil {
     static String[] BODY_ATTRS=new String[]{"datasource",
             "fixnumber","fixnumberright","success_url",
             "empty_show","tablestyle","adminstyle","pagesync",
-            "firstcol","export","cellminwidth","linestyle","rowbuttonwidth","layout"
+            "firstcol","export","cellminwidth","linestyle","rowbtnwidth","layout"
             ,"expandedMode"
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
@@ -212,21 +213,12 @@ public class ListDao extends JsoupUtil {
         coreMap.put("listname", JsoupUtil.strip(doc.title()));
         coreMap.put("ENCRYPT_LIST_ID", JsoupUtil.strip(doc.body().attr("id")));
         coreMap.put("listcode", JsoupUtil.strip(doc.body().attr("id")));
+        coreMap.put("datasource", JsoupUtil.strip(doc.body().attr(JsoupUtil.DATASOURCE)));
         coreMap.put(JsoupUtil.APPEND_HEAD, doc.getElementById(JsoupUtil.APPEND_HEAD) == null ? "" : doc.getElementById(JsoupUtil.APPEND_HEAD).html());
         coreMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
+        coreMap.putAll(JsoupUtil.loadAttrNoChild(doc.body()));
 
-      //  Map<String,String> m=JsoupUtil.attr2Map(doc.body());
-//        m.putIfAbsent("class","layui-bg-gray");
-      //  m.putIfAbsent(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(doc.body()));
-//        StringBuilder sb=new StringBuilder();
-//        m.forEach((k,v)->{
-//            sb.append(k);
-//            sb.append("='");
-//            sb.append(v);
-//            sb.append("'  ");
-//        });
         coreMap.put("bodyTag",eleToString(doc.body(),"body"));
-        //coreMap.putAll(JsoupUtil.attr2Map(doc.body()));
 
 
         Element express = doc.getElementById("express");
@@ -349,7 +341,7 @@ public class ListDao extends JsoupUtil {
                 coreMap.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json));
                 //确保其他ui框架能获取到宽度。
                 coreMap.put("rowbtnwidth",Utils.trimEmptyDefault(rowbutton.attr("width"),"175"));
-                coreMap.put("rowbuttonfixed",Utils.trimNull(rowbutton.attr("fixed") ));
+                coreMap.put("rowbtnfixed",Utils.trimNull(rowbutton.attr("fixed") ));
                 coreMap.put("rowbtnclass",Utils.trimNull(rowbutton.attr("class") ));
             } catch (Exception e) {
                 log.error("", e);
@@ -544,8 +536,8 @@ public class ListDao extends JsoupUtil {
         String groupby_express=  Utils.trimNull( coreMap.get(JsoupUtil.GROUPBY_EXPRESS ));
         String APPEND_HEAD=  Utils.trimNull( coreMap.get(JsoupUtil.APPEND_HEAD));
         String APPEND_FOOT=  Utils.trimNull( coreMap.get(JsoupUtil.APPEND_FOOT));
-        String rowbuttonwidth=  Utils.trimNull( coreMap.get("rowbuttonwidth"));
-        String rowbuttonfixed=  Utils.trimNull( coreMap.get("rowbuttonfixed"));
+        String rowbuttonwidth=  Utils.trimNull( coreMap.get("rowbtnwidth"));
+        String rowbuttonfixed=  Utils.trimNull( coreMap.get("rowbtnfixed"));
 
         if(select_express.indexOf("<![CDATA[")==-1){
             select_express="\n<![CDATA[ \n"+ select_express+"\n]]>\n";
@@ -586,6 +578,7 @@ public class ListDao extends JsoupUtil {
         //处理列
         col(colList, body);
         doc.outputSettings().prettyPrint(true).outline(true).escapeMode();
+        EzClientBootstrap.instance().getEzCache().clear();
        return doc.html();
     }
 
@@ -661,7 +654,7 @@ public class ListDao extends JsoupUtil {
             Map<String,Object> tab= searchList.get(i);
             Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
             try {
-                String config = Utils.trimNull(tab.get("config"));
+                String config = Utils.trimNull(tab.get(JsoupUtil.EZCONFIG));
                 if(StringUtils.isNotBlank(config)){
                         Map<String,String> attrs=JSONUtils.parseMap(config);
                         attrs.forEach((k,v)->{

@@ -1,19 +1,13 @@
 package top.ezadmin.controller;
 
 import net.sf.jsqlparser.statement.select.*;
-import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import top.ezadmin.EzClientBootstrap;
 import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.constants.RequestParamConstants;
 import top.ezadmin.common.utils.*;
-import top.ezadmin.dao.Dao;
 import top.ezadmin.dao.FormDao;
 import top.ezadmin.dao.ListDao;
-import top.ezadmin.dao.PluginsDao;
 import top.ezadmin.plugins.express.InsertSimpleOperator;
 import top.ezadmin.plugins.express.OperatorParam;
 import top.ezadmin.plugins.express.UpdateSimpleOperator;
@@ -59,9 +53,6 @@ public class ListEditController extends BaseController {
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
         Map<String, Object> list = listService.selectConfigEditList(listUrlCode) ;
 
-        if(!Utils.isNotEmpty(list)){
-            list=JSONUtils.parseObjectMap(listService.selectAllListById(listUrlCode));
-        }
         if(!Utils.isNotEmpty(list)){
             throw new NotExistException();
         }
@@ -139,7 +130,7 @@ public class ListEditController extends BaseController {
     @EzMapping("publish.html")
     public EzResult publish(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
-        Map<String,Object>  c=listService.selectConfigPublishList(ENCRYPT_LIST_ID);
+        Map<String,Object>  c=JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID));
         //生成如果有数据 //1.把生产的复制到历史表
         if(Utils.isNotEmpty(c)){
             String config=c.get("EZ_CONFIG")+"";
@@ -221,6 +212,7 @@ public class ListEditController extends BaseController {
             o.executeInner(new Object[]{param});
         }
         //3.刷新缓存
+        EzClientBootstrap.instance().getEzCache().clear();
         request.setAttribute("EZ_TYPE",request.getParameter("EZ_TYPE"));
         return  EzResult.instance();
     }
@@ -264,7 +256,6 @@ public class ListEditController extends BaseController {
         return code;
     }
     @EzMapping("submitSourceEdit.html")
-    @ResponseBody
     public EzResult submitExportEdit(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ezType=request.getParameter("EZ_TYPE");
         String data=request.getParameter("data");
@@ -291,11 +282,76 @@ public class ListEditController extends BaseController {
         request.setAttribute("EZ_TYPE",request.getParameter("EZ_TYPE"));
         return  "layui/edit/export";
     }
+    @EzMapping("trace.html")
+    public void trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        long start = System.currentTimeMillis();
+        if (Utils.getLog() != null) {
+            Utils.addLog("start ID=" + ENCRYPT_LIST_ID);
+        }
+
+        Map<String, Object> requestParamMap = requestToMap(request);
+
+
+        Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+
+        if (Utils.getLog() != null) {
+            Utils.addLog("requestParamMap " + requestParamMap);
+        }
+        if (Utils.getLog() != null) {
+            Utils.addLog("sessionParamMap " + JSONUtils.toJSONString(sessionParamMap));
+        }
+
+
+        Map<String, Object> list = new HashMap<>();
+        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
+            try {
+                  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+                if(Utils.isEmpty(list)){
+                    throw new NotExistException();
+                }
+            }catch (Exception e){
+                if (Utils.getLog() != null) {
+                    Utils.addLog("加载列表异常",e);
+                }
+            }
+        }
+        try {
+            listService.fillCountById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("加载总数异常",e);
+            }
+        }
+        try{
+            listService.fillListById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("查询数据异常",e);
+            }
+        }
+        try{
+            listService.fillTreeById(list, requestParamMap, sessionParamMap);
+        }catch (Exception e){
+            if (Utils.getLog() != null) {
+                Utils.addLog("查询树数据异常",e);
+            }
+        }
+        request.setAttribute("data", list);
+        request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
+
+        request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/listEdit/list-" + ENCRYPT_LIST_ID);
+        if (Utils.getLog() != null) {
+            Utils.addLog("end list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
+        }
+    }
+
 
 
     @EzMapping("importSql.html")
-    public String importSql(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return "edit/import";
+    public String importSql( HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return "layui/edit/import";
     }
     @EzMapping("importlist.html")
     public EzResult importlist(HttpServletRequest request, HttpServletResponse response) throws Exception {

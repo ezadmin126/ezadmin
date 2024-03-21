@@ -59,7 +59,7 @@
                         th:disabled="${disabled}"
                         th:lay-filter="${'lay_filter_'+item_name}"
                         th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
-                        th:aria-describedby="${aria_describedby}"
+
                         lay-ignore
                         th:id="${'ITEM_ID_' + item_name}" class="custom-select" th:name="${item_name}">
                     <option value="">请选择</option>

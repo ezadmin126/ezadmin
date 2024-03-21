@@ -3,6 +3,7 @@ package top.ezadmin.controller;
 import com.ql.util.express.exception.QLCompileException;
 import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.annotation.EzMapping;
+import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.enums.ContentTypeEnum;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.plugins.parser.MapParser;
@@ -53,12 +54,9 @@ public class FormController extends BaseController {
         searchParamsValues.put("FORM_ID",formId);
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",Utils.trimNull(ID));
-        Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
-        //   new HashMap<>();
+        Map<String,Object>  form=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID)) ;
+
         if(Utils.isEmpty(form)){
-            form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-        }
-        if(form==null||form.isEmpty()){
             return EzClientBootstrap.instance().getAdminStyle()+"/404";
         }
         formService.fillFormById(form,searchParamsValues,sessionMap);
@@ -74,7 +72,8 @@ public class FormController extends BaseController {
         String layout = ""+core.getOrDefault("layout",EzClientBootstrap.instance().getLayout());
 
         request.setAttribute("layout",layout);
-
+        String username = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY));
+        request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
 
         return core.get(JsoupUtil.ADMINSTYLE)+"/form";
      }
@@ -143,11 +142,8 @@ public class FormController extends BaseController {
         searchParamsValues.put("ContextPath", request.getContextPath());
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",ID);
-        Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
-        //   new HashMap<>();
-        if(Utils.isEmpty(form)){
-            form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-        }
+        Map<String,Object>  form=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID)) ;
+
         if(form==null||form.isEmpty()){
             return "404";
         }
@@ -178,11 +174,8 @@ public class FormController extends BaseController {
             if ( StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
-            //   new HashMap<>();
-            if(Utils.isEmpty(form)){
-                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-            }
+            Map<String,Object>  form=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID)) ;
+
             if (form==null||form.isEmpty() ) {
                 return EzResult.instance().code("404");
             }
@@ -268,11 +261,8 @@ public class FormController extends BaseController {
             if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
-            //   new HashMap<>();
-            if(Utils.isEmpty(form)){
-                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-            }
+            Map<String,Object>  form=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID)) ;
+
             if (form == null) {
                 return EzResult.instance().code("404");
             }
@@ -336,11 +326,8 @@ public class FormController extends BaseController {
             if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            Map<String, Object> form=formService.selectConfigPublishForm(ENCRYPT_FORM_ID);
-            //   new HashMap<>();
-            if(Utils.isEmpty(form)){
-                form=   JSONUtils.parseObjectMap(formService.selectAllFormById(ENCRYPT_FORM_ID))  ;
-            }
+            Map<String,Object>  form=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID)) ;
+
             if (form == null) {
                 return EzResult.instance().code("404");
             }
