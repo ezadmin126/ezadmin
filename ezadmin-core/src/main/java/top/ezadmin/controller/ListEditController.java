@@ -303,19 +303,9 @@ public class ListEditController extends BaseController {
             Utils.addLog("sessionParamMap " + JSONUtils.toJSONString(sessionParamMap));
         }
 
-
-        Map<String, Object> list = new HashMap<>();
-        if (StringUtils.isNotBlank(ENCRYPT_LIST_ID)) {
-            try {
-                  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
-                if(Utils.isEmpty(list)){
-                    throw new NotExistException();
-                }
-            }catch (Exception e){
-                if (Utils.getLog() != null) {
-                    Utils.addLog("加载列表异常",e);
-                }
-            }
+        Map<String, Object> list =  listService.selectConfigEditList(ENCRYPT_LIST_ID);
+        if(Utils.isEmpty(list)){
+            throw new NotExistException();
         }
         try {
             listService.fillCountById(list, requestParamMap, sessionParamMap);
