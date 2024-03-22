@@ -1,6 +1,7 @@
 package top.ezadmin.blog.vo;
 
-import top.ezadmin.blog.model.Blog;
+
+import top.ezadmin.domain.model.Blog;
 
 public class BlogVO extends Blog {
     private String categoryName;

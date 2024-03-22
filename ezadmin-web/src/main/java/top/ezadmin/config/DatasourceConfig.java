@@ -2,6 +2,8 @@ package top.ezadmin.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Primary;
 import top.ezadmin.common.utils.JsoupUtil;
 import top.ezadmin.plugins.sqlog.EzSqlogDataSource;
 
@@ -21,7 +24,6 @@ public class DatasourceConfig {
 	private Logger logger = LoggerFactory.getLogger(DatasourceConfig.class.getName());
 	@Value("${spring.datasource.druid.db1.driver-class-name}")
 	private String driver1 ;
-
 
 	@Value("${spring.datasource.druid.db1.url}")
 	private String db1Url;
@@ -65,6 +67,7 @@ public class DatasourceConfig {
 		}
 		return null;
 	}
+
 	@Bean(name = "dataSource")
 	@DependsOn("h2server")
 	public DataSource gomanager () {
@@ -85,5 +88,20 @@ public class DatasourceConfig {
 		//ezSqlogDataSource.setCallback(ezSqlogCallBackERP);
 		return ezSqlogDataSource;
 	}
+
+
+	@Value("${system.ossEndpoint:}")
+	private String ossEndpoint;
+	@Value("${system.ossAccessKeyId:}")
+	private String ossAccessKeyId;
+	@Value("${system.ossAccessKeySecret:}")
+	private String ossAccessKeySecret;
+	@Bean(name = "ossClient")
+	@Primary
+	public OSS oss() {
+		return new OSSClientBuilder().build(ossEndpoint, ossAccessKeyId, ossAccessKeySecret);
+	}
+
+
 
 }

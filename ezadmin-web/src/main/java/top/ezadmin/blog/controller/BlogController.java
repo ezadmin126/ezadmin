@@ -1,13 +1,14 @@
 package top.ezadmin.blog.controller;
 
 
+import top.ezadmin.blog.constants.Nologin;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.utils.EzPage;
 import top.ezadmin.common.utils.IpUtils;
+import top.ezadmin.domain.model.BlogMessage;
 import top.ezadmin.web.EzResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import top.ezadmin.blog.model.BlogMessage;
 import top.ezadmin.blog.service.BlogService;
 import top.ezadmin.blog.utils.UrlTool;
 import top.ezadmin.blog.vo.BlogConfigurations;
@@ -34,6 +35,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/blog")
+@Nologin
 public class BlogController {
     Logger logger = LoggerFactory.getLogger(BlogController.class);
 

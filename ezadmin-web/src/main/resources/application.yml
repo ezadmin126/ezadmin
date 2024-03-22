@@ -33,6 +33,13 @@ spring:
       content-type: text/html
     # 开发时关闭缓存,不然没法看到实时页面
     cache: false
+system:
+  uploadType: OSS
+  ossEndpoint: http://oss-cn-shanghai.aliyuncs.com
+  imgEndpoint: imageseg.cn-shanghai.aliyuncs.com
+  ossAccessKeyId:
+  ossAccessKeySecret:
+  ossBucketName:
 h2Server: '-web,-tcpAllowOthers,-webAllowOthers,-tcp,-ifNotExists,-baseDir,'
 topezadmin:
   # 默认true 开发时配置为false

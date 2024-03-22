@@ -45,25 +45,19 @@
             <div id="toolbar"  >
                 <div class="layui-btn-group">
                     <button type="button" title="保存" id="saveButton" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon  layui-icon-ok-circle"></i>
+                        <i class="layui-icon  layui-icon-ok-circle"></i>保存
                     </button>
-                    <button title="撤销" type="button" id="undo" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon layui-icon-left"></i>
-                    </button>
-                    <button title="重做"  type="button" id="redo" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon layui-icon-right"></i>
-                    </button>
-                    <button title="格式化" type="button" id="format" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon  layui-icon-fonts-clear"></i>
+                    <button title="发布" type="button" id="publish" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon  layui-icon-fonts-clear"></i>发布
                     </button>
                     <button title="复制" type="button" id="copy" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon layui-icon-file-b"></i>
+                        <i class="layui-icon layui-icon-file-b"></i>复制
                     </button>
                     <button title="全屏"  type="button" id="full" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon layui-icon-screen-full"></i>
+                        <i class="layui-icon layui-icon-screen-full"></i>全屏
                     </button>
                     <button title="快捷键" type="button" id="keyboard" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon layui-icon-more"></i>
+                        <i class="layui-icon layui-icon-more"></i>快捷键
                     </button>
                 </div>
             </div>
@@ -109,6 +103,20 @@
             layui.layer.alert('请求失败，网络异常');
         });
 
+    })
+    layui.jquery(document).on("click","#publish",function(){
+        var code = editor.getValue();
+        $.post("/topezadmin/formEdit/publish-"+$("#ezCode").val(),  {data:editor.getValue(),cloudId:$("#cloudId").val(),EZ_TYPE:$("#ezType").val()}, function(data) {
+            if(data.success){
+                location.reload();
+            }else{
+                layui.layer.alert(data.message);
+            }
+        }, 'json').fail(function() {
+            layui.layer.alert('请求失败，网络异常');
+        });
+        // var formattedCode = html_beautify(code, { indent_size: 2 });
+        // editor.getSession().setValue(formattedCode);
     })
     layui.jquery(document).on("click","#undo",function(){
         editor.undo();
