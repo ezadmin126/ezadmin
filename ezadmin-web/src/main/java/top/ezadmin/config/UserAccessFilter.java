@@ -22,6 +22,7 @@ import top.ezadmin.common.utils.IpUtils;
 import top.ezadmin.common.utils.NumberUtils;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
+import top.ezadmin.domain.mapper.SysUserMapper;
 import top.ezadmin.domain.model.SysUser;
 import top.ezadmin.web.SpringContextHolder;
 
@@ -48,6 +49,8 @@ import java.util.concurrent.CompletableFuture;
 
     @Resource
     EzClientProperties properties;
+    @Resource
+    SysUserMapper sysUserMapper;
 
 
     private List<String> staticUrl=new ArrayList<>();
@@ -79,18 +82,18 @@ import java.util.concurrent.CompletableFuture;
             return;
         }
 //        //判断sid是否正常
-//        SysUser dbUser= superMapper.selectCheckSid(NumberUtils.toLong(idNameArray[0]),cookie.getCookie(Constants.EZ_SID));
+         SysUser dbUser= sysUserMapper.selectByPrimaryKey(NumberUtils.toLong(idNameArray[0]));
 //
-//        if(dbUser==null){
-//            httpServletResponse.sendRedirect("/login/login.html");
-//            return;
-//        }
+        if(dbUser==null){
+            httpServletResponse.sendRedirect("/login/login.html");
+            return;
+        }
 //        //从cookie里面获取
-//        if(user==null){
-//            user=new User();
-//            user.setUserId(dbUser.getUserId());
-//            user.setUserName(dbUser.getUserName());
-//            user.setCompanyId(dbUser.getCompanyId());
+        if(user==null){
+             user=new User();
+             user.setUserId(dbUser.getUserId());
+            user.setUserName(dbUser.getUserName());
+            user.setCompanyId(dbUser.getCompanyId());
 //
 //          user.setUserId(NumberUtils.toLong(idNameArray[0]));
 //          List<SysOrg> list= superMapper.selectUserOrg(user.getUserId());
@@ -120,7 +123,7 @@ import java.util.concurrent.CompletableFuture;
 //            }else{
 //                user.setOrgId(0L);
 //            }
-//        }
+        }
         httpServletRequest.getSession().setAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY, user.getUserName());
         httpServletRequest.getSession().setAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY, user.getUserId());
         httpServletRequest.getSession().setAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY, user.getCompanyId());

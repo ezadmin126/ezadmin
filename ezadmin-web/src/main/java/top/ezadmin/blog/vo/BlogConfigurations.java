@@ -8,12 +8,12 @@ import java.util.Calendar;
 
 public class BlogConfigurations {
 
-    private String websiteName="Ez-Admin";
-    private String websiteDescription="Ez-Admin";
-    private String websiteIcon="Ez-Admin";
-    private String sysAuthorImg="/static/info-img.jpg";
+    private String websiteName="EzAdmin.top";
+    private String websiteDescription="EzAdmin.top";
+    private String websiteIcon="EzAdmin.top";
+    private String sysAuthorImg="/static/info-img.png";
 
-    private String sysAuthor="湘北";
+    private String sysAuthor="EzAdmin";
 
 
 
@@ -67,7 +67,7 @@ public static JSONObject config(){
     }
 
     public String getSysCopyRight() {
-        return Calendar.getInstance().get(Calendar.YEAR)+" 湘北";
+        return Calendar.getInstance().get(Calendar.YEAR)+" "+sysAuthor;
     }
 
     public void setSysCopyRight(String sysCopyRight) {
