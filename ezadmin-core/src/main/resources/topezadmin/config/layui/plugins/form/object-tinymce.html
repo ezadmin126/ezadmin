@@ -61,6 +61,11 @@
                     tinymce.init({
                         selector: "textarea#[[${'DESC_ITEM_ID_'+item_name}]]"
                         ,
+                        image_dimensions: false,
+                        object_resizing: false,
+                        image_advtab: false,
+                        extended_valid_elements: 'img[class=tinyimage|src|border=0|alt|title|hspace|vspace|align|onmouseover|onmouseout|name]'
+                        ,content_style: "img {max-width:100%;}",
                         language: 'zh_CN'
                         ,
                         height: 600,
