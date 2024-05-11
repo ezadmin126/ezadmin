@@ -439,6 +439,25 @@ function  initSettingsAll(){
         }
     })
 
+    $(".layui-btn-sourceEdit").click(function(){
+        if($("#listCoreContainer").attr("ez-listcode")==''||$("#listCoreContainer").attr("ez-listcode")==undefined){
+            layui.layer.alert("请先保存列表");
+        }else{
+            openBlank("/topezadmin/listEdit/sourceEdit-"+$("#listCoreContainer").attr("ez-listcode"));
+        }
+    })
+
+    $(".layui-btn-publish").click(function(){
+        if($("#listCoreContainer").attr("ez-listcode")==''||$("#listCoreContainer").attr("ez-listcode")==undefined){
+            layui.layer.alert("请先保存列表");
+        }else{
+            openBlank("/topezadmin/listEdit/publish-"+$("#listCoreContainer").attr("ez-listcode"));
+        }
+    })
+
+
+
+
     $(".layui-btn-core").click(function(){
         $("#listCoreContainer").click();
     })
