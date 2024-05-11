@@ -1,0 +1,18 @@
+<div class=" " th:fragment="pagination" th:remove="tag">
+    <div class="col-12" style="text-align:center;" th:if="${page.totalRecord==0}">
+        <div style="display: inline-block;padding-top:5px;margin-left:10px">
+            无结果
+        </div>
+    </div>
+    <div class="layui-box layui-laypage layui-laypage-default" th:if="${page.totalRecord>0}">
+        <a href="javascript:;" class="layui-laypage-prev layui-disabled" data-page="0">上一页</a>
+        <span  class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>1</em></span>
+        <a href="javascript:;" data-page="2">2</a>
+        <a href="javascript:;" data-page="3">3</a>
+        <a href="javascript:;" data-page="4">4</a>
+        <a href="javascript:;"  data-page="5">5</a>
+        <span  class="layui-laypage-spr">…</span>
+        <a href="javascript:;" class="layui-laypage-last" title="尾页"  data-page="7">7</a>
+        <a href="javascript:;" class="layui-laypage-next" data-page="2">下一页</a>
+    </div>
+</div>

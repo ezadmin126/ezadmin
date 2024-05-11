@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>标签管理</title>
+
+</head>
+<body id="base-label" datasource="datasource"  >
+<div id="append_head"></div>
+<div class="layui-fluid">
+    <div class="layui-tab">
+        <ul class="layui-tab-title" id="tab">
+        </ul>
+    </div>
+    <form class="layui-form" id="search">
+        <div ><label >标签名编号</label>
+            <div >
+                <input   type="text" item_name="ID"    >
+            </div>
+        </div>
+        <div ><label >标签名</label>
+            <div >
+                <input   type="text" item_name="LABEL_NAME"   oper="LIKE">
+            </div>
+        </div>
+
+    </form>
+    <hr class="layui-border-blue">
+    <div class="btn-group   bd-highlight" id="tableButton"><button item_name="新增" name="新增" url="/topezadmin/form/form-base-attr" opentype="MODEL" windowname style type="table">新增</button>
+    </div>
+    <table id="table" class="layui-table" style=" width:100%">
+        <thead>
+        <tr id="column">
+            <th type="rowbutton" id="rowbutton" width="235"  >
+                <button item_name="修改"   url="/topezadmin/form/form-base-attr?ID=${ID}" opentype="MODEL" windowname="修改"  type="single">修改</button>
+                <!--          <button item_name="标签值"   url="/topezadmin/list/list-base-attr-value?ATTRIBUTE_ID=${ID}" opentype="PARENT" windowname="标签值"  type="group">标签值</button>-->
+                <button item_name="删除"  url="/topezadmin/form/doDelete-base-attr?ID=${ID}" opentype="CONFIRM_AJAX" windowname="删除标签"  type="group">删除</button></th>
+            <th item_name="ID" width="60" minwidth="60" fixed="left" body="td-numbers" head="th-numbers"      >序号</th>
+
+            <th item_name="LABEL_NAME"     >标签名</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td> express:</td>
+            <td colspan="100"><pre id="express" class="layui-code" orderby="" groupby="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("
+    SELECT
+          ID,
+        LABEL_NAME
+    FROM
+        T_BASE_LABEL A
+    WHERE
+        DELETE_FLAG = 0");
+if(isNotBlank("COMPANY_ID","session")){sql.append(" AND COMPANY_ID="+companyId);}
+return search(sql);</pre></td>
+        </tr>
+        <tr>
+            <td> count:</td>
+            <td colspan="100"><pre id="count" class="layui-code"></pre></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="append_foot"></div>
+
+<script>
+    layui.use(function () {
+
+    })
+</script>
+</body>
+</html>

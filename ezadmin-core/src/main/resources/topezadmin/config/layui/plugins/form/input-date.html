@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>日期</title>
+</head>
+<body id="input-date"   type="form" icon="layui-icon-date">
+
+<div id="template" >
+    <div class="layui-col-md12 layui-col-space10 selector"
+         ez-type="input-date">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">日期</label>
+            <div class="layui-input-block">
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input   autocomplete="off" type="text"
+                           class="layui-input layui-date-input"
+                            name="default" >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="content">
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="input-date"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+         th:ez-class="${class}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  "   >
+                <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                <small
+                        class="layui-form-mid layui-text-em top_desc"
+                        th:utext="${top_desc}" style="float:none"
+                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" autocomplete="off" type="text"
+                           class="layui-input layui-date-narmal" th:value="${value}"
+                           th:classappend="${class}"    th:name="${item_name}" th:id="${item_name+'_ID'}">
+                </div>
+
+
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

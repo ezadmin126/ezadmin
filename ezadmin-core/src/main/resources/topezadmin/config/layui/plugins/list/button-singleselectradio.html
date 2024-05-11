@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>行按钮-弹框单选按钮</title>
+</head>
+<body id="button-singleselectradio" type="listbutton">
+<table>
+    <tr id="content">
+        <td class='rowButtons  fixedCol '>
+            <button th:each="item:${rowButtonItemList}" th:text="${item.label}"
+                    th:if="${not #lists.isEmpty(rowButtonItemList) }"
+                    th:url="${item.url}" th:item_name="${item.item_name}" th:fname="${item.item_name}"
+                    th:name="${item.item_name}" th:opentype="${item.opentype}"
+                    th:windowname="${item.windowname}" th:area="${item.area}" th:item_id="${item.item_id}"
+                    th:if="${item.display}"
+                    type="button" editor="button_row" th:id="${'check_click_'+item_name}"
+                    th:ez_callback="${item.ez_callback}"
+                    class="  ezrowselectbutton list-item layui-btn layui-btn-sm layui-btn-primary ">
+            </button>
+            <script>
+                $(function () {
+
+                })
+            </script>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

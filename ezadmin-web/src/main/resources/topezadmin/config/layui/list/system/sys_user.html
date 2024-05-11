@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>用户列表</title>
+
+ </head>
+ <body id="sys_user" datasource="datasource" fixednumber="" append_column_url append_row_url empty_show="" firstcol="numbers">
+  <div id="append_head"></div>
+  <div class="layui-fluid">
+
+   <form class="layui-form" id="search">
+    <div class=" layui-inline ">
+     <label class="layui-form-label">用户名</label>
+     <div class="layui-input-inline">
+         <object class=" layui-input list-search-item " type="input-text" item_name="USER_NAME"  ></object>
+     </div>
+    </div>
+   </form>
+   <hr class="layui-border-blue">
+   <div class="btn-group   bd-highlight" id="tableButton">
+    <button item_name="新增" name="新增" url="/topezadmin/form/form-sys_user" opentype="MODEL" windowname="新增账号" style type="table">新增</button>
+   </div>
+   <table id="table" class="layui-table" style=" width:100%">
+    <thead>
+     <tr id="column">
+      <th type="rowbutton" id="rowbutton"  fixed="right"  width="175">
+       <button item_name="修改" name="修改" url="/topezadmin/form/form-sys_user?ID=${ID}" opentype="MODEL" windowname="修改账号" style type="button-group"   >修改</button>
+       <button item_name="分配角色" name="分配角色" url="/topezadmin/form/form-sys_user_role?ID=${ID}" opentype="MODEL" windowname="分配角色" style type="single">分配角色</button>
+       <button item_name="分配部门" name="分配部门" url="/topezadmin/form/form-sys_user_org?ID=${ID}" opentype="MODEL" windowname="分配部门" style type="single">分配部门</button>
+       <button item_name="重置密码" name="重置密码" url="/topezadmin/form/doSubmit-sys_user_password?ID=${ID}"  opentype="script" windowname="重置密码" style type="single">重置密码</button>
+
+      </th>
+         <th item_name="ID" width="60" minwidth="60" fixed="left" body="td-numbers" head="th-numbers"      >序号</th>
+
+         <th item_name="USER_NAME"  >用户名</th>
+         <th item_name="PUSER_NAME"  >上级</th>
+         <th item_name="ROLE_NAME"  >角色名称</th>
+         <th item_name="ORG_NAME"  >部门名称</th>
+         <th item_name="STATUS"   body="td-select"   data="yesno">是否启用</th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td> express:</td>
+      <td colspan="100"><pre id="express" class="layui-code" orderby="ORDER BY A.ADD_TIME DESC" groupby="GROUP BY A.USER_ID">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append(" SELECT A.USER_ID ID,A.STATUS, A.USER_NAME, GROUP_CONCAT(DISTINCT  R.ROLE_NAME) ROLE_NAME
+,GROUP_CONCAT(DISTINCT  ORG.ORG_NAME) ORG_NAME,P.USER_NAME PUSER_NAME
+FROM T_SYS_USER A
+         LEFT JOIN T_SYS_USER_ROLE UR ON A.USER_ID = UR.USER_ID and UR.DELETE_FLAG = 0
+         LEFT JOIN T_SYS_ROLE R ON R.ROLE_ID = UR.ROLE_ID
+         left join T_SYS_USER_ORG O ON O.USER_ID=A.USER_ID
+LEFT JOIN T_SYS_ORG ORG ON ORG.ORG_ID=O.ORG_ID
+LEFT JOIN T_SYS_USER P ON P.USER_ID=A.PARENT_ID
+WHERE A.DELETE_FLAG = 0 ");
+if(isNotBlank("COMPANY_ID","session")){sql.append(" AND A.COMPANY_ID="+companyId);}
+return search(sql);</pre></td>
+     </tr>
+     <tr>
+      <td> count:</td>
+      <td colspan="100"><pre id="count" class="layui-code"></pre></td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div id="append_foot">
+      <script>
+          $(function(){
+                    $(document).on('click', '[item_name=重置密码]', function () {
+                    var u=$(this).attr("url");
+                    // layui.layer.prompt({
+                    //     formType: 1,
+                    //     title: '请输入密码'
+                    // }, function(value, index, elem){
+                    //     debugger
+                        $.get(u+'&PASSWORD=123456',function(){
+                            layui.alert('重置密码为123456成功')
+                        })
+                        layui.layer.close(index);
+                   // });
+
+                })
+
+          })
+      </script>
+  </div>
+
+  <script>
+    layui.use(function () {
+
+    })
+</script>
+ </body>
+</html>

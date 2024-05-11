@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>公司管理</title>
+
+ </head>
+ <body id="sys_company" datasource="datasource" success_url="reload">
+  <div id="append_head"></div>
+  <div class="layui-container">
+   <form id="inputForm" method="post" class="layui-form">
+    <div class="layui-form-item">
+     <label class="layui-form-label">表单初始化</label>
+     <div class="layui-input-block">
+      <pre id="init" class="layui-code">StringBuilder sql=new StringBuilder();
+
+sql.append("select COMPANY_NAME,ADD_TIME,ADD_NAME from T_SYS_COMPANY where  COMPANY_ID=${ID}  ");
+
+return select(sql).get(0);</pre>
+     </div>
+    </div>
+    <div class="layui-form-item">
+     <label class="layui-form-label">表单提交</label>
+     <div class="layui-input-block">
+      <pre id="submit" class="layui-code">companyId=$$("COMPANY_ID");                 		
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");        
+sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");    
+if(!isNotBlank("ID")){                  		
+	id=insert("insert into T_SYS_COMPANY(                 
+				COMPANY_NAME
+                						
+
+		,ADD_TIME                 						
+		,ADD_ID                							
+		,ADD_NAME                  						
+	)VALUES(                  							
+				#{COMPANY_NAME}
+                 					
+		 ,
+		,NOW()                 							
+		,"+sessionUserId+"                  				
+		,'"+sessionUserName+"'                				
+		  )");                 							
+ 	return id;                 						
+}else{                 								
+	StringBuilder updateSql=new StringBuilder();				
+	updateSql.append("update T_SYS_COMPANY set ");                	
+	updateSql.append("		COMPANY_NAME = #{COMPANY_NAME}
+");							
+	updateSql.append("		,UPDATE_TIME=now()                 				
+		,UPDATE_ID="+sessionUserId+"                  	
+		,UPDATE_NAME='"+sessionUserName+"'                 
+");					
+	updateSql.append(" where COMPANY_ID=#{ID} ");				
+
+	update(updateSql);                							
+	return ID;                 							
+}</pre>
+     </div>
+    </div>
+    <div class="layui-form-item">
+     <label class="layui-form-label">表单删除</label>
+     <div class="layui-input-block">
+      <pre id="delete" class="layui-code"></pre>
+     </div>
+    </div>
+    <div class="layui-card" group_name="EZ_DEFAULT_GROUP">
+     <div class="layui-card-header">
+       EZ_DEFAULT_GROUP 
+     </div>
+     <div class="layui-card-body">
+      <div class="layui-form-item ">
+       <label class="layui-form-label">公司名称</label>
+       <div class="layui-input-block form-group">
+        <input item_name="COMPANY_NAME" name="COMPANY_NAME" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay-verify class="form-item" type="text" value="" lay_verify="required" item_desc="" group_data="" valid_rule="{&quot;required&quot;: true, &quot;minlength&quot;: 2}" valid_msg="{&quot;required&quot;: &quot;必填&quot;, &quot;minlength&quot;: &quot;长度{0}&quot;}" item_max_upload="">
+       </div>
+      </div>
+     </div>
+    </div>
+   </form>
+
+      <form id="configForm" class="layui-form">
+          <div class="layui-card" group_name="表单数据配置">
+              <div class="layui-card-header">
+                  表单数据配置
+              </div>
+              <div class="layui-card-body"></div>
+          </div>
+          <div class="layui-form-item ">
+              <label class="layui-form-label">初始表达式</label>
+              <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+
+sql.append("select COMPANY_NAME,ADD_TIME,ADD_NAME from T_SYS_COMPANY where  COMPANY_ID=${ID}  ");
+
+return select(sql).get(0);</pre>
+              </div>
+          </div>
+          <div class="layui-form-item ">
+              <label class="layui-form-label">提交表达式</label>
+              <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="submit_express"  item_name="submit_express" type="">companyId=$$("COMPANY_ID");
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");
+sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");
+if(isBlank("ID")){
+	id=insert("insert into T_SYS_COMPANY(
+				COMPANY_NAME
+
+
+		,ADD_TIME
+		,ADD_ID
+		,ADD_NAME
+	)VALUES(
+				#{COMPANY_NAME}
+
+
+		,NOW()
+		,"+sessionUserId+"
+		,'"+sessionUserName+"'
+		  )");
+ 	return id;
+}else{
+	StringBuilder updateSql=new StringBuilder();
+	updateSql.append("update T_SYS_COMPANY set ");
+	updateSql.append("		COMPANY_NAME = #{COMPANY_NAME}");
+	updateSql.append("		,UPDATE_TIME=now()
+		,UPDATE_ID="+sessionUserId+"
+		,UPDATE_NAME='"+sessionUserName+"'
+");
+	updateSql.append(" where COMPANY_ID=#{ID} ");
+
+	update(updateSql);
+	return ID;
+
+}</pre>
+              </div>
+          </div>
+          <div class="layui-form-item ">
+              <label class="layui-form-label">删除表达式</label>
+              <div class="layui-input-block form-group">
+                  <pre class="form-item layui-code" name="delete_express"  item_name="delete_express" type=""></pre>
+              </div>
+          </div>
+          <div class="layui-form-item ">
+              <label class="layui-form-label">分组表达式</label>
+              <div class="layui-input-block form-group">
+                  <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
+              </div>
+          </div>
+      </form>
+  </div>
+
+  <script>
+    layui.use(function () {
+
+    })
+</script>
+  <div id="append_foot"></div>
+ </body>
+</html>

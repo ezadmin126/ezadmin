@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>导出配置代码</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+
+    <link th:href="${'/webjars/layui/2.8.18/dist/css/layui.css?v=2.7.6'}" href="https://cdn.staticfile.net/layui/2.9.4/css/layui.css" rel="stylesheet">
+
+    <script th:src="${'/webjars/layui/2.8.18/dist/layui.js?v=2.8.6'}" src="https://cdn.staticfile.net/layui/2.9.4/layui.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="layui-text">
+        <div class="layui-card " id="card1">
+            <div class="layui-card-header">接入说明</div>
+            <div class="layui-card-body">
+        <pre class="layui-code code-demo" lay-options="{}">
+        <textarea  >
+             1.引入依赖：
+        <dependency>
+            <groupId>top.ezadmin</groupId>
+            <artifactId>ezadmin-core</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+            2.通过此系统设计列表或表单，并将设计好的页面导入到自己的应用。
+            classpath:/topezadmin/config/layui/list  （列表）
+            classpath:/topezadmin/config/layui/form  （表单）
+
+            3.启动自己的应用，查看页面。非springboot应用可以参考EzClientAutoConfiguration 初始化
+            </textarea>
+        </pre>
+            </div>
+        </div>
+        <div class="layui-card " id="card2">
+            <div class="layui-card-header">系统参数配置</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="300">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>配置项</th>
+                        <th>说明</th>
+                        <th>默认值</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>topezadmin.cacheFlag</td>
+                        <td>是否开启缓存，开启后，页面配置将会加载至缓存</td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.datasourceBeanNames</td>
+                        <td>页面所使用的springdatasource数据库连接池</td>
+                        <td>dataSource</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.logType</td>
+                        <td>1 是否打印SQL 1000  2  是否打印无where删除 0100  3 是否拒绝无where删除 0010 4 打印超过10000毫秒的 0001-10000</td>
+                        <td>0000-10000</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.adminStyle</td>
+                        <td>页面样式，可以自定义其他样式，参考 classpath:/topezadmin/config/layui更改layui文件夹名称即可</td>
+                        <td>layui</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.uploadUrl</td>
+                        <td>上传URL，需要返回 resourceId 字段</td>
+                        <td>/topezadmin/form/upload.html</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.downloadUrl</td>
+                        <td>下载URL前缀 + 上传URL返回的resourceId，展示为图片的SRC</td>
+                        <td>/topezadmin/form/download.html?fileId=</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.uploadPath</td>
+                        <td>默认是上传到文件夹的，需要配置一个上传路径</td>
+                        <td>/data/upload/ezadmin</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.exportClass</td>
+                        <td>实现 top.ezadmin.plugins.export.EzExport 接口 实现自定义的导出，默认CSV格式
+                        </td>
+                        <td>top.ezadmin.plugins.export.CSVExport</td>
+                    </tr>
+
+                    <tr>
+                        <td>topezadmin.cacheClass</td>
+                        <td>实现 top.ezadmin.plugins.cache.EzCache 接口 实现自定义的缓存，默认Caffeine
+                        </td>
+                        <td>top.ezadmin.plugins.cache.CaffeineCache</td>
+                    </tr>
+
+                    <tr>
+                        <td>topezadmin.refreshClass</td>
+                        <td>实现 top.ezadmin.plugins.refresh.EzRefresh 接口 实现自定义的文件监听，注意topezadmin.cacheFlag=false才会生效
+                        </td>
+                        <td>top.ezadmin.plugins.refresh.DefaultRefresh</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.layout</td>
+                        <td>container：响应式宽度，  fluid 100%宽度
+                        </td>
+                        <td>container</td>
+                    </tr>
+
+                    <tr>
+                        <td>topezadmin.holiday</td>
+                        <td>日期选择器，展示假期
+                        </td>
+                        <td>
+                            [[${'[["2024-1-1","2024-2-10","2024-2-11","2024-2-12","2024-2-13","2024-2-14","2024-2-15","2024-2-16","2024-2-17","2024-4-4","2024-4-5","2024-4-6","2024-5-1","2024-5-2","2024-5-3","2024-5-4","2024-5-5","2024-6-8","2024-6-9","2024-6-10","2024-9-15","2024-9-16","2024-9-17","2024-10-1","2024-10-2","2024-10-3","2024-10-4","2024-10-5","2024-10-6","2024-10-7"],["2024-2-4","2023-2-18","2024-4-7","2024-4-28","2024-5-11","2024-9-14","2024-9-29","2024-10-12"]]'}]] </td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.signoutUrl</td>
+                        <td>登出URL
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.navUrl</td>
+                        <td>admin框架的菜单接口</td>
+                        <td>/topezadmin/list/navs.html</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.config</td>
+                        <td>透传到首页的JSON配置</td>
+                        <td>{}</td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.logoUrl</td>
+                        <td>Logo</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.systemName</td>
+                        <td>首页的标题</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.appendJs</td>
+                        <td>首页自定义JS</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.messageUrl</td>
+                        <td>首页右上角消息通知URL</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>topezadmin.appendJs</td>
+                        <td>首页自定义JS</td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-card " id="card3">
+            <div class="layui-card-header">列表表达式</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="20%">
+                        <col width="30%">
+                        <col width="50%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>类别</th>
+                        <th>说明</th>
+                        <th>demo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>查询表达式</td>
+                        <td>
+                            通过表达式查询数据库，组装List&lt;Map&gt;，供列表展示<br>
+                            首先通过 StringBuilder sql=new StringBuilder(); 组装一条SQL。<br>
+                            然后调用<a href="#card5">内置函数search</a> ，返回数据即可。<br>
+                            表达式目前使用的是 QLExpress,只需要确保返回List&lt;Map&gt;格式的数据即可。<br>
+                            系统内置了很多常用的函数，满足日常开发的需要。
+                        </td>
+                        <td style="padding: 0;">
+<pre class="layui-code code-demo" lay-options="{}" >
+StringBuilder sql=new StringBuilder();
+sql.append(" SELECT ID,NAME FROM T_USER tec WHERE  tec.IS_DEL = 0");
+return search(sql);
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>总数表达式</td>
+                        <td>
+                           1.默认自动组装： select count(1) from (查询表达式) a<br>
+                           2.count(1)： 即可  系统会截取 "from " 之后的SQL片段执行count
+                           3.固定值，select 10000
+                        </td>
+                        <td>select 10000</td>
+                    </tr>
+                    <tr>
+                        <td>排序表达式</td>
+                        <td> 排序表达式需要单独配置，会拼接在where语句之后</td>
+                        <td>order by id desc</td>
+                    </tr>
+                    <tr>
+                        <td>分组表达式</td>
+                        <td>支持qlexpress</td>
+                        <td>group by xxx</td>
+                    </tr>
+                    <tr>
+                        <td>排序数字表达式</td>
+                        <td>用于列表快速排序功能</td>
+                        <td style="padding:0">
+<pre class="layui-code code-demo">
+import java.lang.Math;
+oldOrder=Integer.parseInt($(&quot;oldOrder&quot;));
+newOrder=Integer.parseInt($(&quot;displayOrder&quot;));
+if(newOrder&gt;oldOrder){
+    update(&quot;update table set DISPLAY_ORDER=DISPLAY_ORDER-1  where DISPLAY_ORDER&gt;=&quot;+Math.min(newOrder,oldOrder)+&quot; and DISPLAY_ORDER &lt;=&quot;+Math.max(newOrder,oldOrder));
+}else{
+    update(&quot;update table set DISPLAY_ORDER=DISPLAY_ORDER+1  where DISPLAY_ORDER&gt;=&quot;+Math.min(newOrder,oldOrder)+&quot; and DISPLAY_ORDER &lt;=&quot;+Math.max(newOrder,oldOrder));
+}
+cc=count(&quot;select count(1) from V_APPLET_AD where IS_DEL=0 &quot;);
+update(&quot;update table set DISPLAY_ORDER=&quot;+Math.min(newOrder,cc)+&quot;  where   AD_ID=${orderId}&quot;);
+</pre>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-card " id="card4">
+            <div class="layui-card-header">表单表达式</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="20%">
+                        <col width="30%">
+                        <col width="50%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>类别</th>
+                        <th>说明</th>
+                        <th>demo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>初始化表达式</td>
+                        <td>
+                            通过表达式查询数据库，组装Map，其中KEY为表单字段NAME;，初始化表单字段<br>
+                            首先通过 StringBuilder sql=new StringBuilder(); 组装一条SQL。<br>
+                            然后调用<a href="#card5">内置函数select</a> ，返回数据即可。<br>
+                            表达式目前使用的是 QLExpress,只需要确保返回Map格式的数据即可。<br>
+                            系统内置了很多常用的函数，满足日常开发的需要。
+                            进入编辑表单，需要传递ID参数
+                        </td>
+                        <td style="padding: 0;">
+<pre class="layui-code code-demo" lay-options="{}" >
+StringBuilder sql=new StringBuilder();
+sql.append(" SELECT ID,NAME FROM T_USER tec WHERE ID = ${ID}");
+return SELECT(sql);
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>提交表达式</td>
+                        <td>
+                           系统默认新增与更新使用同一个表达式，根据请求参数中是否有”ID“ 来做区分。<br>
+                            为了维护方便，内置了InsertParam类，用于组装SQL。<br>
+                            param.table("T_USER"); 设置表名<br>
+                            param.add("#{ID}"); 设置字段<br>
+                            系统在调用insertSimple内置函数时，会自动根据字段是否为空来组装SQL。<br>
+                            如需设置默认值：<br>
+                            param.add("#{ID,value=0}");<br>
+                        </td>
+                        <td>
+<pre class="layui-code code-demo" lay-options="{}" >
+import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.express.jdbc.InsertParam;
+import top.ezadmin.web.EzResult;
+ID=$("ID");
+if(isBlank("ID")){
+    param=new InsertParam();
+    param.table("T_USER");
+    param.add("#{NAME}");
+    id=insertSimple(param);
+    return id;
+}else{
+    param=new UpdateParam();
+    param.table("T_USER");
+    param.add("#{NAME}");
+    StringBuilder updateSql=new StringBuilder();
+    updateSql.append(" where ID=#{ID} ");
+    param.where(updateSql.toString());
+    updateSimple(param);
+    return ID;
+}
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>删除表达式</td>
+                        <td> /ezloud/form/doDelete-FORMNAME?ID=1
+                        用于快速实现列表的删除</td>
+                        <td>update from xxx set delete_flag=0 where id=${ID}</td>
+                    </tr>
+                    <tr>
+                        <td>状态表达式</td>
+                        <td>/ezloud/form/doStatus-FORMNAME?ID=1  用于快速实现列表的上下架或启用禁用</td>
+                        <td>update from xxx set status=abs(AD_STATUS-1) where id=${ID}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-card " id="card5">
+        <div class="layui-card-header">内置函数</div>
+        <div class="layui-card-body">
+            <blockquote class="layui-elem-quote" style="margin-top:10px">
+                为了便于编写表达式，ezadmin内置了一些函数。主要是通过往ExpressRunner添加自定义function实现。
+            </blockquote>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>函数名</th>
+                    <th>入参</th>
+                    <th>出参</th>
+                    <th>说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>select</td>
+                    <td>String(SQL)</td>
+                    <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                    <td>
+<pre>
+用于在表达式中执行查询sql操作。
+除QLEXPRESS中的获取请求参数处理之外，还支持在sql中直接使用 ${userName}  #{userName} 获取并替换参数。
+如：
+StringBuilder sql=new StringBuilder();
+sql.append("select user_id");
+if(isNotBlank("userName")){
+    sql.append(",username")
+}
+sql.append(" from T_USER where 1=#{ID} ");
+return search(sql);
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>update</td>
+                    <td>String(SQL)</td>
+                    <td>int</td>
+                    <td>
+<pre>
+用于在表达式中执行更新sql操作。
+    update("update xxx set xxx");
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>insert</td>
+                    <td>String(SQL)</td>
+                    <td>int</td>
+                    <td>
+<pre>
+用于在表达式中执行插入sql操作。
+    insert("insert into xxx");
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>insertSimple</td>
+                    <td>insertParam</td>
+                    <td>int</td>
+                    <td>
+<pre>
+用于在表达式中执行插入sql操作。insertParam参数主要是为了动态 根据参数是否为空来自动判断是否 组装到SQL中
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>updateSimple</td>
+                    <td>updateParam</td>
+                    <td>int</td>
+                    <td>
+<pre>
+用于在表达式中执行更新sql操作。insertParam参数主要是为了动态 根据参数是否为空来自动判断是否 组装到SQL中
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>search</td>
+                    <td>String(SQL)</td>
+                    <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                    <td>
+<pre>
+search函数内置了request,session中的参数，通过判断参数是否为空，来拼接where语句。
+如果需要在表达式中使用请求参数，但是在where语句中不希望拼接字段，则可以配置type为hidden-nowhere ，或者jdbctype 为 BODY.
+通过解析request中的参数自动拼接where语句。
+入参需要至少包含一个where条件。如无，可以使用 where 1=1 。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>$</td>
+                    <td>Object[] objects</td>
+                    <td>Object</td>
+                    <td>
+<pre>
+$("request"):获取当前request Map参数。
+$("abc"):获取request里面的abc参数对应的String，并将'替换为''，\替换为\\。
+$("abcd","true"):获取request里面的abcd_ARRAY参数对应的String[]。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>$$</td>
+                    <td>Object[] objects</td>
+                    <td>Object</td>
+                    <td>
+<pre>
+
+$$("abc"):获取session里面的abc参数对应的String，并将'替换为''，\替换为\\。
+主要用于数据权限，我们不能使用request里面的参数。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>isNotBlank</td>
+                    <td>Object[] objects</td>
+                    <td>boolean</td>
+                    <td>
+<pre>
+isNotBlank("abc"):判断request里面的abc参数对应的String 是否为blank
+isNotBlank("abc","session"):判断session里面的abc参数对应的String 是否为blank
+isNotBlank("abc","string"):判断第一个参数  是否不为blank
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>isBlank</td>
+                    <td>Object[] objects</td>
+                    <td>boolean</td>
+                    <td>
+<pre>
+isBlank("abc"):判断request里面的abc参数对应的String 是否为blank
+isBlank("abc","session"):判断session里面的abc参数对应的String 是否为blank
+isBlank("abc","string"):判断第一个参数  是否为blank
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>unionall(先考虑一下业务是否合理)</td>
+                    <td>String(SQL)</td>
+                    <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                    <td>
+<pre>
+正常的search插件是直接在SQL最后面拼接where语句的。
+但当SQL中存在union all时，拼接的where语句就会得不到想要的结果，遇到groupby时 会导致不能到两个。
+unionall插件会给 每个子SQL语句分别拼接where， 最后汇总成一条sql。
+出现这种情况，考虑一下业务是否合理，不建议一个列表呈现，存在SQL性能隐患。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>spring</td>
+                    <td>String(SpringBean)</td>
+                    <td>spring bean</td>
+                    <td>
+<pre>
+通过beanName获取spring的bean. 主要用于一些需要远程获取数据的场景。
+spring("userService").add($("user_name"),$$("session_user_id"));
+支持执行一些其他相关增删改查操作。比如平滑过渡复用老代码。
+</pre>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+
+<script>
+    layui.use(function(){
+        // code
+        var $=layui.jquery;
+        layui.code({
+            elem: '.code-demo',
+            tools: ['full','window']
+            ,header :true
+            ,lang: 'html'
+        });
+        $(".layui-card").each(function(){
+            var li=` <li>
+                <a href="#@ID@"><cite >@NAME@</cite></a>
+            </li>`.replace("@ID@",$(this).attr("id")).replace("@NAME@",$(this).find(".layui-card-header").text());
+            $("#dianti").append(li);
+        })
+        if ($("#dianti").length > 0 && $("#dianti").children().length > 1) {
+            layer.open({
+                title: '目录'
+                , skin: 'layui-layer-dir'
+                , type: 1
+                , offset: 'r'
+                , shade: 0
+                , fixed: true
+                , content: $("#dianti")
+            });
+
+        }
+    })
+</script>
+</body>
+<div>
+    <div>
+        <style>
+            /* 目录 */
+            .site-dir {
+                display: none;width:10px
+            }
+            .site-dir:hover {
+                display: block;width:auto;
+            }
+
+            .site-dir li {
+                line-height: 26px;
+                margin-left: 20px;
+                overflow: visible;
+                list-style-type: disc;
+            }
+
+            .site-dir li a {
+                display: block;
+            }
+
+            .site-dir li a:active {
+                color: #01AAED;
+            }
+
+            .site-dir li a.layui-this {
+                color: #01AAED;
+            }
+
+            body .layui-layer-dir {
+                box-shadow: none;
+                border: 1px solid #d2d2d2;
+                opacity: 0.2
+            }
+
+            body .layui-layer-dir:hover {
+                opacity: 1
+            }
+
+            body .layui-layer-dir .layui-layer-content {
+                padding: 10px;
+            }
+
+            .site-dir a em {
+                padding-left: 5px;
+                font-size: 12px;
+                color: #c2c2c2;
+                font-style: normal;
+            }
+
+            .layui-menu li, .layui-menu-body-title a {
+                padding: 0px;
+            }
+
+            @media screen and (max-width: 992px) {
+                .layui-layer-dir {
+                    display: none;
+                }
+            }
+        </style>
+        <ul id="dianti" class="layui-menu site-dir layui-layer-wrap">
+        </ul>
+    </div>
+
+</div>
+</html>

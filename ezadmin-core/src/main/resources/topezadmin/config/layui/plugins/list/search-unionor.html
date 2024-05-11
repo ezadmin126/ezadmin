@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>多字段分别or搜索</title>
+</head>
+<body id="unionor" alias="input-unionor" type="search" icon="layui-icon-more">
+
+<div id="template" >
+    <div class="layui-col-space10 selector layui-col-md3" config-form-type="searchcore" ez-type="unionor">
+        <div class="layui-form-item ">
+            <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px">
+
+                <select name="default" class=""><option value="">请选择</option></select>
+            </div>
+            <div class="layui-input-block">
+                <input type="text" name="default" placeholder="请输入" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div id="content">
+    <div class="  list-item selector " config-form-type="searchcore" ez-type="unionor"
+         th:classappend="${'layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3'}"
+          th:style="${model.style}"
+     th:ITEM_NAME="${model.item_name}"
+     th:ez-name="${model.item_name}"
+         th:ez-label="${model.label}"
+         th:ez-item_name="${model.item_name}"
+         th:ez-placeholder="${model.placeholder}"
+         th:ez-alias="${model.alias}"
+         th:ez-col="${model.col}"
+         th:ez-url="${model.url}"
+
+         th:ez-data="${model.data}"
+         th:ez-datatype="${model.datatype}"
+         th:ez-item_desc="${model.item_desc}"
+         th:ez-top_desc="${model.top_desc}"
+         th:ez-jdbctype="${model.jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(model.lay_verify)?'':model.lay_verify}"
+         th:ez-valid_rule="${model.valid_rule}"
+         th:ez-valid_msg="${model.valid_msg}"
+         th:ez-style="${model.style}"
+
+>
+    <div  class="layui-form-item" >
+        <div class="layui-input-inline edit-unionsearch " style="width:100px"
+             th:for="${'itemId-' + model.item_name}">
+            <select style="width: 100%;" name="itemSearchKey">
+                <option value="">关键字</option>
+                <option th:selected="${model.itemSearchKey==null?false:#strings.equals(model.itemSearchKey,item.item_name)}"
+                        th:value="${item.item_name}" th:text="${item.label}"
+                        th:each="item:${itemNameList}">Alaska
+                </option>
+            </select>
+        </div>
+        <div  class="layui-input-block">
+        <input th:id="${'itemId-' + model.item_name}" type="text"
+               th:placeholder="${model.placeholder}"
+               th:title="${model.title}"
+        class="layui-input" th:value="${model.itemSearchValue}" name="itemSearchValue"
+          >
+    </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

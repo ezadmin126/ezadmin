@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>角色列表</title>
+  <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+ </head>
+ <body id="sys_role" datasource="datasource" fixnumber="" fixnumberright="" empty_show=""   firstcol="numbers">
+  <div id="append_head"></div>
+  <ul id="tab">
+  </ul>
+  <form id="search">
+   <div class="selector layui-col-md3 list-item " type="input-text">
+    <div class="layui-form-item">
+     <label class="layui-form-label">角色名称</label>
+     <div class="layui-input-block">
+      <object class="list-search-item" item_name="ROLE_NAME" type="input-text"></object>
+     </div>
+    </div>
+   </div>
+  </form>
+  <div id="tableButton">
+   <button class=" layui-btn   layui-btn-sm    " opentype="MODEL" url="/topezadmin/form/form-sys_role" item_name="新增" type="button-table">新增</button>
+  </div>
+  <table>
+   <thead>
+    <tr id="column">
+     <th id="rowbutton" width="176" >
+         <button class=" layui-btn   layui-btn-sm    " opentype="MODEL"
+                 url="/topezadmin/form/form-sys_role?ID=${ID}" item_name="修改">修改</button>
+         <button class=" layui-btn   layui-btn-sm    " opentype="MODEL" url="/topezadmin/form/form-sys_role_resource?ID=${ID}" item_name="分配权限">分配权限</button></th>
+        <th item_name="ID" width="60" minwidth="60" fixed="left" body="td-numbers" head="th-numbers"      >序号</th>
+
+        <th item_name="ROLE_NAME" width="200" head="th" label="角色名称" body="td-text"  >角色名称</th>
+     <th item_name="ROLE_DESC" head="th" label="角色描述" body="td-text">角色描述</th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      <pre id="express" orderby="" groupby="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("
+    SELECT
+        ROLE_NAME,ROLE_DESC,
+        ROLE_ID ID
+    FROM
+        T_SYS_ROLE A
+    WHERE
+        DELETE_FLAG = 0");
+       if(isNotBlank("COMPANY_ID","session")){sql.append(" AND A.COMPANY_ID="+companyId);}
+return search(sql);</pre></td>
+    </tr>
+    <tr>
+     <td>
+      <pre id="count"></pre></td>
+    </tr>
+   </tbody>
+  </table>
+  <div id="append_foot"></div>
+ </body>
+</html>

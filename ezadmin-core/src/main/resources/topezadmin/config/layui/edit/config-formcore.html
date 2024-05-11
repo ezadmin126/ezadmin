@@ -1,0 +1,67 @@
+<!-- header.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <div th:fragment="core">
+        <div class="layui-form config-form config-formcore layui-fluid" style="display: none;margin-right:20px">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="layui-badge-dot"  ></span>
+                    表单编码：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="encodeformid"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">表单名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="form_name"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据源：</label>
+                <div class="layui-input-block">
+                    <select placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="datasource" >
+
+                        <option value="dataSource">dataSource</option>
+
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        应用中数据源的springbean名称，区分大小写
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">自定义表单提交URL：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="formsubmiturl"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em">
+                        eg:/admin/form/doSubmit 注意是ajax提交，返回标准json,
+                        data为#success_url 字段 <br>
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">自定义成功URL：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="success_url"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em">
+                        reload:全局刷新<br>
+                        script:自定义js处理<br>
+                        reloadlocal: 仅限跳转当前页面<br>
+                        http://xxx:跳转到其他页面<br>
+                        表单提交之后的跳转URl
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

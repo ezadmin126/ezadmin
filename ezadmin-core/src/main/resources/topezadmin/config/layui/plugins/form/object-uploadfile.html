@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>上传</title>
+</head>
+<body id="uploadfile"  type="form" icon="layui-icon-upload-drag">
+
+<div id="template" >
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="uploadimage">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">上传图片</label>
+            <div class="layui-input-block">
+                <button type="button" name="default" th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
+                ><i class="layui-icon layui-icon-upload"></i>上传
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="uploadimage"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+         th:ez-class="${class}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"    >
+                <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                <small
+                        class="layui-form-mid layui-text-em top_desc"
+                        th:utext="${top_desc}" style="float:none"
+                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+                <div class="layui-upload">
+                    <button type="button" th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
+                    ><i class="layui-icon layui-icon-upload"></i>上传
+                    </button>
+                    <div th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                         class="layui-upload-list dragula-container2"
+                         th:id="${'layui-upload-list_'+item_name}"
+                         >
+                    </div>
+                </div>
+                <input type="hidden" th:value="${value}" th:name="${item_name}" th:id="${'ITEM_ID_' + item_name}" >
+
+
+                <script>
+
+
+                    layui.use(['upload', 'element', 'layer'], function () {
+                        let $ = layui.jquery
+                            , upload = layui.upload
+                            , element = layui.element
+                            , layer = layui.layer;
+                        let laytpl = layui.laytpl;
+
+                        let inputHiddenNode = $("#[[${'ITEM_ID_' + item_name}]]");
+
+                          let currentIds = inputHiddenNode.val();
+                        // if (currentIds&& currentIds.length > 0) {
+                        //     currentIds = currentIds.substring(0, currentIds.length - 1);
+                        //     inputHiddenNode.val(currentIds);
+                        // }
+
+                        var conta = $("#layui-upload-list_[[${item_name}]]");
+
+                        var acceptMime = "images";
+                        var exts = "*";
+                        var verify = conta.attr("lay-verify");
+                        var max = 1;
+                        var min = 0;
+                        var width = 0;
+                        var height = 0;
+                        var size = 0;
+                        var verifyJson = {}
+
+                        if (verify) {
+                            try{
+                                verifyJson = JSON.parse(verify);
+                                acceptMime = verifyJson.acceptMime || acceptMime;
+                                exts = verifyJson.exts || exts;
+                                max = verifyJson.max || max;
+                                min = verifyJson.min || min;
+                                size = verifyJson.size || size;
+                                width = verifyJson.width || width;
+                                height = verifyJson.height || height;
+                            }catch (e){
+                                console.log(verifyJson+e)
+                            }
+                        }
+                        verifyJson.accept='file';
+                        if (currentIds && currentIds.length > 0) {
+                            var split = currentIds.split(",");
+                            for (let i = 0; i < split.length; i++) {
+                                if ( split[i]!=''){
+                                    upload_add(verifyJson,'[[${item_name}]]', split[i])  ;
+                                }
+                            }
+                        }
+
+
+                        conta.attr("item_max_upload_min", min);
+                        conta.attr("item_max_upload_max", max);
+                        var image_width_height = conta.attr("image_width_height");
+                        console.log(acceptMime + exts + max + '--' + min);
+                        var config = {
+                            elem: "#[[${'FILE_ITEM_ID_' + item_name}]]"
+                            , url: '[[${uploadUrl}]]' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+                            , before: function (file) {
+
+                                var conta = $("#layui-upload-list_[[${item_name}]]");
+                                if (conta.children().length > max - 1) {
+                                    layer.alert("只允许上传"+max+"个文件，如需修改，请先删除再重新上传")
+                                    return false;
+                                }
+                            }
+                            ,data: {
+                                width: function () {
+                                    return width;
+                                },
+                                height: function () {
+                                    return height;
+                                }
+                            }
+                            , acceptMime: acceptMime
+                            , exts: exts
+                            , size: size
+                            , multiple: true
+                            , done: function (res) {
+                                var respon=res;
+                                try{respon=JSON.parse(res);
+                                }catch (E){}
+                                console.log(respon);
+                                //如果上传失败
+                                if (!respon.success) {
+                                    return layer.msg('上传失败，原因：' + respon.message);
+                                }
+                                //上传成功的一些操作
+                                try{
+                                    upload_add(verifyJson,'[[${item_name}]]' , respon.data[0].fileId);
+                                }catch (e){
+                                    upload_add(verifyJson,'[[${item_name}]]' , respon.data.fileId);
+                                }
+                            }
+                            , error: function () {
+                                layer.alert("上传失败，请重试。");
+                            }
+                            //进度条
+                            , progress: function (n, elem, e) {
+                                element.progress("[[${'FILE_PROGRESS_ITEM_ID_' + item_name}]]", n + '%')
+                                ; //可配合 layui 进度条元素使用
+                                if (n == 100) {
+                                    layer.msg('上传完毕', {icon: 1});
+                                }
+                            }
+                        }
+
+                        if (max==1){
+                            config.multiple=false;
+                        }
+
+                        var fconfig = $.extend(config, verifyJson);
+                        //常规使用 - 普通图片上传
+                        var uploadInst = upload.render(fconfig);
+
+                        dragula([document.getElementById("layui-upload-list_[[${item_name}]]")])
+                            .on('drop', function (el) {
+                                console.log(el.classList);
+                                upload_reCalId("[[${item_name}]]")
+                            });
+                    });
+                </script>
+
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+</body>
+</html>

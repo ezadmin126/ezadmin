@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>操作日志</title>
+
+ </head>
+ <body id="operlog" datasource="datasource" fixednumber="" fixednumberright="" treegrid="0" append_column_url="" append_row_url="" empty_show="" firstcol="">
+  <div id="append_head"></div>
+  <div class="layui-fluid">
+   <div class="layui-tab">
+    <ul class="layui-tab-title" id="tab">
+    </ul>
+   </div>
+   <form class="layui-form" id="search">
+    <div class=" layui-inline "><label class="layui-form-label">操作内容</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="OPER_NAME" item_name="OPER_NAME" alias="" oper="" >
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">操作单号</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="OPER_NO" item_name="OPER_NO" alias="" oper="" >
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">操作IP</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="OPER_IP" item_name="OPER_IP" alias="" oper="" >
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">操作链接</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="OPER_URL" item_name="OPER_URL" alias="" oper="" >
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">上次操作URL</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="REFERER" item_name="REFERER" alias="" oper="" >
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">操作时间</label>
+     <div class="layui-input-inline">
+      <object class=" layui-input list-search-item " type="daterange" name="" item_name="ADD_TIME" alias="" oper="" jdbctype="DATETIME" data="" datatype="" valid_rule="" valid_msg="" style="" placeholder=""></object>
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">操作人</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="ADD_NAME" item_name="ADD_NAME" alias="" oper="" >
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">终端信息</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="USER_AGENT" item_name="USER_AGENT" alias="" oper="" >
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">登录机器唯一ID</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="SID" item_name="SID" alias="" oper="" >
+     </div>
+    </div>
+   </form>
+   <hr class="layui-border-blue">
+   <div class="btn-group   bd-highlight" id="tableButton">
+   </div>
+   <table id="table" class="layui-table" style=" width:100%">
+    <thead>
+     <tr id="column">
+      <th type="rowbutton" id="rowbutton"></th>
+         <th item_name="ID" width="60" minwidth="60" fixed="left" body="td-numbers" head="th-numbers"      >序号</th>
+      <th item_name="OPER_NAME" url=""  label="操作内容" >操作内容</th>
+      <th item_name="OPER_NO" url=""  label="操作单号" >操作单号</th>
+      <th item_name="OPER_IP" url=""  label="操作IP" >操作IP</th>
+      <th item_name="OPER_URL" url=""  label="操作链接"  area="" opentype="" style="max-width:300px" windowname="" jdbctype="" emptyshow="" datasource=""  width="" minwidth="" order="">操作链接</th>
+      <th item_name="REFERER" url=""  label="上次操作URL"  area="" opentype="" style="max-width:300px" windowname="" jdbctype="" emptyshow="" datasource=""  width="" minwidth="" order="">上次操作URL</th>
+      <th item_name="ADD_TIME" url=""  label="操作时间" >操作时间</th>
+      <th item_name="ADD_NAME" url=""  label="操作人" >操作人</th>
+      <th item_name="USER_AGENT" url=""  label="终端信息" >终端信息</th>
+      <th item_name="SID" url=""  label="登录机器唯一ID" >登录机器唯一ID</th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td> express:</td>
+      <td colspan="100"><pre id="express" class="layui-code" orderby=" order by id desc " groupby="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("
+    SELECT
+        t.ID,
+        OPER_NAME,
+        OPER_NO,
+        OPER_IP,
+        OPER_URL,
+        REFERER,
+        ADD_TIME,
+        ADD_NAME,
+        USER_AGENT,
+        sid 
+    FROM
+        T_SYS_OPERATE_LOG t 
+    WHERE
+        DELETE_FLAG = 0");
+                    if(isNotBlank("COMPANY_ID","session")){sql.append(" AND COMPANY_ID="+companyId);}
+
+return search(sql);</pre></td>
+     </tr>
+     <tr>
+      <td> count:</td>
+      <td colspan="100"><pre id="count" class="layui-code"></pre></td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div id="append_foot"></div>
+
+ </body>
+</html>

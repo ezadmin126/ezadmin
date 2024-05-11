@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="footer" th:remove="tag">
+    <script th:src="${'/static/ezadmin/plugins/jquery/jquery.min.js'}"></script>
+    <script th:src="${'/static/ezadmin/plugins/bootstrap/js/bootstrap.bundle.min.js'}"></script>
+    <!-- overlayScrollbar-->
+    <script th:src="${'/static/ezadmin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js'}"></script>
+    <!-- AdminLTE App -->
+    <script th:src="${'/static/ezadmin/plugins/adminlte/js/adminlte.min.js?32'}"></script>
+    <script th:src="${'/static/js/index/index.js?1'+v}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script>
+        function bindEvent(element, eventName, eventHandler) {
+            if (element.addEventListener){
+                element.addEventListener(eventName, eventHandler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + eventName, eventHandler);
+            }
+        }
+        // Listen to message from child window
+        bindEvent(window, 'message', function (e) {
+            var uni=e.data.id;
+            $('.content-wrapper').IFrame('createTab', e.data.name, e.data.url, uni, true);
+        });
+        //$('.content-wrapper').IFrame('createTab', 'Home','http://ez.ivedeng.com/sys/main#//ezlist/list/list.html?pageId=177', 'welcome-html', true);
+
+    </script>
+</div>
+
+</body>
+
+</html>

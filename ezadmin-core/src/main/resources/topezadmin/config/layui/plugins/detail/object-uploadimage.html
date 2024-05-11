@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>上传</title>
+</head>
+<body id="uploadimage" alias="LAYUI-UPLOAD" type="form" icon="layui-icon-upload-drag">
+
+<div id="template" >
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="uploadimage">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">上传图片</label>
+            <div class="layui-input-block">
+                <button type="button" name="default" th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
+                ><i class="layui-icon layui-icon-upload"></i>上传
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <style>
+        .upload-true .deleteFiles{
+            font-size: 0 !important;
+            height:0px!important;
+        }
+    </style>
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="uploadimage"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  "   >
+                <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}"  th:classappend="${  ' upload-'+disable_flag}">
+                <small
+                        class="layui-form-mid layui-text-em top_desc"
+                        th:utext="${top_desc}" style="float:none"
+                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+                <div class="layui-upload">
+                    <div th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" class="layui-upload-list dragula-container2"
+                         th:id="${'layui-upload-list_'+item_name}"
+                         th:accept="${accept}">
+                    </div>
+                </div>
+                <input type="hidden" th:value="${value}" th:name="${item_name}" th:id="${'ITEM_ID_' + item_name}" >
+
+
+                <script>
+
+
+                    layui.use(['upload', 'element', 'layer'], function () {
+                        let $ = layui.jquery
+                            , upload = layui.upload
+                            , element = layui.element
+                            , layer = layui.layer;
+                        let laytpl = layui.laytpl;
+
+                        let inputHiddenNode = $("#[[${'ITEM_ID_' + item_name}]]");
+
+                        let currentIds = inputHiddenNode.val();
+                        if (currentIds.endsWith(",")) {
+                            currentIds = currentIds.substring(0, currentIds.length - 1);
+                            inputHiddenNode.val(currentIds);
+                        }
+
+                        var conta = $("#layui-upload-list_[[${item_name}]]");
+
+                        var acceptMime = "images";
+                        var exts = "jpg|png|gif|bmp|jpeg";
+                        var verify = conta.attr("lay-verify");
+                        var max = 1;
+                        var min = 0;
+                        var width = 0;
+                        var height = 0;
+                        var size = 0;
+                        var verifyJson = {}
+
+                        if (verify) {
+                            verifyJson = JSON.parse(verify);
+                            acceptMime = verifyJson.acceptMime || acceptMime;
+                            exts = verifyJson.exts || exts;
+                            max = verifyJson.max || max;
+                            min = verifyJson.min || min;
+                            size = verifyJson.size || size;
+                            width = verifyJson.width || width;
+                            height = verifyJson.height || height;
+
+                        }
+                        if (currentIds != undefined && currentIds.length > 0) {
+                            var split = currentIds.split(",");
+                            for (let i = 0; i < split.length; i++) {
+                                upload_add(verifyJson,'[[${item_name}]]', split[i])
+                                ;
+
+                            }
+                        }
+
+                    });
+                </script>
+
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+</body>
+</html>

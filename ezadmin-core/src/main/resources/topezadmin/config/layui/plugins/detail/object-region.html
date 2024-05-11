@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>省市区</title>
+</head>
+<body id="region" alias="10">
+<input th:name="${item_name}" th:id="${'itemId-' + item_name}">
+
+</div>
+<script>
+    layui.use('layCascader', function () {
+        var layCascader = layui.layCascader;
+        $.get("/topezadmin/api/region.html?level=3", function (data) {
+            layCascader({
+                elem: '[[${"#itemId-" + item_name}]]',
+                props: {
+                    value: 'regionId',
+                    label: 'regionName',
+                    children: 'child',
+                    multiple: true
+                },
+                filterable: true,
+                clearable: true, collapseTags: true,
+                placeholder: '[[${#strings.isEmpty(placeholder)?'请选择':placeholder}]]',
+                value: [[${#strings.isEmpty(itemParamValue)?'[]':itemParamValue}]],
+                options: data.data
+            });
+        })
+    });
+</script>
+</body>
+</html>

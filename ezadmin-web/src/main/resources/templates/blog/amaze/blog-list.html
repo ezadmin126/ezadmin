@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="blog-list-fragment" class="am-u-lg-8 am-u-sm-12">
+    <main class="articles-list">
+        <div>
+            <th:block th:if="${null != list}">
+                <th:block th:each="blog,iterStat : ${list}">
+                    <article class="am-g blog-entry-article">
+                        <div class="am-u-lg-6 am-u-lg-12 am-u-sm-12 blog-entry-text post-preview">
+                            <div class="topic-header">
+                                <div class="pull-left">
+                                    <div class="blog-flex-center">
+                                        <div class="blog-flex0">
+                                            <img th:src="@{${configurations.get('sysAuthorImg')}}" alt=""
+                                                 class="link avatar avatar-image">
+                                        </div>
+                                        <div class="author-lockup blog-flex1">
+                                            <a class="link" href="javascript:;"
+                                               th:text="${configurations.get('sysAuthor')}">13</a>
+                                            <span class="in">in</span>
+                                            <span class="category-name">
+                                <a class="category-name" rel="tag" th:href="${blog.categoryUrl}"
+                                   th:utext="${blog.categoryName}">
+                                    </a>
+                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="pull-right time pc_time"
+                                      th:text="${#dates.format(blog?.addTime,'yyyy-MM-dd HH:mm:ss')}">2019-01</span>
+                            </div>
+                            <h2 class="post-index-title"><a itemtype="url" th:href="${blog.blogUrl}">
+                                <th:block th:text="${blog.blogTitle}"></th:block>
+                            </a>
+                            </h2>
+                            <div class="abstract vditor-reset">
+                                <p th:utext="${blog.blogSubTitle}">
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </th:block>
+            </th:block>
+            <!-- 分页逻辑 -->
+          <div th:if="${not #strings.isEmpty(nextPageUrl)}"><a  class="layui-btn layui-btn-normal" th:href="${nextPageUrl}" >下一页</a></div>
+
+            <!--            <div th:replace="common/pagination::pagination"></div>-->
+        </div>
+    </main>
+
+</div>
+</html>

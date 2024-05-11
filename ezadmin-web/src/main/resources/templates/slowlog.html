@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link href="/webjars/layui/2.8.18/dist/css/layui.css?v=2.7.6" rel="stylesheet">
+    <script src="/webjars/layui/2.8.18/dist/layui.js?v=2.8.6" type="text/javascript"></script>
+</head>
+<body>
+<form class="layui-form" action="/sql/slowUpload" method="post" enctype="multipart/form-data">
+    <div class="layui-form-item">
+        <label class="layui-form-label">上传文件</label>
+        <div class="layui-input-inline">
+            <input type="file" name="file" id="ID-upload-demo-form-files">
+        </div>
+        <div class="layui-input-inline">
+            <input type="text" name="date" autocomplete="off" class="layui-input" id="ID-laydate-demo-en" placeholder="yyyy-MM-dd">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="demo1">开始统计</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<table class="layui-table" lay-filter="parse-table-demo">
+    <thead> <tr>
+        <th lay-data="{field:'id', width:60 }">序号</th>
+        <th lay-data="{field:'exetime', width:150,sort:true}">执行时间</th>
+        <th lay-data="{field:'name', width:150,sort:true}">次数</th>
+        <th lay-data="{field:'time', width:150,sort:true}">执行时长</th>
+        <th lay-data="{field:'user', width:150}">账号</th>
+        <th lay-data="{field:'scheme', width:150}">数据库</th>
+        <th lay-data="{field:'fa', width:150,sort:true}">发送行数</th>
+        <th lay-data="{field:'exa', width:150,sort:true}">扫描行数</th>
+        <th lay-data="{field:'row_aff', width:150,sort:true}">影响行数</th>
+        <th lay-data="{field:'vv'  }">SQL</th> </tr>
+    </thead>
+    <tbody> <tr  th:each="item,it:${showlist}">
+        <td  th:text="${it.index}">id</td>
+        <td th:text="${item.value.exetime}">执行时间</td>
+        <td th:text="${item.value.count}">次数</td>
+        <td th:text="${item.value.queryTime}">次数</td>
+        <td th:text="${item.value.user}">次数</td>
+        <td th:text="${item.value.scheme}">次数</td>
+        <td th:text="${item.value.row_send}">发送行数</td>
+        <td th:text="${item.value.row_ex}">扫描行数</td>
+        <td th:text="${item.value.row_aff}">影响行数</td>
+        <td th:text="${item.key}"> </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+<!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+
+<script>
+    layui.use(function(){
+        var table = layui.table;
+        var util = layui.util;
+        // 事件
+        table.init('parse-table-demo', {
+            // height: ''
+
+            lineStyle:'height: 110px;'
+        });
+        table.init('parse-table-demo2', {
+            // height: ''
+            lineStyle:'height: 110px;'
+        });
+
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#ID-laydate-demo-en',
+            type: 'date',
+            min: '2024-1-1'
+        });
+    });
+</script>
+
+</body>
+</html>

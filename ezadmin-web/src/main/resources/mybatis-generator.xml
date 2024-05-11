@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<!-- 配置生成器 -->
+<generatorConfiguration>
+<!--    <columnOverride column="_INTEGER" jdbcType="java.lang.Integer" /> -->
+    <context id="goodsCarId"  targetRuntime="MyBatis3" >
+        <property name="autoDelimitKeywords" value="false"/>
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <jdbcConnection driverClass="org.h2.Driver"
+                        connectionURL="jdbc:h2:tcp://47.103.36.208:9092/ez"
+                        userId="sa" password="">
+        </jdbcConnection>
+
+        <javaModelGenerator targetPackage="top.ezadmin.domain.model" targetProject="src/main/java">
+            <property name="constructorBased" value="false"/>
+
+            <property name="enableSubPackages" value="true"/>
+
+            <property name="immutable" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="top.ezadmin.domain.mapper" targetProject="src/main/resources">
+            <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator targetPackage="top.ezadmin.domain.mapper" type="XMLMAPPER" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <table tableName="T_BLOG" domainObjectName="Blog">
+            <property name="constructorBased" value="false"/>
+            <property name="ignoreQualifiersAtRuntime" value="false"/>
+            <property name="immutable" value="false"/>
+            <property name="modelOnly" value="false"/>
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="BLOG_ID" sqlStatement="CALL IDENTITY()" identity="true"/>
+        </table>
+        <table tableName="T_BLOG_CATEGORY" domainObjectName="BlogCategory">
+            <property name="constructorBased" value="false"/>
+            <property name="ignoreQualifiersAtRuntime" value="false"/>
+            <property name="immutable" value="false"/>
+            <property name="modelOnly" value="false"/>
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="CATEGORY_ID" sqlStatement="CALL IDENTITY()" identity="true"/>
+            <columnOverride column="DELETE_FLAG" property="deleteFlag" javaType="java.lang.Integer"/>
+        </table>
+        <table tableName="T_BLOG_MESSAGE" domainObjectName="BlogMessage">
+            <property name="constructorBased" value="false"/>
+            <property name="ignoreQualifiersAtRuntime" value="false"/>
+            <property name="immutable" value="false"/>
+            <property name="modelOnly" value="false"/>
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="ID" sqlStatement="CALL IDENTITY()" identity="true"/>
+            <columnOverride column="DELETE_FLAG" property="deleteFlag" javaType="java.lang.Integer"/>
+        </table>
+        <table tableName="T_SYS_USER" domainObjectName="SysUser">
+            <property name="constructorBased" value="false"/>
+            <property name="ignoreQualifiersAtRuntime" value="false"/>
+            <property name="immutable" value="false"/>
+            <property name="modelOnly" value="false"/>
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="USER_ID" sqlStatement="CALL IDENTITY()" identity="true"/>
+            <columnOverride column="DELETE_FLAG" property="deleteFlag" javaType="java.lang.Integer"/>
+        </table>
+        <table tableName="T_CORE_FILE" domainObjectName="CoreFile">
+            <property name="constructorBased" value="false"/>
+            <property name="ignoreQualifiersAtRuntime" value="false"/>
+            <property name="immutable" value="false"/>
+            <property name="modelOnly" value="false"/>
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="FILE_ID" sqlStatement="CALL IDENTITY()" identity="true"/>
+            <columnOverride column="DELETE_FLAG" property="deleteFlag" javaType="java.lang.Integer"/>
+        </table>
+        <table tableName="T_VISITOR_LOG" domainObjectName="VisitorLog">
+            <property name="constructorBased" value="false"/>
+            <property name="ignoreQualifiersAtRuntime" value="false"/>
+            <property name="immutable" value="false"/>
+            <property name="modelOnly" value="false"/>
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="ID" sqlStatement="CALL IDENTITY()" identity="true"/>
+        </table>
+    </context>
+
+</generatorConfiguration>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>全功能富文本</title>
+</head>
+<body id="tinymce" type="form" icon="layui-icon-fonts-html">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="tinymce">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">富文本（可视化不渲染）</label>
+            <div class="layui-input-block">
+                <textarea name="default" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="tinymce"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >
+                <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                <small
+                        class="layui-form-mid layui-text-em top_desc"
+                        th:utext="${top_desc}" style="float:none"
+                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+                <!-- 内容状态 -->
+                <textarea th:label="${label}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                          th:name="${item_name}" th:id="${'DESC_ITEM_ID_'+item_name}"
+                          th:text="${value}" class="tinymcetextarea">
+
+                </textarea>
+
+
+                <script>
+                    try{
+                    var uploadUrl = "[[${uploadUrl+'?descFlag=1'}]]";
+                    tinymce.init({
+                        selector: "textarea#[[${'DESC_ITEM_ID_'+item_name}]]"
+                        ,
+                        language: 'zh_CN'
+                        ,
+                        height: 600,
+                        branding: false
+                        ,
+                        width: '100%'
+                        ,
+                        plugins: 'code codesample toc wordcount link image media lists advlist table hr emoticons fullscreen print insertdatetime searchreplace batchUploadImage emoticons'
+                        ,
+                        toolbar: ['styleselect formatselect fontselect fontsizeselect forecolor backcolor fullscreen print',
+                            'code codesample undo redo toc bullist numlist lineheight visualaid bold italic underline strikethrough blockquote subscript superscript  hr removeformat insertdatetime searchreplace emoticons wordcount',
+                            'table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | outdent indent alignleft aligncenter alignright | link image batchUploadImage ']
+                        ,
+                        form: {
+                            name: 'file'
+                        }
+                        ,
+                        toolbar_sticky: true,
+                        relative_urls: false,
+                        convert_urls: false
+                        ,
+                        autosave_ask_before_unload: false
+                        ,
+                        images_upload_url: "[[${uploadUrl+'?descFlag=1'}]]"
+                        ,
+                        file_picker_callback: function (callback, value, meta) {
+                            var filetype = '.bmp, .jpg, .jpeg, .png, .gif, .pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
+
+                            //为不同插件指定文件类型及后端地址
+                            switch (meta.filetype) {
+                                case 'image':
+                                    filetype = '.bmp, .jpg, .jpeg, .png, .gif, .pdf';
+                                    break;
+                                case 'media':
+                                    filetype = '.mp3, .mp4';
+                                    break;
+                                case 'file':
+                                default:
+                            }
+                            //模拟出一个input用于添加本地文件
+                            var input = document.createElement('input');
+                            input.setAttribute('type', 'file');
+                            input.setAttribute('accept', filetype);
+                            input.click();
+                            input.onchange = function () {
+                                var file = this.files[0];
+
+                                var xhr, formData;
+                                xhr = new XMLHttpRequest();
+                                xhr.withCredentials = false;
+                                xhr.open('POST', uploadUrl);
+                                xhr.onload = function () {
+                                    debugger;
+                                    var json;
+                                    if (xhr.status != 200) {
+                                        layer.msg('HTTP Error: ' + xhr.status);
+                                        return;
+                                    }
+                                    console.log('Invalid JSON: ' + xhr.responseText)
+                                    json = JSON.parse(xhr.responseText);
+                                    if (!json) {
+                                        layer.msg('Invalid JSON: ' + xhr.responseText);
+                                        return;
+                                    }
+                                    var uurl = json.data.src||json.data.url;
+                                    if (!uurl.startsWith("http")) {
+                                        uurl = $("#contextName").val() + uurl;
+                                    }
+                                    callback(uurl, {text: file.name, title: file.name, alt: file.name});
+                                };
+                                formData = new FormData();
+                                formData.append('file', file, file.name);
+                                xhr.send(formData);
+                            }
+                        }
+                        ,
+                        images_upload_handler: function (blobInfo, success, fail) {
+                            // 图片上传实现 http://tinymce.ax-z.cn/general/upload-images.php
+                            var formData = new FormData();
+                            debugger
+                            formData.append('file', blobInfo.blob());
+                            $.ajax({
+                                url: uploadUrl,
+                                type: 'POST',
+                                data: formData,
+                                dataType: 'json',
+                                processData: false,
+                                contentType: false,
+                                success: function (response) {
+                                    try {
+                                        var uurl = response.data.src||response.data.url;
+                                        if (!uurl.startsWith("http")) {
+                                            uurl = $("#contextName").val() + uurl;
+                                        }
+                                        success(uurl);
+                                    } catch (e) {
+                                        console.log(e);
+                                        fail('上传失败.');
+                                    }
+                                },
+                                error: function () {
+                                    fail('上传失败.');
+                                }
+                            });
+                            // 上传成功调用 success(url);
+                            // 上传失败调用 fail();
+                        }
+                        ,
+                        setup: function (editor) {
+                            editor.on('change', function (e) {
+                                //  console.log('The Editor has initialized.');
+                                editor.save();
+                            });
+                        }
+                    });
+                    }catch(e){}
+                </script>
+
+
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

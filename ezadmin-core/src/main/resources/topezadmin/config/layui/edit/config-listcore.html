@@ -1,0 +1,103 @@
+<!-- header.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <div th:fragment="core">
+        <div class="layui-form config-form config-listcore" style="display: none">
+            <div class="layui-form-item">
+                <label class="layui-form-label"> <span class="layui-badge-dot"  ></span>
+                    列表编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="listcode"  autocomplete="off"  class="layui-input">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="layui-badge-dot"  ></span>
+                    列表名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="listname"  autocomplete="off"  class="layui-input">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否包含导出</label>
+                <div class="layui-input-block">
+                    <select placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="export" >
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据源<span class="layui-badge-dot"  ></span></label>
+                <div class="layui-input-block">
+                    <select placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="datasource" >
+                        <option value="dataSource">dataSource</option>
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        应用中数据源的springbean名称，区分大小写
+                    </small>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">行高</label>
+                <div class="layui-input-block">
+                    <input type="text" name="linestyle"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em"  >
+                        每一行的高度 height: 95px;
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">空值替换</label>
+                <div class="layui-input-block">
+                    <input type="text" name="empty_show"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em"  >
+                        全局空值替换
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">分页加载类别</label>
+                <div class="layui-input-block">
+                    <select name="pagesync">
+                        <option value="0">异步</option>
+                        <option value="1">同步</option>
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        默认异步
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">按钮列宽度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="rowbtnwidth"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">按钮列固定</label>
+                <div class="layui-input-block">
+                    <select placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="rowbtnfixed" >
+                        <option value="">请选择</option>
+                        <option value="left" disabled>左</option>
+                        <option value="right">右</option>
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        按钮一般靠右
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

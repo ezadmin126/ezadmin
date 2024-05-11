@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>分类管理</title>
+
+ </head>
+ <body id="base-category" treegrid="1" datasource="datasource" fixednumber="" fixednumberright="" append_column_url="" append_row_url="" empty_show="-" firstcol="">
+  <div id="append_head"></div>
+  <div class="layui-fluid">
+   <div class="layui-tab">
+    <ul class="layui-tab-title" id="tab">
+    </ul>
+   </div>
+   <form class="layui-form" id="search">
+    <div class=" layui-inline ">
+     <label class="layui-form-label">分类编码</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" item_name="CATEGORY_CODE" placeholder style alias="M" jdbctype data datatype oper validate_rules validate_messages>
+     </div>
+    </div>
+
+    <div class=" layui-inline ">
+     <label class="layui-form-label">分类名称</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" item_name="CATEGORY_NAME" placeholder style alias="" jdbctype data datatype oper validate_rules validate_messages>
+     </div>
+    </div>
+   </form>
+   <hr class="layui-border-blue">
+   <div class="btn-group   bd-highlight" id="tableButton">
+    <button item_name="新增" name="新增" url="/topezadmin/form/form-base-category" opentype="MODEL" windowname style type="table">新增</button>
+   </div>
+   <table id="table" class="layui-table" style=" width:100%">
+    <thead>
+     <tr id="column">
+
+      <th item_name="id"    >ID</th>
+      <th item_name="name"   >分类名称</th>
+       <th item_name="CATEGORY_CODE"      >分类编码</th>
+      <th item_name="STATUS"   body="td-select"    data="yesno"   >是否启用</th>
+      <th type="rowbutton" id="rowbutton" width="230"><button item_name="修改" name="修改" url="/topezadmin/form/form-base-category?ID=${ID}" opentype="_BLANK_PARAM" windowname style area type="group">修改</button><button item_name="add" name="add" url="/topezadmin/form/form-base-category?PARENT_ID=${CATEGORY_ID}" opentype="MODEL" windowname="添加子分类" style="" area="" type="group">添加子分类</button><button item_name="删除" name="删除" url="/topezadmin/form/doDelete-base-category?ID=${ID}" opentype="CONFIRM_AJAX" windowname style area type="group">删除</button></th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td> express:</td>
+      <td colspan="100"><pre id="express" class="layui-code" orderby="order by CATEGORY_ID" groupby="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("
+       SELECT
+        M.CATEGORY_ID id,
+        PARENT_ID  ,
+          CASE WHEN STATUS=1 THEN '是' ELSE '否' end STATUS,
+        CATEGORY_NAME   , CATEGORY_CODE
+    FROM
+        T_BASE_CATEGORY M
+    WHERE
+        DELETE_FLAG = 0
+       ");
+if(companyId&gt;1){
+	sql.append(" AND COMPANY_ID="+companyId);
+}
+ return treeSearch(sql,"CATEGORY_NAME","ID","PARENT_ID","0");</pre></td>
+     </tr>
+     <tr>
+      <td> count:</td>
+      <td colspan="100"><pre id="count" class="layui-code"></pre></td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div id="append_foot">
+
+   <script type="text/html" id="TPL-treeTable-demo">
+    <div class="layui-btn-container">
+     <button class="layui-btn layui-btn-sm" lay-event="addRoot">新增一级分类</button>
+    </div>
+   </script>
+   <script type="text/html" id="TPL-treeTable-demo-tools">
+    <div class="layui-btn-container">
+<!--     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+     <a class=" layui-btn layui-btn-sm layui-btn-primary layui-border-blue  " lay-event="addChild">新增子类</a>
+     <a class=" layui-btn layui-btn-sm layui-btn-primary layui-border-blue  " lay-event="editChild">修改</a>
+     <a class="layui-btn layui-btn-sm layui-btn-primary layui-border-red " lay-event="delete">删除</a>
+    </div>
+   </script>
+   <script>
+    layui.use(function(){
+     var treeTable = layui.treeTable;
+     treeTable.on("toolbar(TPL-treeTable-demo)", function (obj) {
+      var config = obj.config;
+      var tableId = config.id;
+      var status = treeTable.checkStatus(tableId);
+      // 获取选中行
+      if (obj.event === "addRoot") {
+       openModel("/topezadmin/form/form-base-category?PARENT_ID=0","添加");
+
+       // if(!status.data.length) return layer.msg('无选中数据');
+       // console.log(status);
+       // layer.alert("当前数据选中已经输出到控制台，<br>您可按 F12 从控制台中查看结果。");
+      }
+     });
+     treeTable.on('tool(treetable)', function (obj) {
+      var layEvent = obj.event; // 获得 lay-event 对应的值
+      var trElem = obj.tr;
+      var trData = obj.data;
+      var tableId = obj.config.id;
+      if (layEvent === "detail") {
+
+      // layer.msg("查看操作：" + trData.name);
+      } else if (layEvent === "addChild") {
+         openModel("/topezadmin/form/form-base-category?PARENT_ID="+trData.ID,"添加");
+      }else if (layEvent === "editChild") {
+          openModel("/topezadmin/form/form-base-category?ID="+trData.ID,"修改");
+      }else if(layEvent === "delete"){
+       layer.confirm("真的删除行么", function (index) {
+           var dd={}
+           dd.ID=trData.ID;
+           $.post("/topezadmin/form/doDelete-base-category",  dd, function(data) {
+            if(data.success){
+              obj.del(); // 等效如下
+              layer.close(index);
+            }else{
+              layer.alert(data.message);
+            }
+           }, 'json').fail(function() {
+            debugger;
+            console.log('请求失败');
+           });
+
+       });
+      }
+     });
+    })
+   </script>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>品牌管理</title>
+
+    </head><body id="base_brand" datasource="datasource" success_url="reload"><div id="append_head"></div>
+
+
+<div class="layui-container">
+    <form id="inputForm" method="post" class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">表单初始化</label>
+            <div class="layui-input-block">
+
+                     <pre id="init" class="layui-code">
+                         StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("select COMPANY_ID,BRAND_NAME,BRAND_WEBSITE,ADD_TIME,ADD_NAME from T_BASE_BRAND where  BRAND_ID=${ID}  ");
+if(companyId&gt;1){
+	sql.append(" AND COMPANY_ID="+companyId);
+}
+return select(sql).get(0);</pre>
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">表单提交</label>
+            <div class="layui-input-block">
+
+                 <pre id="submit" class="layui-code">companyId=$$("COMPANY_ID");                 		
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");        
+sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");    
+if(!isNotBlank("ID")){                  		
+	id=insert("insert into T_BASE_BRAND(                 
+				BRAND_NAME
+,		BRAND_WEBSITE
+                						
+		,COMPANY_ID                 					
+		,ADD_TIME                 						
+		,ADD_ID                							
+		,ADD_NAME                  						
+	)VALUES(                  							
+				#{BRAND_NAME}
+,		#{BRAND_WEBSITE}
+                 					
+		,"+companyId+"                 					
+		,NOW()                 							
+		,"+sessionUserId+"                  				
+		,'"+sessionUserName+"'                				
+		  )");                 							
+ 	return id;                 						
+}else{                 								
+	StringBuilder updateSql=new StringBuilder();				
+	updateSql.append("update T_BASE_BRAND set ");                	
+	updateSql.append("		BRAND_NAME = #{BRAND_NAME}
+,		BRAND_WEBSITE = #{BRAND_WEBSITE}
+");							
+	updateSql.append("		,UPDATE_TIME=now()                 				
+		,UPDATE_ID="+sessionUserId+"                  	
+		,UPDATE_NAME='"+sessionUserName+"'                 
+");					
+	updateSql.append(" where BRAND_ID=#{ID} ");				
+	if(companyId&gt;1){               							
+	updateSql.append(" and COMPANY_ID&gt; "+companyId);				
+	}               							
+	update(updateSql);                							
+	return ID;                 							
+}</pre>
+
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">表单删除</label>
+            <div class="layui-input-block">
+
+
+                <pre id="delete" class="layui-code"></pre>
+
+            </div>
+        </div>
+    <div class="layui-form-item ">
+ <label class="layui-form-label">品牌名称</label>
+ <div class="layui-input-block form-group">
+  <input item_name="BRAND_NAME" name="BRAND_NAME" placeholder style alias jdbctype data datatype lay-verify class="form-item" type="text">
+ </div>
+</div><div class="layui-form-item ">
+ <label class="layui-form-label">品牌网站</label>
+ <div class="layui-input-block form-group">
+  <input item_name="BRAND_WEBSITE" name="BRAND_WEBSITE" placeholder style alias jdbctype data datatype lay-verify class="form-item" type="text">
+ </div>
+</div></form>
+    <form id="configForm" class="layui-form">
+        <div class="layui-card" group_name="表单数据配置">
+            <div class="layui-card-header">
+                表单数据配置
+            </div>
+            <div class="layui-card-body"></div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">初始表达式</label>
+            <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("select COMPANY_ID,BRAND_NAME,BRAND_WEBSITE,ADD_TIME,ADD_NAME from T_BASE_BRAND where  BRAND_ID=${ID}  ");
+if(companyId&gt;1){
+	sql.append(" AND COMPANY_ID="+companyId);
+}
+return select(sql).get(0);</pre>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">提交表达式</label>
+            <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="submit_express"  item_name="submit_express" type="">companyId=$$("COMPANY_ID");
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");
+sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");
+if(!isNotBlank("ID")){
+	id=insert("insert into T_BASE_BRAND(
+				BRAND_NAME
+,		BRAND_WEBSITE
+
+		,COMPANY_ID
+		,ADD_TIME
+		,ADD_ID
+		,ADD_NAME
+	)VALUES(
+				#{BRAND_NAME}
+,		#{BRAND_WEBSITE}
+
+		,"+companyId+"
+		,NOW()
+		,"+sessionUserId+"
+		,'"+sessionUserName+"'
+		  )");
+ 	return id;
+}else{
+	StringBuilder updateSql=new StringBuilder();
+	updateSql.append("update T_BASE_BRAND set ");
+	updateSql.append("		BRAND_NAME = #{BRAND_NAME}
+,		BRAND_WEBSITE = #{BRAND_WEBSITE}
+");
+	updateSql.append("		,UPDATE_TIME=now()
+		,UPDATE_ID="+sessionUserId+"
+		,UPDATE_NAME='"+sessionUserName+"'
+");
+	updateSql.append(" where BRAND_ID=#{ID} ");
+	if(companyId&gt;1){
+	updateSql.append(" and COMPANY_ID&gt; "+companyId);
+	}
+	update(updateSql);
+	return ID;
+}</pre>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">删除表达式</label>
+            <div class="layui-input-block form-group">
+                <pre class="form-item layui-code" name="delete_express"  item_name="delete_express" type=""></pre>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">分组表达式</label>
+            <div class="layui-input-block form-group">
+                <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    layui.use(function () {
+
+    })
+</script>
+<div id="append_foot"></div>
+</body></html>
+
+
+
+
+
+
+
+
+
+
+

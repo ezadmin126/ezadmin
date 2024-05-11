@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>静态数据表格</title>
+</head>
+<body id="tableview"   type="form" icon="layui-icon-list">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="tableview">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">多行文本</label>
+            <div class="layui-input-block">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>人物</th>
+                        <th>民族</th>
+                        <th>格言</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>孔子</td>
+                        <td>华夏</td>
+                        <td>有朋至远方来，不亦乐乎</td>
+                    </tr>
+                    <tr>
+                        <td>孟子</td>
+                        <td>华夏</td>
+                        <td>穷则独善其身，达则兼济天下</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" ez-type="table"
+     th:ez-label="${label}"
+     th:ez-item_name="${item_name}"
+     th:ez-placeholder="${placeholder}"
+     th:ez-alias="${alias}"
+     th:ez-col="${col}"
+     th:ez-url="${url}"
+     th:ez-data="${data}"
+     th:ez-datatype="${datatype}"
+     th:ez-item_desc="${item_desc}"
+     th:ez-top_desc="${top_desc}"
+     th:ez-jdbctype="${jdbctype}"
+     th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+     th:ez-valid_rule="${valid_rule}"
+     th:ez-valid_msg="${valid_msg}"
+     th:ez-style="${style}"
+     th:ez-help="${help}"
+>
+    <div class="layui-form-item ">
+        <label class="layui-form-label  "  th:if="${not #strings.isEmpty(label)}" >
+            <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+            <i th:if="${not #strings.isEmpty(help)}"
+               th:id="${'ez-help-'+item_name}"
+               class="ez-help layui-icon-help layui-icon"
+               th:src="${help}"></i>
+            [[${#strings.isEmpty(label)?'':label+'：' }]]
+        </label>
+        <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+            <small
+                    class="layui-form-mid layui-text-em top_desc"
+                    th:utext="${top_desc}" style="float:none"
+                    th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+            <table   th:id="${'ITEM_ID_' + item_name}"  th:lay-filter="${'ITEM_ID_' + item_name}"
+                   class="  layui-table propTable ez-table" style=" width:100%">
+                <thead style="text-align: center">
+                <tr   >
+                    <th th:remove="tag" th:each="item:${subdata.col}" th:utext="${item.html}">
+                    </th>
+                </tr>
+                </thead>
+                <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);" class="dragula-container">
+                <tr th:each="row,rowStat:${subdata.core.dataList}"   th:data-id="${row.id}">
+                    <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <script>
+                layui.use(['table', 'form', 'layCascader'], function () {
+                    var form = layui.form;
+                    var table2 = layui.table;
+                    var curTable = $("#[[${'ITEM_ID_' + item_name}]]");
+                    var tableConfig={
+                        height: '450', //设置高度
+                        escape: false,
+                        autoSort: false
+                        , cellExpandedMode: "tips"
+                        , limit: $("#perPageInt").val() //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
+                        //  ,cellExpandedMode:'tips'
+                        //支持所有基础参数
+                        , done: function (res, curr, count) {
+                            try {
+                                if (typeof (afterAllDataLoad) == "function") {
+                                    afterAllDataLoad();
+                                }
+                                $('.layuimini-loader').fadeOut();
+                                $("[item_name='删除']").addClass("layui-border-red");
+                                $("[item_name='修改']").addClass("layui-border-blue");
+                                $("[item_name='编辑']").addClass("layui-border-blue");
+                            } catch (e) {
+                                console.log(e)
+                            }
+
+                        }
+                    }
+
+                    if($("#[[${'ITEM_ID_' + item_name}]]").attr("lineStyle")!=null&&$("#mytable").attr("lineStyle")!=''){
+                        tableConfig.lineStyle=$("#mytable").attr("lineStyle");
+                    }
+                    if($("#[[${'ITEM_ID_' + item_name}]]").attr("class")!=null&&$("#mytable").attr("class")!=''){
+                        tableConfig.className=$("#mytable").attr("class");
+                    }
+                    tableConfig.cellMinWidth=110;
+                    //转换静态表格
+                    var laytable = table2.init("[[${'ITEM_ID_' + item_name}]]",tableConfig );
+                })
+            </script>
+
+
+            <small
+                    class="layui-form-mid layui-text-em item_desc"
+                    th:utext="${item_desc}"
+                    th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+        </div>
+    </div>
+</div>
+
+</div>
+
+</body>
+</html>

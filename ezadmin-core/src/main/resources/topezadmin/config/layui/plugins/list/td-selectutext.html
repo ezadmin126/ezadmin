@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>下拉富文本</title>
+</head>
+<body id="td-html" type="td" icon="layui-icon-share">
+<div id="template" >
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-html">
+        <div class="   td-text  " >下拉富文本</div>  </div>
+</div>
+<table>
+    <tr id="content">
+        <td th:ITEM_NAME="${item_name}" th:ITEM_ID="${item_name}" class=" ezadmin-td" th:style="${style}">
+            <div th:each="item:${items}" th:remove="tag"
+                 th:if="${dataInDb==null?false:#strings.equals(dataInDb+'',item.K+'')}" th:utext="${item.V}">
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

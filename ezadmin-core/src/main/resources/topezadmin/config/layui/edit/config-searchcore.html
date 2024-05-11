@@ -1,0 +1,133 @@
+<!-- header.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <div th:fragment="core">
+        <div class="layui-form config-form config-searchcore" style="display: none">
+            <div class="layui-form-item">
+                <label class="layui-form-label">插件</label>
+                <div class="layui-input-block">
+                    <select  readonly placeholder="" class="layui-input  search_type_select" lay-filter="lay_filter_all"  name="type" >
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        保存之后预览效果
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label"  autocomplete="off"  class="layui-input">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Placeholder</label>
+                <div class="layui-input-block">
+                    <input type="text" name="placeholder"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="layui-badge-dot"  ></span>字段名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em">
+                        对于合并搜索，请使用半角逗号分割，同时确保各个字段为隐藏域
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">别名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="alias"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em">
+                        如果别名中有半角句号，则在拼接where语句时，会使用alias替代字段名
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据库类型</label>
+                <div class="layui-input-block">
+                    <select  lay-search="" lay-filter="lay_filter_all"  name="jdbctype" item_name="jdbctype"> <option value="">请选择</option> <option value="NUMBER">NUMBER</option> <option value="DATE_TO_NUMBER">DATE_TO_NUMBER</option> <option value="VARCHAR">VARCHAR</option> <option value="DATE">DATE</option> <option value="DATETIME">DATETIME</option> <option value="CLOB">CLOB</option> <option value="BODY">BODY</option> <option value="NUMBER0">NUMBER0</option> <option value="NUMBER1">NUMBER1</option> <option value="NUMBER2">NUMBER2</option> <option value="NUMBER3">NUMBER3</option> <option value="NUMBER4">NUMBER4</option> </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        NUMBER,NUMBER2:格式化小数位<br>
+                        DATETIME,DATE: 格式化日期
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">SQL操作符</label>
+                <div class="layui-input-block">
+                    <select  lay-search="" lay-filter="lay_filter_all"  name="oper" item_name="oper">
+                        <option value="">请选择</option>
+                        <option value="EQ">等于=</option>
+                        <option value="NE">不等于!=</option>
+                        <option value="BETWEEN">区间BETWEEN</option>
+                        <option value="LIKE">包含LIKE</option>
+                        <option value="NOTLIKE">不包含NOTLIKE</option>
+                        <option value="IN">之中IN</option>
+                        <option value="NOT_IN">不在之中NOT IN</option>
+                        <option value="ALL_FIND_IN_SET">ALL_FIND_IN_SET</option>
+                    </select>
+                    <small   class="layui-form-mid layui-text-em">
+                        默认等于=
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">layui验证</label>
+                <div class="layui-input-block">
+                    <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small id="DESC_lay_verify" class="layui-form-mid layui-text-em">
+                        required必填项 phone手机号 email邮箱
+                        url网址  number数字 date日期 identity身份证<br>
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">jquery验证</label>
+                <div class="layui-input-block">
+                    <textarea name="valid_rule" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small id="DESC_valid_rule" class="layui-form-mid layui-text-em">
+                        {"required": true,"minlength": 2}
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">jquery提示</label>
+                <div class="layui-input-block">
+                    <textarea name="valid_msg" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small id="DESC_valid_msg" class="layui-form-mid layui-text-em">
+                        {"required": true, "minlength": "长度{0}"}
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">自定义样式</label>
+                <div class="layui-input-block">
+                    <textarea name="style" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small   class="layui-form-mid layui-text-em">
+                        对这个元素单独设置样式
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">自定义属性</label>
+                <div class="layui-input-block">
+                    <textarea name="ezconfig" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small   class="layui-form-mid layui-text-em">
+                        JSON格式设置属性
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

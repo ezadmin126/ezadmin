@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="footer">
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <ul class="list-inline text-center">
+                        <li class="list-inline-item">
+                            <a href="#">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                </span>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted" th:if="${serverType==1}">Copyright &copy; www.ttqia.com 2021 </p>
+                    <p class="copyright text-muted" th:if="${serverType!=1}">Copyright &copy; www.he-my.com 2021 </p>
+                    <p class="copyright text-muted" th:if="${serverType==1}"><a href="http://beian.miit.gov.cn/">苏ICP备20006003号-1</a></p>
+                    <p class="copyright text-muted" th:if="${serverType!=1}"><a href="http://beian.miit.gov.cn/">苏ICP备20006003号-2</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="/webjars/jquery/1.12.4/jquery.min.js" ></script>
+    <script src="/static/js/clean-blog.min.js"></script>
+
+    <script src="/webjars/topezadmin/plugins/bootstrap/js/bootstrap.min.js"></script>
+</div>
+</body>
+
+</html>

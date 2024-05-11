@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>列表编辑</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link th:href="${'/webjars/layui/2.8.18/dist/css/layui.css'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"   />
+    <link th:href="${ '/webjars/topezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
+    <link th:href="${'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
+    <link th:href="${'/webjars/edit/css/listedit.css'}" rel="stylesheet">
+    <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+    <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
+    <script th:src="${'/webjars/layui/2.8.18/dist/layui.js'}" type="text/javascript"></script>
+    <script src="/webjars/dragula/3.7.3/dist/dragula.min.js"   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script th:src="${'/webjars/topezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
+    <script th:src="${'/webjars/topezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
+
+    <script th:src="${'/webjars/topezadmin/layui/js/core.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/jqueryform/jquery.form.js?'}"></script>
+    <script th:src="${'/webjars/jquery-validation/1.19.5/jquery.validate.min.js'}"></script>
+    <script th:src="${'/webjars/jquery-validation/1.19.5/localization/messages_zh.min.js'}"></script>
+
+    <script src="/webjars/edit/ace/ace.js" type="text/javascript"></script>
+    <script src="/webjars/edit/ace/ext-language_tools.js" type="text/javascript"></script>
+    <script src="/webjars/edit/ace/beautify-html.js"></script>
+    <script src="/webjars/edit/ace/ext-beautify.js"></script>
+</head>
+
+<body th:utext="${data.core.bodyTag}" th:remove="tag"> </body>
+<input type="hidden" id="cloudId" th:value="${cloudId}">
+<div class="layui-fluid layui-form">
+    <div class="layui-row top" >
+
+        <blockquote class="layui-elem-quote selector layui-col-md-offset2  layui-col-md2 systemfloat"   ez-col="12" id="listCoreContainer"
+                    th:ez-datasource="${data.core.datasource}" config-form-type="listcore" th:ez-listcode="${data.core.listcode}"
+                    th:ez-listname="${data.core.listname}"
+                    th:ez-fixnumber="${data.core.fixnumber}"
+                    th:ez-fixnumberright="${data.core.fixnumberright}"
+                    th:ez-empty_show="${data.core.empty_show}"
+                    th:ez-pagesync="${data.core.pagesync}"
+                    th:ez-firstcol="${data.core.firstcol}"
+                    th:ez-export="${data.core.export}"
+                    th:ez-success_url="${data.core.success_url}"
+                    th:ez-cellminwidth="${data.core.cellminwidth}"
+                    th:ez-linestyle="${data.core.linestyle}"
+                    th:ez-rowbtnwidth="${data.core.rowbtnwidth}"
+                    th:ez-rowbtnfixed="${data.core.rowbtnfixed}"
+        >
+            <span id="listname" th:text="${#strings.isEmpty(data.core.listname)?'点此配置列表信息':data.core.listname}">列表配置区</span>
+        </blockquote>
+        <div class="layui-row   layui-col-md6   "  >
+            <div class="layui-tab layui-tab-brief" style="margin:0">
+                <ul class="layui-tab-title dragula-container   systemfloat" id="tabCoreContainer"   style="height:47px;border: 1px dashed #d1d1d1;">
+                    <li class="tip" th:if="${#lists.isEmpty(data.tab)}">Tab标签区</li>
+                    <li class="selector " th:if="${not #lists.isEmpty(data.tab)}"
+                        th:item_name="${item.item_name}"
+                        th:ez-item_name="${item.item_name}"
+                        th:ez-name="${item.item_name}"
+                        th:ez-label="${item.label}"
+                        th:ez-select="${item.select}"
+                        th:ez-url="${item.url}"
+                        config-form-type="tabcore"
+                        th:classappend="${item.select ? 'layui-this  ':' '}"
+                        th:each="item:${data.tab}">
+                        <a th:ez-item_name="${item.item_name}" th:ez-href="${item.url}"
+                           th:text="${item.label}"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space5">
+        <div class="layui-col-md2 layui-col-xs3 left ">
+            <div class="layui-fluid lefttab">
+                <div class="layui-row">
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>拖拽或点击按钮添加插件</legend>
+                    </fieldset>
+                    <div class="layui-tab layui-tab-brief">
+                        <ul class="layui-tab-title" >
+                            <li class="layui-this" style="padding:0">搜索</li>
+                            <li style="padding:0">列</li>
+                            <li style="padding:0">其他</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-row layui-col-space5  dragula-container " style="padding:10px" id="left-search">
+                                    <div th:include="layui/edit/listedit-search :: search" th:remove="tag"></div>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div class="layui-row layui-col-space5  dragula-container " id="left-colitem">
+                                    <div th:include="layui/edit/listedit-col :: col" th:remove="tag"></div>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div class="layui-row layui-col-space5  dragula-container " id="left-button">
+                                    <div th:include="layui/edit/listedit-other :: other" th:remove="tag"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md8 layui-col-xs6 center">
+            <div class="layui-fluid" style="">
+                <div class="layui-row">
+
+                    <pre    id="select_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
+                          th:text="${data.core.select_express}">
+                    </pre>
+                    <pre style="display: none;height: 100%; width: 100%; z-index: 999; "
+                            id="count_express1" th:text="${data.core.count_express}"></pre>
+                    <pre style="display: none;height: 100%; width: 100%; z-index: 999; "
+                         id="orderby_express1" th:text="${data.core.orderby_express}"></pre>
+                    <pre style="display: none;height: 100%; width: 100%; z-index: 999; "
+                         id="groupby_express1" th:text="${data.core.groupby_express}"></pre>
+
+                    <pre style="display: none;height: 100%; width: 100%; z-index: 999; "
+                         id="displayorder_express1" th:text="${data.core.displayorder_express}"></pre>
+
+
+                    <pre style="display: none;height: 100%; width: 100%; z-index: 999; "
+                         id="append_head_code1" th:text="${data.core.append_head}"></pre>
+
+                    <pre style="display: none;height: 100%; width: 100%; z-index: 999; "
+                         id="append_foot_code1" th:text="${data.core.append_foot}"></pre>
+                    <input id="select_express" type="hidden" th:value="${data.core.select_express}">
+                    <input id="count_express" type="hidden" th:value="${data.core.count_express}">
+                    <input id="orderby_express" type="hidden" th:value="${data.core.orderby_express}">
+                    <input id="groupby_express" type="hidden" th:value="${data.core.groupby_express}">
+                    <input id="displayorder_express" type="hidden" th:value="${data.core.displayorder_express}">
+                    <input id="append_head_code" type="hidden" th:value="${data.core.append_head}">
+                    <input id="append_foot_code" type="hidden" th:value="${data.core.append_foot}">
+
+
+
+                </div>
+                <hr>
+                <div class="layui-row"  >
+                    <div id="append_head"  th:utext="${data.core.append_head}" >
+                    </div>
+
+                    <div class=" layui-row dragula-container layui-col-space15  layui-card layui-col-md12   systemfloat"  style=";border: 1px dashed #d1d1d1;"
+                         config-form-type="searchcore"
+                         id="searchCoreContainer" >
+                        <div class="tip" th:if="${  #lists.isEmpty(data.search)}">搜索区</div>
+                        <div    th:remove="tag" th:if="${not #lists.isEmpty(data.search)}"
+                                th:each="item,indexStat:${data.search}" th:utext="${item.html}"
+                        >
+                        </div>
+                    </div>
+                    <div class="layui-col-space10 layui-row  " style="min-height:50px"  >
+                        <div   class="layui-form-item searchButtonRow" style="text-align: center">
+                            <div class="layui-inline ">
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-save  " ><i class="layui-icon layui-icon-ok-circle"></i>保存</button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-preview  "> <i class="layui-icon layui-icon-eye"></i> 预览</button>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-core   "
+                                > <i class="layui-icon layui-icon-fonts-code"></i> 列表配置</button>
+                                <button type="button"   class="layui-btn layui-btn-sm layui-btn-head  "> <i class="layui-icon layui-icon-fonts-code"></i> 页头脚本</button>
+                                <button type="button"   class="layui-btn layui-btn-sm layui-btn-foot  "> <i class="layui-icon layui-icon-fonts-code"></i> 页尾脚本</button>
+                                <button type="button"  help="/welcome.html#card3" class="layui-btn layui-btn-sm layui-btn-select  "> <i class="layui-icon layui-icon-fonts-code"></i> 查询表达式</button>
+                                <button type="button"  help="/welcome.html#card3" class="layui-btn layui-btn-sm layui-btn-count  "> <i class="layui-icon layui-icon-fonts-code"></i> 总数表达式</button>
+                                <button type="button"  help="/welcome.html#card3" class="layui-btn layui-btn-sm layui-btn-orderby  "> <i class="layui-icon layui-icon-fonts-code"></i> 排序表达式</button>
+                                <button type="button"  help="/welcome.html#card3" class="layui-btn layui-btn-sm layui-btn-groupby  "> <i class="layui-icon layui-icon-fonts-code"></i> 分组表达式</button>
+                                <button type="button"  help="/welcome.html#card3" class="layui-btn layui-btn-sm layui-btn-displayorder  "> <i class="layui-icon layui-icon-fonts-code"></i> 排序数字表达式</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row dragula-container layui-col-md12   systemfloat"
+                         id="tableBtnContainer" style=";border: 1px dashed #d1d1d1;min-height: 50px"  >
+                        <div class="tip" th:if="${  #lists.isEmpty(data.tablebtn)}">表头按钮区</div>
+                        <div class="selector layui-col-md2 " th:if="${not #lists.isEmpty(data.tablebtn)}" config-form-type="buttoncore"
+                             th:ez-url="${item.url}"
+                             th:ez-type="${item.type}"
+                             th:ez-windowname="${item.windowname}"
+                             th:ez-opentype="${item.opentype}"
+                             th:ez-item_name="${item.item_name}"
+                             th:ez-display="${item.display}"
+                             th:ez-area="${item.area}"
+                             th:ez-label="${item.label}"
+                             th:each="item:${data.tablebtn}" th:utext="${item.html}"></div>
+                    </div>
+
+                    <div class="layui-col-space10 layui-row    "    >
+                        <div class=" layui-row    layui-col-md10   "  >
+                            <div class="layui-nav layui-bg-gray dragula-container   systemfloat"  lay-filter="demo-filter-nav" id="centerContainer"    style="min-height: 500px;border: 1px dashed #d1d1d1;">
+                                <div  class="tip" th:if="${  #lists.isEmpty(data.col)}">列表字段区</div>
+                                <div style="min-height: 42px" class=" layui-col-xs2 ez-plugin selector" config-form-type="colcore" th:if="${not #lists.isEmpty(data.col) and item.item_name!='firstCol'}"
+                                     th:ez-body="${item.body}"
+                                     th:ez-head="${item.head}"
+                                     th:ez-label="${item.label}"
+                                     th:ez-item_name="${item.item_name}"
+                                     th:ez-jdbctype="${item.jdbctype}"
+                                     th:ez-data="${item.data}"
+                                     th:ez-datatype="${item.datatype}"
+                                     th:ez-order="${item.order}"
+                                     th:ez-fixed="${item.fixed}"
+                                     th:ez-url="${item.url}"
+                                     th:ez-windowname="${item.windowname}"
+                                     th:ez-opentype="${item.opentype}"
+                                     th:ez-style="${item.style}"
+                                     th:ez-width="${item.width}"
+                                     th:ez-emptyshow="${item.emptyshow}"
+                                     th:each="item:${data.col}" ><div th:text="${item.label}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" layui-row dragula-container   layui-col-md2   systemfloat" id="rowbtnContainer" style="min-height: 500px;border: 1px dashed #d1d1d1;">
+                            <div  class="tip" th:if="${ #lists.isEmpty(data.rowbtn)}">行按钮区</div>
+                            <div class="layui-col-xs12 selector " th:if="${not #lists.isEmpty(data.rowbtn)}"
+                                 th:each="item:${data.rowbtn}" config-form-type="buttoncore"
+                                 th:ez-url="${item.url}"
+                                 th:ez-windowname="${item.windowname}"
+                                 th:ez-opentype="${item.opentype}"
+                                 th:ez-item_name="${item.item_name}"
+                                 th:ez-display="${item.display}"
+                                 th:ez-area="${item.area}"
+                                 th:ez-label="${item.label}"
+                                 th:ez-type="${item.type}"
+                                 th:ez-class="${item.class}"
+                            >
+                                <button class="layui-btn layui-btn-sm layui-btn-primary"    th:classappend="${item.class}"  th:utext="${item.label}">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="append_foot"  th:utext="${data.core.append_foot}">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md2 layui-col-xs3 right">
+            <div class="layui-tab layui-tab-brief " lay-filter="test-hash">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" >配置</li>
+                </ul>
+                <div class="layui-tab-content righttab">
+                    <div th:include="layui/edit/config-tabcore :: core" th:remove="tag"></div>
+                    <div th:include="layui/edit/config-buttoncore :: core" th:remove="tag"></div>
+                    <div th:include="layui/edit/config-searchcore :: core" th:remove="tag"></div>
+                    <div th:include="layui/edit/config-listcore :: core" th:remove="tag"></div>
+                    <div th:include="layui/edit/config-colcore :: core" th:remove="tag"></div>
+                    <div th:include="layui/edit/config-selectcore :: core" th:remove="tag"></div>
+                    <div th:include="layui/edit/config-cascadercore :: core" th:remove="tag"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    <input type="hidden" id="fixNumber" name="fixNumber" th:v="${data.core.fixnumber}" th:value="${data.core.fixnumber}">
+    <input type="hidden" id="fixNumberRight" name="fixNumberRight" th:v="${data.core.fixnumberright}" th:value="${data.core.fixnumberright}">
+    <input type="hidden" id="firstCol" name="firstCol" th:value="${data.core.firstcol}">
+    <input type="hidden" id='validateRules' name='validateRules' th:value="${data.core.validateRules}">
+    <input type="hidden" id='validateMessages' name='validateMessages' th:value="${data.core.validateMessages}">
+    <input type="hidden" id='contextName' name='contextName' th:value="${contextName}">
+    <input type="hidden" id='uploadUrl' name='uploadUrl' th:value="${uploadUrl}">
+    <input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
+    <input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
+    <input type="hidden" id='IS_DEBUG' name='IS_DEBUG' th:value="${IS_DEBUG}">
+    <script th:src="${'/webjars/topezadmin/layui/js/ezlist.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/edit/js/e-main.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/edit/js/e-nav.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/edit/js/e-col.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/edit/js/e-rowbtn.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/edit/js/e-search.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/edit/js/e-tablebtn.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/edit/js/e-core.js?v1='+vi}" type="text/javascript"></script>
+</body>
+</html>

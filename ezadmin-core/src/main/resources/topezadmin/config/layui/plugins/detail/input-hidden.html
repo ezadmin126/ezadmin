@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>隐藏域</title>
+</head>
+<body id="input-hidden">
+
+
+<div id="content">
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="input-text"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+
+    >
+        <input type="hidden" th:value="${value}" th:name="${item_name}" th:id="${'ITEM_ID_' + item_name}"
+                >
+    </div>
+
+</div>
+
+
+</body>
+</html>

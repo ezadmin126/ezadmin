@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>base_region</title>
+
+ </head>
+ <body id="base_region" datasource="datasource" success_url="reload">
+  <div id="append_head" class="append"></div>
+  <div class="layui-container">
+   <form id="inputForm" method="post" class="layui-form">
+    <div class="layui-card" group_name="EZ_DEFAULT_GROUP">
+     <div class="layui-card-header">
+       EZ_DEFAULT_GROUP 
+     </div>
+     <div class="layui-card-body">
+      <div class="layui-form-item "><label class="layui-form-label">名称</label>
+       <div class="layui-input-block form-group">
+        <input class="form-item" name="REGION_NAME" type="text" value="" item_name="REGION_NAME" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
+       </div>
+      </div>
+      <div class="layui-form-item ">
+       <label class="layui-form-label">父级</label>
+       <div class="layui-input-block form-group">
+        <input class="form-item" name="PARENT_ID" type="text" value="" item_name="PARENT_ID" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
+       </div>
+      </div>
+      <div class="layui-form-item ">
+       <label class="layui-form-label">编码</label>
+       <div class="layui-input-block form-group">
+        <input class="form-item" name="REGION_FULL_ID" type="text" value="" item_name="REGION_FULL_ID" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
+       </div>
+      </div>
+      <div class="layui-form-item "><label class="layui-form-label">全称</label>
+       <div class="layui-input-block form-group">
+        <input class="form-item" name="REGION_FULL_NAME" type="text" value="" item_name="REGION_FULL_NAME" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
+       </div>
+      </div>
+      <div class="layui-form-item ">
+       <label class="layui-form-label">级别</label>
+       <div class="layui-input-block form-group">
+        <input class="form-item" name="REGION_LEVEL" type="text" value="" item_name="REGION_LEVEL" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
+       </div>
+      </div>
+      <div class="layui-form-item "><label class="layui-form-label">拼音首字</label>
+       <div class="layui-input-block form-group">
+        <input class="form-item" name="REGION_PY_PRE" type="text" value="" item_name="REGION_PY_PRE" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
+       </div>
+      </div>
+      <div class="layui-form-item ">
+       <label class="layui-form-label">全拼</label>
+       <div class="layui-input-block form-group">
+        <input class="form-item" name="REGION_PY" type="text" value="" item_name="REGION_PY" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
+       </div>
+      </div>
+     </div>
+    </div>
+   </form>
+   <form id="configForm" class="layui-form">
+    <div class="layui-card" group_name="表单数据配置">
+     <div class="layui-card-header">
+       表单数据配置 
+     </div>
+     <div class="layui-card-body">
+     </div>
+    </div>
+    <div class="layui-form-item ">
+     <label class="layui-form-label">初始表达式</label>
+     <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" id="init" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("select REGION_FULL_ID,REGION_FULL_NAME,REGION_NAME,PARENT_ID,REGION_LEVEL,REGION_PY_PRE,REGION_PY from T_BASE_REGION where  REGION_ID=${ID}  ");
+if(companyId&gt;1){
+	sql.append(" AND COMPANY_ID="+companyId);
+}
+return select(sql).get(0);</pre>
+     </div>
+    </div>
+    <div class="layui-form-item "><label class="layui-form-label">提交表达式</label>
+     <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" id="submit" name="submit_express"  item_name="submit_express" type="">companyId=$$("COMPANY_ID");
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");        
+sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");    
+if(!isNotBlank("ID")){                  		
+	id=insert("insert into T_BASE_REGION(                 
+				REGION_FULL_ID
+,		REGION_FULL_NAME
+,		REGION_NAME
+,		PARENT_ID
+,		REGION_LEVEL
+,		REGION_PY_PRE
+,		REGION_PY
+                						
+		,COMPANY_ID                 					
+		,ADD_TIME                 						
+		,ADD_ID                							
+		,ADD_NAME                  						
+	)VALUES(                  							
+				#{REGION_FULL_ID}
+,		#{REGION_FULL_NAME}
+,		#{REGION_NAME}
+,		#{PARENT_ID}
+,		#{REGION_LEVEL}
+,		#{REGION_PY_PRE}
+,		#{REGION_PY}
+                 					
+		,"+companyId+"                 					
+		,NOW()                 							
+		,"+sessionUserId+"                  				
+		,'"+sessionUserName+"'                				
+		  )");                 							
+ 	return id;                 						
+}else{                 								
+	StringBuilder updateSql=new StringBuilder();				
+	updateSql.append("update T_BASE_REGION set ");                	
+	updateSql.append("		REGION_FULL_ID = #{REGION_FULL_ID}
+,		REGION_FULL_NAME = #{REGION_FULL_NAME}
+,		REGION_NAME = #{REGION_NAME}
+,		PARENT_ID = #{PARENT_ID}
+,		REGION_LEVEL = #{REGION_LEVEL}
+,		REGION_PY_PRE = #{REGION_PY_PRE}
+,		REGION_PY = #{REGION_PY}
+");							
+	updateSql.append("		,UPDATE_TIME=now()                 				
+		,UPDATE_ID="+sessionUserId+"                  	
+		,UPDATE_NAME='"+sessionUserName+"'                 
+");					
+	updateSql.append(" where REGION_ID=#{ID} ");				
+	if(companyId&gt;1){               							
+	updateSql.append(" and COMPANY_ID&gt; "+companyId);				
+	}               							
+	update(updateSql);                							
+	return ID;                 							
+}</pre>
+     </div>
+    </div>
+    <div class="layui-form-item "><label class="layui-form-label">删除表达式</label>
+     <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" id="delete" name="delete_express"  item_name="delete_express" type=""></pre>
+     </div>
+    </div>
+    <div class="layui-form-item ">
+     <label class="layui-form-label">分组表达式</label>
+     <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
+     </div>
+    </div>
+   </form>
+  </div>
+
+  <script>
+    layui.use(function () {
+
+    })
+</script>
+  <div id="append_foot" class="append">
+  </div>
+ </body>
+</html>

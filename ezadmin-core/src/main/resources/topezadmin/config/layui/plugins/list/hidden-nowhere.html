@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>隐藏域无where</title>
+</head>
+<body id="hidden-nowhere" type="search">
+
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md3"   type="hidden">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">隐藏域无where</label>
+            <div class="layui-input-block">
+                <input type="text" name="default" placeholder="隐藏域,不拼接SQL" disabled class="layui-input">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+<div   th:ITEM_ID="${model.item_name}" class="list-item list-item-hidden">
+    <label class="layui-form-label" th:for="${'itemId-' + model.item_name}"
+           th:text="${model.label}" th:title="${model.label}"
+    >普通文本</label>
+    <div class=" layui-input-block ">
+        <input class="layui-input " type="hidden" th:value="${model.itemParamValue}"
+               th:name="${model.item_name}" th:id="${'itemId-' + model.item_name}"
+               >
+    </div>
+</div>
+</div>
+</body>
+</html>

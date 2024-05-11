@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="blog/common::title"></head>
+<body  >
+<div class="layui-layout layui-layout-admin  ">
+
+    <div th:replace="blog/common::header"></div>
+
+    <div class="layui-container" style="margin-top:70px">
+            <span class="layui-breadcrumb" style="margin-top:10px">
+            <a href="/">首页</a>
+
+            <a><cite th:text="${blogDetailVO.blogTitle}">导航元素</cite></a>
+            </span>
+        <!-- 内容主体区域 -->
+        <div class="layui-row layui-col-space10" style="margin-top:10px">
+
+
+            <div class="layui-col-xs12 layui-col-md12">
+                <div class="layui-panel">
+                    <div class="layui-row layui-text" style="padding:30px">
+                        <div class="layui-col-md1">
+                            <img src="/static/info-img.png?1" style="width:47px;height:47px;border-radius:50%">
+                        </div>
+                        <div class="layui-col-md11  ">
+                            <div class="layui-serachlist-text">
+                                <h1 th:text="${blogDetailVO.blogTitle}"> </h1>
+                                <p> [[${#dates.format(blogDetailVO?.addTime,'yyyy-MM-dd HH:mm:ss')}]]
+                                    <i class="layui-icon-eye layui-icon"></i>[[${blogDetailVO?.viewTimes}]]
+                                    <!--                                    <i class="layui-icon-dialogue layui-icon"></i>12-->
+                                    <!--                                    <i class="layui-icon-praise layui-icon"></i>12-->
+                                    <!--                                    <i class="layui-icon-tread layui-icon"></i>12-->
+                                </p>
+                                <p th:utext="${blogDetailVO.blogContent}">在前端技术的快速发展中找准你的定位，在思考与实践中沉淀。</p>
+                                <p>
+                                    <a class="layui-badge layui-bg-green"
+                                          th:each="tag : ${tagList}"
+                                          th:href="@{'/tag/' + ${tag.tagId}}"
+                                          th:text="${tag.tagName}">
+                                        前端</a>
+                                </p>
+                                <aside class="blog-rights clearfix">
+                                    <p>本站文章除注明转载/出处外，皆为作者原创，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。</p>
+                                </aside>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div th:replace="blog/common::foot"></div>
+
+</div>
+</body>
+</html>

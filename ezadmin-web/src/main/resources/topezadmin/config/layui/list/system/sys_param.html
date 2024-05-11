@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字典</title>
+
+</head>
+<body id="sys_param" datasource="datasource" fixednumber="" append_column_url append_row_url empty_show="" firstcol="">
+<div id="append_head"></div>
+<div class="layui-fluid">
+    <div class="layui-tab">
+        <ul class="layui-tab-title" id="tab">
+
+        </ul>
+    </div>
+    <form class="layui-form" id="search"><div class=" layui-inline ">
+ <label class="layui-form-label">ID</label>
+ <div class="layui-input-inline">
+  <input class=" layui-input list-search-item " type="text" item_name="PARAM_ID" placeholder style alias="" jdbctype data datatype oper>
+ </div>
+</div><div class=" layui-inline ">
+ <label class="layui-form-label">类型</label>
+ <div class="layui-input-inline">
+  <input class=" layui-input list-search-item " type="text" item_name="PARAM_TYPE" placeholder style alias="" jdbctype data datatype oper>
+ </div>
+</div><div class=" layui-inline ">
+ <label class="layui-form-label">键</label>
+ <div class="layui-input-inline">
+  <input class=" layui-input list-search-item " type="text" item_name="PARAM_KEY" placeholder style alias="" jdbctype data datatype oper>
+ </div>
+</div><div class=" layui-inline ">
+ <label class="layui-form-label">值</label>
+ <div class="layui-input-inline">
+  <input class=" layui-input list-search-item " type="text" item_name="PARAM_VALUE" placeholder style alias="" jdbctype data datatype oper>
+ </div>
+</div><div class=" layui-inline ">
+ <label class="layui-form-label">状态</label>
+ <div class="layui-input-inline">
+  <object class=" layui-input list-search-item " type="select" item_name="PARAM_STATUS" placeholder="" style="" alias="" jdbctype="" data="status" datatype="" oper=""></object>
+ </div>
+</div><div class=" layui-inline ">
+ <label class="layui-form-label">描述</label>
+ <div class="layui-input-inline">
+  <input class=" layui-input list-search-item " type="text" item_name="PARAM_DESC" placeholder style alias="" jdbctype data datatype oper>
+ </div>
+</div><div class=" layui-inline ">
+ <label class="layui-form-label">添加时间</label>
+ <div class="layui-input-inline">
+  <object class=" layui-input list-search-item " type="daterange" name="ADD_TIME" placeholder="" style="" alias="" jdbctype="" data="" datatype="" oper=""></object> 
+ </div>
+</div></form>
+    <hr class="layui-border-blue">
+    <div class="btn-group   bd-highlight" id="tableButton">
+
+    <button item_name="新增" name="新增" url="/topezadmin/form/form-sys_param" opentype="MODEL" windowname style type="table">新增</button></div>
+    <table id="table" class="layui-table" style=" width:100%">
+        <thead>
+        <tr id="column">
+            <th type="rowbutton" id="rowbutton"><button item_name="修改" name="修改" url="/topezadmin/form/form-sys_param?ID=${ID}" opentype="MODEL" windowname style type="single">修改</button></th>
+        
+<th item_name="ID" name="ID" body="td-text" head="th">ID</th>
+<th item_name="PARAM_TYPE" name="PARAM_TYPE" body="td-text" head="th">类型</th>
+<th item_name="PARAM_KEY" name="PARAM_KEY" body="td-text" head="th">键</th>
+<th item_name="PARAM_VALUE" name="PARAM_VALUE" body="td-text" head="th">值</th>
+<th item_name="PARAM_ORDER" name="PARAM_ORDER" body="td-text" head="th">排序值</th>
+<th item_name="PARAM_STATUS" name="PARAM_STATUS" body="td-select" head="th" data="status">状态</th>
+<th item_name="PARAM_DESC" name="PARAM_DESC" body="td-text" head="th">描述</th>
+<th item_name="ADD_TIME" name="ADD_TIME" body="td-text" head="th">添加时间</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td> express:</td>
+            <td colspan="100">
+                <pre id="express" class="layui-code" orderby="ORDER BY ADD_TIME DESC" groupby="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("SELECT PARAM_ID ID, PARAM_TYPE, PARAM_KEY, PARAM_VALUE, PARAM_ORDER, PARAM_STATUS, PARAM_DESC, ADD_TIME FROM T_SYS_PARAM where delete_flag=0 ");
+ return search(sql);</pre>
+
+            </td>
+        </tr>
+        <tr>
+            <td> count:</td>
+            <td colspan="100">
+                <pre id="count" class="layui-code"></pre>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="append_foot"></div>
+
+<script>
+    layui.use(function () {
+
+    })
+</script>
+
+</body></html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>复选框</title>
+</head>
+<body id="input-checkbox"   type="form" icon="layui-icon-file">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12"  ez-type="input-checkbox">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">复选框</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="default" placeholder="请输入"  >
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="input-checkbox"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+         th:ez-data="${data}"
+         th:ez-datatype="${datatype}"
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+         th:ez-class="${class}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  "   >
+                <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                <small
+                        class="layui-form-mid layui-text-em top_desc"
+                        th:utext="${top_desc}" style="float:none"
+                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+                <input th:style="${style}" th:label="${label}"
+                       th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                       type="checkbox" th:name="${item_name}"
+                       th:value="${item.K}" th:title="${item.V}" th:each="item:${items}"
+                       th:classappend="${class}"
+                       th:checked="${item.checked}"
+                >
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

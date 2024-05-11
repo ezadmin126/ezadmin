@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ezadmin.domain.mapper.ext.SysUserExtMapper">
+
+    <select id="selectUserRoles" resultType="java.lang.String">
+        select DISTINCT B.ROLE_NAME
+        FROM
+        T_SYS_USER_ROLE A
+        LEFT JOIN
+        T_SYS_ROLE B
+        ON A.ROLE_ID = B.ROLE_ID
+        AND B.DELETE_FLAG = 0
+        where A.USER_ID=#{userId} AND A.DELETE_FLAG=0 AND B.DELETE_FLAG=0
+    </select>
+</mapper>

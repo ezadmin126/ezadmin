@@ -1,0 +1,98 @@
+<!-- header.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <div th:fragment="core">
+        <div class="layui-form config-form config-buttoncore layui-fluid" style="display: none; ">
+            <div class="layui-form-item">
+                <label class="layui-form-label">文案名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="label"  autocomplete="off"  class="layui-input">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="layui-badge-dot"  ></span>按钮名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="item_name"  autocomplete="off"  class="layui-input">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">跳转URL</label>
+                <div class="layui-input-block">
+                    <input type="text" name="url"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">窗口名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="windowname"  autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">窗口大小</label>
+                <div class="layui-input-block">
+                    <input type="text" name="area"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em">
+                        100或者   300,100
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">打开方式</label>
+                <div class="layui-input-block">
+                    <select   name="opentype"    lay-filter="lay_filter_all"     >
+                        <option value="">请选择</option>
+                        <option value="MODEL">弹框</option>
+                        <option value="script">自定义事件</option>
+                        <option value="CONFIRM_MODEL">带确认的弹窗</option>
+                        <option value="_BLANK">新浏览器窗口</option>
+                        <option value="LOCATION">当前窗口</option>
+                        <option value="PARENT">父窗口打开标签</option>
+                        <option value="APPEND_PARAM">携带当前搜索参数窗口打开</option>
+                        <option value="_BLANK_PARAM">携带当前搜索参数新浏览器窗口</option>
+                        <option value="_BLANK_PARAM_COLUMN">只携带配置显示的参数，用于导出</option>
+                        <option value="AJAX">异步请求</option>
+                        <option value="CONFIRM_AJAX">带确认的异步请求</option>
+                        <option value="FORM">全屏表单</option>
+                        <option value="SCRIPT">自定义</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否展示表达式</label>
+                <div class="layui-input-block">
+                    <input type="text" name="display"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em">
+                        取SQL中的字段参数。<BR>
+                        如：${IS_DEL}<BR>
+                        当IS_DEL为0时，则不展示此按钮
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">边框</label>
+                <div class="layui-input-block">
+                    <select   name="class"    lay-filter="lay_filter_all"     >
+                        <option value="layui-border">默认</option>
+                        <option value="layui-border-green">绿色</option>
+                        <option value="layui-border-blue">蓝色</option>
+                        <option value="layui-border-orange">橙色</option>
+                        <option value="layui-border-red">红色</option>
+                        <option value="layui-border-purple">紫色</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

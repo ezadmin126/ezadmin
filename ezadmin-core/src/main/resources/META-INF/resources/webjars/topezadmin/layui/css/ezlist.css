@@ -1,0 +1,374 @@
+
+.layui-layer-imgnext{
+    font-size: 52px !important;
+    color: #8890b5;
+}
+.searchButtonRow{
+    text-align: center;
+    margin-bottom: 0px;
+}
+.searchcontent{
+    margin-bottom: 10px;
+}
+
+.ezopenbutton {
+    cursor: pointer
+}
+
+/* 间距太大了*/
+.layui-card-body {
+    padding: 0;
+}
+
+.searchWrap,.searchWrap .layui-form-item{
+    margin-bottom: 0;
+    margin-top:0;
+}
+
+.layui-tab-content {
+    padding: 5px 0;
+}
+
+
+.page-link {
+    border: 0
+}
+
+th a {
+    color: #212529;
+}
+
+  .ez-daterange-parent  .layui-form-mid {
+        margin-right: 5px !important;
+        margin-left: 5px  !important;
+    }
+
+@media screen and (max-width: 450px) {
+
+    .layui-form-item .layui-input-inline {
+        display: inline-block !important;
+        float: left !important;
+        left: 0;
+        width: auto !important;
+        margin: 0 ;
+    }
+}
+@media screen and (max-width: 767.98px){
+    .el-cascader {
+        margin-left: 0px;
+    }
+    .layui-form-item .ez-range {
+        width: 102px !important;
+    }
+
+    /**数据库插件做兼容**/
+    .layui-form-item .ez-daterange {
+        width: 102px !important;
+    }
+}
+
+
+@media (min-width: 768px) {
+
+    .layui-form-item .ez-range {
+        width: 31% !important;
+    }
+
+    /**数据库插件做兼容**/
+    .layui-form-item .ez-daterange {
+        width: 31% !important;
+    }
+    .el-cascader {
+        margin-left: 0px;
+    }
+}
+
+
+@media  screen and (min-width: 1200px) {
+    .ez-daterange .layui-input{
+        padding-left:10px;
+    }
+}
+
+.card-header .tableButton {
+    width: 100%;
+    text-align: left;
+    margin-left: 13px;
+}
+.tableButton  span{
+    margin-left:13px
+}
+
+.card-header .center {
+    width: 100%;
+    text-align: right;
+    margin-right: 20px !important;
+
+}
+
+
+.layui-table-col-special-img .layui-table-cell {
+    height: 110px;
+    overflow: visible;
+    text-overflow: inherit;
+    white-space: normal;
+
+}
+
+/**label不期望换行**/
+.layui-form-label {
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+.layui-table-page {
+    text-align: right;
+    padding:0;
+    border: 1px solid #eee;
+}
+
+.ez-table-tool {
+    padding:10px;border:1px solid #eee;border-bottom-width: 0;
+    background: #ffffff;
+}
+
+.custom-select{
+    height: 38px;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #fff;
+    color: rgba(0,0,0,.85);
+    border-radius: 2px;
+    border-color: #eee;
+    width:100%;
+}
+
+/*.ezadmin-td{*/
+/*    min-width:110px;*/
+/*}*/
+
+.os-scrollbar {
+    z-index: 200
+}
+
+.redcircle {
+    background: #fc5151;
+}
+
+.greycircle {
+    background: #999;
+}
+
+.bluecircle {
+    background: #3384ef;
+}
+
+.greencircle {
+    background: #68bb68;
+}
+
+.orangecircle {
+    background: #ff9700;
+}
+
+.yellowcircle {
+    background: #fcf459;
+}
+
+.purplecircle {
+    background: #d606d6;
+}
+
+.redcircle, .greycircle, .bluecircle, .greencircle, .orangecircle, .yellowcircle, .purplecircle {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 2px 1px 0;
+    border-radius: 50%;
+}
+
+
+
+
+.el-cascader {
+    line-height: 28px !important;
+}
+
+
+/*!**手机端靠左显示**!*/
+/*ul.dtr-details {*/
+/*    text-align: left;*/
+/*}*/
+
+
+.list-item-hidden {
+    display: none
+}
+
+
+
+.gu-mirror {
+    position: fixed !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    opacity: 0.8;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+    filter: alpha(opacity=80);
+}
+
+.gu-hide {
+    display: none !important;
+}
+
+.gu-unselectable {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.gu-transit {
+    opacity: 0.2;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+    filter: alpha(opacity=20);
+}
+
+.layui-form-radio {
+    line-height: 0;
+}
+
+
+
+/**下拉框高度**/
+.el-input__inner {
+    height: 38px !important;
+    line-height: 38px
+}
+
+
+
+
+
+.layui-card-body .layui-table {
+    margin: 0 0 !important;
+    /*border-collapse:collapse !important;*/
+}
+
+#tableSearchTr th {
+    padding: 2px !important;
+}
+
+.table-th-icon {
+
+    cursor: pointer;
+}
+
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.is-invalid, .is-invalid:focus {
+    border-color: #dc3545 !important;
+    padding-right: 2.25rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(.375em + .1875rem) center;
+    background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+}
+
+
+.ezadmin-td-edit:hover {
+    border: 1px solid red;
+}
+
+.ezadmin-overflowvisible > .layui-layer-content {
+    overflow: visible !important;
+    background-color: #fafafa !important;
+    color: #5f5f5f !important;
+}
+
+.ezadmin-overflowvisible > .layui-layer-content > .layui-layer-TipsG {
+    border-right-color: #fafafa !important;
+}
+
+
+
+
+
+
+/**初始化加载层*/
+.layuimini-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 999999;
+}
+
+.layuimini-loader .layuimini-loader-inner {
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #1E9FFF;
+    animation: spin 2s linear infinite;
+}
+
+.layuimini-loader .layuimini-loader-inner:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #1E9FFF;
+    animation: spin 3s linear infinite;
+}
+
+.layuimini-loader .layuimini-loader-inner:after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #1E9FFF;
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+
+
+
+
+
+
+
+
+

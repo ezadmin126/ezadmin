@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>合并行按钮</title>
+</head>
+<body id="button-group"   type="listbutton">
+<table>
+    <tr id="content">
+        <td class='rowButtons  fixedCol '>
+            <div class="   dragula-container " th:if="${#lists.size(rowButtonItemList)>1 }">
+                <button th:text="${rowButton0.label}"
+                        th:url="${rowButton0.url}" th:item_name="${rowButton0.item_name}"
+                        th:name="${rowButton0.item_name}" th:opentype="${rowButton0.opentype}"
+                        th:windowname="${rowButton0.windowname}" th:area="${rowButton0.area}"
+                        type="button" editor="button_row"
+                        th:classappend="${  #strings.equals('script',rowButton0.opentype)?'':'ezopenbutton' }"
+                        class="rowbutton    layui-btn layui-btn-sm layui-btn-primary  "></button>
+                <button class="layui-btn layui-btn-primary layui-btn-sm dropdown_button" th:itemsJson="${itemsJson}">
+                    更多
+                    <i class="layui-icon layui-icon-down layui-font-12"></i>
+                </button>
+            </div>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

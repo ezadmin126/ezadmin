@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>隐藏域</title>
+</head>
+<body id="hidden" alias="input-hidden" type="search" icon="layui-icon-file">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md3"   config-form-type="searchcore" ez-type="input-hidden">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">隐藏域</label>
+            <div class="layui-input-block">
+                <input type="text" name="default" placeholder="隐藏域,不占用位置" disabled class="layui-input">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div ez-type="input-hidden" class="selector   list-item list-item-hidden"
+         th:classappend="${#strings.isEmpty(model.col)?'layui-col-md3':'layui-col-md'+model.col}"
+         config-form-type="searchcore" th:ITEM_ID="${model.item_name}" th:ITEM_NAME="${model.item_name}"
+           th:ez-label="${model.label}"
+           th:ez-item_name="${model.item_name}"
+           th:ez-placeholder="${model.placeholder}"
+           th:ez-alias="${model.alias}"
+           th:ez-col="${model.col}"
+           th:ez-url="${model.url}"
+
+           th:ez-data="${model.data}"
+           th:ez-datatype="${model.datatype}"
+           th:ez-item_desc="${model.item_desc}"
+           th:ez-top_desc="${model.top_desc}"
+           th:ez-jdbctype="${model.jdbctype}"
+           th:ez-lay_verify="${#strings.isEmpty(model.lay_verify)?'':model.lay_verify}"
+           th:ez-valid_rule="${model.valid_rule}"
+           th:ez-valid_msg="${model.valid_msg}"
+           th:ez-style="${model.style}"
+
+    > <div class="layui-form-item ">
+            <label class="layui-form-label" th:for="${'itemId-' + model.item_name}"  th:text="${model.label}"   th:title="${model.label}"
+               >普通文本</label>
+        <div class=" layui-input-block ">
+            <input class="layui-input " type="hidden" th:value="${model.itemParamValue}"
+                   th:name="${model.item_name}" th:id="${'itemId-' + model.item_name}"
+                   >
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+</html>

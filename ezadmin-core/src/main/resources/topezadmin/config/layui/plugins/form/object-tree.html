@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>树形组件</title>
+</head>
+<body id="tree">
+
+<link rel="stylesheet" type="text/css" href="/webjars/topezadmin/plugins/ztree/css/zTreeStyle/zTreeStyle.css"/>
+<script type="text/javascript"
+        th:src="${contextName+'/webjars/topezadmin/plugins/ztree/js/jquery.ztree.all.js'}"></script>
+<div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}"
+>
+<ul th:id="${'TREE_ID_' + item_name}" class="ztree"></ul>
+<input type="hidden" th:itemsJson="${itemsJson}" th:value="${value}" th:name="${item_name}"
+       th:id="${'ITEM_ID_' + item_name}"
+       >
+</div>
+<script>
+    $(function () {
+
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var setting = {
+            treeId: "",
+            treeObj: null,
+            view: {
+                addDiyDom: null,
+                autoCancelSelected: true,
+                dblClickExpand: true,
+                expandSpeed: "fast",
+                fontCss: {},
+                nodeClasses: {},
+                nameIsHTML: false,
+                selectedMulti: true,
+                showIcon: true,
+                showLine: true,
+                showTitle: true,
+                txtSelectedEnable: false
+                ,
+                addHoverDom: null,
+                removeHoverDom: null
+            },
+            data: {
+                key: {
+                    checked: "_CHECKED_BOOLEAN",
+                    isParent: "ISPARENT",
+                    children: "CHILDREN",
+                    name: "_NAME",
+                    title: "",
+                    url: "url",
+                    icon: "icon"
+                },
+                render: {
+                    name: null,
+                    title: null,
+                },
+                simpleData: {
+                    enable: true,
+                    idKey: "_ID",
+                    pIdKey: "_PARENT_ID",
+                    rootPId: 0
+                },
+                keep: {
+                    parent: false,
+                    leaf: false
+                }
+            },
+            callback: {
+                beforeAsync: null,
+                beforeClick: null,
+                beforeDblClick: null,
+                beforeRightClick: null,
+                beforeMouseDown: null,
+                beforeMouseUp: null,
+                beforeExpand: null,
+                beforeCollapse: null,
+                beforeRemove: null,
+
+                onAsyncError: null,
+                onAsyncSuccess: null,
+                onNodeCreated: null,
+                onClick: null,
+                onDblClick: null,
+                onRightClick: null,
+                onMouseDown: null,
+                onMouseUp: null,
+                onExpand: null,
+                onCollapse: null,
+                onRemove: function () {
+                    console.log("onRemove")
+                },
+                beforeDrag: null,
+                beforeDragOpen: null,
+                beforeDrop: null,
+                beforeEditName: null,
+                beforeRename: null,
+                onDrag: null,
+                onDragMove: null,
+                onDrop: function () {
+                    console.log("onDrop")
+                },
+                onRename: function () {
+                    console.log("rename")
+                }
+                ,
+                beforeCheck: null,
+                onCheck: function () {
+                    let checked = $.fn.zTree.getZTreeObj("[[${'TREE_ID_' + item_name}]]").getCheckedNodes(true);
+                    let ids = [];
+                    $(checked).each(function (i, v) {
+                        ids.push(v._ID);
+                    })
+                    $("#[[${'ITEM_ID_' + item_name}]]").val(ids);
+                }
+            },
+            //edit
+            edit: {
+                enable: false,
+                editNameSelectAll: false,
+                showRemoveBtn: true,
+                showRenameBtn: true,
+                removeTitle: "remove",
+                renameTitle: "rename",
+                drag: {
+                    autoExpandTrigger: false,
+                    isCopy: true,
+                    isMove: true,
+                    prev: true,
+                    next: true,
+                    inner: true,
+                    minMoveSize: 5,
+                    borderMax: 10,
+                    borderMin: -5,
+                    maxShowNodeNum: 5,
+                    autoOpenTime: 500
+                }
+            }
+            ,//check
+            check: {
+                enable: true,
+                autoCheckTrigger: false,
+                //  chkStyle: _consts.checkbox.STYLE,
+                nocheckInherit: false,
+                chkDisabledInherit: false,
+                //  radioType: _consts.radio.TYPE_LEVEL,
+                chkboxType: {
+                    "Y": "s",
+                    "N": "s"
+                }
+            }
+        };
+        // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+        // var zNodes =[
+        //     {_ID:1, _PARENT_ID:0, _NAME: "父节点1"},
+        //     {_ID:11, _PARENT_ID:1, _NAME: "子节点1"},
+        //     {_ID:12, _PARENT_ID:1, _NAME: "子节点2"}
+        // ];
+        var zNodes = JSON.parse($("#[[${'ITEM_ID_' + item_name}]]").attr("itemsJson"));
+
+        var zTreeObj = $.fn.zTree.init($("#[[${'TREE_ID_' + item_name}]]"), setting, zNodes);
+
+    });
+</script>
+
+</body>
+</html>

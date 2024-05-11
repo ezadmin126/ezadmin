@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>普通文本</title>
+</head>
+<body id="td-color"   type="td" >
+<div id="template" >
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-color">
+        <div class="   td-text  " >普通文本</div>
+    </div>
+</div>
+<table>
+    <tr id="content">
+        <td  ez-type="td-color"
+
+            th:ITEM_NAME="${item_name}"
+            th:title="${dataInDb}"
+            th:ITEM_ID="${item_name}"
+            th:_CHECK_ID_VALUE="${_CHECK_ID_VALUE}"
+            th:class="${ '    ezadmin-td ezadmin-td-'+item_name}"
+            th:classappend="${dataInDb}"
+            th:style="${style+(#strings.equals(jdbctype,'NUMBER')?';text-align:right':'')}"
+        >
+            <div  th:_CHECK_ID_VALUE="${_CHECK_ID_VALUE}"
+                  th:class="${ '    ezadmin-td ezadmin-td-'+item_name}"
+                  th:classappend="${dataInDb}" style="border: 1px solid #E6ECF2;
+    align-items: center;
+    text-align: center;
+    align-items: center;
+    margin: 0px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+">
+
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

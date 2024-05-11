@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>参数管理</title>
+
+    </head><body id="sys_param" datasource="datasource" success_url="reload"><div id="append_head"></div>
+
+
+<div class="layui-container">
+    <form id="inputForm" method="post" class="layui-form">
+
+
+    <div class="layui-form-item ">
+ <label class="layui-form-label">类型</label>
+ <div class="layui-input-block form-group">
+  <input item_name="PARAM_TYPE" name="PARAM_TYPE" placeholder style alias jdbctype data datatype lay-verify item_desc class="form-item" type="text">
+ </div>
+</div><div class="layui-form-item ">
+ <label class="layui-form-label">键</label>
+ <div class="layui-input-block form-group">
+  <input item_name="PARAM_KEY" name="PARAM_KEY" placeholder style alias jdbctype data datatype lay-verify item_desc class="form-item" type="text">
+ </div>
+</div><div class="layui-form-item ">
+ <label class="layui-form-label">值</label>
+ <div class="layui-input-block form-group">
+  <input item_name="PARAM_VALUE" name="PARAM_VALUE" placeholder style alias jdbctype data datatype lay-verify item_desc class="form-item" type="text">
+ </div>
+</div><div class="layui-form-item ">
+ <label class="layui-form-label">排序值</label>
+ <div class="layui-input-block form-group">
+  <input item_name="PARAM_ORDER" name="PARAM_ORDER" placeholder style alias jdbctype data datatype lay-verify item_desc class="form-item" type="text">
+ </div>
+</div><div class="layui-form-item ">
+ <label class="layui-form-label">状态</label>
+ <div class="layui-input-block form-group">
+  <input item_name="PARAM_STATUS" name="PARAM_STATUS" placeholder style alias jdbctype data datatype lay-verify item_desc class="form-item" type="text">
+ </div>
+</div><div class="layui-form-item ">
+ <label class="layui-form-label">描述</label>
+ <div class="layui-input-block form-group">
+  <input item_name="PARAM_DESC" name="PARAM_DESC" placeholder style alias jdbctype data datatype lay-verify item_desc class="form-item" type="text">
+ </div>
+</div></form>
+
+    <form id="configForm" class="layui-form">
+        <div class="layui-card" group_name="表单数据配置">
+            <div class="layui-card-header">
+                表单数据配置
+            </div>
+            <div class="layui-card-body"></div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">初始表达式</label>
+            <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("select PARAM_TYPE,PARAM_KEY,PARAM_VALUE,PARAM_ORDER,PARAM_STATUS,PARAM_DESC,ADD_TIME from T_SYS_PARAM where  PARAM_ID=${ID}  ");
+if(companyId&gt;1){
+	sql.append(" AND COMPANY_ID="+companyId);
+}
+return select(sql).get(0);</pre>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">提交表达式</label>
+            <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="submit_express"  item_name="submit_express" type="">companyId=$$("COMPANY_ID");
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");
+sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");
+if(!isNotBlank("ID")){
+	id=insert("insert into T_SYS_PARAM(
+				PARAM_TYPE
+,		PARAM_KEY
+,		PARAM_VALUE
+,		PARAM_ORDER
+,		PARAM_STATUS
+,		PARAM_DESC
+
+		,COMPANY_ID
+		,ADD_TIME
+		,ADD_ID
+		,ADD_NAME
+	)VALUES(
+				#{PARAM_TYPE}
+,		#{PARAM_KEY}
+,		#{PARAM_VALUE}
+,		#{PARAM_ORDER}
+,		#{PARAM_STATUS}
+,		#{PARAM_DESC}
+
+		,"+companyId+"
+		,NOW()
+		,"+sessionUserId+"
+		,'"+sessionUserName+"'
+		  )");
+ 	return id;
+}else{
+	StringBuilder updateSql=new StringBuilder();
+	updateSql.append("update T_SYS_PARAM set ");
+	updateSql.append("		PARAM_TYPE = #{PARAM_TYPE}
+,		PARAM_KEY = #{PARAM_KEY}
+,		PARAM_VALUE = #{PARAM_VALUE}
+,		PARAM_ORDER = #{PARAM_ORDER}
+,		PARAM_STATUS = #{PARAM_STATUS}
+,		PARAM_DESC = #{PARAM_DESC}
+");
+	updateSql.append("		,UPDATE_TIME=now()
+		,UPDATE_ID="+sessionUserId+"
+		,UPDATE_NAME='"+sessionUserName+"'
+");
+	updateSql.append(" where PARAM_ID=#{ID} ");
+	if(companyId&gt;1){
+	updateSql.append(" and COMPANY_ID&gt; "+companyId);
+	}
+	update(updateSql);
+	return ID;
+}</pre>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">删除表达式</label>
+            <div class="layui-input-block form-group">
+                <pre class="form-item layui-code" name="delete_express"  item_name="delete_express" type=""></pre>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">分组表达式</label>
+            <div class="layui-input-block form-group">
+                <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    layui.use(function () {
+
+    })
+</script>
+<div id="append_foot"></div>
+</body></html>
+
+
+
+
+
+
+
+
+
+
+

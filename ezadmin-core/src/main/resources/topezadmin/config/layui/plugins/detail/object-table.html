@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表格</title>
+</head>
+<body id="table" alias="EZ-TABLE" type="form" icon="layui-icon-list">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="table">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">多行文本</label>
+            <div class="layui-input-block">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>人物</th>
+                        <th>民族</th>
+                        <th>格言</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>孔子</td>
+                        <td>华夏</td>
+                        <td>有朋至远方来，不亦乐乎</td>
+                    </tr>
+                    <tr>
+                        <td>孟子</td>
+                        <td>华夏</td>
+                        <td>穷则独善其身，达则兼济天下</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+
+    <div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" ez-type="table"
+     th:ez-label="${label}"
+     th:ez-item_name="${item_name}"
+     th:ez-placeholder="${placeholder}"
+     th:ez-alias="${alias}"
+     th:ez-col="${col}"
+     th:ez-url="${url}"
+     th:ez-data="${data}"
+     th:ez-datatype="${datatype}"
+     th:ez-item_desc="${item_desc}"
+     th:ez-top_desc="${top_desc}"
+     th:ez-jdbctype="${jdbctype}"
+     th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+     th:ez-valid_rule="${valid_rule}"
+     th:ez-valid_msg="${valid_msg}"
+     th:ez-style="${style}"
+     th:ez-help="${help}"
+>
+    <div class="layui-form-item ">
+        <label class="layui-form-label  "   >
+            <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+            <i th:if="${not #strings.isEmpty(help)}"
+               th:id="${'ez-help-'+item_name}"
+               class="ez-help layui-icon-help layui-icon"
+               th:src="${help}"></i>
+            [[${#strings.isEmpty(label)?'':label+'：' }]]
+        </label>
+        <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+            <small
+                    class="layui-form-mid layui-text-em top_desc"
+                    th:utext="${top_desc}" style="float:none"
+                    th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+            <table  border-spacing="0" th:id="${'ITEM_ID_' + item_name}"
+                   class="  layui-table propTable ez-table" th:lay-filter="${not #strings.equals('pure',subdata.tablestyle)?'mytable':''}" style=" width:100%">
+                <thead style="text-align: center">
+                <tr   >
+                    <th th:remove="tag" th:each="item:${subdata.col}" th:utext="${item.html}">
+                    </th>
+                </tr>
+                </thead>
+                <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);" class="dragula-container">
+                <tr th:each="row,rowStat:${subdata.core.dataList}"   th:data-id="${row.id}">
+                    <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <style>
+                .gu-mirror {
+                    position: fixed !important;
+                    margin: 0 !important;
+                    z-index: 9999 !important;
+                    opacity: 0.8;
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+                    filter: alpha(opacity=80);
+                }
+
+                .gu-hide {
+                    display: none !important;
+                }
+
+                .gu-unselectable {
+                    -webkit-user-select: none !important;
+                    -moz-user-select: none !important;
+                    -ms-user-select: none !important;
+                    user-select: none !important;
+                }
+
+                .gu-transit {
+                    opacity: 0.2;
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+                    filter: alpha(opacity=20);
+                }
+            </style>
+            <script>
+                layui.use(['table', 'form', 'layCascader'], function () {
+                    var form = layui.form;
+
+                    var curTable = $("#[[${'ITEM_ID_' + item_name}]]");
+
+                    var btnsNoadd = `<td style="min-width: 150px"> <button type="button" class="rowdelete layui-btn layui-btn-sm layui-btn-primary"  >
+                                                <i class="layui-icon layui-icon-delete"></i>
+                                            </button>
+                                                <button type="button" class="rowadd layui-btn layui-btn-sm layui-btn-primary">
+                                                    <i class="layui-icon layui-icon-addition"></i>
+                                                </button>
+                                                  <button style='float:right;cursor: move' type="button" class="rowmove layui-btn layui-btn-sm layui-btn-primary"  >
+                                                <i class="rowmove layui-icon layui-icon-screen-full"></i>
+                                            </button></td>`;
+                    var trsize = curTable.find('tbody tr').length;
+                    for (var x = 0; x < trsize; x++) {
+                        var tr = curTable.find('tbody tr').eq(x);
+                        tr.append(btnsNoadd);
+                        form.render();
+                    }
+
+                    curTable.on("click", ".rowdelete", function () {
+                        var sibLength = $(this).parents("tr").siblings().length;
+                        if (sibLength >= 1) {
+                            $(this).parents("tr").remove();
+                        }
+                        if (sibLength <= 1) {
+                            curTable.find(".rowdelete").addClass("layui-btn-disabled")
+                        }
+                        form.render();
+                    })
+                    curTable.on("click", ".rowadd", function () {
+                        var cloneTr = $(this).parents("tr").clone();
+                        cloneTr.find("input").eq(0).val('');
+                        $(this).parents("tr").after(cloneTr);
+                        curTable.find(".rowdelete").removeClass("layui-btn-disabled")
+                        form.render();
+                    })
+
+
+                    var drake = dragula({
+                        isContainer: function (el) {
+                            return el.classList.contains('dragula-container');
+                        },
+                        // copy: true,
+                        //  removeOnSpill: true,
+                        revertOnSpill: true,
+                        //copySortSource: true,
+                        moves: function (el, container, handle) {
+
+                            return handle.classList.contains('rowmove');
+                        }, accepts: function (el, target) {
+
+                            return target.classList.contains('dragula-container');
+                        }
+                    })
+                })
+            </script>
+
+
+            <small
+                    class="layui-form-mid layui-text-em item_desc"
+                    th:utext="${item_desc}"
+                    th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+        </div>
+    </div>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>tree-base-attr</title>
+
+ </head>
+ <body id="tree-base-attr" datasource="datasource" fixednumber="" fixednumberright="" append_column_url="" append_row_url="" empty_show="" firstcol="">
+  <div id="append_head"></div>
+  <div class="layui-fluid">
+   <div class="layui-tab">
+    <ul class="layui-tab-title" id="tab">
+    </ul>
+   </div>
+   <form class="layui-form" id="search">
+    <div class=" layui-inline "><label class="layui-form-label">parent_id</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="" placeholder style alias="" jdbctype data datatype oper validate_rules validate_messages> 
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">id</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="ATTRIBUTE_ID" placeholder style alias="" jdbctype data datatype oper validate_rules validate_messages> 
+     </div>
+    </div>
+    <div class=" layui-inline "><label class="layui-form-label">label</label>
+     <div class="layui-input-inline">
+      <input class=" layui-input list-search-item " type="text" name="ATTRIBUTE_NAME" placeholder style alias="" jdbctype data datatype oper validate_rules validate_messages> 
+     </div>
+    </div>
+   </form>
+   <hr class="layui-border-blue">
+   <div class="btn-group   bd-highlight" id="tableButton">
+   </div>
+   <table id="table" class="layui-table" style=" width:100%">
+    <thead>
+     <tr id="column">
+      <th type="rowbutton" id="rowbutton"></th>
+      <th item_name="" name="" body="td-text"   >parent_id</th>
+      <th item_name="ID" name="ID" body="td-text"   >id</th>
+      <th item_name="ATTRIBUTE_NAME" name="ATTRIBUTE_NAME" body="td-text"   >label</th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td> express:</td>
+      <td colspan="100"><pre id="express" class="layui-code" orderby="" groupby="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("
+   select parent_id,id,label,company_id,VALUE from ( select company_id,0 parent_id,ATTRIBUTE_ID id ,ATTRIBUTE_NAME label
+         ,0 VALUE from T_BASE_ATTRIBUTE a where a.delete_flag=0
+union all
+select company_id,ATTRIBUTE_ID parent_id,ATTRIBUTE_VALUE_ID id,ATTRIBUTE_VALUE_NAME label,ATTRIBUTE_VALUE_ID VALUE from T_BASE_ATTRIBUTE_VALUE b
+       where b.DELETE_FLAG=0
+       ) x where 1=1
+");
+if(isNotBlank("COMPANY_ID","session")){sql.append(" AND x.COMPANY_ID="+companyId);}
+return search(sql);</pre></td>
+     </tr>
+     <tr>
+      <td> count:</td>
+      <td colspan="100"><pre id="count" class="layui-code"></pre></td>
+     </tr>
+    </tbody>
+   </table>
+  </div>
+  <div id="append_foot"></div>
+
+  <script>
+    layui.use(function () {
+
+    })
+</script>
+ </body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>用户角色管理</title>
+
+ </head>
+ <body id="sys_user_role" datasource="datasource" success_url="">
+  <div id="append_head" class="append"></div>
+  <div class="layui-container">
+   <form id="inputForm" method="post" class="layui-form">
+    <div class="layui-card" group_name="EZ_DEFAULT_GROUP">
+     <div class="layui-card-header">
+       EZ_DEFAULT_GROUP 
+     </div>
+     <div class="layui-card-body">
+      <div class="layui-form-item "><label class="layui-form-label">用户名</label>
+       <div class="layui-input-block form-group">
+        <input class="form-item" name="USER_NAME" type="span" value="" item_name="USER_NAME" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
+       </div>
+      </div>
+      <div class="layui-form-item ">
+       <label class="layui-form-label">角色</label>
+       <div class="layui-input-block form-group">
+        <object class="form-item" name="ROLE_IDS" type="xmselect" value="" item_name="ROLE_IDS" placeholder="" style="" alias=""
+                jdbctype="" data="SELECT ROLE_ID K,ROLE_NAME V FROM T_SYS_ROLE WHERE COMPANY_ID=${COMPANY_ID} and delete_flag=0" datatype="KVSQL" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload=""></object>
+       </div>
+      </div>
+     </div>
+    </div>
+   </form>
+   <form id="configForm" class="layui-form">
+    <div class="layui-card" group_name="表单数据配置">
+     <div class="layui-card-header">
+       表单数据配置 
+     </div>
+     <div class="layui-card-body">
+     </div>
+    </div>
+    <div class="layui-form-item "><label class="layui-form-label">初始表达式</label>
+     <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" id="init" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("
+select  GROUP_CONCAT(R.ROLE_ID)  ROLE_IDS
+, U.USER_NAME
+FROM T_SYS_ROLE R
+  LEFT JOIN T_SYS_USER_ROLE  UR ON R.ROLE_ID=UR.ROLE_ID and UR.DELETE_FLAG=0
+  LEFT JOIN T_SYS_USER U ON UR.USER_ID=U.USER_ID
+WHERE U.USER_ID=${ID}   
+GROUP BY U.USER_ID, U.USER_NAME
+");
+if(companyId&gt;1){
+	sql.append(" AND R.COMPANY_ID="+companyId);
+}
+return select(sql).get(0);</pre>
+     </div>
+    </div>
+    <div class="layui-form-item ">
+     <label class="layui-form-label">提交表达式</label>
+     <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" id="submit" name="submit_express"  item_name="submit_express" type="">
+          roleids=$("ROLE_IDS");
+update("update T_SYS_USER_ROLE set delete_flag=1 where USER_ID=${ID} ");
+logger(roleids);
+ roleidArray=roleids.split(",");
+for(int i=0;i&lt;roleidArray.length;i++){
+
+     insert("insert T_SYS_USER_ROLE ( USER_ID, ROLE_ID,   DELETE_FLAG)VALUES(#{ID},"+roleidArray[i]+",0)")
+}
+return 1;</pre>
+     </div>
+    </div>
+    <div class="layui-form-item ">
+     <label class="layui-form-label">删除表达式</label>
+     <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" id="delete" name="delete_express"  item_name="delete_express" type=""></pre>
+     </div>
+    </div>
+    <div class="layui-form-item "><label class="layui-form-label">分组表达式</label>
+     <div class="layui-input-block form-group">
+      <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
+     </div>
+    </div>
+   </form>
+  </div>
+
+  <script>
+    layui.use(function () {
+
+    })
+</script>
+  <div id="append_foot" class="append">
+  </div>
+ </body>
+</html>
