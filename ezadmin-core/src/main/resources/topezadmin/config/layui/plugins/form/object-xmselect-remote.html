@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>多选下拉框</title>
+    <title>远程多选下拉框</title>
 </head>
-<body id="xmselect"   type="form" icon="layui-icon-more">
+<body id="xmselect-remote"   type="form" icon="layui-icon-more">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect-remote">
         <div class="layui-form-item ">
-            <label class="layui-form-label  ">多选下拉框</label>
+            <label class="layui-form-label  ">远程多选下拉框</label>
             <div class="layui-input-block">
                 <select name="default" class=""></select>
             </div>
@@ -19,7 +19,7 @@
 <div id="content">
 
 
-    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="xmselect"
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="xmselect-remote"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"
@@ -54,12 +54,13 @@
                         th:utext="${top_desc}" style="float:none"
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
-                <div th:itemsJson="${itemsJson}" th:id="${'itemId-' + item_name}" th:name="${item_name}"
+                <div th:itemsJson="${itemsJson}" th:url="${url}" th:id="${'itemId-' + item_name}" th:name="${item_name}"
                      th:value="${#strings.isEmpty(value)?'[]':'['+value+']'}"></div>
 
                 <script>
                     var xmel = $('[[${"#itemId-" + item_name}]]');
                     var initdata = xmel.attr("itemsJson");
+                    var initUrl = xmel.attr("url");
                     var initvalue = xmel.attr("value");
                     var xmselect = xmSelect.render({
                         el: '[[${"#itemId-" + item_name}]]',
@@ -76,45 +77,33 @@
                         },
                         name: '[[${item_name}]]',
                         tips: '[[${#strings.isEmpty(placeholder)?"请选择":placeholder}]]',
-                        data: JSON.parse(initdata),
+                        remoteSearch: true,
+                        remoteMethod: function(val, cb, show){
+                            var param={ keyword: val}
+                            $.post(initUrl , param, function(response) {
+                                if(response.success){
+                                    var res = response.data;
+                                    cb(res.data)
+                                } else {
+                                    cb([]);
+                                    console.log(response.message);
+                                }
+                            }, 'json').fail(function () {
+                                cb([]);
+                                console.log("error");
+                            });
+                        },
                         initValue: JSON.parse(initvalue),
                         create: function(val, arr){
-
                                 if(arr.length === 0){
                                     return {
                                         V: '创建-' + val,
                                         K: val
                                     }
-
-                                    // var d={};
-                                    // $.ajax({
-                                    //     url:"/jz/createlabel",
-                                    //     data:{"name":val},
-                                    //     async:false,
-                                    //     type: 'POST',
-                                    //     success:function(data){
-                                    //         d.V="新增-" + val;
-                                    //         d.K=data.data.id;
-                                    //         console.log('success'+JSON.stringify(d))
-                                    //         return d;
-                                    //     }
-                                    // })
-                                    // console.log('return sync'+JSON.stringify(d))
-                                    // return d;
                                 }
-
-
-                            // console.log('return sync'+JSON.stringify(d))
-                            // return {
-                            //     name: '新增-' + val,
-                            //     value: val
-                            // };
-
                         }
                     })
                 </script>
-
-
                 <small
                         class="layui-form-mid layui-text-em item_desc"
                         th:utext="${item_desc}"

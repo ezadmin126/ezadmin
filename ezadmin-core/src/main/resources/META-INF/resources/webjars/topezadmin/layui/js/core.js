@@ -1235,7 +1235,7 @@ function parse(f) {
 }
 
 $(function(){
-    var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?123";
+    var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?xx";
     var APPERANCE_KEY = "layui-theme-mode-prefer-dark";
     var savedPreferDark = localStorage.getItem(APPERANCE_KEY)||$.cookie(APPERANCE_KEY)||'';
     if(savedPreferDark=='dark'){

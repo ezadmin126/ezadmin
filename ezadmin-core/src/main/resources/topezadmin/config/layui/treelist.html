@@ -20,7 +20,7 @@
     <script th:src="${contextName+'/webjars/layui/2.8.18/dist/layui.js?v=2.8.6'}" type="text/javascript"></script>
     <script th:src="${contextName+'/webjars/topezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
     <script th:src="${contextName+'/webjars/topezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
-    <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?123':''}"  >
+    <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?123'+vi:''}"  >
 
     [(${data.core.append_head})]
 </head>

@@ -76,7 +76,7 @@
     font-weight: bold;
     color: #ffffff !important;
     height: 50px !important;
-    line-height: 50px !important;
+    line-height: 42px !important;
     overflow: hidden;
     line-height: 64px;
     transition: all .2s !important;
@@ -84,9 +84,9 @@
 
 .layui-layout-admin .layuimini-logo img {
     display: inline-block;
-    height: 40px;
+    height: 50px;
     vertical-align: middle;
-    margin-left: 12px;
+    margin-left: 0px;
 }
 
 .layui-layout-admin .layuimini-logo h1 {
