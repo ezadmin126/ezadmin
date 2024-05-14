@@ -1233,19 +1233,19 @@ function parse(f) {
         .catch(err => layer.msg('读取失败：', err));
 
 }
-
-$(function(){
-    var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?xx";
-    var APPERANCE_KEY = "layui-theme-mode-prefer-dark";
-    var savedPreferDark = localStorage.getItem(APPERANCE_KEY)||$.cookie(APPERANCE_KEY)||'';
-    if(savedPreferDark=='dark'){
-        if(!document.getElementById('layui_theme_css').hasAttribute("href")){
-            document.getElementById('layui_theme_css').setAttribute('href',url);
-            layui.form.render();
-        }
-    }else{
-        document.getElementById('layui_theme_css').removeAttribute('href' );
-        layui.form.render();
-    }
-})
+//
+// $(function(){
+//     var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?xx";
+//     var APPERANCE_KEY = "layui-theme-mode-prefer-dark";
+//     var savedPreferDark = localStorage.getItem(APPERANCE_KEY)||$.cookie(APPERANCE_KEY)||'';
+//     if(savedPreferDark=='dark'){
+//         if(!document.getElementById('layui_theme_css').hasAttribute("href")){
+//             document.getElementById('layui_theme_css').setAttribute('href',url);
+//             layui.form.render();
+//         }
+//     }else{
+//         document.getElementById('layui_theme_css').removeAttribute('href' );
+//         layui.form.render();
+//     }
+// })
 

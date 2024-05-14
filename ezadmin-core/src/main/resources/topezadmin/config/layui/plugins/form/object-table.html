@@ -175,7 +175,7 @@
                 function renderxm(othis){
                     var v=JSON.parse(othis.attr("value"));
 
-                    var initparam={ keyword: v[0],page:1}
+                    var initparam={ id: v[0],page:1}
                     $.post(othis.attr("url") , initparam, function(initresponse) {
                         if(initresponse.success){
                             var initresp = initresponse.data;
