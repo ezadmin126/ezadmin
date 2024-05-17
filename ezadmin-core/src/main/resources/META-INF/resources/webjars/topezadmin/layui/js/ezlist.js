@@ -412,7 +412,7 @@ function renderTable() {
             }
             form.render();
         });
-
+        var inited=false;
         tableConfig={
             height: 'full-'+($("#tab").height()+$("#searchForm").offset().top+$("#searchForm").height()+43+97)  //设置高度
             ,escape: false
@@ -423,14 +423,18 @@ function renderTable() {
             //支持所有基础参数
             ,text: {none: '暂无数据'}
             ,done: function (res, curr, count) {
+
                 try {
-                    if (typeof (afterAllDataLoad) == "function") {
-                        afterAllDataLoad();
+                    if(!inited){
+                        inited=true;
+                        if (typeof (afterAllDataLoad) == "function") {
+                            afterAllDataLoad();
+                        }
+                        doDropdown();
+                        doOrder();
+                        doPage();
+                        doSystem();
                     }
-                    doDropdown();
-                    doOrder();
-                    doPage();
-                    doSystem();
                 } catch (e) {
                     console.log(e)
                 }
