@@ -332,6 +332,9 @@ public class ListServiceImpl implements ListService {
         initType=StringUtils.upperCase(StringUtils.isBlank(initType)?ItemDataSourceType.TEXT.name():initType);
 
         switch (ItemDataSourceType.get(initType)){
+            case DATAGROUP:
+                data=datagroup(datasource,initData,params);
+                break;
             case  TEXT :
                 data=text(initData,params);
                 break;
@@ -364,6 +367,29 @@ public class ListServiceImpl implements ListService {
             data.items(new ArrayList<Map<String, Object>>());
         }
         return data ;
+    }
+    //DATA_CODE,DATA_TYPE,DATA_CONTENT f
+    private ItemInitData datagroup(DataSource datasource,String initData, Map<String, Object> params) throws Exception {
+       Map<String,Object> group= (Map<String, Object>)EzClientBootstrap.instance().getCache().get("datagroup_cache", initData, new Callback() {
+           @Override
+           public Object call(String key) {
+               try {
+                   Map<String, Object> m = dao.executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                           "select DATA_CODE,DATA_TYPE,DATA_CONTENT from T_EZADMIN_DATA WHERE DELETE_FLAG=0 AND DATA_CODE=?", new Object[]{initData});
+                   return m;
+               }catch (Exception e){
+                   return Collections.emptyMap();
+               }
+           }
+       });
+        if(!Utils.isEmpty(group)){
+            if(Utils.trimNull(group.get("DATA_TYPE")).equalsIgnoreCase("datagroup")){
+                return new ItemInitData();
+            }
+            return  getSelectItems(  datasource,   Utils.trimNull(group.get("DATA_CONTENT")),   Utils.trimNull(group.get("DATA_TYPE")),  params
+            );
+        }
+        return new ItemInitData();
     }
 
     private ItemInitData kvTreeSqlCache(String initData, Map<String, Object> params, DataSource datasource, String s) {

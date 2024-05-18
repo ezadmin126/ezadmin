@@ -199,7 +199,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                                 sb.append(v);
                                 sb.append("'  ");
                             });
-                            sb.append(">");
+                            sb.append("></div>");
                             context.setVariable("serverDom",sb.toString());
                             context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
                         }

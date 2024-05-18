@@ -5,7 +5,7 @@ import top.ezadmin.common.utils.Utils;
 
 public enum ItemDataSourceType {
     TEXT,JSON,KVSQL,HTTP,JOIN,KVSQLCACHE,HTTPCACHE,QLEXPRESS,KVSQLCACHE5
-    ,EZLIST,KVJSONRESULT,CASCADER,KVSQL2TREECACHE
+    ,EZLIST,KVJSONRESULT,CASCADER,KVSQL2TREECACHE,DATAGROUP
     ;
 
     public static ItemDataSourceType get(String k){

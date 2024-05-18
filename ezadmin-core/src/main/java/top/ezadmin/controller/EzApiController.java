@@ -77,7 +77,6 @@ public class EzApiController extends BaseController {
         }
         ezResult.printJSONUtils( response);
     }
-
     @EzMapping("category.html")
     public void category(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String url="";
@@ -110,4 +109,42 @@ public class EzApiController extends BaseController {
         }
         ezResult.printJSONUtils(response);
     }
+
+    @EzMapping("datagroup.html")
+    public void datagroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+
+
+        String url="";
+        Map<String,String> searchParamsValues=new HashMap<>();
+        for(Map.Entry<String, String[]> e:request.getParameterMap().entrySet()){
+            searchParamsValues.put(e.getKey(),StringUtils.trimEmpty(StringUtils.join(e.getValue())));
+        }
+        EzResult ezResult=null;
+        final String searchParamJson=JSON.toJSONString(searchParamsValues);
+        if(StringUtils.equals(request.getParameter("isCache"),"0")){
+            String jsonStr=  Utils.postBody2WithTimeOut(bootstrap.getCategoryUrl(),searchParamJson,30000);
+            ezResult= EzResult.instance().data(JSON.parseObject(jsonStr).get("listData"));
+        }else {
+            ezResult = (EzResult) EzClientBootstrap.instance().getCache().get60(CacheNameSpace.CATEGORY.name(),
+                    bootstrap.getCategoryUrl(), new Callback() {
+                        @Override
+                        public Object call(String key) {
+                            try {
+                                String jsonStr = Utils.postBody2WithTimeOut(bootstrap.getCategoryUrl(),searchParamJson, 30000);
+
+                                return EzResult.instance().data(JSON.parseObject(jsonStr).get("listData"));
+                            } catch (Exception e) {
+                                Utils.addLog("", e);
+                            }
+                            return "500";
+                        }
+
+
+                    });
+        }
+        ezResult.printJSONUtils(response);
+    }
+
+
 }

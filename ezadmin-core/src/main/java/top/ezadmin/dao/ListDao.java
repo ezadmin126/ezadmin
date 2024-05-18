@@ -56,7 +56,7 @@ public class ListDao extends JsoupUtil {
             ,JsoupUtil.STYLE
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
             ,JsoupUtil.TOP_DESC,JsoupUtil.ITEM_DESC,JsoupUtil.RIGHT_DESC
-            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE,JsoupUtil.COL,JsoupUtil.PLUGIN
+            ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE,JsoupUtil.COL
             ,JsoupUtil.DISPLAY ,JsoupUtil.CLASS
     };
     private ListDao() {
