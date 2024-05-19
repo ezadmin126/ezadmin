@@ -215,6 +215,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             attrMap.put("class","layui-input "+(Utils.trimNull(attrMap.get("class")).replace("layui-input ","")) );
                             StringBuilder sb=new StringBuilder("<input ");
                             attrMap.forEach((k,v)->{
+                                if(k.equalsIgnoreCase("readonly")||k.equalsIgnoreCase("disabled")){
+                                    v=k;
+                                }
                                 if(StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
                                     ;return;
                                 }

@@ -516,7 +516,7 @@ function renderTable() {
                 },
                 done: function(res, curr, count, origin) {
                     watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});
-                    doPage();
+                   // doPage();
                 }
             });
         }
