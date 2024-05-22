@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class ControllerFilter extends Filter {
     Logger logger = LoggerFactory.getLogger(ControllerFilter.class);
-    public static String includeShow="/topezadmin/(list|form|listEdit|formEdit|detail)/([A-Za-z]+)-(.*)";
+    public static String includeShow="/topezadmin/(list|form|listEdit|formEdit|detail|api)/([A-Za-z]+)-(.*)";
     Map<String, Map<String, Object>> REQUEST_MAPPING = new HashMap<String, Map<String, Object>> ();
     String pack = "top.ezadmin.controller";
     public static String vesion=System.currentTimeMillis()+"";
@@ -117,6 +117,8 @@ public class ControllerFilter extends Filter {
                      case "form":
                      case "formEdit":
                          request.setAttribute("ENCRYPT_FORM_ID", id);
+                     case "api":
+                         request.setAttribute("ENCRYPT_ID", id);
                          break;
                  }
              }catch (IllegalArgumentException  ee){

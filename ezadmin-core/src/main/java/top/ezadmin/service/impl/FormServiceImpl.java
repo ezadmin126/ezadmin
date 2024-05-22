@@ -109,7 +109,11 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                         }
                         context.setVariable("contextName", "");
                         for (Map.Entry<String, Object> entry : item.entrySet()) {
-                            context.setVariable(entry.getKey(), entry.getValue());
+                            if(entry.getKey().equalsIgnoreCase("readonly")||entry.getKey().equalsIgnoreCase("disabled")){
+                                context.setVariable(entry.getKey(),entry.getKey());
+                            }else{
+                                context.setVariable(entry.getKey(), entry.getValue());
+                            }
                         }
 
                         String itemUrl = Utils.trimNull(item_url);
@@ -217,6 +221,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             attrMap.forEach((k,v)->{
                                 if(k.equalsIgnoreCase("readonly")||k.equalsIgnoreCase("disabled")){
                                     v=k;
+
                                 }
                                 if(StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
                                     ;return;
