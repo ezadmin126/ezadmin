@@ -166,11 +166,11 @@ public class ControllerFilter extends Filter {
                     return;
                 }
                 logger.error("找不到指定的方法",vo.getTargetException());
-                EzResult.instance().msg("500", ExceptionUtils.getFullStackTrace(vo.getTargetException())).printJSONUtils(response);
+                EzResult.instance().success(false).msg("500", ExceptionUtils.getFullStackTrace(vo.getTargetException())).printJSONUtils(response);
             }
             catch (Exception e) {
                 logger.error("找不到指定的方法",e);
-                EzResult.instance().msg("500", ExceptionUtils.getFullStackTrace(e)).printJSONUtils(response);
+                EzResult.instance().success(false).msg("500", ExceptionUtils.getFullStackTrace(e)).printJSONUtils(response);
             }
             return;
         }

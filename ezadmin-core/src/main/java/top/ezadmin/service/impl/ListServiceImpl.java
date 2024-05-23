@@ -887,7 +887,7 @@ public class ListServiceImpl implements ListService {
                         sb.append(">");
                         context.setVariable("serverDom",sb.toString());
                     }
-                    if(  pluginCode.contains("xmselect-search")
+                    if(  pluginCode.contains("xmselect")
                     ){
                         Map<String,String> attrMap= (Map<String,String>)search.get("attrMap");
                         attrMap.put("value",StringEscapeUtils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName())+""));
@@ -905,7 +905,7 @@ public class ListServiceImpl implements ListService {
                             sb.append(v);
                             sb.append("'  ");
                         });
-                        sb.append(">");
+                        sb.append("></div>");
                         context.setVariable("serverDom",sb.toString());
                     }
 

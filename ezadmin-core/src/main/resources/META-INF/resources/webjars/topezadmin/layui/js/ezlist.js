@@ -572,7 +572,9 @@ function doPage(){
         if ($(".dataTables_empty").length == 0 && $("#PAGE_LAYUI").length > 0) {
             $.get($("#contextName").val() + "/topezadmin/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
 
-
+                if(!data.success||data.code==500){
+                    return;
+                }
                 if(data.data.page.currentPage>=data.data.page.totalPage){
                     $(".nextpage").removeClass("page-button");
                     $(".nextpage").addClass("layui-btn-disabled");
