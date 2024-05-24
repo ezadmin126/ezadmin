@@ -48,8 +48,8 @@
         </div>
 
             <script>
-                var xmel = $('[[${"#itemId-" + item_name}]]');
-                var initdata = $('[[${"#itemdata-" + item_name}]]').val();
+                var xmel = $('[[${"#itemId-" + model.item_name}]]');
+                var initdata = $('[[${"#itemdata-" + model.item_name}]]').val();
                 var initvalue = xmel.attr("value");
                 var strict = (xmel.attr("strict")||"false".toLowerCase())==="false"?false:true;
 
@@ -58,9 +58,9 @@
                 $(function(){
 
                 xmSelect.render({
-                    el: '[[${"#itemId-" + item_name}]]',
+                    el: '[[${"#itemId-" + model.item_name}]]',
                     autoRow: false,
-                    name:'[[${item_name}]]',
+                    name:'[[${model.item_name}]]',
                     filterable: true,
                     showCount: 5,
 

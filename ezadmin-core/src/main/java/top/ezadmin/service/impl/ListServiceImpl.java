@@ -893,8 +893,8 @@ public class ListServiceImpl implements ListService {
                         attrMap.put("value",StringEscapeUtils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName())+""));
                         attrMap.put("name",search.get(JsoupUtil.ITEM_NAME)+"");
                         attrMap.putIfAbsent("id","itemId-"+search.get(JsoupUtil.ITEM_NAME)+"");
-                        attrMap.putIfAbsent("lay-affix","clear" );
-                        attrMap.put("class","layui-input "+attrMap.get("class") );
+//                        attrMap.putIfAbsent("lay-affix","clear" );
+                        attrMap.put("class","layui-input "+Utils.trimNull(attrMap.get("class")) );
                         StringBuilder sb=new StringBuilder("<div ");
                         attrMap.forEach((k,v)->{
                             if(StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
