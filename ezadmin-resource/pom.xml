@@ -3,11 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>top.ezadmin</groupId>
-        <artifactId>ezadmin</artifactId>
-        <version>2.9.9-SNAPSHOT</version>
-    </parent>
+<!--    <parent>-->
+<!--        <groupId>top.ezadmin</groupId>-->
+<!--        <artifactId>ezadmin</artifactId>-->
+<!--        <version>2.9.9-SNAPSHOT</version>-->
+<!--    </parent>-->
         <distributionManagement>
             <snapshotRepository>
                 <id>ossrh</id>
@@ -20,7 +20,7 @@
         </distributionManagement>
     <groupId>top.ezadmin</groupId>
     <artifactId>ezadmin-resource</artifactId>
-    <version>2.9.9-SNAPSHOT</version>
+    <version>2.9.10-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ezadmin-resource</name>
     <url>https://github.com/ezadmin126/ezadmin</url>

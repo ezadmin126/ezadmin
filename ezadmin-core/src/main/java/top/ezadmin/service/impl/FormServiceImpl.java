@@ -190,7 +190,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             attrMap.put("name",item.get(JsoupUtil.ITEM_NAME)+"");
                           //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                             attrMap.putIfAbsent("id","ITEM_ID_"+item.get(JsoupUtil.ITEM_NAME)+"");
-                            attrMap.putIfAbsent("lay-affix","clear" );
+                           // attrMap.putIfAbsent("lay-affix","clear" );
                             attrMap.putIfAbsent("lay-verify",attrMap.get(JsoupUtil.LAYVERIFY) );
                           //  attrMap.put("class","layui-input "+attrMap.get("class") );
                             StringBuilder sb=new StringBuilder("<div ");
@@ -205,6 +205,8 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             });
                             sb.append("></div>");
                             context.setVariable("serverDom",sb.toString());
+                            //页面不展示data
+                            attrMap.remove("data");
                             context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
                         }
                         else if(Utils.trimNull(item.get("type")).equals("input-text")

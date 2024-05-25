@@ -1016,3 +1016,8 @@ xm-select>.xm-body .xm-paging>span[style*=color]{
 /* xm-select .xm-body .xm-option .xm-option-icon{
   background-color: var(--lay-color-bg-white);
 } */
+
+.mask_div{
+    color:rgb(105 105 105 / 57%) !important;
+    opacity: 0.1;
+}

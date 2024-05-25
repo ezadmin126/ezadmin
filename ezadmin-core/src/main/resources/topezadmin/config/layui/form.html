@@ -64,6 +64,15 @@
                                 <button id="submitbtn" type="submit" class="layui-btn" lay-submit
                                         lay-filter="submitbtn">立即提交
                                 </button>
+                                <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/loadEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                    图形编辑
+                                </button>
+                                <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                    源码编辑
+                                </button>
+                                <button th:if="${not cacheFlag}" opentype="_BLANK_PARAM" type="button" th:url="${'/topezadmin/formEdit/trace-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                    查看SQL
+                                </button>
 <!--                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
                             </div>
                         </div>
