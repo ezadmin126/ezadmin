@@ -285,8 +285,11 @@ public class ListServiceImpl implements ListService {
             return  data.items(( List<Map<String, Object>>) EzClientBootstrap.instance().getCache().get5("KV_SQL_CACHE_", key
                     , callback));
         }
-
-        return  data.items(( List<Map<String, Object>>) EzClientBootstrap.instance().getCache().get60("KV_SQL_CACHE_", key
+        if("60".equals(mini)){
+            return  data.items(( List<Map<String, Object>>) EzClientBootstrap.instance().getCache().get60("KV_SQL_CACHE_", key
+                    , callback));
+        }
+        return  data.items(( List<Map<String, Object>>) EzClientBootstrap.instance().getCache().get("KV_SQL_CACHE_", key
                 , callback));
     }
     ItemInitData qlexpress(String initData,Map<String, Object> params,DataSource datasource){
@@ -347,6 +350,8 @@ public class ListServiceImpl implements ListService {
                 List<Map<String, Object>> keyvalues = dao.executeQuery(datasource, model.getResult(), null);
                 data=data.items(keyvalues);
                 break;
+            case KVSQLCACHEFOREVER:
+                data=kvSqlCache(  initData,  params,  datasource,"0");
             case KVSQLCACHE:
                 data=kvSqlCache(  initData,  params,  datasource,"60");
                 break;

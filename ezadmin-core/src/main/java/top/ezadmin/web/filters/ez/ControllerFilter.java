@@ -81,6 +81,7 @@ public class ControllerFilter extends Filter {
         String contextName = request.getServletContext().getContextPath();
         request.setAttribute("contextName", contextName);
         request.setAttribute("holiday", EzClientBootstrap.instance().getHoliday());
+        request.setAttribute("cacheFlag", EzClientBootstrap.instance().isSqlCache());
         request.setAttribute("vi", vesion);
 
         Cookie[] cookie=request.getCookies();
