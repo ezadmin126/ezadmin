@@ -9,7 +9,9 @@ public enum DefaultParamEnum {
     EZ_PRE_30_DAY //前30天的00:00:00
     ,EZ_TODAY_END     //今天的23:59:59
     ,EZ_MONTH_START//当月第一天的  00:00:00
-    ,EZ_MONTH_END;//当月最后一天的23:59:59
+    ,EZ_MONTH_END//当月最后一天的23:59:59
+    ,EZ_YEAR_START //当年 元旦节
+    ;
     public static boolean isdefaultParam(String param){
         if(StringUtils.isBlank(param)||!Character.isLetter(param.charAt(0))){
             return false;
@@ -35,6 +37,8 @@ public enum DefaultParamEnum {
                         return EzDateUtils.monthStart();
                     case EZ_MONTH_END:
                         return EzDateUtils.monthEnd();
+                    case EZ_YEAR_START:
+                        return EzDateUtils.yearStart();
                 }
             }
         }

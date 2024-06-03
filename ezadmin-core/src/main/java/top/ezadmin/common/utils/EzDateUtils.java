@@ -48,6 +48,16 @@ public class EzDateUtils{
         return simple.format(calendar.getTime());
     }
 
+    public static String yearStart() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simple = new SimpleDateFormat(DATE);
+        calendar.set(Calendar.DAY_OF_MONTH,1);
+       calendar.set(Calendar.MONTH,0);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        return simple.format(calendar.getTime())+" - "+simple.format(new Date());
+    }
     public static String monthStart() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
@@ -136,12 +146,7 @@ public class EzDateUtils{
 
     public static void main(String[] args) throws ParseException {
         SimpleDateFormat simple = new SimpleDateFormat(DATETIME);
-        System.out.println(monthStart());
-        System.out.println(monthEnd());
-        System.out.println(trimDateStart("2021-11-05" ));
-        System.out.println(trimDateStart("2021-11-05 22:11:33" ));
-        System.out.println(trimDateEnd("2021-11-05" ));
-        System.out.println(trimDateEnd("2021-11-05 22:11:33" ));
+        System.out.println(yearStart());
     }
 
     public static String todayDate() {
