@@ -1,10 +1,10 @@
 package top.ezadmin.plugins.parser.parse;
 
 public class Params {
-
+    private static final String VARCHAR="VARCHAR";
     private String paramKey;
     private Object paramValue;
-    private String jdbcType;
+    private String jdbcType=VARCHAR;
 
     @Override
     public String toString() {

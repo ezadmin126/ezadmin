@@ -27,10 +27,10 @@ public class StandardSqlParser {
 
     public static ResultModel parse(String string, Map<String,Object> variables) {
         ResultModel model2=new ResultModel();
-        if(variables==null|| variables.isEmpty()){
-            model2.setResult(string);
-            return model2;
-        }
+//        if(variables==null|| variables.isEmpty()){
+//            model2.setResult(string);
+//            return model2;
+//        }
         if(string.indexOf(startFixStr)>=0){
             ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(model2,variables);
             GenericTokenParser parser = new GenericTokenParser(startFixStr, endFixStr, handler);
@@ -66,7 +66,7 @@ public class StandardSqlParser {
     }
 
     public static void main(String[] args) {
-        System.out.println(getKey("#{u,jdbc=a,v=ss}"));
+        System.out.println(getKey("#{u,value=s's}"));
         System.out.println(getKey("#{u}"));
         System.out.println(getKey("#{u,jdbc=a,v=ss}"));
     }
@@ -97,7 +97,9 @@ public class StandardSqlParser {
             String key=StringUtils.trimEmpty(keyAndType[0]);
             Params p=new Params();
             p.setParamKey(key);
+            String defalutValue="";
             //解析jdbctype与 value
+            boolean hasValueProp=false;
             for (int i = 1; i <keyAndType.length ; i++) {
                 String kvtype=StringUtils.strip(keyAndType[i]);
                 if(kvtype.contains("=")){
@@ -106,27 +108,49 @@ public class StandardSqlParser {
                         p.setJdbcType(kv[1].toUpperCase());
                     }
                     if(Utils.trimNull(kv[0]).equalsIgnoreCase("value")){
-                        p.setParamValue(kv[1]);
+                        hasValueProp=true;
+                        p.setParamValue("?");
+                        if(StringUtils.isNotBlank(kv[1])&&kv[1].charAt(0)=='\''&&kv[1].charAt(kv[1].length()-1)=='\''){
+                            try {
+                                defalutValue=kv[1].substring(1, kv[1].length() - 1);
+                            }catch (Exception e){
+                                //
+                            }
+                        }else{
+                            defalutValue=kv[1];
+                        }
                     }
                 }
             }
-            //无传参
-            if(!variables.containsKey(key)){
-                if(p.getParamValue()==null){
-                    return null;
-                }else{ //有设置value
-                    return  Utils.trimNull(p.getParamValue());
+            //无传参，无value
+//            if(!hasValueProp&&!variables.containsKey(key)){
+//                return null;
+//            }
+            //无传参 且参数为空或者null
+            if(!variables.containsKey(key)&&(StringUtils.isBlank(defalutValue)||StringUtils.equals("null",defalutValue))){
+                p.setParamValue(null);
+                model.addParam(p);
+                return "?";
+            }
+            //无传参  但设置了默认值
+            if(!variables.containsKey(key)&&StringUtils.isNotBlank(defalutValue)){
+                //老版本兼容
+                if("now()".equalsIgnoreCase(defalutValue.trim())){
+                    return defalutValue.trim();
+                }else{
+                    p.setParamValue(defalutValue);
+                    model.addParam(p);
+                    return "?";
                 }
             }
+            //有传参
             Object value= transJavaType(variables.get(key),p.getJdbcType());
-            if(value==null){
-                if(p.getParamValue()==null){
-                    return null;
-                }else{ //有设置value
-                    return  Utils.trimNull(p.getParamValue());
-                }
+
+            //request 没有传值
+            if(StringUtils.equals("null",Utils.trimNull(value))){
+                value=null;
             }
-            //传了参数
+            //request  有传值
             p.setParamValue(value);
             model.addParam(p); //jdbc参数用了null
             return "?";

@@ -26,7 +26,7 @@ public class InsertSimpleOperator extends AbstractOperator {
         return ""+ Dao.getInstance().executeUpdate(operatorParam.getDs(),model.getResult(),model.getParamsStatic());
     }
 
-    private ResultModel generateSql(InsertParam param){
+    public ResultModel generateSql(InsertParam param){
         OperatorParam operatorParam=(OperatorParam) Utils.getParam();
 
 

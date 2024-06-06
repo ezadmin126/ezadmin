@@ -21,26 +21,25 @@ public class CommentsSqlParser {
     private static String endFixStr = "$*/";
 
     public static ResultModel parse(String string, Map<String,Object> variables) {
-        ResultModel model2=new ResultModel();
-        if(variables==null|| variables.isEmpty()){
-            model2.setResult(string);
-            return model2;
-        }
-        if(string.indexOf(startFixStr)>=0){
-            SqlCommentTokenHandler handler = new SqlCommentTokenHandler(model2,variables);
-            GenericTokenParser parser = new GenericTokenParser(startFixStr, endFixStr, handler);
-            string= parser.parse(string);
-        }
+//        ResultModel model2=new ResultModel();
+//        if(variables==null|| variables.isEmpty()){
+//            model2.setResult(string);
+//            return model2;
+//        }
+//        if(string.indexOf(startFixStr)>=0){
+//            SqlCommentTokenHandler handler = new SqlCommentTokenHandler(model2,variables);
+//            GenericTokenParser parser = new GenericTokenParser(startFixStr, endFixStr, handler);
+//            string= parser.parse(string);
+//        }
         //匹配完成之后 ，再全局匹配
 
         ResultModel mod= MapParser.parse(string,variables);//sql片段匹配
         //带参数类型的匹配
-        ResultModel model3=StandardSqlParser.parse(mod.getResult(),variables);
-        model2.setResult(model3.getResult());
-        for (int i = 0; i < model3.getParams().size(); i++) {
-            model2.addParam(model3.getParams().get(i));
-        }
-        return model2;
+        return StandardSqlParser.parse(mod.getResult(),variables);
+//        model2.setResult(model3.getResult());
+//        for (int i = 0; i < model3.getParams().size(); i++) {
+//            model2.addParam(model3.getParams().get(i));
+//        }
     }
 
     private static class SqlCommentTokenHandler implements TokenHandler {

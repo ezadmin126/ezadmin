@@ -1,5 +1,6 @@
 package top.ezadmin.controller;
 
+import com.ql.util.express.exception.QLBizException;
 import com.ql.util.express.exception.QLCompileException;
 import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.annotation.EzMapping;
@@ -238,14 +239,21 @@ public class FormController extends BaseController {
             return EzResult.instance().data( defaultTo);
         }catch (QLCompileException ex){
             logger.error("",ex);
-            return EzResult.instance().setSuccess(false).code("500").setMessage("表达式配置错误");
+            return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
         }
         catch (EzAdminRuntimeException   e2){
             logger.error("",e2);
             if(ExceptionCode.QLBIZ.name().equalsIgnoreCase(e2.code())){
-                return EzResult.instance().setSuccess(false).code("500").setMessage("表达式执行错误");
+                return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
             }
-            return EzResult.instance().setSuccess(false).code("500").setMessage("表达式配置错误");
+            return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
+        }
+        catch (QLBizException BE){
+            if(BE.getCause().getCause() instanceof  EzAdminRuntimeException){
+                return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
+            }else{
+                return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(BE));
+            }
         }
         catch (Exception e) {
             logger.error("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID,ID,e);

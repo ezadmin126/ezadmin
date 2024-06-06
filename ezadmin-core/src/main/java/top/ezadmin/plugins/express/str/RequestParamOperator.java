@@ -34,5 +34,9 @@ public class RequestParamOperator extends AbstractOperator {
         }
     }
 
+    public static void main(String[] args) {
+        System.out.println( (char) (byte) 0x3B);
+    }
+
 
 }
