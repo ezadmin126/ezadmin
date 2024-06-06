@@ -22,7 +22,9 @@ public class InsertSimpleOperatorTest {
         OperatorParam param1 = new OperatorParam();
         param1.getParams().put("a", "b");
         Utils.addParam(param1);
-        Assert.assertEquals("没有传参，且没有默认值", "update  "+TABLE+" set userId=?,userName=?  where 1=1", operator.generateSql(param).getResult());
+        Assert.assertEquals("没有传参，且没有默认值", "insert into table(userId,userName)values(?,?)", operator.generateSql(param).getResult());
+        Assert.assertEquals("没有传参，且没有默认值", "[null,null]",
+                JSON.toJSONString( operator.generateSql(param).getParamsStatic()));
     }
     @Test
     public void test2() {
@@ -37,7 +39,7 @@ public class InsertSimpleOperatorTest {
         param1.getParams().put("a", "b");
         Utils.addParam(param1);
         ResultModel model=operator.generateSql(param);
-        Assert.assertEquals("没有传参，但有默认值", "update  "+TABLE+" set userId=?,userName=?,userSex=?,userSex2=?  where 1=1",
+        Assert.assertEquals("没有传参，但有默认值", "insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
                 model.getResult());
         Assert.assertEquals("没有传参，但有默认值  剥离参数", "[null,\"abc\",null,\"0\"]",
                 JSON.toJSONString(model.getParamsStatic()));
@@ -58,7 +60,7 @@ public class InsertSimpleOperatorTest {
         param1.getParams().put("userSex2", "2");
         Utils.addParam(param1);
         ResultModel model=operator.generateSql(param);
-        Assert.assertEquals("有传参，有默认值", "update  "+TABLE+" set userId=?,userName=?,userSex=?,userSex2=?  where 1=1",
+        Assert.assertEquals("有传参，有默认值", "insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
                 model.getResult());
         Assert.assertEquals("有传参，有默认值  剥离参数", "[\"userId\",\"userName\",3,2]",
                 JSON.toJSONString(model.getParamsStatic()));
@@ -83,7 +85,7 @@ public class InsertSimpleOperatorTest {
         param1.getParams().put("userSex2", "2");
         Utils.addParam(param1);
         ResultModel model=operator.generateSql(param);
-        Assert.assertEquals("有传参，没有默认值", "update  "+TABLE+" set userId=?,userName=?,userName2=?,userName3=?,userSex=?,userSex2=?  where 1=1",
+        Assert.assertEquals("有传参，没有默认值", "insert into table(userId,userName,userName2,userName3,userSex,userSex2)values(?,?,?,?,?,?)",
                 model.getResult());
         Assert.assertEquals("有传参，没有默认值  剥离参数", "[\"userId\",null,null,null,3,2]",
                 JSON.toJSONString(model.getParamsStatic()));
