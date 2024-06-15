@@ -98,7 +98,10 @@ public class Dao {
                 for (int i = 0; i < bindArgs.length; i++) {
                      if(bindArgs[i] instanceof Integer){
                          preparedStatement.setInt(i + 1, NumberUtils.toInt(Utils.trimNull(bindArgs[i])));
-                     }else{
+                     }else if (bindArgs[i] instanceof String){
+                         preparedStatement.setString(i + 1, Utils.trimNull(bindArgs[i]));
+                     }
+                     else{
                          preparedStatement.setObject(i + 1, bindArgs[i]);
                      }
                 }

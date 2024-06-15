@@ -34,6 +34,10 @@
             float:right;
             background: #fff;
         }
+        .ace_search{
+            top: 35px !important;
+            right: 20px !important;
+        }
     </style>
 </head>
 <body style="height:100%">
@@ -47,11 +51,15 @@
                     <button type="button" title="保存" id="saveButton" class="layui-btn layui-btn-primary layui-btn-sm">
                         <i class="layui-icon  layui-icon-ok-circle"></i>保存
                     </button>
-                    <button title="发布" type="button" id="viewEdit" class="layui-btn layui-btn-primary layui-btn-sm">
+                    <button title="可视化编辑" type="button" id="viewEdit" class="layui-btn layui-btn-primary layui-btn-sm">
                         <i class="layui-icon  layui-icon-fonts-clear"></i>可视化编辑
                     </button>
+
                     <button title="发布" type="button" id="publish" class="layui-btn layui-btn-primary layui-btn-sm">
                         <i class="layui-icon  layui-icon-fonts-clear"></i>发布
+                    </button>
+                    <button title="预览" type="button" id="preview" class="layui-btn layui-btn-primary layui-btn-sm">
+                        <i class="layui-icon  layui-icon-eye"></i>预览
                     </button>
                     <button title="复制" type="button" id="copy" class="layui-btn layui-btn-primary layui-btn-sm">
                         <i class="layui-icon layui-icon-file-b"></i>复制
@@ -94,20 +102,46 @@
         enableSnippets: true,
         enableLiveAutocompletion: false
     });
+    var loadIndex=0
+    document.addEventListener('keydown', function(e) {
+        // 检查按键是否是 Ctrl+S
+        if ((e.ctrlKey||e.metaKey) && e.key === 's') {
+            // 阻止默认行为
+            e.preventDefault();
+            loadIndex = layer.msg('加载中', {
+                icon: 16,
+                shade: 0.01
+            });;
+            // 执行你自己的代码
+          //  alert('Ctrl+S was pressed!');
+            $("#saveButton").click();
+            $("#saveButton").addClass("layui-btn-disabled")
+
+            // 可选：保存操作
+            // performSaveOperation();
+        }
+    });
 
     layui.jquery(document).on("click","#saveButton",function(){
         $.post("/topezadmin/formEdit/submitSourceEdit-"+$("#ezCode").val(),  {data:editor.getValue(),cloudId:$("#cloudId").val(),EZ_TYPE:$("#ezType").val()}, function(data) {
             if(data.success){
                 location.reload();
             }else{
+                $("#saveButton").removeClass("layui-btn-disabled")
+                layui.layer.close(loadIndex)
                 layui.layer.alert(data.message);
             }
         }, 'json').fail(function() {
+            $("#saveButton").removeClass("layui-btn-disabled")
+            layui.layer.close(loadIndex)
             layui.layer.alert('请求失败，网络异常');
         });
     })
     layui.jquery(document).on("click","#viewEdit",function(){
         window.open("/topezadmin/formEdit/loadEdit-"+$("#ezCode").val());
+    })
+    layui.jquery(document).on("click","#preview",function(){
+        window.open("/topezadmin/form/form-"+$("#ezCode").val());
     })
 
 

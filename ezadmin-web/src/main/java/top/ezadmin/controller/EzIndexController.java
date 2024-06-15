@@ -39,4 +39,5 @@ public class EzIndexController {
 		}
 		return"forward:"+indexUrl;
 	}
+
 }

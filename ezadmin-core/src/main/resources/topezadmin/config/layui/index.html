@@ -12,10 +12,12 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" th:href="${favicon}">
     <link th:href="${contextName+'/webjars/layui/2.8.18/dist/css/layui.css'}" rel="stylesheet">
-    <link rel="stylesheet" th:href="${contextName+'/webjars/topezadmin/layui/css/layuimini.css?v=202403'}"
+
+    <link rel="stylesheet" th:href="${contextName+'/webjars/topezadmin/layui/css/layuimini.css?v='+vi}"
           href="css/layuimini.css?v=2.0.4.3" media="all">
-    <link rel="stylesheet" th:href="${contextName+'/webjars/topezadmin/layui/css/themes/default.css?v=202403'}"
+    <link rel="stylesheet" th:href="${contextName+'/webjars/topezadmin/layui/css/themes/default.css?v='+vi}"
           href="css/themes/default.css" media="all">
+
     <style id="layuimini-bg-color">
     </style>
     <style>
@@ -45,7 +47,8 @@
          margin-top:0px;
         }
     </style>
-    <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css':''}"  >
+    <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?xx'+vi:''}"  >
+
 </head>
 <body class="layui-layout-body layuimini-all">
 <div class="layui-layout layui-layout-admin">
@@ -103,7 +106,8 @@
 
                 <li class="layui-nav-item " lay-unselect>
                     <div class="  layui-form ws-header-theme">
-                        <input id="ID-header-theme-mode" lay-filter="switchfilter" type="checkbox"   name="CCC" value="2" lay-skin="switch">
+                        <input   th:if="${darkTheme eq 'dark'}" lay-filter="switchfilter" type="checkbox"  checked  name="CCC" value="1" lay-skin="switch">
+                        <input   th:if="${  darkTheme != 'dark'}" lay-filter="switchfilter" type="checkbox"     name="CCC" value="1" lay-skin="switch">
                         <div lay-checkbox    >
                             <i class="layui-icon layui-icon-moon"></i> |
                             <i class="layui-icon layui-icon-light"></i>
@@ -226,8 +230,9 @@
         form.render($("#switchtheme"));
         form.on('switch(switchfilter)',function(data){
             var elem = data.elem; // 获得 checkbox 原始 DOM 对象
+
             if(elem.checked){
-                var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?123";
+                var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?xx"+[[${vi}]];
                 document.getElementById('layui_theme_css').setAttribute('href',url);
 
                 $.get("/topezadmin/dark.html?type=add",function(){

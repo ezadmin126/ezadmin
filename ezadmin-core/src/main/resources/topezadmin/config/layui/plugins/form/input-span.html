@@ -51,9 +51,7 @@
                 <input type="hidden" th:item_name="${item_name}" th:name="${item_name}" th:value="${value}">
                 <span th:style="${style}" type="text" class="layui-text form-block-span" th:name="${item_name}"
                       th:id="${'ITEM_ID_' + item_name}"
-                       th:text="${value}"></span>
-
-
+                       th:text="${#strings.isEmpty(value)?'-':value}"></span>
                 <small
                         class="layui-form-mid layui-text-em item_desc"
                         th:utext="${item_desc}"

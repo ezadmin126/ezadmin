@@ -31,7 +31,7 @@ public class UpdateSimpleOperator extends AbstractOperator {
         }
 
     }
-    private ResultModel generateSql(UpdateParam updateParam){
+    public ResultModel generateSql(UpdateParam updateParam){
         OperatorParam operatorParam=(OperatorParam) Utils.getParam();
         StringBuilder fieldsvalues=new StringBuilder( );
         //也就是只要在param里面add了，就一定在sql中存在

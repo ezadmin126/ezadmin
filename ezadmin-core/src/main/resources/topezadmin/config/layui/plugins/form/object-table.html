@@ -60,7 +60,7 @@
      th:ez-style="${style}"
      th:ez-help="${help}"
 >
-    <div class="layui-form-item ">
+    <div class="layui-form-item " >
         <label class="layui-form-label  "  th:if="${not #strings.isEmpty(label)}" >
             <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
             <i th:if="${not #strings.isEmpty(help)}"
@@ -132,7 +132,6 @@
                     var form = layui.form;
                     var table2 = layui.table;
                     var curTable = $("#[[${'ITEM_ID_' + item_name}]]");
-
                     $(document).on("click", ".rowdelete", function () {
                         var sibLength = $(this).parents("tr").siblings().length;
                         if (sibLength >= 1) {
@@ -146,13 +145,14 @@
                     $(document).on("click", ".rowadd", function () {
                         var cloneTr = $(this).parents("tr").clone();
                         cloneTr.find("input").eq(0).val('');
+                        cloneTr.find("xm-select").remove();
+                        cloneTr.find("[xm-select]").removeAttr("xm-select");
                         $(this).parents("tr").after(cloneTr);
                         curTable.find(".rowdelete").removeClass("layui-btn-disabled")
                         form.render();
+                        renderxm(cloneTr.find(".tdxmselect"));
                     })
-
-
-                    var drake = dragula({
+                    dragula({
                         isContainer: function (el) {
                             return el.classList.contains('dragula-container');
                         },
@@ -168,40 +168,76 @@
                             return target.classList.contains('dragula-container');
                         }
                     })
-                    // var tableConfig={
-                    //     height: '450', //设置高度
-                    //     escape: false,
-                    //     autoSort: false
-                    //     , cellExpandedMode: "tips"
-                    //     , limit: $("#perPageInt").val() //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
-                    //     //  ,cellExpandedMode:'tips'
-                    //     //支持所有基础参数
-                    //     , done: function (res, curr, count) {
-                    //         try {
-                    //             if (typeof (afterAllDataLoad) == "function") {
-                    //                 afterAllDataLoad();
-                    //             }
-                    //             $('.layuimini-loader').fadeOut();
-                    //             $("[item_name='删除']").addClass("layui-border-red");
-                    //             $("[item_name='修改']").addClass("layui-border-blue");
-                    //             $("[item_name='编辑']").addClass("layui-border-blue");
-                    //         } catch (e) {
-                    //             console.log(e)
-                    //         }
-                    //
-                    //     }
-                    // }
-                    //
-                    // if($("#[[${'ITEM_ID_' + item_name}]]").attr("lineStyle")!=null&&$("#mytable").attr("lineStyle")!=''){
-                    //     tableConfig.lineStyle=$("#mytable").attr("lineStyle");
-                    // }
-                    // if($("#[[${'ITEM_ID_' + item_name}]]").attr("class")!=null&&$("#mytable").attr("class")!=''){
-                    //     tableConfig.className=$("#mytable").attr("class");
-                    // }
-                    // tableConfig.cellMinWidth=110;
-                    // //转换静态表格
-                    // var laytable = table2.init("[[${'ITEM_ID_' + item_name}]]",tableConfig );
+                    $(".tdxmselect").each(function(){
+                        renderxm($(this));
+                    });
                 })
+                function renderxm(othis){
+                    var v=JSON.parse(othis.attr("value"));
+
+                    var initparam={ id: v[0],page:1}
+                    $.post(othis.attr("url") , initparam, function(initresponse) {
+                        if(initresponse.success){
+                            var initresp = initresponse.data;
+                            var tm= xmSelect.render({
+                                el: othis[0],
+                                language: 'zn',
+                                filterable: true,
+                                style: {
+                                    height: '26px',
+                                },
+                                prop: {
+                                    name: 'V',
+                                    value: 'K',
+                                } ,
+                                paging: true,
+                                pageSize: 10,
+                                delay:1000,
+                                pageRemote: true,
+                                name: othis.attr("name"),
+                                tips: othis.attr("placeholder")||"请搜索",
+                                remoteSearch: true,
+                                remoteMethod: function(val, cb, show,pageIndex){
+                                    console.log(val);
+                                    if(!val ){
+                                        return cb([]);
+                                    }
+
+                                    var param={ keyword: val,page:pageIndex}
+                                    $.post(othis.attr("url") , param, function(response) {
+                                        if(response.success){
+                                            var res = response.data;
+                                            console.log(res);
+                                            cb(res)
+                                        } else {
+                                            cb([]);
+                                            console.log(response.message);
+                                        }
+                                    }, 'json').fail(function () {
+                                        cb([]);
+                                        console.log("网络异常");
+                                    });
+                                },
+                                data: initresp,
+                                initValue: v,
+                                create: function(val, arr){
+                                    if(arr.length === 0){
+                                        return {
+                                            V: '创建-' + val,
+                                            K: val
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }, 'json').fail(function () {
+                        cb([]);
+                        console.log("网络异常");
+                    });
+
+
+
+                }
             </script>
 
 

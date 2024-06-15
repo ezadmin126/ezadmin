@@ -18,13 +18,14 @@ import top.ezadmin.blog.constants.Nologin;
 import top.ezadmin.blog.model.User;
 import top.ezadmin.blog.utils.DoCookie;
 import top.ezadmin.common.constants.SessionConstants;
-import top.ezadmin.common.utils.IpUtils;
-import top.ezadmin.common.utils.NumberUtils;
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.Utils;
+import top.ezadmin.common.utils.*;
 import top.ezadmin.domain.mapper.SysUserMapper;
 import top.ezadmin.domain.mapper.ext.SysUserExtMapper;
 import top.ezadmin.domain.model.SysUser;
+import top.ezadmin.ip.IpActionDto;
+import top.ezadmin.ip.IpWafService;
+import top.ezadmin.ip.SqLUtils;
+import top.ezadmin.ip.XSSUtils;
 import top.ezadmin.web.SpringContextHolder;
 
 import javax.annotation.Resource;
@@ -70,7 +71,24 @@ import java.util.regex.Pattern;
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-
+        IpActionDto dto=new IpActionDto();
+        dto.setIp(IpUtils.getRealIp(httpServletRequest));
+        dto.setT(System.currentTimeMillis());
+        dto.setUri(realUrl);
+        dto.setRe(httpServletRequest.getHeader("referer"));
+        String p=JSONUtils.toJSONString(requestToMap(httpServletRequest));
+        if(SqLUtils.prevent(p)|| XSSUtils.stripXSS(p)){
+            logger.error("拦截攻击 403");
+            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+            httpServletResponse.getWriter().println("403 contact admin");
+            return;
+        }
+        if(!IpWafService.ipSafe(dto)){
+            logger.error("拦截 403");
+            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+            httpServletResponse.getWriter().println("403 contact admin");
+            return;
+        }
         httpServletRequest.setAttribute("downloadUrl", SpringContextHolder.getBean(EzClientProperties.class).getDownloadUrl());
         httpServletRequest.setAttribute("vi", vi);
         httpServletRequest.getSession().setAttribute("downloadUrl",SpringContextHolder.getBean(EzClientProperties.class).getDownloadUrl());

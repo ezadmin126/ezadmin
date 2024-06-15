@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>多选级联下拉框SQL全量加载</title>
 </head>
-<body id="xmselect-cascader" alias="5" type="form" icon="layui-icon-more">
+<body id="xmselect-cascader"   type="form" icon="layui-icon-more">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect-cascader">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">多选树下拉框SQL全量加载</label>
             <div class="layui-input-block">
@@ -19,7 +19,7 @@
 <div id="content">
 
 
-    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="xmselect"
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="xmselect-cascader"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"
@@ -38,6 +38,7 @@
          th:ez-help="${help}"
          th:ez-class="${class}"
          th:ez-attrMap="${attrMap}"
+         th:ez-data="${data}"
     >
         <div class="layui-form-item ">
             <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >

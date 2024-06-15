@@ -248,11 +248,14 @@ public class ListController extends BaseController {
 
         Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
         List<Map<String, Object>> dataList = (List<Map<String, Object>>) coreMap.get("dataList");
-
-        dataList.forEach(item->{
-            item.remove("tds");
-            item.remove("rowjson");
-        });
+        if(dataList!=null){
+            dataList.forEach(item->{
+                item.remove("tds");
+                item.remove("rowjson");
+            });
+        }else{
+            dataList=new ArrayList<>();
+        }
         request.setAttribute("data", list);
         request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
 

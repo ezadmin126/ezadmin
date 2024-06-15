@@ -285,8 +285,11 @@ public class ListServiceImpl implements ListService {
             return  data.items(( List<Map<String, Object>>) EzClientBootstrap.instance().getCache().get5("KV_SQL_CACHE_", key
                     , callback));
         }
-
-        return  data.items(( List<Map<String, Object>>) EzClientBootstrap.instance().getCache().get60("KV_SQL_CACHE_", key
+        if("60".equals(mini)){
+            return  data.items(( List<Map<String, Object>>) EzClientBootstrap.instance().getCache().get60("KV_SQL_CACHE_", key
+                    , callback));
+        }
+        return  data.items(( List<Map<String, Object>>) EzClientBootstrap.instance().getCache().get("KV_SQL_CACHE_", key
                 , callback));
     }
     ItemInitData qlexpress(String initData,Map<String, Object> params,DataSource datasource){
@@ -332,6 +335,9 @@ public class ListServiceImpl implements ListService {
         initType=StringUtils.upperCase(StringUtils.isBlank(initType)?ItemDataSourceType.TEXT.name():initType);
 
         switch (ItemDataSourceType.get(initType)){
+            case DATAGROUP:
+                data=datagroup(datasource,initData,params);
+                break;
             case  TEXT :
                 data=text(initData,params);
                 break;
@@ -344,6 +350,8 @@ public class ListServiceImpl implements ListService {
                 List<Map<String, Object>> keyvalues = dao.executeQuery(datasource, model.getResult(), null);
                 data=data.items(keyvalues);
                 break;
+            case KVSQLCACHEFOREVER:
+                data=kvSqlCache(  initData,  params,  datasource,"0");
             case KVSQLCACHE:
                 data=kvSqlCache(  initData,  params,  datasource,"60");
                 break;
@@ -364,6 +372,29 @@ public class ListServiceImpl implements ListService {
             data.items(new ArrayList<Map<String, Object>>());
         }
         return data ;
+    }
+    //DATA_CODE,DATA_TYPE,DATA_CONTENT f
+    private ItemInitData datagroup(DataSource datasource,String initData, Map<String, Object> params) throws Exception {
+       Map<String,Object> group= (Map<String, Object>)EzClientBootstrap.instance().getCache().get("datagroup_cache", initData, new Callback() {
+           @Override
+           public Object call(String key) {
+               try {
+                   Map<String, Object> m = dao.executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                           "select DATA_CODE,DATA_TYPE,DATA_CONTENT from T_EZADMIN_DATA WHERE DELETE_FLAG=0 AND DATA_CODE=?", new Object[]{initData});
+                   return m;
+               }catch (Exception e){
+                   return Collections.emptyMap();
+               }
+           }
+       });
+        if(!Utils.isEmpty(group)){
+            if(Utils.trimNull(group.get("DATA_TYPE")).equalsIgnoreCase("datagroup")){
+                return new ItemInitData();
+            }
+            return  getSelectItems(  datasource,   Utils.trimNull(group.get("DATA_CONTENT")),   Utils.trimNull(group.get("DATA_TYPE")),  params
+            );
+        }
+        return new ItemInitData();
     }
 
     private ItemInitData kvTreeSqlCache(String initData, Map<String, Object> params, DataSource datasource, String s) {
@@ -861,14 +892,14 @@ public class ListServiceImpl implements ListService {
                         sb.append(">");
                         context.setVariable("serverDom",sb.toString());
                     }
-                    if(  pluginCode.contains("xmselect-search")
+                    if(  pluginCode.contains("xmselect")
                     ){
                         Map<String,String> attrMap= (Map<String,String>)search.get("attrMap");
                         attrMap.put("value",StringEscapeUtils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName())+""));
                         attrMap.put("name",search.get(JsoupUtil.ITEM_NAME)+"");
                         attrMap.putIfAbsent("id","itemId-"+search.get(JsoupUtil.ITEM_NAME)+"");
-                        attrMap.putIfAbsent("lay-affix","clear" );
-                        attrMap.put("class","layui-input "+attrMap.get("class") );
+//                        attrMap.putIfAbsent("lay-affix","clear" );
+                        attrMap.put("class","layui-input "+Utils.trimNull(attrMap.get("class")) );
                         StringBuilder sb=new StringBuilder("<div ");
                         attrMap.forEach((k,v)->{
                             if(StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
@@ -879,7 +910,7 @@ public class ListServiceImpl implements ListService {
                             sb.append(v);
                             sb.append("'  ");
                         });
-                        sb.append(">");
+                        sb.append("></div>");
                         context.setVariable("serverDom",sb.toString());
                     }
 
@@ -994,7 +1025,7 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public void fillTreeById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception {
+    public void     fillTreeById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception {
         Page pagination= loadingPage(list,requestParamMap);
         Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
         List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");

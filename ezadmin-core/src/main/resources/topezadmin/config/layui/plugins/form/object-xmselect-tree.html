@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>多选树下拉框SQL全量加载</title>
 </head>
-<body id="xmselect-tree" alias="5" type="form" icon="layui-icon-more">
+<body id="xmselect-tree"   type="form" icon="layui-icon-more">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect-tree">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">多选树下拉框SQL全量加载</label>
             <div class="layui-input-block">
@@ -19,7 +19,7 @@
 <div id="content">
 
 
-    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="xmselect"
+    <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="xmselect-tree"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"
@@ -38,6 +38,7 @@
          th:ez-help="${help}"
          th:ez-class="${class}"
          th:ez-attrMap="${attrMap}"
+         th:ez-data="${data}"
     >
         <div class="layui-form-item ">
             <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >
@@ -60,7 +61,7 @@
                     var xmel = $('[[${"#itemId-" + item_name}]]');
                     var initdata = $('[[${"#itemdata-" + item_name}]]').val();
                     var initvalue = xmel.attr("value");
-                    var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
+                     var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
                     var initArray=initvalue?initvalue.split(","):[];
 
                     $(function(){
@@ -70,6 +71,7 @@
                             autoRow: false,
                             name:'[[${item_name}]]',
                             filterable: true,
+
                             showCount:  xmel.attr("showCount")||5,
                             max: xmel.attr("max")||100,
                             radio:  (xmel.attr("radio")||"false").toLowerCase()==="false"?false:true,

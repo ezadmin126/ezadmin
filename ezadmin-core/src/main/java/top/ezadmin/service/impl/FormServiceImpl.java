@@ -109,7 +109,11 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                         }
                         context.setVariable("contextName", "");
                         for (Map.Entry<String, Object> entry : item.entrySet()) {
-                            context.setVariable(entry.getKey(), entry.getValue());
+                            if(entry.getKey().equalsIgnoreCase("readonly")||entry.getKey().equalsIgnoreCase("disabled")){
+                                context.setVariable(entry.getKey(),entry.getKey());
+                            }else{
+                                context.setVariable(entry.getKey(), entry.getValue());
+                            }
                         }
 
                         String itemUrl = Utils.trimNull(item_url);
@@ -186,7 +190,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             attrMap.put("name",item.get(JsoupUtil.ITEM_NAME)+"");
                           //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                             attrMap.putIfAbsent("id","ITEM_ID_"+item.get(JsoupUtil.ITEM_NAME)+"");
-                            attrMap.putIfAbsent("lay-affix","clear" );
+                           // attrMap.putIfAbsent("lay-affix","clear" );
                             attrMap.putIfAbsent("lay-verify",attrMap.get(JsoupUtil.LAYVERIFY) );
                           //  attrMap.put("class","layui-input "+attrMap.get("class") );
                             StringBuilder sb=new StringBuilder("<div ");
@@ -199,8 +203,10 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                                 sb.append(v);
                                 sb.append("'  ");
                             });
-                            sb.append(">");
+                            sb.append("></div>");
                             context.setVariable("serverDom",sb.toString());
+                            //页面不展示data
+                            attrMap.remove("data");
                             context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
                         }
                         else if(Utils.trimNull(item.get("type")).equals("input-text")
@@ -215,6 +221,10 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             attrMap.put("class","layui-input "+(Utils.trimNull(attrMap.get("class")).replace("layui-input ","")) );
                             StringBuilder sb=new StringBuilder("<input ");
                             attrMap.forEach((k,v)->{
+                                if(k.equalsIgnoreCase("readonly")||k.equalsIgnoreCase("disabled")){
+                                    v=k;
+
+                                }
                                 if(StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
                                     ;return;
                                 }

@@ -1,6 +1,7 @@
 package top.ezadmin.controller;
 
 import com.alibaba.fastjson.JSON;
+import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.annotation.EzMapping;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
@@ -77,7 +78,6 @@ public class EzApiController extends BaseController {
         }
         ezResult.printJSONUtils( response);
     }
-
     @EzMapping("category.html")
     public void category(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String url="";
@@ -110,4 +110,19 @@ public class EzApiController extends BaseController {
         }
         ezResult.printJSONUtils(response);
     }
+
+    @EzMapping("datagroup.html")
+    public void datagroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_ID"));
+        if(StringUtils.isBlank(listUrlCode)){
+            throw new NotExistException();
+        }
+
+
+
+        EzResult.instance().printJSONUtils(response);
+    }
+
+
 }

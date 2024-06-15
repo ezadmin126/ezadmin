@@ -37,7 +37,7 @@
          th:ez-readonly="${readonly}"
          th:ez-disabled="${disabled}"
          th:ez-class="${class}"
-         th:ez-attrMap="${attrMap}"
+         th:ez-attrMap="${attrMap}" th:ez-test="${'ag'}"
     >
         <div class="layui-form-item " >
             <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}" th:for="${'ITEM_ID_' + item_name}"  >

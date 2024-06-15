@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>多选下拉框</title>
+</head>
+<body id="xmselect-remote"   type="search" icon="layui-icon-more">
+
+<div id="template" >
+    <div class="layui-col-space10 selector layui-col-md3" config-form-type="searchcore" ez-type="xmselect">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">多选下拉框</label>
+            <div class="layui-input-block">
+                <select name="default" class=""><option value="">请选择</option></select>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class="   list-item  selector " config-form-type="searchcore" ez-type="xmselect"
+         th:classappend="${'layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3'}"
+         th:style="${model.style}"
+         th:ITEM_NAME="${model.item_name}"
+         th:ez-name="${model.item_name}"
+         th:ez-label="${model.label}"
+         th:ez-item_name="${model.item_name}"
+         th:ez-placeholder="${model.placeholder}"
+         th:ez-alias="${model.alias}"
+         th:ez-col="${model.col}"
+         th:ez-url="${model.url}"
+         th:ez-datatype="${model.datatype}"
+         th:ez-item_desc="${model.item_desc}"
+         th:ez-top_desc="${model.top_desc}"
+         th:ez-jdbctype="${model.jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(model.lay_verify)?'':model.lay_verify}"
+         th:ez-valid_rule="${model.valid_rule}"
+         th:ez-valid_msg="${model.valid_msg}"
+         th:ez-style="${model.style}"
+
+    >
+        <div  class="layui-form-item" >
+
+            <label class="layui-form-label" th:for="${'itemName-' + model.item_name}"
+                   th:text="${model.label+'：'}" th:title="${model.label}">普通文本</label>
+            <div  class="layui-input-block">
+                [(${serverDom})]
+                <input type="hidden" th:id="${'itemdata-'+model.item_name}" th:value="${itemsJson}" >
+            </div>
+
+            <script>
+                var xmel = $('[[${"#itemId-" + model.item_name}]]');
+                var initdata = xmel.attr("itemsJson");
+                var initUrl = xmel.attr("url");
+                var initvalue = xmel.attr("value");
+                var xmselect = xmSelect.render({
+                    el: '[[${"#itemId-" + model.item_name}]]',
+                    language: 'zn',
+                    filterable: true,
+                    style: {
+                        height: '26px',
+                    },
+                    prop: {
+                        name: 'V',
+                        value: 'K',
+                    },theme: {
+                        color: '#0081ff',
+                    },
+                    name: '[[${model.item_name}]]',
+                    tips: '[[${#strings.isEmpty(model.placeholder)?"请选择":model.placeholder}]]',
+                    remoteSearch: true,
+                    remoteMethod: function(val, cb, show){
+                        var param={ keyword: val}
+                        $.post(initUrl , param, function(response) {
+                            if(response.success){
+                                var res = response.data;
+                                cb(res.data)
+                            } else {
+                                cb([]);
+                                console.log(response.message);
+                            }
+                        }, 'json').fail(function () {
+                            cb([]);
+                            console.log("error");
+                        });
+                    },
+                    initValue: JSON.parse(initvalue)
+                })
+            </script>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

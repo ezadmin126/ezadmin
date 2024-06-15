@@ -328,6 +328,9 @@ public class FormDao extends JsoupUtil {
                             if(StringUtils.isNotBlank(v)){
                                 formItemHtmlElement.getElementsByTag("object").attr(k,v);
                             }
+                            if(k.equalsIgnoreCase("readonly")||k.equalsIgnoreCase("disabled")){
+                                formItemHtmlElement.getElementsByTag("object").attr(k,v);
+                            }
                         });
                     }else{
                         formItem.forEach((k,v)->{

@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class ControllerFilter extends Filter {
     Logger logger = LoggerFactory.getLogger(ControllerFilter.class);
-    public static String includeShow="/topezadmin/(list|form|listEdit|formEdit|detail)/([A-Za-z]+)-(.*)";
+    public static String includeShow="/topezadmin/(list|form|listEdit|formEdit|detail|api)/([A-Za-z]+)-(.*)";
     Map<String, Map<String, Object>> REQUEST_MAPPING = new HashMap<String, Map<String, Object>> ();
     String pack = "top.ezadmin.controller";
     public static String vesion=System.currentTimeMillis()+"";
@@ -81,6 +81,7 @@ public class ControllerFilter extends Filter {
         String contextName = request.getServletContext().getContextPath();
         request.setAttribute("contextName", contextName);
         request.setAttribute("holiday", EzClientBootstrap.instance().getHoliday());
+        request.setAttribute("cacheFlag", EzClientBootstrap.instance().isSqlCache());
         request.setAttribute("vi", vesion);
 
         Cookie[] cookie=request.getCookies();
@@ -117,6 +118,8 @@ public class ControllerFilter extends Filter {
                      case "form":
                      case "formEdit":
                          request.setAttribute("ENCRYPT_FORM_ID", id);
+                     case "api":
+                         request.setAttribute("ENCRYPT_ID", id);
                          break;
                  }
              }catch (IllegalArgumentException  ee){
@@ -164,11 +167,11 @@ public class ControllerFilter extends Filter {
                     return;
                 }
                 logger.error("找不到指定的方法",vo.getTargetException());
-                EzResult.instance().msg("500", ExceptionUtils.getFullStackTrace(vo.getTargetException())).printJSONUtils(response);
+                EzResult.instance().success(false).msg("500", ExceptionUtils.getFullStackTrace(vo.getTargetException())).printJSONUtils(response);
             }
             catch (Exception e) {
                 logger.error("找不到指定的方法",e);
-                EzResult.instance().msg("500", ExceptionUtils.getFullStackTrace(e)).printJSONUtils(response);
+                EzResult.instance().success(false).msg("500", ExceptionUtils.getFullStackTrace(e)).printJSONUtils(response);
             }
             return;
         }

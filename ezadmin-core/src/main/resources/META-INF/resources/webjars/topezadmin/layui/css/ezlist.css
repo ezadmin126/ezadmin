@@ -37,6 +37,9 @@
 th a {
     color: #212529;
 }
+.layui-form-item .daterangeinput{
+    padding-right: 5px !important;
+}
 
   .ez-daterange-parent  .layui-form-mid {
         margin-right: 5px !important;
@@ -363,6 +366,10 @@ th a {
     }
 }
 
+
+xm-select > .xm-body .scroll-body{
+    max-width: 567px;
+}
 
 
 

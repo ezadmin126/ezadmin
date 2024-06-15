@@ -59,7 +59,7 @@
      th:ez-style="${style}"
      th:ez-help="${help}"
 >
-    <div class="layui-form-item ">
+    <div class="layui-form-item "  >
         <label class="layui-form-label  "  th:if="${not #strings.isEmpty(label)}" >
             <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
             <i th:if="${not #strings.isEmpty(help)}"
@@ -90,42 +90,7 @@
             </table>
             <script>
                 layui.use(['table', 'form', 'layCascader'], function () {
-                    var form = layui.form;
-                    var table2 = layui.table;
-                    var curTable = $("#[[${'ITEM_ID_' + item_name}]]");
-                    var tableConfig={
-                        height: '450', //设置高度
-                        escape: false,
-                        autoSort: false
-                        , cellExpandedMode: "tips"
-                        , limit: $("#perPageInt").val() //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
-                        //  ,cellExpandedMode:'tips'
-                        //支持所有基础参数
-                        , done: function (res, curr, count) {
-                            try {
-                                if (typeof (afterAllDataLoad) == "function") {
-                                    afterAllDataLoad();
-                                }
-                                $('.layuimini-loader').fadeOut();
-                                $("[item_name='删除']").addClass("layui-border-red");
-                                $("[item_name='修改']").addClass("layui-border-blue");
-                                $("[item_name='编辑']").addClass("layui-border-blue");
-                            } catch (e) {
-                                console.log(e)
-                            }
 
-                        }
-                    }
-
-                    if($("#[[${'ITEM_ID_' + item_name}]]").attr("lineStyle")!=null&&$("#mytable").attr("lineStyle")!=''){
-                        tableConfig.lineStyle=$("#mytable").attr("lineStyle");
-                    }
-                    if($("#[[${'ITEM_ID_' + item_name}]]").attr("class")!=null&&$("#mytable").attr("class")!=''){
-                        tableConfig.className=$("#mytable").attr("class");
-                    }
-                    tableConfig.cellMinWidth=110;
-                    //转换静态表格
-                    var laytable = table2.init("[[${'ITEM_ID_' + item_name}]]",tableConfig );
                 })
             </script>
 

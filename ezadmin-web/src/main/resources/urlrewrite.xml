@@ -16,9 +16,6 @@
         <from>/blog/about.html</from>
         <to>/blog/detail.html?blogId=1&amp;currentPage=1</to>
     </rule>
-    <rule>
-        <from>/robots.txt</from>
-        <to>/static/robots.txt</to>
-    </rule>
+
 
 </urlrewrite>

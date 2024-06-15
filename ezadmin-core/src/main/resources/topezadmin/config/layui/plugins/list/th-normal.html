@@ -13,7 +13,9 @@
             class="   list-item  " th:item_name="${item_name}" th:name="${name}"
             th:lay-options='${laydata}'
             th:ez-width="${width}"
+            th:width="${width}"
             th:ez-minWidth="${minWidth}"
+            th:minWidth="${minWidth}"
             th:ez-maxWidth="${maxWidth}"
             th:ez-expandedWidth="${expandedWidth}"
             th:ez-expandedMode="${expandedMode}"
@@ -26,6 +28,7 @@
             th:ez-colspan="${colspan}"
             th:ez-rowspan="${rowspan}"
             th:ez-style="${style}"
+            th:text="${label}"
         >
         </th>
     </tr>

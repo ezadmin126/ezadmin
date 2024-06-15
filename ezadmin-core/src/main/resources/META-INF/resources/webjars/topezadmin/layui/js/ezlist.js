@@ -412,7 +412,7 @@ function renderTable() {
             }
             form.render();
         });
-
+        var inited=false;
         tableConfig={
             height: 'full-'+($("#tab").height()+$("#searchForm").offset().top+$("#searchForm").height()+43+97)  //设置高度
             ,escape: false
@@ -422,15 +422,18 @@ function renderTable() {
             //  ,cellExpandedMode:'tips'
             //支持所有基础参数
             ,text: {none: '暂无数据'}
-            ,done: function (res, curr, count) {
+            ,done: function (res, curr, count,origin) {
+                console.log(origin)
                 try {
-                    if (typeof (afterAllDataLoad) == "function") {
-                        afterAllDataLoad();
-                    }
-                    doDropdown();
-                    doOrder();
-                    doPage();
-                    doSystem();
+                    // if(!inited){
+                    //     inited=true;
+                        if (typeof (afterAllDataLoad) == "function") {
+                            afterAllDataLoad();
+                        }
+                        doDropdown();
+                        doOrder();
+                        doSystem();
+                    //}
                 } catch (e) {
                     console.log(e)
                 }
@@ -456,6 +459,7 @@ function renderTable() {
         }
         //转换静态表格
         laytable = table2.init('mytable',tableConfig );
+        doPage();
 
         laytable.on('sort(mytable)', function(obj){
             console.log(obj.field); // 当前排序的字段名
@@ -510,9 +514,9 @@ function renderTable() {
                         pid:"PARENT_ID"
                     }
                 },
-                done: function (res, curr, count) {
+                done: function(res, curr, count, origin) {
                     watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});
-                    doPage();
+                   // doPage();
                 }
             });
         }
@@ -568,7 +572,9 @@ function doPage(){
         if ($(".dataTables_empty").length == 0 && $("#PAGE_LAYUI").length > 0) {
             $.get($("#contextName").val() + "/topezadmin/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
 
-
+                if(!data.success||data.code==500){
+                    return;
+                }
                 if(data.data.page.currentPage>=data.data.page.totalPage){
                     $(".nextpage").removeClass("page-button");
                     $(".nextpage").addClass("layui-btn-disabled");
@@ -635,12 +641,12 @@ function doSystem() {
     $('.viewer-image').each(function () {
         $(this).on('load', function () {
             // 在图片加载完成后执行的操作
-            if (table) {
-                table.draw();
-            }
-            if (laytable) {
-                laytable.resize();
-            }
+            // if (table) {
+            //     table.draw();
+            // }
+            // if (laytable) {
+            //     laytable.resize();
+            // }
         });
     })
 }
