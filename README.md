@@ -1,4 +1,4 @@
-This is a serlet tool that can convert SQL into a servlet web page with a table or form in any UI framework. also can use drag drop to edit page.
+This is a servlet tool that can convert SQL into a servlet web page with a table or form in any UI framework. also can use drag drop to edit page.
 
 
 springboot :
