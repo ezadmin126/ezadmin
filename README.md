@@ -1,3 +1,6 @@
+This is a tool that can convert SQL into a web page with a table form in any UI framework.
+
+
 springboot :
 1.import
 
@@ -7,25 +10,15 @@ springboot :
  <dependency>
   <groupId>top.ezadmin</groupId>
   <artifactId>ezadmin-core</artifactId>
-  <version>2.9.9-SNAPSHOT</version>
+  <version>2.9.10.1-SNAPSHOT</version>
  </dependency>
 </dependencies>
 ```
 
-2.db.sql
+2.execute db.sql
 
-3.visit /ezadmin/listEdit/list-listmanage
+3.visit localhost:8080/ezadmin/listEdit/list-listmanage
 
-4.button ->发布=publish
 
-5.visit /ezadmin/list/list-listmanage
-
-<img src="https://github.com/ezadmin126/ezadmin/blob/main/ezadmin-web/src/main/resources/static/1.png">
-<img src="https://github.com/ezadmin126/ezadmin/blob/main/ezadmin-web/src/main/resources/static/2.png">
-<img src="https://github.com/ezadmin126/ezadmin/blob/main/ezadmin-web/src/main/resources/static/3.png">
-<img src="https://github.com/ezadmin126/ezadmin/blob/main/ezadmin-web/src/main/resources/static/4.png">
-https://github.com/ezadmin126/ezadmin/blob/main/ezadmin-web/src/main/resources/static/1.png <br>
-https://github.com/ezadmin126/ezadmin/blob/main/ezadmin-web/src/main/resources/static/2.png <br>
-https://github.com/ezadmin126/ezadmin/blob/main/ezadmin-web/src/main/resources/static/3.png <br>
-https://github.com/ezadmin126/ezadmin/blob/main/ezadmin-web/src/main/resources/static/4.png <br>
+demo is  ezadmin-web  a blog demo
  
