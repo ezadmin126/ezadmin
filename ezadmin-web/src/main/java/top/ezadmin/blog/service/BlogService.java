@@ -12,10 +12,7 @@ import top.ezadmin.blog.vo.BlogMessageVO;
 import top.ezadmin.blog.vo.BlogVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import top.ezadmin.domain.model.Blog;
-import top.ezadmin.domain.model.BlogCategory;
-import top.ezadmin.domain.model.BlogMessage;
-import top.ezadmin.domain.model.BlogMessageExample;
+import top.ezadmin.domain.model.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -43,6 +40,13 @@ public class BlogService {
 //            item.setCategoryUrl(UrlTool.blogSearch(item.getCategoryId(),1));
 //        });
         fillBlog(list);
+        return list;
+    }
+    public List<Blog> all(){
+        BlogExample example=new BlogExample();
+        example.createCriteria().andDeleteFlagEqualTo(new Byte("0")).andStatusEqualTo("1");
+        example.setOrderByClause(" BLOG_ID DESC");
+        List<Blog> list=  blogMapper.selectByExample(example) ;
         return list;
     }
 

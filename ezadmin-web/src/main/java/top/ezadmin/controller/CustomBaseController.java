@@ -22,17 +22,5 @@ public class CustomBaseController {
 
         return user;
     }
-    protected String priceTextByType(  Integer priceType){
-        switch (priceType){
-            case 1://不含税运
-                return "不含税运" ;
-            case 2://含税不含运
-                return "含税不含运" ;
-            case 3://含税运
-                return  "含税运";
-            default:break;
-        }
-        return "";
-    }
 
 }
