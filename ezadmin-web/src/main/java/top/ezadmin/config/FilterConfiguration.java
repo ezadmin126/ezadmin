@@ -70,6 +70,7 @@ public class FilterConfiguration implements WebMvcConfigurer {
 		staticUrl.add("/core/**");
 		staticUrl.add("/message/**");
 		staticUrl.add("/system/**");
+		staticUrl.add("/sitemap**");
 
 
 		staticUrl.add("/home/index");
