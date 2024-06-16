@@ -2,4 +2,5 @@
 /target/
 /ezadmin-core/target/
 /ezadmin-web/target/
+/ezadmin-web/src/main/resources/application.yml
 /ezadmin-resource/target/
