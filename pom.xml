@@ -6,7 +6,7 @@
 
     <groupId>top.ezadmin</groupId>
     <artifactId>ezadmin</artifactId>
-    <version>2.9.9-SNAPSHOT</version>
+    <version>2.9.11-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ezadmin</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
