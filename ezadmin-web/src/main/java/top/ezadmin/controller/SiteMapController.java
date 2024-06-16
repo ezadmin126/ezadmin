@@ -42,7 +42,7 @@ public class SiteMapController {
 			sb.append(System.lineSeparator());
 
 				sb.append("<loc>");
-				sb.append("/blog/detail-"+item.getBlogId()+"-1.html");
+				sb.append("https://www.ezadmin.top/blog/detail-"+item.getBlogId()+"-1.html");
 				sb.append("</loc>");
 
 				sb.append("<lastmod>");
