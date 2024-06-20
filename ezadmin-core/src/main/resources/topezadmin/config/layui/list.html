@@ -36,7 +36,7 @@
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${data.core.emptyname}">
 
 <div   th:class="${'layui-'+layout}" >
-    <div class="layui-tab layui-tab-brief searchWrap">
+    <div class="layui-tab layui-tab-brief searchWrap" >
         <ul class="layui-tab-title" id="tab" th:if="${not #lists.isEmpty(data.tab)}"  >
             <li th:item_id="${item.item_name}" th:item_name="${item.item_name}"
                 th:classappend="${item.select?'layui-this  ':' '}"
@@ -44,7 +44,7 @@
                 <a th:item_name="${item.item_name}" th:href="${item.url}"  th:text="${item.label}"></a>
             </li>
         </ul>
-        <div class="layui-tab-content">
+        <div class="layui-tab-content" th:if="${not #lists.isEmpty(data.search)}">
             <div class="layui-tab-item layui-show">
                 <div class="layui-card" style="padding:10px">
                     <div class="layui-card-body"  >

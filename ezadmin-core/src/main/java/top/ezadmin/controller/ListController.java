@@ -66,8 +66,8 @@ public class ListController extends BaseController {
         }
         String username = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY));
         request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
-        return EzClientBootstrap.instance().getAdminStyle() + "/list";
-
+        String adminStyle=Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
+        return adminStyle + "/list";
     }
 
     @EzMapping("count.html")
@@ -137,7 +137,9 @@ public class ListController extends BaseController {
             request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/tree-" + ENCRYPT_LIST_ID);
 
             request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
-            return EzClientBootstrap.instance().getAdminStyle() + "/treelist";
+
+        String adminStyle=Utils.trimNullDefault(core.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
+        return adminStyle + "/treelist";
     }
 
     @EzMapping("treedata.html")
