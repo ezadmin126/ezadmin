@@ -107,7 +107,8 @@ public class StandardSqlParser {
                     if(Utils.trimNull(kv[0]).equalsIgnoreCase("jdbctype")){
                         p.setJdbcType(kv[1].toUpperCase());
                     }
-                    if(Utils.trimNull(kv[0]).equalsIgnoreCase("value")){
+                    if(Utils.trimNull(kv[0]).equalsIgnoreCase("value")||
+                            Utils.trimNull(kv[0]).equalsIgnoreCase("default")){
                         hasValueProp=true;
                         p.setParamValue("?");
                         if(StringUtils.isNotBlank(kv[1])&&kv[1].charAt(0)=='\''&&kv[1].charAt(kv[1].length()-1)=='\''){
@@ -145,6 +146,11 @@ public class StandardSqlParser {
             }
             //有传参
             Object value= transJavaType(variables.get(key),p.getJdbcType());
+            if(variables.get(key)==null&&StringUtils.isNotBlank(defalutValue)){
+                p.setParamValue(defalutValue);
+                model.addParam(p);
+                return "?";
+            }
 
             //request 没有传值
             if(StringUtils.equals("null",Utils.trimNull(value))){

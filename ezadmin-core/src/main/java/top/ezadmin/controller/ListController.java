@@ -44,6 +44,7 @@ public class ListController extends BaseController {
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
         Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(listUrlCode)) ;
         if(!Utils.isNotEmpty(list)){
+            logger.warn("找不到列表：{}",listUrlCode);
             throw new NotExistException();
         }
 
@@ -72,8 +73,8 @@ public class ListController extends BaseController {
 
     @EzMapping("count.html")
     public EzResult count(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
         try {
-            String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
             if (Utils.getLog() != null) {
                 Utils.addLog("start  id=" + listUrlCode);
             }
@@ -82,17 +83,15 @@ public class ListController extends BaseController {
 
             Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(listUrlCode)) ;
             if(Utils.isEmpty(list)){
-                throw new NotExistException();
+                logger.warn("找不到列表：{}",listUrlCode);
+                return EzResult.instance().code("500").setMessage("NotExistException");
             }
-
             listService.fillCountById(list, requestParamMap, sessionParamMap);
-
             request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
             request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
-
             return EzResult.instance().data(list).count(1000);
         } catch (Exception e) {
-            Utils.addLog("结束执行列表  异常：", e);
+            logger.error("count：{}",listUrlCode,e);
             return EzResult.instance().code("500").setMessage(ExceptionUtils.getFullStackTrace(e));
         }
     }

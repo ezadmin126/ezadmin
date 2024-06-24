@@ -75,8 +75,8 @@ public class FormController extends BaseController {
         request.setAttribute("layout",layout);
         String username = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY));
         request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
-
-        return core.get(JsoupUtil.ADMINSTYLE)+"/form";
+        String adminStyle=Utils.trimNullDefault(core.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
+        return adminStyle + "/form";
      }
 
     @EzMapping("upload.html")
