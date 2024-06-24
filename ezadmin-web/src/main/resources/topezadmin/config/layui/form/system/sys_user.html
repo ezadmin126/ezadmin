@@ -54,8 +54,8 @@ if(!isNotBlank("ID")){
     param=new InsertParam();
     param.table("T_SYS_USER");
     param.add("#{USER_NAME}");
-    param.add("#{STATUS,jdbcType=NUMBER}");
-    param.add("#{PARENT_ID,jdbcType=NUMBER}");
+    param.add("#{STATUS,jdbcType=NUMBER,value=0}");
+    param.add("#{PARENT_ID,jdbcType=NUMBER,value=0}");
            param.add("#{COMPANY_ID,value="+companyId+"}");
     param.add("#{ADD_TIME,value=NOW()}");
     param.add("#{ADD_ID,value='"+sessionUserId+"'}");
@@ -66,8 +66,8 @@ return id;
     param=new UpdateParam();
     param.table("T_SYS_USER");
     param.add("#{USER_NAME}");
-    param.add("#{PARENT_ID,jdbcType=NUMBER}");
-    param.add("#{STATUS,jdbcType=NUMBER}");
+    param.add("#{PARENT_ID,jdbcType=NUMBER,value=0}");
+    param.add("#{STATUS,jdbcType=NUMBER,value=0}");
 
    param.add("#{UPDATE_TIME,value=NOW()}");
    param.add("#{UPDATE_ID,value='"+sessionUserId+"'}");

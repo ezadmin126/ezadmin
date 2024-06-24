@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Demo</title>
     <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
-    <link href="/webjars/layui/2.8.18/dist/css/layui.css?v=2.7.6" rel="stylesheet">
-    <script src="/webjars/layui/2.8.18/dist/layui.js?v=2.8.6" type="text/javascript"></script>
+    <link th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
+    <script th:src="${'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
 </head>
 <body>
 <form class="layui-form" action="/sql/slowUpload" method="post" enctype="multipart/form-data">
