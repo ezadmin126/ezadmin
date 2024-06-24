@@ -282,29 +282,44 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
 
             if(Utils.isNotEmpty(validRuleMap)){
                 StringBuilder sb=new StringBuilder();
-                sb.append("{");
                 validRuleMap.forEach((k,v)->{
+                    sb.append(",'");
                     sb.append(k);
-                    sb.append(":");
+                    sb.append("':");
                     sb.append(v);
-                    sb.append(",");
+
                 });
-                sb.append("}");
+                if(sb.length()>0){
+                    sb.setCharAt(0,'{');
+                    sb.append("}");
+                }else{
+                    sb.append("{");
+                    sb.append("}");
+                }
                 core.put("validaterules",sb.toString());
             }
             if(Utils.isNotEmpty(validMsgMap)){
                 StringBuilder sb=new StringBuilder();
-                sb.append("{");
                 validMsgMap.forEach((k,v)->{
+                    sb.append(",'");
                     sb.append(k);
-                    sb.append(":");
+                    sb.append("':");
                     sb.append(v);
-                    sb.append(",");
                 });
-                sb.append("}");
+                if(sb.length()>0){
+                    sb.setCharAt(0,'{');
+                    sb.append("}");
+                }else{
+                    sb.append("{");
+                    sb.append("}");
+                }
                 core.put("validatemessages",sb.toString());
             }
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new StringBuilder("123").substring(0,"123".length()-1));
     }
 
     public Map<String, Object> initMap( Map<String,Object> requestParamMap,Map<String,String> session,Map<String, Object> form,DataSource datasource){
