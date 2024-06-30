@@ -597,6 +597,12 @@
                             th:url="${'/topezadmin/form/form-'+form.core.formcode}"> <i class="layui-icon layui-icon-component"></i> 预览</button>
                     <button type="button" opentype="_BLANK" class="layui-btn layui-btn-sm  ezopenbutton  "
                             th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"> <i class="layui-icon layui-icon-component"></i> 源码编辑</button>
+
+                    <button opentype="CONFIRM_AJAX" windowname="确认发布？" type="button" id="publish"
+                            th:url="${'/topezadmin/formEdit/publish-'+form.core.formcode}"
+                            class="layui-btn layui-btn-primary layui-btn-sm ezopenbutton">
+                        <i class="layui-icon  layui-icon-component"></i>发布
+                    </button>
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-core   "
                     > <i class="layui-icon layui-icon-fonts-code"></i> 表单配置</button>
                     <button type="button"  help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-head  "> <i class="layui-icon layui-icon-fonts-code"></i> 页头html</button>

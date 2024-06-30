@@ -252,6 +252,7 @@ public class FormController extends BaseController {
             if(BE.getCause().getCause() instanceof  EzAdminRuntimeException){
                 return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
             }else{
+                logger.warn("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID,ID,BE);
                 return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(BE));
             }
         }
