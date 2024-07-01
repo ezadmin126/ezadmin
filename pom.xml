@@ -50,7 +50,6 @@
     </scm>
     <modules>
         <module>ezadmin-core</module>
-        <module>ezadmin-resource</module>
         <module>ezadmin-web</module>
     </modules>
 

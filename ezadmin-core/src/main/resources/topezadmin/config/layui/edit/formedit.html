@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>表单编辑</title>
     <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
-    <link th:href="${'/webjars/layui/2.8.18/dist/css/layui.css'}" rel="stylesheet">
+    <link th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
     <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"   />
     <link th:href="${'/webjars/topezadmin/layui/css/ezform.css?v='+vi}" rel="stylesheet">
     <link th:href="${'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
@@ -13,7 +13,7 @@
 
     <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
     <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
-    <script th:src="${'/webjars/layui/2.8.18/dist/layui.js'}" type="text/javascript"></script>
+    <script th:src="${'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
     <script src="/webjars/dragula/3.7.3/dist/dragula.min.js"   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script th:src="${'/webjars/topezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
@@ -597,6 +597,12 @@
                             th:url="${'/topezadmin/form/form-'+form.core.formcode}"> <i class="layui-icon layui-icon-component"></i> 预览</button>
                     <button type="button" opentype="_BLANK" class="layui-btn layui-btn-sm  ezopenbutton  "
                             th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"> <i class="layui-icon layui-icon-component"></i> 源码编辑</button>
+
+                    <button opentype="CONFIRM_AJAX" windowname="确认发布？" type="button" id="publish"
+                            th:url="${'/topezadmin/formEdit/publish-'+form.core.formcode}"
+                            class="layui-btn layui-btn-primary layui-btn-sm ezopenbutton">
+                        <i class="layui-icon  layui-icon-component"></i>发布
+                    </button>
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-core   "
                     > <i class="layui-icon layui-icon-fonts-code"></i> 表单配置</button>
                     <button type="button"  help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-head  "> <i class="layui-icon layui-icon-fonts-code"></i> 页头html</button>

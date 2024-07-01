@@ -451,7 +451,22 @@ function  initSettingsAll(){
         if($("#listCoreContainer").attr("ez-listcode")==''||$("#listCoreContainer").attr("ez-listcode")==undefined){
             layui.layer.alert("请先保存列表");
         }else{
-            openBlank("/topezadmin/listEdit/publish-"+$("#listCoreContainer").attr("ez-listcode"));
+            var title = "确认发布？";
+            var appendUrl="/topezadmin/listEdit/publish-"+$("#listCoreContainer").attr("ez-listcode");
+            layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
+                $(".layuimini-loader").show();
+                $.getJSON(appendUrl, function (result) {
+                    $(".layuimini-loader").hide();
+                    if (result.success) {
+                        layer.alert("操作成功", function (index) {
+                            location.reload();
+                        })
+                    } else {
+                        layer.alert("操作失败:" + result.message)
+                    }
+                })
+                layer.close(index);
+            });
         }
     })
 

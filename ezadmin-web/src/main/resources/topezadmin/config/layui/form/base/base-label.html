@@ -66,7 +66,7 @@ sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");
 if(!isNotBlank("ID")){                  		
     param=new InsertParam();                		
     param.table("T_BASE_LABEL");
-    param.add("#{PARENT_ID,jdbcType=NUMBER}");
+    param.add("#{PARENT_ID,jdbcType=NUMBER,value=0}");
     param.add("#{LABEL_NAME}");
     param.add("#{COMPANY_ID,value="+companyId+"}");
     param.add("#{ADD_TIME,value=NOW()}"); 
@@ -77,7 +77,7 @@ return id;
 }else{                 								
     param=new UpdateParam();
     param.table("T_BASE_LABEL");
-     param.add("#{PARENT_ID,jdbcType=NUMBER}");
+     param.add("#{PARENT_ID,jdbcType=NUMBER,value=0}");
     param.add("#{LABEL_NAME}");
 
    param.add("#{UPDATE_TIME,value=NOW()}");

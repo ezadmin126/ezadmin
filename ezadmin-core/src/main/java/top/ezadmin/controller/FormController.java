@@ -75,8 +75,8 @@ public class FormController extends BaseController {
         request.setAttribute("layout",layout);
         String username = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY));
         request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
-
-        return core.get(JsoupUtil.ADMINSTYLE)+"/form";
+        String adminStyle=Utils.trimNullDefault(core.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
+        return adminStyle + "/form";
      }
 
     @EzMapping("upload.html")
@@ -252,6 +252,7 @@ public class FormController extends BaseController {
             if(BE.getCause().getCause() instanceof  EzAdminRuntimeException){
                 return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
             }else{
+                logger.warn("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID,ID,BE);
                 return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(BE));
             }
         }

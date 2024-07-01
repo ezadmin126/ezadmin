@@ -111,4 +111,23 @@ public class InsertSimpleOperatorTest {
                 JSON.toJSONString(model.getParamsStatic()));
     }
 
+    @Test
+    public void test6() {
+        InsertSimpleOperator operator = new InsertSimpleOperator();
+        InsertParam param = new InsertParam();
+        param.table(TABLE);
+        param.add("#{userId,value=null}");
+        param.add("#{userName,value=abc}");
+        param.add("#{userSex,jdbcType=NUMBER}");
+        param.add("#{userSex2,jdbcType=NUMBER,value=0}");
+        OperatorParam param1 = new OperatorParam();
+        param1.getParams().put("userSex2", null);
+        Utils.addParam(param1);
+        ResultModel model=operator.generateSql(param);
+        Assert.assertEquals("没有传参，但有默认值", "insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
+                model.getResult());
+        Assert.assertEquals("没有传参，但有默认值  剥离参数", "[null,\"abc\",null,\"0\"]",
+                JSON.toJSONString(model.getParamsStatic()));
+    }
+
 }

@@ -234,6 +234,9 @@ public class ListDao extends JsoupUtil {
         }
         //displayorder
         Element displayOrder =doc.selectFirst("[item_name=displayorder_express]")  ;
+        if(displayOrder==null){
+            displayOrder =doc.getElementById("displayorder_express")  ;
+        }
         if (displayOrder != null) {
             coreMap.put(JsoupUtil.DISPLAYORDER_EXPRESS, displayOrder.text());
         }

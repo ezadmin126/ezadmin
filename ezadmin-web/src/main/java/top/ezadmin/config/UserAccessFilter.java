@@ -2,6 +2,8 @@ package top.ezadmin.config;
 
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.druid.support.json.JSONUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,10 +24,7 @@ import top.ezadmin.common.utils.*;
 import top.ezadmin.domain.mapper.SysUserMapper;
 import top.ezadmin.domain.mapper.ext.SysUserExtMapper;
 import top.ezadmin.domain.model.SysUser;
-import top.ezadmin.ip.IpActionDto;
-import top.ezadmin.ip.IpWafService;
-import top.ezadmin.ip.SqLUtils;
-import top.ezadmin.ip.XSSUtils;
+import top.ezadmin.ip.IpCacheService;
 import top.ezadmin.web.SpringContextHolder;
 
 import javax.annotation.Resource;
@@ -71,30 +70,22 @@ import java.util.regex.Pattern;
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-        IpActionDto dto=new IpActionDto();
-        dto.setIp(IpUtils.getRealIp(httpServletRequest));
-        dto.setT(System.currentTimeMillis());
-        dto.setUri(realUrl);
-        dto.setRe(httpServletRequest.getHeader("referer"));
-        String p=JSONUtils.toJSONString(requestToMap(httpServletRequest));
-        if(SqLUtils.prevent(p)|| XSSUtils.stripXSS(p)){
+        String ip=IpUtils.getRealIp(httpServletRequest);
+        String p= JSONUtils.toJSONString(requestToMap(httpServletRequest));
+        if(IpCacheService.isBlack(ip)){
             logger.error("拦截攻击 403");
             httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
             httpServletResponse.getWriter().println("403 contact admin");
             return;
         }
-        if(!IpWafService.ipSafe(dto)){
-            logger.error("拦截 403");
-            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-            httpServletResponse.getWriter().println("403 contact admin");
-            return;
+        if(!StringUtils.startsWith(realUrl,"/topezadmin")){
+            IpCacheService.monitor(ip,realUrl,p);
         }
         httpServletRequest.setAttribute("downloadUrl", SpringContextHolder.getBean(EzClientProperties.class).getDownloadUrl());
         httpServletRequest.setAttribute("vi", vi);
         httpServletRequest.getSession().setAttribute("downloadUrl",SpringContextHolder.getBean(EzClientProperties.class).getDownloadUrl());
         httpServletRequest.setAttribute("companyName","");
         User user = (User) httpServletRequest.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_KEY);
-
         //cookie跟踪
         DoCookie cookie=new DoCookie();
         String idName=  cookie.getDecodeCookie(Constants.EZ_SID);

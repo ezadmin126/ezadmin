@@ -198,39 +198,6 @@ public class PluginsDao {
         }
     }
 
-    private   void itemToMap(Config item, Map<String, Config> configMap,Map<String, List<Config>> pluginsTypeConfigMap){
-        try {
-            InputStream stream = null;
-            if(item.isJar()){
-                stream=item.getIn();
-                Document doc = Jsoup.parse(stream, "UTF-8", "");
-                item.setDoc(doc);
-                configMap.put(doc.body().id(),item);
-                configMap.put(doc.body().attr("alias"),item);
-                //jar包中的流确保只用一次，初始化之后就关闭流
-                stream.close();
-                addPluginType(doc.body().attr("type"),item,pluginsTypeConfigMap);
-            }else{
-                stream=new FileInputStream(item.getFile());
-                Document doc = Jsoup.parse(stream, "UTF-8", "");
-                item.setDoc(doc);
-                configMap.put(doc.body().id(),item);
-                configMap.put(doc.body().attr("alias"),item);
-                stream.close();
-                addPluginType(doc.body().attr("type"),item,pluginsTypeConfigMap);
-            }
-        }catch (Exception e){
-            //jar   包中的 无需重新加载
-            throw new RuntimeException(e);
-        }
-    }
-    private   void addPluginType(String type,Config config,Map<String, List<Config>> pluginsTypeConfigMap){
-        type=type.toLowerCase();
-        if(!pluginsTypeConfigMap.containsKey(type )){
-            pluginsTypeConfigMap.put(type,new ArrayList<Config>());
-        }
-        pluginsTypeConfigMap.get(type).add(config);
-    }
 
     public Map<String, String> getPlugin(String adminstyle, String fold, String pluginCode) {
 
