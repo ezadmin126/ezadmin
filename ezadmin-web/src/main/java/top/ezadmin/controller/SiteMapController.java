@@ -42,7 +42,7 @@ public class SiteMapController {
 			sb.append(System.lineSeparator());
 
 				sb.append("<loc>");
-				sb.append("https://www.ezadmin.top/blog/detail-"+item.getBlogId()+"-1.html");
+				sb.append("https://www.ezjsp.com/blog/detail-"+item.getBlogId()+"-1.html");
 				sb.append("</loc>");
 
 				sb.append("<lastmod>");
@@ -73,7 +73,7 @@ public class SiteMapController {
 		sb.append("Disallow: /topezadmin");
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
-		sb.append("Sitemap: https://www.ezadmin.top/sitemap-1.xml");
+		sb.append("Sitemap: https://www.ezjsp.com/sitemap-1.xml");
 		  response.setContentType("text/txt;charset=UTF-8");
 		  response.getWriter().print(sb.toString());
 	}

@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /topezadmin/
 
-Sitemap: https://www.ezadmin.top/sitemap.xml
+Sitemap: https://www.ezjsp.com/sitemap.xml

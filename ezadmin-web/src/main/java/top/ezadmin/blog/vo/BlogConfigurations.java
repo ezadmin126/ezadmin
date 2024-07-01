@@ -8,9 +8,9 @@ import java.util.Calendar;
 
 public class BlogConfigurations {
 
-    private String websiteName="EzAdmin.top";
-    private String websiteDescription="EzAdmin.top";
-    private String websiteIcon="EzAdmin.top";
+    private String websiteName="EzJsp.com";
+    private String websiteDescription="EzJsp.com";
+    private String websiteIcon="EzJsp.com";
     private String sysAuthorImg="/static/info-img.png?1";
 
     private String sysAuthor="EzAdmin";
