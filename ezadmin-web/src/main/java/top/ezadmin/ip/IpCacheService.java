@@ -48,9 +48,14 @@ public class IpCacheService {
     private static BlockingDeque<Map<String,String>  > IP_VISIT_QUEUE=new LinkedBlockingDeque();
 
     public static boolean isBlack(String ip){
-        int lastend=Math.max(ip.lastIndexOf("."),ip.lastIndexOf(":"));
-        String preIp=ip.substring(0,lastend);
-        return BLACK_MAP.getIfPresent(ip)!=null||BLACK_MAP.getIfPresent(preIp)!=null;
+        try {
+            int lastend = Math.max(ip.lastIndexOf("."), ip.lastIndexOf(":"));
+            String preIp = ip.substring(0, lastend);
+            return BLACK_MAP.getIfPresent(ip) != null || BLACK_MAP.getIfPresent(preIp) != null;
+        }catch (Exception e){
+            LOGGER.error(ip,e);
+            return false;
+        }
     }
     //json格式的 ip  url param
     public static void monitor(String ip,String url,String param){
