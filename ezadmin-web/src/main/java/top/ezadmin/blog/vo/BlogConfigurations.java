@@ -8,12 +8,12 @@ import java.util.Calendar;
 
 public class BlogConfigurations {
 
-    private String websiteName="EzJsp.com";
-    private String websiteDescription="EzJsp.com";
-    private String websiteIcon="EzJsp.com";
+    private String websiteName="Ez嵌入式低代码工具";
+    private String websiteDescription="Ez嵌入式低代码工具";
+    private String websiteIcon="Ez嵌入式低代码工具";
     private String sysAuthorImg="/static/info-img.png?1";
 
-    private String sysAuthor="EzAdmin";
+    private String sysAuthor="Ez";
 
 
 
