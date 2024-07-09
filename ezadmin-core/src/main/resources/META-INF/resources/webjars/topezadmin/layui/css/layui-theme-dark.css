@@ -716,7 +716,7 @@ body .layui-util-face .layui-layer-content{background-color: var(--lay-color-bg-
 
 }
 .ws-bg-light,.ws-header-menu .layui-nav.ws-bg-light {
-    background-color: var(--lay-color-bg-1)!important
+    background-color: var(--lay-color-bg-2)!important
 }
 
 .ws-header:after {
