@@ -43,9 +43,9 @@ $(function () {
             $(element).parent().find(".error").remove();
         },
         submitHandler: function (form) {
-            if (!canEzFormSubmit){
-                return false;
-            }
+            // if (!canEzFormSubmit){
+            //     return false;
+            // }
             canEzFormSubmit=false;
            try {
                var fileerror = false;
@@ -94,6 +94,15 @@ $(function () {
                    url: $("#formSubmitUrl").val(),
                    dataType: 'json',
                    success: function (data) {
+                       try {
+                           if (typeof (eval("submitSuccess")) == "function") {
+                               submitSuccess(data);
+                               return;
+                           }
+                       } catch (e) {
+                           console.log(e);
+                           return;
+                       }
                        if (data.code == 0) {
                            console.log("data::" + data.data);
                            layer.alert("保存成功", function (index) {

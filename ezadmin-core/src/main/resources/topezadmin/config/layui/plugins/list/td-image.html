@@ -16,7 +16,7 @@
 
         <td th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}" th:ITEM_ID="${item_name}" config-form-type="colcore" ez-type="td-image"
             th:class="${'layui-text   ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
-            <div style="width:110px;height:110px; align-items: center;">
+            <div style="align-items: center;">
                 <img style="max-width:100px;max-height:100px;" class="viewer-image" onerror="this.src='/webjars/topezadmin/error.svg'"
                      th:ITEM_ID="${item_name+''+item_name}"
                      th:data-original="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"

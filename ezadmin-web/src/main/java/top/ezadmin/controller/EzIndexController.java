@@ -31,7 +31,6 @@ public class EzIndexController {
 	@Value("${topezadmin.indexUrl:}")
 	private String indexUrl;
 
-
 	@RequestMapping("/")
 	public String index()  {
 		if(StringUtils.isBlank(indexUrl)){

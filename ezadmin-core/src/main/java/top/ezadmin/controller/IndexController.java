@@ -134,4 +134,10 @@ public class IndexController extends BaseController {
         }
         EzResult.instance().msg("0", "ok").data("vo").printJSONUtils(response);
     }
+
+
+    @EzMapping("dev.html")
+    public String dev(HttpServletRequest request,  HttpServletResponse response)throws IOException  {
+        return "redirect:/topezadmin/listEdit/list-listmanage";
+    }
 }

@@ -423,9 +423,9 @@ function renderTable() {
             //支持所有基础参数
             ,text: {none: '暂无数据'}
             ,done: function (res, curr, count,origin) {
-                console.log(origin)
+                console.log(" table done "+res+"\t"+ curr+"\t"+count+"\t"+origin)
                 try {
-                    // if(!inited){
+                     if(origin=='reloadData'){
                     //     inited=true;
                         if (typeof (afterAllDataLoad) == "function") {
                             afterAllDataLoad();
@@ -433,7 +433,7 @@ function renderTable() {
                         doDropdown();
                         doOrder();
                         doSystem();
-                    //}
+                     }
                 } catch (e) {
                     console.log(e)
                 }
@@ -525,10 +525,12 @@ function renderTable() {
 
 function doDropdown(){
     var dropdown = layui.dropdown;
-    if ($(".dropdown_button").length > 0) {
-        $(".dropdown_button").each(function () {
+    if ($(".layui-table-main .dropdown_button").length > 0) {
+        $(".layui-table-main .dropdown_button").each(function () {
             var p = $(this).attr("itemsJson");
+
             var j = JSON.parse(p);
+            console.log($(this).parents("td").attr("class"));
             for (let i = 0; i < j.length; i++) {
                 j[i]['title'] = j[i]['label'];
                 j[i]['id'] = j[i]['item_name'];
@@ -537,7 +539,9 @@ function doDropdown(){
             dropdown.render({
                 elem: $(this)
                 , data: j
+                ,trigger: 'hover'
                 , click: function (obj) {
+                    debugger
                     if (obj.area == undefined) {
                         ezopen(obj.opentype, obj.windowname, obj.url);
                     } else {

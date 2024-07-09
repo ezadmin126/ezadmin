@@ -109,18 +109,18 @@ INSERT INTO  T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME
    </div>
   </form>
   <div id="tableButton">
-   <button opentype="_BLANK" url="/topezadmin/listEdit/loadEdit-" item_name="addd" type="button-table" plugin_code="button-table">新增</button>
-   <button opentype="_BLANK" windowname="SQL生成列表" url="/topezadmin/listEdit/importSql-" item_name="addd2" type="button-table" plugin_code="button-table">SQL生成列表</button>
+   <button opentype="MODEL" url="/topezadmin/listEdit/loadEdit-" item_name="addd" type="button-table" plugin_code="button-table">新增</button>
+   <button opentype="MODEL" windowname="SQL生成列表" url="/topezadmin/listEdit/importSql-" item_name="addd2" type="button-table" plugin_code="button-table">SQL生成列表</button>
   </div>
   <table>
    <tbody>
     <tr id="column">
      <th id="rowbutton" width="200" fixed="right">
-      <button opentype="_BLANK" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" plugin_code="button-group" class="layui-border-blue">可视化编辑</button>
-      <button opentype="_BLANK" url="/topezadmin/listEdit/list-${EZ_CODE}" item_name="preview" type="button-single" plugin_code="button-single" class="layui-border-orange">预览</button>
-      <button opentype="_BLANK" url="/topezadmin/listEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" plugin_code="button-single" class="layui-border-orange">源码编辑</button>
+      <button opentype="MODEL" windowname="可视化编辑" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" plugin_code="button-group" class="layui-border-blue">可视化编辑</button>
+      <button opentype="MODEL" windowname="预览"  url="/topezadmin/listEdit/list-${EZ_CODE}" item_name="preview" type="button-single" plugin_code="button-single" class="layui-border-orange">预览</button>
+      <button opentype="MODEL" windowname="源码编辑" url="/topezadmin/listEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" plugin_code="button-single" class="layui-border-orange">源码编辑</button>
       <button opentype="CONFIRM_AJAX" windowname="确定发布吗" url="/topezadmin/listEdit/publish-${EZ_CODE}?EZ_TYPE=1" item_name="publish" type="button-single" plugin_code="button-single" class="layui-border-orange">发布</button>
-      <button opentype="_BLANK" url="/topezadmin/list/list-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" plugin_code="button-single" class="layui-border-orange">查看发布</button>
+      <button opentype="MODEL" windowname="查看发布"  url="/topezadmin/list/list-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" plugin_code="button-single" class="layui-border-orange">查看发布</button>
       <button opentype="MODEL" windowname="发布历史" url="/topezadmin/listEdit/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single" plugin_code="button-single" class="layui-border-orange">历史</button>
      </th>
      <th item_name="ID" head="th-numbers" width="60" fixed="left">ID</th>
@@ -295,18 +295,18 @@ INSERT INTO T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME,
    </div>
   </form>
   <div id="tableButton">
-   <button opentype="_BLANK" url="/topezadmin/formEdit/loadEdit-" item_name="addd" type="button-table" plugin_code="button-table">新增</button>
-   <button opentype="_BLANK" windowname="SQL生成列表" url="/topezadmin/formEdit/importSql-" item_name="addd2" type="button-table" plugin_code="button-table">SQL生成表单</button>
+   <button opentype="MODEL" windowname="新增" url="/topezadmin/formEdit/loadEdit-" item_name="addd" type="button-table" plugin_code="button-table">新增</button>
+   <button opentype="MODEL" windowname="SQL生成列表" url="/topezadmin/formEdit/importSql-" item_name="addd2" type="button-table" plugin_code="button-table">SQL生成表单</button>
   </div>
   <table>
    <tbody>
     <tr id="column">
      <th id="rowbutton" width="200" fixed="right">
-      <button opentype="_BLANK" url="/topezadmin/formEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" plugin_code="button-group" class="layui-border-blue">可视化编辑</button>
-      <button opentype="_BLANK" url="/topezadmin/formEdit/form-${EZ_CODE}" item_name="preview" type="button-single" plugin_code="button-single" class="layui-border-orange">预览</button>
-      <button opentype="_BLANK" url="/topezadmin/formEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" plugin_code="button-single" class="layui-border-orange">源码编辑</button>
+      <button opentype="MODEL" url="/topezadmin/formEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" plugin_code="button-group" class="layui-border-blue" windowname="可视化编辑">可视化编辑</button>
+      <button opentype="MODEL" url="/topezadmin/formEdit/form-${EZ_CODE}" item_name="preview" type="button-single" plugin_code="button-single" class="layui-border-orange" windowname="预览">预览</button>
+      <button opentype="MODEL" url="/topezadmin/formEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" plugin_code="button-single" class="layui-border-orange" windowname="源码编辑">源码编辑</button>
       <button opentype="CONFIRM_AJAX" windowname="确定发布吗" url="/topezadmin/formEdit/publish-${EZ_CODE}?EZ_TYPE=1" item_name="publish" type="button-single" plugin_code="button-single" class="layui-border-orange">发布</button>
-      <button opentype="_BLANK" url="/topezadmin/form/form-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" plugin_code="button-single" class="layui-border-orange">查看发布</button>
+      <button opentype="MODEL" url="/topezadmin/form/form-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" plugin_code="button-single" class="layui-border-orange" windowname="查看发布">查看发布</button>
       <button opentype="MODEL" url="/topezadmin/list/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single" plugin_code="button-single" class="layui-border-orange">历史</button>
      </th>
      <th item_name="ID" head="th-numbers" width="60" fixed="left">ID</th>

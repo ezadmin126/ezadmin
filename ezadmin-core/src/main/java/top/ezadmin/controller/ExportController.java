@@ -90,7 +90,7 @@ import org.springframework.util.CollectionUtils;
                   Map<String,Object> col= it.next();
                   if(StringUtils.equalsIgnoreCase(col.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-checkbox")
                     ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-pic")
-                          ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-image")
+
                   ){
                       it.remove();
                   }
@@ -133,7 +133,7 @@ import org.springframework.util.CollectionUtils;
                 Map<String,Object> col=(Map<String,Object>)colList.get(i);
                 if(StringUtils.equalsIgnoreCase(col.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-checkbox")
                         ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-pic")
-                        ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-image")
+
                 ){
                     continue;
                 }

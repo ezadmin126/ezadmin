@@ -728,11 +728,7 @@ public class ListServiceImpl implements ListService {
                     String jdbcType = Utils.getStringByObject(th, JsoupUtil.JDBCTYPE);
                     String dataInDb = ObjectUtils.toString(dataRow.get(itemName));
                     String columnEmptyShow = Utils.getStringByObject(th, JsoupUtil.EMPTY_SHOW);
-//                    if( "td-pic".equals(bodyPlugin)||
-//                            "td-image".equals(bodyPlugin)){
-//                        tds.add(EzClientBootstrap.instance().getDownloadUrl()+dataInDb);
-//                        continue;
-//                    }
+
                     dataInDb = calulateData(dataInDb, globalEmptyShow, columnEmptyShow, jdbcType);
                     Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.BODY_PLUGIN_CODE));
                     if(StringUtils.isBlank(bodyPlugin)||StringUtils.isBlank("td-text")||StringUtils.isBlank(getString(th, JsoupUtil.DATA))){

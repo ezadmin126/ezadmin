@@ -45,9 +45,26 @@ public class EzResult {
         ((HashMap<String,String>)data).put(k,v);
         return this;
     }
+    public EzResult dataMap(String k,Object v){
+        if(data==null){
+            data=new HashMap<String,Object>();
+        }
+        ((HashMap<String,Object>)data).put(k,v);
+        return this;
+    }
     public EzResult fail(){
         this.code="500";
         success=false;
+        return this;
+    }
+    public EzResult fail(String message){
+        this.code="500";
+        this.message=message;
+        success=false;
+        return this;
+    }
+    public EzResult success() {
+        this.success = true;
         return this;
     }
     public EzResult count(long count){
@@ -128,4 +145,5 @@ public class EzResult {
         this.success = success;
         return this;
     }
+
 }

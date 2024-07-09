@@ -372,6 +372,21 @@ xm-select > .xm-body .scroll-body{
 }
 
 
+.td-pic-container{
+    border: 1px solid #E6ECF2;
+    align-items: center;
+    text-align: center;
+    background-color: #f8f8f8;
+    align-items: center;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+}
+.td-pic-container img{
+    width:60px;
+}
+
+
 
 
 
