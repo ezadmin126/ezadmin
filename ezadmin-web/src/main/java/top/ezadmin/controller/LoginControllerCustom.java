@@ -39,8 +39,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * : LoginController
- * @author Hank.he
- * @since: 2022/2/12 20:10
  */
 @Controller
 @RequestMapping("/login/")

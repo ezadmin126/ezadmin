@@ -73,7 +73,6 @@ import java.util.Objects;
  * NullPointerException} to be thrown.
  *
  * @author  Xueming Shen
- * @since   1.8
  */
 
 public class Base64 {
@@ -187,7 +186,6 @@ public class Base64 {
      * be thrown.
      *
      * @see     Decoder
-     * @since   1.8
      */
     public static class Encoder {
 
@@ -464,7 +462,6 @@ public class Base64 {
      * be thrown.
      *
      * @see     Encoder
-     * @since   1.8
      */
     public static class Decoder {
 

@@ -11,7 +11,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * : BaseController
- * @since: 2022/2/12 20:30
  */
 public class CustomBaseController {
     protected static   Logger logger= LoggerFactory.getLogger(CustomBaseController.class);

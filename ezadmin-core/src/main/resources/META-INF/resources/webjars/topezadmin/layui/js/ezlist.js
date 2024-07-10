@@ -427,13 +427,13 @@ function renderTable() {
                 try {
                      if(origin=='reloadData'){
                     //     inited=true;
-                        if (typeof (afterAllDataLoad) == "function") {
+                        if (typeof  afterAllDataLoad  == "function") {
                             afterAllDataLoad();
                         }
                         doDropdown();
                         doOrder();
-                        doSystem();
                      }
+                    doSystem();
                 } catch (e) {
                     console.log(e)
                 }
