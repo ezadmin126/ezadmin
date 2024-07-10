@@ -10,7 +10,6 @@ import java.util.Date;
 /**
  * : EzDateUtils
  * @author EzAdmin
- * @since: 2021/10/19 13:10
  */
 public class EzDateUtils{
     private static String DATETIME="yyyy-MM-dd HH:mm:ss";

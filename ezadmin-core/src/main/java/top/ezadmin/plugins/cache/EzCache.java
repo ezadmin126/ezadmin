@@ -3,7 +3,6 @@ package top.ezadmin.plugins.cache;
 /**
  * : EzCache
  * @author EzAdmin
- * @since: 2023/6/10 15:49
  */
 public interface EzCache {
     //5分钟缓存

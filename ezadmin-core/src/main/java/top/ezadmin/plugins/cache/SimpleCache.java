@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * : SimpleCache
  * @author EzAdmin
- * @since: 2023/6/10 15:51
  * 此缓存 只实现永久缓存，使用ConcurrentHashMap
  */
 public class SimpleCache implements EzCache{

@@ -47,8 +47,6 @@ import java.util.*;
 
 /**
  * : AdminController
- * @author Hank.he
- * @since: 2022/3/4 21:49
  */
 @Controller
 @RequestMapping("/system")
@@ -338,6 +336,12 @@ public class UploadController {
         coreFileMapper.updateByPrimaryKeySelective(upfile);
         thbfile.setParentFileId(file.getFileId());
         return thbfile;
+    }
+
+    public static void main(String[] args) throws IOException {
+        String p="D:\\ws\\tool\\shiwu\\shiwu-web\\src\\main\\resources\\a.png";
+        String x="D:\\ws\\tool\\shiwu\\shiwu-web\\src\\main\\resources\\a1.png";
+        Thumbnails.of(new File(p)).height(92).outputQuality(1).toFile(new File(x));
     }
 
 }

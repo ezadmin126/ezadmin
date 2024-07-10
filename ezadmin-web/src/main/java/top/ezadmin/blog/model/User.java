@@ -8,8 +8,6 @@ import java.util.List;
 
 /**
  * : User
- * @author Hank.he
- * @since: 2022/2/12 20:08
  */
 
 public class User {

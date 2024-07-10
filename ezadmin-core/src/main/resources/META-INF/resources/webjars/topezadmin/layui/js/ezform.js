@@ -43,9 +43,9 @@ $(function () {
             $(element).parent().find(".error").remove();
         },
         submitHandler: function (form) {
-            // if (!canEzFormSubmit){
-            //     return false;
-            // }
+            if (!canEzFormSubmit){
+                return false;
+            }
             canEzFormSubmit=false;
            try {
                var fileerror = false;
@@ -81,28 +81,30 @@ $(function () {
                    return false;
                }
 
-               try {
-                   if (typeof (eval("submitHandler")) == "function") {
+
+               if (typeof submitHandler == "function") {
+                   try {
                        if (!submitHandler()) {
                            canEzFormSubmit = true;
                            return false;
                        }
+                   } catch (e) {
                    }
-               } catch (e) {
                }
+
                $(form).ajaxSubmit({
                    url: $("#formSubmitUrl").val(),
                    dataType: 'json',
                    success: function (data) {
-                       try {
-                           if (typeof (eval("submitSuccess")) == "function") {
-                               submitSuccess(data);
+                           if (typeof submitSuccess == "function") {
+                               try {
+                                submitSuccess(data);
+                               } catch (e) {
+                                   console.log(e);
+                               }
+                               canEzFormSubmit = true;
                                return;
                            }
-                       } catch (e) {
-                           console.log(e);
-                           return;
-                       }
                        if (data.code == 0) {
                            console.log("data::" + data.data);
                            layer.alert("保存成功", function (index) {
@@ -119,10 +121,8 @@ $(function () {
                                return false;
                            })
                        }else if(data.code=='200'){
-                           canEzFormSubmit = true;
                            layer.alert(data.message);
                        }  else {
-                           canEzFormSubmit = true;
                            layer.alert( "保存失败");
                            console.log(data.message )
                        }
