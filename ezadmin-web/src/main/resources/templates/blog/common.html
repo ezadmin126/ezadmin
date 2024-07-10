@@ -9,8 +9,8 @@
     <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Window-target" content="_top"/>
-    <meta name="keywords" content="EZ嵌入式低代码工具">
-    <meta name="description" content="EZ嵌入式低代码工具">
+    <meta name="keywords" content="ezadmin-core 嵌入式低代码工具">
+    <meta name="description" content="ezadmin-core 嵌入式低代码工具">
     <link th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
     <script th:src="${'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
 
@@ -81,14 +81,17 @@
     </style>
     <link id="layui_theme_css"  rel="stylesheet">
     <script>
-        var _hmt = _hmt || [];
-        (function() {
+
+            var _hmt = _hmt || [];
+            (function() {
             var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?439e4afb03a8431377c87eb33f253733";
+            hm.src = "https://hm.baidu.com/hm.js?38c0ed6d2ed8226d90796f45ec73276e";
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         })();
-        layui.use(['element', 'layer', 'form'], function(){
+
+
+    layui.use(['element', 'layer', 'form'], function(){
             var form = layui.form;
             var $=layui.$;
             var util = layui.util;
@@ -188,7 +191,7 @@
 
 <div th:fragment="foot" class="layui-row footer layui-panel layui-col-space10">
 		<span class="layui-breadcrumb" lay-separator="|">
-		  <a href="#">Copyright © 2019-现在 EzAdmin 版权所有</a>
+		  <a href="#">Copyright © 2019-现在 EzJsp.com 版权所有</a>
           <a href="#">ezadmin©126.com</a>
 		</span>
     <br>

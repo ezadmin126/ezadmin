@@ -525,8 +525,8 @@ function renderTable() {
 
 function doDropdown(){
     var dropdown = layui.dropdown;
-    if ($(".layui-table-main .dropdown_button").length > 0) {
-        $(".layui-table-main .dropdown_button").each(function () {
+    if ($(".dropdown_button").length > 0) {
+        $(".dropdown_button").each(function () {
             var p = $(this).attr("itemsJson");
 
             var j = JSON.parse(p);

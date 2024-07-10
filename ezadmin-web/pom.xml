@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <ezadmin.version>2.9.12</ezadmin.version>
+        <ezadmin.version>2.9.14.1</ezadmin.version>
     </properties>
     <dependencies>
         <dependency> <groupId>junit</groupId> <artifactId>junit</artifactId>
