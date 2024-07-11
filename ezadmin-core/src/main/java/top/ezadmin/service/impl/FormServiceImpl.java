@@ -275,7 +275,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             String html = ThymeleafUtils.processString(template, context);
                             item.put("html", html);
                         } catch (Exception e) {
-                            logger.error("" + item.get(JsoupUtil.PLUGIN), e);
+                            logger.error("" + item.get(JsoupUtil.TYPE), e);
                         }
                     }
             }

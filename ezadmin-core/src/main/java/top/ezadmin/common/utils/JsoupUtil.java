@@ -89,7 +89,7 @@ public class JsoupUtil {
     public static final String DISPLAY = "display";
     //
     public static String EZ_DEFAULT_GROUP="EZ_DEFAULT_GROUP";
-    public static String PLUGIN="plugin_code";
+     public static String PLUGIN="plugin_code";
     public static String PLUGIN_FOLD="pluginFolder";
     //
     public static String ITEM_NAME="item_name";
@@ -337,7 +337,7 @@ public class JsoupUtil {
         }
 
 
-        ITEM_MAP.put(JsoupUtil.PLUGIN, sb.toString().toLowerCase());
+        ITEM_MAP.put(JsoupUtil.TYPE, sb.toString().toLowerCase());
         List<Attribute> list=item.attributes().asList();
         for (int i = 0; i < list.size(); i++) {
             Attribute attribute=list.get(i);

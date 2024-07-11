@@ -807,7 +807,7 @@ public class ListServiceImpl implements ListService {
                 table.put(JsoupUtil.URL,MapParser.parseDefaultEmpty(getString(table,JsoupUtil.URL), requestParamMap).getResult());
                 table.put(JsoupUtil.WINDOW_NAME,MapParser.parseDefaultEmpty(getString(table,JsoupUtil.WINDOW_NAME), requestParamMap).getResult());
                 table.put(JsoupUtil.EZ_CALLBACK,Utils.trimNull(requestParamMap.get(JsoupUtil.EZ_CALLBACK)));
-                Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(table, JsoupUtil.PLUGIN));
+                Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(table, JsoupUtil.TYPE));
 
                 Context context = new Context();
                 context.setVariables(table);
@@ -830,10 +830,10 @@ public class ListServiceImpl implements ListService {
             for (int i = 0; i < searchList.size(); i++) {
                 Map<String,Object> search= searchList.get(i);
                 String item_name=getString(search,JsoupUtil.ITEM_NAME);
-                String pluginCode=getString(search, JsoupUtil.PLUGIN);
+                String pluginCode=getString(search, JsoupUtil.TYPE);
                 updateValidate(search, validRuleMap, validMsgMap);
                 try {
-                    Map<String, String> plugin = loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(search, JsoupUtil.PLUGIN));
+                    Map<String, String> plugin = loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(search, JsoupUtil.TYPE));
 
                     String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
                     Context context = new Context();
@@ -1208,7 +1208,7 @@ public class ListServiceImpl implements ListService {
                                             context.setVariable("itemsJson", JSONUtils.toJSONString(tempRowItem));
                                         }
                                         Map<String, String> buttonPlugin =
-                                                loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list", Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.PLUGIN));
+                                                loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list", Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.TYPE));
 
                                         context.setVariable("rowButton0", tempRowItem.get(0));
                                         context.setVariable("rowButtonItemList", tempRowItem);

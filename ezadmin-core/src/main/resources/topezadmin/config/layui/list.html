@@ -45,7 +45,8 @@
             </li>
         </ul>
         <div class="layui-tab-content" th:if="${not #lists.isEmpty(data.search)}">
-            <div class="layui-tab-item layui-show">
+            <div class="layui-tab-item layui-show" style="border: 1px solid #eee;border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);">
                 <div class="layui-card" style="padding:10px">
                     <div class="layui-card-body"  >
                         <form id="searchForm" lay-filter="searchForm" class="layui-form   " th:action="${listUrl}" method="get">

@@ -1023,7 +1023,9 @@ $(document).on("click",".ezopenredirect",function(e){
 })
 
 
-$(document).on('click', '.viewer-image', function () {
+$(document).on('click', '.viewer-image', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
     var _this = $(this);
     var pid = _this.attr("pid");
     ;

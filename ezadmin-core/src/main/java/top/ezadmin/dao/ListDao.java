@@ -363,7 +363,7 @@ public class ListDao extends JsoupUtil {
                     continue;
                 }
                 Map<String, Object> thMap =new HashMap<>();
-                thMap.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(th));
+                thMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(th));
 
                 for (int i = 0; i < colNames.length; i++) {
                     Utils.putIfAbsent(thMap,colNames[i], strip(th.attr(colNames[i])));
@@ -405,7 +405,7 @@ public class ListDao extends JsoupUtil {
              for (int i1 = 0; i1 < buttons.size(); i1++) {
                 Element btn=buttons.get(i1);
                 Map<String, Object> btnMap = new HashMap<>();
-                btnMap.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(btn));
+                btnMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(btn));
                 //JsoupUtil.loadplugin(btn );
                 initButtonMapObj(btnMap, btn);
                 if(StringUtils.isBlank(Utils.trimNull(btnMap.get(JsoupUtil.TYPE)))
@@ -427,7 +427,7 @@ public class ListDao extends JsoupUtil {
                     Element btn=buttons.get(i1);
                     Map<String, Object> btnMap = new HashMap<>();
 
-                    btnMap.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(btn));
+                    btnMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(btn));
 
                     initButtonMapObj(btnMap, btn);
                     if(StringUtils.isBlank(Utils.trimNull(btnMap.get(JsoupUtil.TYPE)))
@@ -483,22 +483,22 @@ public class ListDao extends JsoupUtil {
                 listitem.put("attrMap",attrMap);
                 listitem.put(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(item));
 
-                listitem.put(JsoupUtil.PLUGIN,JsoupUtil.getTypeByElement(item));
+                listitem.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(item));
                 listitem.putAll(loadDataAttrNoChild(item));
                 //special
                 Utils.putIfAbsent(listitem,JsoupUtil.LABEL, strip(item.parent().parent().child(0).text()));
                 Utils.putIfAbsent(listitem,"item_id", Utils.trimEmptyDefault(item.attr(JsoupUtil.ITEM_NAME) ).replaceAll(",", "-"));
                 listitem.put(JsoupUtil.ITEM_NAME,  Utils.trimEmptyDefault(item.attr(JsoupUtil.ITEM_NAME) ));
                 //如果是xmselect  默认为in
-                if(listitem.get(JsoupUtil.PLUGIN).toString() .equalsIgnoreCase("xmselect")){
+                if(listitem.get(JsoupUtil.TYPE).toString() .equalsIgnoreCase("xmselect")){
                     if(StringUtils.isBlank(Utils.trimNull(listitem.get(JsoupUtil.OPER)))){
                         listitem.put(JsoupUtil.OPER, OperatorEnum.IN.getOperC());
                     }
                 }
                 //如果区间，默认为between
                 if(
-                        listitem.get(JsoupUtil.PLUGIN).toString().equalsIgnoreCase("daterange")||
-                                listitem.get(JsoupUtil.PLUGIN).toString().equalsIgnoreCase("datetimerange")
+                        listitem.get(JsoupUtil.TYPE).toString().equalsIgnoreCase("daterange")||
+                                listitem.get(JsoupUtil.TYPE).toString().equalsIgnoreCase("datetimerange")
 
                 ){
                     if(StringUtils.isBlank(Utils.trimNull(listitem.get(JsoupUtil.OPER)))){
@@ -597,20 +597,28 @@ public class ListDao extends JsoupUtil {
         for (int i = 0; i < colList.size(); i++) {
             Map<String,Object> tab= colList.get(i);
             Element tabHtml=newCol();
+            Elements th= tabHtml.getElementsByTag("th");
             for (int k = 0; k < colNames.length; k++) {
                 String formItemAttrValue=Utils.trimNull(tab.get(colNames[k]));
                 if(StringUtils.isNotBlank(formItemAttrValue)){
                     if(colNames[k].equals("body")&&formItemAttrValue.equals("td-text")){
-                        tabHtml.getElementsByTag("th").removeAttr(colNames[k]);
+                        th.removeAttr(colNames[k]);
                         continue;
                     }
                     if(colNames[k].equals("head")&&formItemAttrValue.equals("th")){
-                        tabHtml.getElementsByTag("th").removeAttr(colNames[k]);
+                        th.removeAttr(colNames[k]);
                         continue;
                     }
-                    tabHtml.getElementsByTag("th").attr(colNames[k],formItemAttrValue);
+                    th.attr(colNames[k],formItemAttrValue);
+                    //如果设置宽度小于默认宽度，需要修改最小宽度
+                    if(colNames[k].equals(JsoupUtil.WIDTH)){
+                        if(NumberUtils.toInt(formItemAttrValue)<110){
+                            th.attr(JsoupUtil.MIN_WIDTH,formItemAttrValue);
+                        }
+                    }
                 }
             }
+
             tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL),"文案"));
             body.getElementById("column").append("\n\t\t\t"+tabHtml.outerHtml() );
         }

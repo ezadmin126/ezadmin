@@ -328,7 +328,7 @@ public class SqlUtils {
 
     public static String searchToSql(Map<String,Object> search, Map<String,Object> request) {
         StringBuilder result=new StringBuilder();
-        String plugin=Utils.getStringByObject(search,JsoupUtil.PLUGIN);
+        String plugin=Utils.getStringByObject(search,JsoupUtil.TYPE);
         String jdbctype=Utils.getStringByObject(search,JsoupUtil.JDBCTYPE);
         String oper=Utils.getStringByObject(search,JsoupUtil.OPER);
         String name=Utils.getStringByObject(search,JsoupUtil.ITEM_NAME);

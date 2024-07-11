@@ -449,12 +449,10 @@ public class ListEditController extends BaseController {
 
 
             if(alias.contains("时间")){
-                search.put(JsoupUtil.PLUGIN,"daterange");
                 search.put(JsoupUtil.TYPE,"daterange");
                 search.put(JsoupUtil.OPER, "between");
             }
             else{
-                search.put(JsoupUtil.PLUGIN,"input-text");
                 search.put(JsoupUtil.TYPE,"input-text");
             }
             search.put(JsoupUtil.ALIAS,tableName);
