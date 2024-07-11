@@ -42,8 +42,6 @@ public class Dao {
     /**
      * 兼容blob
      *
-
-     * @return
      * @throws Exception
      */
     public List<Map<String, String>> executeQueryString(DataSource dataSource, String sql, Object[] bindArgs) throws  Exception {
@@ -310,7 +308,6 @@ public class Dao {
      * 将结果集对象封装成List<Map<String, Object>> 对象
      *
      * @param resultSet 结果多想
-     * @return 结果的封装
      * @throws Exception
      */
     private static List<Map<String, String>> getDatasString(ResultSet resultSet) throws Exception {
@@ -363,7 +360,6 @@ public class Dao {
      * 将结果集对象封装成List<Map<String, Object>> 对象
      *
      * @param resultSet 结果多想
-     * @return 结果的封装
      * @throws Exception
      */
     private static List<Map<String, Object>> getDatas(ResultSet resultSet) throws Exception {

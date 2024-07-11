@@ -472,6 +472,9 @@ function renderTable() {
         });
 
         laytable.on('row(mytable)', function(obj){
+            if(obj.e.target.tagName=='IMG'||obj.e.target.tagName=='INPUT'){
+                return false;
+            }
             var data = obj.data; // 获取当前行数据
             var input=obj.tr.eq(0).find("[name=list-body-checkbox]");
             var fixedInput=obj.tr.eq(1).find("[name=list-body-checkbox]");

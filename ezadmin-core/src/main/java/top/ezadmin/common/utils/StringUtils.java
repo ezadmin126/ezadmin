@@ -227,7 +227,6 @@ public class StringUtils {
     /**
      * @param paramFromRequest
      * @param sqlsplit         ${databa,varchar}  number,date
-     * @return
      */
     public static Object transeParamType(Map<String, Object> paramFromRequest, String sqlsplit) {
         String[] ex = explain(sqlsplit);

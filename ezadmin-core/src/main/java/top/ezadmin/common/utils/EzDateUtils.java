@@ -20,8 +20,6 @@ public class EzDateUtils{
 
     /**
      * 第i天前的日期  00:00:00
-
-     * @return
      */
     public static String preDay(int i){
         Calendar calendar = Calendar.getInstance();
@@ -34,8 +32,6 @@ public class EzDateUtils{
     }
     /**
      * 第i天后的日期  23:59:59
-
-     * @return
      */
     public static String afterDay(int i){
         Calendar calendar = Calendar.getInstance();

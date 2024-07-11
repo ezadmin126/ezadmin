@@ -43,8 +43,6 @@ public class DESUtils {
     /**
      * DES加密
      *
-
-     * @return
      */
     public static String encryptDES(Object object) throws Exception {
         return encryptDES(Utils.trimNull(object));
@@ -57,7 +55,6 @@ public class DESUtils {
 
     /**
      * DES解密
-     * @return
      * @throws Exception
      */
     public static String decryptDES(String data) throws Exception {
