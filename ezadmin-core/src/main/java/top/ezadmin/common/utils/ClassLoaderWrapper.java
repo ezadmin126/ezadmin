@@ -40,7 +40,6 @@ public class ClassLoaderWrapper {
      * Get a resource as a URL using the current class path
      *
      * @param resource - the resource to locate
-     * @return the resource or null
      */
     public URL getResourceAsURL(String resource) {
         return getResourceAsURL(resource, getClassLoaders(null));

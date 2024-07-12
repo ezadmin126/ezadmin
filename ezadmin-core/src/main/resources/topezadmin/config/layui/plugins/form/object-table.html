@@ -208,7 +208,7 @@
                                         if(response.success){
                                             var res = response.data;
                                             console.log(res);
-                                            cb(res)
+                                            cb(res,response.count);
                                         } else {
                                             cb([]);
                                             console.log(response.message);

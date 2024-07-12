@@ -383,7 +383,9 @@ xm-select > .xm-body .scroll-body{
     justify-content: center;
 }
 .td-pic-container img{
-    width:60px;
+    width:auto;
+    max-width: 80px;
+    max-height: 80px;
 }
 
 
