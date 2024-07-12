@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui-v2.8.0/css/layui.css">
+    <style>
+        .layui-body {
+            padding: 0;
+        }
+        .layui-side {
+            background-color: #393D49;
+        }
+        .layui-nav-itemed > a {
+            background-color: #4E5465 !important;
+        }
+        .layui-nav-tree .layui-nav-child a {
+            background-color: #393D49;
+        }
+    </style>
+</head>
+<body class="layui-fluid">
+
+<div class="layui-text ws-text" id="WS-text">
+    <h1>原理介绍</h1>
+    <blockquote class="layui-elem-quote">
+        将页面分拆成不同的模块（如列表页的搜索模块，分页模块），  每个模块由不同的插件组成 (如搜索模块的文本输入框，下拉框)。
+        插件由html配置，系统先加载页面配置，然后加载模块，最后加载插件，由服务端组装成最终的页面之后再输出至浏览器端完成渲染。
+     </blockquote>
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">
+        列表
+    </h2>
+    <table class="layui-table">
+        <tr><td>模块</td><td>说明</td></tr>
+        <tr><td>标签模块</td><td>页头标签区,用于一个页面包含两个标签的情况</td></tr>
+        <tr><td>搜索模块</td><td>列表搜索项</td></tr>
+        <tr><td>列表操作区</td>
+            <td>列表按钮，如新增，全选，批量删除等<br>
+                页头分页，上一页下一页<br>
+                导出<br>
+                列表配置，自定义搜索项，自定义列展示
+            </td></tr>
+        <tr><td>内容区</td><td>首列，内容列，排序，行按钮，分组行按钮</td></tr>
+        <tr><td>分页</td><td>底部分页</td></tr>
+    </table>
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">
+        表单
+    </h2>
+    <table class="layui-table">
+        <tr><td>模块</td><td>说明</td></tr>
+        <tr><td>分组</td><td>表单字段分组展示</td></tr>
+        <tr><td>导航</td><td>右侧快速导航至分组</td></tr>
+        <tr><td>内容</td>
+            <td> 各个插件组成
+            </td></tr>
+    </table>
+</div>
+
+<script src="https://www.layuicdn.com/layui-v2.8.0/layui.js"></script>
+<script>
+    layui.use(['element', 'layer'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        var $=layui.jquery;
+        // 监听导航点击事件
+        $(".left-menu").click(function(){
+            var target = elem.attr('data-href');
+            if (target) {
+                $('#contentFrame').attr('src', target + '.html');
+            }
+        })
+    });
+</script>
+</body>
+</html>

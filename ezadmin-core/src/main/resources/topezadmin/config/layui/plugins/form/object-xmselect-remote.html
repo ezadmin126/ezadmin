@@ -64,6 +64,10 @@
                     var initvalue = xmel.attr("value");
                     var xmselect = xmSelect.render({
                         el: '[[${"#itemId-" + item_name}]]',
+                        toolbar: {
+                            show: true,
+                            list: ['ALL', 'REVERSE', 'CLEAR']
+                        },
                         language: 'zn',
                         filterable: true,
                         style: {

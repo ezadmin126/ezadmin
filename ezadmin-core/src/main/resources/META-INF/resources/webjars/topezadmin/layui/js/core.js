@@ -465,6 +465,10 @@ function renderXmselect(xm) {
             el: xmel[0],
             language: 'zn',
             filterable: true,
+            toolbar: {
+                show: true,
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
             // filterMethod: function (val, item, index, prop) {//重写搜索方法。
             //     if (val == item.K) {//把value相同的搜索出来
             //         return true;

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui-v2.8.0/css/layui.css">
+    <style>
+        .layui-body {
+            padding: 0;
+        }
+        .layui-side {
+            background-color: #393D49;
+        }
+        .layui-nav-itemed > a {
+            background-color: #4E5465 !important;
+        }
+        .layui-nav-tree .layui-nav-child a {
+            background-color: #393D49;
+        }
+    </style>
+</head>
+<body class="layui-fluid">
+
+<div class="layui-text ws-text" id="WS-text">
+    <h1>开始使用</h1>
+    <blockquote class="layui-elem-quote">
+        这是一个嵌入式的Servlet表单列表工具，可以将SQL转换为带有表格或表单的网页，可适配任意UI框架，同时支持拖拽自定义网页。
+     </blockquote>
+    <h2 id="examples" lay-toc="{anchor: null}" style="margin-bottom: 0;">依赖（内置springboot-starter）</h2>
+    <pre class="layui-code code-demo" lay-options="{}">
+<dependency>
+  <groupId>io.github.ezadmin126</groupId>
+  <artifactId>ezadmin-core</artifactId>
+  <version>最新版</version>
+</dependency>
+    </pre>
+
+
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
+    <pre class="layui-code code-demo" lay-options="{}">
+            /ezadmin-web/src/main/resources/db.sql
+    </pre>
+
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">配置</h2>
+    <pre class="layui-code code-demo" lay-options="{}">
+topezadmin:
+  # 默认true 开发时配置为false
+  cacheFlag: false
+  password: 1234567891234567
+  # 默认dataSource springboot中配置的名字，如果有多个，逗号隔开
+  datasourceBeanNames: 'dataSource'
+  # 自定义上传路径
+  uploadPath: /data/upload
+  # 自定义下载请求
+  downloadUrl:
+  # 自定义下载请求
+  uploadUrl: /system/upload.html
+  # 1000 打印完整SQL日志
+  logType: 1000-10000
+# 默认使用layui作为ui
+  adminStyle: layui
+  holiday: '[["2024-1-1","2024-2-8","2024-2-9","2024-2-10","2024-2-11","2024-2-12","2024-2-13","2024-2-14","2024-2-15","2024-2-16","2024-2-17","2024-2-18","2024-2-19","2024-4-4","2024-4-5","2024-4-6","2024-5-1","2024-5-2","2024-5-3","2024-5-4","2024-5-5","2024-6-8","2024-6-9","2024-6-10","2024-9-15","2024-9-16","2024-9-17","2024-10-1","2024-10-2","2024-10-3","2024-10-4","2024-10-5","2024-10-6","2024-10-7"],["2024-2-4","2023-2-18","2024-4-7","2024-4-28","2024-5-11","2024-9-14","2024-9-29","2024-10-12"]]'
+    </pre>
+    启动应用并访问:  /topezadmin/dev.html
+
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">其他servlet应用</h2>
+    <pre class="layui-code code-demo" lay-options="{}">
+        //  参考EzClientAutoConfiguration，结合配置文件，初始化 EzClientBootstrap 如下代码全部使用默认值
+public class EzClientServletFilter implements Filter {
+
+    EzClientBootstrap ezBootstrap = EzClientBootstrap.instance();
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        ezBootstrap.init();
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws Exception {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        if(! httpServletRequest.getRequestURI().startsWith("/topezadmin")){
+            filterChain.doFilter(servletRequest,servletResponse);
+            return;
+        }
+        try {
+            ezBootstrap.doFilter(httpServletRequest, httpServletResponse,filterChain);
+        } catch (Exception e) {
+            LOGGE.error("", e);
+            httpServletResponse.getWriter().println(e.getMessage());
+        } finally {
+            Utils.clearLog();
+        }
+    }
+
+}
+
+    </pre>
+
+</div>
+
+<script src="https://www.layuicdn.com/layui-v2.8.0/layui.js"></script>
+<script>
+    layui.use(['element', 'layer'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        var $=layui.jquery;
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

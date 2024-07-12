@@ -490,11 +490,11 @@ INSERT INTO T_EZADMIN_PUBLISH (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NA
    <tbody>
     <tr id="column">
      <th id="rowbutton" width="200" fixed="right">
-      <button opentype="_BLANK" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" plugin_code="button-group" class="layui-border-blue">可视化编辑</button>
-      <button opentype="_BLANK" url="/topezadmin/listEdit/list-${EZ_CODE}" item_name="preview" type="button-single" plugin_code="button-single" class="layui-border-orange">预览</button>
-      <button opentype="_BLANK" url="/topezadmin/listEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" plugin_code="button-single" class="layui-border-orange">源码编辑</button>
+      <button opentype="MODEL" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" plugin_code="button-group" class="layui-border-blue">可视化编辑</button>
+      <button opentype="MODEL" url="/topezadmin/listEdit/list-${EZ_CODE}" item_name="preview" type="button-single" plugin_code="button-single" class="layui-border-orange">预览</button>
+      <button opentype="MODEL" url="/topezadmin/listEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" plugin_code="button-single" class="layui-border-orange">源码编辑</button>
       <button opentype="CONFIRM_AJAX" windowname="确定发布吗" url="/topezadmin/listEdit/publish-${EZ_CODE}?EZ_TYPE=1" item_name="publish" type="button-single" plugin_code="button-single" class="layui-border-orange">发布</button>
-      <button opentype="_BLANK" url="/topezadmin/list/list-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" plugin_code="button-single" class="layui-border-orange">查看发布</button>
+      <button opentype="MODEL" url="/topezadmin/list/list-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" plugin_code="button-single" class="layui-border-orange">查看发布</button>
       <button opentype="MODEL" windowname="发布历史" url="/topezadmin/listEdit/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single" plugin_code="button-single" class="layui-border-orange">历史</button>
      </th>
      <th item_name="ID" head="th-numbers" width="60" fixed="left">ID</th>
