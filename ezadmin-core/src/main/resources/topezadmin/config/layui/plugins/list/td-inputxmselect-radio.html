@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>下拉文本</title>
+</head>
+<body id="td-inputxmselect-radio"   type="td" icon="layui-icon-share">
+<div id="template" >
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-select">
+        <div class="   td-text  " >下拉文本</div>
+    </div>
+</div>
+<table>
+    <tr id="content">
+        <td   th:ITEM_NAME="${item_name}" th:ITEM_ID="${item_name}"
+            th:class="${' ezadmin-td ezadmin-td-'+item_name}" th:style="${style}"
+            ez-type="td-select"
+
+        >
+            <div class="  td-text"  >
+                <div th:itemsJson="${itemsJson}" th:url="${url}" th:placeholder="${placeholder}" class="tdxmselect"
+                     th:item_name="${item_name}"
+                     th:name="${item_name}"
+                     radio="true"
+                     th:value="${#strings.isEmpty(dataInDb)?'[]':'['+dataInDb+']'}"></div>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

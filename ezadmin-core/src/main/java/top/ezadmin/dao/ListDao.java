@@ -363,8 +363,8 @@ public class ListDao extends JsoupUtil {
                     continue;
                 }
                 Map<String, Object> thMap =new HashMap<>();
+                thMap.putAll(JsoupUtil.attr2Map(th));
                 thMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(th));
-
                 for (int i = 0; i < colNames.length; i++) {
                     Utils.putIfAbsent(thMap,colNames[i], strip(th.attr(colNames[i])));
                 }
