@@ -81,30 +81,36 @@ INSERT INTO  T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME
  <body id="listmanage" datasource="dataSource" adminstyle="layui" rowbuttonwidth="200">
   <div id="append_head"></div>
   <ul id="tab">
+  <li>
+      <a class="tablink" select="true" item_name="Tab" url="/topezadmin/listEdit/list-listmanage">列表</a>
+     </li>
+     <li>
+      <a class="tablink" select="false" item_name="f" url="/topezadmin/listEdit/list-formmanage">表单</a>
+     </li>
   </ul>
   <form id="search">
    <div>
     <label>列表编码</label>
     <div>
-     <object item_name="EZ_CODE" alias="tec" type="input-text" plugin_code="input-text"></object>
+     <object item_name="EZ_CODE" alias="tec" type="input-text" ></object>
     </div>
    </div>
    <div>
     <label>添加时间</label>
     <div>
-     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" alias="tec" type="daterange" plugin_code="daterange"></object>
+     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" alias="tec" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>修改时间</label>
     <div>
-     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" alias="tec" type="daterange" plugin_code="daterange"></object>
+     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" alias="tec" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>数据源</label>
     <div>
-     <object item_name="DATASOURCE" alias="tec" type="input-text" plugin_code="input-text"></object>
+     <object item_name="DATASOURCE" alias="tec" type="input-text" ></object>
     </div>
    </div>
   </form>
@@ -185,26 +191,26 @@ INSERT INTO T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME,
    <div>
     <label>列表编码</label>
     <div>
-     <object item_name="EZ_CODE" type="input-text" plugin_code="input-text"></object>
+     <object item_name="EZ_CODE" type="input-text" ></object>
     </div>
    </div>
 
    <div>
     <label>添加时间</label>
     <div>
-     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>修改时间</label>
     <div>
-     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>数据源</label>
     <div>
-     <object item_name="DATASOURCE" type="input-text" plugin_code="input-text"></object>
+     <object item_name="DATASOURCE" type="input-text" ></object>
     </div>
    </div>
   </form>
@@ -272,25 +278,25 @@ INSERT INTO T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME,
    <div>
     <label>表单编码</label>
     <div>
-     <object item_name="EZ_CODE" type="input-text" plugin_code="input-text"></object>
+     <object item_name="EZ_CODE" type="input-text" ></object>
     </div>
    </div>
    <div>
     <label>添加时间</label>
     <div>
-     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>修改时间</label>
     <div>
-     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>数据源</label>
     <div>
-     <object item_name="DATASOURCE" type="input-text" plugin_code="input-text"></object>
+     <object item_name="DATASOURCE" type="input-text" ></object>
     </div>
    </div>
   </form>
@@ -371,26 +377,26 @@ INSERT INTO T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME,
    <div>
     <label>表单编码</label>
     <div>
-     <object item_name="EZ_CODE" type="input-text" plugin_code="input-text"></object>
+     <object item_name="EZ_CODE" type="input-text" ></object>
     </div>
    </div>
 
    <div>
     <label>添加时间</label>
     <div>
-     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>修改时间</label>
     <div>
-     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>数据源</label>
     <div>
-     <object item_name="DATASOURCE" type="input-text" plugin_code="input-text"></object>
+     <object item_name="DATASOURCE" type="input-text" ></object>
     </div>
    </div>
   </form>
@@ -460,25 +466,25 @@ INSERT INTO T_EZADMIN_PUBLISH (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NA
    <div>
     <label>列表编码</label>
     <div>
-     <object item_name="EZ_CODE" alias="tec" type="input-text" plugin_code="input-text"></object>
+     <object item_name="EZ_CODE" alias="tec" type="input-text" ></object>
     </div>
    </div>
    <div>
     <label>添加时间</label>
     <div>
-     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" alias="tec" type="daterange" plugin_code="daterange"></object>
+     <object item_name="ADD_TIME" jdbctype="DATETIME" oper="BETWEEN" alias="tec" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>修改时间</label>
     <div>
-     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" alias="tec" type="daterange" plugin_code="daterange"></object>
+     <object item_name="UPDATE_TIME" jdbctype="DATETIME" oper="BETWEEN" alias="tec" type="daterange" ></object>
     </div>
    </div>
    <div>
     <label>数据源</label>
     <div>
-     <object item_name="DATASOURCE" alias="tec" type="input-text" plugin_code="input-text"></object>
+     <object item_name="DATASOURCE" alias="tec" type="input-text" ></object>
     </div>
    </div>
   </form>
