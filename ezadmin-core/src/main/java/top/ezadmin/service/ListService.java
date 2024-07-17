@@ -16,7 +16,6 @@ public interface ListService {
     /**
      * 获取编辑状态下的配置
      * @param code
-     * @return
      * @throws Exception
      */
     public Map<String,Object>  selectConfigEditList(String code ) throws Exception;

@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>文档</title>
-    <link rel="stylesheet" href="https://www.layuicdn.com/layui-v2.8.0/css/layui.css">
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet">
+    </link>
+
     <style>
         .layui-body {
             padding: 0;
@@ -32,7 +34,7 @@
                     <ul>
                         <li>
                             <div class="layui-menu-body-title">
-                                <a class="left-menu"  data-href="开始使用.html">
+                                <a class="left-menu"  data-href="/doc/index.html?p=start">
                                     <span>开始使用</span>
                                     <span class="layui-font-12 layui-font-gray">Getting Started</span>
                                 </a>
@@ -40,7 +42,7 @@
                         </li>
                         <li>
                             <div class="layui-menu-body-title">
-                                <a class="left-menu"  data-href="原理介绍.html">
+                                <a class="left-menu"  data-href="/doc/index.html?p=whatis">
                                     <span>原理介绍</span>
                                     <span class="layui-font-12 layui-font-gray">Base Function</span>
                                 </a>
@@ -405,7 +407,7 @@
     </div>
 </div>
 
-<script src="https://www.layuicdn.com/layui-v2.8.0/layui.js"></script>
+<script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
 <script>
     layui.use(['element', 'layer'], function(){
         var element = layui.element;
@@ -418,6 +420,8 @@
                 $('#contentFrame').attr('src', target );
             }
         })
+
+        $(".left-menu").eq(0).click();
     });
 </script>
 </body>

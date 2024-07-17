@@ -21,8 +21,6 @@ public class SqlUtils {
 
     /**
      *
-
-     * @return
      */
     public static String transToWhere(String itemOper,String itemName, String itemAliasName
     ,String itemJdbcType,String itemValue,String itemValueStart,String itemValueEnd ) {

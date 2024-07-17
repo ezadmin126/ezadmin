@@ -66,8 +66,17 @@ import java.util.regex.Pattern;
         UrlPathHelper helper = new UrlPathHelper();
         String realUrl = helper.getRequestUri(httpServletRequest);
         //静态请求
-        if (staticUrl(realUrl)  ) {
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
+        try {
+            if (staticUrl(realUrl,httpServletRequest)  ) {
+                httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+                httpServletResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            httpServletResponse.getWriter().println("500 contact admin");
             return;
         }
         String ip=IpUtils.getRealIp(httpServletRequest);
@@ -95,8 +104,12 @@ import java.util.regex.Pattern;
             httpServletResponse.sendRedirect("/login/login.html");
             return;
         }
+
+
+
 //        //判断sid是否正常
          SysUser dbUser= sysUserMapper.selectByPrimaryKey(NumberUtils.toLong(idNameArray[0]));
+
 //
         if(dbUser==null){
             httpServletResponse.sendRedirect("/login/login.html");
@@ -152,12 +165,33 @@ import java.util.regex.Pattern;
         }
     }
 
-    private boolean staticUrl(String realUrl) {
+    private boolean staticUrl(String realUrl,HttpServletRequest httpServletRequest) throws Exception {
         for (int i = 0; i < staticUrl.size(); i++) {
             if(matcher.match(staticUrl.get(i),realUrl)){
                 return true;
             }
         }
+        if( !realUrl.startsWith("/topezadmin")) {
+            HandlerExecutionChain handlerExecutionChain = handlerMapping.getHandler(httpServletRequest);
+            if(handlerExecutionChain==null){
+                logger.warn("handlerExecutionChain null {}"+realUrl);
+                return true;
+            }
+            Object handler = handlerExecutionChain.getHandler();
+            if (handler!=null&& handler instanceof HandlerMethod) {
+                HandlerMethod handlerMethod = (HandlerMethod) handler;
+                Method method = handlerMethod.getMethod();
+                Class<?> controllerClass = method.getDeclaringClass();
+                Annotation annotation = controllerClass.getAnnotation(Nologin.class);
+                Annotation m = method.getAnnotation(Nologin.class);
+                if (annotation != null || m != null) {
+                    // 处理注解逻辑
+                    return true;
+                }
+            }
+        }
+
+
         return false;
     }
         private boolean noLogin(String url) {

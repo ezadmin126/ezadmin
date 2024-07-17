@@ -21,6 +21,7 @@
                 <div th:itemsJson="${itemsJson}" th:url="${url}" th:placeholder="${placeholder}" class="tdxmselect"
                      th:item_name="${item_name}"
                      th:name="${item_name}"
+                     th:radio="${radio}"
                      th:value="${#strings.isEmpty(dataInDb)?'[]':'['+dataInDb+']'}"></div>
             </div>
         </td>

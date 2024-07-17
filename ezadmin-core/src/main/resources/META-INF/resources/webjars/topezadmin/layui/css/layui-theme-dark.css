@@ -799,11 +799,20 @@ iframe{
 .layuimini-menu-left .layui-nav-tree .layui-this, .layuimini-menu-left .layui-nav-tree .layui-this > a, .layuimini-menu-left .layui-nav-tree .layui-nav-child dd.layui-this, .layuimini-menu-left .layui-nav-tree .layui-nav-child dd.layui-this a, .layuimini-menu-left-zoom.layui-nav-tree .layui-this, .layuimini-menu-left-zoom.layui-nav-tree .layui-this > a, .layuimini-menu-left-zoom.layui-nav-tree .layui-nav-child dd.layui-this, .layuimini-menu-left-zoom.layui-nav-tree .layui-nav-child dd.layui-this a {
     background-color: var(--lay-color-black-5) !important;
 }
+.searchWrap .layui-tab-item{
+    border: 1px solid var(--lay-color-black-5);border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+}
 
-
-.layui-laypage-em{
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
     color: var(--lay-color-text-2);
     background-color: var(--lay-color-bg-4);
+}
+
+.layui-laypage-limits select,.custom-select {
+    background-color:  var(--lay-color-fill-2);;
+    color:var(--lay-color-text-2);
+    border-color: var(--lay-color-border-1);
 }
 
 xm-select {

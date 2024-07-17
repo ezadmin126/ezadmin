@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-<!--    <parent>-->
-<!--        <groupId>top.ezadmin</groupId>-->
-<!--        <artifactId>ezadmin</artifactId>-->
-<!--        <version>2.9.11-SNAPSHOT</version>-->
-<!--    </parent>-->
+    <parent>
+        <groupId>top.ezadmin</groupId>
+        <artifactId>ezadmin</artifactId>
+        <version>2.9.11-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-core</artifactId>
-    <version>2.9.14.3</version>
+    <version>2.9.15</version>
     <packaging>jar</packaging>
     <name>ezadmin-core</name>
     <url>https://github.com/ezadmin126/ezadmin</url>

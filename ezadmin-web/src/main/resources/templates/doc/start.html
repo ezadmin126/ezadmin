@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>文档</title>
-    <link rel="stylesheet" href="https://www.layuicdn.com/layui-v2.8.0/css/layui.css">
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet">
+    </link>
     <style>
         .layui-body {
             padding: 0;
@@ -28,21 +29,23 @@
      </blockquote>
     <h2 id="examples" lay-toc="{anchor: null}" style="margin-bottom: 0;">依赖（内置springboot-starter）</h2>
     <pre class="layui-code code-demo" lay-options="{}">
+        <textarea>
 <dependency>
   <groupId>io.github.ezadmin126</groupId>
   <artifactId>ezadmin-core</artifactId>
-  <version>最新版</version>
+  <version>2.9.15</version>
 </dependency>
+            </textarea>
     </pre>
-
-
     <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
-    <pre class="layui-code code-demo" lay-options="{}">
-            /ezadmin-web/src/main/resources/db.sql
+    <pre class="layui-code code-demo"  >
+         下载初始化SQL: <a href="https://www.ezjsp.com/static/init.sql">init.sql</a>
+         请在自己数据库中执行如上SQL。
     </pre>
 
     <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">配置</h2>
     <pre class="layui-code code-demo" lay-options="{}">
+         <textarea>
 topezadmin:
   # 默认true 开发时配置为false
   cacheFlag: false
@@ -59,12 +62,12 @@ topezadmin:
   logType: 1000-10000
 # 默认使用layui作为ui
   adminStyle: layui
-  holiday: '[["2024-1-1","2024-2-8","2024-2-9","2024-2-10","2024-2-11","2024-2-12","2024-2-13","2024-2-14","2024-2-15","2024-2-16","2024-2-17","2024-2-18","2024-2-19","2024-4-4","2024-4-5","2024-4-6","2024-5-1","2024-5-2","2024-5-3","2024-5-4","2024-5-5","2024-6-8","2024-6-9","2024-6-10","2024-9-15","2024-9-16","2024-9-17","2024-10-1","2024-10-2","2024-10-3","2024-10-4","2024-10-5","2024-10-6","2024-10-7"],["2024-2-4","2023-2-18","2024-4-7","2024-4-28","2024-5-11","2024-9-14","2024-9-29","2024-10-12"]]'
-    </pre>
+          </textarea>  </pre>
     启动应用并访问:  /topezadmin/dev.html
 
     <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">其他servlet应用</h2>
     <pre class="layui-code code-demo" lay-options="{}">
+         <textarea>
         //  参考EzClientAutoConfiguration，结合配置文件，初始化 EzClientBootstrap 如下代码全部使用默认值
 public class EzClientServletFilter implements Filter {
 
@@ -93,15 +96,15 @@ public class EzClientServletFilter implements Filter {
     }
 
 }
-
+         </textarea>
     </pre>
 
 </div>
 
-<script src="https://www.layuicdn.com/layui-v2.8.0/layui.js"></script>
+<script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
 <script>
     layui.use(['element', 'layer'], function(){
-        var element = layui.element;
+        var element = layui.code;
         var layer = layui.layer;
         var $=layui.jquery;
         // 监听导航点击事件

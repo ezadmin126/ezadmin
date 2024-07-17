@@ -415,7 +415,7 @@ public class ListServiceImpl implements ListService {
     /**
      *
      * @param pluginCode  adminstyle+
-     * @return
+     * @return map
      * @throws Exception
      */
     @EzCacheAnnotation

@@ -592,8 +592,7 @@ function doPage(){
                 }
 
                 laypage.render({
-                    elem: 'PAGE_LAYUI',
-                    theme: '#1E9FFF'
+                    elem: 'PAGE_LAYUI'
                     , count: data.data.page.totalRecord
                     , curr: data.data.page.currentPage
                     , limit: data.data.page.perPageInt
@@ -610,8 +609,8 @@ function doPage(){
             })
         } else {
             laypage.render({
-                elem: 'PAGE_LAYUI',
-                theme: '#1E9FFF'
+                elem: 'PAGE_LAYUI'
+
                 , count: 0
                 , curr: 1
                 , limit: 10

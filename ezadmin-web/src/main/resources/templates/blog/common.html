@@ -217,7 +217,7 @@
 <div th:fragment="page" th:remove="tag">
 
     <div class="layui-box layui-laypage layui-laypage-default" th:if="${pageVo}">
-        <a th:href="${pageVo.prePageUrl}" class="layui-laypage-prev "
+        <a th:href="${pageVo.pageNum>1?pageVo.prePageUrl:'#'}" class="layui-laypage-prev "
            th:classappend="${pageVo.hasPreviousPage?'':'layui-disabled'}">上一页</a>
 
         <a th:href="${pageVo.firstUrl}" th:if="${pageVo.navigateFirstPage > 2}" class="page-item"   >1</a>
