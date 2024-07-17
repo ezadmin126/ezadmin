@@ -77,7 +77,7 @@ public class BaseController {
                 continue;
             }
             if(v!=null&&v.length==1){
-                searchParamsValues.put(k, v[0]);
+                searchParamsValues.put(k, v[0]==null?null:v[0].trim());
                 if(StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_TODAY_DATE.name(),v[0])){
                     searchParamsValues.put(k,DefaultParamEnum.getValue(DefaultParamEnum.EZ_TODAY_DATE.name()));
                 }

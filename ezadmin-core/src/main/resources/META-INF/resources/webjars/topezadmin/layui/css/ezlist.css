@@ -74,12 +74,12 @@ th a {
 @media (min-width: 768px) {
 
     .layui-form-item .ez-range {
-        width: 31% !important;
+        width: 26% !important;
     }
 
     /**数据库插件做兼容**/
     .layui-form-item .ez-daterange {
-        width: 31% !important;
+        width: 29% !important;
     }
     .el-cascader {
         margin-left: 0px;

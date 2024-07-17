@@ -5,7 +5,7 @@
     <title>搜索-数字范围</title>
 </head>
 <body id="numberrange"  >
-<div   th:ITEM_NAME="${model.item_name}" th:style="${model.style}" ez-type="numberrange" th:classappend="${'layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3'}"
+<div   th:ITEM_NAME="${model.item_name}" th:style="${model.style}" ez-type="numberrange" th:classappend="${' layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3'}"
      th:ITEM_ID="${model.item_name}"
        th:ez-label="${model.label}"
        th:ez-item_name="${model.item_name}"
@@ -26,21 +26,22 @@
 
 
 >
+    <div class="layui-form-item">
     <label class="layui-form-label" th:for="${'itemId-' + model.item_name}"
            th:text="${model.label+'：'}" th:title="${model.label}">Date range:</label>
 
-    <div class="layui-input-inline ez-range  " style="margin-right: 0">
+    <div class="layui-input-inline ez-range  "  >
         <input autocomplete="off" type="text" class="layui-input  "
                th:value="${model.itemParamValueStart}"
                th:name="${model.item_name+'_START'}" th:id="${model.item_name+'_START_ID'}">
     </div>
     <div class="layui-form-mid">-</div>
-    <div class="layui-input-inline ez-range " style="margin-right: 0">
+    <div class="layui-input-inline ez-range "  >
         <input autocomplete="off" type="text" class="layui-input "
                th:value="${model.itemParamValueEnd}"
                th:name="${model.item_name+'_END'}" th:id="${model.item_name+'_END_ID'}">
     </div>
-
+    </div>
 </div>
  </body>
 </html>

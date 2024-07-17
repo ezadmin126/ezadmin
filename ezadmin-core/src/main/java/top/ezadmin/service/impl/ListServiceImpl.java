@@ -440,10 +440,14 @@ public class ListServiceImpl implements ListService {
                 listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
                         sql, new Object[]{encodeId.toLowerCase()});
             }catch (Exception e){
-                LOG.error(""+encodeId,e);
+                LOG.error(encodeId,e);
             }
             if(Utils.isEmpty(listMap)){
-                return JSONUtils.toJSONString(ListDao.getInstance().selectAllListById(encodeId.toLowerCase()));
+                Map<String, Object> m=ListDao.getInstance().selectAllListById(encodeId.toLowerCase());
+                if(Utils.isEmpty(m)){
+                    return null;
+                }
+                return JSONUtils.toJSONString(m);
             }
             String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
             Map<String,Object>c= ListDao.getInstance().selectAllListByHtml(html);
@@ -453,7 +457,6 @@ public class ListServiceImpl implements ListService {
             c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
             return JSONUtils.toJSONString(c);
         }catch (Exception e){
-            LOG.error(""+encodeId,e);
             throw e;
         }
     }

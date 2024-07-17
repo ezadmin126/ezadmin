@@ -254,7 +254,11 @@ public class FormDao extends JsoupUtil {
         return result;
     }
     public   Map<String, Object> selectAllFormById(String formCode) {
+
         Config config=formConfigMap.get(formCode.toLowerCase());
+        if(config==null){
+            return null;
+        }
         Document doc = config.getDoc();
         return selectAllFormByHtml(doc.html());
     }

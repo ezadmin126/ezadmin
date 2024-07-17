@@ -472,7 +472,8 @@ function renderTable() {
         });
 
         laytable.on('row(mytable)', function(obj){
-            if(obj.e.target.tagName=='IMG'||obj.e.target.tagName=='INPUT'){
+            if(obj.e.target.tagName=='IMG'||obj.e.target.tagName=='INPUT'
+                ||obj.e.target.tagName=='BUTTON'){
                 return false;
             }
             var data = obj.data; // 获取当前行数据

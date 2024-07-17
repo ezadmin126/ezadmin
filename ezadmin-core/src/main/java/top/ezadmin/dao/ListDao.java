@@ -270,7 +270,9 @@ public class ListDao extends JsoupUtil {
     public   Map<String, Object> selectAllListById(String listcode) {
         Map<String, Object> result=new HashMap<>();
         Config config=listConfigMap.get(listcode.toLowerCase());
-
+        if(config==null){
+            return null;
+        }
         Document doc=config.getDoc();
         Map<String,Object> coreMap=new HashMap<>();
         fillcore(coreMap,doc );
@@ -669,6 +671,7 @@ public class ListDao extends JsoupUtil {
         for (int i = 0; i < searchList.size(); i++) {
             Map<String,Object> tab= searchList.get(i);
             Element tabHtml=newSearch(tab.get(JsoupUtil.ITEM_NAME),tab.get(JsoupUtil.LABEL) );
+            Elements plugin=tabHtml.getElementsByTag("object");
             try {
                 String config = Utils.trimNull(tab.get(JsoupUtil.EZCONFIG));
                 if(StringUtils.isNotBlank(config)){
@@ -686,9 +689,19 @@ public class ListDao extends JsoupUtil {
             for (int k = 0; k < names.length; k++) {
                 String formItemAttrValue=Utils.trimNull(tab.get(names[k]));
                 if(StringUtils.isNotBlank(formItemAttrValue)){
-                    tabHtml.getElementsByTag("object").attr(names[k],formItemAttrValue);
+                    plugin.attr(names[k],formItemAttrValue);
                 }
             }
+            //自动补充between
+            if(StringUtils.isBlank(plugin.attr(JsoupUtil.OPER))&&(
+                    plugin.attr(JsoupUtil.TYPE).equals("numberrange") ||
+                    plugin.attr(JsoupUtil.TYPE).equals("datetimerange") ||
+                    plugin.attr(JsoupUtil.TYPE).equals("daterange")
+                    )
+            ){
+                plugin.attr(JsoupUtil.OPER,OperatorEnum.BETWEEN.getOperC());
+            }
+
             body.getElementById("search").append("\n"+tabHtml.outerHtml()+"\n");
         }
     }

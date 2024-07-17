@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.dao.FormDao;
+import top.ezadmin.dao.ListDao;
 import top.ezadmin.dao.PluginsDao;
 import top.ezadmin.service.FormService;
 import top.ezadmin.service.ListService;
@@ -31,8 +32,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
     @EzCacheAnnotation
     public String selectPublishFormById(String encodeId) throws Exception {
         try {
-            String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=2 " +
-                    "";
+            String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=2 " ;
             Map<String, Object> listMap=null;
             try {
                 listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
@@ -40,7 +40,11 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
             }catch (Exception ee){
             }
             if(Utils.isEmpty(listMap)){
-                return JSONUtils.toJSONString(FormDao.getInstance().selectAllFormById(encodeId));
+                Map<String, Object> m= FormDao.getInstance().selectAllFormById(encodeId.toLowerCase());
+                if(Utils.isEmpty(m)){
+                    return null;
+                }
+                return JSONUtils.toJSONString(m);
             }
             String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
             Map<String,Object>c= FormDao.getInstance().selectAllFormByHtml(html);
@@ -50,7 +54,6 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
             c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
             return JSONUtils.toJSONString(c);
         }catch (Exception e){
-            logger.error(""+encodeId,e);
             throw e;
         }
     }
