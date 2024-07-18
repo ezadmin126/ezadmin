@@ -460,6 +460,20 @@ public class ListServiceImpl implements ListService {
             throw e;
         }
     }
+
+    public String selectDbPublishListById(String encodeId) throws Exception {
+
+        String sql="select id,lower(EZ_CODE) EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   lower(EZ_CODE)=? and EZ_TYPE=1 " +
+                "";
+        Map<String, Object> listMap=null;
+        try {
+            listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                    sql, new Object[]{encodeId.toLowerCase()});
+        }catch (Exception e){
+            LOG.error(encodeId,e);
+        }
+        return JSONUtils.toJSONString(listMap);
+    }
     @EzCacheAnnotation
     public  Map<String, Object> selectAllListMapById(String encodeId) throws Exception {
         try {
@@ -898,7 +912,7 @@ public class ListServiceImpl implements ListService {
                         attrMap.put("name",search.get(JsoupUtil.ITEM_NAME)+"");
                         attrMap.putIfAbsent("id","itemId-"+search.get(JsoupUtil.ITEM_NAME)+"");
 //                        attrMap.putIfAbsent("lay-affix","clear" );
-                        attrMap.put("class","layui-input "+Utils.trimNull(attrMap.get("class")) );
+                        attrMap.put("class","  "+Utils.trimNull(attrMap.get("class")) );
                         StringBuilder sb=new StringBuilder("<div ");
                         attrMap.forEach((k,v)->{
                             if(StringUtils.equals(k,"data")||StringUtils.isBlank(v)){

@@ -48,15 +48,9 @@
         </div>
 
             <script>
-                var xmel = $('[[${"#itemId-" + model.item_name}]]');
-                var initdata = $('[[${"#itemdata-" + model.item_name}]]').val();
-                var initvalue = xmel.attr("value");
-                var strict = (xmel.attr("strict")||"false".toLowerCase())==="false"?false:true;
 
-                var initArray=initvalue?initvalue.split(","):[];
 
                 $(function(){
-
                 xmSelect.render({
                     el: '[[${"#itemId-" + model.item_name}]]',
                     autoRow: false,
@@ -78,7 +72,7 @@
                         showLine: true,
                         indent: 20,
                         expandedKeys: [ -3 ],
-                        strict:strict,
+                        strict:(xmel.attr("strict")||"false".toLowerCase())==="false"?false:true,
                     },
                     toolbar: {
                         show: true,
@@ -87,9 +81,9 @@
                     filterable: true,
                     //height: 'auto',
                     data: function(){
-                        return  JSON.parse(initdata);
+                        return  JSON.parse($('[[${"#itemdata-" + model.item_name}]]').val()||[]);
                     },
-                    initValue: initArray
+                    initValue: xmel.attr("value")? xmel.attr("value").split(","):[]
                 })
             })
         </script>

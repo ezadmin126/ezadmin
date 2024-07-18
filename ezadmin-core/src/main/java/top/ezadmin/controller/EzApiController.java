@@ -118,11 +118,6 @@ public class EzApiController extends BaseController {
         if(StringUtils.isBlank(listUrlCode)){
             throw new NotExistException();
         }
-
-
-
         EzResult.instance().printJSONUtils(response);
     }
-
-
 }

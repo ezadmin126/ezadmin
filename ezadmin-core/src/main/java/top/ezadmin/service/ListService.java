@@ -34,4 +34,5 @@ public interface ListService {
     void fillTreeById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap)throws Exception;
 
 
+    String selectDbPublishListById(String encryptListId) throws Exception ;
 }

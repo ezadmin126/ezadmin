@@ -44,14 +44,16 @@
                    th:text="${model.label+'：'}" th:title="${model.label}">普通文本</label>
             <div  class="layui-input-block">
                 [(${serverDom})]
-                <input type="hidden" th:id="${'itemdata-'+model.item_name}" th:value="${itemsJson}" >
+                <input type="hidden" th:id="${'itemdata-'+model.item_name}"
+                       th:value="${#strings.isEmpty(model.itemParamValue)?'[]':'['+model.itemParamValue+']'}" >
             </div>
 
             <script>
                 var xmel = $('[[${"#itemId-" + model.item_name}]]');
+
                 var initdata = xmel.attr("itemsJson");
                 var initUrl = xmel.attr("url");
-                var initvalue = xmel.attr("value");
+
                 var xmselect = xmSelect.render({
                     el: '[[${"#itemId-" + model.item_name}]]',
                     language: 'zn',
@@ -83,7 +85,7 @@
                             console.log("error");
                         });
                     },
-                    initValue: JSON.parse(initvalue)
+                    initValue: JSON.parse( $('[[${"#itemdata-" + model.item_name}]]').attr("value")||[])
                 })
             </script>
 

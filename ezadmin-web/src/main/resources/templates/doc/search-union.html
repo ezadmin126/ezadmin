@@ -3,23 +3,26 @@
 <head>
     <meta charset="utf-8">
     <title>文档</title>
-    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
-    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
-    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet">
+    </link>
+    <style>
+        .layui-body {
+            padding: 0;
+        }
+        .layui-side {
+            background-color: #393D49;
+        }
+        .layui-nav-itemed > a {
+            background-color: #4E5465 !important;
+        }
+        .layui-nav-tree .layui-nav-child a {
+            background-color: #393D49;
+        }
+    </style>
 </head>
 <body class="layui-fluid">
-<div class="ws-content">
-    <div class="ws-side">
-        <div class="ws-side-fixed">
-            <div class="ws-dir">
-                <ul class="ws-dir-ul">
-                    <li><a href="#quick">快速上手</a></li>
-                    <li ><a href="#servlet">其他servlet应用接入</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="layui-text ws-text" id="WS-text">
+
+<div class="layui-text ws-text" id="WS-text">
     <h1>开始使用</h1>
     <blockquote class="layui-elem-quote">
         EZ一个嵌入式的Servlet表单列表工具，可以将SQL转换为带有表格或表单的网页，可适配任意UI框架，同时支持拖拽自定义网页。
@@ -56,7 +59,6 @@ topezadmin:
 # 0010 如果遇到没有where的delete 或者update语句，抛出异常
   logType: 1000-10000
           </textarea>  </pre>
-     <a href="/doc/sysparam.html">更多配置</a>
 
     <blockquote class="layui-elem-quote"><p>
         启动应用并访问
@@ -65,7 +67,7 @@ topezadmin:
     </blockquote>
 
 
-    <h2  id="quick"  lay-toc="{anchor: null}" style="margin-bottom: 0;">快速上手</h2>
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">快速上手</h2>
     <p>现在，让我们以一个最简单的示例开始入门： 一个用户列表，包含用户ID与用户名称</p>
     <p>进入/topezadmin/dev.html ,点击SQL生成列表</p>
     <p>   列表编码填入：
@@ -82,22 +84,56 @@ SELECT ID ID,NAME 名称 from T_USER WHERE 1=1
              </textarea>
         </pre>
     </p>
-    <img style="width:100%" src="/static/doc/sql2list.png"  alt=""/>
+    <img style="width:900px" src="/static/doc/sql2list.png"  alt=""/>
 
-    <p>点击发布之后，代表列表已经进入生产环境，  点击预览，即查看对应的 userlist</p>
-    <img style="width:100%" src="/static/doc/listedit.png"  alt=""/>
+    <p> 点击预览，即已经生成 userlist</p>
+    <img style="width:900px" src="/static/doc/listedit.png"  alt=""/>
 
     <p> 点击源码编辑，可参考文档，对前端源码进行修改</p>
-    <img style="width:100%" src="/static/doc/listsource.png"  alt=""/>
+    <img style="width:900px" src="/static/doc/listsource.png"  alt=""/>
 
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">其他servlet应用接入</h2>
+    <pre class="layui-code code-demo" lay-options="{}">
+         <textarea>
+        //  参考EzClientAutoConfiguration，结合配置文件，初始化 EzClientBootstrap 如下代码全部使用默认值
+public class EzClientServletFilter implements Filter {
+
+    EzClientBootstrap ezBootstrap = EzClientBootstrap.instance();
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        ezBootstrap.init();
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws Exception {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        if(! httpServletRequest.getRequestURI().startsWith("/topezadmin")){
+            filterChain.doFilter(servletRequest,servletResponse);
+            return;
+        }
+        try {
+            ezBootstrap.doFilter(httpServletRequest, httpServletResponse,filterChain);
+        } catch (Exception e) {
+            LOGGE.error("", e);
+            httpServletResponse.getWriter().println(e.getMessage());
+        } finally {
+            Utils.clearLog();
+        }
+    }
+
+}
+         </textarea>
+    </pre>
 
 </div>
-</div>
-<div class="layui-footer ws-footer">
-    <p> Copyright © 2024 <a href="/">EzJsp</a> 页面来自于Layui</p>
-</div>
+
+<script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
 <script>
     layui.use(['element', 'layer'], function(){
+        var element = layui.code;
+        var layer = layui.layer;
+        var $=layui.jquery;
         // 监听导航点击事件
         layui.code({
             elem: '.code-demo'

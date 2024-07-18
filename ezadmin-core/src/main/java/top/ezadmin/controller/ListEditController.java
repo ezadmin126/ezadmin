@@ -129,7 +129,7 @@ public class ListEditController extends BaseController {
     @EzMapping("publish.html")
     public EzResult publish(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
-        Map<String,Object>  c=JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID));
+        Map<String,Object>  c=JSONUtils.parseObjectMap(listService.selectDbPublishListById(ENCRYPT_LIST_ID));
         //生成如果有数据 //1.把生产的复制到历史表
         if(Utils.isNotEmpty(c)){
             String config=c.get("EZ_CONFIG")+"";

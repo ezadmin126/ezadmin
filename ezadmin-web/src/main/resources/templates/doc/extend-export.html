@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+<!--            <div class="ws-dir">-->
+<!--                <ul class="ws-dir-ul">-->
+<!--                    <li><a href="#list">列表</a></li>-->
+<!--                    <li ><a href="#form">表单</a></li>-->
+<!--                </ul>-->
+<!--            </div>-->
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>POI导出</h1>
+        <blockquote class="layui-elem-quote">
+            系统默认使用CSV格式导出，如需使用POI导出，可以使用此扩展。
+            并修改配置： topezadmin.exportClass =xxx.xxx.POIExport  即可。
+
+        </blockquote>
+        <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            POI导出实现代码
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+             <textarea>
+<![CDATA[
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.util.CollectionUtils;
+import top.ezadmin.common.enums.JdbcTypeEnum;
+import top.ezadmin.common.utils.Utils;
+import top.ezadmin.plugins.export.EzExport;
+
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class PoiExport implements EzExport {
+    @Override
+    public void export(String name, List<List<String>> head, List<List<Object>> data, HttpServletResponse response) throws Exception {
+        // 创建工作簿
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        // 创建工作表
+        SXSSFSheet sheet = workbook.createSheet(name);
+        // 创建表头行
+        // 创建样式
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+        headerStyle.setTopBorderColor(IndexedColors.BLACK.index);
+        headerStyle.setBottomBorderColor(IndexedColors.BLACK.index);
+        headerStyle.setLeftBorderColor(IndexedColors.BLACK.index);
+        headerStyle.setRightBorderColor(IndexedColors.BLACK.index);
+        headerStyle.setFillForegroundColor(IndexedColors.WHITE1.index);
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        Font headerFont = workbook.createFont();
+        headerFont.setFontName("Arial");
+        headerFont.setFontHeightInPoints((short) 12);
+        headerFont.setColor(IndexedColors.BLACK1.getIndex());
+        headerFont.setBold(true);
+        headerStyle.setFont(headerFont);
+
+
+        SXSSFRow headerRow = sheet.createRow(0);
+        headerRow.setHeightInPoints(30);
+        Map<Integer,Integer> widthMap=new HashMap<>(8);
+
+        for (int i = 0; i < head.size(); i++) {
+            SXSSFCell headerCell1 = headerRow.createCell(i);
+            headerCell1.setCellValue(head.get(i).get(0));
+            headerCell1.setCellStyle(headerStyle);
+        }
+
+        Font dataFont = workbook.createFont();
+        dataFont.setFontName("Arial");
+        dataFont.setFontHeightInPoints((short) 12);
+        dataFont.setColor(IndexedColors.BLACK.getIndex());
+
+
+        // 创建数据单元格样式
+        CellStyle dataStyleLeft = workbook.createCellStyle();
+        dataStyleLeft.setFont(dataFont);
+        dataStyleLeft.setAlignment(HorizontalAlignment.LEFT);
+        dataStyleLeft.setWrapText(true);
+
+        CellStyle dataStyleRight = workbook.createCellStyle();
+        dataStyleRight.setFont(dataFont);
+        dataStyleRight.setAlignment(HorizontalAlignment.RIGHT);
+
+        if(!CollectionUtils.isEmpty(data)) {
+            for (int i = 0; i < data.size(); i++) {
+                SXSSFRow bodyRow = sheet.createRow(i + 1);
+                bodyRow.setHeightInPoints(24);
+                for (int j = 0; j < data.get(i).size(); j++) {
+                    SXSSFCell bodyRowCell = null;
+                    String value = Utils.trimNull(data.get(i).get(j));
+                    if (head.get(j).size() > 2) {
+                        if (JdbcTypeEnum.isNumberType(head.get(j).get(2))) {
+                            try {
+                                if (StringUtils.isNotBlank(value)) {
+                                    bodyRowCell = bodyRow.createCell(j, CellType.NUMERIC);
+                                    bodyRowCell.setCellValue(new BigDecimal(value).doubleValue());
+                                    bodyRowCell.setCellStyle(dataStyleRight);
+                                } else {
+                                    bodyRowCell = bodyRow.createCell(j, CellType.STRING);
+                                }
+                            } catch (Exception e) {
+                            }
+                        } else {
+                            bodyRowCell = bodyRow.createCell(j, CellType.STRING);
+                            bodyRowCell.setCellValue(Utils.trimNull(data.get(i).get(j)));
+                            bodyRowCell.setCellStyle(dataStyleLeft);
+                        }
+                    } else {
+                        bodyRowCell = bodyRow.createCell(j, CellType.STRING);
+                        bodyRowCell.setCellValue(Utils.trimNull(data.get(i).get(j)));
+                        bodyRowCell.setCellStyle(dataStyleLeft);
+                    }
+                    widthMap.put(j, Utils.trimNull(data.get(i).get(j)).length());
+                }
+            }
+            for (int i = 0; i < head.size(); i++) {
+                if (head.get(i).size() > 1) {
+                    if (StringUtils.isNotBlank(head.get(i).get(1))) {
+                        int w = NumberUtils.toInt(head.get(i).get(1)) - 40;
+                        int rw = Math.max((w / 10), 8) * 256 + 200;
+                        sheet.setColumnWidth(i, rw); //最小8个字
+                    } else {
+                        if (widthMap.containsKey(i)) {
+                            int w = Math.max(widthMap.get(i), 8) * 256 + 200;
+                            sheet.setColumnWidth(i, w); //最小8个字
+                        } else {
+                            sheet.setColumnWidth(i, 8 * 256 + 200); //最小8个字
+                        }
+                    }
+                }
+            }
+        }
+        response.setContentType("text/excel;charset=UTF-8");
+        response.setCharacterEncoding("utf-8");
+        // 文件名乱码
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String formattedDateTime = now.format(formatter);
+        String finalfileName = URLEncoder.encode(name+"_"+ formattedDateTime);
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + finalfileName + ".xlsx");
+        // 内容乱码
+        workbook.write(response.getOutputStream());
+        workbook.close();
+    }
+}
+                 ]]>
+             </textarea>
+        </pre>
+
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#text">普通输入框</a></li>
+                    <li level="2" ><a href="#param">参数说明</a></li>
+
+                    <li><a href="#hidden">隐藏域</a></li>
+                    <li level="2" ><a href="#hiddenparam">参数说明</a></li>
+
+                    <li><a href="#nowhere">无where隐藏域</a></li>
+                    <li level="2" ><a href="#nowhereparam">参数说明</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>搜索输入框</h1>
+
+        <h2 id="text"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            普通输入框
+        </h2>
+        <blockquote class="layui-elem-quote">
+            SQL生成列表，默认的搜索插件。支持精确，模糊匹配等
+        </blockquote>
+        <pre class="layui-code code-demo" lay-options="{}">
+            支持大部分原生属性。
+            <textarea>
+              <object item_name="EZ_CODE" type="input-text" >编码</object>
+            </textarea>
+        </pre>
+        <h3 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>maxlength</td>
+                <td>最大长度</td>
+                <td>maxlength=10</td>
+            </tr>
+            <tr>
+                <td>style</td>
+                <td>自定义样式</td>
+                <td>style="color:red"</td>
+            </tr>
+            <tr>
+                <td>valid_rule</td>
+                <td>jqueryvalidate 规则</td>
+                <td> {"required": true, "minlength": 2}</td>
+            </tr>
+            <tr>
+                <td>valid_msg</td>
+                <td>jqueryvalidate 提示文案</td>
+                <td>{"required": true,  "minlength": "长度{0}"}</td>
+            </tr>
+            <tr>
+                <td>jdbctype</td>
+                <td>数字靠右展示，时间格式化，小数位保留</td>
+                <td>NUMBER("NUMBER"),
+                    NUMBERNULL("NUMBERNULL"),
+                    DATE_TO_NUMBER("DATE_TO_NUMBER"),
+                    VARCHAR("VARCHAR"),
+                    DATE("DATE"),
+                    DATETIME("DATETIME"),
+                    CLOB("CLOB")
+                    , BODY("BODY"),
+                    NUMBER0("NUMBER0"),
+                    NUMBER1("NUMBER1") ,
+                    NUMBER2("NUMBER2") ,
+
+                    NUMBER3("NUMBER3") ,
+                    NUMBER4("NUMBER4")</td>
+            </tr>
+            <tr>
+                <td>oper</td>
+                <td>sql操作符，不同的操作符，拼接出来的SQL不一样</td>
+                <td>EQ("=","等于"),
+                    NE("!=","不等于"),
+                    LTE( "<=","小于等于"),
+                    BETWEEN("BETWEEN","区间"),
+                    GTE(">=", "大于等于"),
+                    LIKE("LIKE","包含"),
+                    NOTLIKE("NOT LIKE","不包含"),
+                    IN("IN","IN"),
+                    NOT_IN("NOT IN","NOT IN"),
+                    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");</td>
+            </tr>
+            <tr>
+                <td>alias</td>
+                <td>表别名，当多个表字段一样时，用别名来区分，同时如果是需要用表达式替换 如：
+                   ifnull(a.id,0) ,最终的SQL也会使用alias来替换字段名</td>
+                <td>EQ("=","等于"),
+                    NE("!=","不等于"),
+                    LTE( "<=","小于等于"),
+                    BETWEEN("BETWEEN","区间"),
+                    GTE(">=", "大于等于"),
+                    LIKE("LIKE","包含"),
+                    NOTLIKE("NOT LIKE","不包含"),
+                    IN("IN","IN"),
+                    NOT_IN("NOT IN","NOT IN"),
+                    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");</td>
+            </tr>
+            <tr>
+                <td>lay_verify</td>
+                <td>layui原生的验证</td>
+                <td> required</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+
+        <h2 id="hidden"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            隐藏域
+        </h2>
+        <blockquote class="layui-elem-quote">
+             希望纳入搜索，但是不希望用户看不到参数，也可以用于组合搜索。
+        </blockquote>
+        <pre class="layui-code code-demo" lay-options="{}">
+            支持大部分原生属性。
+            <textarea>
+              <object item_name="EZ_CODE" type="hidden" >编码</object>
+            </textarea>
+        </pre>
+        <h3 id="hiddenparam"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>jdbctype</td>
+                <td>数字靠右展示，时间格式化，小数位保留</td>
+                <td>NUMBER("NUMBER"),
+                    NUMBERNULL("NUMBERNULL"),
+                    DATE_TO_NUMBER("DATE_TO_NUMBER"),
+                    VARCHAR("VARCHAR"),
+                    DATE("DATE"),
+                    DATETIME("DATETIME"),
+                    CLOB("CLOB")
+                    , BODY("BODY"),
+                    NUMBER0("NUMBER0"),
+                    NUMBER1("NUMBER1") ,
+                    NUMBER2("NUMBER2") ,
+
+                    NUMBER3("NUMBER3") ,
+                    NUMBER4("NUMBER4")</td>
+            </tr>
+            <tr>
+                <td>oper</td>
+                <td>sql操作符，不同的操作符，拼接出来的SQL不一样</td>
+                <td>EQ("=","等于"),
+                    NE("!=","不等于"),
+                    LTE( "<=","小于等于"),
+                    BETWEEN("BETWEEN","区间"),
+                    GTE(">=", "大于等于"),
+                    LIKE("LIKE","包含"),
+                    NOTLIKE("NOT LIKE","不包含"),
+                    IN("IN","IN"),
+                    NOT_IN("NOT IN","NOT IN"),
+                    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");</td>
+            </tr>
+            <tr>
+                <td>alias</td>
+                <td>表别名，当多个表字段一样时，用别名来区分，同时如果是需要用表达式替换 如：
+                    ifnull(a.id,0) ,最终的SQL也会使用alias来替换字段名</td>
+                <td>EQ("=","等于"),
+                    NE("!=","不等于"),
+                    LTE( "<=","小于等于"),
+                    BETWEEN("BETWEEN","区间"),
+                    GTE(">=", "大于等于"),
+                    LIKE("LIKE","包含"),
+                    NOTLIKE("NOT LIKE","不包含"),
+                    IN("IN","IN"),
+                    NOT_IN("NOT IN","NOT IN"),
+                    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");</td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <h2 id="nowhere"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            隐藏域无where
+        </h2>
+        <blockquote class="layui-elem-quote">
+            携带参数，代入表达式，但是不自动纳入搜索。场景较少，大部分情况下，可以通过修改别名实现。
+        </blockquote>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+              <object item_name="EZ_CODE" type="hidden-nowhere" >编码</object>
+            </textarea>
+        </pre>
+        <h3 id="nowhereparam"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明（无其他参数）
+        </h3>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

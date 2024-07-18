@@ -411,7 +411,8 @@ public class ListDao extends JsoupUtil {
                 //JsoupUtil.loadplugin(btn );
                 initButtonMapObj(btnMap, btn);
                 if(StringUtils.isBlank(Utils.trimNull(btnMap.get(JsoupUtil.TYPE)))
-                 ||StringUtils.equals(Utils.trimNull(btnMap.get(JsoupUtil.TYPE)),"single")){
+                 ||StringUtils.equals(Utils.trimNull(btnMap.get(JsoupUtil.TYPE)),"single")
+                        ||StringUtils.equals(Utils.trimNull(btnMap.get(JsoupUtil.TYPE)),"button")){
                     btnMap.put(JsoupUtil.TYPE, "button-single");
                 }
 
