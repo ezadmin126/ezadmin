@@ -74,7 +74,8 @@ create index T_EZADMIN_HISTORY_EZ_TYPE_index
     on   T_EZADMIN_HISTORY (EZ_TYPE);
 
 
-INSERT INTO  T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME, EZ_CONFIG, ADD_TIME, UPDATE_TIME, IS_DEL, ADD_NAME, UPDATE_NAME) VALUES (1, 'listmanage', 'dataSource', '列表管理', 1, 'EZ', '<html>
+INSERT INTO  T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME, EZ_CONFIG, ADD_TIME, UPDATE_TIME, IS_DEL, ADD_NAME, UPDATE_NAME) VALUES
+              (1, 'listmanage', 'dataSource', '列表管理', 1, 'EZ', '<html>
  <head>
   <title>列表管理</title>
  </head>
@@ -272,7 +273,12 @@ INSERT INTO T_EZADMIN_EDIT (ID, EZ_CODE, DATASOURCE, EZ_NAME, EZ_TYPE, APP_NAME,
  </head>
  <body id="formmanage" datasource="dataSource" adminstyle="layui" rowbuttonwidth="200">
   <div id="append_head"></div>
-  <ul id="tab">
+  <ul id="tab"> <li>
+    <a class="tablink" select="false" item_name="Tab" url="/topezadmin/listEdit/list-listmanage">列表</a>
+   </li>
+   <li>
+    <a class="tablink" select="true" item_name="f" url="/topezadmin/listEdit/list-formmanage">表单</a>
+   </li>
   </ul>
   <form id="search">
    <div>
