@@ -56,6 +56,24 @@ public class SiteMapController {
 			sb.append(System.lineSeparator());
 			sb.append("</url>");
 		});
+
+			sb.append("<url>");
+			sb.append(System.lineSeparator());
+
+			sb.append("<loc>");
+			sb.append("https://www.ezjsp.com/doc/index.html");
+			sb.append("</loc>");
+
+			sb.append("<lastmod>");
+			sb.append(dateString);
+			sb.append("</lastmod>");
+
+			sb.append("<changefreq>");
+			sb.append("weekly");
+			sb.append("</changefreq>");
+
+			sb.append(System.lineSeparator());
+			sb.append("</url>");
 		sb.append(System.lineSeparator());
 		sb.append("</urlset>");
 		response.setContentType("text/xml;charset=UTF-8");
