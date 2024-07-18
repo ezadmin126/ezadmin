@@ -28,18 +28,19 @@
         这是一个嵌入式的Servlet表单列表工具，可以将SQL转换为带有表格或表单的网页，可适配任意UI框架，同时支持拖拽自定义网页。
      </blockquote>
     <h2 id="examples" lay-toc="{anchor: null}" style="margin-bottom: 0;">依赖（内置springboot-starter）</h2>
+    <p>maven仓库目前最新版本为2.9.14.4</p>
     <pre class="layui-code code-demo" lay-options="{}">
         <textarea>
 <dependency>
   <groupId>io.github.ezadmin126</groupId>
   <artifactId>ezadmin-core</artifactId>
-  <version>2.9.15</version>
+  <version>2.9.15-SNAPSHOT</version>
 </dependency>
             </textarea>
     </pre>
     <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
     <pre class="layui-code code-demo"  >
-         下载初始化SQL: <a href="https://www.ezjsp.com/static/init.sql">init.sql</a>
+         下载初始化SQL: <a href="https://www.ezjsp.com/static/doc/init.sql">init.sql</a>
          请在自己数据库中执行如上SQL。
     </pre>
 
@@ -47,25 +48,44 @@
     <pre class="layui-code code-demo" lay-options="{}">
          <textarea>
 topezadmin:
-  # 默认true 开发时配置为false
+# 默认true 开发时配置为false,用于调试
   cacheFlag: false
   password: 1234567891234567
-  # 默认dataSource springboot中配置的名字，如果有多个，逗号隔开
+# 默认dataSource springboot中配置的名字，如果有多个，逗号隔开
   datasourceBeanNames: 'dataSource'
-  # 自定义上传路径
-  uploadPath: /data/upload
-  # 自定义下载请求
-  downloadUrl:
-  # 自定义下载请求
-  uploadUrl: /system/upload.html
-  # 1000 打印完整SQL日志
+# 1 是否记录日志  2  是否打印删除  3 是否拒绝删除 4 打印超过10秒的
+# 1000 仅打印日志
+# 0001-10000 打印超过10秒的sql
+# 0100 打印没有where的 delete 或者update 语句
+# 0010 如果遇到没有where的delete 或者update语句，抛出异常
   logType: 1000-10000
-# 默认使用layui作为ui
-  adminStyle: layui
           </textarea>  </pre>
-    启动应用并访问:  /topezadmin/dev.html
 
-    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">其他servlet应用</h2>
+    <blockquote class="layui-elem-quote"><p>
+        启动应用并访问
+        <a href="/topezadmin/dev.html">/topezadmin/dev.html</a>。
+    </p>
+    </blockquote>
+
+
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">快速上手</h2>
+    <p>现在，让我们以一个最简单的示例开始入门： 一个用户列表，包含用户ID与用户名称</p>
+    <p>进入/topezadmin/dev.html ,点击SQL生成列表</p>
+    <p>   列表编码填入： userlist</p>
+    <p>   表达式填入：
+        <pre class="layui-code code-demo" lay-options="{}">
+             <textarea>
+SELECT ID ID,NAME 名称 from T_USER WHERE 1=1
+             </textarea>
+        </pre>
+    </p>
+    <img style="width:900px" src="/static/doc/sql2list.png"  alt=""/>
+
+    <p> 点击预览，即已经生成 userlist</p>
+    <img style="width:900px" src="/static/doc/listedit.png"  alt=""/>
+
+
+    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">其他servlet应用接入</h2>
     <pre class="layui-code code-demo" lay-options="{}">
          <textarea>
         //  参考EzClientAutoConfiguration，结合配置文件，初始化 EzClientBootstrap 如下代码全部使用默认值
