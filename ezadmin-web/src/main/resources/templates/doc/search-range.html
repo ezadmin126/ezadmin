@@ -3,137 +3,146 @@
 <head>
     <meta charset="utf-8">
     <title>文档</title>
-    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet">
-    </link>
-    <style>
-        .layui-body {
-            padding: 0;
-        }
-        .layui-side {
-            background-color: #393D49;
-        }
-        .layui-nav-itemed > a {
-            background-color: #4E5465 !important;
-        }
-        .layui-nav-tree .layui-nav-child a {
-            background-color: #393D49;
-        }
-    </style>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
 </head>
 <body class="layui-fluid">
-
-<div class="layui-text ws-text" id="WS-text">
-    <h1>开始使用</h1>
-    <blockquote class="layui-elem-quote">
-        EZ一个嵌入式的Servlet表单列表工具，可以将SQL转换为带有表格或表单的网页，可适配任意UI框架，同时支持拖拽自定义网页。
-     </blockquote>
-    <h2 id="examples" lay-toc="{anchor: null}" style="margin-bottom: 0;">依赖（内置springboot-starter）</h2>
-    <p>maven仓库目前最新版本为2.9.14.4</p>
-    <pre class="layui-code code-demo" lay-options="{}">
-        <textarea>
-<dependency>
-  <groupId>io.github.ezadmin126</groupId>
-  <artifactId>ezadmin-core</artifactId>
-  <version>2.9.15-SNAPSHOT</version>
-</dependency>
-            </textarea>
-    </pre>
-    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
-    <p>下载初始化SQL:</p>
-    <a href="https://www.ezjsp.com/static/doc/init.sql">init.sql</a>
-    <p>请在自己的业务数据库中执行如上SQL。</p>
-
-    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">配置</h2>
-    <pre class="layui-code code-demo" lay-options="{}">
-         <textarea>
-topezadmin:
-# 默认true 开发时配置为false,用于调试
-  cacheFlag: false
-  password: 1234567891234567
-# 默认dataSource springboot中配置的名字，如果有多个，逗号隔开
-  datasourceBeanNames: 'dataSource'
-# 1 是否记录日志  2  是否打印删除  3 是否拒绝删除 4 打印超过10秒的
-# 1000 仅打印日志
-# 0001-10000 打印超过10秒的sql
-# 0100 打印没有where的 delete 或者update 语句
-# 0010 如果遇到没有where的delete 或者update语句，抛出异常
-  logType: 1000-10000
-          </textarea>  </pre>
-
-    <blockquote class="layui-elem-quote"><p>
-        启动应用并访问
-        <a href="/topezadmin/dev.html">/topezadmin/dev.html</a>。
-    </p>
-    </blockquote>
-
-
-    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">快速上手</h2>
-    <p>现在，让我们以一个最简单的示例开始入门： 一个用户列表，包含用户ID与用户名称</p>
-    <p>进入/topezadmin/dev.html ,点击SQL生成列表</p>
-    <p>   列表编码填入：
-    <pre class="layui-code code-demo" lay-options="{}">
-             <textarea>
-userlist
-             </textarea>
-        </pre>
-    </p>
-    <p>   表达式填入：
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#date">日期区间</a></li>
+                    <li level="2"><a href="#dateparam">参数说明</a></li>
+                    <li><a href="#number">数字区间<span class="layui-badge-dot"></span></a></li>
+                    <li level="2"><a href="#numberparam">参数说明</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>区间查询</h1>
+        <blockquote class="layui-elem-quote">
+            区间查询默认是 大于等于或小于等于。 适用于数字区间与日期区间
+        </blockquote>
+        <h2 id="date"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            日期区间
+        </h2>
         <pre class="layui-code code-demo" lay-options="{}">
-             <textarea>
-SELECT ID ID,NAME 名称 from T_USER WHERE 1=1
-             </textarea>
+            <textarea>
+     <object item_name="ADD_TIME" type="daterange" jdbctype="DATETIME" oper="BETWEEN"></object>
+            </textarea>
         </pre>
-    </p>
-    <img style="width:900px" src="/static/doc/sql2list.png"  alt=""/>
+        <h3 id="dateparam"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>jdbctype</td>
+                <td>数字靠右展示，时间格式化，小数位保留</td>
+                <td>
+                    DATETIME("DATETIME"),
+                    </td>
+            </tr>
+            <tr>
+                <td>oper</td>
+                <td>sql操作符，不同的操作符，拼接出来的SQL不一样</td>
+                <td>
+                    BETWEEN("BETWEEN","区间"),
+                </td>
+            </tr>
+            <tr>
+                <td>alias</td>
+                <td>表别名，当多个表字段一样时，用别名来区分，同时如果是需要用表达式替换 如：
+                    ifnull(a.id,0) ,最终的SQL也会使用alias来替换字段名</td>
+                <td>EQ("=","等于"),
+                    NE("!=","不等于"),
+                    LTE( "<=","小于等于"),
+                    BETWEEN("BETWEEN","区间"),
+                    GTE(">=", "大于等于"),
+                    LIKE("LIKE","包含"),
+                    NOTLIKE("NOT LIKE","不包含"),
+                    IN("IN","IN"),
+                    NOT_IN("NOT IN","NOT IN"),
+                    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");</td>
+            </tr>
+            </tbody>
+        </table>
 
-    <p> 点击预览，即已经生成 userlist</p>
-    <img style="width:900px" src="/static/doc/listedit.png"  alt=""/>
-
-    <p> 点击源码编辑，可参考文档，对前端源码进行修改</p>
-    <img style="width:900px" src="/static/doc/listsource.png"  alt=""/>
-
-    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">其他servlet应用接入</h2>
-    <pre class="layui-code code-demo" lay-options="{}">
-         <textarea>
-        //  参考EzClientAutoConfiguration，结合配置文件，初始化 EzClientBootstrap 如下代码全部使用默认值
-public class EzClientServletFilter implements Filter {
-
-    EzClientBootstrap ezBootstrap = EzClientBootstrap.instance();
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        ezBootstrap.init();
-    }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws Exception {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-        if(! httpServletRequest.getRequestURI().startsWith("/topezadmin")){
-            filterChain.doFilter(servletRequest,servletResponse);
-            return;
-        }
-        try {
-            ezBootstrap.doFilter(httpServletRequest, httpServletResponse,filterChain);
-        } catch (Exception e) {
-            LOGGE.error("", e);
-            httpServletResponse.getWriter().println(e.getMessage());
-        } finally {
-            Utils.clearLog();
-        }
-    }
-
-}
-         </textarea>
-    </pre>
-
+        <h2 id="number"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            数字区间
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+     <object item_name="AGE" type="numberrange" oper="BETWEEN"></object>
+            </textarea>
+        </pre>
+        <h3 id="numberparam"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>jdbctype</td>
+                <td>数字靠右展示，时间格式化，小数位保留</td>
+                <td>
+                NUMBER
+                </td>
+            </tr>
+            <tr>
+                <td>oper</td>
+                <td>sql操作符，不同的操作符，拼接出来的SQL不一样</td>
+                <td>
+                    BETWEEN("BETWEEN","区间"),
+                </td>
+            </tr>
+            <tr>
+                <td>alias</td>
+                <td>表别名，当多个表字段一样时，用别名来区分，同时如果是需要用表达式替换 如：
+                    ifnull(a.id,0) ,最终的SQL也会使用alias来替换字段名</td>
+                <td>EQ("=","等于"),
+                    NE("!=","不等于"),
+                    LTE( "<=","小于等于"),
+                    BETWEEN("BETWEEN","区间"),
+                    GTE(">=", "大于等于"),
+                    LIKE("LIKE","包含"),
+                    NOTLIKE("NOT LIKE","不包含"),
+                    IN("IN","IN"),
+                    NOT_IN("NOT IN","NOT IN"),
+                    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+
 <script>
     layui.use(['element', 'layer'], function(){
-        var element = layui.code;
-        var layer = layui.layer;
-        var $=layui.jquery;
         // 监听导航点击事件
         layui.code({
             elem: '.code-demo'

@@ -89,7 +89,9 @@ public class ListController extends BaseController {
             listService.fillCountById(list, requestParamMap, sessionParamMap);
             request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
             request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
-            return EzResult.instance().data(list).count(1000);
+             Map<String, Object>  list2=new HashMap<>();
+            list2.put("page",list.get("page"));
+            return EzResult.instance().data(list2).count(1000);
         } catch (Exception e) {
             logger.error("count：{}",listUrlCode,e);
             return EzResult.instance().code("500").setMessage(ExceptionUtils.getFullStackTrace(e));

@@ -72,7 +72,7 @@
                         showLine: true,
                         indent: 20,
                         expandedKeys: [ -3 ],
-                        strict:(xmel.attr("strict")||"false".toLowerCase())==="false"?false:true,
+                        strict:($('[[${"#itemId-" + item_name}]]').attr("strict")||"false".toLowerCase())==="false"?false:true,
                     },
                     toolbar: {
                         show: true,
@@ -83,7 +83,7 @@
                     data: function(){
                         return  JSON.parse($('[[${"#itemdata-" + model.item_name}]]').val()||[]);
                     },
-                    initValue: xmel.attr("value")? xmel.attr("value").split(","):[]
+                    initValue: $('[[${"#itemId-" + model.item_name}]]').attr("value")? $('[[${"#itemId-" + model.item_name}]]').attr("value").split(","):[]
                 })
             })
         </script>

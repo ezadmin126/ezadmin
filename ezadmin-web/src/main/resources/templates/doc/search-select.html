@@ -22,10 +22,10 @@
                     <li><a href="#xmselect">多选下拉</a></li>
                     <li level="2" ><a href="#xmselectparam">参数说明</a></li>
 
-                    <li><a href="#xmselect-tree">树形下拉</a></li>
+                    <li><a href="#xmselect-tree">树形下拉<span class="layui-badge-dot"></span></a></li>
                     <li level="2" ><a href="#xmselect-treeparam">参数说明</a></li>
 
-                    <li><a href="#search-cascader">级联下拉</a></li>
+                    <li><a href="#search-cascader">级联下拉<span class="layui-badge-dot"></span></a></li>
                     <li level="2" ><a href="#search-cascaderparam">参数说明</a></li>
                 </ul>
             </div>
@@ -292,17 +292,114 @@ false                </td>
         </table>
 
 
-        <h2 id="xmselect-remote"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            远程搜索下拉
+        <h2 id="search-cascader"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            sql级联下拉
         </h2>
         <blockquote class="layui-elem-quote">
-             适用于下拉数据很多的情况  待测试
+              类似于省市区的选择插件,目前只处理一次性读取所有数据的情况
         </blockquote>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-     <object item_name="CATEGORY_ID"     id="itemId-CATEGORY_ID" strict="false" type="xmselect-tree" radio="true"></object>
+     <object item_name="CATEGORY_ID" data="select CATEGORY_ID ID,PARENT_ID,CATEGORY_NAME LABEL from T_BASE_CATEGORY WHERE COMPANY_ID=${COMPANY_ID} and DELETE_FLAG=0 and status=1" datatype="KVSQL2TREECACHE" id="itemId-CATEGORY_ID"  type="search-cascadersql" radio="true"></object>
             </textarea>
         </pre>
+
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>datatype</td>
+                <td>KVSQL2TREECACHE 或者 KVSQL2TREE</td>
+                <td>
+                    KVSQL2TREECACHE
+                </td>
+            </tr>
+            <tr>
+                <td>data</td>
+                <td>SQL需要返回 ID,PARENT_ID,LABEL  三个参数</td>
+                <td>
+                    select CATEGORY_ID ID,PARENT_ID,CATEGORY_NAME LABEL from T_BASE_CATEGORY WHERE COMPANY_ID=${COMPANY_ID} and DELETE_FLAG=0 and status=1
+                </td>
+            </tr>
+
+            <tr>
+                <td>collapsetags</td>
+                <td>多选模式下是否折叠Tag</td>
+                <td>
+                    false    https://gitee.com/yixiacoco/lay_cascader/             </td>
+            </tr>
+            <tr>
+                <td>showalllevels</td>
+                <td>输入框中是否显示选中值的完整路径	</td>
+                <td>
+                    true  https://gitee.com/yixiacoco/lay_cascader/                </td>
+            </tr>
+            <tr>
+                <td>radio</td>
+                <td>是否单选</td>
+                <td>
+                    false </td>
+            </tr>
+            <tr>
+                <td>jdbctype</td>
+                <td>数字靠右展示，时间格式化，小数位保留</td>
+                <td>NUMBER("NUMBER"),
+                    NUMBERNULL("NUMBERNULL"),
+                    DATE_TO_NUMBER("DATE_TO_NUMBER"),
+                    VARCHAR("VARCHAR"),
+                    DATE("DATE"),
+                    DATETIME("DATETIME"),
+                    CLOB("CLOB")
+                    , BODY("BODY"),
+                    NUMBER0("NUMBER0"),
+                    NUMBER1("NUMBER1") ,
+                    NUMBER2("NUMBER2") ,
+
+                    NUMBER3("NUMBER3") ,
+                    NUMBER4("NUMBER4")</td>
+            </tr>
+            <tr>
+                <td>oper</td>
+                <td>sql操作符，不同的操作符，拼接出来的SQL不一样</td>
+                <td>EQ("=","等于"),
+                    NE("!=","不等于"),
+                    LTE( "<=","小于等于"),
+                    BETWEEN("BETWEEN","区间"),
+                    GTE(">=", "大于等于"),
+                    LIKE("LIKE","包含"),
+                    NOTLIKE("NOT LIKE","不包含"),
+                    IN("IN","IN"),
+                    NOT_IN("NOT IN","NOT IN"),
+                    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");</td>
+            </tr>
+            <tr>
+                <td>alias</td>
+                <td>表别名，当多个表字段一样时，用别名来区分，同时如果是需要用表达式替换 如：
+                    ifnull(a.id,0) ,最终的SQL也会使用alias来替换字段名</td>
+                <td>EQ("=","等于"),
+                    NE("!=","不等于"),
+                    LTE( "<=","小于等于"),
+                    BETWEEN("BETWEEN","区间"),
+                    GTE(">=", "大于等于"),
+                    LIKE("LIKE","包含"),
+                    NOTLIKE("NOT LIKE","不包含"),
+                    IN("IN","IN"),
+                    NOT_IN("NOT IN","NOT IN"),
+                    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");</td>
+            </tr>
+
+            </tbody>
+        </table>
     </div>
 </div>
 

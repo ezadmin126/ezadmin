@@ -2,7 +2,6 @@ package top.ezadmin.config;
 
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.alibaba.druid.support.json.JSONUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,8 +103,6 @@ import java.util.regex.Pattern;
             httpServletResponse.sendRedirect("/login/login.html");
             return;
         }
-
-
 
 //        //判断sid是否正常
          SysUser dbUser= sysUserMapper.selectByPrimaryKey(NumberUtils.toLong(idNameArray[0]));

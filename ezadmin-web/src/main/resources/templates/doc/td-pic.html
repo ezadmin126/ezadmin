@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+blank.html<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -13,35 +13,46 @@
         <div class="ws-side-fixed">
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
-                    <li><a href="#txt">合并文本框</a></li>
-                    <li ><a href="#date">合并时间区间</a></li>
+                    <li><a href="#source">源码示例</a></li>
+                    <li ><a href="#param">参数说明</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="layui-text ws-text" id="WS-text">
-        <h1>合并搜索</h1>
+        <h1>原理介绍</h1>
         <blockquote class="layui-elem-quote">
-            合并搜索可以解决期望在多个字段同时搜索的诉求，合并搜索插件，在支持合并搜索的同时，可以选择指定的字段单独搜索。
+
         </blockquote>
         <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            合并文本框
+            列表
         </h2>
-        合并文本框的item_name 以多个hidden或者input-text插件的item_name逗号合并
         <pre class="layui-code code-demo" lay-options="{}">
-            <textarea>
-  <object item_name="PROD_CODE,PROD_NAME" type="union"></object>
-            </textarea>
+            <textarea></textarea>
         </pre>
         <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            合并时间区间
+            参数说明
         </h2>
-        合并时间区间的item_name 以多个hidden或者daterange插件的item_name逗号合并
-        <pre class="layui-code code-demo" lay-options="{}">
-            <textarea>
-  <object item_name="ADD_TIME,UPDATE_TIME" type="uniondate"></object>
-            </textarea>
-        </pre>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>topezadmin.cacheFlag</td>
+                <td>是否开启缓存，开启后，页面配置将会加载至缓存</td>
+                <td>true</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 

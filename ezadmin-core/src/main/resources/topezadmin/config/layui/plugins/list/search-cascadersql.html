@@ -31,8 +31,9 @@
      th:ez-alias="${model.alias}"
      th:ez-col="${model.col}"
      th:ez-url="${model.url}"
+     th:ez-radio="${model.radio}"
 
-     th:ez-data="${model.data}"
+
      th:ez-datatype="${model.datatype}"
      th:ez-item_desc="${model.item_desc}"
      th:ez-top_desc="${model.top_desc}"
@@ -41,7 +42,7 @@
      th:ez-valid_rule="${model.valid_rule}"
      th:ez-valid_msg="${model.valid_msg}"
      th:ez-style="${model.style}"
-
+     th:ez-value="${#strings.isEmpty(model.itemParamValue)?'':model.itemParamValue}"
 >
     <div  class="layui-form-item" >
     <label class="layui-form-label" th:for="${'itemName-' + model.item_name}"

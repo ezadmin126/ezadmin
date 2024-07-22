@@ -482,6 +482,13 @@ public class ListDao extends JsoupUtil {
                 for (int i = 0; i < search_attrs.length; i++) {
                     Utils.putIfAbsent(listitem,search_attrs[i], strip(item.attr(search_attrs[i])));
                 }
+                try {
+                    if (StringUtils.isNotBlank(strip(item.attr("radio")))) {
+                        listitem.put(JsoupUtil.MULTI, !Boolean.valueOf(strip(item.attr("radio")) + "") + "");
+                    }
+                }catch (Exception e){
+                    //兼容老版本
+                }
                 Map<String,String>  attrMap=JsoupUtil.attr2Map(item);
                 listitem.put("attrMap",attrMap);
                 listitem.put(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(item));

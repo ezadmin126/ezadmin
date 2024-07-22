@@ -252,11 +252,6 @@ th a {
 
 
 
-/**下拉框高度**/
-.el-input__inner {
-    height: 38px !important;
-    line-height: 38px
-}
 
 
 
@@ -400,7 +395,25 @@ xm-select > .xm-body .scroll-body{
 
 
 
-
-
+/*.el-cascader__search-input {*/
+/*    margin-bottom: 1px;*/
+/*    height: 23px;*/
+/*}*/
+/**下拉框高度**/
+.el-input__inner {
+    height: 38px !important;
+    line-height: 38px
+}
+.el-cascader__search-input{
+    min-width: 20px !important;
+    margin-left:0px !important;
+}
+.el-cascader__tags
+{
+    flex-wrap: nowrap !important;
+}
+.el-input__suffix{
+    z-index: 9999;
+}
 
 

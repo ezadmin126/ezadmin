@@ -43,7 +43,8 @@ pre textarea {
 }
 
 .ws-content {
-    padding: 20px
+    padding: 20px;
+    margin-bottom:30px;
 }
 
 .ws-container {

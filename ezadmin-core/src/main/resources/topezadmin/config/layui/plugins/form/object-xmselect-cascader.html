@@ -63,9 +63,7 @@
                     var initvalue = xmel.attr("value");
                     var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
                     var initArray=initvalue?initvalue.split(","):[];
-
                     $(function(){
-
                         xmSelect.render({
                             el: '[[${"#itemId-" + item_name}]]',
                             autoRow: false,
@@ -73,7 +71,7 @@
                             filterable: true,
                             showCount:  xmel.attr("showCount")||5,
                             max: xmel.attr("max")||100,
-                            radio:  (xmel.attr("radio")||"false").toLowerCase()==="false"?false:true,
+                            radio:  ($('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
                             prop: {
                                 name: 'NAME',
                                 value: 'ID',

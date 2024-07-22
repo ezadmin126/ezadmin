@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#card3">列表表达式</a></li>
+                    <li ><a href="#card4">表单表达式</a></li>
+                    <li ><a href="#card5">内置函数</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>表达式</h1>
+        <blockquote class="layui-elem-quote">
+            EZ使用 QLEXPRESS作为默认的表达式解析工具，具体可以参考：
+            <a rel="nofollow" href="https://github.com/alibaba/QLExpress">QLExpress</a>
+        </blockquote>
+        <div class="layui-card " id="card3">
+            <div class="layui-card-header">列表表达式</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="20%">
+                        <col width="30%">
+                        <col width="50%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>类别</th>
+                        <th>说明</th>
+                        <th>demo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>查询表达式</td>
+                        <td>
+                            通过表达式查询数据库，组装List&lt;Map&gt;，供列表展示<br>
+                            首先通过 StringBuilder sql=new StringBuilder(); 组装一条SQL。<br>
+                            然后调用<a href="#card5">内置函数search</a> ，返回数据即可。<br>
+                            表达式目前使用的是 QLExpress,只需要确保返回List&lt;Map&gt;格式的数据即可。<br>
+                            系统内置了很多常用的函数，满足日常开发的需要。
+                        </td>
+                        <td style="padding: 0;">
+<pre class="layui-code code-demo" lay-options="{}" >
+StringBuilder sql=new StringBuilder();
+sql.append(" SELECT ID,NAME FROM T_USER tec WHERE  tec.IS_DEL = 0");
+return search(sql);
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>总数表达式</td>
+                        <td>
+                            1.默认自动组装： select count(1) from (查询表达式) a<br>
+                            2.count(1)： 即可  系统会截取 "from " 之后的SQL片段执行count
+                            3.固定值，select 10000
+                        </td>
+                        <td>select 10000</td>
+                    </tr>
+                    <tr>
+                        <td>排序表达式</td>
+                        <td> 排序表达式需要单独配置，会拼接在where语句之后</td>
+                        <td>order by id desc</td>
+                    </tr>
+                    <tr>
+                        <td>分组表达式</td>
+                        <td>支持qlexpress</td>
+                        <td>group by xxx</td>
+                    </tr>
+                    <tr>
+                        <td>排序数字表达式</td>
+                        <td>用于列表快速排序功能</td>
+                        <td style="padding:0">
+<pre class="layui-code code-demo">
+import java.lang.Math;
+oldOrder=Integer.parseInt($(&quot;oldOrder&quot;));
+newOrder=Integer.parseInt($(&quot;displayOrder&quot;));
+if(newOrder&gt;oldOrder){
+    update(&quot;update table set DISPLAY_ORDER=DISPLAY_ORDER-1  where DISPLAY_ORDER&gt;=&quot;+Math.min(newOrder,oldOrder)+&quot; and DISPLAY_ORDER &lt;=&quot;+Math.max(newOrder,oldOrder));
+}else{
+    update(&quot;update table set DISPLAY_ORDER=DISPLAY_ORDER+1  where DISPLAY_ORDER&gt;=&quot;+Math.min(newOrder,oldOrder)+&quot; and DISPLAY_ORDER &lt;=&quot;+Math.max(newOrder,oldOrder));
+}
+cc=count(&quot;select count(1) from V_APPLET_AD where IS_DEL=0 &quot;);
+update(&quot;update table set DISPLAY_ORDER=&quot;+Math.min(newOrder,cc)+&quot;  where   AD_ID=${orderId}&quot;);
+</pre>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-card " id="card4">
+            <div class="layui-card-header">表单表达式</div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="20%">
+                        <col width="30%">
+                        <col width="50%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>类别</th>
+                        <th>说明</th>
+                        <th>demo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>初始化表达式</td>
+                        <td>
+                            通过表达式查询数据库，组装Map，其中KEY为表单字段NAME;，初始化表单字段<br>
+                            首先通过 StringBuilder sql=new StringBuilder(); 组装一条SQL。<br>
+                            然后调用<a href="#card5">内置函数select</a> ，返回数据即可。<br>
+                            表达式目前使用的是 QLExpress,只需要确保返回Map格式的数据即可。<br>
+                            系统内置了很多常用的函数，满足日常开发的需要。
+                            进入编辑表单，需要传递ID参数
+                        </td>
+                        <td style="padding: 0;">
+<pre class="layui-code code-demo" lay-options="{}" >
+StringBuilder sql=new StringBuilder();
+sql.append(" SELECT ID,NAME FROM T_USER tec WHERE ID = ${ID}");
+return SELECT(sql);
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>提交表达式</td>
+                        <td>
+                            系统默认新增与更新使用同一个表达式，根据请求参数中是否有”ID“ 来做区分。<br>
+                            为了维护方便，内置了InsertParam类，用于组装SQL。<br>
+                            param.table("T_USER"); 设置表名<br>
+                            param.add("#{ID}"); 设置字段<br>
+                            系统在调用insertSimple内置函数时，会自动根据字段是否为空来组装SQL。<br>
+                            如需设置默认值：<br>
+                            param.add("#{ID,value=0}");<br>
+                        </td>
+                        <td>
+<pre class="layui-code code-demo" lay-options="{}" >
+import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.express.jdbc.InsertParam;
+import top.ezadmin.web.EzResult;
+ID=$("ID");
+if(isBlank("ID")){
+    param=new InsertParam();
+    param.table("T_USER");
+    param.add("#{NAME}");
+    id=insertSimple(param);
+    return id;
+}else{
+    param=new UpdateParam();
+    param.table("T_USER");
+    param.add("#{NAME}");
+    StringBuilder updateSql=new StringBuilder();
+    updateSql.append(" where ID=#{ID} ");
+    param.where(updateSql.toString());
+    updateSimple(param);
+    return ID;
+}
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>删除表达式</td>
+                        <td> /ezloud/form/doDelete-FORMNAME?ID=1
+                            用于快速实现列表的删除</td>
+                        <td>update from xxx set delete_flag=0 where id=${ID}</td>
+                    </tr>
+                    <tr>
+                        <td>状态表达式</td>
+                        <td>/ezloud/form/doStatus-FORMNAME?ID=1  用于快速实现列表的上下架或启用禁用</td>
+                        <td>update from xxx set status=abs(AD_STATUS-1) where id=${ID}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-card " id="card5">
+        <div class="layui-card-header">内置函数</div>
+        <div class="layui-card-body">
+            <blockquote class="layui-elem-quote" style="margin-top:10px">
+                为了便于编写表达式，ezadmin内置了一些函数。主要是通过往ExpressRunner添加自定义function实现。
+            </blockquote>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>函数名</th>
+                    <th>入参</th>
+                    <th>出参</th>
+                    <th>说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>select</td>
+                    <td>String(SQL)</td>
+                    <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                    <td>
+<pre>
+用于在表达式中执行查询sql操作。
+除QLEXPRESS中的获取请求参数处理之外，还支持在sql中直接使用 ${userName}  #{userName} 获取并替换参数。
+如：
+StringBuilder sql=new StringBuilder();
+sql.append("select user_id");
+if(isNotBlank("userName")){
+sql.append(",username")
+}
+sql.append(" from T_USER where 1=#{ID} ");
+return search(sql);
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>update</td>
+                    <td>String(SQL)</td>
+                    <td>int</td>
+                    <td>
+<pre>
+用于在表达式中执行更新sql操作。
+update("update xxx set xxx");
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>insert</td>
+                    <td>String(SQL)</td>
+                    <td>int</td>
+                    <td>
+<pre>
+用于在表达式中执行插入sql操作。
+insert("insert into xxx");
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>insertSimple</td>
+                    <td>insertParam</td>
+                    <td>int</td>
+                    <td>
+<pre>
+用于在表达式中执行插入sql操作。insertParam参数主要是为了动态 根据参数是否为空来自动判断是否 组装到SQL中
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>updateSimple</td>
+                    <td>updateParam</td>
+                    <td>int</td>
+                    <td>
+<pre>
+用于在表达式中执行更新sql操作。insertParam参数主要是为了动态 根据参数是否为空来自动判断是否 组装到SQL中
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>search</td>
+                    <td>String(SQL)</td>
+                    <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                    <td>
+<pre>
+search函数内置了request,session中的参数，通过判断参数是否为空，来拼接where语句。
+如果需要在表达式中使用请求参数，但是在where语句中不希望拼接字段，则可以配置type为hidden-nowhere ，或者jdbctype 为 BODY.
+通过解析request中的参数自动拼接where语句。
+入参需要至少包含一个where条件。如无，可以使用 where 1=1 。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>$</td>
+                    <td>Object[] objects</td>
+                    <td>Object</td>
+                    <td>
+<pre>
+$("request"):获取当前request Map参数。
+$("abc"):获取request里面的abc参数对应的String，并将'替换为''，\替换为\\。
+$("abcd","true"):获取request里面的abcd_ARRAY参数对应的String[]。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>$$</td>
+                    <td>Object[] objects</td>
+                    <td>Object</td>
+                    <td>
+<pre>
+
+$$("abc"):获取session里面的abc参数对应的String，并将'替换为''，\替换为\\。
+主要用于数据权限，我们不能使用request里面的参数。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>isNotBlank</td>
+                    <td>Object[] objects</td>
+                    <td>boolean</td>
+                    <td>
+<pre>
+isNotBlank("abc"):判断request里面的abc参数对应的String 是否为blank
+isNotBlank("abc","session"):判断session里面的abc参数对应的String 是否为blank
+isNotBlank("abc","string"):判断第一个参数  是否不为blank
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>isBlank</td>
+                    <td>Object[] objects</td>
+                    <td>boolean</td>
+                    <td>
+<pre>
+isBlank("abc"):判断request里面的abc参数对应的String 是否为blank
+isBlank("abc","session"):判断session里面的abc参数对应的String 是否为blank
+isBlank("abc","string"):判断第一个参数  是否为blank
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>unionall(先考虑一下业务是否合理)</td>
+                    <td>String(SQL)</td>
+                    <td>List&lt;Map&lt;String, Object&gt;&gt;</td>
+                    <td>
+<pre>
+正常的search插件是直接在SQL最后面拼接where语句的。
+但当SQL中存在union all时，拼接的where语句就会得不到想要的结果，遇到groupby时 会导致不能到两个。
+unionall插件会给 每个子SQL语句分别拼接where， 最后汇总成一条sql。
+出现这种情况，考虑一下业务是否合理，不建议一个列表呈现，存在SQL性能隐患。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>spring</td>
+                    <td>String(SpringBean)</td>
+                    <td>spring bean</td>
+                    <td>
+<pre>
+通过beanName获取spring的bean. 主要用于一些需要远程获取数据的场景。
+spring("userService").add($("user_name"),$$("session_user_id"));
+支持执行一些其他相关增删改查操作。比如平滑过渡复用老代码。
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>log</td>
+                    <td>String</td>
+                    <td>slf4j log</td>
+                    <td>
+<pre>
+log("update xxx set xxx");
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>env</td>
+                    <td>topezadmin.config.key</td>
+                    <td>String</td>
+                    <td>
+<pre>
+    全局变量插件
+env("logo");
+    能够获取topezadmin.config json里面的值，用于全局变量判断
+</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>split</td>
+                    <td>k1,k2</td>
+                    <td>String[]</td>
+                    <td>
+<pre>
+split("a,b,c",",");
+</pre>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

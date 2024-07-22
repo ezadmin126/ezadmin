@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#table">普通按钮</a></li>
+                    <li ><a href="#span">文本说明</a></li>
+                    <li ><a href="#tableselect">确定单选</a></li>
+                    <li ><a href="#tableselect">确定复选</a></li>
+                    <li ><a href="#export">导出<span class="layui-badge-dot"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>原理介绍</h1>
+        <blockquote class="layui-elem-quote">
+            表头按钮是针对整个列表数据的操作
+        </blockquote>
+        <h2 id="table"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            普通按钮
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<object item_name="新增"  type="button-table">新增</object>
+            </textarea>
+        </pre>
+        <h3 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="150">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>windowname</td>
+                <td>弹框标题</td>
+                <td>新增</td>
+            </tr>
+            <tr>
+                <td>url</td>
+                <td>弹框或跳转的url</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>area</td>
+                <td>窗口的大小</td>
+                <td>100 或者   300,100</td>
+            </tr>
+            <tr>
+                <td>class</td>
+                <td>边框颜色</td>
+                <td>layui-border-blue</td>
+            </tr>
+            <tr>
+                <td>opentaype</td>
+                <td>打开方式</td>
+                <td>
+                    <ul >
+                        <li  >MODEL：弹框</li>
+                        <li  >SCRIPT：自定义事件</li>
+                        <li >CONFIRM_MODEL：带确认的弹窗</li>
+                        <li  >_BLANK：新浏览器窗口</li>
+                        <li >LOCATION：当前窗口</li>
+                        <li  >PARENT：父窗口打开标签</li>
+                        <li  >APPEND_PARAM：携带当前搜索参数窗口打开</li>
+                        <li  >_BLANK_PARAM：携带当前搜索参数新浏览器窗口</li>
+                        <li  >_BLANK_PARAM_COLUMN：只携带配置显示的参数，用于导出</li>
+                        <li  >AJAX：异步请求</li>
+                        <li  >CONFIRM_AJAX：带确认的异步请求</li>
+                        <li >FORM：全屏表单</li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 id="span"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            文本说明
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<object item_name="新增"  type="button-span">新增</object>
+            </textarea>
+        </pre>
+        <h3  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+             表头一段说明性的文字
+        </h3>
+
+        <h2 id="tableselect"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            确定单选
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<object item_name="确定单选"  type="button-tableselectradio">确定单选</object>
+<object item_name="确定复选"  type="button-tableselectcheckbox">确定复选</object>
+            </textarea>
+        </pre>
+        <h3  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            确定单选复选
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>示例</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>url</td>
+                <td>点击之后执行的 function</td>
+                <td>
+                    如配置：url="sel" <br>
+                    sel(ids,lines)<br>
+                    ids表示选中的所有id,lines标识选中的所有行数据。
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 id="export"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            导出
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<object item_name="新增"  type="button-table">导出</object>
+            </textarea>
+        </pre>
+        <h3  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+             导出就是一个普通的表头按钮，url设置为指定的<a href="/doc/url.html">导出url</a>即可。
+        </h3>
+
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>
