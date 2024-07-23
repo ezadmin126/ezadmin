@@ -1,4 +1,4 @@
-blank.html<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -13,22 +13,24 @@ blank.html<!DOCTYPE html>
         <div class="ws-side-fixed">
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
-                    <li><a href="#source">源码示例</a></li>
-                    <li ><a href="#param">参数说明</a></li>
+<!--                    <li><a href="#source">源码示例</a></li>-->
+<!--                    <li ><a href="#param">参数说明</a></li>-->
                 </ul>
             </div>
         </div>
     </div>
     <div class="layui-text ws-text" id="WS-text">
-        <h1>原理介绍</h1>
+        <h1>图片</h1>
         <blockquote class="layui-elem-quote">
-
+            列表页展示图片，固定大小，等比压缩，点击后可预览
         </blockquote>
         <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            列表
+            图片
         </h2>
         <pre class="layui-code code-demo" lay-options="{}">
-            <textarea></textarea>
+            <textarea>
+ <th item_name="PIC_ID" name="PIC_ID" body="td-pic"   url="/core/downloadDesc.html?fileId=${PIC_ID}">产品图片</th>
+            </textarea>
         </pre>
         <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
             参数说明
@@ -47,9 +49,9 @@ blank.html<!DOCTYPE html>
             </thead>
             <tbody>
             <tr>
-                <td>topezadmin.cacheFlag</td>
-                <td>是否开启缓存，开启后，页面配置将会加载至缓存</td>
-                <td>true</td>
+                <td>url</td>
+                <td>图片链接</td>
+                <td></td>
             </tr>
             </tbody>
         </table>

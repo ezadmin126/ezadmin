@@ -13,26 +13,39 @@
         <div class="ws-side-fixed">
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
-                    <li><a href="#source">源码示例</a></li>
-                    <li ><a href="#param">参数说明</a></li>
+                    <li><a href="#input">输入框</a></li>
+                    <li ><a href="#select">下拉单选</a></li>
+                    <li ><a href="#select2">下拉多选</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="layui-text ws-text" id="WS-text">
-        <h1>原理介绍</h1>
+        <h1>表单组件</h1>
         <blockquote class="layui-elem-quote">
-
+            列表中也可以包含一些输入组件
         </blockquote>
-        <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            列表
+        <h2 id="input"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            输入框
         </h2>
         <pre class="layui-code code-demo" lay-options="{}">
-            <textarea></textarea>
+            <textarea>
+      <th item_name="CHILD_NUM"   body="td-inputtext"   >数量</th>
+            </textarea>
         </pre>
-        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            参数说明
+
+
+        <h2 id="select"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            下拉单选
         </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+ <th item_name="CHILD_PROD_ID" url="/searchchild.html"   body="td-inputxmselect-radio" width="350" minwidth="350">产品</th>
+            </textarea>
+        </pre>
+        <h3   style="margin-bottom: 0;">
+            参数说明
+        </h3>
         <table class="layui-table">
             <colgroup>
                 <col width="150">
@@ -47,9 +60,135 @@
             </thead>
             <tbody>
             <tr>
-                <td>topezadmin.cacheFlag</td>
-                <td>是否开启缓存，开启后，页面配置将会加载至缓存</td>
-                <td>true</td>
+                <td>url</td>
+                <td>远程数据</td>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <td>datatype</td>
+                <td>下拉框的数据来源</td>
+                <td>
+                    TEXT,JSON,KVSQL,HTTP,JOIN,KVSQLCACHEFOREVER,KVSQLCACHE<br>,HTTPCACHE,QLEXPRESS,KVSQLCACHE5
+                    ,EZLIST,KVJSONRESULT,CASCADER,KVSQL2TREECACHE,DATAGROUP
+                </td>
+            </tr>
+            <tr>
+                <td>data</td>
+                <td>对应datatype的数据取值参数</td>
+                <td>
+                    yesno(是否),status(禁用启用),delete(已删除未删除),数据字典类型,数据源编码<br>
+                    sql select K,V from table where id=${xx} 或者 url<br>
+                    换行符分割<br>
+                    k:v\n 分割<br>
+                    [{"V":"男","K":"1"},{"V":"女","K":"0"}]<br>
+                    如果是JSON， 键必须是 大写  K V ;
+                </td>
+            </tr>
+
+            <tr>
+                <td>style</td>
+                <td>自定义样式</td>
+                <td>style="color:red"</td>
+            </tr>
+
+            <tr>
+                <td>jdbctype</td>
+                <td>数字靠右展示，时间格式化，小数位保留</td>
+                <td>NUMBER("NUMBER"),
+                    NUMBERNULL("NUMBERNULL"),
+                    DATE_TO_NUMBER("DATE_TO_NUMBER"),
+                    VARCHAR("VARCHAR"),
+                    DATE("DATE"),
+                    DATETIME("DATETIME"),
+                    CLOB("CLOB")
+                    , BODY("BODY"),
+                    NUMBER0("NUMBER0"),
+                    NUMBER1("NUMBER1") ,
+                    NUMBER2("NUMBER2") ,
+
+                    NUMBER3("NUMBER3") ,
+                    NUMBER4("NUMBER4")</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 id="select2"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            下拉多选
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+ <th item_name="CHILD_PROD_ID" url="/searchchild.html"   body="td-inputxmselect" width="350" minwidth="350">产品</th>
+            </textarea>
+        </pre>
+        <h3   style="margin-bottom: 0;">
+            参数说明
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>url</td>
+                <td>远程数据</td>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <td>datatype</td>
+                <td>下拉框的数据来源</td>
+                <td>
+                    TEXT,JSON,KVSQL,HTTP,JOIN,KVSQLCACHEFOREVER,KVSQLCACHE<br>,HTTPCACHE,QLEXPRESS,KVSQLCACHE5
+                    ,EZLIST,KVJSONRESULT,CASCADER,KVSQL2TREECACHE,DATAGROUP
+                </td>
+            </tr>
+            <tr>
+                <td>data</td>
+                <td>对应datatype的数据取值参数</td>
+                <td>
+                    yesno(是否),status(禁用启用),delete(已删除未删除),数据字典类型,数据源编码<br>
+                    sql select K,V from table where id=${xx} 或者 url<br>
+                    换行符分割<br>
+                    k:v\n 分割<br>
+                    [{"V":"男","K":"1"},{"V":"女","K":"0"}]<br>
+                    如果是JSON， 键必须是 大写  K V ;
+                </td>
+            </tr>
+
+            <tr>
+                <td>style</td>
+                <td>自定义样式</td>
+                <td>style="color:red"</td>
+            </tr>
+
+            <tr>
+                <td>jdbctype</td>
+                <td>数字靠右展示，时间格式化，小数位保留</td>
+                <td>NUMBER("NUMBER"),
+                    NUMBERNULL("NUMBERNULL"),
+                    DATE_TO_NUMBER("DATE_TO_NUMBER"),
+                    VARCHAR("VARCHAR"),
+                    DATE("DATE"),
+                    DATETIME("DATETIME"),
+                    CLOB("CLOB")
+                    , BODY("BODY"),
+                    NUMBER0("NUMBER0"),
+                    NUMBER1("NUMBER1") ,
+                    NUMBER2("NUMBER2") ,
+
+                    NUMBER3("NUMBER3") ,
+                    NUMBER4("NUMBER4")</td>
             </tr>
             </tbody>
         </table>
