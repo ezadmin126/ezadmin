@@ -14,8 +14,9 @@
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
                     <li><a href="#quick">快速上手</a></li>
-                    <li ><a href="#servlet">其他servlet应用接入</a></li>
-                    <li ><a href="#nosql">无数据库模式</a></li>
+                    <li ><a href="#more">图形化管理</a></li>
+                    <li ><a href="#sql">自定义SQL生成列表表单</a></li>
+                    <li ><a href="#servlet">不是springboot?</a></li>
                 </ul>
             </div>
         </div>
@@ -25,18 +26,101 @@
     <blockquote class="layui-elem-quote">
         EZ一个嵌入式的Servlet表单列表工具，可以将SQL转换为带有表格或表单的网页，可适配任意UI框架，同时支持拖拽自定义网页。
      </blockquote>
-    <h2 id="examples" lay-toc="{anchor: null}" style="margin-bottom: 0;">依赖（内置springboot-starter）</h2>
-    <p>maven仓库目前最新版本为2.9.14.4</p>
-    <pre class="layui-code code-demo" lay-options="{}">
+
+        <h2 id="quick"  lay-toc="{anchor: null}" style="margin-bottom: 0;">1.maven依赖（内置springboot-starter）</h2>
+        <p>
+            下载一个空的springboot应用：<a href="https://start.spring.io/" target="_blank">https://start.spring.io/</a>
+        </p>
+        <p>EZ是在jdk8的环境下开发的，仅使用spring的读取配置工具与bean管理工具，如使用map缓存，修改部分代码最低可以支持至jdk6.
+        </p>
+        <p>  添加如下maven依赖， maven仓库目前最新版本为2.9.14.4</p>
+        <pre class="layui-code code-demo" lay-options="{}">
         <textarea>
 <dependency>
   <groupId>io.github.ezadmin126</groupId>
   <artifactId>ezadmin-core</artifactId>
-  <version>2.9.15-SNAPSHOT</version>
+  <version>2.9.14.4</version>
 </dependency>
             </textarea>
     </pre>
-    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
+        <h2 id="code1" lay-toc="{anchor: null}" style="margin-bottom: 0;">2.加入demo至classpath目录</h2>
+        <p>在
+        <pre class="layui-code code-demo" lay-options="{}">src/main/resource/topezadmin/config/layui/list</pre>
+        路径下添加如下文件  helloworld.html
+        </p>
+        <pre class="layui-code code-demo" lay-options="{}">
+        <textarea>
+
+<html>
+ <head>
+  <title>helloworld</title>
+ </head>
+ <body id="helloworld" datasource="datasource" rowbtnwidth="175" >
+  <div id="append_head"></div>
+  <ul id="tab">
+  </ul>
+  <form id="search">
+   <div>
+    <label>品牌名称</label>
+    <div>
+     <object item_name="BRAND_NAME" type="input-text"></object>
+    </div>
+   </div>
+  </form>
+  <div id="tableButton">
+  </div>
+  <table>
+   <tbody>
+    <tr id="column">
+     <th id="rowbutton"></th>
+     <th item_name="ID">ID</th>
+     <th item_name="BRAND_NAME">品牌名称</th>
+     <th item_name="BRAND_WEBSITE">品牌网站</th>
+     <th item_name="ADD_TIME">添加时间</th>
+    </tr>
+   </tbody>
+  </table>
+  <pre id="express" orderby="" groupby="">
+
+<![CDATA[
+list=new ArrayList();
+m1=new HashMap();
+m1.put("ID",1);
+m1.put("BRAND_NAME","name");
+m1.put("BRAND_WEBSITE","http");
+m1.put("ADD_TIME",new Date());
+list.add(m1);
+return list;
+]]>
+
+
+  </pre>
+  <pre id="count">
+
+</pre>
+  <pre item_name="displayorder_express" type="">
+
+<![CDATA[
+
+]]>
+
+
+  </pre>
+  <div id="append_foot"></div>
+ </body>
+</html>
+            </textarea>
+        </pre>
+        <p>启动应用，访问：http://localhost:8080/topezadmin/list/list-helloworld即可看到一个列表</p>
+        <p>enjoy:^_^</p>
+
+        <blockquote class="layui-elem-quote">
+            为了更加方便快速的管理这些列表，我们将配置放到数据库中，当然不把配置放入数据中，使用代码版本工具管理也是可以的。<br>
+            建议使用数据库管理，增加了图形化界面，以及在线编辑源码的功能。
+        </blockquote>
+
+
+    <h2 id="more"  lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
     <p>下载初始化SQL:</p>
     <a href="https://www.ezjsp.com/static/doc/init.sql">init.sql</a>
     <p>请在自己的业务数据库中执行如上SQL。</p>
@@ -65,9 +149,8 @@ topezadmin:
     </p>
     </blockquote>
 
-
-    <h2  id="quick"  lay-toc="{anchor: null}" style="margin-bottom: 0;">快速上手</h2>
-    <p>现在，让我们以一个最简单的示例开始入门： 一个用户列表，包含用户ID与用户名称</p>
+    <h2  id="sql"  lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL生成列表表单</h2>
+    <p>现在，让我们使用SQL生成一个用户列表，包含用户ID与用户名称</p>
     <p>进入/topezadmin/dev.html ,点击SQL生成列表</p>
     <p>   列表编码填入：
     <pre class="layui-code code-demo" lay-options="{}">
@@ -92,7 +175,7 @@ SELECT ID ID,NAME 名称 from T_USER WHERE 1=1
     <img style="width:100%" src="/static/doc/listsource.png"  alt=""/>
 
 
-   <h2  id="servlet"  lay-toc="{anchor: null}" style="margin-bottom: 0;">其他servlet应用接入</h2>
+   <h2  id="servlet"  lay-toc="{anchor: null}" style="margin-bottom: 0;">不是springboot?</h2>
 
     <p>参照：EzClientServletFilter，自定义filter，初始化EzClientBootstrap即可：</p>
     <pre class="layui-code code-demo" lay-options="{}">
@@ -206,64 +289,6 @@ public void addAppDatasource(String key, DataSource appDatasource) {
         <h3>代码示例</h3>
         <pre class="layui-code code-demo" lay-options="{}">
          <textarea>
-<html>
- <head>
-  <title>品牌列表</title>
- </head>
- <body id="helloworld" datasource="datasource" rowbtnwidth="175" >
-  <div id="append_head"></div>
-  <ul id="tab">
-  </ul>
-  <form id="search">
-   <div>
-    <label>品牌名称</label>
-    <div>
-     <object item_name="BRAND_NAME" type="input-text"></object>
-    </div>
-   </div>
-  </form>
-  <div id="tableButton">
-  </div>
-  <table>
-   <tbody>
-    <tr id="column">
-     <th id="rowbutton"></th>
-     <th item_name="ID">ID</th>
-     <th item_name="BRAND_NAME">品牌名称</th>
-     <th item_name="BRAND_WEBSITE">品牌网站</th>
-     <th item_name="ADD_TIME">添加时间</th>
-    </tr>
-   </tbody>
-  </table>
-  <pre id="express" orderby="" groupby="">
-
-<![CDATA[
-list=new ArrayList();
-m1=new HashMap();
-m1.put("ID",1);
-m1.put("BRAND_NAME","name");
-m1.put("BRAND_WEBSITE","http");
-m1.put("ADD_TIME",new Date());
-list.add(m1);
-return list;
-]]>
-
-
-  </pre>
-  <pre id="count">
-
-</pre>
-  <pre item_name="displayorder_express" type="">
-
-<![CDATA[
-
-]]>
-
-
-  </pre>
-  <div id="append_foot"></div>
- </body>
-</html>
          </textarea>
     </pre>
 
