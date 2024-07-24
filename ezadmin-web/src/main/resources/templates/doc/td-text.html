@@ -13,30 +13,31 @@
         <div class="ws-side-fixed">
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
-                    <li><a href="#source">源码示例</a></li>
-                    <li ><a href="#param">参数说明</a></li>
+                    <li><a href="#text">普通文本</a></li>
+                    <li ><a href="#utext">富文本</a></li>
+                    <li ><a href="#link">链接文本</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="layui-text ws-text" id="WS-text">
-        <h1>原理介绍</h1>
+        <h1>文本</h1>
         <blockquote class="layui-elem-quote">
-
+                展示数据库查出来的数据
         </blockquote>
-        <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            列表
-        </h2>
+        <h2 id="text">普通文本</h2>
         <pre class="layui-code code-demo" lay-options="{}">
-            <textarea></textarea>
+            <textarea>
+<th item_name="USER_NAME"  type="td-text">新增</th>
+            </textarea>
         </pre>
-        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            参数说明
-        </h2>
+        <h3 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            默认插件，直接展示文本，会去除html标签，类似thymeleaf的  th:text
+        </h3>
         <table class="layui-table">
             <colgroup>
                 <col width="150">
-                <col width="300">
+                <col width="150">
             </colgroup>
             <thead>
             <tr>
@@ -47,12 +48,135 @@
             </thead>
             <tbody>
             <tr>
-                <td>topezadmin.cacheFlag</td>
-                <td>是否开启缓存，开启后，页面配置将会加载至缓存</td>
-                <td>true</td>
+                <td>width</td>
+                <td>列宽</td>
+                <td>110</td>
+            </tr>
+            <tr>
+                <td>datatype</td>
+                <td>数字靠右展示，时间格式化，小数位保留
+                    NUMBER,
+                    NUMBERNULL,
+                    DATE_TO_NUMBER,
+                    VARCHAR,
+                    DATE,
+                    DATETIME,
+                    CLOB
+                    , BODY,
+                    NUMBER0,
+                    NUMBER1,
+                    NUMBER2 ,
+                    NUMBER3,
+                    NUMBER4</td>
+                <td>
+                    VARCHAR
+                </td>
             </tr>
             </tbody>
         </table>
+
+
+
+        <h2 id="link">链接文本</h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<th item_name="USER_NAME"  type="td-link" url="http://www.baidu.com">新增</th>
+            </textarea>
+        </pre>
+        <h3   style="margin-bottom: 0;">
+            默认插件，直接展示文本，会去除html标签，类似thymeleaf的  th:text
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="150">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>width</td>
+                <td>列宽</td>
+                <td>110</td>
+            </tr>
+            <tr>
+                <td>url</td>
+                <td>弹框或跳转的url</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 id="linkclick">窗口链接</h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<th item_name="USER_NAME"  type="td-linkclick" url="http://www.baidu.com">新增</th>
+            </textarea>
+        </pre>
+        <h3   style="margin-bottom: 0;">
+            默认插件，直接展示文本，会去除html标签，类似thymeleaf的  th:text
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="150">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>width</td>
+                <td>列宽</td>
+                <td>110</td>
+            </tr>
+            <tr>
+                <td>windowname</td>
+                <td>弹框标题</td>
+                <td>新增</td>
+            </tr>
+            <tr>
+                <td>url</td>
+                <td>弹框或跳转的url</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>area</td>
+                <td>窗口的大小</td>
+                <td>100 或者   300,100</td>
+            </tr>
+            <tr>
+                <td>opentaype</td>
+                <td>打开方式</td>
+                <td>
+                    <ul >
+                        <li  >MODEL：弹框</li>
+                        <li  >SCRIPT：自定义事件</li>
+                        <li >CONFIRM_MODEL：带确认的弹窗</li>
+                        <li  >_BLANK：新浏览器窗口</li>
+                        <li >LOCATION：当前窗口</li>
+                        <li  >PARENT：父窗口打开标签</li>
+                        <li  >APPEND_PARAM：携带当前搜索参数窗口打开</li>
+                        <li  >_BLANK_PARAM：携带当前搜索参数新浏览器窗口</li>
+                        <li  >_BLANK_PARAM_COLUMN：只携带配置显示的参数，用于导出</li>
+                        <li  >AJAX：异步请求</li>
+                        <li  >CONFIRM_AJAX：带确认的异步请求</li>
+                        <li >FORM：全屏表单</li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
     </div>
 </div>
 
