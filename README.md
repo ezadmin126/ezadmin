@@ -1,3 +1,2 @@
-This is a servlet tool that can convert SQL into a servlet web page with a table or form in any UI framework. also can use drag drop to edit page.
-
+EZ一个嵌入式的Servlet表单列表工具，可以将SQL转换为带有表格或表单的网页，可适配任意UI框架，同时支持拖拽自定义网页。
 文档（中文）: https://www.ezjsp.com/doc/index.html 
