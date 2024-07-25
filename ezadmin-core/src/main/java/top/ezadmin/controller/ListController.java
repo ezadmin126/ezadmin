@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @EzMapping("/topezadmin/list/")
 public class ListController extends BaseController {
@@ -287,6 +288,39 @@ public class ListController extends BaseController {
         request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
         return EzClientBootstrap.instance().getAdminStyle() + "/custom_cols_cache";
     }
+
+    @EzMapping("customSearch.html")
+    public String custom_search(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        Map<String, Object> requestParamMap = requestToMap(request);
+        requestParamMap.put("default_empty", "1");
+        Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+        if(Utils.isEmpty(list)){
+            throw new NotExistException();
+        }
+        List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
+        List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("col");
+        List<Map<String, Object>> searchListR=searchList.stream().filter(s ->
+                     s.get("type").equals("input-text")
+                             || s.get("type").equals("select")
+                             || s.get("type").equals("select-search")
+                             || s.get("type").equals("xmselect")
+                             || s.get("type").equals("daterange")
+                ) // 筛选条件：性别为男性
+                .collect(Collectors.toList());
+
+        List<Map<String, Object>> colListR=colList.stream().filter(s ->
+                        s.get("order").equals("1")
+                ) // 筛选条件：性别为男性
+                .collect(Collectors.toList());
+        request.setAttribute("fromSearchField", searchListR);
+        request.setAttribute("fromColField", colListR);
+        request.setAttribute("IS_DEBUG", request.getParameter("IS_DEBUG"));
+        request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
+        return EzClientBootstrap.instance().getAdminStyle() + "/custom_search";
+    }
+
+
 
 
     @EzMapping("navs.html")
