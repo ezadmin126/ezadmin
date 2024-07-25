@@ -406,7 +406,7 @@ xm-select > .xm-body .scroll-body{
 }
 .el-cascader__search-input{
     min-width: 20px !important;
-    margin-left:0px !important;
+    /*margin-left:0px !important; 防止遮挡*/
 }
 .el-cascader__tags
 {

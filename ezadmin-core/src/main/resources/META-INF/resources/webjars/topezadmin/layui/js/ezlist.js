@@ -227,6 +227,14 @@ $(document).ready(function () {
     $(window).resize(function(){
         calculateSearchItemDisplay();
     })
+
+    $("#customBtn").click(function(e){
+        e.preventDefault();
+        var j=$("#customSearch").val();
+        openModel("/topezadmin/list/customSearch-"+$("#ENCRYPT_LIST_ID").val()+"?data="+encodeURIComponent(j),"高级搜索"
+        )
+    })
+
 });
 
 

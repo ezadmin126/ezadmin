@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+    <script src="https://www.ezjsp.com/webjars/topezadmin/plugins/dragula/dragula.min.js"></script>
+    <style>
+        ul {
+            padding-left: 30px;
+            border-left: 2px dotted #c0c4cc;
+            position: relative;
+        }
+        ul li > div {
+            display: inline-block;
+            margin-right: 10px;
+            height: 25px;
+            vertical-align: top;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .layui-form-switch {
+            width: 35px;
+            margin-top: 0px;
+            height:22px;
+        }
+        .layui-form-switch>i
+        {
+            top:2px;
+        }
+        .layui-firebrick,.delete-item{
+            line-height: 25px;
+        }
+        .searchItem{
+            width:100px;
+        }
+        .line{
+            position: absolute;
+            width: 20px;
+            height: 1px;
+            border-top: 2px dotted #c0c4cc;
+            left: 0px;
+            top: 10px;
+        }
+        .gu-mirror {
+            position: fixed !important;
+            margin: 0 !important;
+            z-index: 9999 !important;
+            opacity: 0.8;
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+            filter: alpha(opacity=80);
+        }
+
+        .gu-hide {
+            display: none !important;
+        }
+
+        .gu-unselectable {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+
+        .gu-transit {
+            opacity: 0.2;
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+            filter: alpha(opacity=20);
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" th:value="${data}">
+<div class="layui-container">
+    <blockquote class="layui-elem-quote">
+        综合搜索，提供更加个性化的搜索，与原有搜索相互补充
+    </blockquote>
+    <form class="layui-form">
+        <div>
+            <button   data-type="addOne"> <i class="layui-icon layui-icon-add-1"></i>  添加条件</button>
+            <button   data-type="addGroup"><i  class="layui-icon layui-icon-add-circle"></i> 添加分组</button>
+        </div>
+        <hr>
+        <ul >
+
+        </ul>
+        <hr>
+        <blockquote class="layui-elem-quote">
+            综合排序，适用于多个字段同时排序的场景,按从上到下优先级排序。
+        </blockquote>
+        <table id="orderTable" style="width:500px" class="layui-table dragula-container" th:data-size="${#lists.size(fromColField)}">
+            <tr  th:each="row:${fromColField}"  th:if="${row.order==1}">
+                <td>
+                    <select name="f" lay-ignore>
+                        <option value="">请选择排序字段</option>
+                        <option th:each="item:${fromColField}"
+                        th:if="${item.order==1}" th:value="${item.item_name}" th:text="${item.label}">a</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="o" lay-ignore>
+                        <option value="">不排序</option>
+                        <option value="za">降序（Z-A）</option>
+                        <option value="az">升序（A-Z）</option>
+                    </select>
+                </td>
+                <td>
+                    <i class="layui-font-red layui-icon-reduce-circle layui-icon"></i>
+                    <i style='float:right;cursor: move'
+                                class="rowmove layui-icon layui-icon-transfer rowmove"></i>
+
+                </td>
+            </tr>
+        </table>
+<!--        <a href="#" class="addOrderRow"><i class="layui-icon-add-circle layui-icon"></i>添加次要排序</a>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"> </label>
+            <div class="layui-input-block">
+                <button id="save" class="layui-btn">查询</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script id="single" type="text/html">
+    <li class="searchSingle">
+        <div class="line" ></div>
+        <div style="width:40px">
+            <select class="itemType" lay-ignore>
+                <option value="and">且</option>
+                <option value="or">或</option>
+            </select>
+        </div>
+        <div class="searchItem">
+            <select class="itemField" lay-ignore>
+                <option  th:each="item:${fromSearchField}"
+                    th:text="${item.label}"
+                    th:value="${item.value}"
+                > </option>
+            </select>
+        </div>
+        <div class="searchItem">
+            <select class="itemOperator" lay-ignore>
+                <option value="">请选择</option>
+                <option  value='eq'>等于</option>
+                <option  value='ne'>≠ 不等于</option>
+                <option  value='gt'>> 大于</option>
+                <option  value='ge'>≥ 大于等于</option>
+                <option  value='lt'>< 小于</option>
+                <option  value='le'>≤ 小于等于</option>
+                <option  value='contain'>包含</option>
+                <option  value='notContain'>不包含</option>
+                <option  value='start'>以...开头</option>
+                <option  value='end'>以...结尾</option>
+                <option  value='null'>为空</option>
+                <option  value='notNull'>不为空</option>
+            </select>
+        </div>
+        <div>
+            <input  style="width:100px" class="itemValue"  >
+        </div>
+        <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
+    </li>
+</script>
+<script id="group" type="text/html">
+    <li class="searchGroup">
+        <div class="line" ></div>
+        <div style="width:40px">
+            <select class="itemType" lay-ignore>
+                <option value="and">且</option>
+                <option value="or">或</option>
+            </select>
+        </div>
+        <div class="layui-firebrick">分组</div>
+        <div>
+            <button   data-type="addOne"> <i class="layui-icon layui-icon-add-1"></i>  添加条件</button>
+            <button   data-type="addGroup"><i  class="layui-icon layui-icon-add-circle"></i> 添加分组</button>
+        </div>
+        <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
+        <ul  ></ul>
+    </li>
+</script>
+<script>
+    layui.use(function () {
+        var $ = layui.jquery;
+
+        dragula({
+            isContainer: function (el) {
+                return el.classList.contains('dragula-container');
+            },
+            // copy: true,
+            //  removeOnSpill: true,
+            revertOnSpill: true,
+            //copySortSource: true,
+            moves: function (el, container, handle) {
+                return handle.classList.contains('rowmove');
+            }, accepts: function (el, target) {
+                return target.classList.contains('dragula-container');
+            }
+        })
+
+        $("body").on("click", ".layui-icon-reduce-circle", function (e) {
+            e.preventDefault();
+            var row = $(this)[0].closest('tr');
+            if (row) {
+                row.parentNode.removeChild(row);
+            }
+        })
+
+        $("body").on("click", "[data-type='addOne']", function (e) {
+            e.preventDefault();
+            var element = $(this)[0];
+// 获取父节点
+            var parent = element.parentElement;
+// 获取父节点的所有兄弟节点
+            var siblings = parent.parentElement.children;
+// 查找第一个 <ul> 兄弟节点
+            var firstUlSibling = Array.from(siblings).find(function(sibling) {
+                return sibling.tagName.toLowerCase() === 'ul';
+            });
+            var html=$("#single").html();
+            firstUlSibling.insertAdjacentHTML('beforeend', html);
+        })
+        $("body").on("click", "[data-type='addGroup']", function (e) {
+            e.preventDefault();
+            var element = $(this)[0];
+// 获取父节点
+            var parent = element.parentElement;
+// 获取父节点的所有兄弟节点
+            var siblings = parent.parentElement.children;
+// 查找第一个 <ul> 兄弟节点
+            var firstUlSibling = Array.from(siblings).find(function(sibling) {
+                return sibling.tagName.toLowerCase() === 'ul';
+            });
+            var html=$("#group").html();
+            firstUlSibling.insertAdjacentHTML('beforeend', html);
+        })
+
+        $("body").on("click", ".delete-item", function (e) {
+            e.preventDefault();
+            var row = $(this)[0].closest('li');
+            if (row) {
+                row.parentNode.removeChild(row);
+            }
+        })
+
+
+        $("#save").click(function(e){
+            e.preventDefault();
+            const parentButton = parent.document.getElementById('submitBtn');
+            const customSearch = parent.document.getElementById('customSearch');
+            customSearch.value=getJson();
+            parentButton.click();
+            return false;
+        })
+    });
+    function getJson(){
+        const firstUl = document.querySelector('ul');
+        const json=ulToJson(firstUl);
+        const rows = document.querySelectorAll('#orderTable tr'); // 获取所有行
+        const result =[];
+        if(rows){
+            Array.from(rows).map(row => {
+                const selects = row.querySelectorAll('select'); // 获取当前行的所有 select
+                const data = {};
+                selects.forEach(select => {
+                    data[select.name] = select.value; // 将 name 和 value 存入对象
+                });
+                result.push(data); // 返回每行的对象
+            });
+        }
+        json.o=result;
+        return JSON.stringify(json);
+    }
+    function ulToJson(ul){
+        if(!ul){
+            return;
+        }
+        const liElements = Array.from(ul.children).filter(li => li.tagName === 'LI');
+        const groupArray= [];
+        const singleArray=[];
+        liElements.forEach(li => {
+            if (li.classList.contains('searchGroup')) {
+                const childUl =li.querySelector("ul");
+                const group={};
+                group.c=ulToJson(childUl);
+                group.t=li.querySelector('select.itemType').value;
+                groupArray.push(group);
+            }else  if (li.classList.contains('searchSingle')) {
+                const single={};
+                single.t=li.querySelector('select.itemType').value;
+                single.f=li.querySelector('select.itemField').value;
+                single.o=li.querySelector('select.itemOperator').value;
+                single.v=li.querySelector('input.itemValue').value;
+                singleArray.push(single);
+            }
+        });
+        const result={};
+        result.g=groupArray;
+        result.s=singleArray;
+        return result;
+    }
+</script>
+</body>
+</html>
