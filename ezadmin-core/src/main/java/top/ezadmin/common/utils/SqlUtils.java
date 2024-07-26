@@ -6,6 +6,10 @@ import top.ezadmin.common.enums.OperatorEnum;
 import top.ezadmin.common.enums.ParamNameEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.dao.model.CustomSearchDTO;
+import top.ezadmin.dao.model.CustomSearchGroup;
+import top.ezadmin.dao.model.CustomSearchOrder;
+import top.ezadmin.dao.model.CustomSearchSingle;
 
 import java.util.*;
 
@@ -465,4 +469,76 @@ public class SqlUtils {
         sb.append(")");
         return sb.toString();
     }
+
+
+    public static Map<String,String> customSearchJsonToSql(String json){
+        String customJson =Utils.trimNull(json);
+        Map<String,String> result=new HashMap<>();
+        String customWhere="";
+        String customOrder="";
+        if(StringUtils.isNotBlank(customJson)){
+            try {
+                CustomSearchDTO customSearchDTO = JSONUtils.parseObject(customJson, CustomSearchDTO.class);
+                customWhere = customWhere(customSearchDTO.getG(), customSearchDTO.getS());
+                customOrder = customOrder(customSearchDTO.getO());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        if(StringUtils.isNotBlank(customWhere)){
+            result.put("customWhere",customWhere);
+        }
+        if(StringUtils.isNotBlank(customOrder)){
+            result.put("customOrder",customOrder);
+        }
+        return result;
+    }
+
+    private static String customOrder(List<CustomSearchOrder> o) {
+        if(o==null||o.isEmpty()){
+            return "";
+        }
+        StringBuilder order=new StringBuilder();
+        for (int i = 0; i < o.size(); i++) {
+            if(StringUtils.isNotBlank(o.get(i).getF())&&StringUtils.isNotBlank(o.get(i).getO())){
+                order.append(", ")
+                    .append(StringUtils.safeDb(o.get(i).getF()))
+                    .append(" ")
+                    .append(StringUtils.safeDb(o.get(i).getO()));
+            }
+        }
+        if(order.length()>1){
+            return " order by "+order.substring(1);
+        }
+        return "";
+    }
+
+    private static String customWhere(List<CustomSearchGroup> g, List<CustomSearchSingle> s) {
+        StringBuilder sql=new StringBuilder();
+        if(Utils.isNotEmpty(g)){
+            for (int i = 0; i < g.size(); i++) {
+                if(g!=null&&Utils.isNotEmpty(g.get(i).getC())){
+                    sql.append(" " + g.get(i).getT() +" ( ");
+                    g.get(i).getC().forEach(item->{
+                        sql.append(customWhere(item.getG(),item.getS()));
+                    });
+                    sql.append(" )");
+                }
+            }
+        }
+        if(Utils.isNotEmpty(s)){
+            for (int i = 0; i < s.size(); i++) {
+               String w=transToWhere(StringUtils.safeDb(s.get(i).getO()),
+                       StringUtils.safeDb(s.get(i).getF()),"",
+                       "",StringUtils.safeDb(s.get(i).getV()),"",""
+               );
+               if(i==0){
+                   w= w.trim().replaceFirst("and","");
+               }
+                sql.append(w);
+            }
+        }
+        return sql.toString();
+    }
+
 }

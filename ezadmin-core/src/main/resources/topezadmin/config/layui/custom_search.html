@@ -2,15 +2,21 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>文档</title>
-    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
-    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
-    <script src="https://www.ezjsp.com/webjars/topezadmin/plugins/dragula/dragula.min.js"></script>
+    <title>高级查询</title>
+    <link th:href="${contextName+'/webjars/layuidist/css/layui.css?v=null'}" rel="stylesheet"/>
+    <script th:src="${contextName+'/webjars/layuidist/layui.js?v=null'}"></script>
+    <script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
+    <script th:src="${contextName+'/webjars/topezadmin/plugins/dragula/dragula.min.js'}"></script>
+    <script th:src="${contextName+'/webjars/topezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
+    <script th:src="${contextName+'/webjars/topezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
     <style>
         ul {
             padding-left: 30px;
             border-left: 2px dotted #c0c4cc;
             position: relative;
+        }
+        li{
+            min-width: 450px;
         }
         ul li > div {
             display: inline-block;
@@ -38,10 +44,9 @@
         .line{
             position: absolute;
             width: 20px;
-            height: 1px;
-            border-top: 2px dotted #c0c4cc;
+            height: 10px;
+            border-bottom: 2px dotted #c0c4cc;
             left: 0px;
-            top: 10px;
         }
         .gu-mirror {
             position: fixed !important;
@@ -68,14 +73,23 @@
             -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
             filter: alpha(opacity=20);
         }
+        .itemValue{
+            width:100px;
+        }
     </style>
 </head>
 <body>
-<input type="hidden" th:value="${data}">
+<input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
 <div class="layui-container">
     <blockquote class="layui-elem-quote">
         综合搜索，提供更加个性化的搜索，与原有搜索相互补充
     </blockquote>
+    <div style="display:none">
+    <div
+         th:each="item,indexStat:${data.search}" th:remove="tag" th:utext="${item.html}"
+    >
+    </div>
+    </div>
     <form class="layui-form">
         <div>
             <button   data-type="addOne"> <i class="layui-icon layui-icon-add-1"></i>  添加条件</button>
@@ -89,40 +103,43 @@
         <blockquote class="layui-elem-quote">
             综合排序，适用于多个字段同时排序的场景,按从上到下优先级排序。
         </blockquote>
-        <table id="orderTable" style="width:500px" class="layui-table dragula-container" th:data-size="${#lists.size(fromColField)}">
+        <table id="orderTable" style="width:500px" class="layui-table dragula-container"  >
+            <tbody class=" dragula-container">
             <tr  th:each="row:${fromColField}"  th:if="${row.order==1}">
                 <td>
                     <select name="f" lay-ignore>
                         <option value="">请选择排序字段</option>
                         <option th:each="item:${fromColField}"
-                        th:if="${item.order==1}" th:value="${item.item_name}" th:text="${item.label}">a</option>
+                        th:if="${item.order==1}" th:value="${#strings.contains(item.alias,'.')?item.alias:item.alias+item.item_name}" th:text="${item.label}">a</option>
                     </select>
                 </td>
                 <td>
                     <select name="o" lay-ignore>
                         <option value="">不排序</option>
-                        <option value="za">降序（Z-A）</option>
-                        <option value="az">升序（A-Z）</option>
+                        <option value=" desc ">降序（Z-A）</option>
+                        <option value=" asc ">升序（A-Z）</option>
                     </select>
                 </td>
                 <td>
-                    <i class="layui-font-red layui-icon-reduce-circle layui-icon"></i>
+<!--                    <i class="layui-font-red layui-icon-reduce-circle layui-icon"></i>-->
                     <i style='float:right;cursor: move'
                                 class="rowmove layui-icon layui-icon-transfer rowmove"></i>
 
                 </td>
             </tr>
+            </tbody>
         </table>
 <!--        <a href="#" class="addOrderRow"><i class="layui-icon-add-circle layui-icon"></i>添加次要排序</a>-->
         <div class="layui-form-item">
             <label class="layui-form-label"> </label>
             <div class="layui-input-block">
                 <button id="save" class="layui-btn">查询</button>
+                <button id="reset" class="layui-btn">重置</button>
             </div>
         </div>
     </form>
 </div>
-<script id="single" type="text/html">
+<div id="single" style="display:none">
     <li class="searchSingle">
         <div class="line" ></div>
         <div style="width:40px">
@@ -135,7 +152,7 @@
             <select class="itemField" lay-ignore>
                 <option  th:each="item:${fromSearchField}"
                     th:text="${item.label}"
-                    th:value="${item.value}"
+                    th:value="${item.item_name}"
                 > </option>
             </select>
         </div>
@@ -144,25 +161,25 @@
                 <option value="">请选择</option>
                 <option  value='eq'>等于</option>
                 <option  value='ne'>≠ 不等于</option>
-                <option  value='gt'>> 大于</option>
-                <option  value='ge'>≥ 大于等于</option>
-                <option  value='lt'>< 小于</option>
-                <option  value='le'>≤ 小于等于</option>
-                <option  value='contain'>包含</option>
-                <option  value='notContain'>不包含</option>
-                <option  value='start'>以...开头</option>
-                <option  value='end'>以...结尾</option>
-                <option  value='null'>为空</option>
-                <option  value='notNull'>不为空</option>
+<!--                <option  value='gt'>> 大于</option>-->
+                <option  value='gte'>≥ 大于等于</option>
+<!--                <option  value='lt'>< 小于</option>-->
+                <option  value='lte'>≤ 小于等于</option>
+                <option  value='like'>包含</option>
+                <option  value='notlike'>不包含</option>
+<!--                <option  value='start'>以...开头</option>-->
+<!--                <option  value='end'>以...结尾</option>-->
+<!--                <option  value='null'>为空</option>-->
+<!--                <option  value='notNull'>不为空</option>-->
             </select>
         </div>
-        <div>
-            <input  style="width:100px" class="itemValue"  >
+        <div class="searchItemValue">
+            <input   class="itemValue"  >
         </div>
         <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
     </li>
-</script>
-<script id="group" type="text/html">
+</div>
+<div id="group" style="display:none">
     <li class="searchGroup">
         <div class="line" ></div>
         <div style="width:40px">
@@ -179,10 +196,10 @@
         <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
         <ul  ></ul>
     </li>
-</script>
+</div>
 <script>
     layui.use(function () {
-        var $ = layui.jquery;
+      //  var $ = layui.jquery;
 
         dragula({
             isContainer: function (el) {
@@ -249,11 +266,106 @@
             e.preventDefault();
             const parentButton = parent.document.getElementById('submitBtn');
             const customSearch = parent.document.getElementById('customSearch');
-            customSearch.value=getJson();
+            const key="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
+            localStorage.setItem(key,getJson());
+            customSearch.value=localStorage.getItem(key);
             parentButton.click();
             return false;
         })
+        $("#reset").click(function(e){
+            e.preventDefault();
+            const key="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
+            localStorage.removeItem(key);
+            $("ul").eq(0).html('');
+            $("[name=f]").val('')
+            $("[name=o]").val('')
+            const customSearch = parent.document.getElementById('customSearch');
+            customSearch.value='';
+        })
+
+        init();
+
+        $(document).on("change",".itemField",function(){
+            var row=$(this).closest("li");
+            var input=$("[name="+$(this).val()+"]").clone();
+            console.log(input.html())
+           // input.val(json[i].v);
+            input.addClass("itemValue");
+            input.removeClass("layui-input");
+            input.removeAttr("lay-search");
+            input.removeAttr("name");
+            input.removeAttr("id");
+            input.removeAttr("style");
+            input.attr("lay-ignore","");
+            if(input.hasClass("daterangeinput")){
+                input.attr("type","date");
+            }
+            row.find(".searchItemValue").html('');
+            row.find(".searchItemValue").append(input);
+        })
     });
+
+
+    function doGroup(ul,json) {
+        for (let i = 0; i < json.length; i++) {
+            var row=$($("#group").html());
+            row.find(".itemType").val(json[i].t);
+            $(ul).append(row);
+            if(json[i].c){
+                const group= json[i].c.g;
+                const single= json[i].c.s;
+                const firstUl =row.children('ul').first();
+                doGroup(firstUl,group);
+                doItem(firstUl,single);
+            }
+        }
+    }
+
+    function doItem(ul,json) {
+        for (let i = 0; i < json.length; i++) {
+            var row=$($("#single").html());
+            row.find(".itemType").val(json[i].t);//
+            row.find(".itemField").val(json[i].f);//
+            row.find(".itemOperator").val(json[i].o);//
+            var input=$("[name="+json[i].f+"]").clone();
+            console.log(input.html())
+            input.val(json[i].v);
+            input.addClass("itemValue");
+            input.removeClass("layui-input");
+            input.removeAttr("lay-search");
+            input.removeAttr("name");
+            input.removeAttr("id");
+            input.removeAttr("style");
+            input.attr("lay-ignore","");
+            row.find(".searchItemValue").html('');
+            row.find(".searchItemValue").append(input);
+            $(ul).append(row);
+        }
+    }
+
+    function init(){
+        const key="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
+        const json=localStorage.getItem(key);
+        if(json){
+            const order= JSON.parse(json).o;
+            const group= JSON.parse(json).g;
+            const single= JSON.parse(json).s;
+            if(order){
+                const tr= document.querySelectorAll('#orderTable tr');
+                for (let i = 0; i < order.length; i++) {
+                    if(order[i].f!==''&&order[i].o!==''){
+                        tr[i].querySelector("[name=f]").value=order[i].f;
+                        tr[i].querySelector("[name=o]").value=order[i].o;
+                    }
+                }
+            }
+            const firstUl = document.querySelector('ul');
+            doGroup(firstUl,group);
+            doItem(firstUl,single);
+        }
+    }
+
+
     function getJson(){
         const firstUl = document.querySelector('ul');
         const json=ulToJson(firstUl);
@@ -291,7 +403,7 @@
                 single.t=li.querySelector('select.itemType').value;
                 single.f=li.querySelector('select.itemField').value;
                 single.o=li.querySelector('select.itemOperator').value;
-                single.v=li.querySelector('input.itemValue').value;
+                single.v=li.querySelector('.itemValue').value;
                 singleArray.push(single);
             }
         });

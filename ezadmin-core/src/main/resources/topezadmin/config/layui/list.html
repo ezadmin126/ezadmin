@@ -48,7 +48,7 @@
             <div class="layui-tab-item layui-show"  >
                 <div class="layui-card" style="padding:10px">
                     <div class="layui-card-body"  >
-                        <form id="searchForm" lay-filter="searchForm" class="layui-form   " th:action="${listUrl}" method="get">
+                        <form id="searchForm" lay-filter="searchForm" class="layui-form   " th:action="${listUrl}" method="POST">
                     <input type="hidden" id="currentPage" name="currentPage" th:value="${data.page.currentPage}">
                     <input type="hidden" id="perPageInt" name="perPageInt" th:value="${data.page.perPageInt}">
                     <input type="hidden" id="totalPage" name="totalPage" th:value="${data.page.totalPage}">
@@ -60,7 +60,7 @@
                         </div>
                         <div class="form-group col-md-3 row orderBy" STYLE="display:none">
                             <input id="orderBy" th:name="${data.ezOrderName}" th:value="${data.ezOrderValue}">
-                            <input id="customSearch" th:name="${data.customSearch}" th:value="${data.customSearch}">
+                            <input id="customSearch"  name="customSearch" th:value="${customSearch}">
                         </div>
                         <input type="hidden" id="_SEARCH_ITEM_DISPLAY" name="_SEARCH_ITEM_DISPLAY"
                                th:value="${_SEARCH_ITEM_DISPLAY}">

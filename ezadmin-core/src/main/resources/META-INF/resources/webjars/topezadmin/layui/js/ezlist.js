@@ -58,7 +58,6 @@ $(document).ready(function () {
             $(element).removeClass('is-invalid');
         },
         submitHandler: function (form) {
-           // console.log("start submit form")
             if (typeof submitHandle === "function") {
                 if (submitHandle()) {
                     $("#submitBtn").addClass("layui-btn-disabled");
@@ -230,9 +229,7 @@ $(document).ready(function () {
 
     $("#customBtn").click(function(e){
         e.preventDefault();
-        var j=$("#customSearch").val();
-        openModel("/topezadmin/list/customSearch-"+$("#ENCRYPT_LIST_ID").val()+"?data="+encodeURIComponent(j),"高级搜索"
-        )
+        openModel("/topezadmin/list/customSearch-"+$("#ENCRYPT_LIST_ID").val(),"高级搜索")
     })
 
 });

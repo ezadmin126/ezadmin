@@ -1,12 +1,14 @@
 package top.ezadmin.plugins.express;
 
+import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.Dao;
- import top.ezadmin.plugins.parser.CommentsSqlParser;
+import top.ezadmin.dao.model.CustomSearchDTO;
+import top.ezadmin.dao.model.CustomSearchGroup;
+import top.ezadmin.dao.model.CustomSearchOrder;
+import top.ezadmin.dao.model.CustomSearchSingle;
+import top.ezadmin.plugins.parser.CommentsSqlParser;
 import top.ezadmin.plugins.parser.parse.ResultModel;
 import top.ezadmin.plugins.sqlog.format.FormatStyle;
-import top.ezadmin.common.utils.Page;
-import top.ezadmin.common.utils.SqlUtils;
-import top.ezadmin.common.utils.Utils;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -36,12 +38,31 @@ public class SearchOperator extends AbstractOperator {
                     where.append(SqlUtils.searchToSql(search,operatorParam.getRequestParams()));
                 }
             }
+            String customJson =Utils.trimNull(operatorParam.getRequestParams().get("customSearch"));
+            String customWhere="";
+            String customOrder="";
+            if(StringUtils.isNotBlank(customJson)){
+                try {
+                    CustomSearchDTO customSearchDTO = JSONUtils.parseObject(customJson, CustomSearchDTO.class);
+                    customWhere = customWhere(customSearchDTO.getG(), customSearchDTO.getS());
+                    customOrder = customOrder(customSearchDTO.getO());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            if(StringUtils.isNotBlank(customJson)){
+                where.append(customWhere);
+            }
 
             String groupBy = " " + Utils.trimNull(operatorParam.getParams().get("GROUP_BY")) + " ";
             String limit = " ", orderByClause = " ";
             if (page != null) {
                 limit = " limit " + page.getStartRecord() + "," + page.getPerPageInt();
                 orderByClause = page.getOrderByClause();
+            }
+
+            if(StringUtils.isNotBlank(customOrder)){
+                orderByClause=customOrder;
             }
 
               finalSql = SqlUtils.buildPageSql(sql,Utils.getStringByObject(core,"count_express"),
@@ -72,6 +93,14 @@ public class SearchOperator extends AbstractOperator {
         catch (Exception e){
             throw e;
         }
+    }
+
+    private String customOrder(List<CustomSearchOrder> o) {
+        return null;
+    }
+
+    private String customWhere(List<CustomSearchGroup> g, List<CustomSearchSingle> s) {
+        return null;
     }
 
 }

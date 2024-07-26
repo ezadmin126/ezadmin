@@ -36,6 +36,8 @@ public class ListController extends BaseController {
             throw new NotExistException();
         }
         Map<String, Object> requestParamMap = requestToMap(request);
+        String  customSearch=Utils.trimNull(requestParamMap.get("customSearch") );
+        request.setAttribute("customSearch",customSearch);
 
         requestParamMap.putIfAbsent("perPageInt",request.getParameter("perPageInt"));
         requestParamMap.putIfAbsent("currentPage",request.getParameter("page"));
@@ -275,6 +277,7 @@ public class ListController extends BaseController {
     public String selectCols(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
         Map<String, Object> requestParamMap = requestToMap(request);
+
         requestParamMap.put("default_empty", "1");
         Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
         if(Utils.isEmpty(list)){
@@ -292,12 +295,17 @@ public class ListController extends BaseController {
     @EzMapping("customSearch.html")
     public String custom_search(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        String config = Utils.trimNull(request.getParameter("config"));
         Map<String, Object> requestParamMap = requestToMap(request);
         requestParamMap.put("default_empty", "1");
+        Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+
         Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
         if(Utils.isEmpty(list)){
             throw new NotExistException();
         }
+        listService.fillListById(list, requestParamMap, sessionParamMap);
+
         List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
         List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("col");
         List<Map<String, Object>> searchListR=searchList.stream().filter(s ->
@@ -315,6 +323,8 @@ public class ListController extends BaseController {
                 .collect(Collectors.toList());
         request.setAttribute("fromSearchField", searchListR);
         request.setAttribute("fromColField", colListR);
+        request.setAttribute("data", list);
+        request.setAttribute("config", config);
         request.setAttribute("IS_DEBUG", request.getParameter("IS_DEBUG"));
         request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
         return EzClientBootstrap.instance().getAdminStyle() + "/custom_search";
