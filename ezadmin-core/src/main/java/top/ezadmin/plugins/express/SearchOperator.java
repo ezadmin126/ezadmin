@@ -11,6 +11,7 @@ import top.ezadmin.plugins.parser.parse.ResultModel;
 import top.ezadmin.plugins.sqlog.format.FormatStyle;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,26 +33,23 @@ public class SearchOperator extends AbstractOperator {
             List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
              Map<String,Object>  core=( Map<String,Object>)list.get("core");
 
+             Map<String,Map<String,Object>> searchNameMap=new HashMap<>();
              if(Utils.isNotEmpty(searchList)){
                 for (int i = 0; i < searchList.size(); i++) {
                     Map<String,Object> search=searchList.get(i);
+                    String name=Utils.getStringByObject(search,JsoupUtil.ITEM_NAME);
+
+                    searchNameMap.put(name,search);
                     where.append(SqlUtils.searchToSql(search,operatorParam.getRequestParams()));
                 }
             }
+
+
             String customJson =Utils.trimNull(operatorParam.getRequestParams().get("customSearch"));
-            String customWhere="";
-            String customOrder="";
-            if(StringUtils.isNotBlank(customJson)){
-                try {
-                    CustomSearchDTO customSearchDTO = JSONUtils.parseObject(customJson, CustomSearchDTO.class);
-                    customWhere = customWhere(customSearchDTO.getG(), customSearchDTO.getS());
-                    customOrder = customOrder(customSearchDTO.getO());
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-            if(StringUtils.isNotBlank(customJson)){
-                where.append(customWhere);
+            Map<String,String> customSearch= SqlUtils.customSearchJsonToSql(customJson,searchNameMap);
+
+            if(customSearch.containsKey("customWhere")){
+                where.append(customSearch.get("customWhere"));
             }
 
             String groupBy = " " + Utils.trimNull(operatorParam.getParams().get("GROUP_BY")) + " ";
@@ -61,8 +59,8 @@ public class SearchOperator extends AbstractOperator {
                 orderByClause = page.getOrderByClause();
             }
 
-            if(StringUtils.isNotBlank(customOrder)){
-                orderByClause=customOrder;
+            if(customSearch.containsKey("customOrder")){
+                orderByClause=customSearch.get("customOrder");
             }
 
               finalSql = SqlUtils.buildPageSql(sql,Utils.getStringByObject(core,"count_express"),

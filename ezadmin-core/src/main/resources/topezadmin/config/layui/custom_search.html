@@ -110,7 +110,7 @@
                     <select name="f" lay-ignore>
                         <option value="">请选择排序字段</option>
                         <option th:each="item:${fromColField}"
-                        th:if="${item.order==1}" th:value="${#strings.contains(item.alias,'.')?item.alias:item.alias+item.item_name}" th:text="${item.label}">a</option>
+                        th:if="${item.order==1}" th:value="${item.item_name}" th:text="${item.label}">a</option>
                     </select>
                 </td>
                 <td>

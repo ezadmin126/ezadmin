@@ -309,7 +309,8 @@ public class ListController extends BaseController {
         List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
         List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("col");
         List<Map<String, Object>> searchListR=searchList.stream().filter(s ->
-                     s.get("type").equals("input-text")
+                        s.get("type").equals("numberrange")
+                                ||s.get("type").equals("input-text")
                              || s.get("type").equals("select")
                              || s.get("type").equals("select-search")
                              || s.get("type").equals("xmselect")

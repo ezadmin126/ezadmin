@@ -92,7 +92,6 @@ $(function (){
         copySortSource: true
     }).on('drop', function (el, target, source, sibling) {
         console.log('drop::'+el+target);
-        debugger
 
         var iscenter=$(target).attr("id")=='centerContainer';
 
@@ -114,7 +113,7 @@ $(function (){
         return false;
     })
     function dropcall(el,target){
-        $(target).find(".tip").remove();
+            $(target).find(".tip").remove();
 
         if( $(el).find(".template").length>0){
             var tmp=$(el).find(".template");

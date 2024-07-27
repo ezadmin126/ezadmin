@@ -27,7 +27,12 @@ public class SqlUtils {
      *
      */
     public static String transToWhere(String itemOper,String itemName, String itemAliasName
-    ,String itemJdbcType,String itemValue,String itemValueStart,String itemValueEnd ) {
+            ,String itemJdbcType,String itemValue,String itemValueStart,String itemValueEnd ) {
+        return transToWherePrePare(  itemOper,  itemName,   itemAliasName
+                ,  itemJdbcType,  itemValue,  itemValueStart,  itemValueEnd,true," and ");
+    }
+    public static String transToWherePrePare(String itemOper,String itemName, String itemAliasName
+    ,String itemJdbcType,String itemValue,String itemValueStart,String itemValueEnd,boolean prepare,String union ) {
         String result = "";
         String oper = StringUtils.isBlank( itemOper)? OperatorEnum.EQ.getOperC() : itemOper;
         String name = StringUtils.upperCase(itemName);
@@ -43,21 +48,21 @@ public class SqlUtils {
             case NE:
             case LTE:
             case GTE:
-                result = normal(" and ",alias,name, operatorEnum, VALUE,ITEM_JDBC_TYPE);
+                result = normal(union,alias,name, operatorEnum, VALUE,ITEM_JDBC_TYPE,prepare);
                 break;
             case BETWEEN:
-                result = between(alias,name,   ITEM_JDBC_TYPE, VALUE_START, VALUE_END);
+                result = between(alias,name,   ITEM_JDBC_TYPE, VALUE_START, VALUE_END,union);
                 break;
             case LIKE:
             case NOTLIKE:
-                result = like(" and ",alias,name, operatorEnum, VALUE);
+                result = like(union,alias,name, operatorEnum, VALUE);
                 break;
             case IN:
             case NOT_IN:
-                result = in(alias,name, operatorEnum, ITEM_JDBC_TYPE, VALUE);
+                result = in(alias,name, operatorEnum, ITEM_JDBC_TYPE, VALUE,union);
                 break;
             case ALL_FIND_IN_SET:
-                result = find_in_set(alias,name, operatorEnum, ITEM_JDBC_TYPE, VALUE);
+                result = find_in_set(alias,name, operatorEnum, ITEM_JDBC_TYPE, VALUE,union);
                 break;
             default:
                 break;
@@ -67,7 +72,7 @@ public class SqlUtils {
 
 
 
-    private static String in(String alias,String name, OperatorEnum oper, String jdbcType, String value) {
+    private static String in(String alias,String name, OperatorEnum oper, String jdbcType, String value,String union) {
         if (StringUtils.isBlank(value)) {
             return "";
         }
@@ -78,7 +83,7 @@ public class SqlUtils {
             return "";
         }
         StringBuilder sql = new StringBuilder();
-        sql.append(" and ");
+        sql.append(union);
         sql.append(alias(alias,name));
         sql.append(" "+ oper .getOperC()+" ");
         if (JdbcTypeEnum.VARCHAR.getName().equals(jdbcType)) {
@@ -101,7 +106,7 @@ public class SqlUtils {
         }
         return sql.toString();
     }
-    private static String find_in_set(String alias,String name, OperatorEnum oper, String jdbcType, String value) {
+    private static String find_in_set(String alias,String name, OperatorEnum oper, String jdbcType, String value,String union) {
         if (StringUtils.isBlank(value)) {
             return "";
         }
@@ -113,14 +118,14 @@ public class SqlUtils {
         }
 
         StringBuilder sql = new StringBuilder();
-        sql.append(" and (1=1 ");
+        sql.append(union+"   (1=1 ");
         String idArray[] = StringUtils.split(value, SelectKVContants.SPLIT.toString()+"|,");
         if(idArray.length>0){
             for (String id:idArray){
                 if (StringUtils.isBlank(id)) {
                     continue;
                 }
-                sql.append(" and find_in_set(");
+                sql.append(union+"  find_in_set(");
                 if (JdbcTypeEnum.VARCHAR.getName().equals(jdbcType)) {
                     sql.append("'");
                 }
@@ -139,7 +144,7 @@ public class SqlUtils {
 
 
 
-    private static String between(String alias,String name, String jdbcType, String valueStart, String valueEnd) {
+    private static String between(String alias,String name, String jdbcType, String valueStart, String valueEnd,String union) {
         StringBuilder sql = new StringBuilder();
 
         String finalStart = StringUtils.safeDb(valueStart), finalEnd = StringUtils.safeDb(valueEnd);
@@ -171,13 +176,13 @@ public class SqlUtils {
         }
 
         if (StringUtils.isNotBlank(valueStart)) {
-            sql.append(" and ");
+            sql.append(union);
             sql.append(alias(alias,name));
 
             sql.append(" >=  " + finalStart);
         }
         if (StringUtils.isNotBlank(valueEnd)) {
-            sql.append(" and ");
+            sql.append(union);
             sql.append(alias(alias,name));
             sql.append(" <=  " + finalEnd);
         }
@@ -185,7 +190,7 @@ public class SqlUtils {
         return sql.toString();
     }
 
-    private static String normal(String unionOp,String alias,String name, OperatorEnum oper, String value, String jdbcType) {
+    private static String normal(String unionOp,String alias,String name, OperatorEnum oper, String value, String jdbcType,boolean prepare) {
         if (StringUtils.isBlank(value)) {
             return "";
         }
@@ -195,12 +200,20 @@ public class SqlUtils {
         sb.append(" ");
         sb.append( oper.getOperC());
         sb.append(" ");
-        sb.append(PREFIX);//#{A,jdbcType=xx}
-        sb.append(name);
-        if(JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)){
-            sb.append(",jdbcType=NUMBER");
+        if(prepare){
+            sb.append(PREFIX);//#{A,jdbcType=xx}
+            sb.append(name);
+            if(JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)){
+                sb.append(",jdbcType=NUMBER");
+            }
+            sb.append(SUFIX);
+        }else{
+            if(JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)){
+                sb.append(value);
+            }else{
+                sb.append("'"+value+"'");
+            }
         }
-        sb.append(SUFIX);
         return sb.toString();
     }
 
@@ -471,7 +484,7 @@ public class SqlUtils {
     }
 
 
-    public static Map<String,String> customSearchJsonToSql(String json){
+    public static Map<String,String> customSearchJsonToSql(String json,Map<String,Map<String,Object>> searchNameMap){
         String customJson =Utils.trimNull(json);
         Map<String,String> result=new HashMap<>();
         String customWhere="";
@@ -479,18 +492,14 @@ public class SqlUtils {
         if(StringUtils.isNotBlank(customJson)){
             try {
                 CustomSearchDTO customSearchDTO = JSONUtils.parseObject(customJson, CustomSearchDTO.class);
-                customWhere = customWhere(customSearchDTO.getG(), customSearchDTO.getS());
+                customWhere = customWhere(customSearchDTO.getG(), customSearchDTO.getS(),searchNameMap);
                 customOrder = customOrder(customSearchDTO.getO());
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-        if(StringUtils.isNotBlank(customWhere)){
-            result.put("customWhere",customWhere);
-        }
-        if(StringUtils.isNotBlank(customOrder)){
-            result.put("customOrder",customOrder);
-        }
+        result.put("customWhere",StringUtils.isBlank(customWhere)?"":" and "+Utils.trimNull(customWhere));
+        result.put("customOrder"," "+Utils.trimNull(customOrder));
         return result;
     }
 
@@ -513,31 +522,39 @@ public class SqlUtils {
         return "";
     }
 
-    private static String customWhere(List<CustomSearchGroup> g, List<CustomSearchSingle> s) {
+    private static String customWhere(List<CustomSearchGroup> g, List<CustomSearchSingle> s,Map<String,Map<String,Object>> searchNameMap) {
         StringBuilder sql=new StringBuilder();
+        if(Utils.isNotEmpty(s)){
+            for (int i = 0; i < s.size(); i++) {
+                String field=StringUtils.safeDb(s.get(i).getF());
+                String type=StringUtils.safeDb(" "+s.get(i).getT()+" ");
+                Map<String,Object> search=searchNameMap==null?new HashMap<>():searchNameMap.get(field);
+
+                String jdbctype=Utils.getStringByObject(search,JsoupUtil.JDBCTYPE);
+                String alias=Utils.getStringByObject(search,JsoupUtil.ALIAS);
+
+                String w=transToWherePrePare(StringUtils.safeDb(s.get(i).getO()),
+                        StringUtils.safeDb(s.get(i).getF()),alias,
+                        jdbctype,StringUtils.safeDb(s.get(i).getV()),"","",false,type
+                );
+               if(i==0){
+                   w= w.trim().replaceFirst(type ,"");
+               }
+                sql.append(w);
+            }
+        }
         if(Utils.isNotEmpty(g)){
             for (int i = 0; i < g.size(); i++) {
                 if(g!=null&&Utils.isNotEmpty(g.get(i).getC())){
                     sql.append(" " + g.get(i).getT() +" ( ");
                     g.get(i).getC().forEach(item->{
-                        sql.append(customWhere(item.getG(),item.getS()));
+                        sql.append(customWhere(item.getG(),item.getS(),searchNameMap));
                     });
                     sql.append(" )");
                 }
             }
         }
-        if(Utils.isNotEmpty(s)){
-            for (int i = 0; i < s.size(); i++) {
-               String w=transToWhere(StringUtils.safeDb(s.get(i).getO()),
-                       StringUtils.safeDb(s.get(i).getF()),"",
-                       "",StringUtils.safeDb(s.get(i).getV()),"",""
-               );
-               if(i==0){
-                   w= w.trim().replaceFirst("and","");
-               }
-                sql.append(w);
-            }
-        }
+
         return sql.toString();
     }
 
