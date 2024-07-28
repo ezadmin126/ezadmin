@@ -281,25 +281,16 @@
             $("[name=o]").val('')
             const customSearch = parent.document.getElementById('customSearch');
             customSearch.value='';
+            const parentButton = parent.document.getElementById('submitBtn');
+            parentButton.click();
+            return false;
         })
 
         init();
 
         $(document).on("change",".itemField",function(){
             var row=$(this).closest("li");
-            var input=$("[name="+$(this).val()+"]").clone();
-            console.log(input.html())
-           // input.val(json[i].v);
-            input.addClass("itemValue");
-            input.removeClass("layui-input");
-            input.removeAttr("lay-search");
-            input.removeAttr("name");
-            input.removeAttr("id");
-            input.removeAttr("style");
-            input.attr("lay-ignore","");
-            if(input.hasClass("daterangeinput")){
-                input.attr("type","date");
-            }
+            var input=transSearchItem($(this).val(),'');
             row.find(".searchItemValue").html('');
             row.find(".searchItemValue").append(input);
         })
@@ -327,20 +318,45 @@
             row.find(".itemType").val(json[i].t);//
             row.find(".itemField").val(json[i].f);//
             row.find(".itemOperator").val(json[i].o);//
-            var input=$("[name="+json[i].f+"]").clone();
-            console.log(input.html())
-            input.val(json[i].v);
-            input.addClass("itemValue");
-            input.removeClass("layui-input");
-            input.removeAttr("lay-search");
-            input.removeAttr("name");
-            input.removeAttr("id");
-            input.removeAttr("style");
-            input.attr("lay-ignore","");
+            var input=transSearchItem(json[i].f,json[i].v);
             row.find(".searchItemValue").html('');
             row.find(".searchItemValue").append(input);
             $(ul).append(row);
         }
+    }
+    function transSearchItem(itemname,value){
+        var input=$("[name="+itemname+"]").clone();
+        console.log(input.html())
+
+        input.addClass("itemValue");
+        input.removeClass("layui-input");
+        input.removeAttr("lay-search");
+        input.removeAttr("name");
+        input.removeAttr("id");
+        input.removeAttr("style");
+
+        if(input.hasClass("daterangeinput")){
+            input.attr("type","date");
+        }
+        if(input.hasClass("ez-xmselect")){
+            const json=JSON.parse(input.attr("itemsjson"));
+            const selectElement = $('<select></select>');
+            json.forEach(item => {
+                const optionElement = $('<option></option>').val(item.K).text(item.V);
+                selectElement.append(optionElement);
+            });
+            selectElement.val(value);
+            selectElement.addClass("itemValue");
+            selectElement.attr("lay-ignore","");
+            return selectElement;
+        }
+        if(input.size()==0){
+            input = $('<input>');
+            input.addClass("itemValue");
+        }
+        input.attr("lay-ignore","");
+        input.val(value);
+        return input;
     }
 
     function init(){

@@ -498,7 +498,7 @@ public class SqlUtils {
                 e.printStackTrace();
             }
         }
-        result.put("customWhere",StringUtils.isBlank(customWhere)?"":" and "+Utils.trimNull(customWhere));
+        result.put("customWhere",StringUtils.isBlank(customWhere)?"":"   "+Utils.trimNull(customWhere));
         result.put("customOrder"," "+Utils.trimNull(customOrder));
         return result;
     }

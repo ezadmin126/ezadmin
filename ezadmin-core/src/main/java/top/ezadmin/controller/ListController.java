@@ -313,7 +313,7 @@ public class ListController extends BaseController {
                                 ||s.get("type").equals("input-text")
                              || s.get("type").equals("select")
                              || s.get("type").equals("select-search")
-                             || s.get("type").equals("xmselect")
+                              || s.get("type").equals("xmselect")
                              || s.get("type").equals("daterange")
                 ) // 筛选条件：性别为男性
                 .collect(Collectors.toList());
