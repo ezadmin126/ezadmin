@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>高级查询</title>
-    <link th:href="${contextName+'/webjars/layuidist/css/layui.css?v=null'}" rel="stylesheet"/>
+     <link th:href="${contextName+'/webjars/layuidist/css/layui.css?v=null'}" rel="stylesheet"/>
     <script th:src="${contextName+'/webjars/layuidist/layui.js?v=null'}"></script>
     <script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
     <script th:src="${contextName+'/webjars/topezadmin/plugins/dragula/dragula.min.js'}"></script>
@@ -17,6 +17,7 @@
         }
         li{
             min-width: 450px;
+            padding: 10px;
         }
         ul li > div {
             display: inline-block;
@@ -36,7 +37,7 @@
             top:2px;
         }
         .layui-firebrick,.delete-item{
-            line-height: 25px;
+            line-height: 30px;
         }
         .searchItem{
             width:100px;
@@ -75,74 +76,108 @@
         }
         .itemValue{
             width:100px;
+            height: 28px;
+            border: 1px solid #eee;
+        }
+        select{
+            height: 30px;
+            border-width: 1px;
+            border-style: solid;
+            background-color: #fff;
+            color: rgba(0,0,0,.85);
+            border-radius: 2px;
+            border-color: #eee;
+            width:100%;
+        }
+        body{
+            background: #fbfbfb;
+        }
+        button{
+            min-width: 95px;
+        }
+        .labeldel{
+            float: right;
         }
     </style>
 </head>
 <body>
 <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
 <div class="layui-container">
-    <blockquote class="layui-elem-quote">
-        综合搜索，提供更加个性化的搜索，与原有搜索相互补充
-    </blockquote>
     <div style="display:none">
-    <div
-         th:each="item,indexStat:${data.search}" th:remove="tag" th:utext="${item.html}"
-    >
-    </div>
-    </div>
-    <form class="layui-form">
-        <div>
-            <button   data-type="addOne"> <i class="layui-icon layui-icon-add-1"></i>  添加条件</button>
-            <button   data-type="addGroup"><i  class="layui-icon layui-icon-add-circle"></i> 添加分组</button>
+        <div
+                th:each="item,indexStat:${data.search}" th:remove="tag" th:utext="${item.html}"
+        >
         </div>
-        <hr>
-        <ul >
+    </div>
+    <div class="layui-card"  >
+        <div class="layui-card-header">自定义搜索</div>
+        <div class="layui-card-body"   id="searchLabels">
 
-        </ul>
-        <hr>
-        <blockquote class="layui-elem-quote">
-            综合排序，适用于多个字段同时排序的场景,按从上到下优先级排序。
-        </blockquote>
-        <table id="orderTable" style="width:500px" class="layui-table dragula-container"  >
-            <tbody class=" dragula-container">
-            <tr  th:each="row:${fromColField}"  th:if="${row.order==1}">
-                <td>
-                    <select name="f" lay-ignore>
-                        <option value="">请选择排序字段</option>
-                        <option th:each="item:${fromColField}"
-                        th:if="${item.order==1}" th:value="${item.item_name}" th:text="${item.label}">a</option>
-                    </select>
-                </td>
-                <td>
-                    <select name="o" lay-ignore>
-                        <option value="">不排序</option>
-                        <option value=" desc ">降序（Z-A）</option>
-                        <option value=" asc ">升序（A-Z）</option>
-                    </select>
-                </td>
-                <td>
-<!--                    <i class="layui-font-red layui-icon-reduce-circle layui-icon"></i>-->
-                    <i style='float:right;cursor: move'
-                                class="rowmove layui-icon layui-icon-transfer rowmove"></i>
+        </div>
+    </div>
 
-                </td>
-            </tr>
-            </tbody>
-        </table>
-<!--        <a href="#" class="addOrderRow"><i class="layui-icon-add-circle layui-icon"></i>添加次要排序</a>-->
+    <form class="layui-form">
+        <div class="layui-card"  >
+            <div class="layui-card-header">综合搜索</div>
+            <div class="layui-card-body"  >
+                <div>
+                    <button class="layui-btn layui-btn-primary layui-border layui-btn-sm"  data-type="addOne">添加条件 <i class="layui-icon layui-icon-add-1"></i></button>
+                    <button class="layui-btn layui-btn-primary layui-border layui-btn-sm"  data-type="addGroup">添加分组 <i  class="layui-icon layui-icon-add-circle"></i></button>
+                </div>
+                <hr>
+                <ul id="rootul">
+
+                </ul>
+            </div>
+        </div>
+        <div class="layui-card"  >
+            <div class="layui-card-header">综合排序，适用于多个字段同时排序的场景,按从上到下优先级排序。</div>
+            <div class="layui-card-body"  >
+                <table id="orderTable" style="width:500px" class="layui-table dragula-container"  >
+                    <tbody class=" dragula-container">
+                    <tr  th:each="row:${fromColField}"  th:if="${row.order==1}">
+                        <td>
+                            <select name="f" lay-ignore>
+                                <option value="">请选择排序字段</option>
+                                <option th:each="item:${fromColField}"
+                                        th:if="${item.order==1}" th:value="${item.item_name}" th:text="${item.label}">a</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="o" lay-ignore>
+                                <option value="">不排序</option>
+                                <option value=" desc ">降序（Z-A）</option>
+                                <option value=" asc ">升序（A-Z）</option>
+                            </select>
+                        </td>
+                        <td>
+                            <!--                    <i class="layui-font-red layui-icon-reduce-circle layui-icon"></i>-->
+                            <i style='float:right;cursor: move'
+                               class="rowmove layui-icon layui-icon-transfer rowmove"></i>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--        <a href="#" class="addOrderRow"><i class="layui-icon-add-circle layui-icon"></i>添加次要排序</a>-->
         <div class="layui-form-item">
             <label class="layui-form-label"> </label>
             <div class="layui-input-block">
-                <button id="save" class="layui-btn">查询</button>
-                <button id="reset" class="layui-btn">重置</button>
+                <button id="save" class="layui-btn layui-btn-primary layui-border layui-btn-sm">查询 <i class="layui-icon-search layui-icon"></i></button>
+                <button id="saveAs" class="layui-btn layui-btn-primary layui-border layui-btn-sm">保存为自定义搜索 <i class="layui-icon-star layui-icon"></i></button>
+                <button id="reset" class="layui-btn layui-btn-primary layui-border layui-btn-sm">重置 <i class="layui-icon-fonts-clear layui-icon"></i></button>
             </div>
         </div>
     </form>
+
 </div>
 <div id="single" style="display:none">
     <li class="searchSingle">
         <div class="line" ></div>
-        <div style="width:40px">
+        <div  >
             <select class="itemType" lay-ignore>
                 <option value="and">且</option>
                 <option value="or">或</option>
@@ -190,8 +225,8 @@
         </div>
         <div class="layui-firebrick">分组</div>
         <div>
-            <button   data-type="addOne"> <i class="layui-icon layui-icon-add-1"></i>  添加条件</button>
-            <button   data-type="addGroup"><i  class="layui-icon layui-icon-add-circle"></i> 添加分组</button>
+            <button class="layui-btn layui-btn-primary layui-border layui-btn-sm"  data-type="addOne">添加条件  <i class="layui-icon layui-icon-add-1"></i></button>
+            <button class="layui-btn layui-btn-primary layui-border layui-btn-sm"  data-type="addGroup">添加分组 <i  class="layui-icon layui-icon-add-circle"></i></button>
         </div>
         <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
         <ul  ></ul>
@@ -272,6 +307,33 @@
             parentButton.click();
             return false;
         })
+        $("#saveAs").click(function(e){
+            e.preventDefault();
+            const parentButton = parent.document.getElementById('submitBtn');
+            const customSearch = parent.document.getElementById('customSearch');
+            const key="EZ_CUSTOM_SEARCH_ALL_"+document.getElementById("ENCRYPT_LIST_ID").value;
+            let labelList=localStorage.getItem(key);
+            if(!labelList||labelList==='[object Object]'){
+                labelList="{}";
+            }
+            layer.prompt({title: '请输入搜索名称'}, function(value, index, elem){
+                if(value === '') return elem.focus();
+               // layer.msg('获得：'+ util.escape(value)); // 显示 value
+                // 关闭 prompt
+                let currentLabelJson=JSON.parse(labelList);
+                currentLabelJson[layui.util.escape(value)]=JSON.parse(getJson());
+                localStorage.setItem(key,JSON.stringify(currentLabelJson));
+                layer.close(index);
+                $("#searchLabels").append("<button class=' layui-btn layui-btn-primary layui-border layui-btn-sm saveSearchLabels'>"+
+                    layui.util.escape(value)+
+                    "<i class=\"layui-icon layui-icon-delete labeldel\"></i>" +
+                    "</button>");
+            });
+            // customSearch.value=localStorage.getItem(key);
+            // parentButton.click();
+          //  location.reload();
+            return false;
+        })
         $("#reset").click(function(e){
             e.preventDefault();
             const key="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
@@ -285,8 +347,9 @@
             parentButton.click();
             return false;
         })
-
-        init();
+        const key="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
+        const json=localStorage.getItem(key);
+        init(json);
 
         $(document).on("change",".itemField",function(){
             var row=$(this).closest("li");
@@ -294,6 +357,34 @@
             row.find(".searchItemValue").html('');
             row.find(".searchItemValue").append(input);
         })
+
+        $(document).on("click",".saveSearchLabels",function(e){
+            e.preventDefault();
+            var key=$(this).text();
+            const labels="EZ_CUSTOM_SEARCH_ALL_"+document.getElementById("ENCRYPT_LIST_ID").value;
+            var json=JSON.parse(localStorage.getItem(labels));
+            if(json[key]){
+              //  const key="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
+                $("#rootul").html('');
+                init(JSON.stringify(json[key]));
+                return false;
+            }
+        })
+        $("body").on("click", ".labeldel", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var key=$(this).parent().text();
+            const keyLabel="EZ_CUSTOM_SEARCH_ALL_"+document.getElementById("ENCRYPT_LIST_ID").value;
+            const jsonLabel=localStorage.getItem(keyLabel);
+            if(jsonLabel){
+                let label= JSON.parse(jsonLabel);
+                delete label[key];
+                localStorage.setItem(keyLabel,JSON.stringify(label));
+            }
+            $(this).parent().remove();
+        })
+
+
     });
 
 
@@ -359,9 +450,8 @@
         return input;
     }
 
-    function init(){
-        const key="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
-        const json=localStorage.getItem(key);
+    function init(json){
+
         if(json){
             const order= JSON.parse(json).o;
             const group= JSON.parse(json).g;
@@ -369,9 +459,16 @@
             if(order){
                 const tr= document.querySelectorAll('#orderTable tr');
                 for (let i = 0; i < order.length; i++) {
-                    if(order[i].f!==''&&order[i].o!==''){
-                        tr[i].querySelector("[name=f]").value=order[i].f;
-                        tr[i].querySelector("[name=o]").value=order[i].o;
+                    try{
+                        if(order[i].f!==''&&order[i].o!==''){
+                            tr[i].querySelector("[name=f]").value=order[i].f;
+                            tr[i].querySelector("[name=o]").value=order[i].o;
+                        }else{
+                            tr[i].querySelector("[name=f]").value='';
+                            tr[i].querySelector("[name=o]").value='';
+                        }
+                    }catch(e){
+                        console.log(e)
                     }
                 }
             }
@@ -379,6 +476,20 @@
             doGroup(firstUl,group);
             doItem(firstUl,single);
         }
+
+        const keyLabel="EZ_CUSTOM_SEARCH_ALL_"+document.getElementById("ENCRYPT_LIST_ID").value;
+        const jsonLabel=localStorage.getItem(keyLabel);
+
+        if(jsonLabel){
+            const label= JSON.parse(jsonLabel);
+            const entries = Object.entries(label);
+            $("#searchLabels").html('');
+
+            entries.forEach(([key, value]) => {
+                $("#searchLabels").append("<button class='layui-btn layui-btn-primary layui-border layui-btn-sm saveSearchLabels'>"+key+"<i class=\"layui-icon layui-icon-delete labeldel\"></i></button>");
+            });
+        }
+
     }
 
 

@@ -43,7 +43,7 @@ public class FilterConfiguration implements WebMvcConfigurer {
 		MultipartConfigFactory config = new MultipartConfigFactory();
 		config.setMaxFileSize(DataSize.ofMegabytes(250));
 		config.setMaxRequestSize(DataSize.ofMegabytes(280));
-		config.setLocation(EzClientBootstrap.instance().getUploadPath()+"/temp");
+		config.setLocation(properties.getUploadPath()+"/temp");
 		return config.createMultipartConfig();
 	}
 
