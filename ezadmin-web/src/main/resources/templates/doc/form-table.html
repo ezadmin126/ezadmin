@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ez表单，表格插件文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+<!--                    <li><a href="#source">源码示例</a></li>-->
+<!--                    <li ><a href="#param">参数说明</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>原理介绍</h1>
+        <blockquote class="layui-elem-quote">
+表单里面，一般都需要有 表格的编辑。EZ的交互原本对于此类父子结构的数据，一般采用两个列表实现。
+            但实际场景，在表单编辑子数据的场景还是较多的
+        </blockquote>
+        <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            表格
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+       <object col="12" data="SUB_PRODUCT" item_desc="" datatype="EZLIST"
+                item_name="CHILD_PROD"   type="table"> </object>
+            </textarea>
+        </pre>
+        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h2>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>data</td>
+                <td>列表编码，</td>
+                <td>SUB_PRODUCT
+                </td>
+            </tr>
+            <tr>
+                <td>datatype</td>
+                <td>数据类型，固定值</td>
+                <td>EZLIST</td>
+            </tr>
+            </tbody>
+        </table>
+        <h2    lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            子表实例，包含四个字段，表单提交之后，数据将以数组格式传递，
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+      <html>
+ <head>
+  <title>选择产品</title>
+ </head>
+ <body id="SUB_PRODUCT" datasource="datasource" rowbtnwidth="175" adminstyle="layui">
+  <div id="append_head"></div>
+  <ul id="tab">
+  </ul>
+  <form id="search">
+   <div>
+    <label>产品ID</label>
+    <div>
+     <object item_name="PROD_ID" data="select  PROD_ID K,PROD_NAME V FROM T_BASE_PRODUCT WHERE COMPANY_ID=${COMPANY_ID}" jdbctype="BODY" type="hidden"  datatype="KVSQL"     class="layui-input list-search-item"></object>
+    </div>
+   </div>
+  </form>
+  <div id="tableButton">
+  </div>
+  <table>
+   <tbody>
+    <tr id="column">
+     <th id="rowbutton"></th>
+     <th item_name="CHILD_PROD_ID" url="/jz/searchchild.html" body="td-inputxmselect" width="350" minwidth="350">产品</th>
+     <th item_name="CHILD_NUM" body="td-inputtext" width="100" minwidth="100">数量</th>
+     <th item_name="CHILD_PRICE_CENT" body="td-inputtext" width="100" minwidth="100">价格系数</th>
+     <th item_name="BUY_PRICE" width="100" minwidth="100">采购单价</th>
+     <th item_name="BASE_PRICE" width="100" minwidth="100">销售单价</th>
+    </tr>
+   </tbody>
+  </table>
+  <pre id="express" orderby="order by PROD_ORIGIN,PROD_ID DESC" groupby="">
+
+<![CDATA[
+StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+list=new ArrayList();
+list1=select("SELECT '' ID,
+       '' CHILD_PROD_ID,
+       '' PROD_NAME,
+        '' CHILD_NUM,'1.35' CHILD_PRICE_CENT,  '' BUY_PRICE, '' BASE_PRICE");
+if(isNotBlank("ID")){
+list2=select("SELECT
+        A.PROD_ID ID,
+        A.CHILD_PROD_ID,
+        TBP.PROD_NAME,
+        A.CHILD_NUM ,IFNULL(A.CHILD_PRICE_CENT,'1.35') CHILD_PRICE_CENT,
+        TBP.BUY_PRICE,TBP.BASE_PRICE
+    FROM
+        T_BASE_PRODUCT_PACKAGE A
+    LEFT JOIN
+        T_BASE_PRODUCT TBP
+            on A.CHILD_PROD_ID = TBP.PROD_ID
+    WHERE TBP.PROD_ORIGIN in(3,2,1) and A.DELETE_FLAG=0 AND
+    A.PROD_ID IN("+$("ID")+")");
+          list.addAll(list2);
+}
+list.addAll(list1);
+
+
+return list;
+]]>
+
+
+  </pre>
+  <pre id="count">
+select 10000
+</pre>
+  <pre item_name="displayorder_express" type="">
+
+<![CDATA[
+
+]]>
+
+
+  </pre>
+  <div id="append_foot"></div>
+ </body>
+</html>
+            </textarea>
+        </pre>
+
+        <h2    lay-toc="{anchor: null}" style="margin-bottom: 0;">
+             数据获取实例
+         </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+                表达式中 $(request)可以获取request对象。
+
+       String[]  ids=(String[]) request.get("CHILD_PROD_ID_ARRAY"); //第1列  名称为列表内配置的名称
+        String[]  numbers=(String[]) request.get("CHILD_NUM_ARRAY");//第2列
+        String[] price=(String[]) request.get("CHILD_PRICE_CENT_ARRAY");//第3列
+            </textarea>
+        </pre>
+
+
+
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

@@ -13,33 +13,37 @@
         <div class="ws-side-fixed">
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
-                    <li><a href="#text">单行输入框</a></li>
-                    <li ><a href="#textarea">多行输入框</a></li>
-                    <li ><a href="#ueditor">简约富文本</a></li>
-                    <li ><a href="#tinymce">全功能富文本</a></li>
-                    <li ><a href="#hidden">隐藏域</a></li>
-                    <li ><a href="#number">数字输入框</a></li>
-
+                    <li><a href="#select">原生下拉框</a></li>
+                    <li ><a href="#select-search">搜索下拉框</a></li>
+                    <li ><a href="#select-span">下拉纯文本</a></li>
+                    <li ><a href="#xmselect">下拉多选</a></li>
+                    <li ><a href="#xmselectcascader">下拉级联</a></li>
+                    <li ><a href="#xmselecttree">下拉树</a></li>
+                    <li ><a href="#cascader">eleme 下拉级联</a></li>
+                    <li ><a href="#cascadersql">eleme SQL下拉级联</a></li>
+                    <li ><a href="#radio">单选</a></li>
+                    <li ><a href="#checkbox">复选</a></li>
+                    <li ><a href="#checkbox-tag">标签复选</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="layui-text ws-text" id="WS-text">
-        <h1>输入框</h1>
+        <h1>下拉框</h1>
         <blockquote class="layui-elem-quote">
-系统内置了多种输入框，满足大部分业务场景,同时支持html原生的属性。如placeholder ,style,class，readonly,disable等
+系统内置了多种下拉框，满足大部分业务场景,同时支持html原生的属性。
         </blockquote>
-        <h2 id="text"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            单行输入框
+        <h2 id="select"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            原生下拉框
         </h2>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-       <object col="12"  type="input-text"  > </object>
+       <object col="12"  type="select"  > </object>
             </textarea>
         </pre>
-        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+        <h3  lay-toc="{anchor: null}" style="margin-bottom: 0;">
             参数说明
-        </h2>
+        </h3>
         <table class="layui-table">
             <colgroup>
                 <col width="150">
@@ -53,6 +57,138 @@
             </tr>
             </thead>
             <tbody>
+            <tr>
+                <td>datatype</td>
+                <td>下拉框的数据来源</td>
+                <td>
+                    TEXT,JSON,KVSQL,HTTP,JOIN,KVSQLCACHEFOREVER,KVSQLCACHE<br>,HTTPCACHE,QLEXPRESS,KVSQLCACHE5
+                    ,EZLIST,KVJSONRESULT,CASCADER,KVSQL2TREECACHE,DATAGROUP
+                </td>
+            </tr>
+            <tr>
+                <td>data</td>
+                <td>对应datatype的数据取值参数</td>
+                <td>
+                    yesno(是否),status(禁用启用),delete(已删除未删除),数据字典类型,数据源编码<br>
+                    sql select K,V from table where id=${xx} 或者 url<br>
+                    换行符分割<br>
+                    k:v\n 分割<br>
+                    [{"V":"男","K":"1"},{"V":"女","K":"0"}]<br>
+                    如果是JSON， 键必须是 大写  K V ;
+                </td>
+            </tr>
+            <tr>
+                <td>col</td>
+                <td>栅栏，当前字段的宽度</td>
+                <td>1到12 </td>
+            </tr>
+            <tr>
+                <td>alias</td>
+                <td>表的别名</td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td>item_desc</td>
+                <td>下方的注释</td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td>top_desc</td>
+                <td>上方的注释，主要用于富文本</td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td>jdbctype</td>
+                <td>数据库字段类型</td>
+                <td>NUMBER,
+                    NUMBERNULL,
+                    DATE_TO_NUMBER,
+                    VARCHAR,
+                    DATE,
+                    DATETIME,
+                    CLOB
+                    , BODY,
+                    NUMBER0,
+                    NUMBER1,
+                    NUMBER2 ,
+                    NUMBER3,
+                    NUMBER4 </td>
+            </tr>
+            <tr>
+                <td>lay_verify</td>
+                <td>layui原生验证</td>
+                <td>equired|phone|number
+                    图片：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
+                    文件：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
+                    参考layui官网
+                </td>
+            </tr>
+            <tr>
+                <td>valid_rule</td>
+                <td>jQuery 验证规则</td>
+                <td>{"required": true, "minlength": 2} </td>
+            </tr>
+            <tr>
+                <td>valid_msg</td>
+                <td>下方的注释</td>
+                <td>{"required": true, "minlength": "长度{0}"} </td>
+            </tr>
+            <tr>
+                <td>help</td>
+                <td>字段名称上面的提示，一般用不到</td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td>其他</td>
+                <td>参见HTML原生属性</td>
+                <td> </td>
+            </tr>
+            </tbody>
+        </table>
+        <h2 id="select-search"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            搜索下拉框
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+       <object col="12"  type="select-search"  > </object>
+            </textarea>
+        </pre>
+        <h3   lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>datatype</td>
+                <td>下拉框的数据来源</td>
+                <td>
+                    TEXT,JSON,KVSQL,HTTP,JOIN,KVSQLCACHEFOREVER,KVSQLCACHE<br>,HTTPCACHE,QLEXPRESS,KVSQLCACHE5
+                    ,EZLIST,KVJSONRESULT,CASCADER,KVSQL2TREECACHE,DATAGROUP
+                </td>
+            </tr>
+            <tr>
+                <td>data</td>
+                <td>对应datatype的数据取值参数</td>
+                <td>
+                    yesno(是否),status(禁用启用),delete(已删除未删除),数据字典类型,数据源编码<br>
+                    sql select K,V from table where id=${xx} 或者 url<br>
+                    换行符分割<br>
+                    k:v\n 分割<br>
+                    [{"V":"男","K":"1"},{"V":"女","K":"0"}]<br>
+                    如果是JSON， 键必须是 大写  K V ;
+                </td>
+            </tr>
             <tr>
                 <td>col</td>
                 <td>栅栏，当前字段的宽度</td>
@@ -122,17 +258,26 @@
             </tbody>
         </table>
 
-        <h2 id="textarea"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            多行输入框
+        <h2 id="select-span"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            下拉纯文本
         </h2>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-       <object col="12"  type="textarea"  > </object>
+       <object col="12"  type="select-span"  > </object>
             </textarea>
         </pre>
-        <h2    lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            参数说明
+
+        <h2 id="xmselect"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            下拉多选
         </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+       <object col="12"  type="xmselect"  > </object>
+            </textarea>
+        </pre>
+        <h3   lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h3>
         <table class="layui-table">
             <colgroup>
                 <col width="150">
@@ -146,6 +291,26 @@
             </tr>
             </thead>
             <tbody>
+            <tr>
+                <td>datatype</td>
+                <td>下拉框的数据来源</td>
+                <td>
+                    TEXT,JSON,KVSQL,HTTP,JOIN,KVSQLCACHEFOREVER,KVSQLCACHE<br>,HTTPCACHE,QLEXPRESS,KVSQLCACHE5
+                    ,EZLIST,KVJSONRESULT,CASCADER,KVSQL2TREECACHE,DATAGROUP
+                </td>
+            </tr>
+            <tr>
+                <td>data</td>
+                <td>对应datatype的数据取值参数</td>
+                <td>
+                    yesno(是否),status(禁用启用),delete(已删除未删除),数据字典类型,数据源编码<br>
+                    sql select K,V from table where id=${xx} 或者 url<br>
+                    换行符分割<br>
+                    k:v\n 分割<br>
+                    [{"V":"男","K":"1"},{"V":"女","K":"0"}]<br>
+                    如果是JSON， 键必须是 大写  K V ;
+                </td>
+            </tr>
             <tr>
                 <td>col</td>
                 <td>栅栏，当前字段的宽度</td>
@@ -214,294 +379,11 @@
             </tr>
             </tbody>
         </table>
+        <h3>传输ID数组</h3>
 
-        <h2 id="ueditor"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            简约富文本，简洁的富文本，功能较少，适应于文字+图片类的
-        </h2>
-        <pre class="layui-code code-demo" lay-options="{}">
-            <textarea>
-       <object col="12"  type="ueditor"  > </object>
-            </textarea>
-        </pre>
-        <h2    lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            参数说明
-        </h2>
-        <table class="layui-table">
-            <colgroup>
-                <col width="150">
-                <col width="300">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>配置项</th>
-                <th>说明</th>
-                <th>默认值</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>col</td>
-                <td>栅栏，当前字段的宽度</td>
-                <td>1到12 </td>
-            </tr>
-            <tr>
-                <td>alias</td>
-                <td>表的别名</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>item_desc</td>
-                <td>下方的注释</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>top_desc</td>
-                <td>上方的注释，主要用于富文本</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>jdbctype</td>
-                <td>数据库字段类型</td>
-                <td>NUMBER,
-                    NUMBERNULL,
-                    DATE_TO_NUMBER,
-                    VARCHAR,
-                    DATE,
-                    DATETIME,
-                    CLOB
-                    , BODY,
-                    NUMBER0,
-                    NUMBER1,
-                    NUMBER2 ,
-                    NUMBER3,
-                    NUMBER4 </td>
-            </tr>
-            <tr>
-                <td>lay_verify</td>
-                <td>layui原生验证</td>
-                <td>equired|phone|number
-                    图片：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
-                    文件：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
-                    参考layui官网
-                </td>
-            </tr>
-            <tr>
-                <td>valid_rule</td>
-                <td>jQuery 验证规则</td>
-                <td>{"required": true, "minlength": 2} </td>
-            </tr>
-            <tr>
-                <td>valid_msg</td>
-                <td>下方的注释</td>
-                <td>{"required": true, "minlength": "长度{0}"} </td>
-            </tr>
-            <tr>
-                <td>help</td>
-                <td>字段名称上面的提示，一般用不到</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>其他</td>
-                <td>参见HTML原生属性</td>
-                <td> </td>
-            </tr>
-            </tbody>
-        </table>
 
-        <h2 id="tinymce"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-           tinymce全功能文本，集成了批量上传图片
-        </h2>
-        <pre class="layui-code code-demo" lay-options="{}">
-            <textarea>
-       <object col="12"  type="tinymce"  > </object>
-            </textarea>
-        </pre>
-        <h2    lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            参数说明
-        </h2>
-        <table class="layui-table">
-            <colgroup>
-                <col width="150">
-                <col width="300">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>配置项</th>
-                <th>说明</th>
-                <th>默认值</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>col</td>
-                <td>栅栏，当前字段的宽度</td>
-                <td>1到12 </td>
-            </tr>
-            <tr>
-                <td>alias</td>
-                <td>表的别名</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>item_desc</td>
-                <td>下方的注释</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>top_desc</td>
-                <td>上方的注释，主要用于富文本</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>jdbctype</td>
-                <td>数据库字段类型</td>
-                <td>NUMBER,
-                    NUMBERNULL,
-                    DATE_TO_NUMBER,
-                    VARCHAR,
-                    DATE,
-                    DATETIME,
-                    CLOB
-                    , BODY,
-                    NUMBER0,
-                    NUMBER1,
-                    NUMBER2 ,
-                    NUMBER3,
-                    NUMBER4 </td>
-            </tr>
-            <tr>
-                <td>lay_verify</td>
-                <td>layui原生验证</td>
-                <td>equired|phone|number
-                    图片：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
-                    文件：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
-                    参考layui官网
-                </td>
-            </tr>
-            <tr>
-                <td>valid_rule</td>
-                <td>jQuery 验证规则</td>
-                <td>{"required": true, "minlength": 2} </td>
-            </tr>
-            <tr>
-                <td>valid_msg</td>
-                <td>下方的注释</td>
-                <td>{"required": true, "minlength": "长度{0}"} </td>
-            </tr>
-            <tr>
-                <td>help</td>
-                <td>字段名称上面的提示，一般用不到</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>其他</td>
-                <td>参见HTML原生属性</td>
-                <td> </td>
-            </tr>
-            </tbody>
-        </table>
 
-        <h2 id="hidden"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            隐藏域
-        </h2>
-        <pre class="layui-code code-demo" lay-options="{}">
-            <textarea>
-       <object col="12"  type="input-hidden"  > </object>
-            </textarea>
-        </pre>
 
-        <h2 id="number"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            数字输入框
-        </h2>
-        <pre class="layui-code code-demo" lay-options="{}">
-            <textarea>
-       <object col="12"  type="input-number"  > </object>
-            </textarea>
-        </pre>
-        <h2    lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            参数说明
-        </h2>
-        <table class="layui-table">
-            <colgroup>
-                <col width="150">
-                <col width="300">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>配置项</th>
-                <th>说明</th>
-                <th>默认值</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>col</td>
-                <td>栅栏，当前字段的宽度</td>
-                <td>1到12 </td>
-            </tr>
-            <tr>
-                <td>alias</td>
-                <td>表的别名</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>item_desc</td>
-                <td>下方的注释</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>top_desc</td>
-                <td>上方的注释，主要用于富文本</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>jdbctype</td>
-                <td>数据库字段类型</td>
-                <td>NUMBER,
-                    NUMBERNULL,
-                    DATE_TO_NUMBER,
-                    VARCHAR,
-                    DATE,
-                    DATETIME,
-                    CLOB
-                    , BODY,
-                    NUMBER0,
-                    NUMBER1,
-                    NUMBER2 ,
-                    NUMBER3,
-                    NUMBER4 </td>
-            </tr>
-            <tr>
-                <td>lay_verify</td>
-                <td>layui原生验证</td>
-                <td>equired|phone|number
-                    图片：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
-                    文件：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
-                    参考layui官网
-                </td>
-            </tr>
-            <tr>
-                <td>valid_rule</td>
-                <td>jQuery 验证规则</td>
-                <td>{"required": true, "minlength": 2} </td>
-            </tr>
-            <tr>
-                <td>valid_msg</td>
-                <td>下方的注释</td>
-                <td>{"required": true, "minlength": "长度{0}"} </td>
-            </tr>
-            <tr>
-                <td>help</td>
-                <td>字段名称上面的提示，一般用不到</td>
-                <td> </td>
-            </tr>
-            <tr>
-                <td>其他</td>
-                <td>参见HTML原生属性</td>
-                <td> </td>
-            </tr>
-            </tbody>
-        </table>
 
 
     </div>

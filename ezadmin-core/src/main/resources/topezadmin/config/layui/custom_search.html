@@ -22,10 +22,10 @@
         ul li > div {
             display: inline-block;
             margin-right: 10px;
-            height: 25px;
+           // height: 25px;
             vertical-align: top;
             cursor: pointer;
-            margin-top: 5px;
+          //  margin-top: 5px;
         }
         .layui-form-switch {
             width: 35px;
@@ -37,7 +37,7 @@
             top:2px;
         }
         .layui-firebrick,.delete-item{
-            line-height: 30px;
+            line-height: 38px;
         }
         .searchItem{
             width:100px;
@@ -75,8 +75,7 @@
             filter: alpha(opacity=20);
         }
         .itemValue{
-            width:100px;
-            height: 28px;
+          //  width:100px;
             border: 1px solid #eee;
         }
         select{
@@ -121,8 +120,8 @@
             <div class="layui-card-header">综合搜索</div>
             <div class="layui-card-body"  >
                 <div>
-                    <button class="layui-btn layui-btn-primary layui-border layui-btn-sm"  data-type="addOne">添加条件 <i class="layui-icon layui-icon-add-1"></i></button>
-                    <button class="layui-btn layui-btn-primary layui-border layui-btn-sm"  data-type="addGroup">添加分组 <i  class="layui-icon layui-icon-add-circle"></i></button>
+                    <button class="layui-btn layui-btn-primary layui-border layui-border-orange"  data-type="addOne">添加条件 <i class="layui-icon layui-icon-add-1"></i></button>
+                    <button class="layui-btn layui-btn-primary layui-border layui-border-orange"  data-type="addGroup">添加分组 <i  class="layui-icon layui-icon-add-circle"></i></button>
                 </div>
                 <hr>
                 <ul id="rootul">
@@ -137,14 +136,14 @@
                     <tbody class=" dragula-container">
                     <tr  th:each="row:${fromColField}"  th:if="${row.order==1}">
                         <td>
-                            <select name="f" lay-ignore>
+                            <select name="f" lay-search>
                                 <option value="">请选择排序字段</option>
                                 <option th:each="item:${fromColField}"
                                         th:if="${item.order==1}" th:value="${item.item_name}" th:text="${item.label}">a</option>
                             </select>
                         </td>
                         <td>
-                            <select name="o" lay-ignore>
+                            <select name="o" lay-search>
                                 <option value="">不排序</option>
                                 <option value=" desc ">降序（Z-A）</option>
                                 <option value=" asc ">升序（A-Z）</option>
@@ -177,14 +176,14 @@
 <div id="single" style="display:none">
     <li class="searchSingle">
         <div class="line" ></div>
-        <div  >
-            <select class="itemType" lay-ignore>
+        <div  class="searchItem">
+            <select class="itemType" lay-search>
                 <option value="and">且</option>
                 <option value="or">或</option>
             </select>
         </div>
         <div class="searchItem">
-            <select class="itemField" lay-ignore>
+            <select class="itemField" lay-search lay-filter="itemField">
                 <option  th:each="item:${fromSearchField}"
                     th:text="${item.label}"
                     th:value="${item.item_name}"
@@ -192,7 +191,7 @@
             </select>
         </div>
         <div class="searchItem">
-            <select class="itemOperator" lay-ignore>
+            <select class="itemOperator" lay-search>
                 <option value="">请选择</option>
                 <option  value='eq'>等于</option>
                 <option  value='ne'>≠ 不等于</option>
@@ -209,7 +208,7 @@
             </select>
         </div>
         <div class="searchItemValue">
-            <input   class="itemValue"  >
+            <input   class="itemValue  layui-input "  >
         </div>
         <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
     </li>
@@ -217,22 +216,28 @@
 <div id="group" style="display:none">
     <li class="searchGroup">
         <div class="line" ></div>
-        <div style="width:40px">
-            <select class="itemType" lay-ignore>
+        <div class="searchItem">
+            <select class="itemType" lay-search>
                 <option value="and">且</option>
                 <option value="or">或</option>
             </select>
         </div>
         <div class="layui-firebrick">分组</div>
         <div>
-            <button class="layui-btn layui-btn-primary layui-border layui-btn-sm"  data-type="addOne">添加条件  <i class="layui-icon layui-icon-add-1"></i></button>
-            <button class="layui-btn layui-btn-primary layui-border layui-btn-sm"  data-type="addGroup">添加分组 <i  class="layui-icon layui-icon-add-circle"></i></button>
+            <button class="layui-btn layui-btn-primary layui-border layui-border-orange"  data-type="addOne">添加条件  <i class="layui-icon layui-icon-add-1"></i></button>
+            <button class="layui-btn layui-btn-primary layui-border layui-border-orange"  data-type="addGroup">添加分组 <i  class="layui-icon layui-icon-add-circle"></i></button>
         </div>
         <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
         <ul  ></ul>
     </li>
 </div>
 <script>
+    function render(){
+        layui.laydate.render({
+            elem: '.daterangeinput'
+        });;
+        layui.form.render();
+    }
     layui.use(function () {
       //  var $ = layui.jquery;
 
@@ -272,6 +277,7 @@
             });
             var html=$("#single").html();
             firstUlSibling.insertAdjacentHTML('beforeend', html);
+            render();
         })
         $("body").on("click", "[data-type='addGroup']", function (e) {
             e.preventDefault();
@@ -286,6 +292,7 @@
             });
             var html=$("#group").html();
             firstUlSibling.insertAdjacentHTML('beforeend', html);
+            render();
         })
 
         $("body").on("click", ".delete-item", function (e) {
@@ -351,11 +358,24 @@
         const json=localStorage.getItem(key);
         init(json);
 
+
+        layui.form.on('select(itemField)', function(data){
+            console.log(data.value); // 获取选中的值
+            console.log(data.elem); // 获取select元素
+            console.log(data.othis); // 获取美化后的DOM对象
+            var input=transSearchItem(data.value,'');
+            var row=$(data.elem).closest("li");
+            row.find(".searchItemValue").html('');
+            row.find(".searchItemValue").append(input);
+            render();
+
+        });
         $(document).on("change",".itemField",function(){
             var row=$(this).closest("li");
             var input=transSearchItem($(this).val(),'');
             row.find(".searchItemValue").html('');
             row.find(".searchItemValue").append(input);
+            render();
         })
 
         $(document).on("click",".saveSearchLabels",function(e){
@@ -413,6 +433,7 @@
             row.find(".searchItemValue").html('');
             row.find(".searchItemValue").append(input);
             $(ul).append(row);
+            render();
         }
     }
     function transSearchItem(itemname,value){
@@ -420,14 +441,16 @@
         console.log(input.html())
 
         input.addClass("itemValue");
-        input.removeClass("layui-input");
-        input.removeAttr("lay-search");
+          input.addClass("layui-input");
+       // input.removeAttr("lay-search");
         input.removeAttr("name");
         input.removeAttr("id");
         input.removeAttr("style");
+        input.attr("lay-affix","clear");
+
 
         if(input.hasClass("daterangeinput")){
-            input.attr("type","date");
+           // input.a("type","date");
         }
         if(input.hasClass("ez-xmselect")){
             const json=JSON.parse(input.attr("itemsjson"));
@@ -438,14 +461,15 @@
             });
             selectElement.val(value);
             selectElement.addClass("itemValue");
-            selectElement.attr("lay-ignore","");
+            selectElement.attr("lay-search","");
             return selectElement;
         }
         if(input.size()==0){
             input = $('<input>');
             input.addClass("itemValue");
+            input.addClass("layui-input");
         }
-        input.attr("lay-ignore","");
+        input.attr("lay-search","");
         input.val(value);
         return input;
     }
@@ -489,6 +513,7 @@
                 $("#searchLabels").append("<button class='layui-btn layui-btn-primary layui-border layui-btn-sm saveSearchLabels'>"+key+"<i class=\"layui-icon layui-icon-delete labeldel\"></i></button>");
             });
         }
+        render();
 
     }
 

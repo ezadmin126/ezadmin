@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>详情页插件</title>
+    <title>文档</title>
     <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
     <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
     <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
@@ -20,48 +20,35 @@
         </div>
     </div>
     <div class="layui-text ws-text" id="WS-text">
-        <h1>详情页</h1>
+        <h1>原理介绍</h1>
         <blockquote class="layui-elem-quote">
-            表单可以无缝转为详情页，大部分插件替换成index-span即可。
-            详情页应用较少，只适用于简单快速场景。
+
         </blockquote>
-
-        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            其他情况
+        <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            列表
         </h2>
-        <table class="layui-table">
-            <colgroup>
-                <col width="150">
-                <col width="300">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>表单插件</th>
-                <th>对应详情插件</th>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+  <div class="layui-col-md12 selector" ez-type="card" ez-label="面板" ez-cardname="面板"  ez-col="12"  >
+    <div class="layui-card  ">
+        <div class="layui-card-header  ">
+            面板
+        </div>
+        <div class="layui-card-body ">
+            <div class="layui-row  dragula-container"   ez-col="12"  >
 
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>table</td>
-                <td>tableview</td>
-            </tr> <tr>
-                <td>input等输入类型</td>
-                <td>input-span</td>
-            </tr>
-            <tr>
-                <td>select</td>
-                <td>select-span</td>
-            </tr>
-            <tr>
-                <td>select</td>
-                <td>select-span</td>
-            </tr><tr>
-                <td>其他</td>
-                <td>开发中</td>
-            </tr>
-            </tbody>
-        </table>
+            </div>
+        </div>
+    </div>
+</div>
+            </textarea>
+        </pre>
+        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h2>
+       <p> ez-col:   占位，  每行分成12份</p>
+        <p>layui-card-header:  名称</p>
+
     </div>
 </div>
 

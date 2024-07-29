@@ -13,8 +13,8 @@
         <div class="ws-side-fixed">
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
-                    <li><a href="#source">源码示例</a></li>
-                    <li ><a href="#param">参数说明</a></li>
+<!--                    <li><a href="#source">源码示例</a></li>-->
+<!--                    <li ><a href="#param">参数说明</a></li>-->
                 </ul>
             </div>
         </div>
@@ -22,7 +22,7 @@
     <div class="layui-text ws-text" id="WS-text">
         <h1>原理介绍</h1>
         <blockquote class="layui-elem-quote">
-
+            表单
         </blockquote>
         <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
             列表
@@ -47,10 +47,48 @@
             </thead>
             <tbody>
             <tr>
-                <td>topezadmin.cacheFlag</td>
-                <td>是否开启缓存，开启后，页面配置将会加载至缓存</td>
-                <td>true</td>
+                <td>id</td>
+                <td>表单名称</td>
+                <td></td>
             </tr>
+            <tr>
+                <td>datasource</td>
+                <td>数据源，对应spring的datasource</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>success_url</td>
+                <td>保存成功之后的跳转url</td>
+                <td>reload:重新加载父页面<br>
+                    reloadlocal:重新加载当前页面<br>
+                    其他：自定义的url，支持参数表达式。
+                </td>
+            </tr>
+            <tr>
+                <td>formSubmitUrl</td>
+                <td>提交表单的URL</td>
+                <td>
+                </td>
+            </tr>
+ <tr>
+                <td>表达式</td>
+                <td><a href="/doc/express.html#card4">表单表达式</a></td>
+                <td>
+                </td>
+            </tr>
+<tr>
+                <td>append_head</td>
+                <td>表单前面的一段html代码，自定义css</td>
+                <td>
+                </td>
+            </tr>
+<tr>
+                <td>append_foot</td>
+                <td><表单后面的一段html代码,自定义脚本</td>
+                <td>
+                </td>
+            </tr>
+
             </tbody>
         </table>
     </div>

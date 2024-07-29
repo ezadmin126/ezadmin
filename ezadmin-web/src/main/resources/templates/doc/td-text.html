@@ -76,6 +76,16 @@
         </table>
 
 
+        <h2 id="utext">窗口链接</h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<th item_name="USER_NAME"  type="td-utext" url="http://www.baidu.com">新增</th>
+            </textarea>
+        </pre>
+        <h3   style="margin-bottom: 0;">
+            默认插件，直接展示文本，会去除html标签，类似thymeleaf的  th:utext
+        </h3>
+
 
         <h2 id="link">链接文本</h2>
         <pre class="layui-code code-demo" lay-options="{}">
@@ -84,7 +94,7 @@
             </textarea>
         </pre>
         <h3   style="margin-bottom: 0;">
-            默认插件，直接展示文本，会去除html标签，类似thymeleaf的  th:text
+            默认插件，直接展示文本，会去除html标签，类似thymeleaf的
         </h3>
         <table class="layui-table">
             <colgroup>
@@ -108,71 +118,6 @@
                 <td>url</td>
                 <td>弹框或跳转的url</td>
                 <td></td>
-            </tr>
-            </tbody>
-        </table>
-
-        <h2 id="linkclick">窗口链接</h2>
-        <pre class="layui-code code-demo" lay-options="{}">
-            <textarea>
-<th item_name="USER_NAME"  type="td-linkclick" url="http://www.baidu.com">新增</th>
-            </textarea>
-        </pre>
-        <h3   style="margin-bottom: 0;">
-            默认插件，直接展示文本，会去除html标签，类似thymeleaf的  th:text
-        </h3>
-        <table class="layui-table">
-            <colgroup>
-                <col width="150">
-                <col width="150">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>配置项</th>
-                <th>说明</th>
-                <th>默认值</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>width</td>
-                <td>列宽</td>
-                <td>110</td>
-            </tr>
-            <tr>
-                <td>windowname</td>
-                <td>弹框标题</td>
-                <td>新增</td>
-            </tr>
-            <tr>
-                <td>url</td>
-                <td>弹框或跳转的url</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>area</td>
-                <td>窗口的大小</td>
-                <td>100 或者   300,100</td>
-            </tr>
-            <tr>
-                <td>opentaype</td>
-                <td>打开方式</td>
-                <td>
-                    <ul >
-                        <li  >MODEL：弹框</li>
-                        <li  >SCRIPT：自定义事件</li>
-                        <li >CONFIRM_MODEL：带确认的弹窗</li>
-                        <li  >_BLANK：新浏览器窗口</li>
-                        <li >LOCATION：当前窗口</li>
-                        <li  >PARENT：父窗口打开标签</li>
-                        <li  >APPEND_PARAM：携带当前搜索参数窗口打开</li>
-                        <li  >_BLANK_PARAM：携带当前搜索参数新浏览器窗口</li>
-                        <li  >_BLANK_PARAM_COLUMN：只携带配置显示的参数，用于导出</li>
-                        <li  >AJAX：异步请求</li>
-                        <li  >CONFIRM_AJAX：带确认的异步请求</li>
-                        <li >FORM：全屏表单</li>
-                    </ul>
-                </td>
             </tr>
             </tbody>
         </table>
