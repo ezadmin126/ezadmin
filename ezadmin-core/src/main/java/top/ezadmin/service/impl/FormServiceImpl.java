@@ -333,6 +333,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         if(StringUtils.isJsBlank(ID)){
             ID=Utils.getStringByObject(requestParamMap,"id");
         }
+        if(StringUtils.isJsBlank(ID)){
+            ID="ID";
+        }
         Map<String, Object> initItemMap=new HashMap<>() ;
         initItemMap.putAll(requestParamMap);
         if(StringUtils.isNotBlank(ID)) {
@@ -352,8 +355,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                     }
                 }
             } catch (Exception e) {
-                logger.warn(JSONUtils.toJSONString(form.get("core")));
-                // Utils.addLog(ID,e);
+                 Utils.addLog(JSONUtils.toJSONString(form.get("core")),e);
             }
         }
 //        }else{

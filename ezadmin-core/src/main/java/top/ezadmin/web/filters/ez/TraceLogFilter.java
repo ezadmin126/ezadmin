@@ -25,7 +25,9 @@ public class TraceLogFilter  extends Filter {
         boolean include=include(request.getRequestURI());
 
         try {
-            if (include|| StringUtils.equals(request.getParameter("debug"),"1")|| StringUtils.equals(request.getParameter("DEBUG"),"1")) {
+            if (include||
+                    StringUtils.equals(request.getParameter("trace"),"1")
+                    || StringUtils.equals(request.getParameter("trace"),"1")) {
                 Utils.initLog();
             }
              getNext().doFilter(request,response,filterChain) ;

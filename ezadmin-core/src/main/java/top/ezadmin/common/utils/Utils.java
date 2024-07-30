@@ -67,7 +67,7 @@ public class Utils {
     }
     public static void addLog(String s,Exception e ) {
         add(EzDateUtils.todayDatetime()+ "\t\n" +s  + ExceptionUtils.getFullStackTrace(e));
-        logger.error(s,e);
+        logger.info(s,e);
     }
 
 

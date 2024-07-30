@@ -245,10 +245,7 @@
             isContainer: function (el) {
                 return el.classList.contains('dragula-container');
             },
-            // copy: true,
-            //  removeOnSpill: true,
             revertOnSpill: true,
-            //copySortSource: true,
             moves: function (el, container, handle) {
                 return handle.classList.contains('rowmove');
             }, accepts: function (el, target) {
@@ -314,6 +311,7 @@
             parentButton.click();
             return false;
         })
+        //保存标签
         $("#saveAs").click(function(e){
             e.preventDefault();
             const parentButton = parent.document.getElementById('submitBtn');
@@ -336,9 +334,6 @@
                     "<i class=\"layui-icon layui-icon-delete labeldel\"></i>" +
                     "</button>");
             });
-            // customSearch.value=localStorage.getItem(key);
-            // parentButton.click();
-          //  location.reload();
             return false;
         })
         $("#reset").click(function(e){
@@ -377,7 +372,7 @@
             row.find(".searchItemValue").append(input);
             render();
         })
-
+        //加载标签
         $(document).on("click",".saveSearchLabels",function(e){
             e.preventDefault();
             var key=$(this).text();
@@ -390,6 +385,7 @@
                 return false;
             }
         })
+        //删除标签
         $("body").on("click", ".labeldel", function (e) {
             e.preventDefault();
             e.stopPropagation();

@@ -41,7 +41,11 @@ public class FormEditController extends BaseController {
     FormService formService = EzProxy.singleInstance(FormService.class);
 
 
-
+    @EzMapping(value = "trace.html", name = "view")
+    public String trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String result=form(request,response);
+        return EzClientBootstrap.instance().getAdminStyle()+"/form";
+    }
 
     @EzMapping("submitEdit.html")
     public EzResult edit( HttpServletRequest request, HttpServletResponse response) throws Exception {
