@@ -55,6 +55,9 @@ public class BlogService {
     public BlogVO detail(Integer blogId) {
         Blog blog= blogMapper.selectByPrimaryKey(blogId);
         BlogVO vo=new BlogVO();
+        vo.setBlogUrl(UrlTool.blogDetail(blog.getBlogId()));
+        vo.setCategoryName(blogCategoryMapper.selectByPrimaryKey(blog.getCategoryId()).getCategoryName());
+        vo.setCategoryUrl(UrlTool.blogSearch(blog.getCategoryId(),1));
         BeanUtils.copyProperties(blog,vo);
         return vo;
     }

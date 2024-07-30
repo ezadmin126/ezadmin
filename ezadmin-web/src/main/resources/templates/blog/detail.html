@@ -19,8 +19,6 @@
             </span>
         <!-- 内容主体区域 -->
         <div class="layui-row layui-col-space10" style="margin-top:10px">
-
-
             <div class="layui-col-xs12 layui-col-md12">
                 <div class="layui-panel">
                     <div class="layui-row layui-text" style="padding:30px">
@@ -32,18 +30,17 @@
                                 <h1 th:text="${blogDetailVO.blogTitle}"> </h1>
                                 <p> [[${#dates.format(blogDetailVO?.addTime,'yyyy-MM-dd HH:mm:ss')}]]
                                     <i class="layui-icon-eye layui-icon"></i>[[${blogDetailVO?.viewTimes}]]
-                                    <!--                                    <i class="layui-icon-dialogue layui-icon"></i>12-->
-                                    <!--                                    <i class="layui-icon-praise layui-icon"></i>12-->
-                                    <!--                                    <i class="layui-icon-tread layui-icon"></i>12-->
+                                                                        <i class="layui-icon-dialogue layui-icon"></i>[[${blogDetailVO?.commentCount}]]
+<!--                                                                        <i class="layui-icon-praise layui-icon"></i>12-->
+<!--                                                                        <i class="layui-icon-tread layui-icon"></i>12-->
+                                </p>
+                                <p>
+                                    <a  th:href="${blogDetailVO.categoryUrl}"
+                                        th:utext="${blogDetailVO.categoryName}" class="layui-badge layui-bg-green">前端</a>
                                 </p>
                                 <p th:utext="${blogDetailVO.blogContent}">在前端技术的快速发展中找准你的定位，在思考与实践中沉淀。</p>
-                                <p>
-                                    <a class="layui-badge layui-bg-green"
-                                          th:each="tag : ${tagList}"
-                                          th:href="@{'/tag/' + ${tag.tagId}}"
-                                          th:text="${tag.tagName}">
-                                        前端</a>
-                                </p>
+
+
                                 <aside class="blog-rights clearfix">
                                     <p>本站文章除注明转载/出处外，皆为作者原创，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。</p>
                                 </aside>
@@ -52,12 +49,50 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="layui-row layui-col-space10" style="margin-top:10px">
+            <div class="layui-col-xs12 layui-col-md12">
+                <div class="layui-panel  " style="padding:30px">
+                     <form th:if="${1==blogDetailVO.enableComment}" class="layui-form" action="/blog/addComments.html" method="POST">
+        <input type="hidden" name="blogId" th:value="${blogDetailVO.blogId}">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">验证码</label>
+                    <div class="layui-input-inline layui-input-wrap">
+                        <input type="tel" name="valicode" lay-verify="required" autocomplete="off" lay-reqtext="请填写右侧数字" lay-affix="clear" class="layui-input demo-phone">
+                    </div>
+                    <div class="layui-form-mid" style="padding: 0!important;">
+                        <input type="text" class="layui-input"   th:value="${valicode}">
+                    </div>
+                </div>
 
+                <div class="layui-form-item">
+                    <label class="layui-form-label">昵称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="userName" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
 
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">留言</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" lay-verify="required" name="blogMessage" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit lay-filter="demo1">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+
+        </form>
+
+                </div>
+            </div>
         </div>
 
-    </div>
 
+    </div>
     <div th:replace="blog/common::foot"></div>
 
 </div>

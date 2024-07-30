@@ -105,7 +105,7 @@ public class BlogController {
         pp.setPerPageInt(10);
         pp.setTotalRecord(page.getTotal());
         try {
-            blogVO.setCommentCount(Integer.valueOf(page.getTotal() + ""));
+            blogVO.setCommentCount(NumberUtils.toInt(page.getTotal() + ""));
         }catch (Exception e){}
         model.addAttribute("page", pp);
         if(currentPage<page.getTotal()){
@@ -116,7 +116,9 @@ public class BlogController {
         model.addAttribute("messageList", messageList);
         model.addAttribute("configurations", BlogConfigurations.config());
         model.addAttribute("pageName", blogVO.getBlogTitle());
-
+        Long code=System.currentTimeMillis();
+        model.addAttribute("valicode", code+"");
+        request.getSession().setAttribute(SessionConstants.SESSION_CAPTCHA_KEY,code);
         return "blog/detail";
     }
 
@@ -137,7 +139,7 @@ public class BlogController {
             return EzResult.instance().msg("200", "成功");
         }catch(Exception e){
             logger.error("",e);
-            return EzResult.instance().msg("500", "失败，请联系管理员156275808");
+            return EzResult.instance().msg("500", "失败，请联系管理员ezadmin@126.com");
         }
     }
 
