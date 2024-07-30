@@ -59,7 +59,7 @@ public class SearchOperator extends AbstractOperator {
                 orderByClause = page.getOrderByClause();
             }
 
-            if(customSearch.containsKey("customOrder")){
+            if(StringUtils.isNotBlank(customSearch.get("customOrder"))){
                 orderByClause=customSearch.get("customOrder");
             }
 
