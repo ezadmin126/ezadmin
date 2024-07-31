@@ -14,43 +14,46 @@
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
                     <li><a href="#quick">快速上手</a></li>
-                    <li ><a href="#more">图形化管理</a></li>
-                    <li ><a href="#sql">自定义SQL生成列表表单</a></li>
-                    <li ><a href="#servlet">不是springboot?</a></li>
+                    <li><a href="#more">图形化管理</a></li>
+                    <li><a href="#sql">SQL转列表表单</a></li>
+                    <li><a href="#servlet">非springboot场景</a></li>
+                    <li><a href="#nosql">无数据库场景</a></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="layui-text ws-text" id="WS-text">
-    <h1>开始使用</h1>
-    <blockquote class="layui-elem-quote">
-        EZ一个嵌入式的Servlet表单列表工具，可以将SQL转换为带有表格或表单的网页，可适配任意UI框架，同时支持拖拽自定义网页。
-     </blockquote>
-
-        <h2 id="quick"  lay-toc="{anchor: null}" style="margin-bottom: 0;">1.maven依赖（内置springboot-starter）</h2>
+        <h1>开始使用</h1>
+        <blockquote class="layui-elem-quote">
+            EZ是一个嵌入式的Servlet表单列表工具，可以将SQL转换为列表（table）或表单（form），可适配各类UI框架，同时支持拖拽生成列表表单。
+        </blockquote>
+        <h2 id="quick" lay-toc="{anchor: null}" style="margin-bottom: 0;">1.maven依赖（内置springboot-starter）</h2>
         <p>
-            下载一个空的springboot应用：<a href="https://start.spring.io/" target="_blank">https://start.spring.io/</a>
+            jdk1.8+<br>
+            新建一个空的springboot应用 ，版本建议：2.2.6.RELEASE
         </p>
-        <p>EZ是在jdk8的环境下开发的，仅使用spring的读取配置工具与bean管理工具，如使用map缓存，修改部分代码最低可以支持至jdk6.
-        </p>
-        <p>  添加如下maven依赖， maven仓库目前最新版本为2.9.14.5</p>
+        <p> 添加maven依赖</p>
         <pre class="layui-code code-demo" lay-options="{}">
-        <textarea>
 <dependency>
   <groupId>io.github.ezadmin126</groupId>
   <artifactId>ezadmin-core</artifactId>
-  <version>2.9.14.5</version>
+  <version>2.9.14.7</version>
 </dependency>
-            </textarea>
-    </pre>
-        <h2 id="code1" lay-toc="{anchor: null}" style="margin-bottom: 0;">2.加入demo至classpath目录</h2>
+        </pre>
+        <p>
+            可能产生jar冲突的依赖：<br>
+            jsqlparser4.2 <br>
+            caffeine:2.9.3<br>
+            QLExpress:3.3.1<br>
+            jsoup:1.16.1<br>
+        </p>
+        <h2 id="code1" lay-toc="{anchor: null}" style="margin-bottom: 0;">2.添加helloworld.html</h2>
         <p>在
         <pre class="layui-code code-demo" lay-options="{}">src/main/resource/topezadmin/config/layui/list</pre>
-        路径下添加如下文件  helloworld.html
+        路径下添加如下文件 helloworld.html
         </p>
         <pre class="layui-code code-demo" lay-options="{}">
         <textarea>
-
 <html>
  <head>
   <title>helloworld</title>
@@ -92,19 +95,12 @@ m1.put("ADD_TIME",new Date());
 list.add(m1);
 return list;
 ]]>
-
-
   </pre>
   <pre id="count">
-
 </pre>
   <pre item_name="displayorder_express" type="">
-
 <![CDATA[
-
 ]]>
-
-
   </pre>
   <div id="append_foot"></div>
  </body>
@@ -113,20 +109,16 @@ return list;
         </pre>
         <p>启动应用，访问：http://localhost:8080/topezadmin/list/list-helloworld即可看到一个列表</p>
         <p>enjoy:^_^</p>
-
         <blockquote class="layui-elem-quote">
-            为了更加方便快速的管理这些列表，我们将配置放到数据库中，当然不把配置放入数据中，使用代码版本工具管理也是可以的。<br>
-            建议使用数据库管理，增加了图形化界面，以及在线编辑源码的功能。
+            为了更加方便快速的管理这些列表，我们将配置放到数据库中 。<br>
+            使用数据库管理这些列表，增加图形化界面，以及在线编辑源码的功能。
         </blockquote>
-
-
-    <h2 id="more"  lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
-    <p>下载初始化SQL:</p>
-    <a href="https://www.ezjsp.com/static/doc/init.sql">init.sql</a>
-    <p>请在自己的业务数据库中执行如上SQL。</p>
-
-    <h2   lay-toc="{anchor: null}" style="margin-bottom: 0;">配置</h2>
-    <pre class="layui-code code-demo" lay-options="{}">
+        <h2 id="more" lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
+        <p>下载初始化SQL:</p>
+        <a href="https://www.ezjsp.com/static/doc/init.sql">init.sql</a>
+        <p>请在自己的业务数据库中执行如上SQL。</p>
+        <h2 lay-toc="{anchor: null}" style="margin-bottom: 0;">配置</h2>
+        <pre class="layui-code code-demo" lay-options="{}">
          <textarea>
 topezadmin:
 # 默认true 开发时配置为false,用于调试
@@ -141,44 +133,44 @@ topezadmin:
 # 0010 如果遇到没有where的delete 或者update语句，抛出异常
   logType: 1000-10000
           </textarea>  </pre>
-     <a href="/doc/sysparam.html">更多配置</a>
+        <a href="/doc/sysparam.html">更多配置</a>
 
-    <blockquote class="layui-elem-quote"><p>
-        启动应用并访问
-        <a href="/topezadmin/dev.html">/topezadmin/dev.html</a>。
-    </p>
-    </blockquote>
+        <blockquote class="layui-elem-quote"><p>
+            启动应用并访问
+            <a href="/topezadmin/dev.html">/topezadmin/dev.html</a>。
+        </p>
+        </blockquote>
 
-    <h2  id="sql"  lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL生成列表表单</h2>
-    <p>现在，让我们使用SQL生成一个用户列表，包含用户ID与用户名称</p>
-    <p>进入/topezadmin/dev.html ,点击SQL生成列表</p>
-    <p>   列表编码填入：
-    <pre class="layui-code code-demo" lay-options="{}">
+        <h2 id="sql" lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL转列表表单</h2>
+        <p>现在，让我们使用SQL生成一个用户列表，包含用户ID与用户名称</p>
+        <p>进入/topezadmin/dev.html ,点击SQL生成列表</p>
+        <p> 列表编码填入：
+        <pre class="layui-code code-demo" lay-options="{}">
              <textarea>
 userlist
              </textarea>
         </pre>
-    </p>
-    <p>   表达式填入：
+        </p>
+        <p> 表达式填入：
         <pre class="layui-code code-demo" lay-options="{}">
              <textarea>
 SELECT ID ID,NAME 名称 from T_USER WHERE 1=1
              </textarea>
         </pre>
-    </p>
-    <img style="width:100%" src="/static/doc/sql2list.png"  alt=""/>
+        </p>
+        <img style="width:100%" src="/static/doc/sql2list.png" alt=""/>
 
-    <p>点击发布之后，代表列表已经进入生产环境，  点击预览，即查看对应的 userlist</p>
-    <img style="width:100%" src="/static/doc/listedit.png"  alt=""/>
+        <p>点击发布之后，代表列表已经进入生产环境，点击预览，即查看对应的 userlist</p>
+        <img style="width:100%" src="/static/doc/listedit.png" alt=""/>
 
-    <p> 点击源码编辑，可参考文档，对前端源码进行修改</p>
-    <img style="width:100%" src="/static/doc/listsource.png"  alt=""/>
+        <p> 点击源码编辑，可参考文档，对前端源码进行修改</p>
+        <img style="width:100%" src="/static/doc/listsource.png" alt=""/>
 
 
-   <h2  id="servlet"  lay-toc="{anchor: null}" style="margin-bottom: 0;">不是springboot?</h2>
+        <h2 id="servlet" lay-toc="{anchor: null}" style="margin-bottom: 0;">不是springboot?</h2>
 
-    <p>参照：EzClientServletFilter，自定义filter，初始化EzClientBootstrap即可：</p>
-    <pre class="layui-code code-demo" lay-options="{}">
+        <p>参照：EzClientServletFilter，自定义filter，初始化EzClientBootstrap即可：</p>
+        <pre class="layui-code code-demo" lay-options="{}">
          <textarea>
 package top.ezadmin.web.filters;
 import top.ezadmin.common.utils.JSONUtils;
@@ -283,22 +275,15 @@ public void addAppDatasource(String key, DataSource appDatasource) {
          </textarea>
     </pre>
 
-        <h2  id="nosql"  lay-toc="{anchor: null}" style="margin-bottom: 0;">无数据库模式</h2>
-        <p>EZ同样支持没有数据库的情况下，通过数据展示列表，在classpath目录新建文件，重新启动应用,访问 /topezadmin/list/list-helloworld 即可</p>
+        <h2 id="nosql" lay-toc="{anchor: null}" style="margin-bottom: 0;">无数据库模式</h2>
+        <p>如果不希望执行EZ数据库脚本，EZ同样支持， 在classpath目录新建文件，重新启动应用，访问
+            /topezadmin/list/list-helloworld 即可</p>
         <p>classpath:/topezadmin/config/layui/list/helloword.html</p>
-        <h3>代码示例</h3>
-        <pre class="layui-code code-demo" lay-options="{}">
-         <textarea>
-         </textarea>
-    </pre>
+    </div>
+</div>
 
-</div>
-</div>
-<div class="layui-footer ws-footer">
-    <p> Copyright © 2024 <a href="/">EzJsp</a> 页面来自于Layui</p>
-</div>
 <script>
-    layui.use(['element', 'layer'], function(){
+    layui.use(['element', 'layer'], function () {
         // 监听导航点击事件
         layui.code({
             elem: '.code-demo'
