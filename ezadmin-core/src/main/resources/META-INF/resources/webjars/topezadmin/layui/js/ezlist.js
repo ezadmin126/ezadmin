@@ -231,10 +231,14 @@ $(document).ready(function () {
         e.preventDefault();
         openModel("/topezadmin/list/customSearch-"+$("#ENCRYPT_LIST_ID").val(),"高级搜索")
     })
-    const customBtnKey="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
-    const customBtnJSON=localStorage.getItem(customBtnKey);
-    if(customBtnJSON){
-        $("#customBtn").append("<span class=\"layui-badge-dot\"></span>");
+    try{
+        const customBtnKey="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
+        const customBtnJSON=localStorage.getItem(customBtnKey);
+        if(customBtnJSON){
+            $("#customBtn").append("<span class=\"layui-badge-dot\"></span>");
+        }
+    }catch (e) {
+        
     }
 
 });
