@@ -5,6 +5,9 @@
     img{
         max-width: 100%;
     }
+    h1{
+        font-size: 20px !important;
+    }
 </style>
 <body  >
 <div class="layui-layout layui-layout-admin  ">
@@ -22,12 +25,12 @@
             <div class="layui-col-xs12 layui-col-md12">
                 <div class="layui-panel">
                     <div class="layui-row layui-text" style="padding:30px">
-                        <div class="layui-col-md1">
-                            <img src="/static/info-img.png?1" style="width:47px;height:47px;border-radius:50%">
-                        </div>
-                        <div class="layui-col-md11  ">
+                        <div class="layui-col-md12  ">
                             <div class="layui-serachlist-text">
-                                <h1 th:text="${blogDetailVO.blogTitle}"> </h1>
+                                <div style=" display: flex; line-height: 47px; ">
+                                    <img src="/static/info-img.png?1" style="width:47px;height:47px;border-radius:50%">
+                                    <h1  th:text="${blogDetailVO.blogTitle}">高级搜索、排序、保存搜索</h1>
+                                </div>
                                 <p> [[${#dates.format(blogDetailVO?.addTime,'yyyy-MM-dd HH:mm:ss')}]]
                                     <i class="layui-icon-eye layui-icon"></i>[[${blogDetailVO?.viewTimes}]]
                                                                         <i class="layui-icon-dialogue layui-icon"></i>[[${blogDetailVO?.commentCount}]]

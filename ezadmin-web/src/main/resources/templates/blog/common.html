@@ -9,8 +9,8 @@
     <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Window-target" content="_top"/>
-    <meta name="keywords" content="ezadmin-core 嵌入式列表表单工具">
-    <meta name="description" content="ezadmin-core 嵌入式列表表单工具">
+    <meta name="keywords" content="ezadmin-core EZ Java-Server-Page 嵌入式列表表单工具">
+    <meta name="description" content="ezadmin-core EZ Java-Server-Page 嵌入式列表表单工具">
     <meta name="bytedance-verification-code" content="R8VRIUfVoJYbQ44bDAIS" />
     <link th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
     <script th:src="${'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
@@ -83,24 +83,31 @@
     <link id="layui_theme_css"  rel="stylesheet">
     <script>
 
-            var _hmt = _hmt || [];
-            (function() {
+        var _hmt = _hmt || [];
+        (function () {
             var hm = document.createElement("script");
             hm.src = "https://hm.baidu.com/hm.js?38c0ed6d2ed8226d90796f45ec73276e";
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         })();
 
+        (function(){
+            var el = document.createElement("script");
+            el.src = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?9a6f182565f1d5975e25a56d308bca90f7f5d3252ed31a48a5d41dd44440b1143d72cd14f8a76432df3935ab77ec54f830517b3cb210f7fd334f50ccb772134a";
+            el.id = "ttzz";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(el, s);
+        })(window)
 
     layui.use(['element', 'layer', 'form'], function(){
-            var form = layui.form;
-            var $=layui.$;
-            var util = layui.util;
-            form.render($("#switchtheme"));
-            var url="/webjars/topezadmin/layui/css/layui-theme-dark.css";
+    var form = layui.form;
+    var $=layui.$;
+    var util = layui.util;
+    form.render($("#switchtheme"));
+    var url="/webjars/topezadmin/layui/css/layui-theme-dark.css";
 
-            var APPERANCE_KEY = "layui-theme-mode-prefer-dark";
-            var savedPreferDark = localStorage.getItem(APPERANCE_KEY)||'';
+    var APPERANCE_KEY = "layui-theme-mode-prefer-dark";
+    var savedPreferDark = localStorage.getItem(APPERANCE_KEY)||'';
             if(savedPreferDark=='dark'){
                 $("#ID-header-theme-mode").prop("checked","checked");
                 document.getElementById('layui_theme_css').setAttribute('href',url);
@@ -127,7 +134,7 @@
 <div th:fragment="header" class="layui-header  ws-header ws-bg-light" >
         <div class="layui-container"  >
             <div class=" logo   "  >
-                <a href="/">EZ</a>
+                <a href="/">EZ Java-Server-Page</a>
             </div>
             <!-- 头部区域（可配合layui 已有的水平导航） -->
 
