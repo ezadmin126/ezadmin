@@ -199,6 +199,7 @@ public class FormDao extends JsoupUtil {
                     }
                     attrMap.put(JsoupUtil.COL,Utils.trimEmptyDefault(plugin.attr("col"),formitems.get(j).parent().attr("col"),"12"));
                     attrMap.put(JsoupUtil.TYPE,JsoupUtil.getTypeByElement(plugin));
+                    attrMap.put(JsoupUtil.ITEM_ID,plugin.attr(JsoupUtil.ITEM_NAME).replaceAll(",","_"));
 //                    if(StringUtils.isBlank(attrMap.get(JsoupUtil.URL))){
 //                        attrMap.put(JsoupUtil.URL,plugin.attr("item_url"));
 //                    }

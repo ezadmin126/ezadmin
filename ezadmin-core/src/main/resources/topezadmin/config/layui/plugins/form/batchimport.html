@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>多行文本</title>
+</head>
+<body id="batchimport"   type="form" icon="layui-icon-form">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="batchimport">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">多行文本</label>
+            <div class="layui-input-block">
+                 <textarea name="default" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div id="content">
+        <div id="datain" class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="batchimport"
+             th:ez-label="${label}"
+             th:ez-item_name="${item_name}"
+             th:ez-placeholder="${placeholder}"
+             th:ez-alias="${alias}"
+             th:ez-col="${col}"
+             th:ez-maxlength="${maxlength}"
+             th:ez-item_desc="${item_desc}"
+             th:ez-top_desc="${top_desc}"
+             th:ez-jdbctype="${jdbctype}"
+             th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+             th:ez-valid_rule="${valid_rule}"
+             th:ez-valid_msg="${valid_msg}"
+             th:ez-style="${style}"
+             th:ez-help="${help}"
+             th:ez-class="${class}"
+             th:ez-item_id="${item_id}"
+             th:ez-readonly="${readonly}"
+             th:ez-disabled="${disabled}"
+        >
+            <div class="layui-form-item "  >
+                <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >
+                    <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                    <i th:if="${not #strings.isEmpty(help)}"
+                       th:id="${'ez-help-'+item_name}"
+                       class="ez-help layui-icon-help layui-icon"
+                       th:src="${help}"></i>
+                    [[${#strings.isEmpty(label)?'':label+'：' }]]
+                </label>
+                <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                    <small
+                            class="layui-form-mid layui-text-em top_desc"
+                            th:utext="${top_desc}" style="float:none"
+                            th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+                        <textarea th:classappend="${class}" th:label="${label}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                                  th:placeholder="${placeholder}"
+                                  class=" layui-textarea"
+                                  th:readonly="${readonly}"       th:maxlength="${maxlength}"
+                                  th:disabled="${disabled}"
+                                  th:text="${value}"
+                                  th:name="${item_name}"
+                                  th:id="${'ITEM_ID_' + item_id}"
+                                  th:style="${style}"   rows="10"></textarea>
+                    <small
+                            class="layui-form-mid layui-text-em item_desc"
+                            th:utext="${item_desc}"
+                            th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+                </div>
+            </div>
+
+        </div>
+       <div id="preview"></div>
+        <input type="hidden" name="data" id="dataImportJson">
+        <script>
+            $(function(){
+                 debugger;
+             //   $('#submitbtn').hide();
+                $('[type="reset"]').remove();
+                $(document).on("click","#cancel",function(){
+                    layer.closeAll();
+                })
+                $(document).on("click","#import",function(){
+                    var name=  "[[${item_name}]]";
+                    var namearray=name.split(",");
+                    layer.open({
+                        type: 1, // page 层类型
+                        area: ['500px', '300px'],
+                        title: '正在处理，总计'+$("#showtable").find("tr").length+"条",
+                        shade: 0.6, // 遮罩透明度
+                        shadeClose: true, // 点击遮罩区域，关闭弹层
+                        maxmin: true, // 允许全屏最小化
+                        anim: 0, // 0-6 的动画形式，-1 不开启
+                        content: '',
+                        success: function(layero, index, that){
+                            // 弹层的最外层元素的 jQuery 对象
+                            console.log(layero);
+                            // 弹层的索引值
+                            console.log(index);
+                            // 弹层内部原型链中的 this --- 2.8+
+                            console.log(that);
+                            processTr($("#showtable"),0,namearray,index,layero);
+                        }
+                    });
+                    return false;
+                });
+                $(document).on("click","#next",function(){
+                    generateTable();
+                    $("#datain").hide();
+                });
+                $(document).on("click","#pre",function(){
+                     $("#preview").html('');
+                     $("#datain").show();
+                });
+            })
+            function generateTable()    {
+                if(!layui.form.validate("textarea")){
+                    $("#datain").show();
+                    return false;
+                }
+                var name= "[[${item_name}]]";
+                var namearray=name.split(",");
+                var  dataarray=[];
+
+                var table=`<blockquote class="layui-elem-quote">
+空行自动删除
+</blockquote><table class="layui-table" lay-filter="parse-table-demo" id="showtable"><thead><tr>`;
+                var th=`<th>序号</th>`;
+                for (let i = 0; i < namearray.length; i++) {
+                    th=th+"<th>"+$("[ez-item_name="+namearray[i]+"]").attr("ez-label")+"</th>";
+                }
+                th=th+"<th>状态</th><th  style='width: 250px;'>失败原因</th>";
+                var value=$("#ITEM_ID_[[${item_id}]]").val();
+                var valuelines=value.split("\n");
+                var tbody="";
+                var SKUS=[];//第一个用来判断重复
+
+
+                for (let i = 0; i < Math.min(1000,valuelines.length); i++) {
+                    var resultJson={};
+                    if(!valuelines[i]||valuelines[i]==''){
+                        continue;
+                    }
+                    var tds=valuelines[i].split("\t");
+                    var tdhtml="<td>"+(i+1)+"</td>";
+                    var firstValue=tds[0].trim();
+                    if(SKUS.includes(firstValue)){
+                       continue;//跳过当前迭代
+                    }
+                    SKUS.push(firstValue)
+                    for (let j = 0; j < namearray.length; j++) {
+                        if(tds.length>=j){
+                            tdhtml=tdhtml+"<td name='"+namearray[j]+"'>"+tds[j]+"</td>";
+                        }else{
+                            tdhtml=tdhtml+"<td></td>";
+                        }
+                        resultJson[namearray[j]]=tds[j];
+                    }
+
+                    dataarray.push(resultJson);
+                    tbody=tbody+"<tr>"+tdhtml+"<td > <i class='layui-icon layui-icon-log layui-font-20'></i></td><td class='tips'></td></tr>";
+                }
+                table=table+th+"</tr><tbody>"+tbody+"</tbody></table>";
+                console.log(dataarray);
+                $("#preview").html(table);
+            }
+            function processTr(table,trindex,namearray,loadIndex,layero){
+                console.log("开始处理第"+loadIndex+"行");
+                layero.find(".layui-layer-content").html("正在处理");
+                 // var tr=$(table).find("tr").eq(trindex);
+                 // if(tr&&tr.length<=0){
+                 //     layer.close(loadIndex)
+                 //     return;
+                 // }
+                var PARAM=[];
+                var SKUS=[];//第一个用来判断重复
+
+                $(table).find("tr").each(function(i,tr){
+                    var p={};
+                    var h=false;
+                    var firstName=namearray[0];
+                    if(!$(tr).find("td[name="+firstName+"]")){
+                        return true;//跳过当前迭代
+                    }
+                    var firstValue=$(tr).find("td[name="+firstName+"]").text().trim();
+                    if(SKUS.includes(firstValue)){
+                        return true;//跳过当前迭代
+                    }
+                    SKUS.push(firstValue);
+                    for (let j = 0; j < namearray.length; j++) {
+                        if(!$(tr).find("td[name="+namearray[j]+"]")){
+                            continue;
+                        }
+                        var colvalue=$(tr).find("td[name="+namearray[j]+"]").text().trim();
+                        if(colvalue!=''){
+                            p[namearray[j]]=colvalue;
+                            h=true;
+                        }
+                    }
+                    if(h){
+                        PARAM.push(p);
+                    }
+                })
+
+                $("#dataImportJson").val(JSON.stringify(PARAM));
+
+                layer.close(loadIndex);
+
+                $('#inputForm').submit();
+
+            }
+
+            function submitSuccess(data){
+                if(!data.success){
+                    alert("服务端错误："+data.message);
+                    return;
+                }
+                var name=  "[[${item_name}]]";
+                var namearray=name.split(",");
+                $("#showtable").find("tr").each(function(i,tr){
+                    console.log(data);
+                    if($(tr).find("td[name="+namearray[0]+"]")&&$(tr).find("td[name="+namearray[0]+"]").text()!=''){
+                        var sku=$(tr).find("td[name="+namearray[0]+"]").text();
+                        if(!data.data[sku]){
+                            $(tr).find("i:last").attr("class","layui-icon layui-icon-error  layui-font-20 layui-font-red");
+                            $(tr).find(".tips").text("找不到数据");
+                        }else{
+                            if(data.data[sku].success){
+                                $(tr).find("i:last").attr("class","layui-icon layui-icon-success layui-font-20 layui-font-green")
+                                $(tr).find(".tips").text("成功");
+                                console.log(data.data[sku]+sku);
+                            }else{
+                                $(tr).find("i:last").attr("class","layui-icon layui-icon-error  layui-font-20 layui-font-red");
+                                $(tr).find(".tips").text(data.data[sku].message);
+                            }
+                        }
+                    }
+                })
+            }
+        </script>
+
+
+    </div>
+
+
+
+</body>
+
+</html>

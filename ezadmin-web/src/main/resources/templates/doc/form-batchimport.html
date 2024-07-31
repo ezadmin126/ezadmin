@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#source">表单元素示例</a></li>
+                    <li ><a href="#java">后端内置代码示例</a></li>
+                    <li ><a href="#code">后端自定义接口示例</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>批量导入</h1>
+        <blockquote class="layui-elem-quote">
+            批量导入插件，主要将交互统一，服务端只关心接口传输。
+        </blockquote>
+        <h2 id="source"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            元素示例
+        </h2>
+        <p>在ez表单中，添加一个batchimport插件的元素，数据提交至对应的service，后续交互由ez统一处理</p>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+                <html>
+ <head>
+  <title>新增</title>
+ </head>
+ <body id="importxxx" datasource="dataSource" success_url="reload" formsubmiturl="">
+  <div id="append_head"></div>
+  <form id="inputForm">
+   <div class="layui-card" col="12">
+    <div class="layui-card-body">
+     <div class="layui-form-item" col="12">
+      <label>订货号</label>
+      <div>
+       <object lay_verify="required" item_name="MY_ID"
+                item_desc="
+- 您可以输入单个或多个ID，也可以使用快捷键 ctrl +v 将Excel内容直接钻贴至文本框中；<br>
+- 当前总行数不可超过1000行；<br>
+- 请检查ID，ID无效和重复ID都添加失败；" type="batchimport" col="12"> </object>
+      </div>
+     </div>
+    </div>
+   </div>
+  </form>
+  <form id="configForm">
+   <pre item_name="init_express" type="">return   new HashMap();</pre>
+   <pre item_name="submit_express" type="">return spring("service").import($("MY_ID"));</pre>
+   <pre item_name="delete_express" type=""></pre>
+   <pre item_name="status_express" type=""></pre>
+   <pre item_name="displayorder_express" type=""></pre>
+  </form>
+  <div id="append_foot"></div>
+ </body>
+</html>
+            </textarea>
+        </pre>
+
+        <h2 id="java"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            内置代码
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+EzResult result=EzResult.instance();
+result.dataMap("V1", EzResult.instance().fail().message("不存在"));
+result.dataMap("V2", EzResult.instance());
+                return result;
+            </textarea>
+        </pre>
+
+
+        <h2 id="code"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            自定义接口
+        </h2>
+        <p>如果不希望用内置代码方式，可以配置formSubmitUrl，返回JSON如下即可：</p>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+{
+    "code": "0",
+    "count": 0,
+    "data": {
+        "V1": {
+            "code": "500",
+            "count": 0,
+            "message": "不存在",
+            "success": false
+        },
+        "V2": {
+            "code": "500",
+            "count": 0,
+            "message": "不存在",
+            "success": false
+        }
+    },
+    "success": true
+}
+            </textarea>
+        </pre>
+
+
+
+
+
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>
