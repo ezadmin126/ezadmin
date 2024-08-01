@@ -5,11 +5,17 @@ import org.springframework.stereotype.Service;
 import top.ezadmin.common.utils.JSONUtils;
 import top.ezadmin.web.EzResult;
 
+import java.util.Map;
+
 @Service("testService")
 public class TestService {
 
-    public EzResult test(Object request){
+
+    public EzResult test(Map<String, Object> request) {
         System.out.println(JSONUtils.toJSONString(request));
-        return EzResult.instance();
+        EzResult result = EzResult.instance();
+        result.dataMap("V1", EzResult.instance().fail().message("不存在"));
+        result.dataMap("V2", EzResult.instance());
+        return result;
     }
 }

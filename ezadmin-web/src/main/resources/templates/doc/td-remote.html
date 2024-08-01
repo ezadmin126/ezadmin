@@ -28,10 +28,32 @@
             方案
         </h2>
         <p>同样在表达式中，远程调用相关代码，入参为table里面的List&lt;Map&gt;数据，出参为修改后的List&lt;Map&gt; </p>
+        <p>1.设置列类型为  body="td-utext" </p>
+
+        <p>2.编写提交表达式，获取到搜索结果后，修改返回的List&lt;Map&gt; </p>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
                 list=search(sql);
-                return spring("xxservice").method(list);
+                return spring("testService").test(list);
+            </textarea>
+        </pre>
+        <p>3.编写相关Java代码</p>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+
+import org.springframework.stereotype.Service;
+import top.ezadmin.common.utils.JSONUtils;
+import top.ezadmin.web.EzResult;
+
+import java.util.Map;
+
+@Service("testService")
+public class TestService {
+    public Object test(Object request) {
+        //修改 相关的列
+        return request;
+    }
+}
             </textarea>
         </pre>
     </div>

@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -56,12 +57,12 @@ public class SiteMapController {
 			sb.append(System.lineSeparator());
 			sb.append("</url>");
 		});
-
+		list().forEach(item->{
 			sb.append("<url>");
 			sb.append(System.lineSeparator());
 
 			sb.append("<loc>");
-			sb.append("https://www.ezjsp.com/doc/index.html");
+			sb.append("https://www.ezjsp.com"+item);
 			sb.append("</loc>");
 
 			sb.append("<lastmod>");
@@ -71,14 +72,57 @@ public class SiteMapController {
 			sb.append("<changefreq>");
 			sb.append("weekly");
 			sb.append("</changefreq>");
-
 			sb.append(System.lineSeparator());
 			sb.append("</url>");
+		});
 		sb.append(System.lineSeparator());
 		sb.append("</urlset>");
 		response.setContentType("text/xml;charset=UTF-8");
 		response.getWriter().print(sb.toString());
 	}
+
+	public static List<String> list(){
+		return Arrays.asList(
+				"/doc/index.html",
+				"/doc/start.html",
+				"/doc/whatis.html",
+				"/doc/sysparam.html",
+				"/doc/url.html",
+				"/doc/express.html",
+				"/doc/table.html",
+				"/doc/treetable.html",
+				"/doc/tab.html",
+				"/doc/search-input.html",
+				"/doc/search-select.html",
+				"/doc/search-range.html",
+				"/doc/search-union.html",
+				"/doc/button-table.html",
+				"/doc/button-single.html",
+				"/doc/td-first.html",
+				"/doc/td-text.html",
+				"/doc/td-select.html",
+				"/doc/td-pic.html",
+				"/doc/td-form.html",
+				"/doc/td-remote.html",
+				"/doc/form.html",
+				"/doc/form-card.html",
+				"/doc/form-detail.html",
+				"/doc/form-span.html",
+				"/doc/form-input.html",
+				"/doc/form-select.html",
+				"/doc/form-batchimport.html",
+				"/doc/form-date.html",
+				"/doc/form-upload.html",
+				"/doc/form-table.html",
+				"/doc/extend-nospring.html",
+				"/doc/extend-export.html",
+				"/doc/plugindev.html",
+				"/doc/faq.html"
+		);
+	}
+
+
+
 
 
 	@RequestMapping(value = "/robots.txt", produces = "text/txt;charset=UTF-8")
