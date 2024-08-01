@@ -57,7 +57,7 @@ public class ListDao extends JsoupUtil {
             ,JsoupUtil.MULTI,JsoupUtil.COLLAPSETAGS,JsoupUtil.SHOWALLLEVELS
             ,JsoupUtil.TOP_DESC,JsoupUtil.ITEM_DESC,JsoupUtil.RIGHT_DESC
             ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE,JsoupUtil.COL
-            ,JsoupUtil.DISPLAY ,JsoupUtil.CLASS
+            ,JsoupUtil.DISPLAY ,JsoupUtil.CLASS ,"importname" ,"importtips" ,"importservice"
     };
     private ListDao() {
 
@@ -185,6 +185,7 @@ public class ListDao extends JsoupUtil {
         String [] names=new String[]{   JsoupUtil.WINDOW_NAME,JsoupUtil.ITEM_NAME
                 ,JsoupUtil.AREA,JsoupUtil.URL,JsoupUtil.OPENTYPE,JsoupUtil.CLASS,JsoupUtil.STYLE,
                 JsoupUtil.EZ_CALLBACK,JsoupUtil.ITEM_ID,JsoupUtil.DISPLAY,JsoupUtil.TYPE
+                ,"importname" ,"importtips" ,"importservice"
         };
         for (int i = 0; i < names.length; i++) {
             Utils.putIfAbsent(btnMap,names[i], strip(btn.attr(names[i])));

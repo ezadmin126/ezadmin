@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>新增</title>
+</head>
+<body id="import" datasource="dataSource" success_url="reload" formsubmiturl="">
+<div id="append_head"></div>
+<form id="inputForm">
+    <div class="layui-card" col="12">
+        <div class="layui-card-body">
+            <div class="layui-form-item" col="12">
+                <div>
+                    <object lay_verify="required" item_name="IMPORT_ID"   type="batchimport" col="12"
+                    item_desc="<span id=importtips></span>"> </object>
+                </div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>编号</label>
+                <div>
+                    <object   item_name="importservice"   type="input-hidden" col="12"> </object>
+                </div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>编号</label>
+                <div>
+                    <object   item_name="importname"   type="input-hidden" col="12"> </object>
+                </div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>编号</label>
+                <div>
+                    <object   item_name="importtips"   type="input-hidden" col="12"> </object>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<form id="configForm">
+    <pre item_name="init_express" type="">return   new HashMap();</pre>
+    <pre item_name="submit_express" type="">return imports();</pre>
+    <pre item_name="delete_express" type=""></pre>
+    <pre item_name="status_express" type=""></pre>
+    <pre item_name="displayorder_express" type=""></pre>
+</form>
+<div id="append_foot">
+    <script>
+        $(function(){
+            $("#importtips").html(decodeURIComponent($("[name=importtips]").val()))
+            $("[name='IMPORT_ID']").attr("name",decodeURIComponent($("[name=importname]").val()));
+        })
+    </script>
+
+</div>
+</body>
+</html>

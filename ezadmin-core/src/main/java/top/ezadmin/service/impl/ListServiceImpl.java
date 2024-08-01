@@ -824,6 +824,11 @@ public class ListServiceImpl implements ListService {
                 table.put(JsoupUtil.URL,MapParser.parseDefaultEmpty(getString(table,JsoupUtil.URL), requestParamMap).getResult());
                 table.put(JsoupUtil.WINDOW_NAME,MapParser.parseDefaultEmpty(getString(table,JsoupUtil.WINDOW_NAME), requestParamMap).getResult());
                 table.put(JsoupUtil.EZ_CALLBACK,Utils.trimNull(requestParamMap.get(JsoupUtil.EZ_CALLBACK)));
+
+                table.put("importservice",MapParser.parseDefaultEmpty(getString(table,"importservice"), requestParamMap).getResult());
+                table.put("importtips",MapParser.parseDefaultEmpty(getString(table,"importtips"), requestParamMap).getResult());
+                table.put("importname",MapParser.parseDefaultEmpty(getString(table,"importname"), requestParamMap).getResult());
+
                 Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(table, JsoupUtil.TYPE));
 
                 Context context = new Context();

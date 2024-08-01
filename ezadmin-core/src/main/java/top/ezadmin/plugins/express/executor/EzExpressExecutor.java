@@ -11,6 +11,7 @@ import top.ezadmin.common.utils.Utils;
 import top.ezadmin.plugins.express.*;
 import top.ezadmin.plugins.express.log.LogOperator;
 import top.ezadmin.plugins.express.str.*;
+import top.ezadmin.plugins.imports.ImportOperator;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -114,6 +115,7 @@ public   class EzExpressExecutor {
         runner.addFunction("unionall",new UnionOperator( ));
         runner.addFunction("split",new SplitOperator( ));
         runner.addFunction("env",new EnvOperator( ));
+        runner.addFunction("imports",new ImportOperator( ));
     }
     public Object run( String express) throws Exception {
         if(StringUtils.isBlank(express) ){

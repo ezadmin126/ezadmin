@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li ><a href="#export">导出<span class="layui-badge-dot"></span></a></li>
+                    <li ><a href="#import">批量导入<span class="layui-badge-dot"></span></a></li>
+                    <li ><a href="#other">嵌入批量导入<span class="layui-badge-dot"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>原理介绍</h1>
+        <blockquote class="layui-elem-quote">
+             封装的批量导入与导出功能按钮
+        </blockquote>
+        <h2 id="export"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            导出
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<object item_name="新增" url="/topezadmin/list/export-xxxx" opentype="_BLANK_PARAM" type="button-table">导出</object>
+            </textarea>
+        </pre>
+        <p  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+             导出就是一个普通的表头按钮，url设置为指定的<a href="/doc/url.html">导出url</a>即可。
+             导出一般选择携带参数新窗口打开。 _BLANK_PARAM
+        </p>
+
+
+        <h2 id="import"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            批量导入
+        </h2>
+        <h3>1.在表头配置批量导入按钮</h3>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+    <button opentype="script" windowname="批量导入" item_name="批量导入" type="button-import"
+                importservice="testService" importname="def,abc" importtips="
+- 您可以输入单个或多个数据，也可以使用快捷键 ctrl +v 将Excel内容直接钻贴至文本框中；<br>
+- 当前总行数不可超过1000行；<br>
+- 请检查第一列，第一列无效或重复会无法导入；">批量导入</button>
+            </textarea>
+         </pre>
+        <p>参数说明</p>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>示例</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>opentype</td>
+                <td>固定script，表示不触发默认时间</td>
+                <td>script
+                </td>
+            </tr>
+            <tr>
+                <td>type</td>
+                <td>固定button-import，使用批量导入插件</td>
+                <td>button-import
+                </td>
+            </tr>
+            <tr>
+                <td>importservice</td>
+                <td>请实现接口 EzImport ,并确保已经加入到spring容器内</td>
+                <td>testService,配置处理数据的bean
+                </td>
+            </tr>
+            <tr>
+                <td>importtags</td>
+                <td>字段注释</td>
+                <td>
+                    - 您可以输入单个或多个数据，也可以使用快捷键 ctrl +v 将Excel内容直接钻贴至文本框中；
+                    - 当前总行数不可超过1000行；
+                    - 请检查第一列，第一列无效或重复会无法导入；
+                </td>
+            </tr>
+            <tr>
+                <td>importname</td>
+                <td>字段名称</td>
+                <td>多个字段用逗号分开
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>2.编写配置的importservice类，实现EzImport接口</h3>
+        <p>testService 代码示例</p>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+import org.springframework.stereotype.Service;
+import top.ezadmin.web.EzResult;
+
+import java.util.Map;
+
+@Service("testService")
+public class TestService  implements EzImport  {
+     @Override
+    public Object doImport(Map<String, Object> request) {
+         //前端会通过第一列来获取服务端返回的数据，通过data.success来显示是否导入成功
+        EzResult result = EzResult.instance();
+        result.dataMap("V1", EzResult.instance().fail().message("不存在"));
+        result.dataMap("V2", EzResult.instance());
+        return result;
+    }
+}
+            </textarea>
+        </pre>
+
+        <p>接口请求参数json示例</p>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+        request.get("data")<br>
+       [{
+		"def": "P00008468",
+		"abc": "1.5"
+	}, {
+		"def": "P00008469",
+		"abc": "1.5"
+	},
+	{
+		"def": "P00008470",
+		"abc": "1.5"
+	}, {
+		"def": "P00008471",
+		"abc": "1.7"
+	}, {
+		"def": "P00008472",
+		"abc": "1.7"
+	}, {
+		"def": "P00008474",
+		"abc": "1.35"
+	}, {
+		"def": "P00008475",
+		"abc": "1.35"
+	}
+]
+   </textarea>
+        </pre>
+
+
+        <p>接口返回json示例</p>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+{
+    "code": "0",
+    "count": 0,
+    "data": {
+        "V1": {
+            "code": "500",
+            "message": "不存在",
+            "success": false
+        },
+        "V2": {
+            "code": "500",
+            "message": "不存在",
+            "success": false
+        }
+    },
+    "success": true
+}
+            </textarea>
+        </pre>
+
+        <h2>嵌入批量导入</h2>
+        <p>请在你的代码位置添加如下代码即可,参数说明参见批量导入</p>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<script src="'/webjars/jquery/1.12.4/jquery.min.js"></script>
+<script src="'/webjars/topezadmin/layui/js/import.js"></script>
+<button opentype="script" windowname="批量导入" item_name="批量导入"
+                importname="def,abc" importtips="tips" importservice="testService">批量导入</button>
+            </textarea>
+        </pre>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

@@ -39,14 +39,14 @@
              th:ez-disabled="${disabled}"
         >
             <div class="layui-form-item "  >
-                <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >
-                    <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
-                    <i th:if="${not #strings.isEmpty(help)}"
-                       th:id="${'ez-help-'+item_name}"
-                       class="ez-help layui-icon-help layui-icon"
-                       th:src="${help}"></i>
-                    [[${#strings.isEmpty(label)?'':label+'：' }]]
-                </label>
+<!--                <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >-->
+<!--                    <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>-->
+<!--                    <i th:if="${not #strings.isEmpty(help)}"-->
+<!--                       th:id="${'ez-help-'+item_name}"-->
+<!--                       class="ez-help layui-icon-help layui-icon"-->
+<!--                       th:src="${help}"></i>-->
+<!--                    [[${#strings.isEmpty(label)?'':label+'：' }]]-->
+<!--                </label>-->
                 <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
                     <small
                             class="layui-form-mid layui-text-em top_desc"
@@ -81,7 +81,7 @@
                     layer.closeAll();
                 })
                 $(document).on("click","#import",function(){
-                    var name=  "[[${item_name}]]";
+                    var name= $("#ITEM_ID_[[${item_name}]]").attr("name");
                     var namearray=name.split(",");
                     layer.open({
                         type: 1, // page 层类型
@@ -118,23 +118,24 @@
                     $("#datain").show();
                     return false;
                 }
-                var name= "[[${item_name}]]";
+                var name= $("#ITEM_ID_[[${item_name}]]").attr("name");
+
                 var namearray=name.split(",");
                 var  dataarray=[];
 
-                var table=`<blockquote class="layui-elem-quote">
-空行自动删除
-</blockquote><table class="layui-table" lay-filter="parse-table-demo" id="showtable"><thead><tr>`;
+                var table=`
+<table class="layui-table" lay-filter="parse-table-demo" id="showtable"><thead><tr>`;
                 var th=`<th>序号</th>`;
                 for (let i = 0; i < namearray.length; i++) {
-                    th=th+"<th>"+$("[ez-item_name="+namearray[i]+"]").attr("ez-label")+"</th>";
+                    //$("[ez-item_name="+namearray[i]+"]").attr("ez-label")
+                    th=th+"<th>第"+(i+1)+"列</th>";
                 }
                 th=th+"<th>状态</th><th  style='width: 250px;'>失败原因</th>";
                 var value=$("#ITEM_ID_[[${item_id}]]").val();
                 var valuelines=value.split("\n");
                 var tbody="";
                 var SKUS=[];//第一个用来判断重复
-
+                var exsit=new Set();
 
                 for (let i = 0; i < Math.min(1000,valuelines.length); i++) {
                     var resultJson={};
@@ -145,6 +146,7 @@
                     var tdhtml="<td>"+(i+1)+"</td>";
                     var firstValue=tds[0].trim();
                     if(SKUS.includes(firstValue)){
+                        exsit.add(firstValue);
                        continue;//跳过当前迭代
                     }
                     SKUS.push(firstValue)
@@ -162,7 +164,10 @@
                 }
                 table=table+th+"</tr><tbody>"+tbody+"</tbody></table>";
                 console.log(dataarray);
-                $("#preview").html(table);
+
+                 let block="<blockquote class='layui-elem-quote'>空行已经自动删除，"+Array.from(exsit).join(',')+"由于重复，已经删除重复行</blockquote>";
+
+                $("#preview").html(block+table);
             }
             function processTr(table,trindex,namearray,loadIndex,layero){
                 console.log("开始处理第"+loadIndex+"行");
@@ -212,10 +217,12 @@
 
             function submitSuccess(data){
                 if(!data.success){
-                    alert("服务端错误："+data.message);
+                    alert("服务端错误,请查看console" );
+                    console.log(data.message)
                     return;
                 }
-                var name=  "[[${item_name}]]";
+                var name= $("#ITEM_ID_[[${item_name}]]").attr("name");
+
                 var namearray=name.split(",");
                 $("#showtable").find("tr").each(function(i,tr){
                     console.log(data);
