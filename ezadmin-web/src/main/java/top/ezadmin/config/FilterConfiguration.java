@@ -55,31 +55,11 @@ public class FilterConfiguration implements WebMvcConfigurer {
 
 
 	@Bean
-	public Filter uaf(){
+	public  UserAccessFilter  uaf(){
 		UserAccessFilter uac=new UserAccessFilter();
-		List<String> staticUrl=new ArrayList<>();
-		staticUrl.add("/webjars/**");
-		staticUrl.add("/api/**");
-		staticUrl.add("/static/**");
-		staticUrl.add("/robots.txt");
-		staticUrl.add("/favicon.ico");
-		staticUrl.add("/ws/**");
-		staticUrl.add("/error/**");
-		staticUrl.add("/laynavs**");
-		staticUrl.add("/login/**");
-		staticUrl.add("/core/**");
-		staticUrl.add("/message/**");
-		staticUrl.add("/system/**");
-		staticUrl.add("/sitemap**");
+		List<String> staticUrl = getStaticUrl();
 
-
-		staticUrl.add("/home/index");
-		staticUrl.add("/");
-		staticUrl.add("/blog/**");
-
-
-
-        List<String> exeUrl = new ArrayList<>();
+		List<String> exeUrl = new ArrayList<>();
         exeUrl.add("/topezadmin/list/count-**");
         exeUrl.add("/topezadmin/list/api-**");
         exeUrl.add("/topezadmin/list/tree-**");
@@ -96,9 +76,30 @@ public class FilterConfiguration implements WebMvcConfigurer {
         return uac;
     }
 
+	private static List<String> getStaticUrl() {
+		List<String> staticUrl=new ArrayList<String>();
+		staticUrl.add("/webjars/**");
+		staticUrl.add("/api/**");
+		staticUrl.add("/static/**");
+		staticUrl.add("/robots.txt");
+		staticUrl.add("/favicon.ico");
+		staticUrl.add("/ws/**");
+		staticUrl.add("/error/**");
+		staticUrl.add("/laynavs**");
+		staticUrl.add("/login/**");
+		staticUrl.add("/core/**");
+		staticUrl.add("/message/**");
+		staticUrl.add("/system/**");
+		staticUrl.add("/sitemap**");
+		staticUrl.add("/home/index");
+		staticUrl.add("/");
+		staticUrl.add("/blog/**");
+		return staticUrl;
+	}
+
 	@Bean
 	public FilterRegistrationBean<UserAccessFilter> UserAccessFilter() throws Exception {
-		FilterRegistrationBean  registrationBean = new FilterRegistrationBean();
+		FilterRegistrationBean<UserAccessFilter>  registrationBean = new FilterRegistrationBean<UserAccessFilter>();
 
  		registrationBean.setFilter(uaf());
 		registrationBean.addUrlPatterns("/*");
@@ -108,7 +109,7 @@ public class FilterConfiguration implements WebMvcConfigurer {
 
 	@Bean("deviceResolverRequestFilter")
 	public FilterRegistrationBean<DeviceResolverRequestFilter> deviceResolverRequestFilter() {
-		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+		FilterRegistrationBean<DeviceResolverRequestFilter> registrationBean = new FilterRegistrationBean<DeviceResolverRequestFilter>();
 		DeviceResolverRequestFilter customURLFilter = new DeviceResolverRequestFilter( );
 		registrationBean.setFilter(customURLFilter);
 		registrationBean.addUrlPatterns("/*");

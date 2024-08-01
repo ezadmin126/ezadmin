@@ -32,36 +32,59 @@
         <p>在ez表单中，添加一个batchimport插件的元素，数据提交至对应的service，后续交互由ez统一处理</p>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-                <html>
+               <html>
  <head>
-  <title>新增</title>
+  <title>test</title>
  </head>
- <body id="importxxx" datasource="dataSource" success_url="reload" formsubmiturl="">
+ <body id="test" datasource="dataSource" success_url="" formsubmiturl="">
   <div id="append_head"></div>
   <form id="inputForm">
    <div class="layui-card" col="12">
     <div class="layui-card-body">
      <div class="layui-form-item" col="12">
-      <label>订货号</label>
+      <label>名称</label>
       <div>
-       <object lay_verify="required" item_name="MY_ID"
-                item_desc="
-- 您可以输入单个或多个ID，也可以使用快捷键 ctrl +v 将Excel内容直接钻贴至文本框中；<br>
-- 当前总行数不可超过1000行；<br>
-- 请检查ID，ID无效和重复ID都添加失败；" type="batchimport" col="12"> </object>
+       <object item_name="USER_ID,USER_NAME" id="itemId-USER_ID,USER_NAME" lay_verify="required" type="batchimport"> </object>
       </div>
      </div>
     </div>
    </div>
   </form>
   <form id="configForm">
-   <pre item_name="init_express" type="">return   new HashMap();</pre>
-   <pre item_name="submit_express" type="">return spring("service").import($("MY_ID"));</pre>
-   <pre item_name="delete_express" type=""></pre>
-   <pre item_name="status_express" type=""></pre>
+   <pre item_name="init_express" type="">
+<![CDATA[
+return new HashMap();
+]]>
+
+   </pre>
+   <pre item_name="submit_express" type="">
+<![CDATA[
+return spring("testService").test($("request"));
+]]>
+
+   </pre>
+   <pre item_name="delete_express" type="">
+<![CDATA[
+
+]]>
+
+   </pre>
+   <pre item_name="status_express" type="">
+<![CDATA[
+
+]]>
+
+   </pre>
    <pre item_name="displayorder_express" type=""></pre>
   </form>
-  <div id="append_foot"></div>
+  <div id="append_foot">
+   <script>
+             $("#submitbtn").after(`
+             <button id=pre class=layui-btn>上一步<button>
+             <button id=next class=layui-btn>下一步<button><button id=import class=layui-btn>导入<button>`);
+             $("#submitbtn").remove();
+      </script>
+  </div>
  </body>
 </html>
             </textarea>
@@ -72,10 +95,20 @@
         </h2>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-EzResult result=EzResult.instance();
-result.dataMap("V1", EzResult.instance().fail().message("不存在"));
-result.dataMap("V2", EzResult.instance());
-                return result;
+import org.springframework.stereotype.Service;
+import top.ezadmin.web.EzResult;
+
+import java.util.Map;
+
+@Service("testService")
+public class TestService {
+    public EzResult test(Map<String, Object> request) {
+        EzResult result = EzResult.instance();
+        result.dataMap("V1", EzResult.instance().fail().message("不存在"));
+        result.dataMap("V2", EzResult.instance());
+        return result;
+    }
+}
             </textarea>
         </pre>
 
@@ -107,11 +140,6 @@ result.dataMap("V2", EzResult.instance());
 }
             </textarea>
         </pre>
-
-
-
-
-
     </div>
 </div>
 
