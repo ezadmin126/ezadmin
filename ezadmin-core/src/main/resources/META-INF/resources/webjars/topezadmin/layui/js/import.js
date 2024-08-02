@@ -4,6 +4,24 @@
             var url="/topezadmin/form/form-import";
             var json = ['100%', '100%'];
             var obutton=$(this);
+            if(obutton.attr("importname")==''||obutton.attr("importname")==undefined){
+                layer.msg("importname未配置，请检查")
+                return false;
+            }
+            if(obutton.attr("importservice")==''||obutton.attr("importservice")==undefined){
+                layer.msg("importservice未配置，请检查")
+                return false;
+            }
+            var param=obutton.attr("url");
+            if(param) {
+                try {
+                    // 创建 URLSearchParams 对象
+                    const queryParams = new URLSearchParams(param);
+                } catch (e) {
+                    layer.msg("url配置错误，请检查，格式为：  k=v&k1=v1")
+                    return false;
+                }
+            }
             var index = layer.open({
                 title: obutton.attr("windowname")||'批量导入',
                 type: 2,
@@ -45,14 +63,11 @@
                         "<button class='layui-btn' id='next' type='button'></button>" +
                         "<button class='layui-btn' id='import' type='button'></button>" +
                         "<button class='layui-btn' id='cancel' type='button'>取消</button>");
-
-
                     $(body).find('#importtips').html(obutton.attr("importtips"));
                     $(body).find('#ITEM_ID_IMPORT_ID').attr("name",obutton.attr("importname"));
                     $(body).find('#ITEM_ID_importservice').val( obutton.attr("importservice"));
                     $(body).find('#submitButtonContainer').hide();
                     var param=obutton.attr("url");
-
                     if(param){
                         try{
                         // 创建 URLSearchParams 对象
