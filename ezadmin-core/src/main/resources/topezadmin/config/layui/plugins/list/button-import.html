@@ -5,73 +5,13 @@
     <title>表头按钮</title>
 </head>
 <body id="button-import"   type="listbutton">
-<button
+<button th:windowname="${windowname}"
         th:name="${name}" th:item_name="${item_name}" th:text="${label}"
-        type="button" editor="button" th:area="${area}"
-        th:url="${url}" th:opentype="${opentype}"
-        th:windowname="${windowname}"
-
-        th:importname="${importname}"
-        th:importtips="${importtips}"
+        type="button-import" editor="button" th:area="${area}"
+        th:url="${url}"
         th:importservice="${importservice}"
-
-        th:classappend="${  #strings.equals('script',opentype)?'':'ezopenbutton' }"
         class=" layui-btn   layui-btn-sm layui-btn-normal  ">
 </button>
-<script>
-    $(function(){
-        $("[item_name=[[${item_name}]]]").click(function(){
-
-            var json = ['100%', '100%'];
-            var index = layer.open({
-                title: $(this).attr("windowname"),
-                type: 2,
-                shade: 0.2,
-                maxmin: false,
-                btnAlign:'c',
-                shadeClose: true,
-                area: json,
-                content: "/topezadmin/form/form-import?importname="+encodeURIComponent($(this).attr("importname"))
-                    +"&importtips="+encodeURIComponent($(this).attr("importtips"))
-                    +"&importservice="+$(this).attr("importservice")
-                    +"&"+getSearchParams(),
-                moveOut: true,
-                btn: ["下一步", '完成'],
-                // 按钮1 的回调
-                btn1: function(index111, layero, that){
-                    var body = layer.getChildFrame('body', index111);
-
-                    var txt=$(document).find(".layui-layer-btn0").text().trim();
-                    if(txt=="下一步"){
-                        $(document).find(".layui-layer-btn0").text("开始导入");
-                        $(body).find('#next').click();
-                    }
-                    if(txt=="开始导入"){
-                        $(body).find('#import').click();
-                        $(document).find(".layui-layer-btn0").text("上一步");
-                    }
-                    if(txt=="上一步"){
-                        $(document).find(".layui-layer-btn0").text("下一步");
-                        $(body).find('#pre').click();
-                    }
-
-                },
-                btn2: function(index222, layero, that){
-                    layer.close(index222);
-                    location.reload();
-                },
-                success: function(layero, indexyyy, that){
-                    var body = layer.getChildFrame('body', indexyyy);
-                    $(body).find('#submitButtonContainer').html(
-                        "<button class='layui-btn' id='pre' type='button'></button>" +
-                        "<button class='layui-btn' id='next' type='button'></button>" +
-                        "<button class='layui-btn' id='import' type='button'></button>" +
-                        "<button class='layui-btn' id='cancel' type='button'>取消</button>");
-                    $(body).find('#submitButtonContainer').hide();
-                }
-            });
-        })
-    })
-</script>
+<script src="/webjars/topezadmin/layui/js/import.js?12"></script>
 </body>
 </html>

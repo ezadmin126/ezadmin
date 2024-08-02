@@ -45,13 +45,14 @@
         <h3>1.在表头配置批量导入按钮</h3>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-    <button opentype="script" windowname="批量导入" item_name="批量导入" type="button-import"
-                importservice="testService" importname="def,abc" importtips="
-- 您可以输入单个或多个数据，也可以使用快捷键 ctrl +v 将Excel内容直接钻贴至文本框中；<br>
-- 当前总行数不可超过1000行；<br>
-- 请检查第一列，第一列无效或重复会无法导入；">批量导入</button>
+    <button   windowname="批量导入"   type="button-import"  url="userid=2&companyid=3"
+                importservice="testService" importname="def,abc" importtips="说明"  >批量导入</button>
             </textarea>
          </pre>
+        <p>- 您可以输入单个或多个数据，也可以使用快捷键 ctrl +v 将Excel内容直接钻贴至文本框中；<br>
+            - 当前总行数不可超过1000行；<br>
+            - 请检查第一列，第一列无效或重复会无法导入；</p>
+
         <p>参数说明</p>
         <table class="layui-table">
             <colgroup>
@@ -67,10 +68,15 @@
             </thead>
             <tbody>
             <tr>
-                <td>opentype</td>
-                <td>固定script，表示不触发默认时间</td>
-                <td>script
+                <td>windowname</td>
+                <td>弹框窗口名称</td>
+                <td> 打开
                 </td>
+            </tr>
+            <tr>
+                <td>url</td>
+                <td>传递给后端的额外的参数,格式使用url参数的格式</td>
+                <td>k=v&k1=v1</td>
             </tr>
             <tr>
                 <td>type</td>
@@ -183,9 +189,10 @@ public class TestService  implements EzImport  {
         <p>请在你的代码位置添加如下代码即可,参数说明参见批量导入</p>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-<script src="'/webjars/jquery/1.12.4/jquery.min.js"></script>
-<script src="'/webjars/topezadmin/layui/js/import.js"></script>
-<button opentype="script" windowname="批量导入" item_name="批量导入"
+<script src="/webjars/topezadmin/layuidist/layui.js"></script>
+<script src="/webjars/jquery/1.12.4/jquery.min.js"></script>
+<script src="/webjars/topezadmin/layui/js/import.js"></script>
+<button  windowname="批量导入"  type="button-import" url="userid=2&companyid=3"
                 importname="def,abc" importtips="tips" importservice="testService">批量导入</button>
             </textarea>
         </pre>

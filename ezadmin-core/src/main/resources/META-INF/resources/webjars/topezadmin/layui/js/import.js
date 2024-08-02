@@ -1,17 +1,11 @@
 
-        $(function(){
-            var url="/topezadmin/form/form-import?importname=" + $(this).attr("importname")
-                + "&importtips=" + $(this).attr("importtips")
-                + "&importservice=" + $(this).attr("importservice")
-                + "&";
-            if (typeof getSearchParams == "function") {
-                url=url+ getSearchParams();
-            }
-
-        $("[item_name=批量导入]").click(function () {
+    $(function(){
+        $("[type=button-import]").click(function () {
+            var url="/topezadmin/form/form-import";
             var json = ['100%', '100%'];
+            var obutton=$(this);
             var index = layer.open({
-                title: $(this).attr("windowname"),
+                title: obutton.attr("windowname")||'批量导入',
                 type: 2,
                 shade: 0.2,
                 maxmin: false,
@@ -51,7 +45,28 @@
                         "<button class='layui-btn' id='next' type='button'></button>" +
                         "<button class='layui-btn' id='import' type='button'></button>" +
                         "<button class='layui-btn' id='cancel' type='button'>取消</button>");
+
+
+                    $(body).find('#importtips').html(obutton.attr("importtips"));
+                    $(body).find('#ITEM_ID_IMPORT_ID').attr("name",obutton.attr("importname"));
+                    $(body).find('#ITEM_ID_importservice').val( obutton.attr("importservice"));
                     $(body).find('#submitButtonContainer').hide();
+                    var param=obutton.attr("url");
+
+                    if(param){
+                        try{
+                        // 创建 URLSearchParams 对象
+                        const queryParams = new URLSearchParams(param);
+// 将查询参数转换为 JSON 数组
+                        queryParams.forEach((value, key) => {
+                                    $(body).find('#inputForm').append("<input type='hidden' name='"+key+"' " +
+                                       "value='"+value+"'>");
+                        });
+                        }catch (e){
+                            console.log("url 格式不对， k=v&k1=v1 ,"+queryString)
+                        }
+                    }
+
                 }
             });
         })
