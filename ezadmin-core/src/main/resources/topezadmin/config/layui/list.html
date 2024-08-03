@@ -5,6 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title th:text="${data.listName}">List</title>
+    <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"   />
+
     <link th:href="${contextName+'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
     <link th:href="${contextName+'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
     <link th:href="${contextName+'/webjars/topezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
@@ -14,6 +16,7 @@
     <script th:src="${contextName+'/webjars/jqueryform/jquery.form.js?'}"></script>
     <script th:src="${contextName+'/webjars/jquery-validation/1.19.5/jquery.validate.min.js'}"></script>
     <script th:src="${contextName+'/webjars/jquery-validation/1.19.5/localization/messages_zh.min.js'}"></script>
+    <script src="/webjars/dragula/3.7.3/dist/dragula.min.js"   ></script>
 
     <script th:src="${contextName+'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
     <script th:src="${contextName+'/webjars/topezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>

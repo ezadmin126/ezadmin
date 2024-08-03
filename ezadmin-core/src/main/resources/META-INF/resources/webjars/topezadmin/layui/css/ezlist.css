@@ -221,12 +221,22 @@ th a {
 
 
 .gu-mirror {
-    position: fixed !important;
-    margin: 0 !important;
-    z-index: 9999 !important;
-    opacity: 0.8;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-    filter: alpha(opacity=80);
+    display: table-cell;
+    vertical-align: middle;
+//  padding: 8px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    cursor: move;
+    /*position: fixed !important;*/
+    /*margin: 0 !important;*/
+    /*z-index: 9999 !important;*/
+    /*opacity: 0.8;*/
+    /*-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";*/
+    /*filter: alpha(opacity=80);*/
 }
 
 .gu-hide {
@@ -417,5 +427,23 @@ xm-select > .xm-body .scroll-body{
 .el-input__suffix{
     z-index: 9999;
 }
+
+
+.layui-table-header span{
+    cursor: move !important;
+}
+.layui-table-header .layui-table-sort{
+    cursor: pointer !important;
+}
+
+
+.search-hidden{
+    height: 88px;
+    overflow: hidden;
+}
+
+
+
+
 
 

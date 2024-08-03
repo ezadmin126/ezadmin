@@ -1,14 +1,88 @@
 /*! ezadmin v1.0.0-SNAPSHOT |
  https://gitee.com/ezadmin/index.html
  | MIT /license */
-var holiday = [[], []];
-if ($("#holiday") != null && $("#holiday").val() != null) {
-    try{
-        holiday = JSON.parse($("#holiday").val());
-    }catch (e) {
-        console.log(e)
+$(function (){
+    var holiday = [[], []];
+    if ($("#holiday") != null && $("#holiday").val() != null) {
+        try{
+            holiday = JSON.parse($("#holiday").val());
+        }catch (e) {
+            console.log(e)
+        }
     }
-}
+
+    $(document).on('click', '.ezopenbutton', function () {
+        var btn = $(this);
+        var url = (btn.attr("item_url") || btn.attr("url"));
+        if (url == '#') {
+            return;
+        }
+        var openType = btn.attr("ITEM_OPEN_TYPE") || btn.attr("opentype");
+        var area = btn.attr("area");
+        var title = btn.attr("ITEM_OPEN_TITLE") || btn.attr("windowname") || "打开";
+        ezopen(openType, title, url, area);
+    })
+    $(document).on("click",".ezopenredirect",function(e){
+        openBlank("/ezredirect.html?url="+encodeURIComponent($(this).attr("item_url")));
+    })
+
+
+    $(document).on('click', '.viewer-image', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var _this = $(this);
+        var pid = _this.attr("pid");
+        ;
+        var data = [];
+        var item = {};
+        item.alt = _this.attr("alt");
+        item.pid = _this.attr("pid");
+        item.src = _this.attr("orgsrc")||_this.attr("src");
+        item.thumb = _this.attr("orgsrc");
+        data.push(item);
+        layer.photos({
+            shade: 0.5,
+            photos: {
+                "title": _this.attr("title"),
+                "start": 0,
+                "data": data
+            },
+            footer: false // 是否隐藏底部栏 --- 2.8+
+            ,success:function(){
+                if($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height()>500){
+                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height","500px");
+                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width","auto");
+
+                    $(".layui-layer-photos").eq(0).css("top",$(window).height()/2-250)
+
+
+                }
+            }
+        });
+    })
+//行选择事件
+    $(document).on('click', '.ezrowselectbutton', function () {
+
+        var name = $(this).attr("fname");
+        var ezcallback = $(this).attr("ez_callback") || $(this).attr("item_url") || $(this).attr("url");
+        // var doc=$(itemUrl,window.parent.document);
+        var row = $(this).parents("tr");
+        var ids = getJsonRowIds(row);
+        var lines = getJsonRowIdAndNames(row, name);
+        window.parent[ezcallback] && window.parent[ezcallback](ids, lines);
+    })
+//弹框选择
+    $(document).on('click', '.ezcheckbutton', function () {
+        console.log("checked")
+        debugger;
+        var ezcallback = $(this).attr("ez_callback") || $(this).attr("item_url") || $(this).attr("url");
+        // var doc=$(ezcallback,window.parent.document);
+        var ids = getJsonCheckIds();
+        var lines = getJsonCheckIdAndNames();
+        window.parent[ezcallback] && window.parent[ezcallback](ids, lines);
+    })
+})
+
 var shortcut = [
     {
         text: "昨天",
@@ -212,7 +286,7 @@ var rangeShortCut=[
 function initForm() {
 
     layui.use(['form', 'laydate', 'table', 'dropdown', 'colorpicker'], function () {
-        var $ = layui.jquery,
+        var
             form = layui.form,
             table = layui.table;
         form.render();
@@ -1011,55 +1085,6 @@ function getNow() {
 }
 
 
-$(document).on('click', '.ezopenbutton', function () {
-    var btn = $(this);
-    var url = (btn.attr("item_url") || btn.attr("url"));
-    if (url == '#') {
-        return;
-    }
-    var openType = btn.attr("ITEM_OPEN_TYPE") || btn.attr("opentype");
-    var area = btn.attr("area");
-    var title = btn.attr("ITEM_OPEN_TITLE") || btn.attr("windowname") || "打开";
-    ezopen(openType, title, url, area);
-})
-$(document).on("click",".ezopenredirect",function(e){
-    openBlank("/ezredirect.html?url="+encodeURIComponent($(this).attr("item_url")));
-})
-
-
-$(document).on('click', '.viewer-image', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var _this = $(this);
-    var pid = _this.attr("pid");
-    ;
-    var data = [];
-    var item = {};
-    item.alt = _this.attr("alt");
-    item.pid = _this.attr("pid");
-    item.src = _this.attr("orgsrc")||_this.attr("src");
-    item.thumb = _this.attr("orgsrc");
-    data.push(item);
-    layer.photos({
-        shade: 0.5,
-        photos: {
-            "title": _this.attr("title"),
-            "start": 0,
-            "data": data
-        },
-        footer: false // 是否隐藏底部栏 --- 2.8+
-        ,success:function(){
-            if($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height()>500){
-                $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height","500px");
-                $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width","auto");
-
-                $(".layui-layer-photos").eq(0).css("top",$(window).height()/2-250)
-
-
-            }
-        }
-    });
-})
 
 function ezopen(openType, title, appendUrl, area) {
     appendUrl = ($("#contextName").val()||'') + appendUrl;
@@ -1185,27 +1210,7 @@ function toFloat(num) {
     return result;
 }
 
-//行选择事件
-$(document).on('click', '.ezrowselectbutton', function () {
 
-    var name = $(this).attr("fname");
-    var ezcallback = $(this).attr("ez_callback") || $(this).attr("item_url") || $(this).attr("url");
-    // var doc=$(itemUrl,window.parent.document);
-    var row = $(this).parents("tr");
-    var ids = getJsonRowIds(row);
-    var lines = getJsonRowIdAndNames(row, name);
-    window.parent[ezcallback] && window.parent[ezcallback](ids, lines);
-})
-//弹框选择
-$(document).on('click', '.ezcheckbutton', function () {
-    console.log("checked")
-    debugger;
-    var ezcallback = $(this).attr("ez_callback") || $(this).attr("item_url") || $(this).attr("url");
-    // var doc=$(ezcallback,window.parent.document);
-    var ids = getJsonCheckIds();
-    var lines = getJsonCheckIdAndNames();
-    window.parent[ezcallback] && window.parent[ezcallback](ids, lines);
-})
 
 function isPositiveInteger(value) {
     // 判断是否全是数字

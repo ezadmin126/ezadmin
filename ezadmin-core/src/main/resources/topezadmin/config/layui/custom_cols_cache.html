@@ -6,7 +6,6 @@
     <link th:href="${contextName+'/webjars/layuidist/css/layui.css?v2='+vi}" rel="stylesheet">
     <link th:href="${contextName+'/webjars/topezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
     <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?'+vi:''}"  >
-    <script th:src="${contextName+'/webjars/topezadmin/layui/js/core.js?v='+vi}" type="text/javascript"></script>
     <style>
         .layui-btn:not(.layui-btn-lg ):not(.layui-btn-sm):not(.layui-btn-xs) {
             height: 34px;
@@ -23,7 +22,15 @@
              border: 1px dashed #d1d1d1;
 
          }
+        .gu-mirror {
 
+            position: fixed !important;
+            margin: 0 !important;
+            z-index: 9999 !important;
+            opacity: 0.8;
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+            filter: alpha(opacity=80);
+        }
 
         .gu-mirror .layui-input-inline {
             display: none;
@@ -40,7 +47,11 @@
 </head>
 <body>
 <div class="layui-container">
-    <blockquote class="layui-elem-quote">勾选需要展示的搜索项或表格列，拖拽排序</blockquote>
+    <blockquote class="layui-elem-quote">
+        <p>- 勾选的元素将在列表展示，未勾选的将会隐藏</p>
+        <p>- 可以通过拖拽对相关元素进行排序</p>
+        <p>- 可以在在原列表页面的表头对列宽与顺序进行调整</p>
+    </blockquote>
     <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
     <input type="hidden" name="IS_DEBUG" id="IS_DEBUG" th:value="${IS_DEBUG}">
     <form class="layui-form" th:action="${contextName+'/topezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}" method="post"
@@ -68,7 +79,7 @@
 
                         <input th:if="${not (item.plugin_code eq 'input-hidden' or item.plugin_code eq 'hidden'
                             or item.plugin_code eq '29' or item.plugin_code eq 'search'
-                            )  and  idx.index!=0 }"
+                            )  and  idx.index!=0 }" checked
                                type="checkbox" name="searchId" th:value="${item.item_name}"
                                lay-skin="primary" lay-filter="changeList">
                         </div>
@@ -92,7 +103,7 @@
                         <label class="layui-form-label"  th:title="${ item.item_name =='firstCol'?'首列':  item.label}"
                                th:text="${ item.item_name =='firstCol'?'首列':item.label}">Field E :</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="columnId"   th:if="${idx.index !=0 &&   #strings.isEmpty(item.fixed) }"  lay-filter="changeList" th:value="${item.item_name}"
+                            <input type="checkbox" name="columnId" checked  th:if="${idx.index !=0 &&   #strings.isEmpty(item.fixed) }"  lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
                             <input type="checkbox" name="columnId" checked disabled th:fixed="${item.fixed}"   th:if="${idx.index ==0 || not #strings.isEmpty(item.fixed)}"  lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
@@ -139,9 +150,19 @@
 <script th:src="${contextName+'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
 <script th:src="${contextName+'/webjars/jqueryform/jquery.form.js?'}"></script>
 <script type='text/javascript' th:src="${contextName+'/webjars/topezadmin/plugins/dragula/dragula.min.js'}"></script>
+<script th:src="${contextName+'/webjars/topezadmin/layui/js/core.js?v='+vi}" type="text/javascript"></script>
+
 
 <script>
-
+    function cacheConfig() {
+        var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+        var jsonconfig = localStorage.getItem(key);
+        if (jsonconfig != undefined) {
+            var json = JSON.parse(jsonconfig);
+            return json;
+        }
+        return {};
+    }
     var drake = dragula({
         isContainer: function (el) {
             return el.classList.contains('searchDrage');
@@ -174,31 +195,35 @@
         var jsonconfig = localStorage.getItem(key);
         if (jsonconfig != null) {
             var json = JSON.parse(jsonconfig);
-            var search = json.search;
-            var column = json.column;
+            var search = json.search||[];
+            var column = json.column||[];
             var fixNumber = json.fixNumber||0;
             var fixNumberRight = json.fixNumberRight||0;
 
-            for (var i = 0; i < search.length; i++) {
-                $(".searchDrage").find('[item_name="' + search[i] + '"]').detach().appendTo(".searchDrage");
-            }
-            for (var i = 0; i < column.length; i++) {
-                $(".columnDrage").find('[item_name="' + column[i] + '"]').detach().appendTo(".columnDrage");
-            }
 
-            $("input[name=searchId]").each(function () {
-                if (search.includes($(this).val())) {
-                    $(this).prop("checked", true)
+
+            if(search.length>0){
+                for (var i = 0; i < search.length; i++) {
+                    $(".searchDrage").find('[item_name="' + search[i] + '"]').detach().appendTo(".searchDrage");
                 }
-            })
+                $("input[name=searchId]").each(function () {
+                    if (!search.includes($(this).val())) {
+                        $(this).prop("checked", false)
+                    }
+                })
+            }
 
-
-            $("input[name=columnId]").each(function () {
-
-                if (column.includes($(this).val())) {
-                    $(this).prop("checked", true)
+            if(column.length>0){
+                for (var i = 0; i < column.length; i++) {
+                    $(".columnDrage").find('[item_name="' + column[i] + '"]').detach().appendTo(".columnDrage");
                 }
-            })
+                $("input[name=columnId]").each(function () {
+                    if (!column.includes($(this).val())) {
+                        $(this).prop("checked", false)
+                    }
+                })
+            }
+
 
             $("#fixedNumber").val(fixNumber);
             $("#fixNumberRight").val(fixNumberRight);
@@ -286,7 +311,7 @@
     $("#save").click(function () {
          ;
         count++;
-        var json = {};
+        var json = cacheConfig();
         var search = [];
         var column = [];
 

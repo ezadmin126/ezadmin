@@ -251,16 +251,6 @@ function calculateSearchItemDisplay() {
 
     //搜索项的排序
     if (search.length > 0) {
-        //显示隐藏
-        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
-            var _this=$(this);
-            //配置包含
-            if($.inArray(_this.attr("item_name"), search)>-1){
-               // $(".searchcontent").prepend(_this.detach());
-            }else{
-                _this.remove();
-            }
-        })
         //排序
         for (var i = search.length; i > 0; i--) {
             var item = $(".searchcontent").find('.selector[item_name="' + search[i - 1] + '"]').detach();
@@ -275,22 +265,13 @@ function calculateSearchItemDisplay() {
     // $("#downBtn").show();
     //如果是全部展示
     if ($("#_SEARCH_ITEM_DISPLAY").val() == 1) {
-        $(".searchcontent > .selector").not(".list-item-hidden").show();
+        $(".searchcontent").removeClass("search-hidden");
         $("#upBtn").show(); //展示 展开 按钮就行了
         $("#downBtn").hide();
     }else{
-        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
-            if($(this).offset().top>$(".list-item").eq(0).offset().top+10){  //大于第二行就不展示
-                $("#upBtn").hide(); $("#downBtn").show();
-                $(this).hide();
-            }else if($(this).offset().top==0){
-                $("#downBtn").hide(); $("#upBtn").show();
-                $(this).hide();
-            }else{
-                $(this).show();
-            }
-        })
-
+        $(".searchcontent").addClass("search-hidden");
+        $("#upBtn").hide(); //展示 展开 按钮就行了
+        $("#downBtn").show();
     }
 }
 
@@ -303,28 +284,28 @@ function cacheConfig() {
     }
     return {};
 }
+function updateCacheConfig(value) {
+    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+    localStorage.setItem(key,value);
+}
 
 function selfConfig() {
     //根据本地缓存，去除部分字段
     try {
-        var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
-        var json = cacheConfig();
+         var json = cacheConfig();
 
         var search = json.search == undefined ? [] : json.search;
         var column = json.column == undefined ? [] : json.column;
-        var fixNumber = json.fixNumber;
-        var fixNumberRight = json.fixNumberRight;
-        if (parseInt(fixNumber).toString() != 'NaN') {
-            $("#fixNumber").val(fixNumber)
-        } else {
-            // $("#fixNumber").val(0)
-        }
-        if (parseInt(fixNumberRight).toString() != 'NaN') {
-            $("#fixNumberRight").val(fixNumberRight)
-        } else {
-            //  $("#fixNumberRight").val(0)
-        }
+        var colwidth = json.colwidth == undefined ? {} : json.colwidth;
 
+        for (let key in colwidth) {
+            if (colwidth.hasOwnProperty(key)) {
+                var value=colwidth[key];
+                var thoption=JSON.parse($('#mytable th[item_name="'+key+'"]').attr("lay-options"));
+                thoption.width=value;
+                $('#mytable th[item_name="'+key+'"]').attr("lay-options",JSON.stringify(thoption));
+            }
+        }
 
         //第二行开始初始隐藏
         calculateSearchItemDisplay();
@@ -446,6 +427,35 @@ function renderTable() {
                         }
                         doDropdown();
                         doOrder();
+
+                         // 初始化 dragula
+                         dragula([$("[lay-table-id=mytable] thead tr").eq(0)[0]], {
+                             moves: function (el, container, handle) {
+                                 // 确保只有 span 元素可以触发拖拽
+                                 return   handle.tagName === 'SPAN'&&handle.className=='';
+                             }
+                             // ,mirrorContainer:$("[lay-table-id=mytable] thead tr").eq(0)[0]
+                             // ,copy: function (el, source) {
+                             //     // 复制元素时，添加自定义的类名
+                             //     el.classList.remove('gu-mirror');
+                             //     el.classList.add('th-mirror');
+                             //     return el;
+                             // }
+                         }).on('drop', function (el, target, source, sibling) {
+                             // 拖拽结束后的回调函数
+                            // console.log('Element dropped');
+                            var ths= $("[lay-table-id=mytable] thead").eq(0).find("th");
+                             var json=cacheConfig();
+                             var column =  [];
+                             ths.each(function(i,item){
+                                 console.log(i+"--"+$(item).attr("data-field"));
+                                 column.push($(item).attr("data-field"))
+                             })
+                             json.column=column;
+                             updateCacheConfig(JSON.stringify(json));
+                             location.reload();
+                         });
+
                      }
                     doSystem();
                 } catch (e) {
@@ -483,6 +493,21 @@ function renderTable() {
 
             $("#orderBy").val(obj.type);
             $("#submitBtn").click();
+        });
+        laytable.on('colResized(mytable)', function(obj){
+            var col = obj.col; // 获取当前列属性配置项
+            var options = obj.config; // 获取当前表格基础属性配置项
+
+            var field=obj.col.field;
+            var width=obj.col.width;
+
+            var json = cacheConfig();
+            var colwidth = json.colwidth == undefined ? {} : json.colwidth;
+            colwidth[field]=width;
+            json.colwidth=colwidth;
+            updateCacheConfig(JSON.stringify(json));
+
+            console.log(obj); // 查看对象所有成员
         });
 
         laytable.on('row(mytable)', function(obj){

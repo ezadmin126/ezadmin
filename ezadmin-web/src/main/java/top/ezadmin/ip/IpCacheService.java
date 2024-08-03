@@ -65,7 +65,7 @@ public class IpCacheService {
         request.put("param",param);
         IP_VISIT_QUEUE.addLast(request);
     }
-    private void initFilterList(){
+    private static void initFilterList(){
         for (int i = 0; i < CONFIG_WINDOW_MAX_SIZE.length; i++) {
             Map<String,Object> map=new HashMap<>();
             map.put("window",CONFIG_WINDOW_MAX_SIZE[i][0]);
@@ -106,7 +106,7 @@ public class IpCacheService {
         global.add(map);
     }
 
-    public void init(){
+    public static void init(){
         if(!INITED.getAndSet(true) ){
             IP_QUEUE_CACHE= Caffeine.newBuilder()
                     .expireAfterWrite(5, TimeUnit.MINUTES)
@@ -134,7 +134,7 @@ public class IpCacheService {
         }
     }
     private static  AtomicLong index=new AtomicLong(0);
-    private    void ipSafe(Map<String,String> request){
+    private  static  void ipSafe(Map<String,String> request){
         String ip=request.get("ip");
         String param=request.get("param");
 
@@ -174,7 +174,7 @@ public class IpCacheService {
             LOGGER.error(ip,e);
         }
     }
-    private  void addBlack(String ip,String message){
+    private static void addBlack(String ip,String message){
 
         LOGGER.info("触发黑名单 IP {} {}",ip,message);
         AtomicInteger c= BLACK_MAP.get(ip,k->{
@@ -182,7 +182,7 @@ public class IpCacheService {
         });
         c.incrementAndGet();
     }
-    private   Map<String, Integer> getTopThree(Set<String> set){
+    private static  Map<String, Integer> getTopThree(Set<String> set){
         // 使用Stream API进行分组并计数
         Map<String, Integer> groupedNamesCount =new HashMap<>();
         if(set==null||set.isEmpty()){

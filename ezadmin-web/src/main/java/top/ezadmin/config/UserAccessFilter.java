@@ -306,6 +306,7 @@ import java.util.regex.Pattern;
 
     @Override
     public void initFilterBean() throws ServletException {
+        IpCacheService.init();
          //staticPattern.addAll(loadPattern(staticUrl).keySet());
         // excludePattern.addAll(loadPattern(exclude).keySet());
     }
