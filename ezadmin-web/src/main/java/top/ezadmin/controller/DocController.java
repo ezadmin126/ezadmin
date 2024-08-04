@@ -1,10 +1,12 @@
 package top.ezadmin.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.ezadmin.blog.constants.Nologin;
+import top.ezadmin.blog.vo.BlogConfigurations;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.web.EzResult;
 
@@ -20,7 +22,8 @@ import java.util.logging.Handler;
 public class DocController {
     @RequestMapping("/{template}.html")
     @Nologin
-    public String welcome(@PathVariable("template") String template)  {
+    public String welcome(Model model, @PathVariable("template") String template)  {
+        model.addAttribute("configurations", BlogConfigurations.config());
         return"doc/"+template;
     }
 

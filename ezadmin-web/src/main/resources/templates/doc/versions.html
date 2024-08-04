@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezjsp.com/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezjsp.com/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content" style="margin-right: 0">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+<!--                    <li><a href="#source">源码示例</a></li>-->
+<!--                    <li ><a href="#param">参数说明</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h2 id="v2.9.14.8"  >
+            v2.9.14.8
+            <!-- <span class="layui-badge-rim" style="color: #16b777;">稳定版</span> -->
+            <span class="layui-badge-rim">2024-07-27</span>
+        </h2>
+        <ul>
+            <li>
+                <h4>list</h4>
+                <ul>
+                    <li>优化搜索项的显示隐藏实现方式</li>
+                    <li>列表表头支持拖拽排序与自定义宽度</li>
+                    <li>增加高级搜索</li>
+                </ul>
+            </li>
+            <li>
+                <h4>plugins</h4>
+                <ul>
+                    <li>增加批量导入插件<a href="/doc/button-import.html">batchimport</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2 id="v2.9.13"  >
+            v2.9.13
+            <!-- <span class="layui-badge-rim" style="color: #16b777;">稳定版</span> -->
+            <span class="layui-badge-rim">2024-07-05</span>
+        </h2>
+        <ul>
+            <li>
+                <h4>list</h4>
+                <ul>
+                    <li>增加默认时间参数： EZ_YEAR_START</li>
+                </ul>
+            </li>
+            <li>
+                <h4>form</h4>
+                <ul>
+                    <li>修改富文本，使图片去除修改大小的权限。同时设置默认样式max-wdith:100%</li>
+                    <li>sql表达式支持#{userSex2,jdbcType=NUMBER,value=0}，并添加单元测试 </li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2 id="v2.9.10"  >
+            v2.9.10
+            <!-- <span class="layui-badge-rim" style="color: #16b777;">稳定版</span> -->
+            <span class="layui-badge-rim">2024-06-08</span>
+        </h2>
+        <ul>
+            <li>
+                <h4>core</h4>
+                <ul>
+                    <li>版本号跟layui  同步</li>
+                    <li>datatype新增DATAGROUP，主要是从参数表中 获取数据，减少配置文件中的SQL。</li>
+                    <li>SQL表达式解析算法修改，并增加测试用例。</li>
+                </ul>
+            </li>
+            <li>
+                <h4>list</h4>
+                <ul>
+                    <li>readonly bug 修复</li>
+                </ul>
+            </li>
+            <li>
+                <h4>form</h4>
+                <ul>
+                    <li>form里面的table</li>
+                    <li>form形式的详情页，去除detail</li>
+                    <li>优化datarange样式</li>
+                    <li>xmselect-tree支持</li>
+                    <li>readonly bug 修复</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2 id="v0.1-v1.0.8"  >
+            v0.1-v1.0.8 功能介绍
+            <!-- <span class="layui-badge-rim" style="color: #16b777;">稳定版</span> -->
+            <span class="layui-badge-rim">2019-2023</span>
+        </h2>
+        <ul>
+            <li>
+                <h4>core</h4>
+                <ul>
+                    <li>支持数据库+html格式的配置文件 同时存在</li>
+                    <li>可以嵌入至任意servlet应用</li>
+                    <li>springboot一键加入新老系统</li>
+                    <li>url由/ezlist->/ezadmin->/topezadmin</li>
+                    <li>支持在线查看所有执行的完整sql，日志</li>
+                    <li>插件可以自定义</li>
+                    <li>表达式可以接入spring的bean</li>
+                    <li>支持修改为其他的自定义ui模板，也支持纯html5展示</li>
+                </ul>
+            </li>
+            <li>
+                <h4>list</h4>
+                <ul>
+                    <li>拖拽编辑</li>
+                    <li>配置文件在线源码编辑</li>
+                    <li>搜索项与列表的列可以自定义排序与显隐，同时可以自定义宽度</li>
+                    <li>导出、导入快速配置</li>
+                    <li>列表更新数据库排序字段</li>
+                </ul>
+            </li>
+            <li>
+                <h4>form</h4>
+                <ul>
+                    <li>拖拽表单，card+formitem+grid</li>
+                    <li>form形式的详情页 </li>
+                    <li>自定义提交URL</li>
+                    <li>快捷删除与状态变更请求</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>
