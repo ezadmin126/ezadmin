@@ -138,6 +138,6 @@ public class IndexController extends BaseController {
 
     @EzMapping("dev.html")
     public String dev(HttpServletRequest request,  HttpServletResponse response)throws IOException  {
-        return "redirect:/topezadmin/listEdit/list-listmanage";
+        return "redirect:/topezadmin/list/list-listmanage";
     }
 }
