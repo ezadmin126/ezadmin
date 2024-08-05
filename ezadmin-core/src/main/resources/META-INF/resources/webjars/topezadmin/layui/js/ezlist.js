@@ -251,6 +251,16 @@ function calculateSearchItemDisplay() {
 
     //搜索项的排序
     if (search.length > 0) {
+        //显示隐藏
+        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
+            var _this=$(this);
+            //配置包含
+            if($.inArray(_this.attr("item_name"), search)>-1){
+                // $(".searchcontent").prepend(_this.detach());
+            }else{
+                _this.remove();
+            }
+        })
         //排序
         for (var i = search.length; i > 0; i--) {
             var item = $(".searchcontent").find('.selector[item_name="' + search[i - 1] + '"]').detach();
@@ -265,11 +275,21 @@ function calculateSearchItemDisplay() {
     // $("#downBtn").show();
     //如果是全部展示
     if ($("#_SEARCH_ITEM_DISPLAY").val() == 1) {
-        $(".searchcontent").removeClass("search-hidden");
+        $(".searchcontent > .selector").not(".list-item-hidden").show();
         $("#upBtn").show(); //展示 展开 按钮就行了
         $("#downBtn").hide();
     }else{
-        $(".searchcontent").addClass("search-hidden");
+        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
+            if($(this).offset().top>$("#searchForm").offset().top+76){  //大于第二行就不展示
+                $("#upBtn").hide(); $("#downBtn").show();
+                $(this).hide();
+            }else if($(this).offset().top==0){
+                $("#downBtn").hide(); $("#upBtn").show();
+                $(this).hide();
+            }else{
+                $(this).show();
+            }
+        })
         $("#upBtn").hide(); //展示 展开 按钮就行了
         $("#downBtn").show();
     }
