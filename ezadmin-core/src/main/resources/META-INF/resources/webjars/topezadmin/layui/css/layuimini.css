@@ -894,7 +894,7 @@
     }
 
     .layuimini-mini .layuimini-site-mobile {
-        display: none !important;
+        left:210px;
     }
 
     .layuimini-site-mobile {

@@ -2,8 +2,8 @@
  Home:https://gitee.com/ezadmin/index.html
  Doc:https://ezadmin.gitee.io/index.html/
  | MIT /license */
-console.log(" Home:https://gitee.com/ezadmin/index.html\n" +
-    " Doc:https://ezadmin.gitee.io/index.html/")
+console.log("Welcome\n" +
+    " Doc:https://www.ezjsp.com/doc/index.html")
 layui.config({
     base: $("#contextName").val() + "/webjars/topezadmin/layui/js/layuimini/",
     version: true

@@ -91,13 +91,13 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
             ezBootstrap.addBizDataSource(beanNames[i], dataSource);
         }
         try {
-            logger.info("   开始初始化列表"+ ezClientProperties.getListResourceLocation());
+           // logger.info("   开始初始化列表"+ ezClientProperties.getListResourceLocation());
             ezBootstrap.setListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getListResourceLocation()+";"+listResourceLocation));
-            logger.info("   开始初始化列表插件{}"+ ezClientProperties.getPluginsListResourceLocation());
+          //  logger.info("   开始初始化列表插件{}"+ ezClientProperties.getPluginsListResourceLocation());
             ezBootstrap.setPluginsListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsListResourceLocation()+";"+pluginsListResourceLocation));
-            logger.info("   开始初始化表单"+ ezClientProperties.getFormResourceLocation());
+          //  logger.info("   开始初始化表单"+ ezClientProperties.getFormResourceLocation());
             ezBootstrap.setFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getFormResourceLocation()+";"+formResourceLocation));
-            logger.info("   开始初始化表单插件"+ ezClientProperties.getPluginsFormResourceLocation());
+          //  logger.info("   开始初始化表单插件"+ ezClientProperties.getPluginsFormResourceLocation());
             ezBootstrap.setPluginsFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsFormResourceLocation()+";"+pluginsFormResourceLocation));
             ezBootstrap.setPluginsDetailConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsDetailResourceLocation()+";"+pluginsDetailResourceLocation));
             ezBootstrap.init();

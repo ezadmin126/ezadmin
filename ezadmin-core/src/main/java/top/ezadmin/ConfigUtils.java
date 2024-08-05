@@ -23,7 +23,7 @@ public class ConfigUtils {
     public static  List<Config> loadFiles(String config) throws IOException {
 
         List<Config> listConfig=new ArrayList();
-        logger.info(" topezadmin 开始加载文件{} ",config);
+      //  logger.info(" topezadmin 开始加载文件{} ",config);
         String paths[]= StringUtils.split(config,";");
         for(int i=0;i<paths.length;i++){
             try {
@@ -52,7 +52,7 @@ public class ConfigUtils {
                 logger.error("  paths 加载异常"+paths[i],e);
             }
         }
-        logger.info("   结束加载文件{} {}",config,listConfig.size());
+       // logger.info("   结束加载文件{} {}",config,listConfig.size());
         return listConfig;
     }
 }

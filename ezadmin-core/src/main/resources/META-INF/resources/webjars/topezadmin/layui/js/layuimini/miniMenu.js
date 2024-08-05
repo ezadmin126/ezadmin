@@ -213,15 +213,16 @@ layui.define(["element", "laytpl", "jquery"], function (exports) {
                     $('.layuimini-tool [data-side-fold]').attr('class', 'layui-icon layui-icon-spread-left');
                     $('.layui-layout-body').removeClass('layuimini-all');
                     $('.layui-layout-body').addClass('layuimini-mini');
-                  //  $(".layui-nav-item").find("cite").hide();
 
+                    $(this).find("i").removeClass("layui-icon-spread-left");
+                    $(this).find("i").addClass("layui-icon-shrink-right");
                 } else { // 正常
                     $('.layuimini-tool [data-side-fold]').attr('data-side-fold', 1);
                     $('.layuimini-tool [data-side-fold]').attr('class', 'layui-icon-shrink-right layui-icon');
                     $('.layui-layout-body').removeClass('layuimini-mini');
                     $('.layui-layout-body').addClass('layuimini-all');
-                  //  $(".layui-nav-item").find("cite").show();
-
+                    $(this).find("i").removeClass("layui-icon-shrink-right");
+                    $(this).find("i").addClass("layui-icon-spread-left");
                     layer.close(window.openTips);
                 }
                 element.init();

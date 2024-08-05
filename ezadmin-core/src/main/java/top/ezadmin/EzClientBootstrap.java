@@ -248,13 +248,13 @@ public class EzClientBootstrap {
     public void init(    ) throws  Exception {
         try {
             if (start.compareAndSet(false, true)) {
-                log.info("start init   plugins ");
+              //  log.info("start init   plugins ");
                 PluginsDao.getInstance().init();
-                log.info("start init   list ");
+             //   log.info("start init   list ");
                 ListDao.getInstance().init();
-                log.info("start init   form ");
+              //  log.info("start init   form ");
                 FormDao.getInstance().init();
-                log.info("end init     ");
+             //   log.info("end init     ");
                 ThymeleafUtils.init(sqlCache);
                 filter = new TraceLogFilter();
                 filter.next(new ControllerFilter()).next(new NotFoundFilter());

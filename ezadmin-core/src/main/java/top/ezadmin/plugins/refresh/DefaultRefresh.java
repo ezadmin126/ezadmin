@@ -36,7 +36,7 @@ public class DefaultRefresh extends EzRefresh {
                             @Override
                             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                               // 处理文件夹
-                                 log.info("监听文件夹 " +dir);
+                             //    log.info("监听文件夹 " +dir);
                                  dir.register(watcher,  ENTRY_MODIFY);
                               return FileVisitResult.CONTINUE;
                             }
@@ -67,10 +67,10 @@ public class DefaultRefresh extends EzRefresh {
                                 // 处理不同种类的事件
                                 if (kind == ENTRY_CREATE) {
                                     // 处理文件创建事件
-                                    log.info("文件 " + currentDir + File.separator + fileName +event.context().toString() + " 被"+event.kind()+"了。");
+                                  //  log.info("文件 " + currentDir + File.separator + fileName +event.context().toString() + " 被"+event.kind()+"了。");
                                 } else if (kind == ENTRY_MODIFY) {
                                     // 处理文件修改事件
-                                    log.info("文件 " + currentDir + File.separator + fileName+ " 被"+event.kind()+"了。");
+                                   // log.info("文件 " + currentDir + File.separator + fileName+ " 被"+event.kind()+"了。");
                                 }
                             }
                             // 重置 WatchKey

@@ -148,7 +148,7 @@ public class ListDao extends JsoupUtil {
         listConfigMap.put(doc.body().id().toLowerCase(),item);
      }
     private   void loadAllLists()   {
-        log.info("开始加载所有list size={}", EzClientBootstrap.instance().getListConfigResources().size());
+        //log.info("开始加载所有list size={}", EzClientBootstrap.instance().getListConfigResources().size());
         for (int i = 0; i < EzClientBootstrap.instance().getListConfigResources().size(); i++) {
 
             Config item= EzClientBootstrap.instance().getListConfigResources().get(i);

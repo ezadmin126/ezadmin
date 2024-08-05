@@ -1,0 +1,103 @@
+<html>
+<head>
+    <title>列表管理</title>
+</head>
+<body id="listmanage" datasource="dataSource" rowbuttonwidth="200" adminstyle="layui" rowbtnwidth="200">
+<div id="append_head"></div>
+<ul id="tab">
+    <li>
+        <a class="tablink" select="true" item_name="Tab" url="/topezadmin/listEdit/list-listmanage">列表</a>
+    </li>
+    <li>
+        <a class="tablink" select="false" item_name="f" url="/topezadmin/listEdit/list-formmanage">表单</a>
+    </li>
+</ul>
+<form id="search">
+    <div>
+        <label>列表编码</label>
+        <div>
+            <object item_name="EZ_CODE" alias="tec" type="input-text" plugin_code="input-text"></object>
+        </div>
+    </div>
+    <div>
+        <label>添加时间</label>
+        <div>
+            <object item_name="ADD_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+        </div>
+    </div>
+    <div>
+        <label>修改时间</label>
+        <div>
+            <object item_name="UPDATE_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+        </div>
+    </div>
+    <div>
+        <label>数据源</label>
+        <div>
+            <object item_name="DATASOURCE" alias="tec" type="input-text" plugin_code="input-text"></object>
+        </div>
+    </div>
+</form>
+<div id="tableButton">
+    <button opentype="_BLANK" url="/topezadmin/listEdit/loadEdit-" item_name="addd" type="button-table">新增</button>
+    <button opentype="_BLANK" windowname="SQL生成列表" url="/topezadmin/listEdit/importSql-" item_name="addd2" type="button-table">SQL生成列表</button>
+</div>
+<table>
+    <tbody>
+    <tr id="column">
+        <th id="rowbutton" width="200" fixed="right">
+            <button opentype="_BLANK" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" class="layui-border-blue">可视化编辑</button>
+            <button opentype="_BLANK" url="/topezadmin/listEdit/list-${EZ_CODE}" item_name="preview" type="button-single" class="layui-border-orange">预览</button>
+            <button opentype="_BLANK" url="/topezadmin/listEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" class="layui-border-orange">源码编辑</button>
+            <button opentype="CONFIRM_AJAX" windowname="确定发布吗" url="/topezadmin/listEdit/publish-${EZ_CODE}?EZ_TYPE=1" item_name="publish" type="button-single" class="layui-border-orange">发布</button>
+            <button opentype="_BLANK" url="/topezadmin/list/list-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" class="layui-border-orange">查看发布</button>
+            <button opentype="MODEL" windowname="发布历史" url="/topezadmin/listEdit/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single" class="layui-border-orange">历史</button>
+        </th>
+        <th item_name="ID" head="th-numbers" width="60" minwidth="60" fixed="left">ID</th>
+        <th item_name="EZ_CODE" url="/topezadmin/listEdit/list-${EZ_CODE}" body="td-link" opentype="_BLANK" fixed="left">列表编码</th>
+        <th item_name="EZ_NAME">列表名称</th>
+        <th item_name="ADD_TIME" jdbctype="DATETIME">添加时间</th>
+        <th item_name="UPDATE_TIME" jdbctype="DATETIME">修改时间</th>
+        <th item_name="PUB_TIME" jdbctype="DATETIME">上次发布时间</th>
+        <th item_name="DATASOURCE">数据源</th>
+    </tr>
+    </tbody>
+</table>
+<pre id="express" orderby="ORDER BY UPDATE_TIME DESC" groupby="">
+
+<![CDATA[
+StringBuilder sql=new StringBuilder();
+sql.append("
+ SELECT
+        tec.ID,
+         tec.EZ_CODE, tec.EZ_NAME,
+         tec.APP_NAME,
+         tec.ADD_TIME,
+         tec.UPDATE_TIME,
+         tec.DATASOURCE, TEP.UPDATE_TIME PUB_TIME
+    FROM
+        T_EZADMIN_EDIT tec LEFT JOIN T_EZADMIN_PUBLISH TEP
+            on tec.EZ_TYPE = TEP.EZ_TYPE
+                                                                  AND tec.EZ_CODE=TEP.EZ_CODE
+    WHERE
+        tec.IS_DEL = 0 and  ifnull(tec.APP_NAME,'')!='EZ'
+        AND tec.EZ_TYPE = 1");
+return search(sql);
+]]>
+
+
+  </pre>
+<pre id="count">
+
+</pre>
+<pre item_name="displayorder_express" type="">
+
+<![CDATA[
+
+]]>
+
+
+  </pre>
+<div id="append_foot"></div>
+</body>
+</html>

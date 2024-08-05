@@ -436,11 +436,14 @@ public class ListServiceImpl implements ListService {
             String sql="select id,lower(EZ_CODE) EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   lower(EZ_CODE)=? and EZ_TYPE=1 " +
                     "";
             Map<String, Object> listMap=null;
-            try {
-                listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
-                        sql, new Object[]{encodeId.toLowerCase()});
-            }catch (Exception e){
-                LOG.error(encodeId,e);
+            //系统list直接集成在jar包
+            if(!StringUtils.contains("listmanage,formmanage",encodeId)){
+                try {
+                    listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                            sql, new Object[]{encodeId.toLowerCase()});
+                }catch (Exception e){
+                    LOG.error(encodeId,e);
+                }
             }
             if(Utils.isEmpty(listMap)){
                 Map<String, Object> m=ListDao.getInstance().selectAllListById(encodeId.toLowerCase());
