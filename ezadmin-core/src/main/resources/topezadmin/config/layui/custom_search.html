@@ -108,7 +108,8 @@
         >
         </div>
     </div>
-    <div class="layui-card"  >
+
+    <div class="layui-card"  style="margin-top: 15px" >
         <div class="layui-card-header">自定义搜索</div>
         <div class="layui-card-body"   id="searchLabels">
 
@@ -184,6 +185,7 @@
         </div>
         <div class="searchItem">
             <select class="itemField" lay-search lay-filter="itemField">
+                <option value="">请选择</option>
                 <option  th:each="item:${fromSearchField}"
                     th:text="${item.label}"
                     th:value="${item.item_name}"
