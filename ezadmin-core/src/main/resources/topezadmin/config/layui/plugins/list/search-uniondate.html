@@ -63,13 +63,15 @@
                     </option>
                 </select>
             </div>
-            <div class="layui-input-wrap">
-                <div class="layui-input-prefix">
-                    <i class="layui-icon layui-icon-date"></i>
+            <div class="layui-input-block"  >
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input  PLACEHOLDER="开始时间"   type="text"
+                            class="layui-input daterangeinput"  autocomplete="off"  th:maxlength="${model.maxlength}"
+                            name="itemSearchDateValue" th:value="${model.itemSearchDateValue}">
                 </div>
-                <input  PLACEHOLDER="开始时间"  autocomplete="off" type="text"
-                        class="layui-input daterangeinput"  autocomplete="off"  th:maxlength="${model.maxlength}"
-                        name="itemSearchDateValue" th:value="${model.itemSearchDateValue}">
             </div>
         </div>
 

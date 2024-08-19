@@ -5,7 +5,6 @@ import top.ezadmin.common.utils.Utils;
 import top.ezadmin.plugins.express.OperatorParam;
 import top.ezadmin.plugins.express.InsertSimpleOperator;
 import top.ezadmin.plugins.express.jdbc.InsertParam;
-import top.ezadmin.plugins.express.jdbc.InsertParam;
 import top.ezadmin.plugins.parser.parse.ResultModel;
 
 public class InsertSimpleOperatorTest {

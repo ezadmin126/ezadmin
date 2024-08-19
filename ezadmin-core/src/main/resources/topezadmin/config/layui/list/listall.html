@@ -2,39 +2,39 @@
 <head>
     <title>列表管理</title>
 </head>
-<body id="listmanage" datasource="dataSource" rowbuttonwidth="200" adminstyle="layui" rowbtnwidth="200">
+<body id="listall" datasource="dataSource" rowbuttonwidth="200" adminstyle="layui" rowbtnwidth="200">
 <div id="append_head"></div>
 <ul id="tab">
     <li>
-        <a class="tablink" select="true" item_name="Tab" url="/topezadmin/listEdit/list-listmanage">列表</a>
+        <a class="tablink" select="true" item_name="Tab" url="/topezadmin/list/list-listall">列表</a>
     </li>
     <li>
-        <a class="tablink" select="false" item_name="f" url="/topezadmin/listEdit/list-formmanage">表单</a>
+        <a class="tablink" select="false" item_name="f" url="/topezadmin/list/list-formall">表单</a>
     </li>
 </ul>
 <form id="search">
     <div>
         <label>列表编码</label>
         <div>
-            <object item_name="EZ_CODE" alias="tec" type="input-text" plugin_code="input-text"></object>
+            <object item_name="EZ_CODE" alias="tec" type="input-text"  ></object>
         </div>
     </div>
     <div>
         <label>添加时间</label>
         <div>
-            <object item_name="ADD_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+            <object item_name="ADD_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange"  ></object>
         </div>
     </div>
     <div>
         <label>修改时间</label>
         <div>
-            <object item_name="UPDATE_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange" plugin_code="daterange"></object>
+            <object item_name="UPDATE_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange"  ></object>
         </div>
     </div>
     <div>
         <label>数据源</label>
         <div>
-            <object item_name="DATASOURCE" alias="tec" type="input-text" plugin_code="input-text"></object>
+            <object item_name="DATASOURCE" alias="tec" type="input-text" ></object>
         </div>
     </div>
 </form>
@@ -49,9 +49,9 @@
             <button opentype="_BLANK" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" class="layui-border-blue">可视化编辑</button>
             <button opentype="_BLANK" url="/topezadmin/listEdit/list-${EZ_CODE}" item_name="preview" type="button-single" class="layui-border-orange">预览</button>
             <button opentype="_BLANK" url="/topezadmin/listEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" class="layui-border-orange">源码编辑</button>
-            <button opentype="CONFIRM_AJAX" windowname="确定发布吗" url="/topezadmin/listEdit/publish-${EZ_CODE}?EZ_TYPE=1" item_name="publish" type="button-single" class="layui-border-orange">发布</button>
+            <button opentype="CONFIRM_AJAX" windowname="确定发布吗" url="/topezadmin/listEdit/publish-${EZ_CODE}?EZ_TYPE=1" item_name="publish" type="button-single" class="layui-border-orange">发布正式</button>
             <button opentype="_BLANK" url="/topezadmin/list/list-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" class="layui-border-orange">查看发布</button>
-            <button opentype="MODEL" windowname="发布历史" url="/topezadmin/listEdit/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single" class="layui-border-orange">历史</button>
+            <button opentype="MODEL" windowname="发布历史" url="/topezadmin/listEdit/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single" class="layui-border-orange">发布历史</button>
         </th>
         <th item_name="ID" head="th-numbers" width="60" minwidth="60" fixed="left">ID</th>
         <th item_name="EZ_CODE" url="/topezadmin/listEdit/list-${EZ_CODE}" body="td-link" opentype="_BLANK" fixed="left">列表编码</th>

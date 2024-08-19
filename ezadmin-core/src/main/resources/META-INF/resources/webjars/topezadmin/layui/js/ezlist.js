@@ -271,18 +271,21 @@ function calculateSearchItemDisplay() {
             }
         }
     }
-    // $("#upBtn").show();
-    // $("#downBtn").show();
+    $("#upBtn").hide();
+    $("#downBtn").hide();
     //如果是全部展示
     if ($("#_SEARCH_ITEM_DISPLAY").val() == 1) {
         $(".searchcontent > .selector").not(".list-item-hidden").show();
         $("#upBtn").show(); //展示 展开 按钮就行了
         $("#downBtn").hide();
     }else{
+        var hasHidden=false;
         $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
             if($(this).offset().top>$("#searchForm").offset().top+76){  //大于第二行就不展示
-                $("#upBtn").hide(); $("#downBtn").show();
+                $("#upBtn").hide();
+                $("#downBtn").show();
                 $(this).hide();
+                hasHidden=true;
             }else if($(this).offset().top==0){
                 $("#downBtn").hide(); $("#upBtn").show();
                 $(this).hide();
@@ -290,8 +293,10 @@ function calculateSearchItemDisplay() {
                 $(this).show();
             }
         })
-        $("#upBtn").hide(); //展示 展开 按钮就行了
-        $("#downBtn").show();
+        if(hasHidden){
+            $("#upBtn").hide(); //展示 展开 按钮就行了
+            $("#downBtn").show();
+        }
     }
 }
 

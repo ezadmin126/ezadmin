@@ -1,11 +1,5 @@
-import com.alibaba.fastjson.JSON;
-import org.junit.Assert;
 import org.junit.Test;
-import top.ezadmin.common.utils.SqlUtils;
-import top.ezadmin.common.utils.Utils;
-import top.ezadmin.plugins.express.InsertSimpleOperator;
-import top.ezadmin.plugins.express.OperatorParam;
-import top.ezadmin.plugins.express.jdbc.InsertParam;
+import io.github.ezadmin126.common.utils.SqlUtils;
 
 public class CustomSearchTest {
 
