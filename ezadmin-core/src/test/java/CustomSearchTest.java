@@ -1,5 +1,5 @@
 import org.junit.Test;
-import io.github.ezadmin126.common.utils.SqlUtils;
+import top.ezadmin.common.utils.SqlUtils;
 
 public class CustomSearchTest {
 

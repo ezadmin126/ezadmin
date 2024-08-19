@@ -1,7 +1,7 @@
 import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
-import io.github.ezadmin126.common.utils.Utils;
+import top.ezadmin.common.utils.Utils;
 import top.ezadmin.plugins.express.OperatorParam;
 import top.ezadmin.plugins.express.UpdateSimpleOperator;
 import top.ezadmin.plugins.express.jdbc.UpdateParam;
