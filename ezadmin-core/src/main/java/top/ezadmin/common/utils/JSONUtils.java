@@ -1,6 +1,7 @@
 package top.ezadmin.common.utils;
 
 
+
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 public class JSONUtils {
     static Gson DEFAULT = new Gson();
-   static  Logger logger= LoggerFactory.getLogger(JSONUtils.class);
+   static Logger logger= LoggerFactory.getLogger(JSONUtils.class);
     public static String toJSONString(Object obj) {
         return DEFAULT.toJson(obj);
     }

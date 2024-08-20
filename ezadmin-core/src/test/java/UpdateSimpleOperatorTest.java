@@ -1,7 +1,7 @@
-import com.alibaba.fastjson.JSON;
-import org.junit.Assert;
+ import org.junit.Assert;
 import org.junit.Test;
-import top.ezadmin.common.utils.Utils;
+ import top.ezadmin.common.utils.JSONUtils;
+ import top.ezadmin.common.utils.Utils;
 import top.ezadmin.plugins.express.OperatorParam;
 import top.ezadmin.plugins.express.UpdateSimpleOperator;
 import top.ezadmin.plugins.express.jdbc.UpdateParam;
@@ -41,7 +41,7 @@ public class UpdateSimpleOperatorTest {
         Assert.assertEquals("没有传参，但有默认值", "update  "+TABLE+" set userId=?,userName=?,userSex=?,userSex2=?  where 1=1",
                 model.getResult());
         Assert.assertEquals("没有传参，但有默认值  剥离参数", "[null,\"abc\",null,\"0\"]",
-                JSON.toJSONString(model.getParamsStatic()));
+                JSONUtils.toJSONString(model.getParamsStatic()));
     }
     @Test
     public void test3() {
@@ -63,7 +63,7 @@ public class UpdateSimpleOperatorTest {
         Assert.assertEquals("有传参，有默认值", "update  "+TABLE+" set userId=?,userName=?,userSex=?,userSex2=?  where 1=1",
                 model.getResult());
         Assert.assertEquals("有传参，有默认值  剥离参数", "[\"userId\",\"userName\",3,2]",
-                JSON.toJSONString(model.getParamsStatic()));
+                JSONUtils.toJSONString(model.getParamsStatic()));
     }
     @Test
     public void test4() {
@@ -89,7 +89,7 @@ public class UpdateSimpleOperatorTest {
         Assert.assertEquals("有传参，没有默认值", "update  "+TABLE+" set userId=?,userName=?,userName2=?,userName3=?,userSex=?,userSex2=?  where 1=1",
                 model.getResult());
         Assert.assertEquals("有传参，没有默认值  剥离参数", "[\"userId\",null,null,null,3,2]",
-                JSON.toJSONString(model.getParamsStatic()));
+                JSONUtils.toJSONString(model.getParamsStatic()));
     }
     @Test
     public void test5() {
@@ -110,7 +110,7 @@ public class UpdateSimpleOperatorTest {
         Assert.assertEquals("老版本默认值兼容", "update  table set userId=?,userName=?,userSex=?,userSex2=?,userSex3=?,userSex4=NOW(),userSex5=NOW()  where 1=1",
                 model.getResult());
         Assert.assertEquals("老版本默认值兼容", "[null,\"abc\",\"ab'c\",\"ab'c\",\"ab=c\"]",
-                JSON.toJSONString(model.getParamsStatic()));
+                JSONUtils.toJSONString(model.getParamsStatic()));
     }
 
 }
