@@ -1,7 +1,6 @@
 package top.ezadmin.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import top.ezadmin.blog.vo.BlogConfigurations;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.utils.DESUtils;
 import top.ezadmin.common.utils.IpUtils;
+import top.ezadmin.common.utils.JSONUtils;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.domain.mapper.SysUserMapper;
@@ -99,7 +99,7 @@ public class LoginControllerCustom extends CustomBaseController {
     public EzResult userInfo(Model model, String error, HttpServletRequest request, HttpServletResponse response) {
         model.addAttribute("error", error);
         return EzResult.instance().data("user",
-                JSON.toJSONString(getSessionUser().getRoleNames()));
+                JSONUtils.toJSONString(getSessionUser().getRoleNames()));
     }
     @RequestMapping(value = "doLogin.html",method = RequestMethod.POST)
     @Nologin

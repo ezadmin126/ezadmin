@@ -1,10 +1,11 @@
 package top.ezadmin.blog.vo;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
+import top.ezadmin.common.utils.JSONUtils;
 
 import java.util.Calendar;
+import java.util.Map;
 
 public class BlogConfigurations {
 
@@ -20,10 +21,10 @@ public class BlogConfigurations {
     private String sysCopyRight;
 
 
-private static JSONObject obj=JSON.parseObject(JSON.toJSONString(new BlogConfigurations()));
+private static Map<String,String> obj= JSONUtils.parseMap(JSONUtils.toJSONString(new BlogConfigurations()));
 
 
-public static JSONObject config(){
+public static Map<String,String> config(){
    return obj;
 }
     public String getWebsiteName() {

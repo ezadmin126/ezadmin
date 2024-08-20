@@ -3,7 +3,7 @@ package top.ezadmin.web;
 
 
 
-import com.alibaba.fastjson.JSON;
+
 import top.ezadmin.common.utils.JSONUtils;
 import top.ezadmin.common.utils.Utils;
 
@@ -27,7 +27,7 @@ public class EzResult {
         map.put("V","VV");
         List list=new ArrayList<String>();
         list.add(map);
-        System.out.println(JSON.toJSONString(EzResult.instance().data(list)));
+        System.out.println(JSONUtils.toJSONString(EzResult.instance().data(list)));
     }
     private EzResult(){}
     public static EzResult instance(){

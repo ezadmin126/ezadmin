@@ -1,10 +1,6 @@
  package top.ezadmin.controller;
-//
-//
-import com.alibaba.fastjson.JSON;
 import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.utils.*;
-import top.ezadmin.dao.ListDao;
 import top.ezadmin.service.ListService;
 import top.ezadmin.common.annotation.EzMapping;
 import top.ezadmin.common.constants.SessionConstants;
@@ -47,7 +43,7 @@ import org.springframework.util.CollectionUtils;
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("status", "failure");
                 map.put("message", key+"导出失败：当前已有人员"+existList.get(key)+"正在导出此列表，请等待对方先导出完成。"  );
-                response.getWriter().println(JSON.toJSONString(map));
+                response.getWriter().println(JSONUtils.toJSONString(map));
                 return;
             }else{
                 existList.put(key,sessionUserId+username+ip);
@@ -104,7 +100,7 @@ import org.springframework.util.CollectionUtils;
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("status", "failure");
                 map.put("message", "导出失败：未查询到可以导出的数据，请检查列表筛选项。"  );
-                response.getWriter().println(JSON.toJSONString(map));
+                response.getWriter().println(JSONUtils.toJSONString(map));
                 return;
             }
             List<List<Object>> data=new ArrayList<>();
@@ -164,7 +160,7 @@ import org.springframework.util.CollectionUtils;
             Map<String, String> map = new HashMap<String, String>();
             map.put("status", "failure");
             map.put("message", "导出文件失败：" + e.getMessage());
-            response.getWriter().println(JSON.toJSONString(map));
+            response.getWriter().println(JSONUtils.toJSONString(map));
         }finally {
             existList.remove(key);
         }
