@@ -30,11 +30,9 @@
         <div class="ws-side-fixed">
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
-                    <li><a href="#quick">快速上手</a></li>
-                    <li><a href="#more">图形化管理</a></li>
-                    <li><a href="#sql">SQL转列表表单</a></li>
-                    <li><a href="#servlet">非springboot场景</a></li>
-                    <li><a href="#nosql">无数据库场景</a></li>
+                    <li><a href="#add">1.添加依赖</a></li>
+                    <li><a href="#config">2.编写配置</a></li>
+                    <li><a href="#run">3.启动</a></li>
                 </ul>
             </div>
         </div>
@@ -44,30 +42,24 @@
         <blockquote class="layui-elem-quote">
             EZ是一个嵌入式的Servlet表单列表工具，可以将SQL转换为列表（table）或表单（form），可适配各类UI框架，同时支持拖拽生成列表表单。
         </blockquote>
-        <h2 id="quick" lay-toc="{anchor: null}" style="margin-bottom: 0;">1.maven依赖（内置springboot-starter）</h2>
+
+        <h2 id="add" lay-toc="{anchor: null}" style="margin-bottom: 0;">1.maven依赖（内置springboot-starter）</h2>
         <p>
-            jdk1.8+<br>
-            新建一个空的springboot应用 ，版本建议：2.2.6.RELEASE
+            JDK1.8<br>
+            新建一个空的springboot应用 ，版本建议：2.2.6.RELEASE (非springboot参见：<a href="#servlet">非springboot场景</a>)
         </p>
         <p> 添加maven依赖</p>
         <pre class="layui-code code-demo" lay-options="{}">
 <dependency>
   <groupId>io.github.ezadmin126</groupId>
   <artifactId>ezadmin-core</artifactId>
-  <version>2.9.14.8</version>
+  <version>2.9.15</version>
 </dependency>
         </pre>
+        <h2 id="config" lay-toc="{anchor: null}" style="margin-bottom: 0;">2.添加helloworld.html</h2>
         <p>
-            可能产生jar冲突的依赖：<br>
-            jsqlparser4.2 <br>
-            caffeine:2.9.3<br>
-            QLExpress:3.3.1<br>
-            jsoup:1.16.1<br>
-        </p>
-        <h2 id="code1" lay-toc="{anchor: null}" style="margin-bottom: 0;">2.添加helloworld.html</h2>
-        <p>在
         <pre class="layui-code code-demo" lay-options="{}">src/main/resource/topezadmin/config/layui/list</pre>
-        路径下添加如下文件 helloworld.html
+        在如上路径下添加 helloworld.html，内容：
         </p>
         <pre class="layui-code code-demo" lay-options="{}">
         <textarea>
@@ -124,16 +116,9 @@ return list;
 </html>
             </textarea>
         </pre>
-        <p>启动应用，访问：http://localhost:8080/topezadmin/list/list-helloworld即可看到一个列表</p>
-        <p>enjoy:^_^</p>
-        <blockquote class="layui-elem-quote">
-            为了更加方便快速的管理这些列表，我们将配置放到数据库中 。<br>
-            使用数据库管理这些列表，增加图形化界面，以及在线编辑源码的功能。
-        </blockquote>
-        <h2 id="more" lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL</h2>
-        <p>下载初始化SQL:</p>
-        <a href="https://www.ezjsp.com/static/doc/init.sql">init.sql</a>
-        <p>请在自己的业务数据库中执行如上SQL。</p>
+        <p id="run">启动应用，访问：http://localhost:8080/topezadmin/list/list-helloworld </p>
+
+
         <h2 lay-toc="{anchor: null}" style="margin-bottom: 0;">配置</h2>
         <pre class="layui-code code-demo" lay-options="{}">
          <textarea>
@@ -143,7 +128,7 @@ topezadmin:
   password: 1234567891234567
 # 默认dataSource springboot中配置的名字，如果有多个，逗号隔开
   datasourceBeanNames: 'dataSource'
-# 1 是否记录日志  2  是否打印删除  3 是否拒绝删除 4 打印超过10秒的
+# 1 是否记录日志  2  是否打印删除  3 是否拒绝删除 4 打印超过10秒的  打印完整SQL，方便定位SQL异常
 # 1000 仅打印日志
 # 0001-10000 打印超过10秒的sql
 # 0100 打印没有where的 delete 或者update 语句
@@ -152,151 +137,6 @@ topezadmin:
           </textarea>  </pre>
         <a href="/doc/sysparam.html">更多配置</a>
 
-        <blockquote class="layui-elem-quote"><p>
-            启动应用并访问
-            <a href="/topezadmin/dev.html">/topezadmin/dev.html</a>。
-        </p>
-        </blockquote>
-
-        <h2 id="sql" lay-toc="{anchor: null}" style="margin-bottom: 0;">SQL转列表表单</h2>
-        <p>现在，让我们使用SQL生成一个用户列表，包含用户ID与用户名称</p>
-        <p>进入/topezadmin/dev.html ,点击SQL生成列表</p>
-        <p> 列表编码填入：
-        <pre class="layui-code code-demo" lay-options="{}">
-             <textarea>
-userlist
-             </textarea>
-        </pre>
-        </p>
-        <p> 表达式填入：
-        <pre class="layui-code code-demo" lay-options="{}">
-             <textarea>
-SELECT ID ID,NAME 名称 from T_USER WHERE 1=1
-             </textarea>
-        </pre>
-        </p>
-        <img style="width:100%" src="/static/doc/sql2list.png" alt=""/>
-
-        <p>点击发布之后，代表列表已经进入生产环境，点击预览，即查看对应的 userlist</p>
-        <img style="width:100%" src="/static/doc/listedit.png" alt=""/>
-
-        <p> 点击源码编辑，可参考文档，对前端源码进行修改</p>
-        <img style="width:100%" src="/static/doc/listsource.png" alt=""/>
-
-
-        <h2 id="servlet" lay-toc="{anchor: null}" style="margin-bottom: 0;">不是springboot?</h2>
-
-        <p>参照：EzClientServletFilter，自定义filter，初始化EzClientBootstrap即可：</p>
-        <pre class="layui-code code-demo" lay-options="{}">
-         <textarea>
-package top.ezadmin.web.filters;
-import top.ezadmin.common.utils.JSONUtils;
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.Utils;
-import top.ezadmin.EzClientBootstrap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-public class EzClientServletFilter implements Filter {
-private static final Logger LOGGE = LoggerFactory.getLogger(EzClientServletFilter.class);
-
-
-private Map<String, DataSource> appDatasource = new HashMap<String, DataSource>();
-
-
-EzClientBootstrap ezBootstrap;
-
-public void setEzBootstrap(EzClientBootstrap bootstrap) {
-    if(ezBootstrap==null){
-        ezBootstrap = bootstrap;
-    }
-}
-
-@Override
-public void init(FilterConfig filterConfig) throws ServletException {
-    LOGGE.info("start init EzAdminFilter" + filterConfig.getInitParameterNames());
-    if (ezBootstrap == null) {
-        ezBootstrap = EzClientBootstrap.instance();
-        String configJson=filterConfig.getInitParameter("configJson");
-        Map<String, Object> configMap=JSONUtils.parseObjectMap(configJson);
-        ezBootstrap.setConfig(configMap);
-
-        ezBootstrap.setAppName(filterConfig.getInitParameter("appName"));
-        ezBootstrap.setSqlCache(StringUtils.toBoolean(filterConfig.getInitParameter("cacheFlag")));
-        if(StringUtils.isNotBlank(filterConfig.getInitParameter("uploadUrl"))){
-            ezBootstrap.setUploadUrl(filterConfig.getInitParameter("uploadUrl"));
-        }
-        if(StringUtils.isNotBlank(filterConfig.getInitParameter("downloadUrl"))){
-            ezBootstrap.setDownloadUrl(filterConfig.getInitParameter("downloadUrl"));
-        }
-        ezBootstrap.setLogType(filterConfig.getInitParameter("logType"));
-        ezBootstrap.setRegionUrl(filterConfig.getInitParameter("regionUrl"));
-        ezBootstrap.setCategoryUrl(filterConfig.getInitParameter("categoryUrl"));
-        ezBootstrap.setOrgUrl(filterConfig.getInitParameter("orgUrl"));
-        ezBootstrap.setSystemName(filterConfig.getInitParameter("systemName"));
-        ezBootstrap.setNavUrl(filterConfig.getInitParameter("navUrl"));
-        ezBootstrap.setLogoUrl(filterConfig.getInitParameter("logoUrl"));
-        ezBootstrap.setSearchUrl(filterConfig.getInitParameter("searchUrl"));
-        ezBootstrap.setAppendJs(filterConfig.getInitParameter("appendJs"));
-        ezBootstrap.setIndexUrl(filterConfig.getInitParameter("indexUrl"));
-        ezBootstrap.setSignoutUrl(filterConfig.getInitParameter("signoutUrl"));
-        ezBootstrap.setMessageUrl(filterConfig.getInitParameter("messageUrl"));
-        ezBootstrap.setChatUrl(filterConfig.getInitParameter("chatUrl"));
-        ezBootstrap.setAdminStyle(filterConfig.getInitParameter("adminStyle"));
-        for (Map.Entry<String, DataSource> entry:appDatasource.entrySet()){
-            ezBootstrap.addBizDataSource(entry.getKey(), entry.getValue());
-        }
-        try {
-            ezBootstrap.init();
-        } catch (Exception throwables) {
-            throw new ServletException(throwables);
-        }
-    }
-}
-
-@Override
-public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-    HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-    HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-    try {
-        ezBootstrap.doFilter(httpServletRequest, httpServletResponse,filterChain);
-    } catch (Exception e) {
-        LOGGE.error("", e);
-        httpServletResponse.getWriter().println(e.getMessage());
-    } finally {
-        Utils.clearLog();
-    }
-}
-
-@Override
-public void destroy() {
-
-}
-
-
-public void addAppDatasource(String key, DataSource appDatasource) {
-    this.appDatasource.put(key, appDatasource);
-}
-
-
-}
-
-         </textarea>
-    </pre>
-
-        <h2 id="nosql" lay-toc="{anchor: null}" style="margin-bottom: 0;">无数据库模式</h2>
-        <p>如果不希望执行EZ数据库脚本，EZ同样支持， 在classpath目录新建文件，重新启动应用，访问
-            /topezadmin/list/list-helloworld 即可</p>
-        <p>classpath:/topezadmin/config/layui/list/helloword.html</p>
-    </div>
 </div>
 
 <script>

@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-        <ezadmin.version>2.9.14.7</ezadmin.version>
+        <ezadmin.version>2.9.15</ezadmin.version>
     </properties>
     <developers>
         <developer>
@@ -26,6 +26,15 @@
             <email>ezadmin@126.com</email>
         </developer>
     </developers>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.ezadmin126</groupId>
+                <artifactId>ezadmin-core</artifactId>
+                <version>${ezadmin.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 	
     <distributionManagement>
         <snapshotRepository>

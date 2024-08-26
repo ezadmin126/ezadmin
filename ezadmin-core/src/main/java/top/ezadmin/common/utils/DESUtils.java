@@ -82,11 +82,4 @@ public class DESUtils {
             throw new RuntimeException(e);
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        init("01ER4F6#$@abUHef");
-        System.out.println(encrypt("123456"));;
-        System.out.println(decrypt(encrypt("123456")));;
-    }
-
 }

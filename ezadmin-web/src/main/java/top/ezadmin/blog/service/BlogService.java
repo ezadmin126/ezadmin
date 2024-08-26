@@ -1,5 +1,7 @@
 package top.ezadmin.blog.service;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import top.ezadmin.common.utils.NumberUtils;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.domain.mapper.BlogCategoryMapper;
@@ -13,6 +15,7 @@ import top.ezadmin.blog.vo.BlogVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import top.ezadmin.domain.model.*;
+import top.ezadmin.web.SpringContextHolder;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -62,7 +65,30 @@ public class BlogService {
         return vo;
     }
 
+
+    @Transactional
+    public void a(){
+        SpringContextHolder.getBean(this.getClass()).b();
+    }
+
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public void b(){
+
+    }
+
+
+
+    @Transactional
     public void addView(Integer blogId,Integer times) {
+        Blog blog= new Blog();
+        blog.setBlogId(blogId);
+        blog.setViewTimes(times==null?1:times+1);
+        blogMapper.updateByPrimaryKeySelective(blog);
+        SpringContextHolder.getBean(BlogService.class).test(blogId,times);
+
+    }
+
+    private void test(Integer blogId,Integer times) {
         Blog blog= new Blog();
         blog.setBlogId(blogId);
         blog.setViewTimes(times==null?1:times+1);

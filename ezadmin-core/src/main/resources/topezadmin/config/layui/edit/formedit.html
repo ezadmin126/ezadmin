@@ -35,6 +35,8 @@
 
     </style>
 </head>
+
+
 <body>
  <div class="layui-fluid">
     <div class="layui-row layui-col-space5">
@@ -45,20 +47,20 @@
                 </ul>
                 <div class="layui-tab-content lefttab">
                     <div class="layui-tab-item layui-show ">
-                        <div class="layui-row layui-col-space5  dragula-container " id="leftContainer">
-
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                        <div  class="layui-row layui-col-space5   " style="margin:10px" id="cardcontainer">
+                            <button type="button" ez-type="card"  class="leftcard  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
                                 <i class="layui-icon layui-icon-layer"></i>
                                 <span>面板</span>
-<!--                                <i class="layui-icon layui-icon-down layui-font-12"></i> -->
+                                <!--                                <i class="layui-icon layui-icon-down layui-font-12"></i> -->
                                 <script type="text/x-template" class="template" >
                                     <div class="layui-col-md12 selector" ez-type="card" ez-label="面板" ez-cardname="面板"  ez-col="12"  >
                                         <div class="layui-card  ">
                                             <div class="layui-card-header  ">
                                                 面板
+                                                <a class="layui-icon-up layui-icon"> </a>
                                             </div>
                                             <div class="layui-card-body ">
-                                                <div class="layui-row  dragula-container"   ez-col="12"  >
+                                                <div class="layui-row  dragula-container form-item-container"   ez-col="12"  >
 
                                                 </div>
                                             </div>
@@ -66,7 +68,9 @@
                                     </div>
                                 </script>
                             </button>
-                            <hr>
+                        </div>
+                        <div class="layui-row layui-col-space5  dragula-container " id="leftContainer">
+
                             <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
                                 <i class="layui-icon  layui-icon-component"  ></i>
                                 <span>纯文字渲染</span>
@@ -616,7 +620,7 @@
                 </div>
 
                 <hr>
-                <div class="body dragula-container layui-row layui-col-space16  layui-form " id="centerContainer">
+                <div class="body   layui-row layui-col-space16  layui-form " id="centerContainer">
                     <div id="append_head" th:utext="${form.core.append_head}" >
 
                     </div>
@@ -624,11 +628,12 @@
                     <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
                          th:ez-cardname="${card.cardname}" ez-type="card" th:ez-col="${card.col}">
                         <div class="layui-card"  >
-                            <div class="layui-card-header" th:text="${card.cardname}" th:if="${not #strings.isEmpty(card.cardname)}">
-                                卡片面板
+                            <div class="layui-card-header"  th:if="${not #strings.isEmpty(card.cardname)}" >
+                                [[${card.cardname}]]
+                                <a class="layui-icon-up layui-icon"> </a>
                             </div>
                             <div class="layui-card-body   ">
-                                <div class="layui-row dragula-container">
+                                <div class="layui-row dragula-container form-item-container">
                                     <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
                                     </div>
                                 </div>

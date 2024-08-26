@@ -157,6 +157,18 @@ $(function () {
     });
     $("#inputForm").validate(config);
 
+
+    $(document).on("click",".layui-card-header .layui-icon",function(){
+        if($(this).hasClass("layui-icon-up")){
+            $(this).parents(".layui-card").find(".dragula-container").hide();
+            $(this).removeClass("layui-icon-up")
+            $(this).addClass("layui-icon-down")
+        }else{
+            $(this).parents(".layui-card").find(".dragula-container").show();
+            $(this).removeClass("layui-icon-down")
+            $(this).addClass("layui-icon-up")
+        }
+    })
 })
 
 

@@ -90,11 +90,16 @@
     cursor: pointer;
     z-index: 21;
     color: #fff;
-    width: 32px;
+    width: 42px;
     height: 20px;
     line-height: 20px;
     text-align: center;
 }
+.layui-component-tools .layui-icon-templeate-1{
+    right:30px;
+}
+
+
 .layui-component-tools i, .layui-component-move i {
     font-size: 12px;
 }

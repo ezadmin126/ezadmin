@@ -143,3 +143,8 @@ small {
     font-weight: 700
 }
 
+.layui-card-header .layui-icon{
+    position: absolute;
+    right: 15px;
+}
+

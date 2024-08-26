@@ -49,82 +49,107 @@ layui.use(function(){
     });
 
 });
-$(function (){
 
-    dragula({
-        isContainer: function (el) {
-            return $(el).hasClass('dragula-container'); // only elements in drake.containers will be taken into account
+
+$(function (){
+    var  itemdrag=itemdragInit();
+    const cardcontainer = document.getElementById('cardcontainer');
+    const centerContainer = document.getElementById('centerContainer');
+    //card拖入情况
+    var carddrag= dragula([cardcontainer, centerContainer], {
+        copy: function (el, source) {
+            // 只允许从左边复制到右边
+            return source === cardcontainer;
         },
         moves: function (el, source, handle, sibling) {
-            return true; // elements are always draggable by default
+            debugger
+            var iscardcol=(
+                (handle.classList.contains('cardcol')
+                )
+                &&
+                handle.classList.contains("active"))
+            ||
+                handle.classList.contains('layui-card-header');
+            console.log(iscardcol)
+            var ileftcard=handle.classList.contains("leftcard")||$(handle).parent().hasClass("leftcard");
+            console.log(ileftcard)
+
+            return iscardcol||ileftcard  ;
         },
         accepts: function (el, target, source, sibling) {
-            //改为正向
-            //中间
-            var iscenter=$(target).attr("id")=='centerContainer';
-
-            var iscard=
-                $(el).find("[ez-type=card]").length>0||//是否是左侧模版
-                $(el).attr("ez-type")=='card';//是否是中间自己挪动
-
-            var targetBody=$(target).parent().hasClass("layui-card-body");
-
-            if(iscenter&&iscard){
-
-                return true;
-            }
-            if(targetBody&&!iscard){
-
-                return true;
-            }
-
-            return false;
-          //  return true; // elements can be dropped in any of the `containers` by default
-        },
-        invalid: function (el, handle) {
-            if($(el).hasClass("tip")){
-                return true;
-            }
-            return false; // don't prevent any drags from initiating by default
-        },
-        copy: true,
-        revertOnSpill: true,
-        copySortSource: true
+            // 只允许拖放到右侧容器
+            console.log("carddrag accepts ")
+            return target !== cardcontainer;
+        }
     }).on('drop', function (el, target, source, sibling) {
-        console.log('drop::'+el+target);
-
-        var iscenter=$(target).attr("id")=='centerContainer';
-
-        var iscard=
-            $(el).find("[ez-type=card]").length>0||//是否是左侧模版
-            $(el).attr("ez-type")=='card';//是否是中间自己挪动
-
-        var targetBody=$(target).parent().hasClass("layui-card-body");
-
-        if(iscenter&&iscard){
-            dropcall(el,target);
-            return true;
+        if(source !== cardcontainer){
+            return false;
         }
-        if(targetBody&&!iscard){
-            dropcall(el,target);
-            return true;
-        }
-
-        return false;
+        var tmp=$(el).find(".template");
+        tmp.find('[name=default]').attr("name",new Date().getTime());
+        $(el).replaceWith($(el).find(".template").html());
+        layui.form.render()
+        itemdragInit();
+        return true;
     })
-    function dropcall(el,target){
-            $(target).find(".tip").remove();
 
-        if( $(el).find(".template").length>0){
+
+    //元素拖动初始化
+    const  rightContainers = document.querySelectorAll('.dragula-container');
+
+    rightContainers.forEach(level2 => {
+        dragula([level2], {
+            moves: function (el, source, handle, sibling) {
+                return handle.classList.contains('layui-col-space10'); // 确保只有 level3 元素可以被拖动
+            }
+        }).on('drop', function (el, target, source, sibling) {
+            console.log("rightContainers drop ")
+            return true;
+        }) ;
+    });
+
+    function itemdragInit(){
+        const leftContainer = document.getElementById('leftContainer');
+        const  rightContainers = document.querySelectorAll('.form-item-container');
+        try{
+            itemdrag.destroy();
+        }catch (e) {
+            console.log(e);
+        }
+        //新增元素的情况
+        itemdrag= dragula([leftContainer,...rightContainers ], {
+            copy: function (el, source) {
+                // 只允许从左边复制到右边
+                console.log("itemdragInit copy"+(source === leftContainer))
+                return source === leftContainer;
+            },
+            moves: function (el, source, handle, sibling) {
+                console.log("itemdragInit moves")
+                return true;
+            },
+            accepts: function (el, target, source, sibling) {
+                // 只允许拖放到右侧容器
+                console.log("itemdragInit accepts"+(target !== leftContainer))
+                return target !== leftContainer;
+            }
+        }).on('drop', function (el, target, source, sibling) {
+            // 只允许从左边拖到右边
+            console.log("itemdragInit drop"+(source !== leftContainer))
+            if(source !== leftContainer){
+                return false;
+            }
             var tmp=$(el).find(".template");
             tmp.find('[name=default]').attr("name",new Date().getTime());
 
             $(el).replaceWith($(el).find(".template").html());
-        }else{
-            return false;
-        }
-        layui.form.render()
+
+            layui.form.render()
+            return true;
+        })
+        return itemdrag;
     }
+
+
     function rowselect(el){
         let edittype=el.attr("ez-type");
         //样式切换

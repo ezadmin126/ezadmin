@@ -178,7 +178,7 @@ public class FormDao extends JsoupUtil {
             for (int i = 0; i < cardColList.size(); i++) {
 
                 Map<String,Object> cardEl=new HashMap<>();
-                cardEl.put("col",Utils.trimEmptyDefault(cardColList.get(i).parent().attr("col"),"12"));
+                cardEl.put("col",Utils.trimEmptyDefault(cardColList.get(i).attr("col"),"12"));
                 try {
                     cardEl.put("cardname", cardColList.get(i).selectFirst(".layui-card-header").html());
                 }catch(Exception e){}
