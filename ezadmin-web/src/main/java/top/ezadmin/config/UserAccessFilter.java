@@ -88,9 +88,7 @@ import java.util.regex.Pattern;
             httpServletResponse.getWriter().println("429 Too Many Requests");
             return;
         }
-//        if(!StringUtils.startsWith(realUrl,"/topezadmin")){
-//            IpCacheService.monitor(ip,realUrl,p);
-//        }
+
         httpServletRequest.setAttribute("downloadUrl", SpringContextHolder.getBean(EzClientProperties.class).getDownloadUrl());
         httpServletRequest.setAttribute("vi", vi);
         httpServletRequest.getSession().setAttribute("downloadUrl",SpringContextHolder.getBean(EzClientProperties.class).getDownloadUrl());
@@ -182,12 +180,8 @@ import java.util.regex.Pattern;
         return false;
     }
         private boolean noLogin(HttpServletRequest httpServletRequest,String url) throws Exception {
-        for (int i = 0; i < excludeUrl.size(); i++) {
-            if (matcher.match(excludeUrl.get(i),url)) {
-                return true;
-            }
-        }
-            if( !url.startsWith("/topezadmin")) {
+
+            if( !url.startsWith("/topezadmin")&&!url.startsWith("/ezadmin")) {
                 HandlerExecutionChain handlerExecutionChain = handlerMapping.getHandler(httpServletRequest);
                 if(handlerExecutionChain==null){
                     logger.warn("handlerExecutionChain null {}"+url);
@@ -213,27 +207,10 @@ import java.util.regex.Pattern;
 
     private boolean auth(String url,HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) {
         try {
-            if( !url.startsWith("/topezadmin")) {
-                HandlerExecutionChain handlerExecutionChain = handlerMapping.getHandler(httpServletRequest);
-                if(handlerExecutionChain==null){
-                    logger.warn("handlerExecutionChain null {}"+url);
+            for (int i = 0; i < excludeUrl.size(); i++) {
+                if (matcher.match(excludeUrl.get(i),url)) {
                     return true;
                 }
-                Object handler = handlerExecutionChain.getHandler();
-                if (handler!=null&& handler instanceof HandlerMethod) {
-                    HandlerMethod handlerMethod = (HandlerMethod) handler;
-                    Method method = handlerMethod.getMethod();
-                    Class<?> controllerClass = method.getDeclaringClass();
-                    Annotation annotation = controllerClass.getAnnotation(Nologin.class);
-                    Annotation m = method.getAnnotation(Nologin.class);
-                    if (annotation != null || m != null) {
-                        // 处理注解逻辑
-                        return true;
-                    }
-                }
-            }
-            if(noLogin(httpServletRequest,url)){
-                return true;
             }
             User user = (User) httpServletRequest.getSession().getAttribute("EZ_SESSION_USER_KEY");
             UrlPathHelper helper = new UrlPathHelper();
