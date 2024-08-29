@@ -43,7 +43,7 @@ public class IpPoolRule extends AbstractRule {
 
         //  ExecutorService executor = Executors.newFixedThreadPool(1);
         Runnable task = () -> {
-            logger.info("IpPoolRule  定时任务执行");
+           // logger.info("IpPoolRule  定时任务执行");
             doIpPool("定时任务");
         };
         scheduler.scheduleAtFixedRate(task, 0, 5, TimeUnit.SECONDS);
@@ -110,7 +110,7 @@ public class IpPoolRule extends AbstractRule {
             }
         }
         return   groupedNamesCount.entrySet().stream()
-                .filter(entry -> entry.getValue() > 50)
+                .filter(entry -> entry.getValue() > 100)
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 按照计数从大到小排序
                 .limit(3) // 限制结果集大小为前三个
                 .collect(Collectors.toMap(

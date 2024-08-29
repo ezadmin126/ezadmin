@@ -1,13 +1,11 @@
 package top.ezadmin.config;
 
 
-import cn.hutool.core.collection.CollectionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExecutionChain;
@@ -23,7 +21,6 @@ import top.ezadmin.common.utils.*;
 import top.ezadmin.domain.mapper.SysUserMapper;
 import top.ezadmin.domain.mapper.ext.SysUserExtMapper;
 import top.ezadmin.domain.model.SysUser;
-import top.ezadmin.ip.IpCacheService;
 import top.ezadmin.web.SpringContextHolder;
 
 import javax.annotation.Resource;
@@ -35,7 +32,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 /**
@@ -80,15 +76,15 @@ import java.util.regex.Pattern;
         }
         String ip=IpUtils.getRealIp(httpServletRequest);
         String p= JSONUtils.toJSONString(requestToMap(httpServletRequest));
-        if(IpCacheService.isBlack(ip)){
+        if(top.ezadmin.web.safe.DefaultLocalFilter.isSafe(realUrl,ip)){
             logger.error("拦截攻击 403");
             httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
             httpServletResponse.getWriter().println("403 contact admin");
             return;
         }
-        if(!StringUtils.startsWith(realUrl,"/topezadmin")){
-            IpCacheService.monitor(ip,realUrl,p);
-        }
+//        if(!StringUtils.startsWith(realUrl,"/topezadmin")){
+//            IpCacheService.monitor(ip,realUrl,p);
+//        }
         httpServletRequest.setAttribute("downloadUrl", SpringContextHolder.getBean(EzClientProperties.class).getDownloadUrl());
         httpServletRequest.setAttribute("vi", vi);
         httpServletRequest.getSession().setAttribute("downloadUrl",SpringContextHolder.getBean(EzClientProperties.class).getDownloadUrl());
@@ -306,7 +302,7 @@ import java.util.regex.Pattern;
 
     @Override
     public void initFilterBean() throws ServletException {
-        IpCacheService.init();
+        top.ezadmin.web.safe.DefaultLocalFilter.init();
          //staticPattern.addAll(loadPattern(staticUrl).keySet());
         // excludePattern.addAll(loadPattern(exclude).keySet());
     }

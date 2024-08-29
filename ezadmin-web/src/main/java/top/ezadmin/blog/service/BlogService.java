@@ -84,16 +84,10 @@ public class BlogService {
         blog.setBlogId(blogId);
         blog.setViewTimes(times==null?1:times+1);
         blogMapper.updateByPrimaryKeySelective(blog);
-        SpringContextHolder.getBean(BlogService.class).test(blogId,times);
+
 
     }
 
-    private void test(Integer blogId,Integer times) {
-        Blog blog= new Blog();
-        blog.setBlogId(blogId);
-        blog.setViewTimes(times==null?1:times+1);
-        blogMapper.updateByPrimaryKeySelective(blog);
-    }
 
     public List<BlogMessageVO> listMessage(Integer blogId ) {
         BlogMessageExample example=new BlogMessageExample();
