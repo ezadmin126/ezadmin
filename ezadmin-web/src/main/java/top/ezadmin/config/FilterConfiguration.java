@@ -70,7 +70,8 @@ public class FilterConfiguration implements WebMvcConfigurer {
         exeUrl.add("/topezadmin/list/doOrder-**");
         exeUrl.add("/ezadmin/index.html");
         exeUrl.add("/ezadmin/dark.html");
-        exeUrl.add("/ezredirect.html");
+		exeUrl.add("/");
+		exeUrl.add("/blog/**");
         uac.setStaticUrl(staticUrl);
         uac.setExcludeUrl(exeUrl);
         return uac;
@@ -92,8 +93,7 @@ public class FilterConfiguration implements WebMvcConfigurer {
 		staticUrl.add("/system/**");
 		staticUrl.add("/sitemap**");
 		staticUrl.add("/home/index");
-		staticUrl.add("/");
-		staticUrl.add("/blog/**");
+
 		return staticUrl;
 	}
 

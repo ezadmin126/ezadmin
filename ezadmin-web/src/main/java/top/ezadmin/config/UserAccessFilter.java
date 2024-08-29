@@ -22,6 +22,7 @@ import top.ezadmin.domain.mapper.SysUserMapper;
 import top.ezadmin.domain.mapper.ext.SysUserExtMapper;
 import top.ezadmin.domain.model.SysUser;
 import top.ezadmin.web.SpringContextHolder;
+import top.ezadmin.web.safe.IpActionDto;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -62,6 +63,7 @@ import java.util.regex.Pattern;
         String realUrl = helper.getRequestUri(httpServletRequest);
         //静态请求
         try {
+
             if (staticUrl(realUrl,httpServletRequest)  ) {
                 httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
                 httpServletResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -76,10 +78,14 @@ import java.util.regex.Pattern;
         }
         String ip=IpUtils.getRealIp(httpServletRequest);
         String p= JSONUtils.toJSONString(requestToMap(httpServletRequest));
-        if(top.ezadmin.web.safe.DefaultLocalFilter.isSafe(realUrl,ip)){
-            logger.error("拦截攻击 403");
-            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-            httpServletResponse.getWriter().println("403 contact admin");
+        IpActionDto ipActionDto = new IpActionDto();
+        ipActionDto.setIp(ip );
+        ipActionDto.setUri(realUrl);
+        ipActionDto.setP(p);
+        if(!top.ezadmin.web.safe.DefaultLocalFilter.isSafe(ipActionDto)){
+            logger.error("拦截攻击 429");
+            httpServletResponse.setStatus(429);
+            httpServletResponse.getWriter().println("429 Too Many Requests");
             return;
         }
 //        if(!StringUtils.startsWith(realUrl,"/topezadmin")){
@@ -95,6 +101,14 @@ import java.util.regex.Pattern;
         String idName=  cookie.getDecodeCookie(Constants.EZ_SID);
         String[] idNameArray = StringUtils.split(idName, "@@");
         //
+        try {
+            if(noLogin(httpServletRequest,realUrl)){
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return  ;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if(idNameArray==null||idNameArray.length!=2){
             httpServletResponse.sendRedirect("/login/login.html");
             return;
@@ -164,36 +178,36 @@ import java.util.regex.Pattern;
                 return true;
             }
         }
-        if( !realUrl.startsWith("/topezadmin")) {
-            HandlerExecutionChain handlerExecutionChain = handlerMapping.getHandler(httpServletRequest);
-            if(handlerExecutionChain==null){
-                logger.warn("handlerExecutionChain null {}"+realUrl);
-                return true;
-            }
-            Object handler = handlerExecutionChain.getHandler();
-            if (handler!=null&& handler instanceof HandlerMethod) {
-                HandlerMethod handlerMethod = (HandlerMethod) handler;
-                Method method = handlerMethod.getMethod();
-                Class<?> controllerClass = method.getDeclaringClass();
-                Annotation annotation = controllerClass.getAnnotation(Nologin.class);
-                Annotation m = method.getAnnotation(Nologin.class);
-                if (annotation != null || m != null) {
-                    // 处理注解逻辑
-                    return true;
-                }
-            }
-        }
-
 
         return false;
     }
-        private boolean noLogin(String url) {
+        private boolean noLogin(HttpServletRequest httpServletRequest,String url) throws Exception {
         for (int i = 0; i < excludeUrl.size(); i++) {
             if (matcher.match(excludeUrl.get(i),url)) {
                 return true;
             }
         }
-        return false;
+            if( !url.startsWith("/topezadmin")) {
+                HandlerExecutionChain handlerExecutionChain = handlerMapping.getHandler(httpServletRequest);
+                if(handlerExecutionChain==null){
+                    logger.warn("handlerExecutionChain null {}"+url);
+                    return true;
+                }
+                Object handler = handlerExecutionChain.getHandler();
+                if (handler!=null&& handler instanceof HandlerMethod) {
+                    HandlerMethod handlerMethod = (HandlerMethod) handler;
+                    Method method = handlerMethod.getMethod();
+                    Class<?> controllerClass = method.getDeclaringClass();
+                    Annotation annotation = controllerClass.getAnnotation(Nologin.class);
+                    Annotation m = method.getAnnotation(Nologin.class);
+                    if (annotation != null || m != null) {
+                        // 处理注解逻辑
+                        return true;
+                    }
+                }
+            }
+
+            return false;
      }
 
 
@@ -218,7 +232,7 @@ import java.util.regex.Pattern;
                     }
                 }
             }
-            if(noLogin(url)){
+            if(noLogin(httpServletRequest,url)){
                 return true;
             }
             User user = (User) httpServletRequest.getSession().getAttribute("EZ_SESSION_USER_KEY");
