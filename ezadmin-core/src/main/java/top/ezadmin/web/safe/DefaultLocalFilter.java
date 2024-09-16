@@ -47,14 +47,14 @@ public class DefaultLocalFilter {
                 BLACKLIST.put(ip,"异常时间段访问");
             }
         };
-        SafeCallback p=new SafeCallback() {
+        SafeCallback per=new SafeCallback() {
             @Override
             public void doCallback(String ip, long count, long period, long max) {
                 logger.info("反爬告警  区间访问 {} {} {} {}",ip,count,period,max);
                 BLACKLIST.put(ip,"区间访问");
             }
         };
-        RuleHolder.getInstance().init( urllimit,pool,night,p);
+        RuleHolder.getInstance().init( urllimit,pool,night,per);
     }
 
     public static boolean isSafe(IpActionDto dto){

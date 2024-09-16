@@ -1,6 +1,7 @@
 package top.ezadmin.controller;
 
 import top.ezadmin.EzClientBootstrap;
+import top.ezadmin.blog.constants.Nologin;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.dao.model.Info;
 import top.ezadmin.dao.model.InitVO;
@@ -32,6 +33,7 @@ public class EzIndexController {
 	private String indexUrl;
 
 	@RequestMapping("/")
+	@Nologin
 	public String index()  {
 		if(StringUtils.isBlank(indexUrl)){
 			return"redirect:/topezadmin/index.html";

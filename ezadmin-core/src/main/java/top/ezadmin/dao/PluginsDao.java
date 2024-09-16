@@ -20,24 +20,8 @@ public class PluginsDao {
 
     private static PluginsDao dao = new PluginsDao();
 
-    /**
-     * key:plugincode
-     * value:config
-     */
-//    private static Map<String, Config> pluginsFormConfigMap=new HashMap();
-//    private static Map<String, Config> pluginsListConfigMap=new HashMap();
-//    private static Map<String, Config> pluginsDetailConfigMap=new HashMap();
-
-
     private static Map<String, Config> pluginsAllConfigMap=new HashMap();
 
-    /**
-     * key:plugintype
-     * value:List-config
-     */
-//    private static Map<String, List<Config>> pluginsFormTypeConfigMap=new HashMap();
-//    private static Map<String, List<Config>> pluginsDetailTypeConfigMap=new HashMap();
-//    private static Map<String, List<Config>> pluginsListTypeConfigMap=new HashMap();
 
     private PluginsDao() {
 
@@ -50,23 +34,7 @@ public class PluginsDao {
     public   void init(){
         loadPlugins();
     }
-//    public   Map<String, String> getDbTemplateByCode(String code, String fold) {
-//        Config config=null;
-//        if (StringUtils.equalsIgnoreCase(fold, "list")) {
-//              config= pluginsListConfigMap.get(code);
-//        }else if (StringUtils.equalsIgnoreCase(fold, "form")) {
-//                config= pluginsFormConfigMap.get(code);
-//        }else{
-//            config= pluginsDetailConfigMap.get(code);
-//        }
-//        if(config==null){
-//            log.error("plugin is null : {} {}",code,fold);
-//            return Collections.emptyMap();
-//        }
-//        Document doc =config.getDoc()  ;
-//
-//        return docToPluginMap(doc);
-//    }
+
 
     private static Map<String, String> docToPluginMap(Document doc){
         Map<String, String> p = new HashMap<>();
@@ -94,28 +62,6 @@ public class PluginsDao {
 
     public   List<Map<String, Object>> listPlugin(String pre) {
         List<Map<String, Object>> l = new ArrayList<>();
-//        for (Map.Entry<String, List<Config>> entry:pluginsListTypeConfigMap.entrySet()){
-//            List<Config> configList=entry.getValue();
-//            if(StringUtils.isBlank(pre)){
-//                for (int i = 0; i < configList.size(); i++) {
-//                    Map  v=docToPluginMap(configList.get(i).getDoc());
-//                    Map<String, Object> m = new HashMap<>();
-//                    m.put("K", v.get("PLUGIN_CODE"));
-//                    m.put("V", v.get("PLUGIN_NAME"));
-//                    l.add(m);
-//                }
-//            } else{
-//                if(StringUtils.equalsIgnoreCase(entry.getKey(),pre)){
-//                    for (int i = 0; i < configList.size(); i++) {
-//                        Map  v=docToPluginMap(configList.get(i).getDoc());
-//                        Map<String, Object> m = new HashMap<>();
-//                        m.put("K", v.get("PLUGIN_CODE"));
-//                        m.put("V", v.get("PLUGIN_NAME"));
-//                        l.add(m);
-//                    }
-//                }
-//            }
-//        }
 
         return l;
     }

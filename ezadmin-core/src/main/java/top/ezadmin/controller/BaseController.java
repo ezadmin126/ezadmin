@@ -94,6 +94,8 @@ public class BaseController {
                 map.put("EZ_SESSION_USER_ID_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));
                 map.put("EZ_SESSION_USER_NAME_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
                 map.put("EZ_SESSION_COMPANY_ID_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
+                map.put("COMPANY_ID",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
+
                 return map;
             }else{
               return  Collections.emptyMap();

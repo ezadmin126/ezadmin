@@ -46,15 +46,12 @@
                         class="layui-form-mid layui-text-em top_desc"
                         th:utext="${top_desc}" style="float:none"
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
-
+                <style> .tinyimage{ max-width:100%;  } </style>
                 <!-- 内容状态 -->
                 <textarea th:label="${label}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
                           th:name="${item_name}" th:id="${'DESC_ITEM_ID_'+item_name}"
                           th:text="${value}" class="tinymcetextarea">
-
                 </textarea>
-
-
                 <script>
                     try{
                     var uploadUrl = "[[${uploadUrl+'?descFlag=1'}]]";
@@ -65,7 +62,7 @@
                         object_resizing: false,
                         image_advtab: false,
                         extended_valid_elements: 'img[class=tinyimage|src|border=0|alt|title|hspace|vspace|align|onmouseover|onmouseout|name]'
-                        ,content_style: "img {max-width:100%;}",
+                        ,content_style: 'img {max-width:100%;}',
                         language: 'zh_CN'
                         ,
                         height: 600,

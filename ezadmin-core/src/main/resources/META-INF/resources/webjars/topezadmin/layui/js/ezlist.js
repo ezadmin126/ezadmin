@@ -235,6 +235,7 @@ $(document).ready(function () {
         const customBtnKey="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
         const customBtnJSON=localStorage.getItem(customBtnKey);
         if(customBtnJSON){
+            $("customSearch").val(customBtnJSON);
             $("#customBtn").append("<span class=\"layui-badge-dot\"></span>");
         }
     }catch (e) {

@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class IpPeriodRule extends AbstractRule{
     private static List<Cache<String, AtomicLong>> list=new ArrayList<>();
     private SafeCallback callback=null;
-   static Integer[][] config=new Integer[][]{{5000,10},{60000,50},{300000,100},{1800000,300},{3600000,400},{7200000,500}};
+    static Integer[][] config=new Integer[][]{{5000,10},{60000,50},{300000,100},{1800000,300},{3600000,400},{7200000,500}};
 
 
     public void init(SafeCallback c) {
@@ -39,7 +39,7 @@ public class IpPeriodRule extends AbstractRule{
                 list.get(i).cleanUp();
             }
         };
-        scheduler.scheduleAtFixedRate(task, 0, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(task, 3, 5, TimeUnit.SECONDS);
     }
 
     @Override

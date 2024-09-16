@@ -89,9 +89,7 @@ public class FormEditController extends BaseController {
     }
 
     @EzMapping("submitSourceEdit.html")
-    
-    public EzResult submitExportEdit(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String ezType=request.getParameter("EZ_TYPE");
+    public EzResult submitSourceEdit(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String data=request.getParameter("data");
         //所有表单类型的插件
         if(StringUtils.isNotBlank(data)){

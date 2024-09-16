@@ -3,6 +3,7 @@ package top.ezadmin.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import top.ezadmin.EzClientBootstrap;
+import top.ezadmin.blog.constants.Nologin;
 import top.ezadmin.blog.service.BlogService;
 import top.ezadmin.domain.model.Blog;
 import top.ezadmin.plugins.cache.Callback;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
+@Nologin
 public class SiteMapController {
 	@Resource
 	BlogService blogService;

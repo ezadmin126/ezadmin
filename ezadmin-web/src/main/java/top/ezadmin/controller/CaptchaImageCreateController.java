@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import top.ezadmin.blog.constants.Nologin;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.utils.StringUtils;
 
@@ -18,6 +19,7 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/login/validate")
+@Nologin
 public class CaptchaImageCreateController {
 
 	@RequestMapping("/")

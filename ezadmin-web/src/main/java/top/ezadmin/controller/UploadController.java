@@ -50,6 +50,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/system")
+@Nologin
 public class UploadController {
     Logger logger = LoggerFactory.getLogger(UploadController.class);
 

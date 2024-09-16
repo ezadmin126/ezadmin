@@ -74,28 +74,40 @@
                     class="layui-form-mid layui-text-em top_desc"
                     th:utext="${top_desc}" style="float:none"
                     th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
-
+<style>
+    .gu-mirror .ezadmin-td{
+        display: none;
+    }
+    .gu-mirror .layui-btn-group{
+        width:100px
+    }
+</style>
             <table    th:id="${'ITEM_ID_' + item_name}"  th:lay-filter="${'ITEM_ID_' + item_name}"
                    class="  layui-table propTable ez-table"   style=" width:100%">
                 <thead style="text-align: center">
-                <tr   >
+                <tr >
+                    <th lay-options='{"field":"oper","width":200,"fixed":"right","title":"操作","align":"","escape":false}'>操作</th>
                     <th th:remove="tag" th:each="item:${subdata.col}" th:utext="${item.html}">
                     </th>
-                    <th lay-options='{"field":"oper","width":200,"fixed":"right","title":"操作","align":"","escape":false}'>操作</th>
                 </tr>
                 </thead>
                 <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);" class="dragula-container">
                 <tr th:each="row,rowStat:${subdata.core.dataList}"   th:data-id="${row.id}">
-                    <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
-                    <td style="min-width: 150px"> <button type="button" class="rowdelete layui-btn layui-btn-sm layui-btn-primary"  >
-                        <i class="layui-icon layui-icon-delete"></i>
-                    </button>
-                        <button type="button" class="rowadd layui-btn layui-btn-sm layui-btn-primary">
-                            <i class="layui-icon layui-icon-addition"></i>
+                    <td style="width: 40px;">
+                        <div class="layui-btn-group">
+                            <button style='cursor: move' type="button" class="rowmove layui-btn layui-btn-xs layui-btn-primary"  >
+                                <i class="rowmove layui-icon layui-icon-transfer"></i>
+                            </button>
+                            <button type="button" class="rowadd layui-btn layui-btn-xs layui-btn-primary">
+                                <i class="layui-icon layui-icon-addition"></i>
+                            </button>
+                            <button type="button" class="rowdelete layui-btn layui-btn-xs layui-btn-primary"  >
+                                <i class="layui-icon layui-icon-delete"></i>
                         </button>
-                        <button style='float:right;cursor: move' type="button" class="rowmove layui-btn layui-btn-sm layui-btn-primary"  >
-                            <i class="rowmove layui-icon layui-icon-transfer"></i>
-                        </button></td>
+                        </div>
+                    </td>
+                    <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
+
                 </tr>
                 </tbody>
             </table>
@@ -219,8 +231,8 @@
                                             console.log(response.message);
                                         }
                                     }, 'json').fail(function () {
-                                        cb([]);
                                         console.log("网络异常");
+                                        cb([]);
                                     });
                                 },
                                 data: initresp,
@@ -236,8 +248,7 @@
                             })
                         }
                     }, 'json').fail(function () {
-                        cb([]);
-                        console.log("网络异常");
+                        console.log("网络异常");alert('网络异常');
                     });
                 }
             </script>

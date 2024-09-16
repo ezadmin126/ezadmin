@@ -82,7 +82,7 @@ import java.util.regex.Pattern;
         ipActionDto.setIp(ip );
         ipActionDto.setUri(realUrl);
         ipActionDto.setP(p);
-        if(!top.ezadmin.web.safe.DefaultLocalFilter.isSafe(ipActionDto)){
+        if(  !realUrl.startsWith("/ezadmin")&&!realUrl.startsWith("/topezadmin") &&!top.ezadmin.web.safe.DefaultLocalFilter.isSafe(ipActionDto)){
             logger.error("拦截攻击 429");
             httpServletResponse.setStatus(429);
             httpServletResponse.getWriter().println("429 Too Many Requests");
@@ -127,6 +127,7 @@ import java.util.regex.Pattern;
             user.setUserName(dbUser.getUserName());
             user.setCompanyId(dbUser.getCompanyId());
             user.setRoleNames(sysUserExtMapper.selectUserRoles(dbUser.getUserId()));
+            user.setResourceIds(sysUserExtMapper.selectUserResources(dbUser.getUserId()));
         }
         httpServletRequest.getSession().setAttribute(SessionConstants.EZ_SESSION_USER_KEY, user);
         httpServletRequest.getSession().setAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY, user.getUserName());
@@ -168,6 +169,9 @@ import java.util.regex.Pattern;
                 );
             }
         }
+
+
+
     }
 
     private boolean staticUrl(String realUrl,HttpServletRequest httpServletRequest) throws Exception {
@@ -234,30 +238,6 @@ import java.util.regex.Pattern;
         return false;
     }
 
-//    private void doEzadminBefore(HttpServletRequest request, User user) {
-//        if(StringUtils.isBlank(Utils.trimNull(request.getAttribute("EZ_NAME")))){
-//            return;
-//        }
-//        // 保存日志记录
-//        SysOperateLog o = new SysOperateLog();
-//        o.setReferer(request.getHeader("REFERER"));
-//        o.setOperIp(IpUtils.getRealIp(request));
-//        o.setOperUrl(request.getRequestURI());
-//        if(user!=null){
-//            o.setAddId(user.getUserId());
-//            o.setAddName(user.getUserName());
-//            o.setCompanyId(user.getCompanyId());
-//        }
-//        o.setAddTime(new Date());
-//        o.setOperNo(Utils.trimNull(request.getAttribute("BNO")));
-//        o.setOperName(request.getAttribute("EZ_NAME") + "");
-//        DoCookie cookie=new DoCookie();
-//        o.setSid(cookie.getCookie(Constants.EZ_SID));
-//        CompletableFuture.runAsync(()->{
-//            mapper.insertSelective(o);
-//        });
-//    }
-
     protected Map<String,Object> requestToMap(HttpServletRequest request){
         Map<String, Object> searchParamsValues = new HashMap<>();
         try{
@@ -274,60 +254,14 @@ import java.util.regex.Pattern;
         return searchParamsValues;
     }
 
-//    private String exclude =
-//            "/(laynavs|login|doLogin|core|message).*;" +
-//            "/ezadmin/api/(region|category).*;" +
-//            "(/ezadmin/(core|index|welcome)).*;" +
-//            "(/ezadmin/list/count).*;" +
-//            "(/ezadmin/list/selectCols).*;" +
-//            "(/ezadmin/form/doOrder).*;" +
-//            "/ezadmin/(anon).*;/ezadmin/(welcome|dev|search|trace).*;" +
-//            "/403.html;/404.html;/500.html";
-//
-//    private String staticUrl =
-//            "/(webjars|api|static|ws|favicon).*;" +
-//                    "/403.html;/404.html;/500.html";
-
     private List<Pattern> excludePattern = new ArrayList<Pattern>(1);
     private List<Pattern> staticPattern = new ArrayList<Pattern>(1);
 
     @Override
     public void initFilterBean() throws ServletException {
         top.ezadmin.web.safe.DefaultLocalFilter.init();
-         //staticPattern.addAll(loadPattern(staticUrl).keySet());
-        // excludePattern.addAll(loadPattern(exclude).keySet());
     }
 
-//    private boolean staticUrl(String url) {
-//        for (int i = 0; i < staticPattern.size(); i++) {
-//            if (staticPattern.get(i).matcher(url).matches()) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
-//
-//    private static Map<Pattern, String> loadPattern(String conf) {
-//        if (conf == null || "".equals(conf)) {
-//            return Collections.emptyMap();
-//        }
-//        Map<Pattern, String> map = new HashMap<Pattern, String>();
-//        String[] includes = conf.split(";");
-//        for (int i = 0; i < includes.length; i++) {
-//            if (conf == null || "".equals(conf)) {
-//                continue;
-//            }
-//            String[] include = includes[i].split(":");
-//            Pattern pInclude = Pattern.compile(include[0]);
-//            if (include.length == 2) {
-//                map.put(pInclude, include[1]);
-//            } else {
-//                map.put(pInclude, "1");
-//            }
-//        }
-//        return map;
-//    }
 
     public List<String> getStaticUrl() {
         return staticUrl;

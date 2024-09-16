@@ -62,7 +62,7 @@ $(function (){
             return source === cardcontainer;
         },
         moves: function (el, source, handle, sibling) {
-            debugger
+
             var iscardcol=(
                 (handle.classList.contains('cardcol')
                 )
