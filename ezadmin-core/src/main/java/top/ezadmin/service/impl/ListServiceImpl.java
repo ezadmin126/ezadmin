@@ -626,7 +626,14 @@ public class ListServiceImpl implements ListService {
                                 nm.putAll(requestParamMap);
                                 nm.putAll(sessionParamMap);//SESSION cover
                                 ItemInitData items = getSelectItems(temp, getString(th, JsoupUtil.DATA), getString(th, JsoupUtil.DATATYPE),  nm);
-                                context.setVariable("items", items.getItems());
+                                if(Utils.isNotEmpty(items.getItems())){
+                                    final String dataInDbf=dataInDb;
+                                    boolean containsStudent = items.getItems().stream()
+                                            .anyMatch(student -> dataInDbf.equals(student.get("K")));
+                                    if(containsStudent){
+                                        context.setVariable("items", items.getItems());
+                                    }
+                                }
                                 context.setVariable("itemsJson", JSONUtils.toJSONString(items.getItems()));
                             } catch (Exception e) {
                                 LOG.error("EZADMIN LIST={}  列数据异常{} ", JSONUtils.toJSONString(th), e);

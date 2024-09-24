@@ -116,7 +116,8 @@
 .ez-range{
     width:30px!important;
 }
-.ez-plugin {
+
+.lefttab .ez-plugin {
     margin-left: 0px !important  ;
     margin-top: 10px;
 }
