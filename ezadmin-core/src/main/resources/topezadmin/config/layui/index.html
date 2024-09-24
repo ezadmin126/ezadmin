@@ -234,7 +234,7 @@
             if(elem.checked){
                 var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?xx"+[[${vi}]];
                 document.getElementById('layui_theme_css').setAttribute('href',url);
-
+                $("body").remove()
                 $.get("/topezadmin/dark.html?type=add",function(){
 
                 })

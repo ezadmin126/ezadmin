@@ -614,7 +614,6 @@ public class ListServiceImpl implements ListService {
                                 continue;
                             }
 
-
                             String columnDs = getString(th, JsoupUtil.DATASOURCE);
                             if (StringUtils.isBlank(columnDs)) {
                                 columnDs = datasourceCore;
@@ -636,15 +635,19 @@ public class ListServiceImpl implements ListService {
                                 }
                                 context.setVariable("itemsJson", JSONUtils.toJSONString(items.getItems()));
                             } catch (Exception e) {
-                                LOG.error("EZADMIN LIST={}  列数据异常{} ", JSONUtils.toJSONString(th), e);
-                            }
+                                Utils.addLog("获取列表数据异常:"+JSONUtils.toJSONString(th), e);
+                             }
 
                             String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
                             String html = ThymeleafUtils.processString(template, context);
-                            tds.add(html);
 
+                            if(StringUtils.isBlank(html)){
+                                tds.add("<td class='errorplugincode ezadmin-td ezadmin-td-'" + itemName + ">" + dataInDb + "</td>");
+                            }else{
+                                tds.add(html);
+                            }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Utils.addLog("获取列表数据异常:"+JSONUtils.toJSONString(th), e);
                     }
                 }
 
