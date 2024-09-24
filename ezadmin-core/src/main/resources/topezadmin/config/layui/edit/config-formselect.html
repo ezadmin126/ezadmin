@@ -13,8 +13,9 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">插件：</label>
                 <div class="layui-input-block">
-                    <select readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
-<!--                        <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>-->
+                    <select id="formitem_type_select"
+                            readonly placeholder="" class="layui-input formitem_type_select " lay-filter="lay_filter_all"  name="type" >
+                        <!--                                    <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>-->
                     </select>
                 </div>
             </div>
@@ -55,7 +56,7 @@
                         <option value="">请选择</option>
                         <option value="TEXT">TEXT</option>
                         <option value="DATAGROUP">DATAGROUP</option>
-                        <option value="DICT">DICT</option>
+
                         <option value="JSON" selected="selected">JSON</option>
                         <option value="KVSQL">KVSQL</option>
                         <option value="HTTP">HTTP</option>

@@ -389,7 +389,7 @@ $(function (){
         let html=$($(this).find(".template").html());
         var value=html.attr("ez-type");
         var name=$(this).find("span").eq(0).text();
-        $("#formitem_type_select").each(function(){
+        $(".formitem_type_select").each(function(){
             $(this).append("<option value="+value+">"+name+"</option>");
         })
     })

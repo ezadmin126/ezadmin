@@ -195,7 +195,7 @@
                         <div class=" layui-row    layui-col-md10   "  >
                             <div class="layui-nav layui-bg-gray dragula-container   systemfloat"  lay-filter="demo-filter-nav" id="centerContainer"    style="min-height: 500px;border: 1px dashed #d1d1d1;">
                                 <div  class="tip" th:if="${  #lists.isEmpty(data.col)}">列表字段区</div>
-                                <div style="min-height: 42px" class=" layui-col-xs2 ez-plugin selector" config-form-type="colcore" th:if="${not #lists.isEmpty(data.col) and item.item_name!='firstCol'}"
+                                <div style="min-height: 42px;height: 42px;overflow: hidden;" class=" layui-col-xs2 ez-plugin selector" config-form-type="colcore" th:if="${not #lists.isEmpty(data.col) and item.item_name!='firstCol'}"
                                      th:ez-body="${item.body}"
                                      th:ez-head="${item.head}"
                                      th:ez-label="${item.label}"
@@ -211,7 +211,7 @@
                                      th:ez-style="${item.style}"
                                      th:ez-width="${item.width}"
                                      th:ez-emptyshow="${item.emptyshow}"
-                                     th:each="item:${data.col}" ><div th:text="${item.label}"></div>
+                                     th:each="item:${data.col}" ><div th:utext="${item.label}" th:remove="tag"></div>
                                 </div>
                             </div>
                         </div>

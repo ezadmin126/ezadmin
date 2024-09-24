@@ -14,7 +14,7 @@
                 <label class="layui-form-label">插件(保存之后预览效果)：</label>
                 <div class="layui-input-block">
                     <select id="formitem_type_select"
-                            readonly placeholder="" class="layui-input  " lay-filter="lay_filter_all"  name="type" >
+                            readonly placeholder="" class="layui-input  formitem_type_select" lay-filter="lay_filter_all"  name="type" >
                         <!--                                    <option th:value="${item.K}" th:each="item:${plugins}" th:text="${item.V}">纯文本</option>-->
                     </select>
                 </div>
@@ -68,7 +68,7 @@
                         <option value="">请选择</option>
                         <option value="TEXT">TEXT</option>
                         <option value="DATAGROUP">DATAGROUP</option>
-                        <option value="DICT">DICT</option>
+
                         <option value="JSON" selected="selected">JSON</option>
                         <option value="KVSQL">KVSQL</option>
                         <option value="HTTP">HTTP</option>
@@ -95,7 +95,8 @@
                         sql or url<br>
                         换行符<br>
                         k:v<br>
-                        [{"V":"男","K":"1"},{"V":"女","K":"0"}]
+                          [{"V":"男","K":"1"},{"V":"女","K":"0"}]
+                        <br>
                     </small>
                 </div>
             </div>
@@ -129,7 +130,7 @@
                     <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>
                     <small id="DESC_lay_verify" class="layui-form-mid layui-text-em layui-text">
                         required|phone|number<br>
-                        图片：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}<br>
+                        图片：{"required":true,"acceptMime":"image/jpeg, image/jpg, image/png","exts":"jpg|jpeg|png","max":1,"min":1,"size":200,"width":680,"height":300}<br>
                         文件：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}<br>
                         自定义参考layui官网<a href="https://layui.dev/docs/2/form/#verify" class="layui-text" target="blank">layui官网</a>
                     </small>

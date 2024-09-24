@@ -81,6 +81,38 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label">数据源类型</label>
+                <div class="layui-input-block">
+                    <select   name="datatype"   lay-search="" lay-filter="lay_filter_all"    > <option value="">请选择</option>
+                        <option value="DATAGROUP">DATAGROUP</option>
+
+                        <option value="TEXT">TEXT</option> <option value="JSON" selected="selected">JSON</option> <option value="KVSQL">KVSQL</option> <option value="HTTP">HTTP</option> <option value="JOIN">JOIN</option> <option value="KVSQLCACHE">KVSQLCACHE</option> <option value="HTTPCACHE">HTTPCACHE</option> <option value="QLEXPRESS">QLEXPRESS</option> <option value="KVSQLCACHE5">KVSQLCACHE5</option> <option value="EZLIST">EZLIST</option> <option value="KVJSONRESULT">KVJSONRESULT</option> <option value="CASCADER">CASCADER</option> <option value="KVSQL2TREECACHE">KVSQL2TREECACHE</option> </select>
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据源</label>
+                <div class="layui-input-block">
+                    <textarea name="data" class="layui-textarea"  autocomplete="off" ></textarea>
+                    <small   class="layui-form-mid layui-text-em">
+                        yesno,status,delete,数据字典类型,数据源编码<br>
+                        sql or url<br>
+                        换行符分割<br>
+                        k:v+换行符分割<br>
+                        [{"V":"男","K":"1"},{"V":"女","K":"0"}]<br>
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">远程链接</label>
+                <div class="layui-input-block">
+                    <input type="text" name="url"  autocomplete="off"  class="layui-input">
+                    <small   class="layui-form-mid layui-text-em">
+                        远程链接 须符合 EzResult格式，且data为  K  V 键值对的JSON
+                    </small>
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label">layui验证</label>
                 <div class="layui-input-block">
                     <textarea name="lay_verify" class="layui-textarea"  autocomplete="off" ></textarea>

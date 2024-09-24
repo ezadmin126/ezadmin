@@ -554,6 +554,8 @@ function renderXmselect(xm) {
             // },
             style: {
                 height: '26px',
+            },theme: {
+                color: '#1e9fff',
             },
             prop: {
                 name: 'V',

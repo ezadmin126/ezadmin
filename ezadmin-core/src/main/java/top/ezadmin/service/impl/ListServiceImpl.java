@@ -269,7 +269,7 @@ public class ListServiceImpl implements ListService {
             @Override
             public Object call(String key) {
                 try {
-                    List list= dao.executeQueryString(datasource, model.getResult(), null);
+                    List list= dao.executeQueryString(datasource, model.getResult(), model.getParamsStatic());
                     if(list!=null&&list.size()>10000){
                         LOG.error("ezadmin cache  缓存 元素超过 10000个，数据量过大建议优化 key={} "
                                 ,initData);
@@ -375,12 +375,13 @@ public class ListServiceImpl implements ListService {
     }
     //DATA_CODE,DATA_TYPE,DATA_CONTENT f
     private ItemInitData datagroup(DataSource datasource,String initData, Map<String, Object> params) throws Exception {
-       Map<String,Object> group= (Map<String, Object>)EzClientBootstrap.instance().getCache().get("datagroup_cache", initData, new Callback() {
+       String kv[]= initData.split("\\.");
+       Map<String,Object> group= (Map<String, Object>)EzClientBootstrap.instance().getCache().get("datagroup_cache", kv[0], new Callback() {
            @Override
            public Object call(String key) {
                try {
                    Map<String, Object> m = dao.executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
-                           "select DATA_CODE,DATA_TYPE,DATA_CONTENT from T_EZADMIN_DATA WHERE DELETE_FLAG=0 AND DATA_CODE=?", new Object[]{initData});
+                           "select DATA_CODE,DATA_TYPE,DATA_CONTENT from T_EZADMIN_DATA WHERE DELETE_FLAG=0 AND DATA_CODE=?", new Object[]{kv[0]});
                    return m;
                }catch (Exception e){
                    return Collections.emptyMap();
@@ -390,6 +391,9 @@ public class ListServiceImpl implements ListService {
         if(!Utils.isEmpty(group)){
             if(Utils.trimNull(group.get("DATA_TYPE")).equalsIgnoreCase("datagroup")){
                 return new ItemInitData();
+            }
+            if(kv.length>1){
+                params.put("DICT_TYPE",kv[1]);
             }
             return  getSelectItems(  datasource,   Utils.trimNull(group.get("DATA_CONTENT")),   Utils.trimNull(group.get("DATA_TYPE")),  params
             );
