@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1a5m7ct" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.27.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
-  <bpmn:process id="Process_00vu5jm" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_1" name="开始">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1a5m7ct" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.27.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="Process_order" name="订单审核" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="开始" camunda:initiator="starter">
       <bpmn:outgoing>Flow_1xhumf8</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1xhumf8" sourceRef="StartEvent_1" targetRef="Activity_0iiopmb" />
@@ -14,31 +14,35 @@
       <bpmn:incoming>Flow_1g7rnb9</bpmn:incoming>
       <bpmn:outgoing>Flow_04aavyb</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="Gateway_0ox60qq">
+    <bpmn:exclusiveGateway id="Gateway_0ox60qq" default="Flow_17qr1c1">
       <bpmn:incoming>Flow_04aavyb</bpmn:incoming>
       <bpmn:outgoing>Flow_18ffy0u</bpmn:outgoing>
       <bpmn:outgoing>Flow_17qr1c1</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_04aavyb" sourceRef="Activity_1f0moz9" targetRef="Gateway_0ox60qq" />
-    <bpmn:sequenceFlow id="Flow_18ffy0u" sourceRef="Gateway_0ox60qq" targetRef="Activity_10h8cjm" />
+    <bpmn:sequenceFlow id="Flow_18ffy0u" sourceRef="Gateway_0ox60qq" targetRef="Activity_10h8cjm">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${total&gt;10000}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:userTask id="Activity_10h8cjm" name="经理审核">
       <bpmn:incoming>Flow_18ffy0u</bpmn:incoming>
       <bpmn:outgoing>Flow_1luu42d</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1luu42d" sourceRef="Activity_10h8cjm" targetRef="Activity_0u8gctk" />
     <bpmn:sequenceFlow id="Flow_17qr1c1" sourceRef="Gateway_0ox60qq" targetRef="Activity_0u8gctk" />
-    <bpmn:serviceTask id="Activity_0u8gctk" name="自动质管审核">
+    <bpmn:serviceTask id="Activity_0u8gctk" name="自动质管审核" camunda:type="external" camunda:topic="autoCheckCert">
       <bpmn:incoming>Flow_1luu42d</bpmn:incoming>
       <bpmn:incoming>Flow_17qr1c1</bpmn:incoming>
       <bpmn:outgoing>Flow_1d6v4wa</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1d6v4wa" sourceRef="Activity_0u8gctk" targetRef="Gateway_01tj8h9" />
-    <bpmn:exclusiveGateway id="Gateway_01tj8h9">
+    <bpmn:exclusiveGateway id="Gateway_01tj8h9" default="Flow_0i6vcot">
       <bpmn:incoming>Flow_1d6v4wa</bpmn:incoming>
       <bpmn:outgoing>Flow_0onlfc0</bpmn:outgoing>
       <bpmn:outgoing>Flow_0i6vcot</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0onlfc0" sourceRef="Gateway_01tj8h9" targetRef="Activity_0x4r8ut" />
+    <bpmn:sequenceFlow id="Flow_0onlfc0" sourceRef="Gateway_01tj8h9" targetRef="Activity_0x4r8ut">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pass==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:intermediateThrowEvent id="Event_1mzxgy4" name="结束">
       <bpmn:incoming>Flow_09gxjb1</bpmn:incoming>
       <bpmn:incoming>Flow_0i6vcot</bpmn:incoming>
@@ -51,7 +55,7 @@
     <bpmn:sequenceFlow id="Flow_0i6vcot" sourceRef="Gateway_01tj8h9" targetRef="Event_1mzxgy4" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_00vu5jm">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_order">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -102,14 +106,14 @@
         <di:waypoint x="645" y="117" />
         <di:waypoint x="710" y="117" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17qr1c1_di" bpmnElement="Flow_17qr1c1">
+        <di:waypoint x="620" y="142" />
+        <di:waypoint x="620" y="250" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1luu42d_di" bpmnElement="Flow_1luu42d">
         <di:waypoint x="760" y="160" />
         <di:waypoint x="760" y="290" />
         <di:waypoint x="670" y="290" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_17qr1c1_di" bpmnElement="Flow_17qr1c1">
-        <di:waypoint x="620" y="142" />
-        <di:waypoint x="620" y="250" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1d6v4wa_di" bpmnElement="Flow_1d6v4wa">
         <di:waypoint x="570" y="290" />
@@ -119,14 +123,14 @@
         <di:waypoint x="455" y="290" />
         <di:waypoint x="370" y="290" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_09gxjb1_di" bpmnElement="Flow_09gxjb1">
-        <di:waypoint x="320" y="330" />
-        <di:waypoint x="320" y="432" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0i6vcot_di" bpmnElement="Flow_0i6vcot">
         <di:waypoint x="480" y="315" />
         <di:waypoint x="480" y="450" />
         <di:waypoint x="338" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09gxjb1_di" bpmnElement="Flow_09gxjb1">
+        <di:waypoint x="320" y="330" />
+        <di:waypoint x="320" y="432" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
