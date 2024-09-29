@@ -6,11 +6,11 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1xhumf8" sourceRef="StartEvent_1" targetRef="Activity_0iiopmb" />
     <bpmn:sequenceFlow id="Flow_1g7rnb9" sourceRef="Activity_0iiopmb" targetRef="Activity_1f0moz9" />
-    <bpmn:userTask id="Activity_0iiopmb" name="申请人">
+    <bpmn:userTask id="Activity_0iiopmb" name="申请人" camunda:assignee="${starter}">
       <bpmn:incoming>Flow_1xhumf8</bpmn:incoming>
       <bpmn:outgoing>Flow_1g7rnb9</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_1f0moz9" name="主管审核">
+    <bpmn:userTask id="Activity_1f0moz9" name="主管审核" camunda:assignee="${zhuguan}">
       <bpmn:incoming>Flow_1g7rnb9</bpmn:incoming>
       <bpmn:outgoing>Flow_04aavyb</bpmn:outgoing>
     </bpmn:userTask>
@@ -23,13 +23,19 @@
     <bpmn:sequenceFlow id="Flow_18ffy0u" sourceRef="Gateway_0ox60qq" targetRef="Activity_10h8cjm">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${total&gt;10000}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="Activity_10h8cjm" name="经理审核">
+    <bpmn:userTask id="Activity_10h8cjm" name="经理审核" camunda:assignee="${jingli}">
       <bpmn:incoming>Flow_18ffy0u</bpmn:incoming>
       <bpmn:outgoing>Flow_1luu42d</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1luu42d" sourceRef="Activity_10h8cjm" targetRef="Activity_0u8gctk" />
     <bpmn:sequenceFlow id="Flow_17qr1c1" sourceRef="Gateway_0ox60qq" targetRef="Activity_0u8gctk" />
     <bpmn:serviceTask id="Activity_0u8gctk" name="自动质管审核" camunda:type="external" camunda:topic="autoCheckCert">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="orderNo">${orderNo}</camunda:inputParameter>
+          <camunda:outputParameter name="pass">${pass}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1luu42d</bpmn:incoming>
       <bpmn:incoming>Flow_17qr1c1</bpmn:incoming>
       <bpmn:outgoing>Flow_1d6v4wa</bpmn:outgoing>
@@ -47,7 +53,7 @@
       <bpmn:incoming>Flow_09gxjb1</bpmn:incoming>
       <bpmn:incoming>Flow_0i6vcot</bpmn:incoming>
     </bpmn:intermediateThrowEvent>
-    <bpmn:userTask id="Activity_0x4r8ut" name="人工质管审核">
+    <bpmn:userTask id="Activity_0x4r8ut" name="人工质管审核" camunda:assignee="${zhiguan}">
       <bpmn:incoming>Flow_0onlfc0</bpmn:incoming>
       <bpmn:outgoing>Flow_09gxjb1</bpmn:outgoing>
     </bpmn:userTask>

@@ -48,6 +48,11 @@
                 <version>${camunda.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.camunda.bpm.springboot</groupId>
+                <artifactId>camunda-bpm-spring-boot-starter-external-task-client</artifactId>
+                <version>${camunda.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.ezadmin126</groupId>
                 <artifactId>ezadmin-core</artifactId>
                 <version>${ezadmin.version}</version>
