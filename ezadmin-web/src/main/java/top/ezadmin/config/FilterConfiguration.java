@@ -82,6 +82,7 @@ public class FilterConfiguration implements WebMvcConfigurer {
 		staticUrl.add("/webjars/**");
 		staticUrl.add("/api/**");
 		staticUrl.add("/static/**");
+		staticUrl.add("/camunda/**");
 		staticUrl.add("/robots.txt");
 		staticUrl.add("/favicon.ico");
 		staticUrl.add("/ws/**");

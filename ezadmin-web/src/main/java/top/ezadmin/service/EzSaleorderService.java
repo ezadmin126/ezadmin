@@ -56,6 +56,7 @@ public class EzSaleorderService {
         saleorder.setAddTime(new Date());
         saleorder.setUpdateTime(new Date());
 
+
         BaseTrader trader= baseTraderMapper.selectByPrimaryKey(saleorder.getTraderId());
         saleorder.setTraderName(trader.getTraderName());
 
@@ -72,7 +73,7 @@ public class EzSaleorderService {
         saleorder.setUpdateId(user.getUserId());
         saleorder.setCompanyId(user.getCompanyId());
         saleorder.setSaleorderNo(NoDirect.saleorderNo());
-        saleorderMapper.insert(saleorder);
+        saleorderMapper.insertSelective(saleorder);
 
 
 
@@ -83,6 +84,9 @@ public class EzSaleorderService {
         BigDecimal totalPrice=BigDecimal.ZERO;
         if(!ArrayUtils.isEmpty(prodIdArrays)){
             for (int i = 0; i < prodIdArrays.length; i++) {
+                if(StringUtils.isBlank(prodIdArrays[i])){
+                    continue;
+                }
                 SaleorderGoods saleorderGoods = new SaleorderGoods();
                 saleorderGoods.setSaleorderId(saleorder.getSaleorderId());
                 saleorderGoods.setAddTime(new Date());
@@ -102,7 +106,7 @@ public class EzSaleorderService {
                 saleorderGoods.setUnitName(unit.getUnitName());
                 saleorderGoods.setBrandName(brand.getBrandName());
                 totalPrice= totalPrice.add(saleorderGoods.getBasePrice().multiply(new BigDecimal(saleorderGoods.getProdNum()+"")));
-                saleorderGoodsMapper.insert(saleorderGoods);
+                saleorderGoodsMapper.insertSelective(saleorderGoods);
             }
             Saleorder saleorderUpdate = new Saleorder();
             saleorderUpdate.setSaleorderId(saleorder.getSaleorderId());

@@ -86,7 +86,7 @@ public class DatasourceConfig {
 		ezSqlogDataSource.setRealDataSource(dds);
 		ezSqlogDataSource.setLogType(logType);
 		//ezSqlogDataSource.setCallback(ezSqlogCallBackERP);
-		return ezSqlogDataSource;
+		return dds;
 	}
 
 

@@ -11,6 +11,7 @@ import top.ezadmin.blog.model.User;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.domain.mapper.ext.BaseProductExtendMapper;
+import top.ezadmin.domain.model.BaseProduct;
 import top.ezadmin.domain.model.ext.BaseProductExtend;
 import top.ezadmin.domain.mapper.BaseProductMapper;
 import top.ezadmin.domain.model.BaseProductExample;
@@ -34,7 +35,7 @@ public class JxcController extends CustomBaseController {
     @RequestMapping("/product/search.html")
     @Nologin
     @ResponseBody
-    public EzResult search(HttpServletRequest request, String keyword, String page) {
+    public EzResult search(HttpServletRequest request,String id, String keyword, String page) {
         User user = getSessionUser();
         List<Map<String, String>> result = new ArrayList<>();
         Page page2 = PageHelper.startPage(NumberUtils.toInt(page + "", 1), 6);
@@ -47,7 +48,13 @@ public class JxcController extends CustomBaseController {
                 result.add(m);
             });
         }
-        ;
+        if (StringUtils.isNotBlank(id)) {
+            BaseProduct baseProduct=baseProductExtendMapper.selectByPrimaryKey(Long.parseLong(id));
+            Map<String, String> m = new HashMap<>();
+            m.put("K", baseProduct.getProdId() + "");
+            m.put("V", baseProduct.getProdCode() + "-" + baseProduct.getProdName());
+            result.add(m);
+        }
         EzPage p = new EzPage(NumberUtils.toInt(page + "", 1), 6, "");
         p.setTotalRecord(page2.getTotal());
 
