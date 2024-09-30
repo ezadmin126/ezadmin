@@ -28,61 +28,71 @@
     <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?123'+vi:''}"  >
 
 </head>
-<body class="layui-bg-gray" >
+<body >
+[(${form.core.append_head})]
+    <form ID="inputForm" method="post" class="  layui-form"  >
+        <div class="layui-panel" style="height:58px;position:fixed;top:0;Z-INDEX: 1000;width: 100%;">
+            <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer">
+                <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue " lay-submit
+                        lay-filter="submitbtn">保 存
+                </button>
 
-<div th:class="${'layui-'+layout}">
-    [(${form.core.append_head})]
-    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/loadEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                    图形编辑
+                </button>
+                <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                    源码编辑
+                </button>
+                <button th:if="${not cacheFlag}" opentype="_BLANK_PARAM" type="button" th:url="${'/topezadmin/formEdit/trace-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                    查看SQL
+                </button>
+            </div>
+        </div>
+        <div class="layui-panel" style="height:58px">
+        </div>
+    <div th:class="${'layui-'+layout}">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 
-        <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
 
-<!--                <blockquote  class="layui-elem-quote layui-quote-nm"-->
-<!--                            th:text="${form.core.form_name}">这个-->
-<!--                </blockquote>-->
-                <form ID="inputForm" method="post" class="  layui-form"  >
-                     <input type="hidden" ID="ID" name="ID" th:VALUE="${ID}">
-                    <input type="hidden" id="FORM_ID" name="FORM_ID" th:VALUE="${form.core.formcode}">
-                    <div class="layui-col-space10 layui-row ">
-                        <div th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}">
-                            <div class="layui-card"  >
-                                <div class="layui-card-header" th:ID="${card.cardname}"  th:text="${card.cardname}"
-                                     th:if="${not #strings.isEmpty(card.cardname) and card.cardname!='EZ_DEFAULT_GROUP' }">
-                                    卡片面板
-                                </div>
-                                <div class="layui-card-body   ">
-                                    <div class="layui-row  ">
-                                        <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
+    <!--                <blockquote  class="layui-elem-quote layui-quote-nm"-->
+    <!--                            th:text="${form.core.form_name}">这个-->
+    <!--                </blockquote>-->
+
+                         <input type="hidden" ID="ID" name="ID" th:VALUE="${ID}">
+                        <input type="hidden" id="FORM_ID" name="FORM_ID" th:VALUE="${form.core.formcode}">
+                        <div class="layui-col-space10 layui-row ">
+                            <div th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}">
+                                <div class="layui-card"  >
+                                    <div class="layui-card-header" th:ID="${card.cardname}"  th:text="${card.cardname}"
+                                         th:if="${not #strings.isEmpty(card.cardname) and card.cardname!='EZ_DEFAULT_GROUP' }">
+                                        卡片面板
+                                    </div>
+                                    <div class="layui-card-body   ">
+                                        <div class="layui-row  ">
+                                            <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+<!--                            <div class="layui-col-md12">-->
+<!--                            <div class="layui-form-item">-->
+<!--                                <div class="layui-input-block" id="submitButtonContainer">-->
+
+<!--                                   -->
+<!--    &lt;!&ndash;                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>&ndash;&gt;-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
-                        <div class="layui-col-md12">
-                        <div class="layui-form-item">
-                            <div class="layui-input-block" id="submitButtonContainer">
-                                <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue " lay-submit
-                                        lay-filter="submitbtn">保 存
-                                </button>
-                                <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/loadEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
-                                    图形编辑
-                                </button>
-                                <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
-                                    源码编辑
-                                </button>
-                                <button th:if="${not cacheFlag}" opentype="_BLANK_PARAM" type="button" th:url="${'/topezadmin/formEdit/trace-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
-                                    查看SQL
-                                </button>
-<!--                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
-                            </div>
                         </div>
-                    </div>
-                    </div>
-                </form>
-            </div>
-        </div><!--end layui-tab-content-->
+
+                </div>
+            </div><!--end layui-tab-content-->
+        </div>
     </div>
-</div>
+</form>
 </body>
 <div>
     <div>

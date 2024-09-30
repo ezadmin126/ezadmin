@@ -118,6 +118,14 @@ public class EzDateUtils{
         }
         return date;
     }
+    public static String toDateTimeFormat(Date date){
+        SimpleDateFormat simple = new SimpleDateFormat(DATETIME);
+        try {
+            return simple.format(date) ;
+        }catch (Exception e){
+        }
+        return "error";
+    }
 
     public static String toTimestamp(String date){
         if(StringUtils.isBlank(date)){

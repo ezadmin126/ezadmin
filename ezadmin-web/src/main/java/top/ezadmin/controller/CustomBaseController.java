@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
  import top.ezadmin.blog.model.User;
+ import top.ezadmin.common.constants.SessionConstants;
 
  import javax.servlet.http.HttpServletRequest;
 
@@ -17,9 +18,7 @@ public class CustomBaseController {
     protected User getSessionUser(){
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();
-        User user = (User) request.getSession().getAttribute("EZ_SESSION_USER_KEY");
-
-        return user;
+        return (User) request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_KEY);
     }
 
 }
