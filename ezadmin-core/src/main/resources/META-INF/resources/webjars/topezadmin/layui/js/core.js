@@ -1180,16 +1180,16 @@ function ezopen(openType, title, appendUrl, area) {
                 $.getJSON(appendUrl, function (result) {
                     $(".layuimini-loader").hide();
                     if (result.success) {
-                        layer.alert("操作成功", function (index) {
+                        layer.msg("操作成功")
+                        setTimeout(function(){
                             location.reload();
-                        })
+                        },1000)
                     } else {
                         layer.alert("操作失败:" + result.message)
                     }
                 })
                 layer.close(index);
             });
-
             // openTab(title,appendUrl)
             break;
         default:
