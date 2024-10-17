@@ -124,7 +124,7 @@ public class EzDateUtils{
             return simple.format(date) ;
         }catch (Exception e){
         }
-        return "error";
+        return "";
     }
 
     public static String toTimestamp(String date){

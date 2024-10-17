@@ -59,9 +59,11 @@ public class DefaultLocalFilter {
 
     public static boolean isSafe(IpActionDto dto){
         if(BLACKLIST.getIfPresent(dto.getIp())!=null){
+            logger.error("黑名单ip {} {}",dto.getIp(),BLACKLIST);
             return false;
         }
         if(sql(dto.getP())||xss(dto.getP())){
+            logger.error("攻击代码 {}",dto.getP());
             BLACKLIST.put(dto.getIp(),"攻击代码");
             return false;
         }

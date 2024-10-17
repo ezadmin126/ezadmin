@@ -862,7 +862,7 @@ function openForm(url, name, area) {
         },
         success: function(layero, indexyyy, that){
             var body = layer.getChildFrame('body', indexyyy);
-            $(body).find('#submitbtn').parent().hide();
+            //$(body).find('#submitbtn').parent().hide();
         }
     });
     return index;
@@ -891,7 +891,7 @@ function openFull(url, name,yestxt,yesfunc,notxt,nofunc) {
         },
         success: function(layero, indexyyy, that){
             var body = layer.getChildFrame('body', indexyyy);
-            $(body).find('#submitButtonContainer').html('');
+           // $(body).find('#submitButtonContainer').html('');
         }
     });
     return index;
@@ -1180,16 +1180,16 @@ function ezopen(openType, title, appendUrl, area) {
                 $.getJSON(appendUrl, function (result) {
                     $(".layuimini-loader").hide();
                     if (result.success) {
-                        layer.msg("操作成功")
-                        setTimeout(function(){
+                        layer.alert("操作成功", function (index) {
                             location.reload();
-                        },1000)
+                        })
                     } else {
                         layer.alert("操作失败:" + result.message)
                     }
                 })
                 layer.close(index);
             });
+
             // openTab(title,appendUrl)
             break;
         default:

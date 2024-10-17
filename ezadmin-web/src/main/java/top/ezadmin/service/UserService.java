@@ -20,8 +20,7 @@ import java.util.*;
 
 @Service
 public class UserService {
-    @Resource
-    SysUserMapper userMapper;
+
     @Resource
     SysUserExtMapper sysUserExtMapper;
     @Resource
@@ -51,7 +50,7 @@ public class UserService {
         sysUser.setCompanyId(company.getCompanyId());
         sysUser.setDeleteFlag(0);
         sysUser.setStatus(1);
-        userMapper.insert(sysUser);
+        sysUserExtMapper.insert(sysUser);
 
         SysRole role=new SysRole();
         role.setCompanyId(sysUser.getCompanyId());
@@ -108,5 +107,26 @@ public class UserService {
                 doResource(resources2,companyId,roleId);
             }
         });
+    }
+
+    public SysUser getFirstUserByRoleName(String roleName,Long companyId){
+        return sysUserExtMapper.selectFirstUserByRoleName(roleName,companyId);
+    }
+    public List<String> getUserRoles(Long userId ){
+        return sysUserExtMapper.selectUserRoles(userId);
+    }
+
+    public SysUser getParentUser(Long userId) {
+        SysUser user=  sysUserExtMapper.selectByPrimaryKey(userId);
+        SysUser puser=  sysUserExtMapper.selectByPrimaryKey(user.getParentId());
+        List<String> proles=sysUserExtMapper.selectUserRoles(user.getUserId());
+        if(proles.contains("管理员")){
+            return user;
+        }
+        return puser;
+    }
+
+    public SysUser getUserById(String currentId) {
+        return sysUserExtMapper.selectByPrimaryKey(Long.parseLong(currentId));
     }
 }

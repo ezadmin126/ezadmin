@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.enums.DefaultParamEnum;
 import top.ezadmin.common.utils.DESUtils;
+import top.ezadmin.common.utils.IpUtils;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
 
@@ -79,7 +80,8 @@ public class BaseController {
         }
         searchParamsValues.put("EZ_SESSION_USER_ID_KEY",Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));
         searchParamsValues.put("EZ_SESSION_USER_NAME_KEY",Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
-
+        searchParamsValues.put("EZ_CLIENT_IP", IpUtils.getRealIp(request));
+        searchParamsValues.put("EZ_REFERER", request.getHeader("referer"));
         return searchParamsValues;
     }
 

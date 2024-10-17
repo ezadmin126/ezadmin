@@ -14,6 +14,9 @@ import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.ezadmin.blog.constants.Nologin;
@@ -23,17 +26,17 @@ import top.ezadmin.common.utils.EzDateUtils;
 import top.ezadmin.common.utils.JSONUtils;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.controller.CustomBaseController;
+import top.ezadmin.domain.model.SysUser;
+import top.ezadmin.service.UserService;
 import top.ezadmin.web.EzResult;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
-@RequestMapping("/camunda/check/")
-@Nologin
+@RequestMapping("/mycamunda/check/")
 public class CamundaController extends CustomBaseController {
     @Autowired
     private RuntimeService runtimeService;
@@ -49,27 +52,48 @@ public class CamundaController extends CustomBaseController {
 
     @Resource
     private ProcessEngine processEngine;
+    @Autowired
+    private UserService userService;
 
-    @RequestMapping("/exist")
+
+    /**
+     * 判断当前流程是否已经启动
+     * @param id
+     * @param definitionKey
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/exist/{definitionKey}")
     @ResponseBody
-    public EzResult exist(String id,String definitionKey,HttpServletRequest request, HttpServletResponse response){
+    @Nologin
+    public EzResult exist(String id, @PathVariable("definitionKey") String definitionKey, HttpServletRequest request, HttpServletResponse response){
         String bizKey=definitionKey+"_"+id;
         Map<String,Object> variables = Variables.createVariables();
         variables.put("id",id);
         variables.put("definitionKey",definitionKey);
-        User user=getSessionUser();
         ProcessInstanceQuery query =runtimeService.createProcessInstanceQuery().processDefinitionKey(definitionKey)
                 .processInstanceBusinessKey(bizKey);
-        ProcessInstance c=null;
         ProcessInstance processInstance = query.singleResult();
         if(processInstance!=null){
            return EzResult.instance();
         }
         return EzResult.instance().fail("已经启动");
     }
-    @RequestMapping("/checkflag")
+
+    /**
+     * 获取 当前流程是否是轮到自己审核了
+     * @param id
+     * @param definitionKey
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/checkflag/{definitionKey}")
     @ResponseBody
-    public EzResult checkflag(String id,String definitionKey,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @Nologin
+    public EzResult checkflag(String id,@PathVariable("definitionKey") String definitionKey,HttpServletRequest request, HttpServletResponse response) throws Exception {
         String bizKey=definitionKey+"_"+id;
         Map<String,Object> variables = Variables.createVariables();
         variables.put("id",id);
@@ -82,14 +106,94 @@ public class CamundaController extends CustomBaseController {
         if(processInstance==null){
             return EzResult.instance().fail("未启动");
         }else{
-            List<Task> taskList =taskService.createTaskQuery().processInstanceId(c.getProcessInstanceId())
-                    .taskAssignee(DESUtils.encryptDES(user.getUserId())).active().list();
-
+            Task  task  =taskService.createTaskQuery().processInstanceId(c.getProcessInstanceId())
+                    .active().singleResult();
+            List<String> roles=userService.getUserRoles(user.getUserId());
+            if(!roles.contains(task.getName())&&!task.getAssignee().equals(DESUtils.encryptDES(user.getUserId()))){
+                return EzResult.instance().fail("没有权限");
+            }
         }
         return EzResult.instance() ;
     }
 
-    @RequestMapping("/start")
+    /**
+     * 审核某个流程
+     * @return
+     */
+    @RequestMapping("/start/{definitionKey}")
+    @ResponseBody
+    public EzResult start(String id,@PathVariable("definitionKey") String definitionKey,
+                          HttpServletRequest request, HttpServletResponse response) throws Exception {
+        User user=getSessionUser();
+        String bizKey=definitionKey+"_"+id;
+        Map<String,Object> variables = Variables.createVariables();
+        variables.put("id",id);
+        variables.put("definitionKey",definitionKey);
+
+        variables.put("zhiguan",userService.getFirstUserByRoleName("质管",user.getCompanyId()));
+
+        SysUser parentUser= userService.getParentUser(user.getUserId());
+        variables.put("parentUser",DESUtils.encrypt(parentUser.getUserId()+""));
+      //  variables.put("parentUser",DESUtils.encrypt(parentUser.getUserId()+""));
+
+        ProcessInstanceQuery query =runtimeService.createProcessInstanceQuery().processDefinitionKey(definitionKey)
+                .processInstanceBusinessKey(bizKey);
+        ProcessInstance c=null;
+        ProcessInstance processInstance = query.singleResult();
+        if(processInstance!=null){
+            return EzResult.instance().fail("已经发起审核，请勿重新发起审核。");
+        }else{
+            variables.put("starter",DESUtils.encrypt(user.getUserId()+""));
+            c= runtimeService.startProcessInstanceByKey(definitionKey, bizKey, variables);
+            Task  task  =taskService.createTaskQuery().processInstanceId(c.getProcessInstanceId())
+                    .active().singleResult();
+            taskService.createComment(task.getId(), c.getId(), "申请审核" );
+            taskService.complete(task.getId(),variables);
+        }
+        return EzResult.instance().data("processInstanceId",c.getId());
+    }
+    /**
+     * 开始某个流程
+     * @return
+     */
+    @RequestMapping("/complete/{definitionKey}")
+    @ResponseBody
+    public EzResult complete(String id,@PathVariable("definitionKey") String definitionKey,
+                             boolean pass,String comment,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String bizKey=definitionKey+"_"+id;
+        Map<String,Object> variables = Variables.createVariables();
+        variables.put("id",id);
+        variables.put("definitionKey",definitionKey);
+        User user=getSessionUser();
+        ProcessInstanceQuery query =runtimeService.createProcessInstanceQuery().processDefinitionKey(definitionKey)
+                .processInstanceBusinessKey(bizKey);
+
+        ProcessInstance processInstance = query.singleResult();
+        if(processInstance==null){
+            return EzResult.instance().fail("未启动");
+        }else{
+            Task  task  =taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId())
+                    .active().singleResult();
+            List<String> roles=userService.getUserRoles(user.getUserId());
+            if(roles.contains(task.getName())||task.getAssignee().equals(DESUtils.encryptDES(user.getUserId()))){
+                task.setAssignee(DESUtils.encryptDES(user.getUserId()));
+                if(pass){
+                    taskService.createComment(task.getId(), processInstance.getId(), "审核通过" );
+                    variables.put("pass",true);
+                 }else{
+                    taskService.createComment(task.getId(), processInstance.getId(), "审核不通过，原因："+comment );
+                    variables.put("pass",false);
+                 }
+                taskService.complete(task.getId(),variables);
+            }
+        }
+        return EzResult.instance() ;
+    }
+
+
+
+
+    @RequestMapping("/start2")
     @ResponseBody
     public String start(){
         String bizKey="2";
@@ -101,6 +205,8 @@ public class CamundaController extends CustomBaseController {
         variables.put("jingli3","jingli3,zizhi5");
         variables.put("zhiguan","zhiguan4");
         variables.put("zizhi","zizhi5");
+
+
         variables.put("pass","true");
         //设置当前操作人是self1
         identityService.setAuthenticatedUserId("jingli3");
@@ -133,56 +239,62 @@ public class CamundaController extends CustomBaseController {
         return "OK" ;
     }
 
-    @RequestMapping("/history")
-    @ResponseBody
-    public String history(){
-        String bizKey="2";
+    @RequestMapping("/history/{definitionKey}")
+    @Nologin
+    public String history(Model model, String id,@PathVariable("definitionKey")  String definitionKey, HttpServletRequest request, HttpServletResponse response){
+        String bizKey=definitionKey+"_"+id;
         Map<String,Object> variables = Variables.createVariables();
-        variables.put("self","self1");
-        variables.put("zhuguan","zhuguan2");
-        variables.put("jingli","jingli3");
-        variables.put("jingli3","jingli3,zizhi5");
-        variables.put("zhiguan","zhiguan4");
-        variables.put("zizhi","zizhi5");
-         //设置当前操作人是1_self
-        //identityService.setAuthenticatedUserId("1_self");
-        StringBuilder sb=new StringBuilder();
+        variables.put("id",id);
+        variables.put("definitionKey",definitionKey);
+        User user=getSessionUser();
+        List<Map<String,String>> resultList=new ArrayList<>();
+
+
         List<HistoricProcessInstance> list=  historyService.createHistoricProcessInstanceQuery()
                // .finished()
-                .processDefinitionKey("Process_order")
+                .processDefinitionKey(definitionKey)
                 .processInstanceBusinessKey(bizKey)
-                .orderByProcessInstanceStartTime().desc()
-                .list();
+                .orderByProcessInstanceStartTime().asc()
+                .listPage(0,10);
             list.forEach(item->{
-                sb.append("<br>操作人："+item.getStartUserId()+"\t ");
-                sb.append("<br>操作时间："+EzDateUtils.toDateTimeFormat(item.getStartTime())+" - "+EzDateUtils.toDateTimeFormat(item.getEndTime())+"\t");
+//                sb.append("<br>操作人："+item.getStartUserId()+"\t ");
+//                sb.append("<br>操作时间："+EzDateUtils.toDateTimeFormat(item.getStartTime())+" - "+EzDateUtils.toDateTimeFormat(item.getEndTime())+"\t");
                 HistoricTaskInstanceQuery taskInstanceQuery = historyService.createHistoricTaskInstanceQuery()
                         .processInstanceId(item.getId());
                 List<HistoricTaskInstance> historicTaskInstances = taskInstanceQuery
-                        .orderByHistoricActivityInstanceStartTime().asc().list();
-                historicTaskInstances.forEach(task->{
+                        .orderByHistoricActivityInstanceStartTime().asc().listPage(0,10);
+                for (int i =0; i <historicTaskInstances.size() ; i++) {
+                    Map<String,String> historyItem=new HashMap<>();
+                    HistoricTaskInstance task=historicTaskInstances.get(i);
+                    try {
+                        String currentId=DESUtils.decryptDES(task.getAssignee());
 
 
-
-                    sb.append("<br>==========执行人："+task.getAssignee()+"\t" );
-                   List<HistoricIdentityLinkLog> list1= historyService.createHistoricIdentityLinkLogQuery().taskId(task.getId())
-                           .type("candidate").list();
-                    if(Utils.isNotEmpty(list1)){
-                        for (HistoricIdentityLinkLog identityLink : list1) {
-                            sb.append("<br>==========候选人："+identityLink.getUserId()+"\t"+identityLink.getType()+"\t" );//assignee candidate
+                        historyItem.put("assignee",userService.getUserById(currentId).getUserName());
+                       //
+                        StringBuilder sb=new StringBuilder();
+                        List<HistoricIdentityLinkLog> list1= historyService.createHistoricIdentityLinkLogQuery().taskId(task.getId())
+                                .type("candidate").list();
+                        if(Utils.isNotEmpty(list1)){
+                            for (int j = list1.size()-1; j >=0 ; j--) {
+                                sb.append(""+list1.get(j).getUserId()+"\t"+list1.get(j).getType()+"\t" );//assignee candidate
+                            }
                         }
+                        historyItem.put("candidate",sb.toString());
+                        List<Comment> comments = processEngine.getTaskService().getTaskComments(task.getId());
+                        historyItem.put("comments", (Utils.isNotEmpty(comments)?comments.get(0).getFullMessage():""));
+                        historyItem.put("startTime", EzDateUtils.toDateTimeFormat(task.getStartTime()));
+                        historyItem.put("endTime", EzDateUtils.toDateTimeFormat(task.getEndTime()));
+                        resultList.add(historyItem);
+                     } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
-                    sb.append("<br>==========执行时间："+EzDateUtils.toDateTimeFormat(task.getStartTime())+" - "+EzDateUtils.toDateTimeFormat(task.getEndTime())+"\t");
-                    List<Comment> comments = processEngine.getTaskService().getTaskComments(task.getId());
-                    sb.append("<br>==========执行备注："+ (Utils.isNotEmpty(comments)?comments.get(0).getFullMessage():"null"));
-                    sb.append("<br>" +
-                            "===============================================================================<br>");
-                });
-                sb.append("<br>节点状态："+item.getState()+"\t<br>" +
-                        "===============================================================================<br>");
+                }
             });
-
-        return "OK"+sb;
+        model.addAttribute("data",resultList);
+        model.addAttribute("id",id);
+        model.addAttribute("definitionKey",definitionKey);
+        return "jxc/historylist";
     }
 
 

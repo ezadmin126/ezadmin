@@ -49,8 +49,7 @@ public class LoginControllerCustom extends CustomBaseController {
     @Qualifier("dataSource")
     DataSource dataSource;
 
-    @Resource
-    SysUserMapper userMapper;
+
     @Resource
     SysUserExtMapper sysUserExtMapper;
     @Resource
@@ -84,7 +83,7 @@ public class LoginControllerCustom extends CustomBaseController {
         }
         SysUserExample exampleU=new SysUserExample();
         exampleU.createCriteria().andUserNameEqualTo(username).andStatusEqualTo(1).andDeleteFlagEqualTo(0);
-        List<SysUser> userList=userMapper.selectByExample(exampleU);
+        List<SysUser> userList=sysUserExtMapper.selectByExample(exampleU);
         if(!CollectionUtils.isEmpty(userList)){
             return login(model, "用户名已经注册", request, response);
         }
@@ -101,7 +100,7 @@ public class LoginControllerCustom extends CustomBaseController {
         sidUser.setUserId(user.getUserId());
         sidUser.setSid(sid);
         sidUser.setUpdateTime(new Date());
-        userMapper.updateByPrimaryKeySelective(sidUser);
+        sysUserExtMapper.updateByPrimaryKeySelective(sidUser);
         return "redirect:/topezadmin/index.html";
     }
 
@@ -138,7 +137,7 @@ public class LoginControllerCustom extends CustomBaseController {
         }
         SysUserExample exampleU=new SysUserExample();
         exampleU.createCriteria().andUserNameEqualTo(userName).andStatusEqualTo(1).andDeleteFlagEqualTo(0);
-        List<SysUser> userList=userMapper.selectByExample(exampleU);
+        List<SysUser> userList=sysUserExtMapper.selectByExample(exampleU);
         try {
             if (CollectionUtils.isEmpty(userList) || !
                     StringUtils.equals(DESUtils.decryptDES(userList.get(0).getPassword()), password)) {
@@ -167,7 +166,7 @@ public class LoginControllerCustom extends CustomBaseController {
         sidUser.setUserId(user.getUserId());
         sidUser.setSid(sid);
         sidUser.setUpdateTime(new Date());
-        userMapper.updateByPrimaryKeySelective(sidUser);
+        sysUserExtMapper.updateByPrimaryKeySelective(sidUser);
         return "redirect:/topezadmin/index.html";
     }
 

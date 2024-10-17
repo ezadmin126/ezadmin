@@ -37,7 +37,7 @@
 </head>
 
 
-<body>
+<body th:utext="${form.core.bodyTag}" th:remove="tag"> </body>
  <div class="layui-fluid">
     <div class="layui-row layui-col-space5">
         <div class="layui-col-md2 layui-col-xs3 left">
@@ -620,6 +620,7 @@
             <div class="layui-card-header">
                 <blockquote class="layui-elem-quote selector"  ez-col="12"
                             th:ez-success_url="${form.core.success_url}"
+                            th:ez-ezconfig="${form.core.ezconfig}"
                             th:ez-formsubmiturl="${form.core.formsubmiturl}"
                             th:ez-datasource="${form.core.datasource}" id="formCoreContainer" ez-type="formcore" th:ez-encodeFormId="${form.core.formcode}"
                             th:ez-form_name="${form.core.form_name}">

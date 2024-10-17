@@ -16,7 +16,7 @@
 
         <jdbcConnection driverClass="org.h2.Driver"
                         connectionURL="jdbc:h2:tcp://47.103.36.208:9092/ez"
-                        userId="sa" password="lkm123">
+                        userId="" password="">
         </jdbcConnection>
 
         <javaModelGenerator targetPackage="top.ezadmin.domain.model" targetProject="src/main/java">

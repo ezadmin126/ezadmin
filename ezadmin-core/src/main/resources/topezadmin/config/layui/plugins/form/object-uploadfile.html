@@ -51,7 +51,7 @@
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
                 <div class="layui-upload">
-                    <button type="button" th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
+                    <button type="button" th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn layui-bg-blue"
                     ><i class="layui-icon layui-icon-upload"></i>上传
                     </button>
                     <div th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"

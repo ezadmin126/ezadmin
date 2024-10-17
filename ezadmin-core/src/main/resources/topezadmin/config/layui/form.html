@@ -28,13 +28,13 @@
     <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?123'+vi:''}"  >
 
 </head>
-<body >
+<body th:utext="${form.core.bodyTag}" th:remove="tag"> </body>
 [(${form.core.append_head})]
     <form ID="inputForm" method="post" class="  layui-form"  >
         <div class="layui-panel" style="height:58px;position:fixed;top:0;Z-INDEX: 1000;width: 100%;">
             <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer">
                 <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue " lay-submit
-                        lay-filter="submitbtn">保 存
+                        lay-filter="submitbtn">提交
                 </button>
 
                 <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/loadEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">

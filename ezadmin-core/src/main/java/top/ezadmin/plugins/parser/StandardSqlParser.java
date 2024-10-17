@@ -146,7 +146,7 @@ public class StandardSqlParser {
             }
             //有传参
             Object value= transJavaType(variables.get(key),p.getJdbcType());
-            if(variables.get(key)==null&&StringUtils.isNotBlank(defalutValue)){
+            if(value==null&&StringUtils.isNotBlank(defalutValue)){
                 p.setParamValue(defalutValue);
                 model.addParam(p);
                 return "?";
@@ -169,6 +169,7 @@ public class StandardSqlParser {
                 return obj;
             }
             if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(type)) {
+                //number类型  如果为empty,直接返回null
                 if(StringUtils.isBlank(obj+"")){
                     return null;
                 }

@@ -72,6 +72,8 @@ public class FilterConfiguration implements WebMvcConfigurer {
         exeUrl.add("/ezadmin/dark.html");
 		exeUrl.add("/");
 		exeUrl.add("/blog/**");
+		exeUrl.add("**/static/**");
+		exeUrl.add("/camunda/**");
         uac.setStaticUrl(staticUrl);
         uac.setExcludeUrl(exeUrl);
         return uac;
@@ -81,8 +83,8 @@ public class FilterConfiguration implements WebMvcConfigurer {
 		List<String> staticUrl=new ArrayList<String>();
 		staticUrl.add("/webjars/**");
 		staticUrl.add("/api/**");
-		staticUrl.add("/static/**");
-		staticUrl.add("/camunda/**");
+		staticUrl.add("**/static/**");
+
 		staticUrl.add("/robots.txt");
 		staticUrl.add("/favicon.ico");
 		staticUrl.add("/ws/**");

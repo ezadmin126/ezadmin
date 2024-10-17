@@ -443,7 +443,7 @@ public class ListEditController extends BaseController {
             Map<String,Object> search=new HashMap<>();
             search.put(JsoupUtil.LABEL,alias);
             search.put(JsoupUtil.ITEM_NAME,StringUtils.upperCase(colName));
-            search.put(JsoupUtil.NAME,StringUtils.upperCase(colName));
+           // search.put(JsoupUtil.NAME,StringUtils.upperCase(colName));
             //  search.put("ITEM_SORT",i*10+"");
 
 
@@ -617,6 +617,9 @@ public class ListEditController extends BaseController {
         ex.append("    param.table(\""+table+"\");               		\n");
 
         for (int i=0;i<fieldNameList.size();i++){
+            if(fieldNameList.get(i).equalsIgnoreCase("ID")){
+                continue;
+            }
             StringBuilder pa=new StringBuilder();
             pa.append("#{");
             pa.append(fieldNameList.get(i));

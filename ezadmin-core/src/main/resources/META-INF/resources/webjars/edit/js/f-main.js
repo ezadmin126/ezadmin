@@ -156,14 +156,8 @@ $(function (){
         $(".active").removeClass("active");
         $(".layui-component-tools").remove();
         el.addClass("active");
-        if(edittype!='formcore'){//表单不允许复制
-            el.append(tools);
-        }
         $(".config-form").hide();//所有配置隐藏
-
-
         var currentConfig=typeform(edittype);
-
         //清空当前表单
         var elms = currentConfig.find("[name]"); //formid 包含name属性的所有元素
         $.each(elms, function (i, item) {
@@ -173,7 +167,20 @@ $(function (){
             }
         });
 
-        //赋值
+
+        if(edittype!='formcore'){//表单不允许复制
+            el.append(tools);
+            //赋值
+
+        }else{
+            $.each($("body")[0].attributes,function(i,d){
+                var k=d.name;
+                var v=d.value;
+                el.attr("ez-"+k,v);
+            })
+        }
+
+
         $.each(el[0].attributes,function(i,d){
             if(d.name.indexOf('ez-')>=0){
                 var cname=d.name.replace('ez-','');
@@ -197,6 +204,7 @@ $(function (){
                 layui.form.render();
             }
         })
+
         let col=el.attr("ez-col")||12;
         //列设置
         layui.slider.render({
@@ -320,6 +328,20 @@ $(function (){
         core.success_url=successurl;
         core.formsubmiturl=formsubmiturl;
         core.datasource=datasource;
+
+        var ezconfig={};
+        $.each($("#formCoreContainer")[0].attributes,function(i,d){
+            if(d.name.indexOf('ez-')>=0){
+                var cname=d.name.replace('ez-','');
+                try{
+                    core[cname]=d.value;
+                    ezconfig[cname]=d.value;
+                }catch(e){
+                    console.log(e);
+                }
+            }
+        })
+        core.ezconfig=JSON.stringify(ezconfig);
         core.init_express=init_express;
         core.submit_express=submit_express;
         core.delete_express=delete_express;

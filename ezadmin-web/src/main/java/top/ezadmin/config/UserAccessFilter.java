@@ -21,6 +21,7 @@ import top.ezadmin.common.utils.*;
 import top.ezadmin.domain.mapper.SysUserMapper;
 import top.ezadmin.domain.mapper.ext.SysUserExtMapper;
 import top.ezadmin.domain.model.SysUser;
+import top.ezadmin.web.EzResult;
 import top.ezadmin.web.SpringContextHolder;
 import top.ezadmin.web.safe.IpActionDto;
 
@@ -82,7 +83,7 @@ import java.util.regex.Pattern;
         ipActionDto.setIp(ip );
         ipActionDto.setUri(realUrl);
         ipActionDto.setP(p);
-        if(  !realUrl.startsWith("/ezadmin")&&!realUrl.startsWith("/topezadmin") &&!top.ezadmin.web.safe.DefaultLocalFilter.isSafe(ipActionDto)){
+        if( !realUrl.startsWith("/camunda")&& !realUrl.startsWith("/ezadmin")&&!realUrl.startsWith("/topezadmin") &&!top.ezadmin.web.safe.DefaultLocalFilter.isSafe(ipActionDto)){
             logger.error("拦截攻击 429");
             httpServletResponse.setStatus(429);
             httpServletResponse.getWriter().println("429 Too Many Requests");
@@ -157,8 +158,9 @@ import java.util.regex.Pattern;
                 }
             }else{
                 LOG.warn("auth2 null {} {}",realUrl,user.getResourceIds());
-                 httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-                 httpServletResponse.getWriter().println("403 contact admin");
+                // httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+                EzResult.instance().fail().code(HttpStatus.FORBIDDEN.value()+"").message("没有权限").printJSONUtils(httpServletResponse);
+                // httpServletResponse.getWriter().println("403 contact admin");
                // httpServletResponse.sendRedirect("/error/403.html?filter=1");
             }
         } finally {
@@ -222,11 +224,9 @@ import java.util.regex.Pattern;
             if(user.getRoleNames().contains("管理员")){
                 return  true;
             }
+
             for (int i = 0; i < user.getResourceIds().size(); i++) {
-                if (user.getResourceIds().get(i).startsWith(realUrl)) {
-                    return true;
-                }
-                if (user.getResourceIds().get(i).startsWith(realUrl)) {
+                if(matcher.match(user.getResourceIds().get(i),realUrl)){
                     return true;
                 }
             }
@@ -237,6 +237,8 @@ import java.util.regex.Pattern;
         }
         return false;
     }
+
+
 
     protected Map<String,Object> requestToMap(HttpServletRequest request){
         Map<String, Object> searchParamsValues = new HashMap<>();
@@ -254,8 +256,6 @@ import java.util.regex.Pattern;
         return searchParamsValues;
     }
 
-    private List<Pattern> excludePattern = new ArrayList<Pattern>(1);
-    private List<Pattern> staticPattern = new ArrayList<Pattern>(1);
 
     @Override
     public void initFilterBean() throws ServletException {

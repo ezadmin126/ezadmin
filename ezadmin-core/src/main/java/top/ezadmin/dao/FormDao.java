@@ -79,32 +79,7 @@ public class FormDao extends JsoupUtil {
     }
 
 
-    public   Map<String, String> selectFormById(String formCode) {
-        
-        Config config=formConfigMap.get(formCode.toLowerCase());
-        Document doc = config.getDoc();
-        Element body = doc.body();
-        Map<String, String> formMap = JsoupUtil.loadAttrNoChild(body);
-        formMap.put("ENCRYPT_FORM_ID", formCode);
-        formMap.put("datasource", strip(body.attr("datasource")));
-        formMap.put("success_url", strip(body.attr("success_url")));
 
-        Element configForm=body.getElementById("configForm");
-        if(configForm!=null){
-            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.SUBMIT_EXPRESS);
-            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.INIT_EXPRESS);
-            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.DELETE_EXPRESS);
-            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.STATUS_EXPRESS);
-            JsoupUtil.loadConfigByName(configForm, formMap,JsoupUtil.GROUP_DATA);
-        }else{//不再兼容老的
-        }
-        formMap.put(JsoupUtil.APPEND_HEAD, doc.getElementById(JsoupUtil.APPEND_HEAD) == null ? "" : doc.getElementById(JsoupUtil.APPEND_HEAD).html());
-        formMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
-        formMap.put(JsoupUtil.FORM_NAME, doc.title());
-        formMap.put(JsoupUtil.FORM_NAME.toLowerCase(), doc.title());
-        Utils.putIfAbsent(formMap,JsoupUtil.ADMINSTYLE,EzClientBootstrap.instance().getAdminStyle());
-        return formMap;
-    }
 
 
 
@@ -137,7 +112,19 @@ public class FormDao extends JsoupUtil {
 
     public void clear() {
     }
-
+    public String eleToString(Element e,String tag){
+        Map<String,String> m=JsoupUtil.attr2Map(e);
+        // m.putIfAbsent("class","layui-bg-gray");
+        m.putIfAbsent(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(e));
+        StringBuilder sb=new StringBuilder();
+        m.forEach((k,v)->{
+            sb.append(k);
+            sb.append("='");
+            sb.append(v);
+            sb.append("'  ");
+        });
+        return "<"+tag+"  "+sb.toString()+">" ;
+    }
     public Map<String, Object> selectAllFormByHtml(String ezConfig ) {
         Map<String, Object> result=new HashMap<>();
         Document doc=Jsoup.parse(ezConfig);
@@ -146,6 +133,10 @@ public class FormDao extends JsoupUtil {
         formMap.put("formcode", body.attr("id"));
         formMap.put("datasource", strip(body.attr("datasource")));
         formMap.put(JsoupUtil.SUCCESS_URL, strip(body.attr(JsoupUtil.SUCCESS_URL)));
+
+        formMap.put("bodyTag",eleToString(doc.body(),"body"));
+        formMap.put(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(doc.body()));
+
 
         Element configForm=body.getElementById("configForm");
         if(configForm!=null){
@@ -296,6 +287,12 @@ public class FormDao extends JsoupUtil {
 
         Document doc =  JsoupUtil.newform();
         Element body = doc.body();
+
+
+        String ezconfig=Utils.trimNull(coreMap.get(JsoupUtil.EZCONFIG));
+        //把json赋值给body,前端需要组装json
+        JsoupUtil.json2Attr(body,ezconfig);
+
         body.attr("id",StringUtils.lowerCase(formcode) );
         //处理主体
         body.attr(JsoupUtil.DATASOURCE,datasource);

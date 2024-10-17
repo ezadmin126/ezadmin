@@ -142,7 +142,6 @@ public class User {
         this.orgName = orgName;
     }
 
-    @Deprecated
     public Long getParentId() {
         return parentId;
     }

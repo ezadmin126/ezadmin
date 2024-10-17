@@ -173,7 +173,7 @@ $(function () {
 
 
 var template = `
- <div  class="file_preview file_preview_{{ d.uniqueName }}" file_id="{{ d.fileId }}" style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
+ <div  class="file_preview file_preview_{{ d.uniqueName }}" file_id="{{ d.fileId }}" style="margin-top:5px;margin-right:5px;cursor: pointer;position: relative;border:1px solid #dae0e6">
 	<div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
 	<img data-original="{{ d.downloadUrl }}{{ d.fileId }}" style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
 		 src="{{ d.downloadUrl }}{{ d.fileId }}"></img>

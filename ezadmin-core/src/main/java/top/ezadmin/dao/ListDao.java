@@ -265,10 +265,7 @@ public class ListDao extends JsoupUtil {
 //        }
     }
 
-    public boolean exist(String listcode){
-        return listConfigMap.containsKey(listcode.toLowerCase());
-    }
-    public   Map<String, Object> selectAllListById(String listcode) {
+     public   Map<String, Object> selectAllListById(String listcode) {
         Map<String, Object> result=new HashMap<>();
         Config config=listConfigMap.get(listcode.toLowerCase());
         if(config==null){
