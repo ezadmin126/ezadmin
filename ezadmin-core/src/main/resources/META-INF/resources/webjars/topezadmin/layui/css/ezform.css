@@ -1,3 +1,6 @@
+body{
+    background-color: #fafafa;
+}
 .form-block-span {
     line-height: 38px !important;
     display: block !important;

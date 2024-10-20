@@ -156,12 +156,14 @@ $(document).ready(function () {
         $("#searchForm").submit();
     })
     $("#export").click(function () {
-        var url="/topezadmin/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams();
+        var url="/topezadmin/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?_BLANK_PARAM_COLUMN='+getCurrentCol()+"&"+getSearchParams();
        openBlank(url)
     })
-
-
-
+    function getCurrentCol(){
+        var json = cacheConfig();
+        var column = json.column == undefined ? [] : json.column;
+         return column.join();
+    }
 
     $(".ITEM_CHECK_BOX").each(function () {
         $(this).change(function (e) {
@@ -338,6 +340,7 @@ function selfConfig() {
 
 
         if (column.length > 0) {
+
             for (var i = 0; i < column.length; i++) {
                 $("#mytable thead tr").each(function () {
                     $(this).find('th[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
@@ -345,10 +348,8 @@ function selfConfig() {
                 $("#mytable tbody tr").each(function () {
                     $(this).find('td[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
                 })
-                // $("#mytable tfoot tr").each(function () {
-                //     $(this).find('th[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
-                // })
             }
+
             $("#mytable thead tr").each(function () {
                 $(this).find('.rowButtons').detach().appendTo($(this));
             })
@@ -357,22 +358,27 @@ function selfConfig() {
                 $(this).find('.rowButtons').detach().appendTo($(this));
             })
 
-            $("#mytable th").not(".fixedCol").each(function () {
-                if (column.includes($(this).attr("item_name"))) {
+            $("#mytable th").each(function () {
+                if (column.includes($(this).attr("item_name"))||$(this).attr("specialcol")==1
+                   || $(this).hasClass("rowButtons")
+                ) {
                     $(this).show();
                 } else {
                     $(this).remove();
                 }
             })
-            $("#mytable td").not(".fixedCol").each(function () {
-                if (column.includes($(this).attr("item_name"))) {
+            $("#mytable td").each(function () {
+                if ($("#mytable thead tr").find('th[ITEM_NAME="' + $(this).attr("item_name") + '"]').size()>0
+                    || $(this).hasClass("rowButtons")
+                    || $(this).hasClass("fixedCol")
+
+                ) {
                     $(this).show();
                 } else {
                     $(this).remove();
                 }
             })
         }
-
 
     } catch (E) {
         console.log(E);

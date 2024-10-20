@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +31,11 @@ public class CSVExport implements EzExport {
             response.getOutputStream().write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
             printer = new CSVPrinter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8), CSVFormat.EXCEL);
 
-            printer.printRecord(head);
+            List<String> headList=new ArrayList<>();
+            for (int i = 0; i < head.size(); i++) {
+                headList.add(head.get(i).get(0));
+            }
+            printer.printRecord(headList);
             for (int i = 0; i < data.size(); i++) {
                 printer.printRecord(data.get(i));
             }

@@ -392,7 +392,19 @@ public class ListDao extends JsoupUtil {
                     thMap.put("fixed",fixed);
                 }
                 thMap.put(JsoupUtil.LAYDATA,JSONUtils.toJSONString(laydataMap));
+                //不纳入导出，不排序等
+                if(StringUtils.equalsIgnoreCase(thMap.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-checkbox")
+                        ||StringUtils.equalsIgnoreCase(thMap.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-pic")
+                        ||StringUtils.equalsIgnoreCase(thMap.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-numbers")
+                        ||StringUtils.equalsIgnoreCase(thMap.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-numbers")
+                        ||StringUtils.equalsIgnoreCase(thMap.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-radio")
+                ){
+                    thMap.put("specialcol",1);
+                }else{
+                    thMap.put("specialcol",0);
+                }
                 searchConfigList.add(thMap);
+
             }
         }
     }

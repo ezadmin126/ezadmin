@@ -94,7 +94,7 @@ public   class EzExpressExecutor {
 
     static{
         runner.addFunction("select",new SelectOperator());
-        //  runner.addFunction("http",new HttpOperator(operatorParam));
+        runner.addFunction("selectOne",new SelectOneOperator());
         runner.addFunction("search",new SearchOperator( ));
         runner.addFunction("treeSearch",new TreeSearchOperator( ));
         runner.addFunction("count",new CountOperator());

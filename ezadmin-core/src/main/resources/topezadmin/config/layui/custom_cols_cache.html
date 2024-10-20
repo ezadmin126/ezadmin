@@ -48,9 +48,9 @@
 <body>
 <div class="layui-container">
     <blockquote class="layui-elem-quote">
-        <p>- 勾选的元素将在列表展示，未勾选的将会隐藏</p>
-        <p>- 可以通过拖拽对相关元素进行排序</p>
-        <p>- 可以在在原列表页面的表头对列宽与顺序进行调整</p>
+        <p>- 勾选字段控制显示与隐藏</p>
+        <p>- 拖拽字段控制排序</p>
+        <p>- 原列表表头也可以自定义列宽与排序</p>
     </blockquote>
     <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
     <input type="hidden" name="IS_DEBUG" id="IS_DEBUG" th:value="${IS_DEBUG}">
@@ -97,15 +97,13 @@
             </div>
 
             <div class="layui-card-body layui-row layui-col-space15 columnDrage">
-                <div class="layui-col-md3 " th:each="item,idx:${fromColField}" th:classappend="${item.item_name !='firstCol' ?'move':''  }"
-                     th:ITEM_NAME="${item.item_name}">
-                    <div class="layui-form-item "  >
-                        <label class="layui-form-label"  th:title="${ item.item_name =='firstCol'?'首列':  item.label}"
-                               th:text="${ item.item_name =='firstCol'?'首列':item.label}">Field E :</label>
+                <div class="layui-col-md3 " th:each="item,idx:${fromColField}" th:classappend="${item.specialcol =='1' ||  #strings.isEmpty(item.fixed) ?'':'move'  }"
+                     th:ITEM_NAME="${item.item_name}"  th:if="${ item.specialcol == 0 &&  #strings.isEmpty(item.fixed) }">
+                    <div class="layui-form-item "    >
+                        <label class="layui-form-label"  th:title="${item.label}"
+                               th:text="${item.label}">Field E :</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="columnId" checked  th:if="${idx.index !=0 &&   #strings.isEmpty(item.fixed) }"  lay-filter="changeList" th:value="${item.item_name}"
-                                   lay-skin="primary">
-                            <input type="checkbox" name="columnId" checked disabled th:fixed="${item.fixed}"   th:if="${idx.index ==0 || not #strings.isEmpty(item.fixed)}"  lay-filter="changeList" th:value="${item.item_name}"
+                            <input type="checkbox" name="columnId" checked   lay-filter="changeList" th:value="${item.item_name}"
                                    lay-skin="primary">
                          </div>
                     </div>
@@ -114,27 +112,6 @@
              </div>
         </div>
         <div class="layui-card">
-<!--            <div class="layui-card-header"><span class="layui-breadcrumb" lay-separator="|">-->
-<!--                <a href="#">其他配置</a></span>-->
-<!--            </div>-->
-<!--            <div class="layui-card-body">-->
-<!--                <div class="layui-form-item  ">-->
-<!--                    <div class="layui-inline">-->
-<!--                        <label class="layui-form-label"> 冻结列数(左)</label>-->
-<!--                        <div class="layui-input-inline">-->
-<!--                            <input min="0" step="1" max="3" lay-affix="number" class="layui-input" type="number" id="fixedNumber"-->
-<!--                            >-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="layui-inline">-->
-<!--                        <label class="layui-form-label"> 冻结列数(右)</label>-->
-<!--                        <div class="layui-input-inline">-->
-<!--                            <input min="0" step="1" max="3" lay-affix="number" class="layui-input" type="number" id="fixNumberRight"-->
-<!--                            >-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
 
         <div class="layui-form-item" th:style="${IS_DEBUG==1?'':'display: none'}">
@@ -295,13 +272,13 @@
     function checkless(data) {
         if ($("input[name=searchId]:checked").length == 0) {
             data.elem.checked = true;
-            form.render();
+            layui.form.render();
             layer.alert("搜索项 还是留个火种吧~");
             return false;
         }
         if ($("input[name=columnId]:checked").length == 0) {
             data.elem.checked = true;
-            form.render();
+            layui.form.render();
             layer.alert("列表项 还是留个火种吧~");
             return false;
         }

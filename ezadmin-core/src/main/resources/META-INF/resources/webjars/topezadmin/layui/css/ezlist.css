@@ -1,4 +1,6 @@
-
+body{
+    background-color: #fafafa;
+}
 .layui-layer-imgnext{
     font-size: 52px !important;
     color: #8890b5;
@@ -440,6 +442,15 @@ xm-select > .xm-body .scroll-body{
 .search-hidden{
     height: 88px;
     overflow: hidden;
+}
+
+
+.righttool button{
+padding: 0 5px;
+    margin-left:2px !important;
+}
+.righttool button i{
+    font-size: 16px !important;
 }
 
 

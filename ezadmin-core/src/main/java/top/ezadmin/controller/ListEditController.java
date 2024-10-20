@@ -545,7 +545,7 @@ public class ListEditController extends BaseController {
 
         sqlExpress.append("StringBuilder sql=new StringBuilder();");
         sqlExpress.append("\nsql.append(\""+sql.toString()+"\");");
-        sqlExpress.append("\nreturn select(sql).get(0);");
+        sqlExpress.append("\nreturn selectOne(sql);");
 
 
         form.put(JsoupUtil.INIT_EXPRESS, sqlExpress.toString());

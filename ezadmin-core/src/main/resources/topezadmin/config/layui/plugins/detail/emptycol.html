@@ -6,7 +6,7 @@
 </head>
 <body id="emptycol" type="form" icon="layui-icon-file-b">
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md6"  ez-type="emptycol" ez-col="6">
+    <div class="layui-col-space10 selector layui-hide-sm layui-col-md6"  ez-type="emptycol" ez-col="6">
         <div class="layui-form-item ">
             <label class="layui-form-label  "  >&nbsp; </label>
             <div class="layui-input-block"><span class="layui-input-wrap">&nbsp;</span>
@@ -15,7 +15,7 @@
     </div>
 </div>
 <div id="content">
-    <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}" ez-type="emptycol"
+    <div class="layui-col-space10 layui-hide-sm selector" th:classappend="${'layui-col-md'+col}" ez-type="emptycol"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"
