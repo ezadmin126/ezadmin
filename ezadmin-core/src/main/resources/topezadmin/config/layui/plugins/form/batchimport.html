@@ -80,7 +80,7 @@
                 $(document).on("click","#cancel",function(){
                     layer.closeAll();
                 })
-                $(document).on("click","#import",function(){
+                $(document).on("click","#importBatch",function(){
                     var name= $("#ITEM_ID_[[${item_name}]]").attr("name");
                     var namearray=name.split(",");
                     layer.open({

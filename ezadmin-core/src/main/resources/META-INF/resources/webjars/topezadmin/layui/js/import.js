@@ -43,7 +43,7 @@
                         $(body).find('#next').click();
                     }
                     if (txt == "开始导入") {
-                        $(body).find('#import').click();
+                        $(body).find('#importBatch').click();
                         $(document).find(".layui-layer-btn0").text("上一步");
                     }
                     if (txt == "上一步") {
@@ -61,12 +61,12 @@
                     $(body).find('#submitButtonContainer').html(
                         "<button class='layui-btn' id='pre' type='button'></button>" +
                         "<button class='layui-btn' id='next' type='button'></button>" +
-                        "<button class='layui-btn' id='import' type='button'></button>" +
+                        "<button class='layui-btn' id='importBatch' type='button'></button>" +
                         "<button class='layui-btn' id='cancel' type='button'>取消</button>");
                     $(body).find('#importtips').html(obutton.attr("importtips"));
                     $(body).find('#ITEM_ID_IMPORT_ID').attr("name",obutton.attr("importname"));
                     $(body).find('#ITEM_ID_importservice').val( obutton.attr("importservice"));
-                    $(body).find('#submitButtonContainer').hide();
+                    $(body).find('.formtopfix').hide();
                     var param=obutton.attr("url");
                     if(param){
                         try{
