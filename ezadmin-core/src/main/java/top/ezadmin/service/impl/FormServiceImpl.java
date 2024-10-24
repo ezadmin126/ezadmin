@@ -165,14 +165,16 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
 
                                 String v=Utils.trimNull(initItemMap.get(item_name));
                                 String[] vs=StringUtils.split(v, ",");
-                                selectItems.getItems().forEach(th->{
-                                    if(ArrayUtils.contains(vs,th.get("K"))){
-                                        th.put("checked", true);
+                                if(Utils.trimNull(item.get("type")).contains("input-checkbox")){
+                                    vs=JSONUtils.parseArray(v, String.class).toArray(new String[0]);
+                                }
+                                for (int i1 = 0; i1 < selectItems.getItems().size(); i1++) {
+                                    if(ArrayUtils.contains(vs,selectItems.getItems().get(i1).get("K"))){
+                                        selectItems.getItems().get(i1).put("checked", true);
                                     }else{
-                                        th.put("checked", false);
+                                        selectItems.getItems().get(i1).put("checked", false);
                                     }
-                                });
-
+                                }
                                 context.setVariable("items", selectItems.getItems());
                                 context.setVariable("data", dataConf);
                                 context.setVariable("childItems", selectItems.getChildItems());

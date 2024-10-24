@@ -162,7 +162,12 @@ $(document).ready(function () {
     function getCurrentCol(){
         var json = cacheConfig();
         var column = json.column == undefined ? [] : json.column;
-         return column.join();
+        var result=[];
+        $("th[ez-fixed=left]").each(function(){
+            result.push($(this).attr("item_name"))
+        })
+        result.push(column);
+        return result.join();
     }
 
     $(".ITEM_CHECK_BOX").each(function () {
@@ -231,7 +236,7 @@ $(document).ready(function () {
 
     $("#customBtn").click(function(e){
         e.preventDefault();
-        openModel("/topezadmin/list/customSearch-"+$("#ENCRYPT_LIST_ID").val(),"高级搜索")
+        openModel("/topezadmin/list/customSearch-"+$("#ENCRYPT_LIST_ID").val(),"高级查询")
     })
     try{
         const customBtnKey="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
@@ -359,7 +364,9 @@ function selfConfig() {
             })
 
             $("#mytable th").each(function () {
-                if (column.includes($(this).attr("item_name"))||$(this).attr("specialcol")==1
+                if (column.includes($(this).attr("item_name"))
+                    ||$(this).attr("specialcol")==1
+                    ||$(this).attr("ez-fixed")!==undefined
                    || $(this).hasClass("rowButtons")
                 ) {
                     $(this).show();
@@ -370,6 +377,7 @@ function selfConfig() {
             $("#mytable td").each(function () {
                 if ($("#mytable thead tr").find('th[ITEM_NAME="' + $(this).attr("item_name") + '"]').size()>0
                     || $(this).hasClass("rowButtons")
+                    || $(this).attr("ez-fixed")!==undefined
                     || $(this).hasClass("fixedCol")
 
                 ) {

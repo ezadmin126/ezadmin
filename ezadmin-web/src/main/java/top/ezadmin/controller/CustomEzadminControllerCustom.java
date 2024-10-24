@@ -110,7 +110,7 @@ public class CustomEzadminControllerCustom extends CustomBaseController {
         toproot.add(TOP);
         String logo=EzClientBootstrap.instance().getConfig().get("logo")+"";
         vo.homeInfo(EzClientBootstrap.instance().getSystemName(),"").
-                logoInfo("","/ezadmin/index.html",logo  )
+                logoInfo("","/ezadmin/index.html","/static/logo.jpg"  )
                 .setMenuInfo(toproot);
         EzResult.instance().msg("0","ok")
                 .data(vo).printJSONUtils(response);

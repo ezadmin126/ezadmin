@@ -142,7 +142,7 @@ import org.springframework.util.CollectionUtils;
         if(!Utils.isNotEmpty(list)){
             throw new NotExistException();
         }
-        Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
+        //Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
         List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
         if(orderedColumn!=null&&orderedColumn.length>0){
             List<Map<String,Object>> orderedColList=new ArrayList<>();

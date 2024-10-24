@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.enums.DefaultParamEnum;
-import top.ezadmin.common.utils.DESUtils;
-import top.ezadmin.common.utils.IpUtils;
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.Utils;
+import top.ezadmin.common.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -76,6 +73,7 @@ public class BaseController {
                 searchParamsValues.put(k+"_ARRAY",v);
             }else if(v.length>1){
                 searchParamsValues.put(k+"_ARRAY",request.getParameterValues(k));
+                searchParamsValues.put(k, JSONUtils.toJSONString(request.getParameterValues(k)));
             }
         }
         searchParamsValues.put("EZ_SESSION_USER_ID_KEY",Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));

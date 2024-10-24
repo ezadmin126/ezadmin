@@ -58,23 +58,16 @@
                 <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}" >
                 <!--ID,PARENT_ID,CHILDREN-->
                 <script>
-                    var xmel = $('[[${"#itemId-" + item_name}]]');
-                    var initdata = $('[[${"#itemdata-" + item_name}]]').val();
-                    var initvalue = xmel.attr("value");
-                     var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
-                    var initArray=initvalue?initvalue.split(","):[];
-
                     $(function(){
-
                         xmSelect.render({
                             el: '[[${"#itemId-" + item_name}]]',
                             autoRow: false,
                             name:'[[${item_name}]]',
                             filterable: true,
-
-                            showCount:  xmel.attr("showCount")||5,
-                            max: xmel.attr("max")||100,
-                            radio:  (xmel.attr("radio")||"false").toLowerCase()==="false"?false:true,
+                            showCount: 5,
+                            theme: {
+                                            color: '#1e9fff',
+                                 },
                             prop: {
                                 name: 'NAME',
                                 value: 'ID',
@@ -82,8 +75,6 @@
                                 disabled:"disabled",
                                 children:"CHILDREN",
                                 optgroup:"optgroup",
-                            },theme: {
-                                color: '#1e9fff',
                             },
                             tree: {
                                 show: true,
@@ -91,7 +82,7 @@
                                 showLine: true,
                                 indent: 20,
                                 expandedKeys: [ -3 ],
-                                strict:strict,
+                                strict:($('[[${"#itemId-" + item_name}]]').attr("strict")||"false".toLowerCase())==="false"?false:true,
                             },
                             toolbar: {
                                 show: true,
@@ -99,12 +90,60 @@
                             },
                             filterable: true,
                             //height: 'auto',
+                            radio:  ( $('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
                             data: function(){
-                                return  JSON.parse(initdata);
+                                return  JSON.parse($('[[${"#itemdata-" + item_name}]]').val()||[]);
                             },
-                            initValue: initArray
+                            initValue: $('[[${"#itemId-" + item_name}]]').attr("value")? $('[[${"#itemId-" + item_name}]]').attr("value").split(","):[]
                         })
                     })
+                    // var xmel = $('[[${"#itemId-" + item_name}]]');
+                    // var initdata = $('[[${"#itemdata-" + item_name}]]').val();
+                    // var initvalue = xmel.attr("value");
+                    //  var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
+                    // var initArray=initvalue?initvalue.split(","):[];
+                    //
+                    // $(function(){
+                    //
+                    //     xmSelect.render({
+                    //         el: '[[${"#itemId-" + item_name}]]',
+                    //         autoRow: false,
+                    //         name:'[[${item_name}]]',
+                    //         filterable: true,
+                    //
+                    //         showCount:  xmel.attr("showCount")||5,
+                    //         max: xmel.attr("max")||100,
+                    //         radio:  (xmel.attr("radio")||"false").toLowerCase()==="false"?false:true,
+                    //         prop: {
+                    //             name: 'NAME',
+                    //             value: 'ID',
+                    //             selected:"checked",
+                    //             disabled:"disabled",
+                    //             children:"CHILDREN",
+                    //             optgroup:"optgroup",
+                    //         },theme: {
+                    //             color: '#1e9fff',
+                    //         },
+                    //         tree: {
+                    //             show: true,
+                    //             showFolderIcon: true,
+                    //             showLine: true,
+                    //             indent: 20,
+                    //             expandedKeys: [ -3 ],
+                    //             strict:strict,
+                    //         },
+                    //         toolbar: {
+                    //             show: true,
+                    //             list: ['ALL', 'REVERSE', 'CLEAR']
+                    //         },
+                    //         filterable: true,
+                    //         //height: 'auto',
+                    //         data: function(){
+                    //             return  JSON.parse(initdata);
+                    //         },
+                    //         initValue: initArray
+                    //     })
+                    // })
                 </script>
 
 
