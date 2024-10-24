@@ -31,6 +31,8 @@ public enum  OperatorEnum {
     IN("IN","IN"),
     //
     NOT_IN("NOT IN","NOT IN"),
+    ALL_EQ("=","ALL_EQ"),
+    ALL_LIKE("LIKE","ALL_LIKE"),
     ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");
 //    //
 //    IS_NULL(" IS NULL ","无效的"),

@@ -53,7 +53,7 @@ public class ListController extends BaseController {
 
         request.setAttribute(RequestParamConstants._SEARCH_ITEM_DISPLAY, request.getParameter("_SEARCH_ITEM_DISPLAY"));
 
-         request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
+        request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
         request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
         request.setAttribute("cacheFlag",EzClientBootstrap.instance().isSqlCache());
 

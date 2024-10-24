@@ -13,6 +13,8 @@ import top.ezadmin.dao.model.CustomSearchSingle;
 
 import java.util.*;
 
+import static javax.management.Query.and;
+
 
 public class SqlUtils {
     static Logger logger = LoggerFactory.getLogger(SqlUtils.class);
@@ -64,12 +66,50 @@ public class SqlUtils {
             case ALL_FIND_IN_SET:
                 result = find_in_set(alias,name, operatorEnum, ITEM_JDBC_TYPE, VALUE,union);
                 break;
+            case ALL_EQ:
+                result = all(alias,name, operatorEnum, ITEM_JDBC_TYPE, VALUE,union);
+                break;
+            case ALL_LIKE:
+                //todo
             default:
                 break;
         }
         return result;
     }
 
+    private static String all(String alias, String name, OperatorEnum operatorEnum, String itemJdbcType, String value, String union) {
+        if (StringUtils.isBlank(value)) {
+            return "";
+        }
+        value=StringUtils.safeDb(value);
+        value=StringUtils.replace(value,"[","");
+        value=StringUtils.replace(value,"]","");
+        if (StringUtils.isBlank(value)) {
+            return "";
+        }
+        StringBuilder sql = new StringBuilder();
+        sql.append(union); //and
+        sql.append(" ( 1=1 ");
+        String idArray[] = StringUtils.split(value, SelectKVContants.SPLIT.toString()+"|,");
+        String fieldName=alias(alias,name);
+        if(idArray.length>0){
+            for (String item : idArray) {
+                if (StringUtils.isBlank(item)) {
+                    continue;
+                }
+                String valueNew= item ;
+                if (JdbcTypeEnum.VARCHAR.getName().equals(itemJdbcType)) {
+                    sql.append(" and  ").append(fieldName)
+                            .append("=  '").append(valueNew).append("'");
+                }else{
+                    sql.append(" and  ").append(fieldName)
+                            .append("=  ").append(valueNew) ;
+                }
+            }
+        }
+        sql.append(" ) ");
+        return sql.toString();
+    }
 
 
     private static String in(String alias,String name, OperatorEnum oper, String jdbcType, String value,String union) {

@@ -99,6 +99,7 @@ public class JsoupUtil {
     public static String VALIDATEMESSAGES="valid_msg";
     //
     public static String LAYVERIFY="lay_verify";
+    public static String SPECIALCOL="specialcol";
 
     public static void attr(Element item, String key, String values) {
 

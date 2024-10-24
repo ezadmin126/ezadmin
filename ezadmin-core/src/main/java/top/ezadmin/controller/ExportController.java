@@ -55,43 +55,10 @@ import org.springframework.util.CollectionUtils;
             requestParamMap.put("currentPage", "1");
             requestParamMap.put("perPageInt", EZ_PER_PAGE_SIZE);
 
-             Map<String, Object> list = JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
-
-            if(!Utils.isNotEmpty(list)){
-                throw new NotExistException();
-            }
-
-
-
-
+            Map<String, Object> list=exportList(  ENCRYPT_LIST_ID,orderedColumn);
             Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
             List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
-            if(orderedColumn!=null&&orderedColumn.length>0){
-                List<Map<String,Object>> orderedColList=new ArrayList<>();
-                for (int j = 0; j < orderedColumn.length; j++) {
-                    for (int i = 0; i < colList.size(); i++) {
-                        Map<String,Object> col=(Map<String,Object>)colList.get(i);
-                        String itemName=Utils.getStringByObject(colList.get(i), JsoupUtil.ITEM_NAME);
-                            if(orderedColumn[j].equalsIgnoreCase(itemName)){
-                                orderedColList.add(col);
-                                break;
-                            }
-                    }
-                }
-                colList=orderedColList;
-                list.put("col",orderedColList);
-            }
-              Iterator<Map<String,Object>> it= colList.iterator();
-              while(it.hasNext()){
-                  Map<String,Object> col= it.next();
-                  if(StringUtils.equalsIgnoreCase(col.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-checkbox")
-                    ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-pic")
-                          ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-numbers")
-                          ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-radio")
-                  ){
-                      it.remove();
-                  }
-              }
+
             listService.exportListById(list,requestParamMap,sessionParamMap);
             log.info("start finish load ez   list_id=" + listId);
             List<Map<String, Object>> dataList=(List<Map<String, Object>>)coreMap.get("dataList");
@@ -112,7 +79,8 @@ import org.springframework.util.CollectionUtils;
             int currentPage=2;
             while (Utils.isNotEmpty(dataList)&&dataList.size()>=NumberUtils.toInt(EZ_PER_PAGE_SIZE)) {
                 requestParamMap.put("currentPage", currentPage++);
-                Map<String, Object> listTemp = JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+                Map<String, Object> listTemp   =exportList(  ENCRYPT_LIST_ID,orderedColumn);
+                      //  JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
                 listService.exportListById(listTemp,requestParamMap,sessionParamMap);
                 Map<String,Object> coreMapTemp=(Map<String,Object>)listTemp.get("core");
                 List<Map<String, Object>> dataTemp=(List<Map<String, Object>>)coreMapTemp.get("dataList");
@@ -168,6 +136,47 @@ import org.springframework.util.CollectionUtils;
             existList.remove(key);
         }
     }
+
+    private Map<String, Object> exportList(String ENCRYPT_LIST_ID,String orderedColumn[]) throws Exception {
+        Map<String, Object> list = JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;
+        if(!Utils.isNotEmpty(list)){
+            throw new NotExistException();
+        }
+        Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
+        List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
+        if(orderedColumn!=null&&orderedColumn.length>0){
+            List<Map<String,Object>> orderedColList=new ArrayList<>();
+            for (int j = 0; j < orderedColumn.length; j++) {
+                for (int i = 0; i < colList.size(); i++) {
+                    Map<String,Object> col=(Map<String,Object>)colList.get(i);
+                    String itemName=Utils.getStringByObject(colList.get(i), JsoupUtil.ITEM_NAME);
+                    if(orderedColumn[j].equalsIgnoreCase(itemName)){
+                        orderedColList.add(col);
+                        break;
+                    }
+                }
+            }
+            colList=orderedColList;
+            list.put("col",orderedColList);
+        }else{
+            list.put("col",colList);
+        }
+        Iterator<Map<String,Object>> it= colList.iterator();
+        while(it.hasNext()){
+            Map<String,Object> col= it.next();
+            if( StringUtils.equalsIgnoreCase(col.get(JsoupUtil.SPECIALCOL)+"","1")
+//                    ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-pic")
+//                    ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.HEAD_PLUGIN_CODE)+"","th-numbers")
+//                    ||StringUtils.equalsIgnoreCase(col.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-radio")
+            ){
+                it.remove();
+            }
+        }
+        return list;
+    }
+
+
+
 
      private void fillExcelData(List<List<Object>> data, List<Map<String, Object>> dataList,List<Map<String,Object>> colList) {
         if(Utils.isEmpty(dataList)){

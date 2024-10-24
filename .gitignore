@@ -3,6 +3,7 @@
 /ezadmin-core/target/
 /ezadmin-web/target/
 /ezadmin-web/src/main/resources/application.yml
+/ezadmin-core/pom.xml
 /ezadmin-resource/target/
 /ezadmin-web/ez.mv.db
 /ezadmin-web/ez.trace.db
