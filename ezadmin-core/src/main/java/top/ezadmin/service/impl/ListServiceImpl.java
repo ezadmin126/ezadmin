@@ -518,6 +518,23 @@ public class ListServiceImpl implements ListService {
         c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
         return c;
     }
+    public Map<String,Object>  selectConfigHistoryList(String code ,String version ) throws Exception {
+        String sql="select id,lower(EZ_CODE) EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_HISTORY where   lower(EZ_CODE)=? and EZ_TYPE=1 " +
+                " AND ID= " +version
+                 ;
+        Map<String, Object> listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                sql,new Object[]{ code.toLowerCase() });
+        if(Utils.isEmpty(listMap)){
+            return listMap;
+        }
+        String html=Utils.trimNull(listMap.get("EZ_CONFIG"));
+        Map<String,Object>c= ListDao.getInstance().selectAllListByHtml(html);
+        c.put("EZ_CONFIG",html);
+        c.put("EZ_CODE",Utils.trimNull(listMap.get("EZ_CODE")));
+        c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
+        c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
+        return c;
+    }
 
 
 

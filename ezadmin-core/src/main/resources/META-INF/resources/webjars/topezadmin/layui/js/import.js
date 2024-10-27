@@ -32,41 +32,25 @@
                 area: json,
                 content:  url ,
                 moveOut: true,
-                btn: ["下一步", '完成'],
-                // 按钮1 的回调
-                btn1: function (index111, layero, that) {
-                    var body = layer.getChildFrame('body', index111);
 
-                    var txt = $(document).find(".layui-layer-btn0").text().trim();
-                    if (txt == "下一步") {
-                        $(document).find(".layui-layer-btn0").text("开始导入");
-                        $(body).find('#next').click();
-                    }
-                    if (txt == "开始导入") {
-                        $(body).find('#importBatch').click();
-                        $(document).find(".layui-layer-btn0").text("上一步");
-                    }
-                    if (txt == "上一步") {
-                        $(document).find(".layui-layer-btn0").text("下一步");
-                        $(body).find('#pre').click();
-                    }
-
-                },
-                btn2: function (index222, layero, that) {
-                    layer.close(index222);
-                    location.reload();
-                },
                 success: function (layero, indexyyy, that) {
                     var body = layer.getChildFrame('body', indexyyy);
                     $(body).find('#submitButtonContainer').html(
-                        "<button class='layui-btn' id='pre' type='button'></button>" +
-                        "<button class='layui-btn' id='next' type='button'></button>" +
-                        "<button class='layui-btn' id='importBatch' type='button'></button>" +
-                        "<button class='layui-btn' id='cancel' type='button'>取消</button>");
+                        "<button class='layui-btn   layui-bg-blue layui-btn-disabled'   id='pre' type='button'>上一步</button>" +
+                        "<button class='layui-btn layui-bg-blue' id='next' type='button'>下一步</button>" +
+                        "<button class='layui-btn layui-bg-blue layui-btn-disabled' id='importBatch'    type='button'>开始导入</button>" +
+                        "<button class='layui-btn layui-bg-blue' id='cancel' type='button'>关闭</button>");
+
+                    $(body).on("click","#cancel",function(){
+                        layer.close(indexyyy);
+                    })
+
+
+
                     $(body).find('#importtips').html(obutton.attr("importtips"));
                     $(body).find('#ITEM_ID_IMPORT_ID').attr("name",obutton.attr("importname"));
                     $(body).find('#ITEM_ID_importservice').val( obutton.attr("importservice"));
-                    $(body).find('.formtopfix').hide();
+                    //参数带过去
                     var param=obutton.attr("url");
                     if(param){
                         try{

@@ -9,7 +9,7 @@
 <div id="template" >
     <div class="layui-col-space10 selector layui-col-md3" config-form-type="searchcore" ez-type="unionor">
         <div class="layui-form-item ">
-            <div class="layui-input-inline edit-unionsearch " style="width:100px;padding:0px">
+            <div class="layui-input-inline edit-unionsearch " style="width:100px !important;padding:0px">
 
                 <select name="default" class=""><option value="">请选择</option></select>
             </div>
@@ -47,7 +47,7 @@
 
 >
     <div  class="layui-form-item" >
-        <div class="layui-input-inline edit-unionsearch " style="width:100px"
+        <div class="layui-input-inline edit-unionsearch " style="width:100px !important;"
              th:for="${'itemId-' + model.item_name}">
             <select style="width: 100%;" name="itemSearchKey">
                 <option value="">关键字</option>

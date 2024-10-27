@@ -1,49 +1,31 @@
-<!doctype html>
-<html lang="en">
- <head>
-  <meta charset="UTF-8">
-  <title>资源角色管理</title>
-
- </head>
- <body id="sys_resource_role" datasource="datasource" success_url="reload">
-  <div id="append_head" class="append"></div>
-  <div class="layui-container">
-   <form id="inputForm" method="post" class="layui-form">
-    <div class="layui-card" group_name="EZ_DEFAULT_GROUP">
-     <div class="layui-card-header">
-       EZ_DEFAULT_GROUP 
-     </div>
-     <div class="layui-card-body">
-
-         <div class="layui-form-item ">
-             <label class="layui-form-label">资源名称</label>
-             <div class="layui-input-block form-group">
-                 <input class="form-item" name="RESOURCE_NAME" type="text" value="" item_name="RESOURCE_NAME" align="" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="" help="">
-             </div>
-         </div>
-
-      <div class="layui-form-item ">
-       <label class="layui-form-label">角色</label>
-       <div class="layui-input-block form-group">
-        <object class="form-item" name="ROLE_IDS" type="xmselect"   item_name="ROLE_IDS"
-                 data="SELECT ROLE_ID K,ROLE_NAME V FROM T_SYS_ROLE WHERE COMPANY_ID=4 and delete_flag=0"
-                datatype="KVSQL"  ></object>
-       </div>
-      </div>
-     </div>
+<html>
+<head>
+    <title>资源角色管理</title>
+</head>
+<body id="sys_resource_role" datasource="datasource" success_url="reload" formsubmiturl="">
+<div id="append_head"></div>
+<form id="inputForm">
+    <div class="layui-card" col="12">
+        <div class="layui-card-body">
+            <div class="layui-form-item" col="12">
+                <label>资源名称</label>
+                <div>
+                    <object item_name="RESOURCE_NAME" id="itemId-RESOURCE_NAME"> </object>
+                </div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>角色</label>
+                <div>
+                    <object data="SELECT ROLE_ID ID,ROLE_NAME NAME FROM T_SYS_ROLE WHERE COMPANY_ID=${COMPANY_ID} and delete_flag=0" datatype="KVSQL" item_name="ROLE_IDS" id="itemId-ROLE_IDS" type="xmselect-tree"> </object>
+                </div>
+            </div>
+        </div>
     </div>
-   </form>
-   <form id="configForm" class="layui-form">
-    <div class="layui-card" group_name="表单数据配置">
-     <div class="layui-card-header">
-       表单数据配置 
-     </div>
-     <div class="layui-card-body">
-     </div>
-    </div>
-    <div class="layui-form-item "><label class="layui-form-label">初始表达式</label>
-     <div class="layui-input-block form-group">
-      <pre class="form-item layui-code" id="init" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+</form>
+<form id="configForm">
+   <pre item_name="init_express" type="">
+<![CDATA[
+StringBuilder sql=new StringBuilder();
 companyId=$$("COMPANY_ID");
 sql.append("
 select  GROUP_CONCAT(UR.ROLE_ID)  ROLE_IDS
@@ -54,43 +36,36 @@ FROM T_SYS_RESOURCE R
  GROUP BY R.RESOURCE_ID
 ");
 
-return select(sql).get(0);</pre>
-     </div>
-    </div>
-    <div class="layui-form-item ">
-     <label class="layui-form-label">提交表达式</label>
-     <div class="layui-input-block form-group">
-      <pre class="form-item layui-code" id="submit" name="submit_express"  item_name="submit_express" type="">
+return select(sql).get(0);
+]]>
+
+   </pre>
+    <pre item_name="submit_express" type="">
+<![CDATA[
 roleids=$("ROLE_IDS");
-update("update T_SYS_ROLE_RESOURCE set delete_flag=1 where ROLE_ID=${ID} ");
+update("update T_SYS_ROLE_RESOURCE set delete_flag=1 where RESOURCE_ID=${ID} ");
 roleidArray=roleids.split(",");
-for(int i=0;i&lt;roleidArray.length;i++){
-     insert("insert T_SYS_ROLE_RESOURCE ( RESOURCE_ID, ROLE_ID,   DELETE_FLAG)VALUES(#{ID},"+roleidArray[i]+",0)")
+for(int i=0;i<roleidArray.length;i++){
+
+     insert("insert INTO T_SYS_ROLE_RESOURCE ( RESOURCE_ID,ROLE_ID ,   DELETE_FLAG)VALUES(#{ID},"+roleidArray[i]+",0)")
 }
-return 1;
-      </pre>
-     </div>
-    </div>
-    <div class="layui-form-item ">
-     <label class="layui-form-label">删除表达式</label>
-     <div class="layui-input-block form-group">
-      <pre class="form-item layui-code" id="delete" name="delete_express"  item_name="delete_express" type=""></pre>
-     </div>
-    </div>
-    <div class="layui-form-item "><label class="layui-form-label">分组表达式</label>
-     <div class="layui-input-block form-group">
-      <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
-     </div>
-    </div>
-   </form>
-  </div>
+]]>
 
-  <script>
-    layui.use(function () {
+   </pre>
+    <pre item_name="delete_express" type="">
+<![CDATA[
 
-    })
-</script>
-  <div id="append_foot" class="append">
-  </div>
- </body>
+]]>
+
+   </pre>
+    <pre item_name="status_express" type="">
+<![CDATA[
+
+]]>
+
+   </pre>
+    <pre item_name="displayorder_express" type=""></pre>
+</form>
+<div id="append_foot"></div>
+</body>
 </html>

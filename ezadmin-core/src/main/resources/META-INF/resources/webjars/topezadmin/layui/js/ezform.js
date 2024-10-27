@@ -169,6 +169,11 @@ $(function () {
             $(this).addClass("layui-icon-up")
         }
     })
+
+
+
+    //end
+    $('.layuimini-loader').fadeOut();
 })
 
 

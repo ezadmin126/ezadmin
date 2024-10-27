@@ -30,8 +30,8 @@
 </head>
 <body th:utext="${form.core.bodyTag}" th:remove="tag"> </body>
 [(${form.core.append_head})]
-    <form ID="inputForm" method="post" class="  layui-form"  >
-        <div class="layui-panel formtopfix" style="height:58px;position:fixed;top:0;Z-INDEX: 1000;width: 100%;">
+    <form ID="inputForm" method="post" style="padding-bottom: 50px;" class="  layui-form"  >
+        <div class="layui-panel formtopfix formtopfixbuttons"  >
             <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer">
                 <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue " lay-submit
                         lay-filter="submitbtn">提交
@@ -48,8 +48,7 @@
                 </button>
             </div>
         </div>
-        <div class="layui-panel formtopfix" style="height:58px">
-        </div>
+
     <div th:class="${'layui-'+layout}">
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 
@@ -93,6 +92,11 @@
         </div>
     </div>
 </form>
+<!--<div class="layui-panel  formtopfix formtopfixbottom" style="height:58px">-->
+<!--</div>-->
+<div class="layuimini-loader"  >
+    <div class="layuimini-loader-inner"></div>
+</div>
 </body>
 <div>
     <div>
@@ -176,6 +180,7 @@
 <script th:src="${contextName+'/webjars/topezadmin/layui/js/ezform.js?v='+vi}" type="text/javascript"></script>
 
 <script>
+
     layui.use("layer", function () {
         if ($("#dianti").length > 0 && $("#dianti").children().length > 1) {
             layer.open({

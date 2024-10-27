@@ -19,6 +19,7 @@ public interface ListService {
      * @throws Exception
      */
     public Map<String,Object>  selectConfigEditList(String code ) throws Exception;
+    public Map<String,Object>  selectConfigHistoryList(String code,String version ) throws Exception;
 
       ItemInitData getSelectItems(DataSource datasource, String initData, String initType, Map<String, Object> params
     ) throws Exception;

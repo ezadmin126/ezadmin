@@ -1,55 +1,33 @@
-<!doctype html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>角色管理</title>
-
 </head>
-<body id="sys_role" datasource="datasource" success_url="reload">
-<div id="append_head" class="append"></div>
-<div class="layui-container">
-    <form id="inputForm" method="post" class="layui-form">
-        <div class="layui-card" group_name="EZ_DEFAULT_GROUP">
-            <div class="layui-card-header">
-                EZ_DEFAULT_GROUP
-            </div>
-            <div class="layui-card-body">
-                <div class="layui-form-item ">
-                    <label class="layui-form-label">角色名称</label>
-                    <div class="layui-input-block form-group">
-                        <input class="form-item" name="ROLE_NAME" type="text" value="" item_name="ROLE_NAME" align="" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="" help="">
-                    </div>
+<body id="sys_role" datasource="datasource" success_url="reload" formsubmiturl="">
+<div id="append_head"></div>
+<form id="inputForm">
+    <div class="layui-card" col="12">
+        <div class="layui-card-body">
+            <div class="layui-form-item" col="12">
+                <label>角色名称</label>
+                <div>
+                    <object name="ROLE_NAME" item_name="ROLE_NAME" type="input-text" col="12" class="form-item"> </object>
                 </div>
-                <div class="layui-form-item ">
-                    <label class="layui-form-label">角色描述</label>
-                    <div class="layui-input-block form-group">
-                        <object class="form-item" name="ROLE_DESC" type="textarea" value="" item_name="ROLE_DESC" align="" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="" help="">
-                        </object></div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>角色描述</label>
+                <div>
+                    <object name="ROLE_DESC" item_name="ROLE_DESC" type="textarea" col="12" class="form-item"> </object>
                 </div>
             </div>
         </div>
-    </form>
-    <form id="configForm" class="layui-form">
-        <div class="layui-card" group_name="表单数据配置">
-            <div class="layui-card-header">
-                表单数据配置
-            </div>
-            <div class="layui-card-body">
-            </div>
-        </div>
-        <div class="layui-form-item "><label class="layui-form-label">初始表达式</label>
-            <div class="layui-input-block form-group">
-      <pre class="form-item layui-code" id="init" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+    </div>
+</form>
+<form id="configForm">
+   <pre item_name="init_express" type="">StringBuilder sql=new StringBuilder();
 companyId=$$("COMPANY_ID");
 sql.append("select ROLE_NAME,ROLE_DESC,ROLE_ID ID,ROLE_ID from T_SYS_ROLE where  ROLE_ID=${ID}  ");
 return select(sql).get(0);</pre>
-            </div>
-        </div>
-        <div class="layui-form-item ">
-            <label class="layui-form-label">提交表达式</label>
-            <div class="layui-input-block form-group">
-      <pre class="form-item layui-code" id="submit" name="submit_express"  item_name="submit_express" type="">
-import top.ezadmin.plugins.express.jdbc.UpdateParam;
+    <pre item_name="submit_express" type="">import top.ezadmin.plugins.express.jdbc.UpdateParam;
 import top.ezadmin.plugins.express.jdbc.InsertParam;
 companyId=$$("COMPANY_ID");
 sessionUserId=$$("EZ_SESSION_USER_ID_KEY");
@@ -83,28 +61,10 @@ return id;
  updateSimple(param);
  return ID;
 }</pre>
-            </div>
-        </div>
-        <div class="layui-form-item ">
-            <label class="layui-form-label">删除表达式</label>
-            <div class="layui-input-block form-group">
-                <pre class="form-item layui-code" id="delete" name="delete_express"  item_name="delete_express" type="">update("UPDATE T_SYS_ROLE set delete_flag=1 where ROLE_ID=${ID}");</pre>
-            </div>
-        </div>
-        <div class="layui-form-item "><label class="layui-form-label">分组表达式</label>
-            <div class="layui-input-block form-group">
-                <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
-            </div>
-        </div>
-    </form>
-</div>
-
-<script>
-    layui.use(function () {
-
-    })
-</script>
-<div id="append_foot" class="append">
-</div>
+    <pre item_name="delete_express" type="">update("UPDATE T_SYS_ROLE set delete_flag=1 where ROLE_ID=${ID}");</pre>
+    <pre item_name="status_express" type=""></pre>
+    <pre item_name="displayorder_express" type=""></pre>
+</form>
+<div id="append_foot"></div>
 </body>
 </html>

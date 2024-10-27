@@ -236,7 +236,7 @@
                 document.getElementById('layui_theme_css').setAttribute('href',url);
                 $("body").remove()
                 $.get("/topezadmin/dark.html?type=add",function(){
-
+                    location.reload();
                 })
 
             }else{

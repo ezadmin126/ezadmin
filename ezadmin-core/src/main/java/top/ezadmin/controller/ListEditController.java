@@ -51,7 +51,9 @@ public class ListEditController extends BaseController {
 
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
         Map<String, Object> list = listService.selectConfigEditList(listUrlCode) ;
-
+        if(StringUtils.isNotBlank(request.getParameter("version"))){
+            list=listService.selectConfigHistoryList(listUrlCode,request.getParameter("version"));
+        }
         if(!Utils.isNotEmpty(list)){
             throw new NotExistException();
         }
@@ -85,6 +87,9 @@ public class ListEditController extends BaseController {
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());
         requestParamMap.put("loadDataFlag",0);
         Map<String, Object> list= listService.selectConfigEditList(ENCRYPT_LIST_ID) ;
+        if(StringUtils.isNotBlank(request.getParameter("version"))){
+            list=listService.selectConfigHistoryList(ENCRYPT_LIST_ID,request.getParameter("version"));
+        }
         if(Utils.isEmpty(list)){
             list=new HashMap();
             list.put("core",new HashMap());
@@ -275,10 +280,15 @@ public class ListEditController extends BaseController {
     public String export(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
         Map<String,Object>  c=listService.selectConfigEditList(ENCRYPT_LIST_ID);
-
+        if(StringUtils.isNotBlank(request.getParameter("version"))){
+            c=listService.selectConfigHistoryList(ENCRYPT_LIST_ID,request.getParameter("version"));
+        }
         request.setAttribute("EZ_CONFIG",c.get("EZ_CONFIG")+"");
         request.setAttribute("ENCRYPT_LIST_ID",ENCRYPT_LIST_ID);
         request.setAttribute("EZ_TYPE",request.getParameter("EZ_TYPE"));
+        requestToMap(request).forEach((k,v)->{
+            request.setAttribute(k,v);
+        });
         return  "layui/edit/export";
     }
     @EzMapping("trace.html")

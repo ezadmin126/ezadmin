@@ -284,7 +284,6 @@ var rangeShortCut=[
     }
 ]
 function initForm() {
-
     layui.use(['form', 'laydate', 'table', 'dropdown', 'colorpicker'], function () {
         var
             form = layui.form,
@@ -818,7 +817,17 @@ function openModel(url, name, area) {
         shadeClose: true,
         area: json,
         content: url,
-        moveOut: true
+        moveOut: true,
+        success: function(layero, indexyyy, that){
+
+            var body = layer.getChildFrame('body', indexyyy);
+            if($(body).find('#submitButtonContainer').size()>0){
+                $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+                $(body).on("click","#closeParent",function(){
+                    layui.layer.close(indexyyy);
+                })
+            }
+        }
     });
     return index;
 }
@@ -846,23 +855,12 @@ function openForm(url, name, area) {
         area: json,
         content: url,
         moveOut: true,
-        btn: ['提交', '取消'],
-        // 按钮1 的回调
-        btn1: function(index111, layero, that){
-            var body = layer.getChildFrame('body', index111);
-
-            $(body).find('#submitbtn').click();
-
-            //  layer.close(index111); // 关闭弹层
-        },
-        btn2: function(index222, layero, that){
-            layer.close(index222);
-            // 按钮2 的回调
-            // return false // 点击该按钮后不关闭弹层
-        },
         success: function(layero, indexyyy, that){
             var body = layer.getChildFrame('body', indexyyy);
-            //$(body).find('#submitbtn').parent().hide();
+            $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+            $(body).on("click","#closeParent",function(){
+                layui.layer.close(indexyyy);
+            })
         }
     });
     return index;

@@ -165,8 +165,11 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
 
                                 String v=Utils.trimNull(initItemMap.get(item_name));
                                 String[] vs=StringUtils.split(v, ",");
-                                if(Utils.trimNull(item.get("type")).contains("input-checkbox")){
-                                    vs=JSONUtils.parseArray(v, String.class).toArray(new String[0]);
+                                try {
+                                    if (Utils.trimNull(item.get("type")).contains("input-checkbox")) {
+                                        vs = JSONUtils.parseArray(v, String.class).toArray(new String[0]);
+                                    }
+                                }catch (Exception e){
                                 }
                                 for (int i1 = 0; i1 < selectItems.getItems().size(); i1++) {
                                     if(ArrayUtils.contains(vs,selectItems.getItems().get(i1).get("K"))){

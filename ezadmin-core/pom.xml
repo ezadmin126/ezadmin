@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-core</artifactId>
-    <version>2.9.18.3</version>
+    <version>2.9.17</version>
     <packaging>jar</packaging>
     <name>ezadmin-core</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
@@ -211,6 +211,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
+                    <deploymentName>${project.version}</deploymentName>
                 </configuration>
             </plugin>
             <plugin>

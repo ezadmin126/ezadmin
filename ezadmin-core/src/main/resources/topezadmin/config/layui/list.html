@@ -116,12 +116,12 @@
         </div><!--tab-content-->
     </div><!--tab -->
      <div class="layui-row layui-panel ez-table-tool" style="">
-            <div class="layui-col-xs12 layui-col-sm8" th:if="${#lists.size(data.tablebtn)>0}">
-                <div class="  tableButton  " style="text-align: left">&nbsp;
+            <div class="layui-col-xs6 layui-col-sm8" th:if="${#lists.size(data.tablebtn)>0}">
+                <div class="  tableButton layui-btn-container " style="text-align: left">&nbsp;
                     <div th:remove="tag" th:each="item:${data.tablebtn}" th:utext="${item.html}"></div>
                 </div>
             </div>
-            <div class="layui-col-xs12 righttool" th:classappend="${#lists.size(data.tablebtn)>0
+            <div class="layui-col-xs6 righttool layui-btn-group" th:classappend="${#lists.size(data.tablebtn)>0
                     ?'layui-col-sm4':''
             }" style="text-align: right;">
             <button title="上一页" type="button"

@@ -1,0 +1,153 @@
+<html>
+<head>
+    <title>资源列表</title>
+</head>
+<body id="sys_resource" empty_show="-" treegrid="1" datasource="datasource" rowbtnwidth="350" adminstyle="layui">
+<div id="append_head">
+    <style></style>
+</div>
+<ul id="tab">
+</ul>
+<form id="search">
+    <div>
+        <label>父级菜单</label>
+        <div>
+            <object item_name="PARENT_RESOURCE_ID" type="input-text"></object>
+        </div>
+    </div>
+    <div>
+        <label>菜单名称</label>
+        <div>
+            <object item_name="RESOURCE_NAME" type="input-text"></object>
+        </div>
+    </div>
+    <div>
+        <label>地址</label>
+        <div>
+            <object item_name="RESOURCE_URL" type="input-text"></object>
+        </div>
+    </div>
+    <div>
+        <label>图标</label>
+        <div>
+            <object item_name="RESOURCE_ICON" type="input-text"></object>
+        </div>
+    </div>
+</form>
+<div id="tableButton">
+    <button opentype="MODEL" url="/topezadmin/form/form-sys_resource" item_name="新增" type="button-table">新增</button>
+</div>
+<table>
+    <tbody>
+    <tr id="column">
+        <th id="rowbutton" width="350" fixed="right">
+            <button opentype="MODEL" url="/topezadmin/form/form-sys_resource?ID=${ID}" item_name="修改" type="button-single">修改</button>
+            <button opentype="MODEL" url="/topezadmin/form/form-sys_resource_role?ID=${ID}" item_name="分配角色" type="button-single">分配角色</button>
+        </th>
+        <th item_name="ID" width="60" minwidth="60">ID</th>
+        <th item_name="NAME" width="190">菜单名称</th>
+        <th item_name="RESOURCE_URL" width="260">地址</th>
+        <th item_name="RESOURCE_ICON">图标</th>
+        <th item_name="DISPLAY_ORDER">排序值</th>
+    </tr>
+    </tbody>
+</table>
+<pre id="express" orderby="ORDER BY DISPLAY_ORDER desc" groupby="">
+
+<![CDATA[
+StringBuilder sql=new StringBuilder();
+companyId=$$("COMPANY_ID");
+sql.append("
+       SELECT
+          RESOURCE_ID ID ,  PARENT_RESOURCE_ID PARENT_ID ,RESOURCE_NAME NAME,
+                    RESOURCE_NAME, RESOURCE_URL, RESOURCE_ICON,DISPLAY_ORDER FROM T_SYS_RESOURCE A WHERE DELETE_FLAG = 0
+       ");
+
+	sql.append(" AND COMPANY_ID="+companyId);
+
+ return treeSearch(sql,"RESOURCE_NAME","ID","PARENT_RESOURCE_ID","0");
+]]>
+
+
+  </pre>
+<pre id="count">
+
+</pre>
+<pre item_name="displayorder_express" type="">
+
+<![CDATA[
+
+]]>
+
+
+  </pre>
+<div id="append_foot">
+    <script type="text/html" id="TPL-treeTable-demo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="addRoot">新增一级资源</button>
+        </div>
+    </script>
+    <script type="text/html" id="TPL-treeTable-demo-tools">
+        <div class="layui-btn-container">
+            <!--     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+            <a class=" layui-btn layui-btn-sm layui-btn-primary layui-border-blue  " lay-event="addChild">新增子资源</a>
+
+            <a class=" layui-btn layui-btn-sm layui-btn-primary layui-border-blue  " lay-event="editChild">修改</a>
+            <a class=" layui-btn layui-btn-sm layui-btn-primary layui-border-blue  " lay-event="assRole">分配角色</a>
+            <a class="layui-btn layui-btn-sm layui-btn-primary layui-border-red " lay-event="delete">删除</a>
+        </div>
+    </script>
+    <script>
+        layui.use(function(){
+            var treeTable = layui.treeTable;
+            treeTable.on("toolbar(TPL-treeTable-demo)", function (obj) {
+                var config = obj.config;
+                var tableId = config.id;
+                var status = treeTable.checkStatus(tableId);
+                // 获取选中行
+                if (obj.event === "addRoot") {
+                    openModel("/topezadmin/form/form-sys_resource?PARENT_RESOURCE_ID=0","添加");
+
+                    // if(!status.data.length) return layer.msg('无选中数据');
+                    // console.log(status);
+                    // layer.alert("当前数据选中已经输出到控制台，<br>您可按 F12 从控制台中查看结果。");
+                }
+            });
+            treeTable.on('tool(treetable)', function (obj) {
+                var layEvent = obj.event; // 获得 lay-event 对应的值
+                var trElem = obj.tr;
+                var trData = obj.data;
+                var tableId = obj.config.id;
+                if (layEvent === "detail") {
+
+                    // layer.msg("查看操作：" + trData.name);
+                } else if (layEvent === "addChild") {
+                    openModel("/topezadmin/form/form-sys_resource?PARENT_RESOURCE_ID="+trData.ID,"添加");
+                } else if (layEvent === "editChild") {
+                    openModel("/topezadmin/form/form-sys_resource?ID="+trData.ID,"修改");
+                } else if (layEvent === "assRole") {
+                    openModel("/topezadmin/form/form-sys_resource_role?ID="+trData.ID,"分配角色");
+                }else if(layEvent === "delete"){
+                    layer.confirm("真的删除行么", function (index) {
+                        var dd={}
+                        dd.ID=trData.ID;
+                        $.post("/topezadmin/form/doDelete-sys_resource",  dd, function(data) {
+                            if(data.success){
+                                obj.del(); // 等效如下
+                                layer.close(index);
+                            }else{
+                                layer.alert(data.message);
+                            }
+                        }, 'json').fail(function() {
+                            debugger;
+                            console.log('请求失败');
+                        });
+
+                    });
+                }
+            });
+        })
+    </script>
+</div>
+</body>
+</html>

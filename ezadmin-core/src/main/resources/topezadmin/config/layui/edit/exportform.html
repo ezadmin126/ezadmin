@@ -76,14 +76,16 @@
             </pre>
     </div>
     <div class="layui-col-xs6 container-card" style="height:98%">
-        <iframe   width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0"
-                th:src="${'/topezadmin/formEdit/form-'+EZ_CODE+'?ez_edit_flag=1'}"></iframe>
+        <iframe  id="right" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0"
+                ></iframe>
     </div>
 </div>
 
 
 
 <script>
+    $("#right").attr("src","/topezadmin/formEdit/form-"+$("#ezCode").val()+window.location.search)
+
     let editor = ace.edit("editor");
     editor.setTheme("ace/theme/eclipse");
     editor.session.setMode("ace/mode/html");
@@ -137,25 +139,34 @@
         });
     })
     layui.jquery(document).on("click","#viewEdit",function(){
-        window.open("/topezadmin/formEdit/loadEdit-"+$("#ezCode").val());
+        window.open("/topezadmin/formEdit/loadEdit-"+$("#ezCode").val()+window.location.search);
     })
     layui.jquery(document).on("click","#preview",function(){
-        window.open("/topezadmin/form/form-"+$("#ezCode").val());
+        window.open("/topezadmin/form/form-"+$("#ezCode").val()+window.location.search);
     })
 
 
 
     layui.jquery(document).on("click","#publish",function(){
         var code = editor.getValue();
-        $.post("/topezadmin/formEdit/publish-"+$("#ezCode").val(),  {data:editor.getValue(),cloudId:$("#cloudId").val(),EZ_TYPE:$("#ezType").val()}, function(data) {
-            if(data.success){
-                location.reload();
-            }else{
-                layui.layer.alert(data.message);
-            }
-        }, 'json').fail(function() {
-            layui.layer.alert('请求失败，网络异常');
+        layer.prompt({title: '请输入发布说明', formType: 2}, function(value, index, elem){
+            if(value === '') return elem.focus();
+           // layer.msg('获得：'+ util.escape(value)); // 显示 value
+            $.post("/topezadmin/formEdit/publish-"+$("#ezCode").val(),
+                {data:editor.getValue(),cloudId:$("#cloudId").val(),EZ_TYPE:$("#ezType").val()
+                    ,msg:layui.util.escape(value)
+                }, function(data) {
+                if(data.success){
+                    location.reload();
+                }else{
+                    layui.layer.alert(data.message);
+                }
+            }, 'json').fail(function() {
+                layui.layer.alert('请求失败，网络异常');
+            });
+            layer.close(index);
         });
+
         // var formattedCode = html_beautify(code, { indent_size: 2 });
         // editor.getSession().setValue(formattedCode);
     })

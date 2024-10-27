@@ -74,15 +74,24 @@
         <input type="hidden" name="data" id="dataImportJson">
         <script>
             $(function(){
-                 debugger;
-             //   $('#submitbtn').hide();
-                $('[type="reset"]').remove();
-                $(document).on("click","#cancel",function(){
-                    layer.closeAll();
-                })
+
+
                 $(document).on("click","#importBatch",function(){
                     var name= $("#ITEM_ID_[[${item_name}]]").attr("name");
                     var namearray=name.split(",");
+                    $("#next").addClass("layui-btn-disabled");
+                    $("#pre").addClass("layui-btn-disabled");
+                    $(".step1").addClass("layui-step-item-done");
+                    $(".step1").removeClass("layui-step-item-active");
+                    $(".step1").find(".layui-icon").html('');
+                    $(".step2").addClass("layui-step-item-done");
+                    $(".step2").removeClass("layui-step-item-active");
+                    $(".step2").find(".layui-icon").html('');
+                    $(".step3").addClass("layui-step-item-active");
+                    $(".step3").removeClass("layui-step-item-inactive");
+
+
+                    $("#importBatch").addClass("layui-btn-disabled");
                     layer.open({
                         type: 1, // page 层类型
                         area: ['500px', '300px'],
@@ -105,12 +114,41 @@
                     return false;
                 });
                 $(document).on("click","#next",function(){
+                    if($("textarea").val()==''){
+                        layui.layer.msg("请粘贴数据");
+                        return false;
+                    }
                     generateTable();
+
                     $("#datain").hide();
+
+                    $("#next").addClass("layui-btn-disabled");
+                    $("#pre").removeClass("layui-btn-disabled");
+                    $("#importBatch").removeClass("layui-btn-disabled");
+                    $(".step1").addClass("layui-step-item-done");
+                    $(".step1").removeClass("layui-step-item-active");
+                    $(".step1").find(".layui-icon").html('');
+
+                    $(".step2").addClass("layui-step-item-active");
+                    $(".step2").removeClass("layui-step-item-inactive");
+
+
                 });
                 $(document).on("click","#pre",function(){
                      $("#preview").html('');
                      $("#datain").show();
+                    $("#next").removeClass("layui-btn-disabled");
+                    $("#pre").addClass("layui-btn-disabled");;
+                    $("#importBatch").addClass("layui-btn-disabled");
+
+                    $(".step1").removeClass("layui-step-item-done");
+                    $(".step1").addClass("layui-step-item-active");
+                    $(".step1").find(".layui-icon").html('1');
+
+                    $(".step2").removeClass("layui-step-item-active");
+                    $(".step2").addClass("layui-step-item-inactive");
+
+
                 });
             })
             function generateTable()    {
@@ -164,8 +202,12 @@
                 }
                 table=table+th+"</tr><tbody>"+tbody+"</tbody></table>";
                 console.log(dataarray);
+                console.log(exsit);
 
-                 let block="<blockquote class='layui-elem-quote'>空行已经自动删除，"+Array.from(exsit).join(',')+"由于重复，已经删除重复行</blockquote>";
+                 let block="<blockquote class='layui-elem-quote'>" +
+                     "- 空行已经自动删除，行《"+Array.from(exsit).join(',')+"》由于重复，仅保留一行供导入。<br>" +
+                     "- 如有导入失败的行，请重新发起导入操作，已经导入的默认不回滚。 <br>" +
+                     "</blockquote>";
 
                 $("#preview").html(block+table);
             }
@@ -217,10 +259,14 @@
 
             function submitSuccess(data){
                 if(!data.success){
-                    alert("服务端错误,请查看console" );
+                  //  alert("服务端错误,请查看console" );
+                    layui.layer.alert("数据导入异常，请联系管理员！");
                     console.log(data.message)
                     return;
                 }
+                $(".step3").addClass("layui-step-item-done");
+                $(".step3").removeClass("layui-step-item-active");
+                $(".step3").find(".layui-icon").html('');
                 var name= $("#ITEM_ID_[[${item_name}]]").attr("name");
 
                 var namearray=name.split(",");
@@ -231,6 +277,7 @@
                         if(!data.data[sku]){
                             $(tr).find("i:last").attr("class","layui-icon layui-icon-error  layui-font-20 layui-font-red");
                             $(tr).find(".tips").text("找不到数据");
+
                         }else{
                             if(data.data[sku].success){
                                 $(tr).find("i:last").attr("class","layui-icon layui-icon-success layui-font-20 layui-font-green")

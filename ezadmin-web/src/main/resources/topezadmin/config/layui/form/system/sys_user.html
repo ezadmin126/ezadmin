@@ -1,50 +1,54 @@
-<!doctype html>
-<html lang="en">
- <head>
-  <meta charset="UTF-8">
-  <title>用户管理</title>
-
- </head>
- <body id="sys_user" datasource="datasource" success_url="reloadlocal">
-  <div id="append_head"></div>
-   <div class="layui-container">
-   <form id="inputForm" method="post" class="layui-form">
-    <div class="layui-form-item ">
-     <label class="layui-form-label">用户名</label>
-     <div class="layui-input-block form-group">
-      <input item_name="USER_NAME" name="USER_NAME" placeholder style alias jdbctype data datatype lay-verify class="form-item" type="text">
-     </div>
+<html>
+<head>
+    <title>用户管理</title>
+</head>
+<body id="sys_user" datasource="datasource" success_url="reload" formsubmiturl="">
+<div id="append_head"></div>
+<form id="inputForm">
+    <div class="layui-card" col="12">
+        <div class="layui-card-body">
+            <div class="layui-form-item" col="12">
+                <label>用户名</label>
+                <div>
+                    <object col="12" name="USER_NAME" item_name="USER_NAME" id="itemId-USER_NAME" type="input-text" class="form-item"> </object>
+                </div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>上级</label>
+                <div>
+                    <object col="12" data="SELECT USER_ID K,USER_NAME V FROM T_SYS_USER WHERE DELETE_FLAG=0 AND COMPANY_ID=${COMPANY_ID}" datatype="KVSQL" name="PARENT_ID" item_name="PARENT_ID" id="itemId-PARENT_ID" type="select-search" class="form-item"> </object>
+                </div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>部门</label>
+                <div>
+                    <object col="12" data="select ORG_ID K, ORG_NAME V from T_SYS_ORGANIZATION WHERE COMPANY_ID=${COMPANY_ID} AND DELETE_FLAG=0" datatype="KVSQL" item_name="ORG_ID" id="itemId-ORG_ID" type="select-search" class="form-item"> </object>
+                </div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>是否启用</label>
+                <div>
+                    <object col="12" data="yesno" name="STATUS" item_name="STATUS" id="itemId-STATUS" type="input-radio" class="form-item"> </object>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="layui-form-item ">
-     <label class="layui-form-label">上级
-     </label>
-     <div class="layui-input-block form-group">
-      <select item_name="PARENT_ID" type="search" name="PARENT_ID" placeholder style alias jdbctype data="SELECT USER_ID K,USER_NAME V FROM T_SYS_USER WHERE DELETE_FLAG=0 AND COMPANY_ID=${COMPANY_ID}" datatype="KVSQL" lay-verify class="form-item"  >
-      </select> </div>
-    </div>
-    <div class="layui-form-item ">
-     <label class="layui-form-label">是否启用
-     </label>
-     <div class="layui-input-block form-group">
-      <select item_name="STATUS" type="search" name="STATUS" placeholder style alias jdbctype data="yesno" datatype="" lay-verify class="form-item"  >
-      </select> </div>
-    </div>
-   </form>
-   <form id="configForm" class="layui-form">
-
-    <div class="layui-card" group_name="表单数据配置">
-     <div class="layui-card-header">
-       表单数据配置 
-     </div>
-     <div class="layui-card-body">
-      <pre class="form-item layui-code" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+</form>
+<form id="configForm">
+   <pre item_name="init_express" type="">
+<![CDATA[
+StringBuilder sql=new StringBuilder();
 companyId=$$("COMPANY_ID");
-sql.append("select COMPANY_ID,USER_NAME,STATUS,PARENT_ID from T_SYS_USER where  USER_ID=${ID}  ");
-if(companyId&gt;1){
+sql.append("select COMPANY_ID,USER_NAME,STATUS,PARENT_ID,ORG_ID from T_SYS_USER where  USER_ID=${ID}  ");
+if(companyId>1){
 	sql.append(" AND COMPANY_ID="+companyId);
 }
-return select(sql).get(0);</pre>
-      <pre class="form-item layui-code" name="submit_express"  item_name="submit_express" type="">
+return select(sql).get(0);
+]]>
+
+   </pre>
+    <pre item_name="submit_express" type="">
+<![CDATA[
 import top.ezadmin.plugins.express.jdbc.UpdateParam;
 import top.ezadmin.plugins.express.jdbc.InsertParam;
 companyId=$$("COMPANY_ID");
@@ -54,8 +58,10 @@ if(!isNotBlank("ID")){
     param=new InsertParam();
     param.table("T_SYS_USER");
     param.add("#{USER_NAME}");
-    param.add("#{STATUS,jdbcType=NUMBER,value=0}");
-    param.add("#{PARENT_ID,jdbcType=NUMBER,value=0}");
+     param.add("#{ORG_ID,value=0}");
+
+    param.add("#{STATUS,jdbcType=NUMBER}");
+    param.add("#{PARENT_ID,jdbcType=NUMBER}");
            param.add("#{COMPANY_ID,value="+companyId+"}");
     param.add("#{ADD_TIME,value=NOW()}");
     param.add("#{ADD_ID,value='"+sessionUserId+"'}");
@@ -66,34 +72,39 @@ return id;
     param=new UpdateParam();
     param.table("T_SYS_USER");
     param.add("#{USER_NAME}");
-    param.add("#{PARENT_ID,jdbcType=NUMBER,value=0}");
-    param.add("#{STATUS,jdbcType=NUMBER,value=0}");
+    param.add("#{PARENT_ID,jdbcType=NUMBER}");
+    param.add("#{STATUS,jdbcType=NUMBER}");
+     param.add("#{ORG_ID,value=0}");
 
    param.add("#{UPDATE_TIME,value=NOW()}");
    param.add("#{UPDATE_ID,value='"+sessionUserId+"'}");
    param.add("#{UPDATE_NAME,value='"+sessionUserName+"'}");
   StringBuilder updateSql=new StringBuilder();
   updateSql.append(" where USER_ID=#{ID} ");
-  if(companyId&gt;1){
+  if(companyId>1){
       updateSql.append(" and COMPANY_ID= "+companyId);
   }
  param.where(updateSql.toString());
  updateSimple(param);
  return ID;
 }
- </pre>
-      <pre class="form-item layui-code" name="delete_express"  item_name="delete_express" type=""></pre>
-      <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
-     </div>
-    </div>
-   </form>
-  </div>
+]]>
 
-  <script>
-    layui.use(function () {
+   </pre>
+    <pre item_name="delete_express" type="">
+<![CDATA[
 
-    })
-</script>
-   <div id="append_foot"></div>
- </body>
+]]>
+
+   </pre>
+    <pre item_name="status_express" type="">
+<![CDATA[
+
+]]>
+
+   </pre>
+    <pre item_name="displayorder_express" type=""></pre>
+</form>
+<div id="append_foot"></div>
+</body>
 </html>

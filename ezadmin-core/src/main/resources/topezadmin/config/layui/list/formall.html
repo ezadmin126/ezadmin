@@ -47,11 +47,9 @@
     <tr id="column">
         <th id="rowbutton" width="200" fixed="right">
             <button opentype="_BLANK" url="/topezadmin/formEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group"  class="layui-border-blue">可视化编辑</button>
-            <button opentype="_BLANK" url="/topezadmin/formEdit/form-${EZ_CODE}" item_name="preview" type="button-single"   class="layui-border-orange">预览</button>
             <button opentype="_BLANK" url="/topezadmin/formEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single"  class="layui-border-orange">源码编辑</button>
-            <button opentype="CONFIRM_AJAX" windowname="确定发布吗" url="/topezadmin/formEdit/publish-${EZ_CODE}?EZ_TYPE=1" item_name="publish" type="button-single"   class="layui-border-orange">发布</button>
-            <button opentype="_BLANK" url="/topezadmin/form/form-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single"   class="layui-border-orange">查看发布</button>
-            <button opentype="MODEL" url="/topezadmin/list/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single"   class="layui-border-orange">历史</button>
+            <button opentype="_BLANK" url="/topezadmin/form/form-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single"   class="layui-border-orange">预览已发布</button>
+            <button opentype="MODEL" url="/topezadmin/list/list-formhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single"   class="layui-border-orange">发布历史</button>
         </th>
         <th item_name="ID" head="th-numbers" width="60" minwidth="60" fixed="left">ID</th>
         <th item_name="EZ_CODE" url="/topezadmin/formEdit/form-${EZ_CODE}" body="td-link" opentype="_BLANK" fixed="left">表单编码</th>

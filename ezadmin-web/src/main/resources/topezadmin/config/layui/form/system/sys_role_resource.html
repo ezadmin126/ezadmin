@@ -1,61 +1,31 @@
-<!doctype html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>角色资源管理</title>
-
 </head>
-<body id="sys_role_resource" datasource="datasource" success_url="">
-<div id="append_head" class="append"></div>
-<div class="layui-container">
-    <form id="inputForm" method="post" class="layui-form">
-        <div class="layui-card" group_name="EZ_DEFAULT_GROUP">
-            <div class="layui-card-header">
-                EZ_DEFAULT_GROUP
-            </div>
-            <div class="layui-card-body">
-                <div class="layui-form-item "><label class="layui-form-label">角色名</label>
-                    <div class="layui-input-block form-group">
-                        <input class="form-item" name="ROLE_NAME" type="span" value="" item_name="ROLE_NAME" placeholder="" style="" alias="" jdbctype="" data="" datatype="" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload="">
-                    </div>
+<body id="sys_role_resource" datasource="datasource" success_url="" formsubmiturl="">
+<div id="append_head"></div>
+<form id="inputForm">
+    <div class="layui-card" col="12">
+        <div class="layui-card-body">
+            <div class="layui-form-item" col="12">
+                <label>角色名</label>
+                <div>
+                    <object col="12" name="ROLE_NAME" item_name="ROLE_NAME" id="itemId-ROLE_NAME" type="input-span" class="form-item"> </object>
                 </div>
-                <div class="layui-form-item ">
-                    <label class="layui-form-label">资源树</label>
-                    <div class="layui-input-block form-group">
-                        <object class="form-item" name="RESOURCE_IDS" type="tree" value="" item_name="RESOURCE_IDS" placeholder="" style="" alias="" jdbctype="" data="StringBuilder sql=new StringBuilder();
-companyId=$(&quot;COMPANY_ID&quot;);
-sql.append(&quot;
-select R.RESOURCE_ID _ID,R.PARENT_RESOURCE_ID _PARENT_ID,concat(R.RESOURCE_NAME,IFNULL(R.RESOURCE_DESC,'')) _NAME
-,IF(U.ROLE_ID is null,'false','true') _CHECKED_BOOLEAN
-FROM T_SYS_RESOURCE R
-  LEFT JOIN T_SYS_ROLE_RESOURCE  UR ON R.RESOURCE_ID=UR.RESOURCE_ID  and UR.DELETE_FLAG=0
-and UR.ROLE_ID=${ID}
-  LEFT JOIN T_SYS_ROLE U ON UR.ROLE_ID=U.ROLE_ID
-and U.ROLE_ID=${ID}
-WHERE R.DELETE_FLAG=0
-&quot;);
-if(companyId>1){
-	sql.append(&quot; AND R.COMPANY_ID=&quot;+companyId);
-}
- result=new HashMap();
-result.put(&quot;items&quot;, select(sql));
-return result;" datatype="QLEXPRESS" lay_verify="" item_desc="" group_data="" valid_rule="" valid_msg="" item_max_upload=""></object>
-                    </div>
+            </div>
+            <div class="layui-form-item" col="12">
+                <label>资源树</label>
+                <div>
+                    <object col="12" data="select RESOURCE_ID ID,PARENT_RESOURCE_ID PARENT_ID,RESOURCE_NAME NAME from T_SYS_RESOURCE where COMPANY_ID=${COMPANY_ID} and delete_flag=0" datatype="KVSQL2TREECACHE" name="RESOURCE_IDS" item_name="RESOURCE_IDS" id="itemId-RESOURCE_IDS" strict="false" type="xmselect-tree" class="form-item"> </object>
                 </div>
             </div>
         </div>
-    </form>
-    <form id="configForm" class="layui-form">
-        <div class="layui-card" group_name="表单数据配置">
-            <div class="layui-card-header">
-                表单数据配置
-            </div>
-            <div class="layui-card-body">
-            </div>
-        </div>
-        <div class="layui-form-item "><label class="layui-form-label">初始表达式</label>
-            <div class="layui-input-block form-group">
-      <pre class="form-item layui-code" id="init" name="init_express"  item_name="init_express" type="">StringBuilder sql=new StringBuilder();
+    </div>
+</form>
+<form id="configForm">
+   <pre item_name="init_express" type="">
+<![CDATA[
+StringBuilder sql=new StringBuilder();
 companyId=$$("COMPANY_ID");
 sql.append("
 select GROUP_CONCAT(R.RESOURCE_ID) RESOURCE_IDS
@@ -67,45 +37,37 @@ AND UR.ROLE_ID=${ID}
 WHERE U.ROLE_ID=${ID}
 GROUP BY U.ROLE_NAME, U.ROLE_ID
 ");
-if(companyId&gt;1){
-	sql.append(" AND U.COMPANY_ID="+companyId);
-}
-return select(sql).get(0);</pre>
-            </div>
-        </div>
-        <div class="layui-form-item ">
-            <label class="layui-form-label">提交表达式</label>
-            <div class="layui-input-block form-group">
-      <pre class="form-item layui-code" id="submit" name="submit_express"  item_name="submit_express" type="">roleids=$("RESOURCE_IDS");
+
+return select(sql).get(0);
+]]>
+
+   </pre>
+    <pre item_name="submit_express" type="">
+<![CDATA[
+roleids=$("RESOURCE_IDS");
 update("update T_SYS_ROLE_RESOURCE set delete_flag=1 where ROLE_ID=${ID} ");
 
  roleidArray=roleids.split(",");
-for(int i=0;i&lt;roleidArray.length;i++){
+for(int i=0;i<roleidArray.length;i++){
      insert("insert into T_SYS_ROLE_RESOURCE ( ROLE_ID, RESOURCE_ID,   DELETE_FLAG)VALUES(#{ID},"+roleidArray[i]+",0)")
 }
-return 1;</pre>
-            </div>
-        </div>
-        <div class="layui-form-item ">
-            <label class="layui-form-label">删除表达式</label>
-            <div class="layui-input-block form-group">
-                <pre class="form-item layui-code" id="delete" name="delete_express"  item_name="delete_express" type=""></pre>
-            </div>
-        </div>
-        <div class="layui-form-item "><label class="layui-form-label">分组表达式</label>
-            <div class="layui-input-block form-group">
-                <pre class="form-item layui-code" name="group_data"  item_name="group_data" type=""></pre>
-            </div>
-        </div>
-    </form>
-</div>
+]]>
 
-<script>
-    layui.use(function () {
+   </pre>
+    <pre item_name="delete_express" type="">
+<![CDATA[
 
-    })
-</script>
-<div id="append_foot" class="append">
-</div>
+]]>
+
+   </pre>
+    <pre item_name="status_express" type="">
+<![CDATA[
+
+]]>
+
+   </pre>
+    <pre item_name="displayorder_express" type=""></pre>
+</form>
+<div id="append_foot"></div>
 </body>
 </html>
