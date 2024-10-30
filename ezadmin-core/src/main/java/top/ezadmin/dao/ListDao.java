@@ -399,9 +399,9 @@ public class ListDao extends JsoupUtil {
                         ||StringUtils.equalsIgnoreCase(thMap.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-numbers")
                         ||StringUtils.equalsIgnoreCase(thMap.get(JsoupUtil.BODY_PLUGIN_CODE)+"","td-radio")
                 ){
-                    thMap.put("specialcol",1);
+                    thMap.put(JsoupUtil.SPECIALCOL,1);
                 }else{
-                    thMap.put("specialcol",0);
+                    thMap.put(JsoupUtil.SPECIALCOL,0);
                 }
                 searchConfigList.add(thMap);
 

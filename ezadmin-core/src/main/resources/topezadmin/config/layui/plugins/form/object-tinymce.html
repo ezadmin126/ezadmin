@@ -58,10 +58,10 @@
                     tinymce.init({
                         selector: "textarea#[[${'DESC_ITEM_ID_'+item_name}]]"
                         ,
-                        image_dimensions: false,
-                        object_resizing: false,
-                        image_advtab: false,
-                        extended_valid_elements: 'img[class=tinyimage|src|border=0|alt|title|hspace|vspace|align|onmouseover|onmouseout|name]'
+                        image_dimensions: true,
+                        object_resizing: true,
+                        image_advtab: true//
+                     //  , extended_valid_elements: 'img[class=tinyimage|src|border=0|alt|title|hspace|vspace|align|onmouseover|onmouseout|name]'
                         ,content_style: 'img {max-width:100%;}',
                         language: 'zh_CN'
                         ,
@@ -70,10 +70,10 @@
                         ,
                         width: '100%'
                         ,
-                        plugins: 'code codesample toc wordcount link image media lists advlist table hr emoticons fullscreen print insertdatetime searchreplace batchUploadImage emoticons'
+                        plugins: 'code codesample   wordcount link image media lists advlist table hr emoticons fullscreen print insertdatetime searchreplace batchUploadImage emoticons'
                         ,
                         toolbar: ['styleselect formatselect fontselect fontsizeselect forecolor backcolor fullscreen print',
-                            'code codesample undo redo toc bullist numlist lineheight visualaid bold italic underline strikethrough blockquote subscript superscript  hr removeformat insertdatetime searchreplace emoticons wordcount',
+                            'code codesample undo redo   bullist numlist lineheight visualaid bold italic underline strikethrough blockquote subscript superscript  hr removeformat insertdatetime searchreplace emoticons wordcount',
                             'table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | outdent indent alignleft aligncenter alignright | link image batchUploadImage ']
                         ,
                         form: {

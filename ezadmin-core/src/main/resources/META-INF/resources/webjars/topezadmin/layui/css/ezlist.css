@@ -458,6 +458,15 @@ xm-select > .xm-body .scroll-body{
 }
 
 
+.tableButton  .layui-btn {
+    margin-bottom:0px !important;
+}
+.layui-tab-title{
+    background: #fff;
+    margin-bottom: -5px;
+}
+
+
 
 
 
