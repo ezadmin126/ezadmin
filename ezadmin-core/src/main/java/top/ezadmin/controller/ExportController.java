@@ -85,7 +85,7 @@ import org.springframework.util.CollectionUtils;
                 Map<String,Object> coreMapTemp=(Map<String,Object>)listTemp.get("core");
                 List<Map<String, Object>> dataTemp=(List<Map<String, Object>>)coreMapTemp.get("dataList");
                 fillExcelData(data,dataTemp,colList);
-                log.info("ezadmin finishfill page:{} export {} {} {} {}",currentPage,sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
+               // log.info("ezadmin finishfill page:{} export {} {} {} {}",currentPage,sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
                 dataList=dataTemp;
             }
             List<List<String>> head = new ArrayList<List<String>>();
@@ -114,14 +114,14 @@ import org.springframework.util.CollectionUtils;
                 head1.add(Utils.getStringByObject(col,JsoupUtil.JDBCTYPE));
                 head.add(head1);
             }
-            log.info("ezadmin start export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
+          //  log.info("ezadmin start export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
             String fileName=request.getParameter("EXPORT_FILE_NAME");
             if(StringUtils.isBlank(fileName)){
                 fileName=Utils.getStringByObject(coreMap,"listname");
             }
             EzClientBootstrap.instance().getExport().export(fileName,head,data,response);
             //记录日志
-            log.info("ezadmin end export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
+          //  log.info("ezadmin end export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
 
         }catch (Exception e){
             log.error("",e);

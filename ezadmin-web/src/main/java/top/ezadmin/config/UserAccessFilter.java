@@ -186,11 +186,10 @@ import java.util.regex.Pattern;
         return false;
     }
         private boolean noLogin(HttpServletRequest httpServletRequest,String url) throws Exception {
-
             if( !url.startsWith("/topezadmin")&&!url.startsWith("/ezadmin")) {
                 HandlerExecutionChain handlerExecutionChain = handlerMapping.getHandler(httpServletRequest);
                 if(handlerExecutionChain==null){
-                    logger.warn("handlerExecutionChain null {}"+url);
+                   // logger.warn("handlerExecutionChain null {}"+url);
                     return true;
                 }
                 Object handler = handlerExecutionChain.getHandler();

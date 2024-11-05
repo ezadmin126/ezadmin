@@ -36,7 +36,7 @@ public class EzClientServletFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        LOGGE.info("start init EzAdminFilter" + filterConfig.getInitParameterNames());
+       // LOGGE.info("start init EzAdminFilter" + filterConfig.getInitParameterNames());
         if (ezBootstrap == null) {
             ezBootstrap = EzClientBootstrap.instance();
             String configJson=filterConfig.getInitParameter("configJson");

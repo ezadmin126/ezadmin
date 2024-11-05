@@ -220,7 +220,7 @@ public class JsoupUtil {
 
     public   static String editPath(String pathx) throws IOException {
             String rootPath= projectRootPath();
-        logger.info("rootpath::{}",rootPath);
+      //  logger.info("rootpath::{}",rootPath);
         rootPath= rootPath.substring(0,rootPath.indexOf("target")) +"src"+
                     File.separator+"main"+File.separator+"resources"+File.separator+pathx;
         if(Files.notExists(Paths.get(rootPath))){

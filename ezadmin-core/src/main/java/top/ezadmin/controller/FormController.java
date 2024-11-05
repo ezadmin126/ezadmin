@@ -170,8 +170,7 @@ public class FormController extends BaseController {
         String ENCRYPT_FORM_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
         String ID=getIdInForm(request);
         try {
-
-            logger.info("ezform doSubmit start {} {} ID={}", ENCRYPT_FORM_ID,ID);
+          //  logger.info("ezform doSubmit start {} {} ID={}", ENCRYPT_FORM_ID,ID);
             if ( StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
@@ -210,7 +209,7 @@ public class FormController extends BaseController {
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
             paras.putAll(searchParamsValues);
-            logger.info("ezform doSubmit execute   {} ID={} param={}",  ENCRYPT_FORM_ID,ID, JSONUtils.toJSONString(searchParamsValues));
+           // logger.info("ezform doSubmit execute   {} ID={} param={}",  ENCRYPT_FORM_ID,ID, JSONUtils.toJSONString(searchParamsValues));
             //计算初始化表单的参数值
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
@@ -302,8 +301,8 @@ public class FormController extends BaseController {
 
             Map<String,Object> searchParamsValues=requestToMap(request );
             paras.putAll(searchParamsValues);
-            logger.info("保存表单 {}{}{}",  ENCRYPT_FORM_ID,
-                    ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
+         //   logger.info("保存表单 {}{}{}",  ENCRYPT_FORM_ID,
+            //        ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
             //计算初始化表单的参数值
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
@@ -322,7 +321,7 @@ public class FormController extends BaseController {
             }
             return EzResult.instance().data( toFormId(rowId,request) );
         } catch (Exception e) {
-            logger.info("保存表单失败{}"  ,ENCRYPT_FORM_ID,e);
+            logger.error("保存表单失败{}"  ,ENCRYPT_FORM_ID,e);
             return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常"+ExceptionUtils.getFullStackTrace(e));
         }
     }
