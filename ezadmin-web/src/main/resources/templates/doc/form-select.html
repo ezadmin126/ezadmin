@@ -395,7 +395,8 @@
         </h2>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-<object type="xmselect-cascader"></object>
+<object type="xmselect-cascader" data="select REGION_ID ID,PARENT_ID ,REGION_NAME NAME,100000 as ROOT_ID from T_REGION WHERE (REGION_ID>100000) AND IS_DELETED=0
+" datatype="KVSQL2TREECACHE"></object>
             </textarea>
         </pre>
 
@@ -520,6 +521,12 @@
             <tr>
                 <td>其他</td>
                 <td>参见HTML原生属性</td>
+                <td> </td>
+            </tr>
+
+            <tr>
+                <td>ROOT_ID</td>
+                <td>当使用级联SQL时，自定义根节点ID，默认为0</td>
                 <td> </td>
             </tr>
             </tbody>

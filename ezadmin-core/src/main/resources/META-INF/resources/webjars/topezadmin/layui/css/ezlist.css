@@ -423,7 +423,8 @@ xm-select > .xm-body .scroll-body{
 /**下拉框高度**/
 .el-input__inner {
     height: 38px !important;
-    line-height: 38px
+    line-height: 38px;
+    border-radius: 0px !important;
 }
 .el-cascader__search-input{
     min-width: 20px !important;

@@ -343,7 +343,8 @@ public class ListServiceImpl implements ListService {
                 break;
             case JSON:
             case KVJSONRESULT:
-                data= data.items(JSONUtils.parseListMapString(initData ));
+                ResultModel modelk = CommentsSqlParser.parse(initData,  params);
+                data= data.items(JSONUtils.parseListMapString(modelk.getResult()));
                 break;
             case KVSQL:
                 ResultModel model = CommentsSqlParser.parse(initData,  params);

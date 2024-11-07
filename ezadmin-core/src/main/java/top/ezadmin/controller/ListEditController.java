@@ -76,7 +76,11 @@ public class ListEditController extends BaseController {
             listService.fillCountById(list, requestParamMap, sessionParamMap);
         }
         String adminStyle=Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
-        return adminStyle + "/list";
+        String template=Utils.trimNullDefault(coreMap.get(JsoupUtil.TEMPLATE),EzClientBootstrap.instance().getAdminStyle());
+        if(StringUtils.isBlank(template)){
+            template="list";
+        }
+        return adminStyle + "/"+template;
     }
 
     @EzMapping("loadEdit.html")

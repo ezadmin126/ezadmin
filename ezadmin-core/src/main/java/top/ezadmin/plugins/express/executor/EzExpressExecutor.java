@@ -83,10 +83,13 @@ public   class EzExpressExecutor {
     }
     private static ExpressRunner runner = new ExpressRunner();
 
+
     public static void initSpringFunction(Operator operator){
-        if(runner.getFunction("spring")==null){
-            runner.addFunction("spring",operator);
-        }
+        //if(runner.getFunction("spring")==null){
+        try {
+            runner.addFunction("spring", operator);
+        }catch (Exception e){}
+       // }
     }
     public static void initEnv(String k,Object v){
         envParams.put(k,v);

@@ -71,8 +71,15 @@ public class ListController extends BaseController {
         String username = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY));
         request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
         String adminStyle=Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
-        return adminStyle + "/list";
+        String template=Utils.trimNullDefault(coreMap.get(JsoupUtil.TEMPLATE),EzClientBootstrap.instance().getAdminStyle());
+        if(StringUtils.isBlank(template)){
+            template="list";
+        }
+        return adminStyle + "/"+template;
     }
+
+
+
 
     @EzMapping("count.html")
     public EzResult count(HttpServletRequest request, HttpServletResponse response) throws Exception {

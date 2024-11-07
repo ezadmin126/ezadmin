@@ -59,7 +59,7 @@
                 <!--ID,PARENT_ID,CHILDREN-->
                 <script>
                     var xmel = $('[[${"#itemId-" + item_name}]]');
-                    var initdata = $('[[${"#itemdata-" + item_name}]]').val();
+                    var initdata = $('[[${"#itemdata-" + item_name}]]').val()||[];
                     var initvalue = xmel.attr("value");
                     var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
                     var initArray=initvalue?initvalue.split(","):[];
@@ -101,7 +101,11 @@
                             filterable: true,
                             //height: 'auto',
                             data: function(){
+                                try{
                                 return  JSON.parse(initdata);
+                                }catch (e){
+                                    return [];
+                                }
                             },
                             initValue: initArray
                         })
