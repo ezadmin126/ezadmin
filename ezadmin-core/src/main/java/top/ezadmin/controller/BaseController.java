@@ -80,6 +80,7 @@ public class BaseController {
         searchParamsValues.put("EZ_SESSION_USER_NAME_KEY",Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
         searchParamsValues.put("EZ_CLIENT_IP", IpUtils.getRealIp(request));
         searchParamsValues.put("EZ_REFERER", request.getHeader("referer"));
+        searchParamsValues.put("HttpServletRequest", request);
         return searchParamsValues;
     }
 

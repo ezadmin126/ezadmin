@@ -933,6 +933,13 @@ function openModelReload(url, name, cancel) {
 
 
 function openTab(title, link) {
+    try{
+        if(window.top === window.self){
+            return openBlank(link);
+        }
+    }catch (e) {
+        console.log(e);
+    }
     var uniqueName = link.replace('./', '').replace(/["&'./:=%?[\]]/gi, '-').replace(/(--)/gi, '');
     window.parent.postMessage({
         from: 'ez',

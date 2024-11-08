@@ -32,7 +32,7 @@ public class ListDao extends JsoupUtil {
             "fixnumber","fixnumberright","success_url",
             "empty_show","tablestyle","adminstyle","pagesync",
             "firstcol","export","cellminwidth","linestyle","rowbtnwidth","layout"
-            ,"expandedMode"
+            ,"expandedMode",JsoupUtil.TEMPLATE
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
             JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,
@@ -70,15 +70,6 @@ public class ListDao extends JsoupUtil {
     public void init()   {
         loadAllLists( );
     }
-
-
-
-
-//    public static  boolean isImageTd(Element th){
-//        String plugin= Utils.trimNull(th.attr(JsoupUtil.BODY_PLUGIN_CODE));
-//        return  "td-pic".equals(plugin)||
-//                "td-image".equals(plugin);
-//    }
 
     /**
      * 靠左靠右 排序 宽度
