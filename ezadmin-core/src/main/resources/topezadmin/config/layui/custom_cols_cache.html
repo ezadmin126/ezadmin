@@ -49,8 +49,8 @@
 <div class="layui-container">
     <blockquote class="layui-elem-quote">
         <p>- 勾选字段控制显示与隐藏</p>
-        <p>- 拖拽字段控制排序</p>
-        <p>- 原列表表头也可以自定义列宽与排序</p>
+        <p>- 拖拽字段名控制字段排序</p>
+        <p>- 移动列表表头控制列宽</p>
     </blockquote>
     <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
     <input type="hidden" name="IS_DEBUG" id="IS_DEBUG" th:value="${IS_DEBUG}">
@@ -97,7 +97,7 @@
             </div>
 
             <div class="layui-card-body layui-row layui-col-space15 columnDrage">
-                <div class="layui-col-md3 " th:each="item,idx:${fromColField}" th:classappend="${item.specialcol =='1' ||  #strings.isEmpty(item.fixed) ?'':'move'  }"
+                <div class="layui-col-md3 move" th:each="item,idx:${fromColField}" th:classappend="${item.specialcol =='1' ||  #strings.isEmpty(item.fixed) ?'':'move'  }"
                      th:ITEM_NAME="${item.item_name}"  th:if="${ item.specialcol == 0 &&  #strings.isEmpty(item.fixed) }">
                     <div class="layui-form-item "    >
                         <label class="layui-form-label"  th:title="${item.label}"

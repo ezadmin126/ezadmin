@@ -30,7 +30,7 @@
 </head>
 <body th:utext="${form.core.bodyTag}" th:remove="tag"> </body>
 [(${form.core.append_head})]
-    <form ID="inputForm" method="post" style="padding-bottom: 50px;" class="  layui-form"  >
+    <form ID="inputForm" method="post" style="padding-bottom: 50px;" class="  layui-form"  lay-filter="inputForm" >
         <div class="layui-panel formtopfix formtopfixbuttons"  >
             <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer">
                 <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue " lay-submit
@@ -94,9 +94,9 @@
 </form>
 <!--<div class="layui-panel  formtopfix formtopfixbottom" style="height:58px">-->
 <!--</div>-->
-<div class="layuimini-loader"  >
-    <div class="layuimini-loader-inner"></div>
-</div>
+<!--<div class="layuimini-loader"  >-->
+<!--    <div class="layuimini-loader-inner"></div>-->
+<!--</div>-->
 </body>
 <div>
     <div>

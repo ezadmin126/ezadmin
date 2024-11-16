@@ -34,7 +34,10 @@ public class FormController extends BaseController {
     //
     @EzMapping(value = "trace.html", name = "view")
     public String trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        long start=System.currentTimeMillis();
+
             String result=form(request,response);
+        Utils.addLog("form cost:"+(System.currentTimeMillis()-start));
             return EzClientBootstrap.instance().getAdminStyle()+"/form";
     }
     @EzMapping(value = "form.html", name = "view")

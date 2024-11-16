@@ -13,6 +13,7 @@
         <div class="ws-side-fixed">
             <div class="ws-dir">
                 <ul class="ws-dir-ul">
+                    <li><a href="#pub">公共配置</a></li>
                     <li><a href="#select">原生下拉框</a></li>
                     <li ><a href="#select-search">搜索下拉框</a></li>
                     <li ><a href="#select-span">下拉纯文本</a></li>
@@ -20,10 +21,12 @@
                     <li ><a href="#xmselectcascader">下拉级联</a></li>
                     <li ><a href="#xmselecttree">下拉树</a></li>
 <!--                    <li ><a href="#cascader">eleme 下拉级联</a></li>-->
-<!--                    <li ><a href="#cascadersql">eleme SQL下拉级联</a></li>-->
+
                     <li ><a href="#radio">单选</a></li>
                     <li ><a href="#checkbox">复选</a></li>
                     <li ><a href="#checkbox-tag">标签复选</a></li>
+                    <li ><a href="#cascadersql">eleme SQL下拉级联</a></li>
+                    <li ><a href="#xmselect-remote">下拉远程搜索</a></li>
                 </ul>
             </div>
         </div>
@@ -33,6 +36,20 @@
         <blockquote class="layui-elem-quote">
 系统内置了多种下拉框，满足大部分业务场景,同时支持html原生的属性。
         </blockquote>
+        <h2 id="pub"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            公共配置
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+           <textarea>  回调函数：选中之后，xmselect的回调函数是没有提供单独的接口的。
+            所以需要在节点上 配置 on属性。
+            比如：
+            <object on="abc" type=xmselect>
+            再写一个js函数：
+               function abc(data){
+                  就能获取相关的数据了。
+               }
+             </textarea>
+        </pre>
         <h2 id="select"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
             原生下拉框
         </h2>
@@ -395,7 +412,8 @@
         </h2>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-<object type="xmselect-cascader"></object>
+<object type="xmselect-cascader" data="select REGION_ID ID,PARENT_ID ,REGION_NAME NAME,100000 as ROOT_ID from T_REGION WHERE (REGION_ID>100000) AND IS_DELETED=0
+" datatype="KVSQL2TREECACHE"></object>
             </textarea>
         </pre>
 
@@ -522,10 +540,69 @@
                 <td>参见HTML原生属性</td>
                 <td> </td>
             </tr>
+
+            <tr>
+                <td>ROOT_ID</td>
+                <td>当使用级联SQL时，自定义根节点ID，默认为0</td>
+                <td> </td>
+            </tr>
             </tbody>
         </table>
 
+        <h2 id="cascadersql"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            饿了么下拉级联
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<object type="cascadersql" data="select REGION_ID ID,PARENT_ID ,REGION_NAME LABEL,100000 as ROOT_ID from T_REGION WHERE (REGION_ID>100000) AND IS_DELETED=0
+" datatype="KVSQL2TREECACHE"></object>
+            </textarea>
+        </pre>
 
+        <h2 id="xmselect-remote"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            饿了么下拉级联
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<div class="layui-form-item" col="12">
+      <label>归属人</label>
+      <div>
+       <object toolbar="false" item_name="uuid" placeholder="select" id="itemId-uuid" type="xmselect-remote" url="/xmremote" on="selectuuid" radio="true"> </object>
+      </div>
+     </div>
+ 返回数据示例：
+                {
+    "code": "0",
+    "success": true,
+    "message": null,
+    "count": 100,
+    "data": [
+        {
+            "V": "a",
+            "K": "1"
+        },
+        {
+            "V": "b",
+            "K": "2"
+        },
+        {
+            "V": "c",
+            "K": "3"
+        }
+    ]
+}
+  function      selectuuid(data){
+//arr:  当前多选已选中的数据
+                            var arr = data.arr;
+                            //change, 此次选择变化的数据,数组
+                            var change = data.change;
+                            //isAdd, 此次操作是新增还是删除
+                            var isAdd = data.isAdd;
+
+                }
+
+            </textarea>
+        </pre>
 
 
     </div>

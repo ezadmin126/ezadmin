@@ -23,7 +23,7 @@ public class TraceLogFilter  extends Filter {
 
     public void doFilter(HttpServletRequest request , HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         boolean include=include(request.getRequestURI());
-
+        long start=System.currentTimeMillis();
         try {
             if (include||
                     StringUtils.equals(request.getParameter("trace"),"1")
@@ -33,6 +33,11 @@ public class TraceLogFilter  extends Filter {
              getNext().doFilter(request,response,filterChain) ;
 
         }finally {
+            if (include||
+                    StringUtils.equals(request.getParameter("trace"),"1")
+                    || StringUtils.equals(request.getParameter("trace"),"1")) {
+                Utils.addLog("cost:"+(System.currentTimeMillis()-start));
+            }
             if(Utils.getLog()!=null) {
                 WebContext context = new WebContext(request, response, request.getServletContext());
                 try {

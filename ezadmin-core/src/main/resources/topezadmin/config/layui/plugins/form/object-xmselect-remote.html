@@ -54,18 +54,20 @@
                         th:utext="${top_desc}" style="float:none"
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
-                <div th:itemsJson="${itemsJson}" th:url="${url}" th:id="${'itemId-' + item_name}" th:name="${item_name}"
-                     th:value="${#strings.isEmpty(value)?'[]':'['+value+']'}"></div>
+                [(${serverDom})]
+                <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}" >
+
 
                 <script>
                     var xmel = $('[[${"#itemId-" + item_name}]]');
-                    var initdata = xmel.attr("itemsJson");
-                    var initUrl = xmel.attr("url");
-                    var initvalue = xmel.attr("value");
+                   // var initdata = xmel.attr("itemsJson");
+                  //  var initUrl = xmel.attr("url");
+                    var initvalue = xmel.attr("value")||[];
+                    var toolbar=xmel.attr("toolbar")||'true';
                     var xmselect = xmSelect.render({
                         el: '[[${"#itemId-" + item_name}]]',
                         toolbar: {
-                            show: true,
+                            show: (xmel.attr("toolbar")||'true')=='true',
                             list: ['ALL', 'REVERSE', 'CLEAR']
                         },
                         language: 'zn',
@@ -79,25 +81,49 @@
                         },theme: {
                             color: '#1e9fff',
                         },
+                        data: function(){
+                            try{
+                            return  JSON.parse($('[[${"#itemdata-" + item_name}]]').val()||'[]');
+                            }catch (e) {
+                                return [];
+                            }
+                        },
+                        radio:  ( $('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
+                        clickClose: ( $('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
                         name: '[[${item_name}]]',
                         tips: '[[${#strings.isEmpty(placeholder)?"请选择":placeholder}]]',
                         remoteSearch: true,
-                        remoteMethod: function(val, cb, show){
-                            var param={ keyword: val}
-                            $.post(initUrl , param, function(response) {
-                                if(response.success){
-                                    var res = response.data;
-                                    cb(res.data)
+                        //开启分页
+                        paging: (xmel.attr("paging")||'false')=='true',
+                        //远程分页
+                        pageRemote: (xmel.attr("paging")||'false')=='true',
+                        pageSize: xmel.attr("pagesize")||10,
+                        remoteMethod: function(val, cb, show,pageIndex){
+                            if(val==''){
+                                cb([],0);
+                               return;
+                            }
+                            let param={ keyword: val,pageIndex:pageIndex};
+                            $.post(xmel.attr("url") , param, function(response) {
+                                if(response.success&&response.data!=''){
+                                    try{
+
+                                        cb(response.data,response.count)
+                                    }catch (e) {
+                                        debugger
+                                        console.log(res);
+                                        console.log(e);
+                                    }
                                 } else {
-                                    cb([]);
+                                    cb([],0);
                                     console.log(response.message);
                                 }
                             }, 'json').fail(function () {
-                                cb([]);
+                                cb([],0);
                                 console.log("error");
                             });
                         },
-                        initValue: JSON.parse(initvalue),
+                        initValue: $('[[${"#itemId-" + item_name}]]').attr("value")? $('[[${"#itemId-" + item_name}]]').attr("value").split(","):[],
                         create: function(val, arr){
                                 if(arr.length === 0){
                                     return {
@@ -105,6 +131,18 @@
                                         K: val
                                     }
                                 }
+                        },on: function(data){
+                            //arr:  当前多选已选中的数据
+                            var arr = data.arr;
+                            //change, 此次选择变化的数据,数组
+                            var change = data.change;
+                            //isAdd, 此次操作是新增还是删除
+                            var isAdd = data.isAdd;
+
+                            var functionName=xmel.attr("on")
+                            if (functionName&&window[functionName]) {
+                                    window[functionName](data);
+                            }
                         }
                     })
                 </script>

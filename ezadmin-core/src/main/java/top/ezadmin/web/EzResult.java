@@ -52,6 +52,16 @@ public class EzResult {
         ((HashMap<String,Object>)data).put(k,v);
         return this;
     }
+    public EzResult dataKVList(String k,Object v){
+        if(data==null){
+            data=new ArrayList<HashMap<String,Object>>();
+        }
+        Map<String,Object> kvmap=new HashMap<String,Object>();
+        kvmap.put("K",k);
+        kvmap.put("V",v);
+        ((ArrayList)data).add(kvmap);
+        return this;
+    }
     public EzResult fail(){
         this.code="500";
         success=false;

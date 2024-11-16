@@ -146,6 +146,26 @@ small {
     font-weight: 700
 }
 
+.el-input__inner {
+    height: 38px !important;
+    line-height: 38px;
+    border-radius: 0px !important;
+}
+.el-cascader__search-input{
+    min-width: 20px !important;
+    /*margin-left:0px !important; 防止遮挡*/
+}
+.el-cascader__tags
+{
+    flex-wrap: nowrap !important;
+}
+.el-input__suffix{
+    z-index: 9999;
+}
+
+
+
+
 .layui-card-header>.layui-icon{
     position: absolute;
     right: 15px;

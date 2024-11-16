@@ -337,7 +337,11 @@ public class Utils {
     }
     public static List<Map<String,Object>> flatTree(List<Map<String,Object>> list){
         Map  root=new HashMap();
+
         root.put("ID","0");
+        if(list.size()>0&&list.get(0).containsKey("ROOT_ID")){
+            root.put("ID",list.get(0).get("ROOT_ID"));
+        }
         flatTree2(root,list);
         return (List<Map<String,Object>>)root.get("CHILDREN");
     }
@@ -385,6 +389,12 @@ public class Utils {
 
 
     public static Integer toInt(Object traderId) {
+        return NumberUtils.toInt(traderId+"");
+    }
+    public static Integer toIntWithNull(Object traderId) {
+        if(traderId==null||StringUtils.isBlank(traderId+"")){
+            return null;
+        }
         return NumberUtils.toInt(traderId+"");
     }
 

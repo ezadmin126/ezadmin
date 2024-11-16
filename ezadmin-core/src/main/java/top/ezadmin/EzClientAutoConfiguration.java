@@ -8,7 +8,6 @@ import top.ezadmin.web.SpringBeanOperator;
 import top.ezadmin.web.SpringContextHolder;
 
 
-import top.ezadmin.web.filters.EzClientServletFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -118,7 +117,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
     @Bean
     public FilterRegistrationBean  ezClientFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        EzClientServletFilter customURLFilter = new EzClientServletFilter();
+        top.ezadmin.web.filters.EzClientServletFilter customURLFilter = new top.ezadmin.web.filters.EzClientServletFilter();
         customURLFilter.setEzBootstrap(ezClientBootstrap());
         registrationBean.setFilter(customURLFilter);
         registrationBean.addUrlPatterns("/topezadmin/*","/ezadmin/*","/ezcloud/*");

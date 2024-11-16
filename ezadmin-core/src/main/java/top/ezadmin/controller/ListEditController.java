@@ -76,7 +76,8 @@ public class ListEditController extends BaseController {
             listService.fillCountById(list, requestParamMap, sessionParamMap);
         }
         String adminStyle=Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
-        return adminStyle + "/list";
+        String template=Utils.trimNullDefault(coreMap.get(JsoupUtil.TEMPLATE),"list");
+        return adminStyle + "/"+template;
     }
 
     @EzMapping("loadEdit.html")
@@ -99,12 +100,14 @@ public class ListEditController extends BaseController {
             list.put("rowbtn",new ArrayList<>());
             list.put("col",new ArrayList<>());
             Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
-            coreMap.put(JsoupUtil.ADMINSTYLE,"layui");
+            coreMap.put(JsoupUtil.ADMINSTYLE,"layui"); //编辑状态使用layui
+            coreMap.put(JsoupUtil.TEMPLATE,"list");
             coreMap.put(JsoupUtil.APPEND_HEAD,"");
             coreMap.put(JsoupUtil.APPEND_FOOT,"");
         }else{
             Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
             coreMap.put(JsoupUtil.ADMINSTYLE,"layui");
+            coreMap.put(JsoupUtil.TEMPLATE,"list");
             coreMap.putIfAbsent(JsoupUtil.APPEND_HEAD,"");
             coreMap.putIfAbsent(JsoupUtil.APPEND_FOOT,"");
         }

@@ -32,7 +32,7 @@ public class ListDao extends JsoupUtil {
             "fixnumber","fixnumberright","success_url",
             "empty_show","tablestyle","adminstyle","pagesync",
             "firstcol","export","cellminwidth","linestyle","rowbtnwidth","layout"
-            ,"expandedMode"
+            ,"expandedMode",JsoupUtil.TEMPLATE
     };
     private static  String [] colNames=new String[]{ JsoupUtil.ITEM_NAME,
             JsoupUtil.URL, JsoupUtil.HEAD_PLUGIN_CODE,
@@ -58,6 +58,7 @@ public class ListDao extends JsoupUtil {
             ,JsoupUtil.TOP_DESC,JsoupUtil.ITEM_DESC,JsoupUtil.RIGHT_DESC
             ,JsoupUtil.ALIAS,JsoupUtil.ALIGN,JsoupUtil.HELP,JsoupUtil.TYPE,JsoupUtil.COL
             ,JsoupUtil.DISPLAY ,JsoupUtil.CLASS ,"importname" ,"importtips" ,"importservice"
+            ,JsoupUtil.AREA
     };
     private ListDao() {
 
@@ -70,15 +71,6 @@ public class ListDao extends JsoupUtil {
     public void init()   {
         loadAllLists( );
     }
-
-
-
-
-//    public static  boolean isImageTd(Element th){
-//        String plugin= Utils.trimNull(th.attr(JsoupUtil.BODY_PLUGIN_CODE));
-//        return  "td-pic".equals(plugin)||
-//                "td-image".equals(plugin);
-//    }
 
     /**
      * 靠左靠右 排序 宽度
@@ -340,7 +332,10 @@ public class ListDao extends JsoupUtil {
             try {
                 json.put("title","操作");
                 //默认两个按钮的宽度，每个按钮两个字
-                json.put("width",Math.max(NumberUtils.toInt(json.get("width")+""),150));
+              //  json.put("width",Math.max(NumberUtils.toInt(json.get("width")+""),150));
+                if(StringUtils.isBlank(Utils.trimNull(json.get("width")))){
+                    json.put("width",150);
+                }
                 coreMap.put(JsoupUtil.LAYDATA, JSONUtils.toJSONString(json));
                 //确保其他ui框架能获取到宽度。
                 coreMap.put("rowbtnwidth",Utils.trimEmptyDefault(rowbutton.attr("width"),"175"));

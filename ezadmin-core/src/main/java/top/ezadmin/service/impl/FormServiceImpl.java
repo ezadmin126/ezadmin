@@ -233,7 +233,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                                     v=k;
 
                                 }
-                                if(StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
+                                if(
+
+                                        StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
                                     ;return;
                                 }
                                 sb.append(k);
@@ -277,6 +279,36 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             context.setVariable("serverDom",sb.toString());
                             context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
                         }
+                        else if(Utils.trimNull(item.get("type")).equals("cascader")){
+                            Map<String,String> attrMap= (Map<String,String>)item.get("attrMap");
+                            attrMap.put("value", StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName())+""));
+                            attrMap.put("name",item.get(JsoupUtil.ITEM_NAME)+"");
+                            //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
+                            attrMap.putIfAbsent("id","ITEM_ID_"+item.get(JsoupUtil.ITEM_NAME));
+                            attrMap.putIfAbsent("lay-affix","clear" );
+                            attrMap.putIfAbsent("lay-verify",attrMap.get(JsoupUtil.LAYVERIFY) );
+                            attrMap.put("class","layui-input ez-laycascader "+(Utils.trimNull(attrMap.get("class")).replace("ez-laycascader","").replace("layui-input","")) );
+                            StringBuilder sb=new StringBuilder("<input ");
+                            attrMap.forEach((k,v)->{
+                                if(k.equalsIgnoreCase("readonly")||k.equalsIgnoreCase("disabled")){
+                                    v=k;
+
+                                }
+                                if(StringUtils.equals(k,"type")||
+                                        StringUtils.equals(k,"valid_msg")||
+                                        StringUtils.equals(k,"valid_rule")||
+                                        StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
+                                    ;return;
+                                }
+                                sb.append(k);
+                                sb.append("='");
+                                sb.append(v);
+                                sb.append("'  ");
+                            });
+                            sb.append(" type='text'>");
+                            context.setVariable("serverDom",sb.toString());
+                            context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
+                       }
 
                         try {
                             String template= Utils.trimNull(plugin.get("PLUGIN_BODY"));

@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public class JsoupUtil {
+    //自定义的模版
+    public static final String TEMPLATE = "template";
     protected static final String HREF ="href" ;
     protected static final String COL = "col";
     public static final String TYPE ="type" ;
