@@ -59,52 +59,57 @@
                 <!--ID,PARENT_ID,CHILDREN-->
                 <script>
                     var xmel = $('[[${"#itemId-" + item_name}]]');
-                    var initdata = $('[[${"#itemdata-" + item_name}]]').val();
+                   // var initdata = $('[[${"#itemdata-" + item_name}]]').val();
                     var initvalue = xmel.attr("value");
                     var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
                     var initArray=initvalue?initvalue.split(","):[];
                     $(function(){
-                        xmSelect.render({
-                            el: '[[${"#itemId-" + item_name}]]',
-                            autoRow: false,
-                            name:'[[${item_name}]]',
-                            filterable: true,
-                            showCount:  xmel.attr("showCount")||5,
-                            max: xmel.attr("max")||100,
-                            radio:  ($('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
-                            prop: {
-                                name: 'NAME',
-                                value: 'ID',
-                                selected:"checked",
-                                disabled:"disabled",
-                                children:"CHILDREN",
-                                optgroup:"optgroup",
-                            },theme: {
-                                color: '#1e9fff',
-                            },
-                            cascader: {
-                                show: true,
-                                indent: 200,
-                                strict:strict,
-                            },
-                            // tree: {
-                            //     show: true,
-                            //     showFolderIcon: true,
-                            //     showLine: true,
-                            //     indent: 20,
-                            //     expandedKeys: [ -3 ],
-                            // },
-                            toolbar: {
-                                show: true,
-                                list: ['ALL', 'REVERSE', 'CLEAR']
-                            },
-                            filterable: true,
-                            //height: 'auto',
-                            data: function(){
-                                return  JSON.parse(initdata);
-                            },
-                            initValue: initArray
-                        })
+                        try {
+                            xmSelect.render({
+                                el: '[[${"#itemId-" + item_name}]]',
+                                autoRow: false,
+                                name: '[[${item_name}]]',
+                                filterable: true,
+                                showCount: xmel.attr("showCount") || 5,
+                                max: xmel.attr("max") || 100,
+                                radio: ($('[[${"#itemId-" + item_name}]]').attr("radio") || "false").toLowerCase() === "false" ? false : true,
+                                prop: {
+                                    name: 'NAME',
+                                    value: 'ID',
+                                    selected: "checked",
+                                    disabled: "disabled",
+                                    children: "CHILDREN",
+                                    optgroup: "optgroup",
+                                }, theme: {
+                                    color: '#1e9fff',
+                                },
+                                cascader: {
+                                    show: true,
+                                    indent: 200,
+                                    strict: strict,
+                                },
+                                // tree: {
+                                //     show: true,
+                                //     showFolderIcon: true,
+                                //     showLine: true,
+                                //     indent: 20,
+                                //     expandedKeys: [ -3 ],
+                                // },
+                                toolbar: {
+                                    show: true,
+                                    list: ['ALL', 'REVERSE', 'CLEAR']
+                                },
+                                filterable: true,
+                                //height: 'auto',
+                                data: function () {
+                                    return JSON.parse($('[[${"#itemdata-" + item_name}]]').val() || []);
+                                    //  JSON.parse(initdata);
+                                },
+                                initValue: initArray
+                            })
+                        }catch (e) {
+                            console.log("级联xm初始化异常"+e)
+                        }
                     })
                 </script>
 
