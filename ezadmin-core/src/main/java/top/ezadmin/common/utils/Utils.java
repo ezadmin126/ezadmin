@@ -391,6 +391,12 @@ public class Utils {
     public static Integer toInt(Object traderId) {
         return NumberUtils.toInt(traderId+"");
     }
+    public static Integer toIntWithNull(Object traderId) {
+        if(traderId==null||StringUtils.isBlank(traderId+"")){
+            return null;
+        }
+        return NumberUtils.toInt(traderId+"");
+    }
 
     public static Long toLong(Object traderId) {
         return NumberUtils.toLong(traderId+"");

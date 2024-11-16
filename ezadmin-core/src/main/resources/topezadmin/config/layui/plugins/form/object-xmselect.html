@@ -75,6 +75,7 @@
                             color: '#1e9fff',
                         },
                         radio:  ( $('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
+                        clickClose: ( $('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
                         name: '[[${item_name}]]',
                         tips: '[[${#strings.isEmpty(placeholder)?"请选择":placeholder}]]',
                         data: function(){

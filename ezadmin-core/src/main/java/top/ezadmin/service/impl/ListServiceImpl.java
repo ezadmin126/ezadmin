@@ -348,8 +348,10 @@ public class ListServiceImpl implements ListService {
                 break;
             case KVSQL:
                 ResultModel model = CommentsSqlParser.parse(initData,  params);
-                List<Map<String, Object>> keyvalues = dao.executeQuery(datasource, model.getResult(), null);
-                data=data.items(keyvalues);
+                if(!model.getResult().contains("${")){
+                    List<Map<String, Object>> keyvalues = dao.executeQuery(datasource, model.getResult(), null);
+                    data=data.items(keyvalues);
+                }
                 break;
             case KVSQLCACHEFOREVER:
                 data=kvSqlCache(  initData,  params,  datasource,"0");

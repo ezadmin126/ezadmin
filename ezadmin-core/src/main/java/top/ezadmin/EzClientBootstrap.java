@@ -4,6 +4,7 @@
 
 package top.ezadmin;
 
+import org.springframework.context.ApplicationContext;
 import top.ezadmin.dao.FormDao;
 import top.ezadmin.dao.ListDao;
  import top.ezadmin.dao.PluginsDao;
@@ -12,6 +13,7 @@ import top.ezadmin.plugins.export.EzExport;
 import top.ezadmin.plugins.refresh.EzRefresh;
 import top.ezadmin.plugins.sqlog.EzSqlogDataSource;
 import top.ezadmin.web.Config;
+import top.ezadmin.web.SpringContextHolder;
 import top.ezadmin.web.filters.ez.ControllerFilter;
 import top.ezadmin.web.filters.ez.Filter;
 import top.ezadmin.web.filters.ez.NotFoundFilter;
@@ -268,6 +270,9 @@ public class EzClientBootstrap {
         }catch (Exception e){
             log.error("start init    ",e);
         }
+    }
+    public void initSpring(ApplicationContext applicationContext1){
+        SpringContextHolder.init(applicationContext1);
     }
 
     public EzCache getCache() {

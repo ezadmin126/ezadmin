@@ -7,7 +7,8 @@ $(function () {
     var config = {
         ignore: "",
         onfocusout: function (element) {
-            $(element).valid();
+             $(element).valid();
+           // this.element(element);
         },
         // 其他验证选项...
         invalidHandler: function(event, validator) {
@@ -28,12 +29,11 @@ $(function () {
         errorElement: 'span',
         errorPlacement: function (error, element) {
             error.addClass('invalid-feedback');
-            element.parent().append(error);
-            // if(.find(".errorContainer")){
-            //
-            // }else{
-            //     error.insertAfter(element);//错误提示要放到下方
-            // }
+            if(element.parent().prop('tagName')=='XM-SELECT'){
+                element.parent().parent().append(error);
+            }else{
+                element.parent().append(error);
+            }
         },
         highlight: function (element, errorClass, validClass) {
             $(element).addClass('is-invalid');
@@ -155,6 +155,9 @@ $(function () {
         //允许, 货币格式
         return this.optional(element) || /^([1-9]{1}[0-9]{0,3}(\,[0-9]{3,4})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(value);
     });
+    $.validator.addMethod("url", function() {
+        return true; // 始终返回 true，表示通过
+    }, "Please enter a valid URL.");
     $("#inputForm").validate(config);
 
 
@@ -173,7 +176,7 @@ $(function () {
 
 
     //end
-    $('.layuimini-loader').fadeOut();
+   // $('.layuimini-loader').fadeOut();
 })
 
 

@@ -422,8 +422,7 @@ function renderCascader(cas) {
         try {
             var layCascader = layui.layCascader;
             var _this = $(cas);
-            var url = _this.attr("ez_url");
-            var ezurl = _this.attr("ezlist_url");
+            var url = _this.attr("url");
             var value = _this.attr("ez_value") || 'VALUE';
             var label = _this.attr("ez_label") || 'LABEL';
             var children = _this.attr("ez_children") || 'CHILDREN';
@@ -437,58 +436,51 @@ function renderCascader(cas) {
             var showAllLevels = istrue(_this.attr("showalllevels"));
             var span = ('true' == _this.attr("span"));
 
-            if (url || ezurl) {
-                $.get(url || ezurl, function (data) {
-                    var res = data.data;
-                    var prop = {};
-                    prop.value = value;
-                    prop.label = label;
-                    prop.children = children;
-                    prop.multiple = multiple;
-                    //prop.disabled = disable_flag=="true";
+            if (url) {
 
-                    if (ezurl) {
-                        res = flatToTree(res, 0);
-                    }
-                    var cc = layCascader({
-                        elem: _this[0],
-                        props: prop,
-                        filterable: true,
-                        // filterMethod: function (node, val) {//重写搜索方法。
-                        //     if (val == node.data[label]) {//把value相同的搜索出来
-                        //
-                        //         return true;
-                        //     }
-                        //     if ((node.data[label] + node.data[label]).indexOf(val) != -1) {//名称中包含的搜索出来
-                        //         return true;
-                        //     }
-                        //     //  console.log(node.data.orgName+node.data.orgNames+'##'+(node.data.orgId+'').indexOf(val));
-                        //     return !ezpingyin(val, (node.data[label] + node.data[label]), (node.data[value] + ''));
-                        // },
-                        clearable: true,
-                        placeholder: itemPlaceholder,
-                        collapseTags: collapseTags,
-                        showAllLevels: showAllLevels,
-                        disabled : disable_flag=="true",
-                        value: paramValue,
+                $.post(url, {}, function(response) {
+                    if(response.success){
+                        var res = response.data;
+                        var prop = {};
+                        prop.value = value;
+                        prop.label = label;
+                        prop.children = children;
+                        prop.multiple = multiple;
 
-                        options: res
-                    });
-                    if (span) {
-                        //回显 laycascader
-                        var c = $("#" + _this.attr("id")).parent();
-                        var text = ''
-                        if (multiple) {
-                            text = c.find(".el-cascader").text();
+                        var cc = layCascader({
+                            elem: _this[0],
+                            props: prop,
+                            filterable: true,
+                            clearable: true,
+                            placeholder: itemPlaceholder,
+                            collapseTags: collapseTags,
+                            showAllLevels: showAllLevels,
+                            disabled : disable_flag=="true",
+                            value: paramValue,
+                            options: res
+                        });
+                        if (span) {
+                            //回显 laycascader
+                            var c = $("#" + _this.attr("id")).parent();
+                            var text = ''
+                            if (multiple) {
+                                text = c.find(".el-cascader").text();
 
-                        } else {
-                            text = c.find(".el-input__inner").attr("label")
+                            } else {
+                                text = c.find(".el-input__inner").attr("label")
 
+                            }
+                            c.html(
+                                "<span class='layui-text form-block-span'>" + text + "</span>")
                         }
-                        c.html(
-                            "<span class='layui-text form-block-span'>" + text + "</span>")
+                    }else{
+
                     }
-                })
+
+                }, 'json').fail(function () {
+                    console.log("error");
+                });
+
             } else if (itemsJson) {
                 var res = JSON.parse(itemsJson);
                 var prop = {};
