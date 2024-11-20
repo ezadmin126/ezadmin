@@ -176,7 +176,17 @@ var shortcut = [
     }
 ];
 
-var rangeShortCut=[
+var rangeShortCut=[{
+    text: "昨天",
+    value: function(){
+        var today = new Date();
+        const preday = new Date(today.getTime() - (  24 * 60 * 60 * 1000));
+        return [
+            preday,
+            preday
+        ];
+    }
+} ,
     {
         text: "上周",
         value: function(){

@@ -123,6 +123,19 @@ public class ListServiceImpl implements ListService {
            return " ";
        }
     }
+    private Object executepress(String exp, Map<String, Object> request  )   {
+        try {
+
+            ListExpressExecutor groupExe = ListExpressExecutor.createInstance();
+            groupExe.express(exp);
+            groupExe.addRequestParam( request);
+            Object obj = groupExe.execute();
+            return obj;
+        }catch (Exception e){
+            LOG.error("EZADMIN   group by 配置错误   ,",   e);
+            return " ";
+        }
+    }
 
 
     private String transSqlToQl(String ql){
@@ -861,6 +874,14 @@ public class ListServiceImpl implements ListService {
                 table.put(JsoupUtil.URL,MapParser.parseDefaultEmpty(getString(table,JsoupUtil.URL), requestParamMap).getResult());
                 table.put(JsoupUtil.WINDOW_NAME,MapParser.parseDefaultEmpty(getString(table,JsoupUtil.WINDOW_NAME), requestParamMap).getResult());
                 table.put(JsoupUtil.EZ_CALLBACK,Utils.trimNull(requestParamMap.get(JsoupUtil.EZ_CALLBACK)));
+                String display=getString(table,JsoupUtil.DISPLAY);
+                if(StringUtils.isNotBlank(display)){
+                    //
+                    if(Utils.trimNull(executepress(display,requestParamMap)).equals("0")||
+                            Utils.trimNull(executepress(display,requestParamMap)).equals("none")){
+                        continue;
+                    }
+                }
 
                 table.put("importservice",MapParser.parseDefaultEmpty(getString(table,"importservice"), requestParamMap).getResult());
                 table.put("importtips",MapParser.parseDefaultEmpty(getString(table,"importtips"), requestParamMap).getResult());

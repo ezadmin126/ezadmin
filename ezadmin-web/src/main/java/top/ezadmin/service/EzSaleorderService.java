@@ -41,6 +41,10 @@ public class EzSaleorderService {
     @Resource
     BaseUnitMapper baseUnitMapper;
 
+    public Object exe(String express){
+            return express;
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public void doUpdate(Map<String, Object> request){
         log.info("add order:{}",JSONUtils.toJSONString(request));
