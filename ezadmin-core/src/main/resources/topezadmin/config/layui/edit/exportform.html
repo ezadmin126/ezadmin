@@ -150,7 +150,7 @@
     layui.jquery(document).on("click","#publish",function(){
         var code = editor.getValue();
         layer.prompt({title: '请输入发布说明', formType: 2}, function(value, index, elem){
-            if(value === '') return elem.focus();
+          //  if(value === '') return elem.focus();
            // layer.msg('获得：'+ util.escape(value)); // 显示 value
             $.post("/topezadmin/formEdit/publish-"+$("#ezCode").val(),
                 {data:editor.getValue(),cloudId:$("#cloudId").val(),EZ_TYPE:$("#ezType").val()

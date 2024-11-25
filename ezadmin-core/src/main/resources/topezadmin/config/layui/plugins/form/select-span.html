@@ -40,7 +40,7 @@
     >
         <div class="layui-form-item ">
             <label class="layui-form-label  "  th:if="${not #strings.isEmpty(label)}" >
-                <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
                    class="ez-help layui-icon-help layui-icon"

@@ -10,6 +10,7 @@ $(function () {
              $(element).valid();
            // this.element(element);
         },
+        onkeyup: false,
         // 其他验证选项...
         invalidHandler: function(event, validator) {
             // 找到第一个错误的元素
@@ -40,7 +41,11 @@ $(function () {
         },
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass('is-invalid');
-            $(element).parent().find(".error").remove();
+            if($(element).parent().prop('tagName')=='XM-SELECT'){
+                $(element).parent().parent().find(".error").remove();
+            }else{
+                $(element).parent().find(".error").remove();
+            }
         },
         submitHandler: function (form) {
             if (!canEzFormSubmit){

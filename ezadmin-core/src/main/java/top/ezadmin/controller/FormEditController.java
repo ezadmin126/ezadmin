@@ -337,7 +337,7 @@ public class FormEditController extends BaseController {
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
             paras.putAll(searchParamsValues);
-            logger.info("ezform doSubmit execute   {} ID={} param={}",  ENCRYPT_FORM_ID,ID, JSONUtils.toJSONString(searchParamsValues));
+            logger.info("ezform doSubmit execute   {} ID={} param={}",  ENCRYPT_FORM_ID,ID );
             //计算初始化表单的参数值
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)

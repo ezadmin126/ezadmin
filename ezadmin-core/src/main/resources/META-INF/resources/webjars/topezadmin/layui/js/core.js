@@ -424,9 +424,7 @@ function initForm() {
 function istrue(c) {
     return (c || 'true') == 'true' || (c || '1') == '1';
 }
-function ezpingyin(){
 
-}
 function renderCascader(cas) {
     layui.use('layCascader', function () {
         try {
@@ -467,7 +465,17 @@ function renderCascader(cas) {
                             showAllLevels: showAllLevels,
                             disabled : disable_flag=="true",
                             value: paramValue,
-                            options: res
+                            options: res,
+                            filterMethod: function (node, val) {//重写搜索方法。
+                                if (val == node.data[label]) {//把value相同的搜索出来
+                                    return true;
+                                }
+                                if ((node.data[label] + node.data[label]).indexOf(val) != -1) {//名称中包含的搜索出来
+                                    return true;
+                                }
+                                //  console.log(node.data.orgName+node.data.orgNames+'##'+(node.data.orgId+'').indexOf(val));
+                                return !ezpingyin(val, (node.data[label] + node.data[label]), (node.data[value] + ''));
+                            },
                         });
                         if (span) {
                             //回显 laycascader
@@ -492,34 +500,7 @@ function renderCascader(cas) {
                 });
 
             } else if (itemsJson) {
-                var res = JSON.parse(itemsJson);
-                var prop = {};
-                prop.value = value;
-                prop.label = label;
-                prop.children = children;
-                prop.multiple = multiple;
-                // res=flatToTree(res,0);
-                layCascader({
-                    elem: _this[0],
-                    props: prop,
-                    filterable: true,
-                    // filterMethod: function (node, val) {//重写搜索方法。
-                    //     if (val == node.data[label]) {//把value相同的搜索出来
-                    //
-                    //         return true;
-                    //     }
-                    //     if ((node.data[label] + node.data[label]).indexOf(val) != -1) {//名称中包含的搜索出来
-                    //         return true;
-                    //     }
-                    //     //  console.log(node.data.orgName+node.data.orgNames+'##'+(node.data.orgId+'').indexOf(val));
-                    //     return !ezpingyin(val, (node.data[label] + node.data[label]), (node.data[value] + ''));
-                    // },
-                    clearable: true,
-                    placeholder: itemPlaceholder,
-                    collapseTags: collapseTags,
-                    value: paramValue,
-                    options: res
-                });
+
             }
         } catch (e) {
 
@@ -528,6 +509,39 @@ function renderCascader(cas) {
     })
 
 }
+
+var ezpingyin=function(value,text,id){
+    var { pinyin } = pinyinPro;
+    console.log(value+"\t"+text+"\t"+id)
+    var result;
+    if (escape(value).indexOf("%u") != -1) { //汉字
+        result = text.indexOf(value) > -1;
+    } else {
+        
+        value=value.toLowerCase();
+        try{
+        //var firstLetter=pinyinUtil.getFirstLetter(text, false).toLowerCase() ;
+        var firstLetter=pinyin(text, { pattern: 'first', toneType: 'none', type: 'array'}).join('');
+        //var pingyin=pinyinUtil.getPinyin(text,'',false,false).toLowerCase()
+        var pingyinq=pinyin(text, { toneType: 'none', type: 'array' }).join('');
+
+            console.log(value+"\t"+text+"\t"+id+"\t"+firstLetter+"\t"+pingyinq)
+        // console.log(firstLetter+"\t"+pingyin+"\t"+value+"\t"+text);
+        result = firstLetter.indexOf(value) > -1
+            || pingyinq.indexOf(value) > -1
+            || text.toLowerCase().indexOf(value) > -1
+            || (id === undefined ? false : id.indexOf(value) > -1);
+        }catch (e) {
+            console.log(e);
+        }
+    }
+    if (result == true) {
+        return false;
+    } else {
+        return true;
+    }
+}
+window.ezpingyin = ezpingyin;
 
 function renderXmselect(xm) {
     try {
@@ -544,15 +558,15 @@ function renderXmselect(xm) {
                 show: true,
                 list: ['ALL', 'REVERSE', 'CLEAR']
             },
-            // filterMethod: function (val, item, index, prop) {//重写搜索方法。
-            //     if (val == item.K) {//把value相同的搜索出来
-            //         return true;
-            //     }
-            //     if (item.V.indexOf(val) != -1) {//名称中包含的搜索出来
-            //         return true;
-            //     }
-            //     return !ezpingyin(val, item.V, item.K);
-            // },
+            filterMethod: function (val, item, index, prop) {//重写搜索方法。
+                if (val == item.K) {//把value相同的搜索出来
+                    return true;
+                }
+                if (item.V.indexOf(val) != -1) {//名称中包含的搜索出来
+                    return true;
+                }
+                return !ezpingyin(val, item.V, item.K);
+            },
             style: {
                 height: '26px',
             },theme: {
@@ -823,7 +837,7 @@ function openModel(url, name, area) {
         success: function(layero, indexyyy, that){
 
             var body = layer.getChildFrame('body', indexyyy);
-            if($(body).find('#submitButtonContainer').size()>0){
+            if($(body).find('#submitButtonContainer').length>0){
                 $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
                 $(body).on("click","#closeParent",function(){
                     layui.layer.close(indexyyy);

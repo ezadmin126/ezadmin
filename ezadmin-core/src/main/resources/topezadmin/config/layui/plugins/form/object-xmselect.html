@@ -41,7 +41,7 @@
     >
         <div class="layui-form-item ">
             <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >
-                <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
                    class="ez-help layui-icon-help layui-icon"
@@ -58,12 +58,16 @@
                 <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}" >
 
                 <script>
-                    // var xmel = $('[[${"#itemId-" + item_name}]]');
+                   //  var xmel = $('[[${"#itemId-" + item_name}]]');
                     // var initdata = xmel.attr("itemsJson");
                     // var initvalue = xmel.attr("value");
                     var xmselect = xmSelect.render({
                         el: '[[${"#itemId-" + item_name}]]',
                         language: 'zn',
+                        toolbar: {
+                            show: ($('[[${"#itemId-" + item_name}]]').attr("toolbar")||'true')=='true',
+                            list: ['ALL', 'REVERSE', 'CLEAR']
+                        },
                         filterable: true,
                         style: {
                             height: '26px',
@@ -82,38 +86,15 @@
                             return  JSON.parse($('[[${"#itemdata-" + item_name}]]').val()||[]);
                         },
                         initValue: $('[[${"#itemId-" + item_name}]]').attr("value")? $('[[${"#itemId-" + item_name}]]').attr("value").split(","):[]
-                       , create: function(val, arr){
-
-                                if(arr.length === 0){
-                                    return {
-                                        V: '创建-' + val,
-                                        K: val
-                                    }
-
-                                    // var d={};
-                                    // $.ajax({
-                                    //     url:"/jz/createlabel",
-                                    //     data:{"name":val},
-                                    //     async:false,
-                                    //     type: 'POST',
-                                    //     success:function(data){
-                                    //         d.V="新增-" + val;
-                                    //         d.K=data.data.id;
-                                    //         console.log('success'+JSON.stringify(d))
-                                    //         return d;
-                                    //     }
-                                    // })
-                                    // console.log('return sync'+JSON.stringify(d))
-                                    // return d;
-                                }
-
-
-                            // console.log('return sync'+JSON.stringify(d))
-                            // return {
-                            //     name: '新增-' + val,
-                            //     value: val
-                            // };
-
+                        ,
+                        filterMethod: function (val, item, index, prop) {//重写搜索方法。
+                            if (val == item.K) {//把value相同的搜索出来
+                                return true;
+                            }
+                            if (item.V.indexOf(val) != -1) {//名称中包含的搜索出来
+                                return true;
+                            }
+                            return !ezpingyin(val, item.V, item.K);
                         }
                     })
                 </script>

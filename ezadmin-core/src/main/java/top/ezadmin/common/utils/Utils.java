@@ -351,7 +351,7 @@ public class Utils {
             if(StringUtils.equals(Utils.trimNull(cur.get("ID")),"0")){
                 continue;
             }
-            if( StringUtils.equals(Utils.trimNull(cur.get("PARENT_ID")),Utils.trimNull(root.get("ID")))){
+             if( StringUtils.equals(Utils.trimNull(cur.get("PARENT_ID")),Utils.trimNull(root.get("ID")))){
                 if(!root .containsKey("CHILDREN")){
                     root.put("CHILDREN",new ArrayList<>());
                 }

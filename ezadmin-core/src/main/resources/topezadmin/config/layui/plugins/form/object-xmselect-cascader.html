@@ -42,7 +42,7 @@
     >
         <div class="layui-form-item ">
             <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >
-                <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
+                <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
                    class="ez-help layui-icon-help layui-icon"
@@ -69,6 +69,7 @@
                             autoRow: false,
                             name:'[[${item_name}]]',
                             filterable: true,
+                            clickClose: ($('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
                             showCount:  xmel.attr("showCount")||5,
                             max: xmel.attr("max")||100,
                             radio:  ($('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
@@ -86,6 +87,10 @@
                                 show: true,
                                 indent: 200,
                                 strict:strict,
+
+                            },
+                            iconfont: {
+                                parent:   'hidden'
                             },
                             // tree: {
                             //     show: true,
@@ -107,7 +112,16 @@
                                     return [];
                                 }
                             },
-                            initValue: initArray
+                            initValue: initArray,
+                            filterMethod: function (val, item, index, prop) {//重写搜索方法。
+                                if (val == item.K) {//把value相同的搜索出来
+                                    return true;
+                                }
+                                if (item.V.indexOf(val) != -1) {//名称中包含的搜索出来
+                                    return true;
+                                }
+                                return !ezpingyin(val, item.V, item.K);
+                            }
                         })
                     })
                 </script>

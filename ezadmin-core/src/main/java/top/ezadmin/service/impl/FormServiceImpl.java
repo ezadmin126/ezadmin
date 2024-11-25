@@ -93,17 +93,20 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                 for (int j = 0; j < items.size(); j++) {
                         Map<String, Object> item = items.get(j);
                         String item_name = getStringValue(item, JsoupUtil.ITEM_NAME);
+                        String defaultValue=getStringValue(item, "value");
+                        String defaultValueS=getStringValue(item, "valueStart");
+                        String defaultValueE=getStringValue(item, "valueEnd");
 
                         String item_url = getStringValue(item, JsoupUtil.URL);
                         updateValidate(item, validRuleMap, validMsgMap);
 
-                        item.put(ParamNameEnum.itemParamValue.getName(), Utils.trimNull(initItemMap.get(item_name)));
-                        item.put(ParamNameEnum.itemParamValueStart.getName(), Utils.trimNull(initItemMap.get(item_name + "_START")));
-                        item.put(ParamNameEnum.itemParamValueEnd.getName(), Utils.trimNull(initItemMap.get(item_name + "_END")));
+                        item.put(ParamNameEnum.itemParamValue.getName(), Utils.trimNullDefault(initItemMap.get(item_name),defaultValue));
+                        item.put(ParamNameEnum.itemParamValueStart.getName(), Utils.trimNullDefault(initItemMap.get(item_name + "_START"),defaultValueS));
+                        item.put(ParamNameEnum.itemParamValueEnd.getName(), Utils.trimNullDefault(initItemMap.get(item_name + "_END"),defaultValueE));
 
-                        item.put("value", Utils.trimNull(initItemMap.get(item_name)));
-                        item.put("value_start", Utils.trimNull(initItemMap.get(item_name + "_START")));
-                        item.put("value_end", Utils.trimNull(initItemMap.get(item_name + "_END")));
+                        item.put("value", Utils.trimNullDefault(initItemMap.get(item_name),defaultValue));
+                        item.put("value_start", Utils.trimNullDefault(initItemMap.get(item_name + "_START"),defaultValueS));
+                        item.put("value_end", Utils.trimNullDefault(initItemMap.get(item_name + "_END"),defaultValueE));
                         Context context = new Context();
                         context.setVariable("uploadUrl", EzClientBootstrap.instance().getUploadUrl());
                         context.setVariable("downloadUrl", EzClientBootstrap.instance().getDownloadUrl());
@@ -279,7 +282,8 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             context.setVariable("serverDom",sb.toString());
                             context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
                         }
-                        else if(Utils.trimNull(item.get("type")).equals("cascader")){
+                        else if(Utils.trimNull(item.get("type")).equals("cascader")
+                                ||Utils.trimNull(item.get("type")).equals("cascadersql")){
                             Map<String,String> attrMap= (Map<String,String>)item.get("attrMap");
                             attrMap.put("value", StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName())+""));
                             attrMap.put("name",item.get(JsoupUtil.ITEM_NAME)+"");

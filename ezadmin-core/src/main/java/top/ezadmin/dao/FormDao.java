@@ -326,6 +326,12 @@ public class FormDao extends JsoupUtil {
                     if(formAttrMap!=null){
                         formAttrMap.put("id","itemId-"+formAttrMap.get(JsoupUtil.ITEM_NAME));
                         formAttrMap.forEach((k,v)->{
+                            if(StringUtils.equals(k,JsoupUtil.LABEL)
+                            ||StringUtils.equals(k,"lay-affix")
+                            ||StringUtils.equals(k,JsoupUtil.NAME)
+                            ){
+                                return;
+                            }
                           //  String formItemAttrValue=Utils.trimNull(formItem.get(names[k]));
                             if(StringUtils.isNotBlank(v)){
                                 formItemHtmlElement.getElementsByTag("object").attr(k,v);
