@@ -1321,7 +1321,7 @@ public class ListServiceImpl implements ListService {
 
 
     @Override
-    public void fillCountById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception {
+    public long fillCountById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception {
         Page pagination= loadingPage(list,requestParamMap);
         Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
         List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
@@ -1340,11 +1340,11 @@ public class ListServiceImpl implements ListService {
         pagination.setTotalRecord(count);
 
         page(pagination,list,requestParamMap);
-
+        return count;
     }
 
 
-    void page(Page pagination,Map<String, Object> list,Map<String, Object> requestParamMap) throws Exception {
+    void page(Page pagination,Map<String, Object> list,Map<String, Object> requestParamMap ) throws Exception {
         Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
         String listcode=getString(coreMap,"listcode");
         //分页

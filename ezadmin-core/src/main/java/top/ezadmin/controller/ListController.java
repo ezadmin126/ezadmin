@@ -93,12 +93,13 @@ public class ListController extends BaseController {
                 logger.warn("找不到列表：{}",listUrlCode);
                 return EzResult.instance().code("500").setMessage("NotExistException");
             }
-            listService.fillCountById(list, requestParamMap, sessionParamMap);
+
+         long count=   listService.fillCountById(list, requestParamMap, sessionParamMap);
             request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
             request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
              Map<String, Object>  list2=new HashMap<>();
             list2.put("page",list.get("page"));
-            return EzResult.instance().data(list2).count(1000);
+            return EzResult.instance().data(list2).count(count);
         } catch (Exception e) {
             logger.error("count：{}",listUrlCode,e);
             return EzResult.instance().code("500").setMessage(ExceptionUtils.getFullStackTrace(e));

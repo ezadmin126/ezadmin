@@ -99,8 +99,8 @@ public class Page {
         totalPage = (totalRecord / getPerPageInt() == 0 ? 1
                 : (totalRecord % getPerPageInt() > 0 ? (totalRecord / getPerPageInt() + 1)
                 : totalRecord / getPerPageInt()));
-        totalPage = currentPage > totalPage ? 0 : totalPage;
-        totalRecord = currentPage > totalPage ? 0 : totalRecord;
+        //totalPage = currentPage > totalPage ? 0 : totalPage;
+       // totalRecord = currentPage > totalPage ? 0 : totalRecord;
         //  currentPage=Math.min(Integer.valueOf(totalPage+""),currentPage);
         return totalPage;
     }
