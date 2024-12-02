@@ -78,7 +78,7 @@
                         </div>
 
                         <input th:classappend="${class}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" autocomplete="off" type="text"
-                               class="layui-input layui-date" th:value="${value_start}"
+                               class="layui-input layui-date-narmal" th:value="${value_start}"
                                th:name="${item_name+'_START'}" th:id="${item_name+'_START_ID'}">
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                             <i class="layui-icon layui-icon-date"></i>
                         </div>
                         <input th:classappend="${class}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" autocomplete="off" type="text"
-                               class="layui-input layui-date" th:value="${value_end}"
+                               class="layui-input layui-date-narmal" th:value="${value_end}"
                                th:name="${item_name+'_END'}" th:id="${item_name+'_END_ID'}">
                     </div>
                 </div>

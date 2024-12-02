@@ -289,16 +289,18 @@ function calculateSearchItemDisplay() {
     }else{
         var hasHidden=false;
         $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
-            if($(this).offset().top>$("#searchForm").offset().top+76){  //大于第二行就不展示
-                $("#upBtn").hide();
-                $("#downBtn").show();
-                $(this).hide();
-                hasHidden=true;
-            }else if($(this).offset().top==0){
-                $("#downBtn").hide(); $("#upBtn").show();
-                $(this).hide();
-            }else{
-                $(this).show();
+            if($("#searchForm").offset()){
+                if($(this).offset().top>$("#searchForm").offset().top+76){  //大于第二行就不展示
+                    $("#upBtn").hide();
+                    $("#downBtn").show();
+                    $(this).hide();
+                    hasHidden=true;
+                }else if($(this).offset().top==0){
+                    $("#downBtn").hide(); $("#upBtn").show();
+                    $(this).hide();
+                }else{
+                    $(this).show();
+                }
             }
         })
         if(hasHidden){
@@ -448,8 +450,19 @@ function renderTable() {
             form.render();
         });
         var inited=false;
+        var hh=0;
+        try{
+            if($("#searchForm").offset()){
+                hh=$("#searchForm").offset().top+$("#searchForm").height();
+            }
+            if($("#tab").height()){
+                hh=hh+$("#tab").height();
+            }
+        }catch (e) {
+            console.log(e)
+        }
         tableConfig={
-            height: 'full-'+($("#tab").height()+$("#searchForm").offset().top+$("#searchForm").height()+43+97)  //设置高度
+            height: 'full-'+(hh+43+97)  //设置高度
             ,escape: false
             ,autoSort: false
             ,cellExpandedMode: $("#expandedMode").val()||''
