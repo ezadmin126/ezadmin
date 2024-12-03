@@ -3,7 +3,7 @@
  Doc:https://ezadmin.gitee.io/index.html/
  | MIT /license */
 console.log("Welcome\n" +
-    " Doc:https://www.ezjsp.com/doc/index.html")
+    " Doc:https://www.ezadmin.top/doc/index.html")
 layui.config({
     base: $("#contextName").val() + "/webjars/topezadmin/layui/js/layuimini/",
     version: true
