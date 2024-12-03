@@ -48,6 +48,7 @@ public class JxcController extends CustomBaseController {
                 result.add(m);
             });
         }
+        PageHelper.clearPage();
         if (StringUtils.isNotBlank(id)) {
             BaseProduct baseProduct=baseProductExtendMapper.selectByPrimaryKey(Long.parseLong(id));
             Map<String, String> m = new HashMap<>();

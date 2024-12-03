@@ -86,7 +86,7 @@
                    class="  layui-table propTable ez-table"   style=" width:100%">
                 <thead style="text-align: center">
                 <tr >
-                    <th lay-options='{"field":"oper","width":200,"fixed":"right","title":"操作","align":"","escape":false}'>操作</th>
+                    <th style="width:100px" lay-options='{"field":"oper","width":100,"fixed":"right","title":"操作","align":"","escape":false}'>操作</th>
                     <th th:remove="tag" th:each="item:${subdata.col}" th:utext="${item.html}">
                     </th>
                 </tr>
@@ -185,13 +185,14 @@
                     });
                 })
                 function renderxm(othis){
+                    console.log("初始化xmselect：："+othis.attr("item_name"))
                     var v=JSON.parse(othis.attr("value"));
 
                     var initparam={ id: v[0],page:1}
                     $.post(othis.attr("url") , initparam, function(initresponse) {
                         if(initresponse.success){
                             var initresp = initresponse.data;
-                            var tm= xmSelect.render({
+                            xmSelect.render({
                                 el: othis[0],
                                 language: 'zn',
                                 filterable: true,
@@ -199,7 +200,7 @@
                                     height: '26px',
                                 },
                                 toolbar: {
-                                    show: true,
+                                    show: ($('[[${"#itemId-" + item_name}]]').attr("toolbar")||'true')=='true',
                                     list: ['ALL', 'REVERSE', 'CLEAR']
                                 },theme: {
                                     color: '#1e9fff',
@@ -212,8 +213,8 @@
                                 pageSize: 10,
                                 delay:1000,
                                 pageRemote: true,
-                                name: othis.attr("name"),
-                                radio: othis.attr("radio")||false,
+                                name: othis.attr("item_name"),
+                                radio: ( othis.attr("radio")||"false").toLowerCase()==="false"?false:true,
                                 tips: othis.attr("placeholder")||"请搜索",
                                 remoteSearch: true,
                                 remoteMethod: function(val, cb, show,pageIndex){
@@ -248,6 +249,8 @@
                                     }
                                 }
                             })
+                        }else{
+                            console.log("初始化数据"+JSON.stringify(initresponse));
                         }
                     }, 'json').fail(function () {
                         console.log("网络异常");alert('网络异常');

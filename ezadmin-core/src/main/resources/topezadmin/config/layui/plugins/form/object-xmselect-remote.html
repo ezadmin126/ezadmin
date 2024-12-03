@@ -59,15 +59,12 @@
 
 
                 <script>
-                    var xmel = $('[[${"#itemId-" + item_name}]]');
-                   // var initdata = xmel.attr("itemsJson");
-                  //  var initUrl = xmel.attr("url");
-                    var initvalue = xmel.attr("value")||[];
-                    var toolbar=xmel.attr("toolbar")||'true';
+
+
                     var xmselect = xmSelect.render({
                         el: '[[${"#itemId-" + item_name}]]',
                         toolbar: {
-                            show: (xmel.attr("toolbar")||'true')=='true',
+                            show: ($('[[${"#itemId-" + item_name}]]').attr("toolbar")||'true')=='true',
                             list: ['ALL', 'REVERSE', 'CLEAR']
                         },
                         language: 'zn',
@@ -94,17 +91,17 @@
                         tips: '[[${#strings.isEmpty(placeholder)?"请选择":placeholder}]]',
                         remoteSearch: true,
                         //开启分页
-                        paging: (xmel.attr("paging")||'false')=='true',
+                        paging: ($('[[${"#itemId-" + item_name}]]').attr("paging")||'false')=='true',
                         //远程分页
-                        pageRemote: (xmel.attr("paging")||'false')=='true',
-                        pageSize: xmel.attr("pagesize")||10,
+                        pageRemote: ($('[[${"#itemId-" + item_name}]]').attr("paging")||'false')=='true',
+                        pageSize: $('[[${"#itemId-" + item_name}]]').attr("pagesize")||10,
                         remoteMethod: function(val, cb, show,pageIndex){
                             if(val==''){
                                 cb([],0);
                                return;
                             }
                             let param={ keyword: val,pageIndex:pageIndex};
-                            $.post(xmel.attr("url") , param, function(response) {
+                            $.post($('[[${"#itemId-" + item_name}]]').attr("url") , param, function(response) {
                                 if(response.success&&response.data!=''){
                                     try{
 
@@ -139,7 +136,7 @@
                             //isAdd, 此次操作是新增还是删除
                             var isAdd = data.isAdd;
 
-                            var functionName=xmel.attr("on")
+                            var functionName=$('[[${"#itemId-" + item_name}]]').attr("on")
                             if (functionName&&window[functionName]) {
                                     window[functionName](data);
                             }

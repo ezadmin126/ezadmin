@@ -9,8 +9,8 @@
     <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Window-target" content="_top"/>
-    <meta name="keywords" content="ezadmin-core EZ Java-Server-Page 嵌入式列表表单工具">
-    <meta name="description" content="ezadmin-core EZ Java-Server-Page 嵌入式列表表单工具">
+    <meta name="keywords" th:content="${configurations.get('websiteKeywords')}">
+
     <meta name="bytedance-verification-code" content="R8VRIUfVoJYbQ44bDAIS" />
     <link th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
     <script th:src="${'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
@@ -83,17 +83,21 @@
     <link id="layui_theme_css"  rel="stylesheet">
     <script>
 
-        var _hmt = _hmt || [];
-        (function () {
+
+            var _hmt = _hmt || [];
+            (function() {
             var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?38c0ed6d2ed8226d90796f45ec73276e";
+            hm.src = "https://hm.baidu.com/hm.js?439e4afb03a8431377c87eb33f253733";
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         })();
 
-        (function(){
-            var el = document.createElement("script");
-            el.src = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?9a6f182565f1d5975e25a56d308bca90f7f5d3252ed31a48a5d41dd44440b1143d72cd14f8a76432df3935ab77ec54f830517b3cb210f7fd334f50ccb772134a";
+
+
+    (function(){
+    var el = document.createElement("script");
+    el.src =
+    "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?9a6f182565f1d5975e25a56d308bca90f7f5d3252ed31a48a5d41dd44440b1143d72cd14f8a76432df3935ab77ec54f830517b3cb210f7fd334f50ccb772134a";
             el.id = "ttzz";
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(el, s);
@@ -134,7 +138,7 @@
 <div th:fragment="header" class="layui-header  ws-header ws-bg-light" >
         <div class="layui-container"  >
             <div class=" logo   "  >
-                <a href="/">EZ Java-Server-Page</a>
+                <a href="/">ezadmin</a>
             </div>
             <!-- 头部区域（可配合layui 已有的水平导航） -->
 
@@ -152,24 +156,24 @@
             <div  class="ws-header-menu   layui-bg-gray ws-bg-light   ">
                 <ul class="layui-nav   layui-bg-gray ws-bg-light " >
 
-                    <li class="layui-nav-item layui-hide layui-show-sm-inline-block        ">
-                        <a th:href="@{/blog/detail-6-1.html}">关于本站</a></li>
-                    <li class="layui-nav-item layui-hide layui-show-sm-inline-block"><a th:href="@{/blog/detail-4-1.html}">联系站长</a></li>
+<!--                    <li class="layui-nav-item layui-hide layui-show-sm-inline-block        ">-->
+<!--                        <a th:href="@{/blog/detail-6-1.html}">关于本站</a></li>-->
+<!--                    <li class="layui-nav-item layui-hide layui-show-sm-inline-block"><a th:href="@{/blog/detail-4-1.html}">联系站长</a></li>-->
                     <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
                         <a target="_blank" href="/doc/index.html">文档</a>
                     </li>
-                    <li class="layui-nav-item layui-hide layui-show-sm-inline-block"><a target="_blank" href="/topezadmin/index.html">EzAdmin</a></li>
+                    <li class="layui-nav-item layui-hide layui-show-sm-inline-block"><a target="_blank" href="/topezadmin/index.html">登录</a></li>
 
                     <li class="layui-nav-item layui-hide-sm  "  >
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-more-vertical"></i>
                         </a>
                         <dl class="layui-nav-child layui-nav-child-r">
-                            <dd><a th:href="@{/blog/detail-6-1.html}">关于本站</a></dd>
-                            <dd><a th:href="@{/blog/detail-4-1.html}">联系站长</a></dd>
+<!--                            <dd><a th:href="@{/blog/detail-6-1.html}">关于本站</a></dd>-->
+<!--                            <dd><a th:href="@{/blog/detail-4-1.html}">联系站长</a></dd>-->
                             <dd><a target="_blank" href="/doc/index.html">文档</a></dd>
                             <hr>
-                            <dd><a target="_blank" href="/topezadmin/index.html">EzAdmin</a></dd>
+                            <dd><a target="_blank" href="/topezadmin/index.html">登录</a></dd>
                         </dl>
                     </li>
 
@@ -201,7 +205,7 @@
 
 <div th:fragment="foot" class="layui-row footer layui-panel layui-col-space10">
 		<span class="layui-breadcrumb" lay-separator="|">
-		  <a href="#">Copyright © 2019-现在 EzJsp.com 版权所有</a>
+		  <a href="#">Copyright © 2019-现在 ezadmin.top 版权所有</a>
           <a href="#">ezadmin©126.com</a>
 		</span>
     <br>

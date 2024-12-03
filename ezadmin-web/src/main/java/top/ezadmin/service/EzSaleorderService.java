@@ -47,7 +47,7 @@ public class EzSaleorderService {
 
     @Transactional(rollbackFor = Exception.class)
     public void doUpdate(Map<String, Object> request){
-        log.info("add order:{}",JSONUtils.toJSONString(request));
+       // log.info("add order:{}",JSONUtils.toJSONString(request));
 
         Saleorder saleorder = new Saleorder();
         saleorder.setTraderId(Utils.toLong(request.get("TRADER_ID")));
@@ -57,7 +57,7 @@ public class EzSaleorderService {
         saleorder.setTraderComments(Utils.trimNull(request.get("TRADER_COMMENTS")));
         saleorder.setAdditionalClause(Utils.trimNull(request.get("ADDITIONAL_CLAUSE")));
         saleorder.setComments(Utils.trimNull(request.get("COMMENTS")));
-        saleorder.setAddTime(new Date());
+
         saleorder.setUpdateTime(new Date());
 
 
@@ -73,13 +73,19 @@ public class EzSaleorderService {
         saleorder.setTraderRegion(traderAddress.getRegionId());
 
         SysUser user= sysUserMapper.selectByPrimaryKey(Utils.toLong(request.get("EZ_SESSION_USER_ID_KEY")));
-        saleorder.setAddId(user.getUserId());
+
         saleorder.setUpdateId(user.getUserId());
         saleorder.setCompanyId(user.getCompanyId());
-        saleorder.setSaleorderNo(NoDirect.saleorderNo());
-        saleorderMapper.insertSelective(saleorder);
-
-
+       Long ID= Utils.toLong(request.get("ID"));
+        if(ID>0){
+            saleorder.setSaleorderId(ID);
+            saleorderMapper.updateByPrimaryKeySelective(saleorder);
+        }else{
+            saleorder.setAddId(user.getUserId());
+            saleorder.setAddTime(new Date());
+            saleorder.setSaleorderNo(NoDirect.saleorderNo());
+            saleorderMapper.insertSelective(saleorder);
+        }
 
         //EZ_SESSION_USER_NAME_KEY EZ_SESSION_USER_ID_KEY
         String[] basePriceArrays=(String[])  request.get("BASE_PRICE_ARRAY");
@@ -87,11 +93,17 @@ public class EzSaleorderService {
         String[] childNumArrays=(String[])  request.get("CHILD_NUM_ARRAY");
         BigDecimal totalPrice=BigDecimal.ZERO;
         if(!ArrayUtils.isEmpty(prodIdArrays)){
+            SaleorderGoodsExample example=new SaleorderGoodsExample();
+            example.createCriteria().andDeleteFlagEqualTo(0).andSaleorderIdEqualTo(saleorder.getSaleorderId());
+            SaleorderGoods goods=new SaleorderGoods();
+            goods.setDeleteFlag(1);
+            saleorderGoodsMapper.updateByExampleSelective(goods,example);
             for (int i = 0; i < prodIdArrays.length; i++) {
                 if(StringUtils.isBlank(prodIdArrays[i])){
                     continue;
                 }
                 SaleorderGoods saleorderGoods = new SaleorderGoods();
+                saleorderGoods.setDeleteFlag(0);
                 saleorderGoods.setSaleorderId(saleorder.getSaleorderId());
                 saleorderGoods.setAddTime(new Date());
                 saleorderGoods.setUpdateTime(new Date());
@@ -102,7 +114,8 @@ public class EzSaleorderService {
                 saleorderGoods.setProdNum(Utils.toInt(childNumArrays[i]));
                 BaseProduct baseProduct= baseProductMapper.selectByPrimaryKey(saleorderGoods.getProdId());
                 saleorderGoods.setProdCode(baseProduct.getProdCode());
-                saleorderGoods.setProdModelSpec(baseProduct.getProdModelSpec());
+                saleorderGoods.setProdModel(baseProduct.getProdModel());
+                saleorderGoods.setProdSpec(baseProduct.getProdSpec());
                 saleorderGoods.setProdName(baseProduct.getProdName());
 
                 BaseBrand brand= baseBrandMapper.selectByPrimaryKey(baseProduct.getBrandId());

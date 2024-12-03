@@ -9,12 +9,13 @@ import java.util.Map;
 
 public class BlogConfigurations {
 
-    private String websiteName="EZ 纯Servlet嵌入式列表表单工具";
-    private String websiteDescription="EZ 纯Servlet嵌入式列表表单工具";
-    private String websiteIcon="EZ 纯Servlet嵌入式列表表单工具";
+    private String websiteName="ezadmin 纯Servlet嵌入式列表表单工具";
+    private String websiteDescription="ezadmin 纯Servlet嵌入式列表表单工具，嵌入式低代码工具，SQL转列表，表单";
+    private String websiteKeywords="ezadmin，嵌入式低代码工具，SQL转列表、表单";
+    private String websiteIcon="ezadmin 纯Servlet嵌入式列表表单工具";
     private String sysAuthorImg="/static/info-img.png?1";
 
-    private String sysAuthor="EZ";
+    private String sysAuthor="ezadmin";
 
 
 
@@ -73,5 +74,13 @@ public static Map<String,String> config(){
 
     public void setSysCopyRight(String sysCopyRight) {
         this.sysCopyRight = sysCopyRight;
+    }
+
+    public String getWebsiteKeywords() {
+        return websiteKeywords;
+    }
+
+    public void setWebsiteKeywords(String websiteKeywords) {
+        this.websiteKeywords = websiteKeywords;
     }
 }

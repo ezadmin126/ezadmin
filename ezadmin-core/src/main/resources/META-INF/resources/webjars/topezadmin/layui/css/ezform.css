@@ -85,6 +85,7 @@ small {
     font-weight: 400;
 }
 .custom-select{
+    padding-left: 7px;
     height: 38px;
     border-width: 1px;
     border-style: solid;
