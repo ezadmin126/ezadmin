@@ -1,33 +1,13 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
     <meta charset="utf-8">
-    <title>ezadmin文档</title>
+    <title>文档</title>
     <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
     <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
     <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
-    <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <script>
-        var _hmt = _hmt || [];
-        (function () {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?38c0ed6d2ed8226d90796f45ec73276e";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-
-        (function(){
-            var el = document.createElement("script");
-            el.src = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?9a6f182565f1d5975e25a56d308bca90f7f5d3252ed31a48a5d41dd44440b1143d72cd14f8a76432df3935ab77ec54f830517b3cb210f7fd334f50ccb772134a";
-            el.id = "ttzz";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(el, s);
-        })(window)
-    </script>
-
 </head>
 <body>
 <div class="layui-header ws-header ws-bg-light">

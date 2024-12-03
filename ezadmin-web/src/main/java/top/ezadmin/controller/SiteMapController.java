@@ -134,7 +134,12 @@ public class SiteMapController {
 		sb.append(System.lineSeparator());
 		sb.append("Disallow: /system");
 		sb.append(System.lineSeparator());
+		sb.append("Disallow: /login");
+		sb.append(System.lineSeparator());
 		sb.append("Disallow: /topezadmin");
+		sb.append("User-agent: SemrushBot");
+		sb.append(System.lineSeparator());
+		sb.append("Disallow: /");
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append("Sitemap: https://www.ezadmin.top/sitemap-1.xml");
