@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link href="//unpkg.com/layui@2.9.20/dist/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">单行选择框</label>
+        <div class="layui-input-inline">
+            <select name="interest" lay-filter="aihao">
+                <option value=""></option>
+                <option value="0">很长写作</option>
+                <option value="1" selected>很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作
+                    很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作</option>
+                <option value="2">游戏</option>
+                <option value="3">音乐</option>
+                <option value="4">旅行</option>
+            </select>
+        </div>
+    </div>
+</form>
+
+<!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+<script src="//unpkg.com/layui@2.9.20/dist/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate', 'util'], function(){
+       
+    });
+</script>
+
+</body>
+</html>

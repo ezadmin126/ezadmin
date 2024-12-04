@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo</title>
+    <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+    <link href="//unpkg.com/layui@2.9.20/dist/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<blockquote class="layui-elem-quote">
+    <p> 下拉框内容过长时，部分交互在一些场景下不太好。
+        期望有的功能：
+    </p>
+    <p>
+        1.是否可以给选项一个title属性；<br>
+        2.选项的宽度是否可以固定；<br>
+        3.选项的高度目前是固定的300px;是否可以设置；<br>
+        4.选项长度过长时，是否会考虑换行；<br>
+    </p>
+</blockquote>
+<form class="layui-form" action="">
+<div class="layui-form-item">
+    <label class="layui-form-label">单行选择框</label>
+    <div class="layui-input-inline">
+        <select name="interest" lay-filter="aihao">
+            <option value=""></option>
+            <option value="0">很长写作</option>
+            <option value="1" selected>很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作
+                很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作很长写作</option>
+            <option value="2">游戏</option>
+            <option value="3">音乐</option>
+            <option value="4">旅行</option>
+        </select>
+    </div>
+</div>
+</form>
+<blockquote class="layui-elem-quote">
+    <p>弹框内下拉框内容过长，出现滚动条时，点击滚动条，滚动条消失，且无反应  </p>
+</blockquote>
+<a class="layui-btn" lay-on="e1">测试子页面</a>
+
+<!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+<script src="//unpkg.com/layui@2.9.20/dist/layui.js"></script>
+<script>
+    layui.use(['form',  'util','layer'], function(){
+        var $ = layui.$;
+        var layer = layui.layer;
+        var util = layui.util;
+        util.on({
+            e1: function(){
+                layer.open({
+                    title: "TEST",
+                    type: 2,
+                    area: ['300px','200px'],
+                    content: "child.html",
+                    moveOut: true,
+                    success: function(layero, indexyyy, that){
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
