@@ -31,24 +31,7 @@
 </head>
 <body th:utext="${form.core.bodyTag}" th:remove="tag"> </body>
 [(${form.core.append_head})]
-    <form ID="inputForm" method="post" style="padding-bottom: 50px;" class="  layui-form"  lay-filter="inputForm" >
-        <div class="layui-panel formtopfix formtopfixbuttons"  >
-            <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer">
-                <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue " lay-submit
-                        lay-filter="submitbtn">提交
-                </button>
-
-                <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/loadEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
-                    图形编辑
-                </button>
-                <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
-                    源码编辑
-                </button>
-                <button th:if="${not cacheFlag}" opentype="_BLANK_PARAM" type="button" th:url="${'/topezadmin/formEdit/trace-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
-                    查看SQL
-                </button>
-            </div>
-        </div>
+    <form ID="inputForm" method="post" style="padding-bottom: 60px"  class="  layui-form"  lay-filter="inputForm" >
 
     <div th:class="${'layui-'+layout}">
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
@@ -92,12 +75,48 @@
             </div><!--end layui-tab-content-->
         </div>
     </div>
+        <button id="submitbtn"  type="submit" class="layui-btn layui-bg-blue layui-hide " lay-submit
+                lay-filter="submitbtn">提交
+        </button>
 </form>
-<!--<div class="layui-panel  formtopfix formtopfixbottom" style="height:58px">-->
-<!--</div>-->
+<!-- <div class="layui-panel  formtopfix formtopfixbottom" style="height:58px">-->
+<!-- </div>-->
 <!--<div class="layuimini-loader"  >-->
 <!--    <div class="layuimini-loader-inner"></div>-->
 <!--</div>-->
+<div class="layui-panel formtopfix formtopfixbuttons"  >
+    <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer">
+        <button id="submitbtnProxy"  class="layui-btn layui-bg-blue "
+                lay-filter="submitbtn">提交
+        </button>
+        <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/loadEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+            图形编辑
+        </button>
+        <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+            源码编辑
+        </button>
+        <button th:if="${not cacheFlag}" opentype="_BLANK_PARAM" type="button" th:url="${'/topezadmin/formEdit/trace-'+form.core.formcode}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+            查看SQL
+        </button>
+    </div>
+</div>
+<script>
+    layui.layer.open({
+        type: 1,
+        offset: 'b',
+        title: false, // 不显示标题栏
+        closeBtn: 0,
+        anim: 'slideUp', // 从下往上
+        area: ['100%', '60px'],
+        shade: 0,
+        skin:'submitButtonContainerClass',
+        shadeClose: false,
+        id: 'ID-submitButtonContainer',
+        content: $("#submitButtonContainer")
+    });
+</script>
+
+
 </body>
 <div>
     <div>

@@ -177,9 +177,9 @@ $(function () {
             $(this).addClass("layui-icon-up")
         }
     })
-
-
-
+    $("body").on("click","#submitbtnProxy",function(){
+        $("#submitbtn").click();
+    })
     //end
    // $('.layuimini-loader').fadeOut();
 })

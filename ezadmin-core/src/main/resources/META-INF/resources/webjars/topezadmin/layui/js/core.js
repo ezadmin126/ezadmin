@@ -432,7 +432,7 @@ function renderCascader(cas) {
             var _this = $(cas);
             var url = _this.attr("url");
             var value = _this.attr("ez_value") || 'VALUE';
-            var label = _this.attr("ez_label") || 'LABEL';
+            var label = _this.attr("ez_treelabel")|| _this.attr("ez_label") || 'LABEL';
             var children = _this.attr("ez_children") || 'CHILDREN';
             var multiple = istrue(_this.attr("multi"));
             var itemsJson = _this.attr("itemsJson");

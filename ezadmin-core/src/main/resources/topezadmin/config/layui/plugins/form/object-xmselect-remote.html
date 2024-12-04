@@ -102,9 +102,8 @@
                             }
                             let param={ keyword: val,pageIndex:pageIndex};
                             $.post($('[[${"#itemId-" + item_name}]]').attr("url") , param, function(response) {
-                                if(response.success&&response.data!=''){
+                                if(response.success&&response.data&&response.data!=''){
                                     try{
-
                                         cb(response.data,response.count)
                                     }catch (e) {
                                         debugger
