@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+<!--            <div class="ws-dir">-->
+<!--                <ul class="ws-dir-ul">-->
+<!--                    <li><a href="#list">列表</a></li>-->
+<!--                    <li ><a href="#form">表单</a></li>-->
+<!--                </ul>-->
+<!--            </div>-->
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>非springboot项目</h1>
+        <blockquote class="layui-elem-quote">
+            本工具支持嵌入至任意servlet应用，对于非springboot需要自定义一个filter,并初始化相关配置参数。
+        </blockquote>
+        <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            非springboot项目实现代码
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+             <textarea>
+<![CDATA[
+                  //  参考EzClientAutoConfiguration，结合配置文件，初始化 EzClientBootstrap 如下代码全部使用默认值
+public class EzClientServletFilter implements Filter {
+
+    EzClientBootstrap ezBootstrap = EzClientBootstrap.instance();
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        ezBootstrap.init();
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws Exception {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        if(! httpServletRequest.getRequestURI().startsWith("/topezadmin")){
+            filterChain.doFilter(servletRequest,servletResponse);
+            return;
+        }
+        try {
+            ezBootstrap.doFilter(httpServletRequest, httpServletResponse,filterChain);
+        } catch (Exception e) {
+            LOGGE.error("", e);
+            httpServletResponse.getWriter().println(e.getMessage());
+        } finally {
+            Utils.clearLog();
+        }
+    }
+
+}
+                 ]]>
+             </textarea>
+        </pre>
+
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

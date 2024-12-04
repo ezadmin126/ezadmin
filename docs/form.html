@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#demo">demo</a></li>
+                    <li ><a href="#param">参数说明</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>表单</h1>
+        <blockquote class="layui-elem-quote">
+            纵向 使用块（card），横向使用12栅格模式，组合成各类表单页面。<br>
+            实际业务场景，表单往往比较复杂，可以自定义插件或JS渲染
+        </blockquote>
+        <h2 id="demo"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            demo
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<html>
+ <head>
+  <title>test</title>
+ </head>
+ <body id="test" datasource="dataSource" success_url="reload" formsubmiturl="">
+  <div id="append_head"></div>
+  <form id="inputForm">
+   <div class="layui-card" col="">
+    <div class="layui-card-body">
+     <div class="layui-form-item" col="12">
+      <label>名称</label>
+      <div>
+       <object item_name="NAME" type="input-text"> </object>
+      </div>
+     </div>
+    </div>
+   </div>
+  </form>
+  <form id="configForm">
+   <pre item_name="init_express" type="">
+<![CDATA[
+StringBuilder sql=new StringBuilder();
+sql.append("select NAME from T_USER where  ID=${ID}  ");
+return select(sql).get(0);
+]]>
+
+   </pre>
+   <pre item_name="submit_express" type="">
+<![CDATA[
+import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.express.jdbc.InsertParam;
+import top.ezadmin.web.EzResult;
+ID=$("ID");
+if(!isNotBlank("ID")){
+    param=new InsertParam();
+    param.table("T_USER");
+    param.add("#{ID}");
+    param.add("#{NAME}");
+id=insertSimple(param);
+return id;
+}else{
+    param=new UpdateParam();
+    param.table("T_USER");
+    param.add("#{ID}");
+    param.add("#{NAME}");
+  StringBuilder updateSql=new StringBuilder();
+  updateSql.append(" where ID=#{ID} ");
+ param.where(updateSql.toString());
+ updateSimple(param);
+ return ID;
+}
+]]>
+
+   </pre>
+   <pre item_name="delete_express" type="">
+<![CDATA[
+update("UPDATE T_USER set delete_flag=1 where ID=${ID}");
+]]>
+
+   </pre>
+   <pre item_name="status_express" type="">
+<![CDATA[
+reload
+]]>
+
+   </pre>
+   <pre item_name="displayorder_express" type=""></pre>
+  </form>
+  <div id="append_foot"></div>
+ </body>
+</html>
+            </textarea>
+        </pre>
+        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h2>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>id</td>
+                <td>表单名称</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>datasource</td>
+                <td>数据源，对应spring的datasource</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>success_url</td>
+                <td>保存成功之后的跳转url</td>
+                <td>reload:重新加载父页面<br>
+                    reloadlocal:重新加载当前页面<br>
+                    其他：自定义的url，支持参数表达式。
+                </td>
+            </tr>
+            <tr>
+                <td>formSubmitUrl</td>
+                <td>提交表单的URL,  自定义URL  需要支持 form表单提交的数据，且返回值 EzResult格式的JSON格式
+                    <pre class="layui-code code-demo">
+                    @RequestMapping(value = "test.html")
+                    @ResponseBody
+                    public EzResult test(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+                    return  EzResult.instance().data("success_url","ok");
+                    }
+                    </pre>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>表达式</td>
+                <td><a href="/doc/express.html#card4">点击查看表单表达式</a></td>
+                <td>
+                </td>
+            </tr>
+<tr>
+                <td>append_head</td>
+                <td>表单前面的一段html代码，自定义css</td>
+                <td>
+                </td>
+            </tr>
+<tr>
+                <td>append_foot</td>
+                <td>表单后面的一段html代码,自定义脚本</td>
+                <td>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

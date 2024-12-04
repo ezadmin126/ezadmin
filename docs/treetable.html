@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content"  style="margin-right: 0">
+<!--    <div class="ws-side">-->
+<!--        <div class="ws-side-fixed">-->
+<!--            <div class="ws-dir">-->
+<!--                <ul class="ws-dir-ul">-->
+<!--&lt;!&ndash;                    <li><a href="#source">源码示例</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <li ><a href="#param">参数说明</a></li>&ndash;&gt;-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>树形表格</h1>
+        <blockquote class="layui-elem-quote">
+            树形表格采用layui的treetable实现，继承自普通表格，在原有表格基础上添加一定配置即可。
+        </blockquote>
+        <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            配置treegrid=1
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+
+<body id="sys_resource"   treegrid="1" ></body>
+
+            </textarea>
+        </pre>
+
+
+        <h2 id="tree"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            表达式返回树形结构的数据
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+        StringBuilder sql=new StringBuilder();
+        sql.append("
+        SELECT
+        RESOURCE_ID ID ,  PARENT_RESOURCE_ID PARENT_ID ,RESOURCE_NAME NAME,
+        RESOURCE_NAME, RESOURCE_URL, RESOURCE_ICON,DISPLAY_ORDER FROM T_SYS_RESOURCE A WHERE DELETE_FLAG = 0
+        ");
+        return treeSearch(sql,"RESOURCE_NAME","ID","PARENT_RESOURCE_ID","0");
+            </textarea>
+        </pre>
+
+
+
+
+
+
+        <h2 id="button"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            append_foot配置补充按钮等代码
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+<textarea>
+
+
+<div id="append_foot">
+<script type="text/html" id="TPL-treeTable-demo">
+    <div class="layui-btn-container">
+        <button class="layui-btn" lay-event="addRoot">新增</button>
+    </div>
+</script>
+<script type="text/html" id="TPL-treeTable-demo-tools">
+    <div class="layui-btn-container">
+        <a class=" layui-btn" lay-event="addChild">新增子资源</a>
+    </div>
+</script>
+<script>
+    layui.use(function(){
+        var treeTable = layui.treeTable;
+        treeTable.on("toolbar(TPL-treeTable-demo)", function (obj) {
+            if (obj.event === "addRoot") {
+                openModel("/topezadmin/form/form-sys_resource?PID=0","添加");
+            }
+        });
+        treeTable.on('tool(treetable)', function (obj) {
+            var trData = obj.data;
+            if ( obj.event === "addChild") {
+                openModel("/topezadmin/form/form-sys_resource?PID="+trData.ID,"添加");
+            }
+        });
+    })
+</script>
+</div>
+            </textarea>
+        </pre>
+
+        <h2 id="show"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            url访问
+        </h2>
+        /topezadmin/list/tree-${code}
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

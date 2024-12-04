@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#color">颜色选择</a></li>
+                    <li ><a href="#tree">树</a></li>
+                    <li ><a href="#import">批量导入</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>介绍</h1>
+        <blockquote class="layui-elem-quote">
+一些其他的插件
+        </blockquote>
+        <h2 id="color"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            颜色选择
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+                <object type=colorpick></object>
+            </textarea>
+        </pre>
+        <h2 id="tree"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            树
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+                <object type=tree></object>
+            </textarea>
+        </pre>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

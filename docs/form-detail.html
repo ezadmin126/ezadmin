@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+<!--                    <li><a href="#source">源码示例</a></li>-->
+<!--                    <li ><a href="#param">参数说明</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>详情页</h1>
+        <blockquote class="layui-elem-quote">
+            表单可以无缝转为详情页，大部分插件替换成index-span即可。
+            详情页应用较少，只适用于简单快速场景。
+        </blockquote>
+
+        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            其他情况
+        </h2>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>表单插件</th>
+                <th>对应详情插件</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>table</td>
+                <td>tableview</td>
+            </tr> <tr>
+                <td>input等输入类型</td>
+                <td>input-span</td>
+            </tr>
+            <tr>
+                <td>select</td>
+                <td>select-span</td>
+            </tr>
+            <tr>
+                <td>select</td>
+                <td>select-span</td>
+            </tr><tr>
+                <td>其他</td>
+                <td>开发中</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

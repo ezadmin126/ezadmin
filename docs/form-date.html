@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#date">日期</a></li>
+                    <li ><a href="#daterange">日期区间</a></li>
+                    <li><a href="#datetime">日期时分秒</a></li>
+                    <li ><a href="#datetimerange">日期时分秒区间</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>时间</h1>
+        <blockquote class="layui-elem-quote">
+集成了普通的 日期与时间 的插件
+        </blockquote>
+        <h2 id="date"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            日期
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+                       <object col="12"  type="date"  > </object>
+            </textarea>
+        </pre>
+        <h2 id="daterange"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            日期区间
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+                       <object col="12"  type="daterange"  > </object>
+            </textarea>
+        </pre>
+        <h2 id="datetime"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            日期时分秒
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+                       <object col="12"  type="datetime"  > </object>
+            </textarea>
+        </pre>
+        <h3>服务端获取到的值，以  " - "分割</h3>
+
+        <h2 id="datetimerange"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            日期时分秒区间
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+                       <object col="12"  type="datetimerange"  > </object>
+            </textarea>
+        </pre>
+        <h3>服务端获取到的值，以  " - "分割</h3>
+
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

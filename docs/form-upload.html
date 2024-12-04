@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+                    <li><a href="#pic">图片</a></li>
+                    <li ><a href="#file">文件</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>介绍</h1>
+        <blockquote class="layui-elem-quote">
+        系统集成了图片与文件的上传，请先在系统参数处配置对应的上传url以及下载URL
+        </blockquote>
+        <h2 id="pic"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            图片
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<object type="uploadfile"></object>
+            </textarea>
+        </pre>
+        <h2 id="file"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            文件
+        </h2>
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+<object type="uploadimage"></object>
+            </textarea>
+        </pre>
+
+
+
+        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
+            参数说明
+        </h2>
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="300">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>配置项</th>
+                <th>说明</th>
+                <th>默认值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>col</td>
+                <td>栅栏，当前字段的宽度</td>
+                <td>1到12 </td>
+            </tr>
+            <tr>
+                <td>alias</td>
+                <td>表的别名</td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td>item_desc</td>
+                <td>下方的注释</td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td>top_desc</td>
+                <td>上方的注释，主要用于富文本</td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td>jdbctype</td>
+                <td>数据库字段类型</td>
+                <td>NUMBER,
+                    NUMBERNULL,
+                    DATE_TO_NUMBER,
+                    VARCHAR,
+                    DATE,
+                    DATETIME,
+                    CLOB
+                    , BODY,
+                    NUMBER0,
+                    NUMBER1,
+                    NUMBER2 ,
+                    NUMBER3,
+                    NUMBER4 </td>
+            </tr>
+            <tr>
+                <td>lay_verify</td>
+                <td>layui原生验证</td>
+                <td>required|phone|number
+                    图片：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
+                    文件：{"required":true,"acceptMime":"image/jpeg, image/jpg","exts":"jpg|jpeg","max":1,"min":1,"size":200,"width":680,"height":300}
+                    参考layui官网
+                </td>
+            </tr>
+            <tr>
+                <td>valid_rule</td>
+                <td>jQuery 验证规则</td>
+                <td>{"required": true, "minlength": 2} </td>
+            </tr>
+            <tr>
+                <td>valid_msg</td>
+                <td>下方的注释</td>
+                <td>{"required": true, "minlength": "长度{0}"} </td>
+            </tr>
+            <tr>
+                <td>help</td>
+                <td>字段名称上面的提示，一般用不到</td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td>其他</td>
+                <td>参见HTML原生属性</td>
+                <td> </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>
