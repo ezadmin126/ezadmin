@@ -212,6 +212,8 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             attrMap.putIfAbsent("id","ITEM_ID_"+item.get(JsoupUtil.ITEM_NAME)+"");
                             // attrMap.putIfAbsent("lay-affix","clear" );
                             attrMap.putIfAbsent("lay-verify",attrMap.get(JsoupUtil.LAYVERIFY) );
+                            attrMap.put("class", (Utils.trimNull(attrMap.get("class")).replace("layui-input","")) );
+
                             //  attrMap.put("class","layui-input "+attrMap.get("class") );
                             StringBuilder sb=new StringBuilder("<div ");
                             attrMap.forEach((k,v)->{

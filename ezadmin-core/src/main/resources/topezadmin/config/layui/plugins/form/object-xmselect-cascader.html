@@ -100,7 +100,7 @@
                             //     expandedKeys: [ -3 ],
                             // },
                             toolbar: {
-                                show: ($('[[${"#itemId-" + model.item_name}]]').attr("toolbar")||'true')=='true',
+                                show: ($('[[${"#itemId-" + item_name}]]').attr("toolbar")||'true')=='true',
                                 list: ['ALL', 'REVERSE', 'CLEAR']
                             },
                             filterable: true,
@@ -109,7 +109,7 @@
                                 return  $('[[${"#itemdata-" +  item_name}]]').val()==''?[]:
                                     JSON.parse($('[[${"#itemdata-" +  item_name}]]').val()) ;
                             },
-                            initValue: $('[[${"#itemId-" +  item_name}]]').attr("value")? $('[[${"#itemId-" +  item_name}]]').attr("value").split(","):[]
+                            initValue: $('[[${"#itemId-" +  item_name}]]').attr("value")? $('[[${"#itemId-" +  item_name}]]').attr("value").split(","):[],
                             filterMethod: function (val, item, index, prop) {//重写搜索方法。
                                 if (val == item.K) {//把value相同的搜索出来
                                     return true;

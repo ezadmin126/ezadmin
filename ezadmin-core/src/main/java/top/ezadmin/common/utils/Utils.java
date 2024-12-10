@@ -359,8 +359,7 @@ public class Utils {
 
         idMap.forEach((k,v)->{
             String parentId=Utils.trimNull(v.get("PARENT_ID"));
-
-            if(StringUtils.equals("0",parentId)){
+            if(StringUtils.equals(Utils.trimNull(root.get("ID")),parentId)){
                 ((ArrayList)root.get("CHILDREN")).add(v);
             }else{
                 if(idMap.containsKey(parentId)){
