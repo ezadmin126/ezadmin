@@ -1,6 +1,7 @@
 
     $(function(){
-        $("[type=button-import]").click(function () {
+        $("[type=button-import]").click(function (e) {
+
             var url="/topezadmin/form/form-import";
             var json = ['100%', '100%'];
             var obutton=$(this);
@@ -54,13 +55,13 @@
                     var param=obutton.attr("url");
                     if(param){
                         try{
-                        // 创建 URLSearchParams 对象
-                        const queryParams = new URLSearchParams(param);
-// 将查询参数转换为 JSON 数组
-                        queryParams.forEach((value, key) => {
-                                    $(body).find('#inputForm').append("<input type='hidden' name='"+key+"' " +
-                                       "value='"+value+"'>");
-                        });
+                            // 创建 URLSearchParams 对象
+                            const queryParams = new URLSearchParams(param);
+                            // 将查询参数转换为 JSON 数组
+                            queryParams.forEach((value, key) => {
+                                        $(body).find('#inputForm').append("<input type='hidden' name='"+key+"' " +
+                                           "value='"+value+"'>");
+                            });
                         }catch (e){
                             console.log("url 格式不对， k=v&k1=v1 ,"+queryString)
                         }
@@ -68,5 +69,8 @@
 
                 }
             });
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
         })
     })

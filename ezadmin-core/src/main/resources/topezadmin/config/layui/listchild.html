@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:text="${data.listName}">List</title>
+    <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"   />
+
+    <link th:href="${contextName+'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
+    <link th:href="${contextName+'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
+    <link th:href="${contextName+'/webjars/topezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
+
+    <script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
+    <script th:src="${contextName+'/webjars/topezadmin/layui/js/jquery.cookie.js'}"></script>
+    <script th:src="${contextName+'/webjars/jqueryform/jquery.form.js?'}"></script>
+    <script th:src="${contextName+'/webjars/jquery-validation/1.19.5/jquery.validate.min.js'}"></script>
+    <script th:src="${contextName+'/webjars/jquery-validation/1.19.5/localization/messages_zh.min.js'}"></script>
+    <script src="/webjars/dragula/3.7.3/dist/dragula.min.js"   ></script>
+
+    <script th:src="${contextName+'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${contextName+'/webjars/topezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
+    <script th:src="${contextName+'/webjars/topezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
+    <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?123'+vi:''}"  >
+
+    [(${data.core.append_head})]
+</head>
+
+<body th:utext="${data.core.bodyTag}" th:remove="tag"> </body>
+<!--初始化加载层-->
+<div class="layuimini-loader" th:if="${not #strings.equals('pure',data.core.tablestyle)}">
+    <div class="layuimini-loader-inner"></div>
+</div>
+<input type="hidden" ID="ENCRYPT_LIST_ID" name="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
+<input type="hidden" ID="EZ_SESSION_USER_NAME_KEY" name="EZ_SESSION_USER_NAME_KEY"
+       th:value="${EZ_SESSION_USER_NAME_KEY}">
+<input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
+<input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
+<input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${data.core.emptyname}">
+<input type="hidden" ID="removewatermark" name="removewatermark"  value="1">
+
+<div   th:class="${'layui-'+layout}" >
+    <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap" style="display: none">
+        <ul class="layui-tab-title" id="tab" th:if="${not #lists.isEmpty(data.tab)}"  >
+            <li th:lay-id="${item.item_name}" th:item_id="${item.item_name}" th:item_name="${item.item_name}"
+                th:classappend="${item.select?'layui-this  ':' '}"
+                th:each="item:${data.tab}">
+                <a th:item_name="${item.item_name}" th:href="${item.url}"  th:text="${item.label}"></a>
+            </li>
+        </ul>
+        <div class="layui-tab-content" th:if="${not #lists.isEmpty(data.search)}">
+            <div class="layui-tab-item layui-show"  >
+                <div class="layui-card" style="padding:10px">
+                    <div class="layui-card-body"  >
+                        <form id="searchForm" lay-filter="searchForm" class="layui-form   " th:action="${listUrl}" method="POST">
+                    <input type="hidden" id="currentPage" name="currentPage" th:value="${data.page.currentPage}">
+                    <input type="hidden" id="perPageInt" name="perPageInt" th:value="${data.page.perPageInt}">
+                    <input type="hidden" id="totalPage" name="totalPage" th:value="${data.page.totalPage}">
+                    <input type="hidden" id="totalRecord" name="totalRecord" th:value="${data.page.totalRecord}">
+                    <div class="  searchcontent layui-row layui-col-space5">
+                        <div th:style="${indexStat.index>8?'display:none':''}"  th:remove="tag"
+                             th:each="item,indexStat:${data.search}" th:utext="${item.html}"
+                             >
+                        </div>
+                        <div class="form-group col-md-3 row orderBy" STYLE="display:none">
+                            <input id="orderBy" th:name="${data.ezOrderName}" th:value="${data.ezOrderValue}">
+                            <input id="customSearch"  name="customSearch" th:value="${customSearch}">
+                        </div>
+                        <input type="hidden" id="_SEARCH_ITEM_DISPLAY" name="_SEARCH_ITEM_DISPLAY"
+                               th:value="${_SEARCH_ITEM_DISPLAY}">
+                        <input type="hidden" id="_EZ_MOBILE_FLAG" name="_EZ_MOBILE_FLAG" th:value="${_EZ_MOBILE_FLAG}">
+                    </div>
+
+                    <div   class="layui-form-item searchButtonRow">
+                        <div class="layui-inline ">
+                            <button type="button" id="submitBtn" class="layui-btn layui-btn-normal layui-btn-sm">查询
+                            </button>
+                            <button type="button" id="resetBtn" class="layui-btn    layui-btn-primary layui-btn-sm ">
+                                重置
+                            </button>
+                            <button type="button" id="customBtn" windowname="高级查询"
+                                    class="layui-btn  layui-btn-primary  layui-btn-sm  ">高级查询
+
+                            </button>
+                            <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/listEdit/loadEdit-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                               图形编辑
+                            </button>
+                            <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/listEdit/sourceEdit-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                源码编辑
+                            </button>
+                            <button th:if="${not cacheFlag}" opentype="_BLANK_PARAM" type="button" th:url="${'/topezadmin/listEdit/trace-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                查看SQL
+                            </button>
+
+                            <button   type="button"
+                                     style="display:none" id="downBtn"
+                                    class="layui-btn layui-btn-primary layui-btn-sm "
+                                    data-placement="top" title="展开">
+                                展开
+                                <i class="layui-icon layui-icon-down"></i>
+                            </button>
+                            <button   type="button" id="upBtn"
+                                      style="display:none"
+                                    class="layui-btn layui-btn-primary layui-btn-sm  "
+                                    data-placement="top" title="收起">
+                                收起
+                                <i class="layui-icon layui-icon-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+
+                </form>
+                    </div>
+                </div>
+            </div><!--formitem-->
+        </div><!--tab-content-->
+    </div><!--tab -->
+    <div class="layui-card">
+        <div class="layui-card-body"  >
+            <div id="table-wrap"  >
+                <table   th:lay-filter="${not #strings.equals('pure',data.core.tablestyle)?'mytable':''}"
+                       id="mytable" th:lineStyle="${data.core.linestyle}"
+                       class="  layui-table ez-table " >
+                    <thead style="text-align: center">
+                    <tr th:f="${data.core.firstcol}">
+
+                        <th th:remove="tag" th:each="item:${data.col}" th:utext="${item.html}">
+
+                        </th>
+                        <th  item_name="oper" th:lay-options="${data.core.laydata}" th:corelaydata="${data.core.laydata}" class="rowButtons fixedCol  "
+                            th:if="${not #lists.isEmpty(data.rowbtn)   }">
+                            操作
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);">
+                    <tr th:each="row,rowStat:${data.core.dataList}" th:data-rowjson="${row.rowjson}"    th:data-id="${row.id}">
+                        <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <DIV class="layui-table-column layui-table-page">
+                    <div  class="layui-inline layui-table-pageview" style="margin-right: 10px;
+    margin-top: 8px;" th:utext="${data.page.html}"></div>
+                </DIV>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</div><!--container-->
+
+
+<input type="hidden" id="fixNumber" name="fixNumber" th:v="${data.core.fixnumber}" th:value="${data.core.fixnumber}">
+<input type="hidden" id="fixNumberRight" name="fixNumberRight" th:v="${data.core.fixnumberright}"
+       th:value="${data.core.fixnumberright}">
+<input type="hidden" id="firstCol" name="firstCol" th:value="${data.core.firstcol}">
+<input type="hidden" id="cellMinWidth" name="cellMinWidth" th:value="${data.core.cellMinWidth}">
+
+<input type="hidden" id='validateRules' name='validateRules' th:value="${data.validateRules}">
+<input type="hidden" id='validateMessages' name='validateMessages' th:value="${data.validateMessages}">
+
+<input type="hidden" id='contextName' name='contextName' th:value="${contextName}">
+<input type="hidden" id='uploadUrl' name='uploadUrl' th:value="${uploadUrl}">
+<input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
+<input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
+<input type="hidden" id='IS_DEBUG' name='IS_DEBUG' th:value="${IS_DEBUG}">
+<input type="hidden" id='linestyle' name='linestyle'  th:lineStyle="${data.core.linestyle}">
+<input type="hidden" id='expandedMode' name='expandedMode'  th:lineStyle="${data.core.expandedMode}">
+</body>
+<script th:src="${contextName+'/webjars/topezadmin/layui/js/py.js?v='+vi}" type="text/javascript"></script>
+
+<script th:src="${contextName+'/webjars/topezadmin/layui/js/core.js?v='+vi}" type="text/javascript"></script>
+
+<script th:src="${contextName+'/webjars/topezadmin/layui/js/ezlist.js?v='+vi}" type="text/javascript"></script>
+
+[(${data.core.append_foot})]
+
+<script th:if="${#strings.equals('pure',data.core.tablestyle)}">
+    afterAllDataLoad();
+</script>
+</html>

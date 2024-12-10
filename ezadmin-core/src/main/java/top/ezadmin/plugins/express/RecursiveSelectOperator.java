@@ -37,8 +37,7 @@ public class RecursiveSelectOperator extends AbstractOperator {
                 }
             }
         }catch (Exception e){
-            logger.error("",e);
-            Utils.addLog(model.getResult(),ExceptionUtils.getFullStackTrace(e));
+            Utils.addLog(model.getResult(),e);
            // throw e;
         }
         return result;

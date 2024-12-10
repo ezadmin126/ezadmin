@@ -135,6 +135,7 @@ public class BlogController {
         try {
             blog.setAddTime(new Date());
             blog.setAddIp(IpUtils.getRealIp(request));
+            blog.setOnLine(0);
             blogService.addMessage(blog);
             return EzResult.instance().msg("200", "成功");
         }catch(Exception e){

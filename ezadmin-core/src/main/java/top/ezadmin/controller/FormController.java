@@ -212,8 +212,7 @@ public class FormController extends BaseController {
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
             paras.putAll(searchParamsValues);
-           // logger.info("ezform doSubmit execute   {} ID={} param={}",  ENCRYPT_FORM_ID,ID, JSONUtils.toJSONString(searchParamsValues));
-            //计算初始化表单的参数值
+             //计算初始化表单的参数值
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
                     .addParam(paras)
@@ -237,6 +236,7 @@ public class FormController extends BaseController {
                  if(StringUtils.contains(successurl,"/")){
                     successurl=request.getContextPath()+successurl;
                 }
+                 paras.put("ID",toFormId(rowId,request));
                 defaultTo= MapParser.parseDefaultEmpty(successurl, paras).getResult();
             }
             return EzResult.instance().data( defaultTo);
@@ -304,13 +304,16 @@ public class FormController extends BaseController {
 
             Map<String,Object> searchParamsValues=requestToMap(request );
             paras.putAll(searchParamsValues);
-         //   logger.info("保存表单 {}{}{}",  ENCRYPT_FORM_ID,
+             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+
+            //   logger.info("保存表单 {}{}{}",  ENCRYPT_FORM_ID,
             //        ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
             //计算初始化表单的参数值
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
                     .addParam(paras)
-                    .addRequestParam(requestToMap(request))
+                    .addRequestParam(searchParamsValues)
+                    .addSessionParam(sessionParamMap)
                     .execute();
 
             Object rowId=result;
@@ -369,13 +372,16 @@ public class FormController extends BaseController {
 
             Map<String,Object> searchParamsValues=requestToMap(request );
             paras.putAll(searchParamsValues);
+            Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+
             logger.info("保存表单 {} {}"   ,
-                    ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
+                    ENCRYPT_FORM_ID );
             //计算初始化表单的参数值
             Object rowId = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
                     .addParam(paras)
-                    .addRequestParam(requestToMap(request))
+                    .addRequestParam(searchParamsValues)
+                    .addSessionParam(sessionParamMap)
                     .execute();
             if(rowId instanceof  EzResult){
                 EzResult  r= (EzResult)rowId;

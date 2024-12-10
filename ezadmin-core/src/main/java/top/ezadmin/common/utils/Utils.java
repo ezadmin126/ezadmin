@@ -16,6 +16,8 @@ import java.io.*;
 import java.math.BigDecimal;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Utils {
 
@@ -60,14 +62,20 @@ public class Utils {
      * 把当前日志放到 尾部
      */
     public static void addLog(String s,Object obj) {
-        add(s+"\t"+JSONUtils.toJSONString(obj));
+        if(getLog()!=null){
+            add(s+"\t"+JSONUtils.toJSONString(obj));
+        }
     }
     public static void addLog(String s ) {
-        add(EzDateUtils.todayDatetime()+ "\t\n" +s );
+        if(getLog()!=null) {
+            add(EzDateUtils.todayDatetime() + "\t\n" + s);
+        }
     }
     public static void addLog(String s,Exception e ) {
-        add(EzDateUtils.todayDatetime()+ "\t\n" +s  + ExceptionUtils.getFullStackTrace(e));
-        logger.info(s,e);
+        if(getLog()!=null){
+            add(EzDateUtils.todayDatetime()+ "\t\n" +s  + ExceptionUtils.getFullStackTrace(e));
+        }
+        logger.error(s,e);
     }
 
 
@@ -335,17 +343,71 @@ public class Utils {
             in.close();
         }
     }
+
     public static List<Map<String,Object>> flatTree(List<Map<String,Object>> list){
+        Map  root=new HashMap();
+        root.put("ID","0");
+        if(list.size()>0&&list.get(0).containsKey("ROOT_ID")){
+            root.put("ID",list.get(0).get("ROOT_ID"));
+        }
+        root.put("CHILDREN",new ArrayList<>());
+        //1转成Map
+        Map<String, Map<String, Object>> idMap=new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            idMap.put(Utils.trimNull(list.get(i).get("ID")),list.get(i));
+        }
+
+        idMap.forEach((k,v)->{
+            String parentId=Utils.trimNull(v.get("PARENT_ID"));
+
+            if(StringUtils.equals("0",parentId)){
+                ((ArrayList)root.get("CHILDREN")).add(v);
+            }else{
+                if(idMap.containsKey(parentId)){
+                    if(!idMap.get(parentId).containsKey("CHILDREN")){
+                        idMap.get(parentId).put("CHILDREN",new ArrayList<>()) ;
+                    }
+                    ((List)idMap.get(parentId).get("CHILDREN")).add(v);
+                }
+            }
+        });
+
+        List<Map<String,Object>> result=((ArrayList)root.get("CHILDREN"));
+        result.sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get("ID")))));
+        sortChildren(result);
+        return result;
+    }
+    private static void sortChildren(List<Map<String,Object>> nodes) {
+        for (Map<String,Object> node : nodes) {
+            if(isNotEmpty(((List)node.get("CHILDREN")))){
+                // Sort the current node's children by ID
+                ((List)node.get("CHILDREN")).sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get("ID")))));
+                // Recursively sort the children
+                sortChildren(((List)node.get("CHILDREN")));
+            }
+        }
+    }
+
+//    public static void main(String[] args) {
+//        System.out.println(NumberUtils.toLong("620000000000"));
+//    }
+
+    public static List<Map<String,Object>> flatTreeV2(List<Map<String,Object>> list){
         Map  root=new HashMap();
 
         root.put("ID","0");
         if(list.size()>0&&list.get(0).containsKey("ROOT_ID")){
             root.put("ID",list.get(0).get("ROOT_ID"));
         }
-        flatTree2(root,list);
+        AtomicInteger level=new AtomicInteger(0);
+        flatTree2(root,list,level);
         return (List<Map<String,Object>>)root.get("CHILDREN");
     }
-    static  void flatTree2( Map<String,Object>  root,List<Map<String,Object>> left){
+    static  void flatTree2( Map<String,Object>  root,List<Map<String,Object>> left,AtomicInteger level){
+        if(level.incrementAndGet()>4){
+            logger.warn("超过4层，存在溢出风险");
+            return;
+        }
         for (int i = 0; i < left.size(); i++) {
             Map cur=left.get(i);
             if(StringUtils.equals(Utils.trimNull(cur.get("ID")),"0")){
@@ -357,7 +419,7 @@ public class Utils {
                 }
                 ArrayList<Map<String,Object>> cc=( ArrayList<Map<String,Object>>)root.get("CHILDREN");
                 cc.add(cur);
-                flatTree2(cur,left);
+                flatTree2(cur,left,level);
             }
         }
     }

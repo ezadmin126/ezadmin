@@ -22,41 +22,32 @@
         </div>
     </div>
     <div class="layui-text ws-text" id="WS-text">
-        <h1>图片</h1>
+        <h1>介绍</h1>
         <blockquote class="layui-elem-quote">
-            列表页展示图片，固定大小，等比压缩，点击后可预览
+          配置各个组件时，需要能够取到各个参数，如SQL中 #{abc},
         </blockquote>
-        <h2 id="list"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            图片
-        </h2>
+
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
- <th item_name="PIC_ID" name="PIC_ID" body="td-pic"   url="/core/downloadDesc.html?fileId=${PIC_ID}">产品图片</th>
+1.请求request中的参数
+  1.1插件中
+  <button url="/abc?id=${ID}"> 可以将${ID}替换为当前request中的ID
+  1.2表达式中
+  id=$("id");
+  sql="select id from table where name=#{name} and id="+id;
+  都可以替换。
+2.请求session中的参数
+  在表达式中可以获取到内置的session参数。
+  2.1插件中
+  同request,如果名称相同，优先取session
+
+  2.2表达式
+  userId=$$("USER_ID");
+3.列表单元格获取当前行的数据
+  <object type=select data="select id K,name V from t where id=${rowdata.USER_ID}" datatype=KVSQL>
+
             </textarea>
         </pre>
-        <h2 id="param"  lay-toc="{anchor: null}" style="margin-bottom: 0;">
-            参数说明
-        </h2>
-        <table class="layui-table">
-            <colgroup>
-                <col width="150">
-                <col width="300">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>配置项</th>
-                <th>说明</th>
-                <th>默认值</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>url</td>
-                <td>图片链接</td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 

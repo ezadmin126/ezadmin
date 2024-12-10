@@ -80,6 +80,7 @@ public class FormEditController extends BaseController {
         }
         List<Map<String, Object>> plugins= PluginsDao.getInstance().allFormPlugin();
         request.setAttribute("plugins",plugins);
+        searchParamsValues.put(JsoupUtil.FORM_EDIT_FLAG,"1");
 
         Map<String,Object> core=(Map<String,Object>)form.get("core");
         core.put(JsoupUtil.ADMINSTYLE,"layui");
@@ -108,6 +109,7 @@ public class FormEditController extends BaseController {
     @EzMapping("sourceEdit.html")
     public String export(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_FORM_ID = Utils.trimNull(request.getAttribute("ENCRYPT_FORM_ID"));
+        request.setAttribute(JsoupUtil.FORM_EDIT_FLAG,"1");
         Map<String,Object>
             c=formService.selectConfigEditForm(ENCRYPT_FORM_ID);
         request.setAttribute("EZ_CONFIG",c.get("EZ_CONFIG")+"");
@@ -361,6 +363,7 @@ public class FormEditController extends BaseController {
                 if(StringUtils.contains(successurl,"/")){
                     successurl=request.getContextPath()+successurl;
                 }
+                paras.put("ID",toFormId(rowId,request));
                 defaultTo= MapParser.parseDefaultEmpty(successurl, paras).getResult();
             }
             return EzResult.instance().data( defaultTo);
@@ -420,13 +423,13 @@ public class FormEditController extends BaseController {
 
             Map<String,Object> searchParamsValues=requestToMap(request );
             paras.putAll(searchParamsValues);
-            logger.info("保存表单 {}{}{}",  ENCRYPT_FORM_ID,
-                    ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
+            Map<String, String> sessionParamMap = sessionToMap(request.getSession());
             //计算初始化表单的参数值
             Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
                     .addParam(paras)
-                    .addRequestParam(requestToMap(request))
+                    .addRequestParam(searchParamsValues)
+                    .addSessionParam(sessionParamMap)
                     .execute();
 
             Object rowId=result;
@@ -485,13 +488,14 @@ public class FormEditController extends BaseController {
 
             Map<String,Object> searchParamsValues=requestToMap(request );
             paras.putAll(searchParamsValues);
-            logger.info("保存表单 {} {}"   ,
-                    ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
+            Map<String, String> sessionParamMap = sessionToMap(request.getSession());
+
             //计算初始化表单的参数值
             Object rowId = DefaultExpressExecutor.createInstance().datasource(formDs)
                     .express(express)
                     .addParam(paras)
-                    .addRequestParam(requestToMap(request))
+                    .addRequestParam(searchParamsValues)
+                    .addSessionParam(sessionParamMap)
                     .execute();
             if(rowId instanceof  EzResult){
                 EzResult  r= (EzResult)rowId;

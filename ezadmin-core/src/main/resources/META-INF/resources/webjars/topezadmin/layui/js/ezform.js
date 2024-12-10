@@ -166,22 +166,26 @@ $(function () {
     $("#inputForm").validate(config);
 
 
-    $(document).on("click",".layui-card-header .layui-icon",function(){
-        if($(this).hasClass("layui-icon-up")){
-            $(this).parents(".layui-card").find(".dragula-container").hide();
-            $(this).removeClass("layui-icon-up")
-            $(this).addClass("layui-icon-down")
-        }else{
-            $(this).parents(".layui-card").find(".dragula-container").show();
-            $(this).removeClass("layui-icon-down")
-            $(this).addClass("layui-icon-up")
-        }
-    })
+
     $("body").on("click","#submitbtnProxy",function(){
         $("#submitbtn").click();
     })
     //end
    // $('.layuimini-loader').fadeOut();
+    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});
+
+    //panel 扩大缩小
+    $(".ez-form-panel  .layui-layer-min").click(function(){
+        $(this).closest(".layui-card").find(".layui-card-body").hide();
+        $(this).siblings().removeClass("layui-hide");
+        $(this).addClass("layui-hide");
+    })
+    $(".ez-form-panel  .layui-layer-maxmin").click(function(){
+        $(this).closest(".layui-card").find(".layui-card-body").show();
+        $(this).addClass("layui-hide");
+        $(this).siblings().removeClass("layui-hide");
+    })
+
 })
 
 

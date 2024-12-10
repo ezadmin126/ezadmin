@@ -9,6 +9,7 @@
         font-size: 20px !important;
     }
 </style>
+<link href="/static/prism/prism.min.css" rel="stylesheet" />
 <body  >
 <div class="layui-layout layui-layout-admin  ">
 
@@ -56,9 +57,9 @@
         <div class="layui-row layui-col-space10" style="margin-top:10px">
             <div class="layui-col-xs12 layui-col-md12">
                 <div class="layui-panel  " style="padding:30px">
-                     <form th:if="${1==blogDetailVO.enableComment}" class="layui-form" action="/blog/addComments.html" method="POST">
+                     <form th:if="${1==blogDetailVO.enableComment}" class="layui-form"   method="POST">
         <input type="hidden" name="blogId" th:value="${blogDetailVO.blogId}">
-            <div class="layui-form-item">
+                <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">验证码</label>
                     <div class="layui-input-inline layui-input-wrap">
@@ -68,13 +69,20 @@
                         <input type="text" class="layui-input"   th:value="${valicode}">
                     </div>
                 </div>
+            </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">昵称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="userName" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                        <input type="text" name="userName" lay-verify="required" placeholder="请输入昵称" autocomplete="off" class="layui-input">
                     </div>
                 </div>
+                 <div class="layui-form-item">
+                     <label class="layui-form-label">邮箱</label>
+                     <div class="layui-input-block">
+                         <input type="text" name="userEmail" lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                     </div>
+                 </div>
 
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">留言</label>
@@ -83,8 +91,8 @@
                     </div>
                 </div>
 
-                <div class="layui-input-block">
-                    <button type="submit" class="layui-btn" lay-submit lay-filter="demo1">立即提交</button>
+                <div class="layui-form-item">
+                    <button   class="layui-btn" lay-submit lay-filter="demo1">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
 
@@ -94,10 +102,51 @@
             </div>
         </div>
 
+        <div class="layui-row layui-col-space10" style="margin-top:10px">
+            <div class="layui-col-xs12 layui-col-md12">
+
+            </div>
+        </div>
+        messageList
+
 
     </div>
     <div th:replace="blog/common::foot"></div>
 
 </div>
+<script>
+    layui.use(function() {
+        var $ = layui.$;
+        var form = layui.form;
+        var layer = layui.layer;
+        // 提交事件
+        form.on('submit(demo1)', function (data) {
+            var field = data.field; // 获取表单全部字段值
+            var elem = data.elem; // 获取当前触发事件的元素 DOM 对象，一般为 button 标签
+            var elemForm = data.form; // 获取当前表单域的 form 元素对象，若容器为 form 标签才会返回。
+            // 显示填写结果，仅作演示用
+            // layer.alert(JSON.stringify(field), {
+            //     title: '当前填写的字段值'
+            // });
+            // 此处可执行 Ajax 等操作
+            // …
+            $.post("/blog/addComments.html",  field, function(x) {
+                if(x.success){
+                    layer.alert("提交成功");
+                }else{
+                     layer.alert(x.message);
+                }
+            }, 'json').fail(function() {
+                 layer.alert('请求失败，网络异常');
+            });
+            return false; // 阻止默认 form 跳转
+        });
+    })
+</script>
+<script src="/static/prism/prism.min.js"></script>
+<!-- 引入你需要的语言插件 -->
+<script src="/static/prism/prism-javascript.min.js"></script>
+<script src="/static/prism/prism-css.min.js"></script>
+<script src="/static/prism/prism-java.min.js"></script>
 </body>
 </html>

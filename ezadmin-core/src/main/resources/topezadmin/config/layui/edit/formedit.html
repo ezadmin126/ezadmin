@@ -694,11 +694,28 @@
                     </div>
 
                     <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
-                         th:ez-cardname="${card.cardname}" ez-type="card" th:ez-col="${card.col}">
+                         th:ez-cardname="${card.cardname}" ez-type="card"
+                         th:ez-col="${card.col}"
+                         th:ez-frameurl="${card.frameurl}"
+                         th:ez-frameheight="${card.frameheight}"
+                         th:ez-btnname="${card.btnname}"
+                         th:ez-btnurl="${card.btnurl}"
+                         th:ez-btnopentype="${card.btnopentype}"
+                         th:ez-btntemplate="${card.btntemplate}"
+                    >
                         <div class="layui-card"  >
                             <div class="layui-card-header"  th:if="${not #strings.isEmpty(card.cardname)}" >
                                 [[${card.cardname}]]
-                                <a class="layui-icon-up layui-icon"> </a>
+                                <div class="layui-layer-setwin  " style="top: 0px;line-height: 43px;position: absolute;">
+                                    <div class="layui-btn-group custom-card-btn">
+                                        <button  th:if="${not #strings.isEmpty(card.btnname)}" class="ezopenbutton layui-btn layui-btn-sm layui-btn-normal"
+                                                 th:windowname="${card.btnname}"
+                                                 th:url="${card.btnurl}" th:opentype="${card.btnopentype}" th:text="${card.btnname}">添加</button>
+                                        [(${card.btntemplate})]
+                                    </div>
+                                    <span class="layui-layer-min" style=" "></span>
+                                    <span class="layui-layer-max layui-layer-maxmin layui-hide"  ></span>
+                                </div>
                             </div>
                             <div class="layui-card-body   ">
                                 <div class="layui-row dragula-container form-item-container">

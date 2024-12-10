@@ -24,36 +24,4 @@ public class CommentsSqlParser {
         //带参数类型的匹配
         return StandardSqlParser.parse(mod.getResult(),variables);
     }
-
-    private static class SqlCommentTokenHandler implements TokenHandler {
-        private final Map<String,Object> variables;
-        ResultModel model;
-
-        private SqlCommentTokenHandler(ResultModel model,Map<String,Object> variables) {
-            this.variables = variables;
-            this.model=model;
-        }
-
-
-        @Override
-        public String handleToken(String content) {
-            if(StringUtils.isBlank(content)){
-                return "";
-            }
-            //通过${}匹配后的结果
-            ResultModel modelDyna=MapParser.parse(content,variables);
-
-            ResultModel modelStand=StandardSqlParser.parse(modelDyna.getResult(),variables);
-
-            if(modelDyna.getParams().size()>0||modelStand.getParams().size()>0){
-                //只接收modelStand的参数
-                for (int i = 0; i < modelStand.getParams().size(); i++) {
-                    model.addParam(modelStand.getParams().get(i));
-                }
-                return modelStand.getResult();
-            }
-            return "";
-        }
-    }
-
 }

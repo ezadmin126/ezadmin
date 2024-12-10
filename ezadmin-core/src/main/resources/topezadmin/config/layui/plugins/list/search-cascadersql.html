@@ -48,17 +48,47 @@
     <label class="layui-form-label" th:for="${'itemName-' + model.item_name}"
            th:text="${model.label+'：'}" th:title="${model.label}">普通文本</label>
     <div  class="layui-input-block">
-        <input th:value="${#strings.isEmpty(model.itemParamValue)?'':model.itemParamValue}"
-               th:name="${model.item_name}" th:id="${'search-itemName-' + model.item_name}"
-               class="ez-laycascader layui-input"
-               th:itemsJson="${itemsJson}"
-               ez_value="ID" ez_label="LABEL"
-               th:multi="${model.multi}"
-               th:collapseTags="${model.collapsetags}"
-               th:showAllLevels="${model.showalllevels}"
-               th:placeholder="${model.placeholder}">
+        [(${serverDom})]
+        <!--树形数据 flat2tree  datatype=KVSQL2TREECACHE  -->
+        <input type="hidden" th:id="${'itemdata-'+model.item_name}" th:value="${itemsJson}" >
     </div>
+        <script>
+            layui.use('layCascader', function () {
+                try{
+                    var layCascader=layui.layCascader;
+                    var _this = $('[[${"#ITEM_ID_" + model.item_name}]]');
+                    var prop = {};
+                    prop.value =  _this.attr("ez_value")||'VALUE';
+                    prop.label = _this.attr("ez_label")||'LABEL' ;
+                    prop.children = _this.attr("ez_children")||'CHILDREN';
+                    prop.multiple = ($('[[${"#ITEM_ID_" + model.item_name}]]').attr("radio")||"false").toLowerCase()==="false"?true:false,
+                        // res=flatToTree(res,0);
+                        layCascader({
+                            elem: _this[0],
+                            props: prop,
+                            filterable:  ($('[[${"#ITEM_ID_" + model.item_name}]]').attr("filterable")||"true").toLowerCase()==="true"?true: false,
+                            clearable:   ($('[[${"#ITEM_ID_" + model.item_name}]]').attr("clearable")||"true").toLowerCase()==="true"?true: false ,
+                            placeholder: _this.attr("placeholder") ,
+                            collapseTags:  ($('[[${"#ITEM_ID_" + model.item_name}]]').attr("collapseTags")||"true").toLowerCase()==="true"?true: false ,
+                            value: _this.attr("value"),
+                            options: JSON.parse($('[[${"#itemdata-" + model.item_name}]]').val()||[])
+                            ,
+                            filterMethod: function (node, val) {//重写搜索方法。
+                                if (val == node.data[prop.label]) {//把value相同的搜索出来
+                                    return true;
+                                }
+                                if ((node.data[prop.label] + node.data[prop.label]).indexOf(val) != -1) {//名称中包含的搜索出来
+                                    return true;
+                                }
 
+                                return !ezpingyin(val, (node.data[prop.label] + node.data[prop.label]), (node.data[prop.value] + ''));
+                            }
+                        });
+                }catch (e) {
+                    console.log(e)
+                }
+            })
+        </script>
 </div>
 </div>
 </div>

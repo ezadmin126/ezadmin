@@ -53,6 +53,7 @@
 
 
                 $(function(){
+                    try{
                 xmSelect.render({
                     el: '[[${"#itemId-" + model.item_name}]]',
                     autoRow: false,
@@ -77,16 +78,20 @@
                         strict:($('[[${"#itemId-" + model.item_name}]]').attr("strict")||"false".toLowerCase())==="false"?false:true,
                     },
                     toolbar: {
-                        show: true,
+                        show: ($('[[${"#itemId-" + model.item_name}]]').attr("toolbar")||'true')=='true',
                         list: ['ALL', 'REVERSE', 'CLEAR']
                     },
                     filterable: true,
                     //height: 'auto',
                     data: function(){
-                        return  JSON.parse($('[[${"#itemdata-" + model.item_name}]]').val()||[]);
+                        return  $('[[${"#itemdata-" + model.item_name}]]').val()==''?[]:
+                        JSON.parse($('[[${"#itemdata-" + model.item_name}]]').val()) ;
                     },
                     initValue: $('[[${"#itemId-" + model.item_name}]]').attr("value")? $('[[${"#itemId-" + model.item_name}]]').attr("value").split(","):[]
                 })
+                    }catch (e) {
+                        console.log(e)
+                    }
             })
         </script>
 

@@ -359,6 +359,12 @@ $(function (){
             }
             card.cardname=cardname;
             card.col=col;
+            $.each($(this)[0].attributes,function(i,d){
+                if(d.name.indexOf('ez-')>=0){
+                    let cname=d.name.replace('ez-','');
+                    card[cname]=d.value;
+                }
+            })
             var items=[];
             $(this).find(".selector").each(function(){
                 var item={};
@@ -392,7 +398,6 @@ $(function (){
             cards.push(card);
         })
         formData.cards=cards;
-        var cloudId=$("#cloudId").val();
         $.post("/topezadmin/formEdit/submitEdit-"+formcode,  {data:JSON.stringify(formData)}, function(data) {
             if(data.success){
                 layui.layer.confirm('保存成功，重新加载？', {icon: 1, title:'提示'}, function(index){

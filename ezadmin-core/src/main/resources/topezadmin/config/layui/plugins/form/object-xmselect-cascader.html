@@ -58,20 +58,21 @@
                 <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}" >
                 <!--ID,PARENT_ID,CHILDREN-->
                 <script>
-                    var xmel = $('[[${"#itemId-" + item_name}]]');
-                    var initdata = $('[[${"#itemdata-" + item_name}]]').val()||[];
-                    var initvalue = xmel.attr("value");
-                    var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
-                    var initArray=initvalue?initvalue.split(","):[];
+                    // var xmel = $('[[${"#itemId-" + item_name}]]');
+                    // var initdata = $('[[${"#itemdata-" + item_name}]]').val()||[];
+                    // var initvalue = xmel.attr("value");
+                    // var strict = (xmel.attr("strict")||"false").toLowerCase()==="false"?false:true;
+                    // var initArray=initvalue?initvalue.split(","):[];
                     $(function(){
+                        try{
                         xmSelect.render({
                             el: '[[${"#itemId-" + item_name}]]',
                             autoRow: false,
                             name:'[[${item_name}]]',
                             filterable: true,
                             clickClose: ($('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
-                            showCount:  xmel.attr("showCount")||5,
-                            max: xmel.attr("max")||100,
+                            showCount:  $('[[${"#itemId-" + item_name}]]').attr("showCount")||5,
+                            max: $('[[${"#itemId-" + item_name}]]').attr("max")||100,
                             radio:  ($('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
                             prop: {
                                 name: 'NAME',
@@ -86,8 +87,7 @@
                             cascader: {
                                 show: true,
                                 indent: 200,
-                                strict:strict,
-
+                                strict:($('[[${"#itemId-" + item_name}]]').attr("strict")||"false").toLowerCase()==="false"?false:true,
                             },
                             iconfont: {
                                 parent:   'hidden'
@@ -100,19 +100,16 @@
                             //     expandedKeys: [ -3 ],
                             // },
                             toolbar: {
-                                show: true,
+                                show: ($('[[${"#itemId-" + model.item_name}]]').attr("toolbar")||'true')=='true',
                                 list: ['ALL', 'REVERSE', 'CLEAR']
                             },
                             filterable: true,
                             //height: 'auto',
                             data: function(){
-                                try{
-                                return  JSON.parse(initdata);
-                                }catch (e){
-                                    return [];
-                                }
+                                return  $('[[${"#itemdata-" +  item_name}]]').val()==''?[]:
+                                    JSON.parse($('[[${"#itemdata-" +  item_name}]]').val()) ;
                             },
-                            initValue: initArray,
+                            initValue: $('[[${"#itemId-" +  item_name}]]').attr("value")? $('[[${"#itemId-" +  item_name}]]').attr("value").split(","):[]
                             filterMethod: function (val, item, index, prop) {//重写搜索方法。
                                 if (val == item.K) {//把value相同的搜索出来
                                     return true;
@@ -123,6 +120,9 @@
                                 return !ezpingyin(val, item.V, item.K);
                             }
                         })
+                        }catch (e) {
+                            console.log(e);
+                        }
                     })
                 </script>
 

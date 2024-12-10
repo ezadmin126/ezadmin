@@ -471,6 +471,14 @@ xm-select > .xm-body .scroll-body{
 
 
 
+/*修改layui样式*/
+  .layui-input:focus, .layui-textarea:focus {
+      border-color: #1e9fff !important;
+  }
+
+
+
+
 
 
 

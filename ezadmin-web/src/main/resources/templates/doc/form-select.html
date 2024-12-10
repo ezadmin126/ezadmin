@@ -19,16 +19,16 @@
                     <li><a href="#select">原生下拉框</a></li>
                     <li ><a href="#select-search">搜索下拉框</a></li>
                     <li ><a href="#select-span">下拉纯文本</a></li>
-                    <li ><a href="#xmselect">下拉多选</a></li>
-                    <li ><a href="#xmselectcascader">下拉级联</a></li>
-                    <li ><a href="#xmselecttree">下拉树</a></li>
+                    <li ><a href="#xmselect">xm下拉多选</a></li>
+                    <li ><a href="#xmselectcascader">xm下拉级联</a></li>
+                    <li ><a href="#xmselecttree">xm下拉树</a></li>
 <!--                    <li ><a href="#cascader">eleme 下拉级联</a></li>-->
 
                     <li ><a href="#radio">单选</a></li>
                     <li ><a href="#checkbox">复选</a></li>
                     <li ><a href="#checkbox-tag">标签复选</a></li>
-                    <li ><a href="#cascadersql">eleme SQL下拉级联</a></li>
-                    <li ><a href="#xmselect-remote">下拉远程搜索</a></li>
+                    <li ><a href="#cascadersql">饿了么SQL下拉级联</a></li>
+                    <li ><a href="#xmselect-remote">xm下拉远程搜索</a></li>
                 </ul>
             </div>
         </div>
@@ -94,6 +94,7 @@
                     k:v\n 分割<br>
                     [{"V":"男","K":"1"},{"V":"女","K":"0"}]<br>
                     如果是JSON， 键必须是 大写  K V ;
+                    <br>参见data规则：<a href="/doc/data.html">data</a>
                 </td>
             </tr>
             <tr>
@@ -556,8 +557,10 @@
         </h2>
         <pre class="layui-code code-demo" lay-options="{}">
             <textarea>
-<object type="cascadersql" data="select REGION_ID ID,PARENT_ID ,REGION_NAME LABEL,100000 as ROOT_ID from T_REGION WHERE (REGION_ID>100000) AND IS_DELETED=0
+<object type="cascadersql" ez_value="ID" data="select REGION_ID ID,PARENT_ID ,REGION_NAME LABEL,100000 as ROOT_ID from T_REGION WHERE (REGION_ID>100000) AND IS_DELETED=0
 " datatype="KVSQL2TREECACHE"></object>
+  配置ez_value的主要原因是，这个插件默认的key是“VALUE”     名称是 “LABEL”
+
             </textarea>
         </pre>
 

@@ -13,6 +13,7 @@ import top.ezadmin.domain.model.*;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.utils.NoDirect;
@@ -53,6 +54,19 @@ public class EzSaleorderService {
         saleorder.setTraderId(Utils.toLong(request.get("TRADER_ID")));
         saleorder.setTraderAddressId(Utils.toLong(request.get("TRADER_ADDRESS_ID")));
         saleorder.setTraderContactId(Utils.toLong(request.get("TRADER_CONTACT_ID")));
+
+        saleorder.setTakeTraderId(Utils.toLong(request.get("TAKE_TRADER_ID")));
+        saleorder.setTakeTraderAddressId(Utils.toLong(request.get("TAKE_TRADER_ADDRESS_ID")));
+        saleorder.setTakeTraderContactId(Utils.toLong(request.get("TAKE_TRADER_CONTACT_ID")));
+
+        saleorder.setInvoiceTraderId(Utils.toLong(request.get("INVOICE_TRADER_ID")));
+        saleorder.setInvoiceTraderAddressId(Utils.toLong(request.get("INVOICE_TRADER_ADDRESS_ID")));
+        saleorder.setInvoiceTraderContactId(Utils.toLong(request.get("INVOICE_TRADER_CONTACT_ID")));
+        saleorder.setInvoiceType(Utils.toInt(request.get("INVOICE_TYPE")));
+        saleorder.setInvoiceEmail(Utils.trimNull(request.get("INVOICE_EMAIL")));
+
+        saleorder.setLogisticsComments(Utils.trimNull(request.get("LOGISTICS_COMMENTS")));
+
         saleorder.setUserId(Utils.toLong(request.get("USER_ID")));
         saleorder.setTraderComments(Utils.trimNull(request.get("TRADER_COMMENTS")));
         saleorder.setAdditionalClause(Utils.trimNull(request.get("ADDITIONAL_CLAUSE")));
@@ -72,6 +86,9 @@ public class EzSaleorderService {
         saleorder.setTraderAddress(traderAddress.getTraderAddress());
         saleorder.setTraderRegion(traderAddress.getRegionId());
 
+
+
+
         SysUser user= sysUserMapper.selectByPrimaryKey(Utils.toLong(request.get("EZ_SESSION_USER_ID_KEY")));
 
         saleorder.setUpdateId(user.getUserId());
@@ -80,55 +97,31 @@ public class EzSaleorderService {
         if(ID>0){
             saleorder.setSaleorderId(ID);
             saleorderMapper.updateByPrimaryKeySelective(saleorder);
-        }else{
-            saleorder.setAddId(user.getUserId());
-            saleorder.setAddTime(new Date());
-            saleorder.setSaleorderNo(NoDirect.saleorderNo());
-            saleorderMapper.insertSelective(saleorder);
         }
-
-        //EZ_SESSION_USER_NAME_KEY EZ_SESSION_USER_ID_KEY
-        String[] basePriceArrays=(String[])  request.get("BASE_PRICE_ARRAY");
-        String[] prodIdArrays=(String[])  request.get("CHILD_PROD_ID_ARRAY");
-        String[] childNumArrays=(String[])  request.get("CHILD_NUM_ARRAY");
+        else{
+//            saleorder.setAddId(user.getUserId());
+//            saleorder.setAddTime(new Date());
+//            saleorder.setSaleorderNo(NoDirect.saleorderNo());
+//            saleorderMapper.insertSelective(saleorder);
+        }
         BigDecimal totalPrice=BigDecimal.ZERO;
-        if(!ArrayUtils.isEmpty(prodIdArrays)){
-            SaleorderGoodsExample example=new SaleorderGoodsExample();
-            example.createCriteria().andDeleteFlagEqualTo(0).andSaleorderIdEqualTo(saleorder.getSaleorderId());
-            SaleorderGoods goods=new SaleorderGoods();
-            goods.setDeleteFlag(1);
-            saleorderGoodsMapper.updateByExampleSelective(goods,example);
-            for (int i = 0; i < prodIdArrays.length; i++) {
-                if(StringUtils.isBlank(prodIdArrays[i])){
-                    continue;
-                }
-                SaleorderGoods saleorderGoods = new SaleorderGoods();
-                saleorderGoods.setDeleteFlag(0);
-                saleorderGoods.setSaleorderId(saleorder.getSaleorderId());
-                saleorderGoods.setAddTime(new Date());
-                saleorderGoods.setUpdateTime(new Date());
-                saleorderGoods.setUpdateId(user.getUserId());
-
-                saleorderGoods.setProdId(Utils.toLong(prodIdArrays[i]));
-                saleorderGoods.setBasePrice(new BigDecimal(basePriceArrays[i]));
-                saleorderGoods.setProdNum(Utils.toInt(childNumArrays[i]));
-                BaseProduct baseProduct= baseProductMapper.selectByPrimaryKey(saleorderGoods.getProdId());
-                saleorderGoods.setProdCode(baseProduct.getProdCode());
-                saleorderGoods.setProdModel(baseProduct.getProdModel());
-                saleorderGoods.setProdSpec(baseProduct.getProdSpec());
-                saleorderGoods.setProdName(baseProduct.getProdName());
-
+        SaleorderGoodsExample example=new SaleorderGoodsExample();
+        example.createCriteria().andDeleteFlagEqualTo(0).andSaleorderIdEqualTo(saleorder.getSaleorderId());
+        List<SaleorderGoods> goodsList= saleorderGoodsMapper.selectByExample(example);
+        if(Utils.isNotEmpty(goodsList)){
+            for (int i = 0; i < goodsList.size(); i++) {
+                totalPrice=totalPrice.add(goodsList.get(i).getBasePrice().multiply(new BigDecimal(goodsList.get(i).getProdNum())));
+                BaseProduct baseProduct= baseProductMapper.selectByPrimaryKey(goodsList.get(i).getProdId());
                 BaseBrand brand= baseBrandMapper.selectByPrimaryKey(baseProduct.getBrandId());
                 BaseUnit unit= baseUnitMapper.selectByPrimaryKey(baseProduct.getBaseUnitId());
-                saleorderGoods.setUnitName(unit.getUnitName());
-                saleorderGoods.setBrandName(brand.getBrandName());
-                totalPrice= totalPrice.add(saleorderGoods.getBasePrice().multiply(new BigDecimal(saleorderGoods.getProdNum()+"")));
-                saleorderGoodsMapper.insertSelective(saleorderGoods);
+                goodsList.get(i).setUnitName(unit.getUnitName());
+                goodsList.get(i).setBrandName(brand.getBrandName());
+                saleorderGoodsMapper.updateByPrimaryKeySelective(goodsList.get(i));
             }
-            Saleorder saleorderUpdate = new Saleorder();
-            saleorderUpdate.setSaleorderId(saleorder.getSaleorderId());
-            saleorderUpdate.setTotalAmount(totalPrice);
-            saleorderMapper.updateByPrimaryKeySelective(saleorderUpdate);
         }
+        Saleorder saleorderUpdate = new Saleorder();
+        saleorderUpdate.setSaleorderId(saleorder.getSaleorderId());
+        saleorderUpdate.setTotalAmount(totalPrice);
+        saleorderMapper.updateByPrimaryKeySelective(saleorderUpdate);
     }
 }

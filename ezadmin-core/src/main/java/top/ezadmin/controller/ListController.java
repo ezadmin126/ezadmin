@@ -148,7 +148,7 @@ public class ListController extends BaseController {
             request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
 
         String adminStyle=Utils.trimNullDefault(core.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
-        return adminStyle + "/treelist";
+        return adminStyle + "/listtree";
     }
 
     @EzMapping("treedata.html")

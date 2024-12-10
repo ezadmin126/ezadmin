@@ -657,6 +657,11 @@ public class ListServiceImpl implements ListService {
                                 Map nm = new HashMap();
                                 nm.putAll(requestParamMap);
                                 nm.putAll(sessionParamMap);//SESSION cover
+                                //rowdata
+
+                                dataRow.forEach((k,v)->{
+                                    nm.put("rowdata."+k,v);
+                                });
                                 ItemInitData items = getSelectItems(temp, getString(th, JsoupUtil.DATA), getString(th, JsoupUtil.DATATYPE),  nm);
                                 if(Utils.isNotEmpty(items.getItems())){
                                     final String dataInDbf=dataInDb;
@@ -694,10 +699,19 @@ public class ListServiceImpl implements ListService {
                             Map<String, Object> m = new HashMap<String, Object>();
 
                             m.putAll(item);
-                            m.put(JsoupUtil.URL, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.URL), dataRow).getResult());
-                            m.put(JsoupUtil.LABEL, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.LABEL), dataRow).getResult());
-                            m.put(JsoupUtil.WINDOW_NAME, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.WINDOW_NAME), dataRow).getResult());
-                            m.put(JsoupUtil.ITEM_ID, MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.ITEM_ID), "0"), dataRow).getResult());
+
+                            Map nm = new HashMap();
+                            nm.putAll(requestParamMap);
+                            nm.putAll(sessionParamMap);//SESSION cover
+                            nm.putAll(dataRow);
+                            dataRow.forEach((k,v)->{
+                                nm.put("rowdata."+k,v);//语法保持与其他地方一致
+                            });
+
+                            m.put(JsoupUtil.URL, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.URL), nm).getResult());
+                            m.put(JsoupUtil.LABEL, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.LABEL), nm).getResult());
+                            m.put(JsoupUtil.WINDOW_NAME, MapParser.parseDefaultEmpty(Utils.getStringByObject(item, JsoupUtil.WINDOW_NAME), nm).getResult());
+                            m.put(JsoupUtil.ITEM_ID, MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.ITEM_ID), "0"), nm).getResult());
                             m.put("rowdataid", dataRow.get("ID"));
                             m.put("rowjson", dataRow.get("rowjson"));
                             String display = Utils.trimNull(item.get(JsoupUtil.DISPLAY));
@@ -941,9 +955,9 @@ public class ListServiceImpl implements ListService {
                             context.setVariable("jsonArrayValue",JSONUtils.toJSONString(array) );
                             context.setVariable("itemsJson", JSONUtils.toJSONString(items.getItems()));
                         } catch (Exception e) {
-                            if(Utils.getLog()!=null) {
+                           // if(Utils.getLog()!=null) {
                                 Utils.addLog("search error:"+coreMap.get("listcode"), e);
-                            }
+                          //  }
                         }
                     }
                     //初始化值
@@ -988,6 +1002,38 @@ public class ListServiceImpl implements ListService {
                         });
                         sb.append("></div>");
                         context.setVariable("serverDom",sb.toString());
+                    }
+                    else if( pluginCode .equals("search-cascader")
+                            || pluginCode .equals("search-cascadersql")){
+                        Map<String,String> attrMap= (Map<String,String>)search.get("attrMap");
+                        attrMap.put("value", StringEscapeUtils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName())+""));
+                        attrMap.put("name",search.get(JsoupUtil.ITEM_NAME)+"");
+                        //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
+                        attrMap.putIfAbsent("id","ITEM_ID_"+search.get(JsoupUtil.ITEM_NAME));
+                        attrMap.putIfAbsent("lay-affix","clear" );
+                        attrMap.putIfAbsent("lay-verify",attrMap.get(JsoupUtil.LAYVERIFY) );
+                        //远程请求的统一到 core.js初始化，暂时没有挪走。因为当前的这个级联功能有限， 期望后期自己开发一个。
+                        attrMap.put("class","layui-input ez-laycascader "+(Utils.trimNull(attrMap.get("class")).replace("ez-laycascader","").replace("layui-input","")) );
+                        StringBuilder sb=new StringBuilder("<input ");
+                        attrMap.forEach((k,v)->{
+                            if(k.equalsIgnoreCase("readonly")||k.equalsIgnoreCase("disabled")){
+                                v=k;
+
+                            }
+                            if(StringUtils.equals(k,"type")||
+                                    StringUtils.equals(k,"valid_msg")||
+                                    StringUtils.equals(k,"valid_rule")||
+                                    StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
+                                ;return;
+                            }
+                            sb.append(k);
+                            sb.append("='");
+                            sb.append(v);
+                            sb.append("'  ");
+                        });
+                        sb.append(" type='text'>");
+                        context.setVariable("serverDom",sb.toString());
+                        context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
                     }
 
 
@@ -1328,7 +1374,7 @@ public class ListServiceImpl implements ListService {
         String datasourceCore=getString(coreMap,"datasource");
         String firstcol=getString(coreMap,"firstcol");
         DataSource dataSourceVO= EzClientBootstrap.instance().getDataSourceByKey(datasourceCore);
-        fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
+        //fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
 
 
         String globalEmptyShow=getString(coreMap,"empty_show");

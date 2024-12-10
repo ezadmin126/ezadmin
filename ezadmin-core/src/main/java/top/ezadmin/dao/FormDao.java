@@ -170,6 +170,19 @@ public class FormDao extends JsoupUtil {
 
                 Map<String,Object> cardEl=new HashMap<>();
                 cardEl.put("col",Utils.trimEmptyDefault(cardColList.get(i).attr("col"),"12"));
+                if(StringUtils.isNotBlank(Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FRAMEURL)))){
+                    cardEl.put(JsoupUtil.FRAMEURL,Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FRAMEURL)));
+                    cardEl.put(JsoupUtil.FRAMEHEIGHT,Utils.trimEmptyDefault(cardColList.get(i).attr(JsoupUtil.FRAMEHEIGHT),"527"));
+                }
+                if(StringUtils.isNotBlank(Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FORM_CARD_BTN_NAME)))){
+                    cardEl.put(JsoupUtil.FORM_CARD_BTN_NAME,Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FORM_CARD_BTN_NAME)));
+                    cardEl.put(JsoupUtil.FORM_CARD_BTN_URL,Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FORM_CARD_BTN_URL)));
+                    cardEl.put("btnopentype",Utils.trimNull(cardColList.get(i).attr("btnopentype")));
+                }
+                if(StringUtils.isNotBlank(Utils.trimNull(cardColList.get(i).attr("btntemplate")))){
+                    cardEl.put("btntemplate",Utils.trimNull(cardColList.get(i).attr("btntemplate")));
+                }
+
                 try {
                     cardEl.put("cardname", cardColList.get(i).selectFirst(".layui-card-header").html());
                 }catch(Exception e){}
@@ -202,10 +215,10 @@ public class FormDao extends JsoupUtil {
                     attrMap.put(JsoupUtil.EZCONFIG,JsoupUtil.attr2Json(plugin));
                     formitemList.add(attrMap);
                 }
-                if(Utils.isNotEmpty(formitemList)){
+              //  if(Utils.isNotEmpty(formitemList)){
                     cardEl.put("items",formitemList);
                     cardsList.add(cardEl);
-                }
+              //  }
             }
         }else{//兼容没有card的情况
             Map<String,Object> cardEl=new HashMap<>();
@@ -313,9 +326,7 @@ public class FormDao extends JsoupUtil {
         if(Utils.isNotEmpty(cardsList)){
             for (int i = 0; i < cardsList.size(); i++) {
                 Map<String,Object> card=cardsList.get(i);
-                String cardName=Utils.trimNull(card.get("cardname"));
-                String col=Utils.trimNull(card.get("col"));
-                Element newcardElement=newCard(cardName,col);
+                Element newcardElement=newCard(card);
                 List<Map<String,Object>> formItemList=(List<Map<String,Object>>)card.get("items");
                 for (int j = 0; j < formItemList.size(); j++) {
                     Map<String,Object> formItem=formItemList.get(j);
@@ -369,26 +380,56 @@ public class FormDao extends JsoupUtil {
     }
 
 
-    Element newCard(String label,String col){
+    Element newCard( Map<String,Object> card){
+        //String label,String col,String url,String frameheight
+        String cardName=Utils.trimNull(card.get("cardname"));
+        String frameurl=Utils.trimNull(card.get("frameurl"));
+        String frameheight=Utils.trimNull(card.get("frameheight"));
+        String btnname=Utils.trimNull(card.get("btnname"));
+        String btnurl=Utils.trimNull(card.get("btnurl"));
+        String btnopentype=Utils.trimNull(card.get("btnopentype"));
+        String btntemplate=Utils.trimNull(card.get("btntemplate"));
+        String col=Utils.trimNull(card.get("col"));
         StringBuilder sb=new StringBuilder();
-        sb.append("\n\t<div   class='layui-card'  col='"+col+"'  > \n");
-        if(StringUtils.isNotBlank(label)&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,label)){
-            sb.append(  "\t\t<div class=\"layui-card-header\">\n" +label +"  </div>\n" );
+
+
+        if(col.equals("12")||StringUtils.isNotBlank(col)){
+            sb.append("\n\t<div   class='layui-card'  cardname='"+cardName+"'");
+        }else{
+            sb.append("\n\t<div   class='layui-card'  col='"+col+"' cardname='"+cardName+"'");
+        }
+        if(StringUtils.isNotBlank(frameurl)){
+            sb.append(" frameurl='"+frameurl+"' frameheight='"+frameheight+"'" );
+        }
+        if(StringUtils.isNotBlank(btnname)){
+            sb.append(" btnname='"+btnname+"' btnurl='"+btnurl+"' btnopentype='" +btnopentype+"'" );
+        }
+        if(StringUtils.isNotBlank(btntemplate)){
+            sb.append(" btntemplate='"+btntemplate+"'  " );
+        }
+        sb.append("        > \n");
+        if(StringUtils.isNotBlank(cardName)&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,cardName)){
+            sb.append(  "\t\t<div class=\"layui-card-header\">\n" +cardName +"  </div>\n" );
         }
         sb.append(  " \t\t<div class=\"layui-card-body\"> </div>\n" );
         sb.append("\t</div>\n\n");
         return Jsoup.parse(sb.toString()).body().child(0);
     }
     Element newFormItem(String label,String col){
-        return Jsoup.parse("\n\t\t\t<div  class='layui-form-item'  col='"+col+"'   >\n" +
-
-                "                        <label >"+label+"</label>\n" +
+        StringBuilder sb=new StringBuilder( );
+        if(col.equals("12")||StringUtils.isNotBlank(col)){
+            sb.append("\n\t<div  class='layui-form-item'  ");
+        }else{
+            sb.append("\n\t<div  class='layui-form-item'  col='"+col+"'");
+        }
+        sb.append(   "                        <label >"+label+"</label>\n" +
                 "                        <div  >\n" +
                 "                            <object   >\n" +
                 "                            </object>\n" +
                 "                        </div>\n" +
 
-                "                </div>\n").body().child(0);
+                "                </div>\n");
+        return Jsoup.parse(sb.toString()).body().child(0);
     }
 
 

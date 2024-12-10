@@ -197,3 +197,14 @@ small {
 .submitButtonContainerClass{
     box-shadow: 1px 1px 1px rgba(0, 0, 0, .3) !important;
 }
+
+
+
+/*修改layui样式*/
+.layui-input:focus, .layui-textarea:focus {
+    border-color: #1e9fff !important;
+}
+
+.custom-card-btn{
+
+}
