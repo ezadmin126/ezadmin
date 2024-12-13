@@ -95,6 +95,18 @@
                                 return true;
                             }
                             return !ezpingyin(val, item.V, item.K);
+                        },on: function(data){
+                            //arr:  当前多选已选中的数据
+                            var arr = data.arr;
+                            //change, 此次选择变化的数据,数组
+                            var change = data.change;
+                            //isAdd, 此次操作是新增还是删除
+                            var isAdd = data.isAdd;
+
+                            var functionName=$('[[${"#itemId-" + item_name}]]').attr("on")
+                            if (functionName&&window[functionName]) {
+                                window[functionName](data);
+                            }
                         }
                     })
                 </script>

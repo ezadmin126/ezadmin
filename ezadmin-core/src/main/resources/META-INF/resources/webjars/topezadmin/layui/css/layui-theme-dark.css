@@ -1027,6 +1027,11 @@ xm-select>.xm-body .xm-paging>span[style*=color]{
 } */
 
 .mask_div{
-    color:rgb(105 105 105 / 57%) !important;
+    color:rgb(255 255 255 / 57%) !important;
     opacity: 0.1;
+}
+
+.layui-table-view:after {
+
+    background-color: var(--lay-color-border-2);
 }
