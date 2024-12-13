@@ -1225,7 +1225,7 @@
     flex: 1;
     height: 24px;
     min-width: 60px;
-    margin: 0px 0 0px 15px;
+    margin: 2px 0 2px 15px;
     padding: 0;
     color: #606266;
     border: none;
@@ -1648,7 +1648,3 @@
     width: 0;
     height: 0
 }
-
-/*::-webkit-scrollbar {*/
-/*    width: 0;*/
-/*}*/

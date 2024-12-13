@@ -69,12 +69,12 @@ public class JxcController extends CustomBaseController {
     public EzResult se(HttpServletRequest request, Long  TRADER_ID) throws Exception {
         User user = getSessionUser();
         List<Map<String,Object>> kv= Dao.getInstance().executeQuery(dataSource,"select  A.TRADER_ADDRESS_ID K, CONCAT(coalesce(C.REGION_FULL_NAME),\n" +
-                "    coalesce(B.REGION_FULL_NAME),coalesce(TBR.REGION_FULL_NAME),' ' \n" +
+                "    coalesce(B.REGION_FULL_NAME),coalesce(TBR.REGION_FULL_NAME),'  ' \n" +
                 "        ,coalesce(A.TRADER_ADDRESS)) V,A.TRADER_ADDRESS,A.REGION_ID,A.CITY_ID,A.PROVICE_ID\n" +
                 "from T_BASE_TRADER_ADDRESS A\n" +
-                "    LEFT JOIN T_BASE_REGION TBR on A.REGION_ID = TBR.REGION_ID\n" +
-                "    LEFT JOIN T_BASE_REGION B ON TBR.PARENT_ID=B.REGION_ID\n" +
-                "    LEFT JOIN T_BASE_REGION C ON B.PARENT_ID=C.REGION_ID\n" +
+                "    LEFT JOIN T_BASE_REGION TBR on A.REGION_ID = TBR.REGION_FULL_ID\n" +
+                "    LEFT JOIN T_BASE_REGION B ON TBR.PARENT_ID=B.REGION_FULL_ID\n" +
+                "    LEFT JOIN T_BASE_REGION C ON B.PARENT_ID=C.REGION_FULL_ID\n" +
                 "WHERE  A.TRADER_ID=? AND A.COMPANY_ID=? AND A.DELETE_FLAG=0",new Object[]{TRADER_ID,user.getCompanyId()});
 
         List<Map<String,Object>> kv2= Dao.getInstance().executeQuery(dataSource,"select A.TRADER_CONTACT_ID K,CONCAT(A.CONTACT_NAME,'/',A.CONTACT_MOBILE)  V " +

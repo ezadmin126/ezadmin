@@ -197,7 +197,7 @@ $(document).ready(function () {
 
     $("#customColAndSearch").click(function () {
         var index = layer.open({
-            title: "设置",
+            title: "显隐与排序设置",
             area: ['90%', '80%'],
             type: 2,
             shade: 0.1,
@@ -398,6 +398,7 @@ function selfConfig() {
 function renderTable() {
     console.log("开始渲染table");
     if (table) {
+        console.log("销毁上一个table");
         table.destroy();
     }
     try {
@@ -422,6 +423,7 @@ function renderTable() {
         var treeTable = layui.treeTable;
         var form=layui.form;
         //实现checkbox 半选效果
+        console.log("开始渲染checkbox");
         form.on('checkbox(list-head-checkbox)', function(data){
             var elem = data.elem; // 获得 checkbox 原始 DOM 对象
             var checked = elem.checked; // 获得 checkbox 选中状态
@@ -452,17 +454,16 @@ function renderTable() {
         var inited=false;
         var hh=0;
         try{
-            if($("#searchForm").offset()){
-                hh=$("#searchForm").offset().top+$("#searchForm").height();
+            hh=$(".ez-table-tool").offset().top+43+5;//分页的高度  51为tablebutton高度
+            if($(".ez-table-tool").length>0){
+                hh=hh+51;
             }
-            if($("#tab").height()){
-                hh=hh+$("#tab").height();
-            }
+            console.log("计算table的高度："+hh);
         }catch (e) {
             console.log(e)
         }
         tableConfig={
-            height: 'full-'+(hh+43+97)  //设置高度
+            height: 'full-'+hh  //设置高度
             ,escape: false
             ,autoSort: false
             ,cellExpandedMode: $("#expandedMode").val()||''
@@ -471,29 +472,26 @@ function renderTable() {
             //支持所有基础参数
             ,text: {none: '暂无数据'}
             ,done: function (res, curr, count,origin) {
-                console.log(" table done "+res+"\t"+ curr+"\t"+count+"\t"+origin)
+                console.log(" 初始化table完成 data："+JSON.stringify(res)+"\tpage:"+ curr+"\tcount:"+count+"\torigin:"+(origin||''))
                 try {
                      if(origin=='reloadData'){
                     //     inited=true;
                         if (typeof  afterAllDataLoad  == "function") {
                             afterAllDataLoad();
                         }
+                        //
+                        console.log("数据获取完成之后，开始初始化dropdown");
                         doDropdown();
-                        doOrder();
+                         console.log("数据获取完成之后，开始初始化排序");
 
+                         doOrder();
+                         console.log("数据获取完成之后，开始初始化dragula，页头拖拽排序");
                          // 初始化 dragula
                          dragula([$("[lay-table-id=mytable] thead tr").eq(0)[0]], {
                              moves: function (el, container, handle) {
                                  // 确保只有 span 元素可以触发拖拽
                                  return   handle.tagName === 'SPAN'&&handle.className=='';
                              }
-                             // ,mirrorContainer:$("[lay-table-id=mytable] thead tr").eq(0)[0]
-                             // ,copy: function (el, source) {
-                             //     // 复制元素时，添加自定义的类名
-                             //     el.classList.remove('gu-mirror');
-                             //     el.classList.add('th-mirror');
-                             //     return el;
-                             // }
                          }).on('drop', function (el, target, source, sibling) {
                              // 拖拽结束后的回调函数
                             // console.log('Element dropped');
@@ -510,6 +508,7 @@ function renderTable() {
                          });
 
                      }
+                    console.log("数据获取完成之后，开始初始化 水印，图片高度，按钮颜色等 ");
                     doSystem();
                 } catch (e) {
                     console.log(e)
@@ -536,6 +535,7 @@ function renderTable() {
         }
         //转换静态表格
         laytable = table2.init('mytable',tableConfig );
+        console.log("初始化分页组件");
         doPage();
 
         laytable.on('sort(mytable)', function(obj){
@@ -547,6 +547,7 @@ function renderTable() {
             $("#orderBy").val(obj.type);
             $("#submitBtn").click();
         });
+        console.log("初始化页头手动设置宽度");
         laytable.on('colResized(mytable)', function(obj){
             var col = obj.col; // 获取当前列属性配置项
             var options = obj.config; // 获取当前表格基础属性配置项
@@ -562,6 +563,7 @@ function renderTable() {
 
             console.log(obj); // 查看对象所有成员
         });
+        console.log("初始化行选择");
 
         laytable.on('row(mytable)', function(obj){
             if(obj.e.target.tagName=='IMG'||obj.e.target.tagName=='INPUT'
@@ -587,8 +589,9 @@ function renderTable() {
             }
             layui.form.render()
         });
-
+        console.log("初始化树形table");
         if($("#coldata").val()!=undefined){
+            console.log("初始化树形table");
             var json=JSON.parse($("#coldata").val());
             var col=[];
             col.push(json);
@@ -736,7 +739,9 @@ function doSystem() {
     $("[item_name='删除']").addClass("layui-border-red");
     $("[item_name='修改']").addClass("layui-border-blue");
     $("[item_name='编辑']").addClass("layui-border-blue");
-    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + getNow()});
+    if($("#removewatermark").val()!=1){
+        watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + getNow()});
+    }
     $('.viewer-image').each(function () {
         $(this).on('load', function () {
             // 在图片加载完成后执行的操作

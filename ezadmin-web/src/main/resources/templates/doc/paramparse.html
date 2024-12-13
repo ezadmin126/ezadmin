@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="doc/common::title"></head>
+<head th:remove="all">
+    <meta charset="utf-8">
+    <title>文档</title>
+    <link href="https://www.ezadmin.top/webjars/layuidist/css/layui.css?v=null" rel="stylesheet"/>
+    <link href="/static/doc/index.css?v=null" rel="stylesheet"/>
+    <script src="https://www.ezadmin.top/webjars/layuidist/layui.js?v=null"></script>
+</head>
+<body class="layui-fluid">
+<div class="ws-content">
+    <div class="ws-side">
+        <div class="ws-side-fixed">
+            <div class="ws-dir">
+                <ul class="ws-dir-ul">
+<!--                    <li><a href="#source">源码示例</a></li>-->
+<!--                    <li ><a href="#param">参数说明</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="layui-text ws-text" id="WS-text">
+        <h1>介绍</h1>
+        <blockquote class="layui-elem-quote">
+          配置各个组件时，需要能够取到各个参数，如SQL中 #{abc},
+        </blockquote>
+
+        <pre class="layui-code code-demo" lay-options="{}">
+            <textarea>
+1.请求request中的参数
+  1.1插件中
+  <button url="/abc?id=${ID}"> 可以将${ID}替换为当前request中的ID
+  1.2表达式中
+  id=$("id");
+  sql="select id from table where name=#{name} and id="+id;
+  都可以替换。
+2.请求session中的参数
+  在表达式中可以获取到内置的session参数。
+  2.1插件中
+  同request,如果名称相同，优先取session
+
+  2.2表达式
+  userId=$$("USER_ID");
+3.列表单元格获取当前行的数据
+  <object type=select data="select id K,name V from t where id=${rowdata.USER_ID}" datatype=KVSQL>
+
+            </textarea>
+        </pre>
+    </div>
+</div>
+
+
+<script>
+    layui.use(['element', 'layer'], function(){
+        // 监听导航点击事件
+        layui.code({
+            elem: '.code-demo'
+        });
+    });
+</script>
+</body>
+</html>

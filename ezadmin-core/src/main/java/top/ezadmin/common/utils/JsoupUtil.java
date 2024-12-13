@@ -19,6 +19,10 @@ import java.util.Map;
 public class JsoupUtil {
     //自定义的模版
     public static final String TEMPLATE = "template";
+    public static final String FRAMEURL = "frameurl";
+    public static final String FORM_CARD_BTN_NAME = "btnname";
+    public static final String FORM_CARD_BTN_URL = "btnurl";
+    public static final String FRAMEHEIGHT = "frameheight";
     protected static final String HREF ="href" ;
     protected static final String COL = "col";
     public static final String TYPE ="type" ;
@@ -57,6 +61,7 @@ public class JsoupUtil {
     public static final String BODY_PLUGIN_CODE = "body";
     public static final String EMPTY_SHOW = "emptyshow";
     public static final String EDIT_FLAG = "editflag";
+    public static final String FORM_EDIT_FLAG = "FORM_EDIT_FLAG";
     public static final String EDIT_EXPRESS ="editexpress" ;
     public static final String EDIT_PLUGIN = "editplugin";
     public static final String WIDTH = "width";

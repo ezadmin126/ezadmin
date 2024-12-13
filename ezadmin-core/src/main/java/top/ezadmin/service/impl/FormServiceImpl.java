@@ -87,10 +87,22 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         if(Utils.isNotEmpty(cardList)){
             for (int i = 0; i < cardList.size(); i++) {
                 List<Map<String,Object>> items=(List<Map<String,Object>>)cardList.get(i).get("items");
-                if(Utils.isEmpty(items)) {
-                    continue;
+                String frameUrl=Utils.trimNull(cardList.get(i).get(JsoupUtil.FRAMEURL));
+                String FORM_CARD_BTN_NAME=Utils.trimNull(cardList.get(i).get(JsoupUtil.FORM_CARD_BTN_NAME));
+                if (StringUtils.isNotBlank(frameUrl)&&
+                        !StringUtils.equals(Utils.trimNull(requestParamMap.get(JsoupUtil.FORM_EDIT_FLAG)),"1")) {//只有不是编辑状态才替换
+                    String url = MapParser.parseDefaultEmpty(frameUrl, requestParamMap).getResult();
+                    cardList.get(i).put(JsoupUtil.FRAMEURL,url);
                 }
-                for (int j = 0; j < items.size(); j++) {
+                if (StringUtils.isNotBlank(FORM_CARD_BTN_NAME)&&
+                        !StringUtils.equals(Utils.trimNull(requestParamMap.get(JsoupUtil.FORM_EDIT_FLAG)),"1")) {//只有不是编辑状态才替换
+                    String FORM_CARD_BTN_URL=Utils.trimNull(cardList.get(i).get(JsoupUtil.FORM_CARD_BTN_URL));
+                    String url = MapParser.parseDefaultEmpty(FORM_CARD_BTN_URL, requestParamMap).getResult();
+                    cardList.get(i).put(JsoupUtil.FORM_CARD_BTN_URL,url);
+                }
+                if(Utils.isNotEmpty(items)) {
+                   // continue;
+                    for (int j = 0; j < items.size(); j++) {
                         Map<String, Object> item = items.get(j);
                         String item_name = getStringValue(item, JsoupUtil.ITEM_NAME);
                         String defaultValue=getStringValue(item, "value");
@@ -187,10 +199,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                                 context.setVariable("itemsJson", JSONUtils.toJSONString(selectItems.getItems()));
                                 //计算checkbox显示
                             } catch (Exception e) {
-                                logger.error("", e);
-                                if (Utils.getLog() != null) {
-                                    Utils.addLog("error getFormId=" + ",get search select error,fillSearchHtml=" + item, ExceptionUtils.getFullStackTrace(e));
-                                }
+                              Utils.addLog("error getFormId=" + ",get search select error,fillSearchHtml=" + item,e);
                             }
                         }
                         //生成searchTag
@@ -199,11 +208,13 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             Map<String,String> attrMap= (Map<String,String>)item.get("attrMap");
                             attrMap.put("value", StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName())+""));
                             attrMap.put("name",item.get(JsoupUtil.ITEM_NAME)+"");
-                          //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
+                            //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                             attrMap.putIfAbsent("id","ITEM_ID_"+item.get(JsoupUtil.ITEM_NAME)+"");
-                           // attrMap.putIfAbsent("lay-affix","clear" );
+                            // attrMap.putIfAbsent("lay-affix","clear" );
                             attrMap.putIfAbsent("lay-verify",attrMap.get(JsoupUtil.LAYVERIFY) );
-                          //  attrMap.put("class","layui-input "+attrMap.get("class") );
+                            attrMap.put("class", (Utils.trimNull(attrMap.get("class")).replace("layui-input","")) );
+
+                            //  attrMap.put("class","layui-input "+attrMap.get("class") );
                             StringBuilder sb=new StringBuilder("<div ");
                             attrMap.forEach((k,v)->{
                                 if(StringUtils.equals(k,"data")||StringUtils.isBlank(v)){
@@ -270,7 +281,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                                         StringUtils.equals(k,"data")||
                                                 StringUtils.equals(k,JsoupUtil.EZCONFIG)||
                                                 StringUtils.equals(k,"attrMap")||
-                                        StringUtils.isBlank(v)){
+                                                StringUtils.isBlank(v)){
                                     ;return;
                                 }
                                 sb.append(k);
@@ -312,7 +323,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             sb.append(" type='text'>");
                             context.setVariable("serverDom",sb.toString());
                             context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
-                       }
+                        }
 
                         try {
                             String template= Utils.trimNull(plugin.get("PLUGIN_BODY"));
@@ -322,6 +333,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             logger.error("" + item.get(JsoupUtil.TYPE), e);
                         }
                     }
+                }
             }
 
             if(Utils.isNotEmpty(validRuleMap)){

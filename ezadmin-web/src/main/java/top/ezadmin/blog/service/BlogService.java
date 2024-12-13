@@ -91,7 +91,7 @@ public class BlogService {
 
     public List<BlogMessageVO> listMessage(Integer blogId ) {
         BlogMessageExample example=new BlogMessageExample();
-        example.createCriteria().andBlogIdEqualTo(blogId);
+        example.createCriteria().andBlogIdEqualTo(blogId).andOnLineEqualTo(1);
         List<BlogMessage> blogMessageVOList= blogMessageMapper.selectByExample(example);
         return transMessage(blogMessageVOList);
     }

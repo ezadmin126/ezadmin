@@ -51,43 +51,45 @@
             </div>
 
             <script>
-                var xmel = $('[[${"#itemId-" + model.item_name}]]');
-
-                var initdata = xmel.attr("itemsJson");
-                var initUrl = xmel.attr("url");
-
-                var xmselect = xmSelect.render({
-                    el: '[[${"#itemId-" + model.item_name}]]',
-                    language: 'zn',
-                    filterable: true,
-                    style: {
-                        height: '26px',
-                    },
-                    prop: {
-                        name: 'V',
-                        value: 'K',
-                    },theme: {
-                        color: '#1e9fff',
-                    },
-                    name: '[[${model.item_name}]]',
-                    tips: '[[${#strings.isEmpty(model.placeholder)?"请选择":model.placeholder}]]',
-                    remoteSearch: true,
-                    remoteMethod: function(val, cb, show){
-                        var param={ keyword: val}
-                        $.post(initUrl , param, function(response) {
-                            if(response.success){
-                                var res = response.data;
-                                cb(res.data)
-                            } else {
-                                cb([]);
-                                console.log(response.message);
-                            }
-                        }, 'json').fail(function () {
-                            cb([]);
-                            console.log("error");
-                        });
-                    },
-                    initValue: JSON.parse( $('[[${"#itemdata-" + model.item_name}]]').attr("value")||[])
+                $(function(){
+                    try{
+                        xmSelect.render({
+                            el: '[[${"#itemId-" + model.item_name}]]',
+                            language: 'zn',
+                            filterable: true,
+                            style: {
+                                height: '26px',
+                            },
+                            prop: {
+                                name: 'V',
+                                value: 'K',
+                            },theme: {
+                                color: '#1e9fff',
+                            },
+                            name: '[[${model.item_name}]]',
+                            tips: '[[${#strings.isEmpty(model.placeholder)?"请选择":model.placeholder}]]',
+                            remoteSearch: true,
+                            remoteMethod: function(val, cb, show){
+                                var param={ keyword: val}
+                                $.post($('[[${"#itemId-" + model.item_name}]]').attr("url") , param, function(response) {
+                                    if(response.success){
+                                        var res = response.data;
+                                        cb(res.data)
+                                    } else {
+                                        cb([]);
+                                        console.log(response.message);
+                                    }
+                                }, 'json').fail(function () {
+                                    cb([]);
+                                    console.log("error");
+                                });
+                            },
+                            initValue:
+                                JSON.parse( $('[[${"#itemdata-" + model.item_name}]]').attr("value")||[])
+                        })
+                    }catch (e){
+                        console.log(e);
+                    }
                 })
             </script>
 

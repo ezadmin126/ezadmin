@@ -48,7 +48,7 @@
                    th:src="${help}"></i>
                 [[${#strings.isEmpty(label)?'':label+'：' }]]
             </label>
-            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}" >
                 <small
                         class="layui-form-mid layui-text-em top_desc"
                         th:utext="${top_desc}" style="float:none"

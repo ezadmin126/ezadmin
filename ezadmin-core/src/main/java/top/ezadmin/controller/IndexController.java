@@ -89,14 +89,14 @@ public class IndexController extends BaseController {
         listN.setTitle("列表管理");
         listN.setId("1");
         listN.setPid("0");
-        listN.setHref("/topezadmin/listEdit/list-listall?perPageInt=20");
+        listN.setHref("/topezadmin/list/list-listall?perPageInt=20");
         root.add(listN);
 
         Info listF = new Info();
         listF.setTitle("表单管理");
         listF.setId("2");
         listF.setPid("0");
-        listF.setHref("/topezadmin/listEdit/list-formall?perPageInt=20");
+        listF.setHref("/topezadmin/list/list-formall?perPageInt=20");
         root.add(listF);
 //        Info list2 = new Info();
 //        list2.setTitle("表单管理");

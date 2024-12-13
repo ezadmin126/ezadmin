@@ -11,7 +11,9 @@ $(function (){
         }
     }
 
-    $(document).on('click', '.ezopenbutton', function () {
+    $(document).on('click', '.ezopenbutton', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         var btn = $(this);
         var url = (btn.attr("item_url") || btn.attr("url"));
         if (url == '#') {
@@ -21,15 +23,18 @@ $(function (){
         var area = btn.attr("area");
         var title = btn.attr("ITEM_OPEN_TITLE") || btn.attr("windowname") || "打开";
         ezopen(openType, title, url, area);
+        return false;
     })
     $(document).on("click",".ezopenredirect",function(e){
         openBlank("/ezredirect.html?url="+encodeURIComponent($(this).attr("item_url")));
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     })
 
 
     $(document).on('click', '.viewer-image', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+
         var _this = $(this);
         var pid = _this.attr("pid");
         ;
@@ -59,9 +64,12 @@ $(function (){
                 }
             }
         });
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     })
 //行选择事件
-    $(document).on('click', '.ezrowselectbutton', function () {
+    $(document).on('click', '.ezrowselectbutton', function (e) {
 
         var name = $(this).attr("fname");
         var ezcallback = $(this).attr("ez_callback") || $(this).attr("item_url") || $(this).attr("url");
@@ -70,9 +78,12 @@ $(function (){
         var ids = getJsonRowIds(row);
         var lines = getJsonRowIdAndNames(row, name);
         window.parent[ezcallback] && window.parent[ezcallback](ids, lines);
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     })
 //弹框选择
-    $(document).on('click', '.ezcheckbutton', function () {
+    $(document).on('click', '.ezcheckbutton', function (e) {
         console.log("checked")
         debugger;
         var ezcallback = $(this).attr("ez_callback") || $(this).attr("item_url") || $(this).attr("url");
@@ -80,6 +91,9 @@ $(function (){
         var ids = getJsonCheckIds();
         var lines = getJsonCheckIdAndNames();
         window.parent[ezcallback] && window.parent[ezcallback](ids, lines);
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     })
 })
 
@@ -387,7 +401,7 @@ function initForm() {
         })
     })
 
-    $(document).on("click",".ez-help",function(){
+    $(document).on("click",".ez-help",function(e){
         var url = $(this).attr("src");
         var tips = $(this).attr("tips");
         var id = $(this).attr("id");
@@ -408,6 +422,9 @@ function initForm() {
                 time: 4000
             });
         }
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
     })
 
 
@@ -500,7 +517,7 @@ function renderCascader(cas) {
                 });
 
             } else if (itemsJson) {
-
+//放到插件里面处理
             }
         } catch (e) {
 
@@ -839,8 +856,11 @@ function openModel(url, name, area) {
             var body = layer.getChildFrame('body', indexyyy);
             if($(body).find('#submitButtonContainer').length>0){
                 $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
-                $(body).on("click","#closeParent",function(){
+                $(body).on("click","#closeParent",function(e){
                     layui.layer.close(indexyyy);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
                 })
             }
         }
@@ -874,8 +894,11 @@ function openForm(url, name, area) {
         success: function(layero, indexyyy, that){
             var body = layer.getChildFrame('body', indexyyy);
             $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
-            $(body).on("click","#closeParent",function(){
+            $(body).on("click","#closeParent",function(e){
                 layui.layer.close(indexyyy);
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
             })
         }
     });

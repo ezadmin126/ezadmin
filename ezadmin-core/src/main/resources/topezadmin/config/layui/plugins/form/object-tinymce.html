@@ -54,7 +54,7 @@
                 </textarea>
                 <script>
                     try{
-                    var uploadUrl = "[[${uploadUrl+'?descFlag=1'}]]";
+                   // var uploadUrl = "[[${uploadUrl+'?descFlag=1'}]]";
                     tinymce.init({
                         selector: "textarea#[[${'DESC_ITEM_ID_'+item_name}]]"
                         ,
@@ -113,7 +113,7 @@
                                 var xhr, formData;
                                 xhr = new XMLHttpRequest();
                                 xhr.withCredentials = false;
-                                xhr.open('POST', uploadUrl);
+                                xhr.open('POST', "[[${uploadUrl+'?descFlag=1'}]]");
                                 xhr.onload = function () {
                                     debugger;
                                     var json;
@@ -145,7 +145,7 @@
                             debugger
                             formData.append('file', blobInfo.blob());
                             $.ajax({
-                                url: uploadUrl,
+                                url: "[[${uploadUrl+'?descFlag=1'}]]",
                                 type: 'POST',
                                 data: formData,
                                 dataType: 'json',

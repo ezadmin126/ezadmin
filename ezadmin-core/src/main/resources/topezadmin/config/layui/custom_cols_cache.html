@@ -47,11 +47,6 @@
 </head>
 <body>
 <div class="layui-container">
-    <blockquote class="layui-elem-quote">
-        <p>- 勾选字段控制显示与隐藏</p>
-        <p>- 拖拽字段名控制字段排序</p>
-        <p>- 移动列表表头控制列宽</p>
-    </blockquote>
     <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
     <input type="hidden" name="IS_DEBUG" id="IS_DEBUG" th:value="${IS_DEBUG}">
     <form class="layui-form" th:action="${contextName+'/topezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}" method="post"
@@ -59,7 +54,7 @@
         <div class="layui-card">
             <div class="layui-card-header">
                 <span class="layui-breadcrumb" lay-separator="|">
-                    <a href="#">搜索项设置</a>
+                    <a href="#" style="color: #0052CC !important;font-size: 24px">搜索项设置</a>
                 <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
                    onclick="changeSearchAll(1)"> 全选</a>
                 </span>
@@ -90,7 +85,7 @@
         </div>
         <div class="layui-card">
             <div class="layui-card-header"><span class="layui-breadcrumb" lay-separator="|">
-                <a href="#">列表项设置</a>
+                <a href="#" style="color: #0052CC !important;font-size: 24px">列表项设置</a>
                 <a class="layui-text" style="color:#01AAED !important;cursor: pointer"
                    onclick="changeListAll(1)"> 全选</a>
                 </span>
