@@ -1,6 +1,7 @@
 package top.ezadmin.common.utils;
 
 
+import org.apache.commons.lang.BooleanUtils;
 import top.ezadmin.common.enums.DefaultParamEnum;
 import top.ezadmin.common.enums.ColTypeEnum;
 import top.ezadmin.common.enums.JdbcTypeEnum;
@@ -461,5 +462,15 @@ public class Utils {
 
     public static Long toLong(Object traderId) {
         return NumberUtils.toLong(traderId+"");
+    }
+
+    /**
+     *
+     * @param obj  true  on  yes 1
+     * @return
+     */
+    public static boolean isTrue(Object obj){
+        String s=trimNull(obj);
+        return "1".equals(s)||BooleanUtils.toBoolean(s);
     }
 }

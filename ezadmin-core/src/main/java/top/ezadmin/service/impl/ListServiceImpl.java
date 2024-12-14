@@ -891,18 +891,15 @@ public class ListServiceImpl implements ListService {
                 String display=getString(table,JsoupUtil.DISPLAY);
                 if(StringUtils.isNotBlank(display)){
                     //
-                    if(Utils.trimNull(executepress(display,requestParamMap)).equals("0")||
-                            Utils.trimNull(executepress(display,requestParamMap)).equals("none")){
+                    String dis=Utils.trimNull(executepress(display,requestParamMap));
+                    if(!Utils.isTrue(dis)){
                         continue;
                     }
                 }
-
                 table.put("importservice",MapParser.parseDefaultEmpty(getString(table,"importservice"), requestParamMap).getResult());
                 table.put("importtips",MapParser.parseDefaultEmpty(getString(table,"importtips"), requestParamMap).getResult());
                 table.put("importname",MapParser.parseDefaultEmpty(getString(table,"importname"), requestParamMap).getResult());
-
                 Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(table, JsoupUtil.TYPE));
-
                 Context context = new Context();
                 context.setVariables(table);
                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
@@ -1072,8 +1069,10 @@ public class ListServiceImpl implements ListService {
                 String[] valueSplit=orgValue.split(" - ");
                 search.put(currentItemname,orgValue);
                 search.put(ParamNameEnum.itemParamValue.getName(),orgValue);
-                search.put(ParamNameEnum.itemParamValueStart.getName(),valueSplit[0]);
-                search.put(ParamNameEnum.itemParamValueEnd.getName(),valueSplit[1]);
+                if(valueSplit.length==2){
+                    search.put(ParamNameEnum.itemParamValueStart.getName(),valueSplit[0]);
+                    search.put(ParamNameEnum.itemParamValueEnd.getName(),valueSplit[1]);
+                }
             }
 
             search.put(ParamNameEnum.itemParamOrderValue.getName(),Utils.trimNull(requestParamMap.get(currentItemname+ "_ORDER")));

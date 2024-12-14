@@ -614,7 +614,7 @@ function renderTable() {
                     }
                 },
                 done: function(res, curr, count, origin) {
-                    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});
+                    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+' '+ getNow()});
                    // doPage();
                 }
             });
@@ -640,7 +640,11 @@ function doDropdown(){
                 , data: j
                 ,trigger: 'hover'
                 , click: function (obj) {
-                    debugger
+                    //debugger
+                    if('script'==obj.opentype){
+                        doClickDropItem(obj);
+                        return;
+                    }
                     if (obj.area == undefined) {
                         ezopen(obj.opentype, obj.windowname, obj.url);
                     } else {
@@ -740,7 +744,7 @@ function doSystem() {
     $("[item_name='修改']").addClass("layui-border-blue");
     $("[item_name='编辑']").addClass("layui-border-blue");
     if($("#removewatermark").val()!=1){
-        watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + getNow()});
+        watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() +' '+ getNow()});
     }
     $('.viewer-image').each(function () {
         $(this).on('load', function () {

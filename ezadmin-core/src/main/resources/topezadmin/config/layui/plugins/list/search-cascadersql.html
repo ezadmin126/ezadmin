@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Sql级联下拉</title>
 </head>
-<body id="search-cascadersql" type="search" icon="layui-icon-share">
+<body id="search-cascadersql" alias="cascadersql" type="search" icon="layui-icon-share">
 <div id="template" >
     <div class="layui-col-space10 selector layui-col-md3" config-form-type="cascader"    ez-type="cascadersql">
         <div class="layui-form-item ">
@@ -59,9 +59,12 @@
                     var _this = $('[[${"#ITEM_ID_" + model.item_name}]]');
                     var prop = {};
                     prop.value =  _this.attr("ez_value")||'VALUE';
-                    prop.label = _this.attr("ez_label")||'LABEL' ;
+                    prop.label = _this.attr("ez_treelabel")||_this.attr("ez_label")||'LABEL' ;
                     prop.children = _this.attr("ez_children")||'CHILDREN';
                     prop.multiple = ($('[[${"#ITEM_ID_" + model.item_name}]]').attr("radio")||"false").toLowerCase()==="false"?true:false,
+                    //单选且任意层级
+                    prop.checkStrictly = ($('[[${"#ITEM_ID_-" + model.item_name}]]').attr("checkStrictly")||"false").toLowerCase()==="true"?true:false,
+
                         // res=flatToTree(res,0);
                         layCascader({
                             elem: _this[0],
@@ -71,8 +74,7 @@
                             placeholder: _this.attr("placeholder") ,
                             collapseTags:  ($('[[${"#ITEM_ID_" + model.item_name}]]').attr("collapseTags")||"true").toLowerCase()==="true"?true: false ,
                             value: _this.attr("value"),
-                            options: JSON.parse($('[[${"#itemdata-" + model.item_name}]]').val()||[])
-                            ,
+                            options: JSON.parse($('[[${"#itemdata-" + model.item_name}]]').val()||[]),
                             filterMethod: function (node, val) {//重写搜索方法。
                                 if (val == node.data[prop.label]) {//把value相同的搜索出来
                                     return true;
@@ -80,7 +82,6 @@
                                 if ((node.data[prop.label] + node.data[prop.label]).indexOf(val) != -1) {//名称中包含的搜索出来
                                     return true;
                                 }
-
                                 return !ezpingyin(val, (node.data[prop.label] + node.data[prop.label]), (node.data[prop.value] + ''));
                             }
                         });

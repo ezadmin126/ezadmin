@@ -14,6 +14,7 @@
                         th:name="${rowButton0.item_name}" th:opentype="${rowButton0.opentype}"
                         th:windowname="${rowButton0.windowname}" th:area="${rowButton0.area}"
                         type="button" editor="button_row"
+                        th:data-rowjson="${rowButton0.rowjson}"
                         th:classappend="${  #strings.equals('script',rowButton0.opentype)?'':'ezopenbutton' }"
                         class="rowbutton    layui-btn layui-btn-sm layui-btn-primary  "></button>
                 <button class="layui-btn layui-btn-primary layui-btn-sm dropdown_button" th:itemsJson="${itemsJson}">
