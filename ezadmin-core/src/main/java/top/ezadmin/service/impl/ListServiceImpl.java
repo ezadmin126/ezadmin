@@ -423,7 +423,7 @@ public class ListServiceImpl implements ListService {
         List<Map<String,Object>> d=(List<Map<String,Object>>) EzClientBootstrap.instance().getCache().get("kvtreesqlcache", key, new Callback() {
             @Override
             public Object call(String key) {
-                return Utils.flatTree(data.getItems());
+                return Utils.flatTree(data.getItems(),"ID","asc");
             }
         });
         data.items(d);
@@ -1154,7 +1154,7 @@ public class ListServiceImpl implements ListService {
         List<Map<String,Object>> tablebtnList=new ArrayList<>();
         List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
         List<Map<String,Object>> rowList=new ArrayList<>();
-        List<Map<String,Object>> rowbtnList=new ArrayList<>();
+        List<Map<String, Object>> rowbtnList = (List<Map<String, Object>>) list.get("rowbtn");
 
         String globalEmptyShow=getString(coreMap,JsoupUtil.EMPTY_SHOW);
         String listcode=getString(coreMap,"listcode");
@@ -1201,12 +1201,7 @@ public class ListServiceImpl implements ListService {
         if(Utils.isNotEmpty(dataList)){
             for (int i = 0; i <dataList.size() ; i++) {
                 Map<String, Object> dataRow=dataList.get(i);
-                List<String> tds=new ArrayList<>();
-                dataRow.put("tds",tds);
-                if(Utils.isNotEmpty(colList)){
-                    rowList.add(dataRow);
-                    continue;
-                }
+
                 for (int j = 0; j < colList.size(); j++) {
                         Map<String,Object> th=colList.get(j);
                         String itemName=Utils.getStringByObject(th,JsoupUtil.ITEM_NAME);
@@ -1224,25 +1219,7 @@ public class ListServiceImpl implements ListService {
                                 loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th,JsoupUtil.BODY_PLUGIN_CODE));
 
                         try {
-                            //处理第一列
-                            if(ColTypeEnum.isFirst(Utils.getStringByObject(th,JsoupUtil.HEAD_PLUGIN_CODE))){
-                                Context context = new Context();
-                                context.setVariable("firstCol", firstcol);
-                                context.setVariable("count", pagination.getStartRecord() + i + 1);
-                                context.setVariable("_CHECK_ID_VALUE", dataRow.get("ID"));
-                                context.setVariable("dataRow", dataRow.entrySet());
-                                String template =  Utils.trimNull(loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th,JsoupUtil.BODY_PLUGIN_CODE))
-                                        .get("PLUGIN_BODY"));
-                                String html = ThymeleafUtils.processString(template, context);
-                                if (StringUtils.isBlank(html)) {
-                                    tds.add("");
-                                } else {
-                                    tds.add(html);
-                                }
-                                continue;
-                            }
-                            //处理数据列
-                            else{
+
                                 if (StringUtils.isNotBlank(bodyPlugin)  ) {
                                     Context context = new Context();
                                     context.setVariables(th);
@@ -1272,11 +1249,6 @@ public class ListServiceImpl implements ListService {
                                         DataSource temp= EzClientBootstrap.instance().getDataSourceByKey(columnDs);
 
                                         if(ItemDataSourceType.isEzList(getString(th,JsoupUtil.DATATYPE))){
-                                            //获取
-//                                            EzList listTemp = new DefaultEzList( getString(th,JsoupUtil.DATA), temp, requestParamMap,sessionParamMap);
-//
-//                                            list.renderHtml();
-                                            //context.setVariable("data", listTemp.getEzListDto());
                                         }else {
                                             try {
                                                 Map nm=new HashMap();
@@ -1294,19 +1266,20 @@ public class ListServiceImpl implements ListService {
 
                                     String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
                                     String html = ThymeleafUtils.processString(template, context);
-                                    tds.add(html);
-
-                                } else {
-                                    tds.add("<td class='  ezadmin-td ezadmin-td-'"+itemName+">" + dataInDb + "</td>");
+                                    //NAME样式有冲突，直接展示文字。
+                                    if(!"id".equalsIgnoreCase(itemName)
+                                            &&!JsoupUtil.NAME.equalsIgnoreCase(itemName)
+                                            &&!"PARENT_ID".equalsIgnoreCase(itemName)
+                                            &&!"IS_PARENT".equalsIgnoreCase(itemName)
+                                            &&!"DISPLAY_ORDER".equalsIgnoreCase(itemName)
+                                    ){
+                                        dataRow.put(itemName,StringUtils.replace(html,"<td ","<div ")
+                                                .replace("</td>","</div>"));
+                                    }
                                 }
-                            }
-
                             //处理按钮列
                             try {
-
-
                                 if(Utils.isNotEmpty(rowbtnList)) {
-
                                     List<Map<String,Object>> tempRowItem=new ArrayList<>();
                                     for (int i1 = 0; i1 < rowbtnList.size(); i1++) {
                                         Map<String,Object> item=rowbtnList.get(i1);
@@ -1318,13 +1291,12 @@ public class ListServiceImpl implements ListService {
                                         m.put(JsoupUtil.WINDOW_NAME,MapParser.parseDefaultEmpty(Utils.getStringByObject(item,JsoupUtil.WINDOW_NAME),  dataRow ).getResult());
                                         m.put(JsoupUtil.ITEM_ID,MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.ITEM_ID),"0"),  dataRow ).getResult());
                                         m.put(JsoupUtil.DISPLAY,MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.DISPLAY),"true"),  dataRow ).getResult());
+                                        m.put("rowdataid",dataRow.get("ID"));
+                                        m.put("data-id",dataRow.get("ID"));
                                         if(BooleanUtils.toBoolean(Utils.getStringByObject(m,JsoupUtil.DISPLAY))){
                                             tempRowItem.add(m);
                                         }
                                     };
-
-
-
                                     Context context = new Context();
                                     if(tempRowItem.size()>0) {
                                         if (tempRowItem.size() > 1) {
@@ -1341,29 +1313,24 @@ public class ListServiceImpl implements ListService {
                                         String template = Utils.trimNull(buttonPlugin.get("PLUGIN_BODY"));
                                         String html = ThymeleafUtils.processString(template, context);
                                         if (StringUtils.isNotBlank(html)) {
-                                            tds.add(html);
+                                            dataRow.put("oper",StringUtils.replace(html,"<td ","<div ")
+                                                    .replace("</td>","</div>"));
                                         }
                                     }
                                 }
                             } catch (Exception e) {
-                                LOG.error("EZADMIN LIST={}  初始化第{}行按钮错误{} ",  i,dataRow,e);
+                                LOG.error("EZADMIN LIST={}  初始化第{}行按钮错误  ",  i,dataRow,e);
                             }
-
-
                         }catch (Exception e){
-                            e.printStackTrace();
+                            LOG.error("EZADMIN LIST={}  初始化第{}行按钮错误  ",  i, e);
                         }
                     }
-
                 rowList.add(dataRow);
             }
-            coreMap.put("dataList",rowList);
+            coreMap.put("dataList", Utils.flatTree(rowList,"DISPLAY_ORDER","desc"));
         }
-
         page(pagination,list,requestParamMap);
     }
-
-
 
     @Override
     public long fillCountById(Map<String, Object> list, Map<String, Object> requestParamMap, Map<String, String> sessionParamMap) throws Exception {
@@ -1371,19 +1338,10 @@ public class ListServiceImpl implements ListService {
         Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
         List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
         String datasourceCore=getString(coreMap,"datasource");
-        String firstcol=getString(coreMap,"firstcol");
         DataSource dataSourceVO= EzClientBootstrap.instance().getDataSourceByKey(datasourceCore);
-        //fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
-
-
-        String globalEmptyShow=getString(coreMap,"empty_show");
-        String listcode=getString(coreMap,"listcode");
-
-
         //填充数据
         long count =getDataCountByListId(dataSourceVO, list, requestParamMap,sessionParamMap );
         pagination.setTotalRecord(count);
-
         page(pagination,list,requestParamMap);
         return count;
     }
@@ -1409,7 +1367,6 @@ public class ListServiceImpl implements ListService {
         pagemap.put("totalRecord",pagination.getTotalRecord() );
         pagemap.put("html",html);
         list.put("page",pagemap);
-
     }
     public Page loadingPage(Map<String, Object> list,Map<String, Object> requestParamMap) {
         Page  pagination=new Page(requestParamMap);
@@ -1430,14 +1387,12 @@ public class ListServiceImpl implements ListService {
                 pagination.setOrderByClause(item.get(JsoupUtil.ITEM_NAME) + " " + OrderEnum.getSort(orderValue));
                 break;
             }
-
         }
         if(StringUtils.isBlank(pagination.getOrderByClause())){
             pagination.setOrderByClause(Utils.trimNull(coreMap.get("orderby_express")));
         }else{
             pagination.setOrderByClause(" order by "+pagination.getOrderByClause());
         }
-
         return pagination;
     }
     String getString(Map<String,Object> map,String key){
@@ -1451,9 +1406,6 @@ public class ListServiceImpl implements ListService {
         try {
             if (StringUtils.isNotBlank(rule)) {
                 Map<String,Object> cof=JSONUtils.parseObjectMap(rule);
-//                if(StringUtils.toBoolean(Utils.trimNull(cof.get("required")))){
-//                    // item.setLayVerify(Utils.trimNull(item.getLayVerify())+"|required");
-//                }
                 validRuleMap.put(itemName,cof) ;
                 if (StringUtils.isNotBlank(message)) {
                     validMsgMap.put(itemName,JSONUtils.parseObjectMap(message)) ;

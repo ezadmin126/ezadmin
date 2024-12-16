@@ -345,7 +345,16 @@ public class Utils {
         }
     }
 
-    public static List<Map<String,Object>> flatTree(List<Map<String,Object>> list){
+    /**
+     *
+     * @param list
+     * @param sort
+     * @param sorttype  asc  desc ,默认asc
+     * @return
+     */
+    public static List<Map<String,Object>> flatTree(List<Map<String,Object>> list,String sort,String sorttype ){
+        String fsort=Utils.trimEmptyDefault(sort,"ID");
+       String fsorttype=trimEmptyDefault(sorttype,"asc");
         Map  root=new HashMap();
         root.put("ID","0");
         if(list.size()>0&&list.get(0).containsKey("ROOT_ID")){
@@ -362,64 +371,38 @@ public class Utils {
             String parentId=Utils.trimNull(v.get("PARENT_ID"));
             if(StringUtils.equals(Utils.trimNull(root.get("ID")),parentId)){
                 ((ArrayList)root.get("CHILDREN")).add(v);
+                root.put("IS_PARENT",true);
             }else{
                 if(idMap.containsKey(parentId)){
                     if(!idMap.get(parentId).containsKey("CHILDREN")){
                         idMap.get(parentId).put("CHILDREN",new ArrayList<>()) ;
                     }
+                    idMap.get(parentId).put("IS_PARENT",true);
                     ((List)idMap.get(parentId).get("CHILDREN")).add(v);
                 }
             }
         });
 
         List<Map<String,Object>> result=((ArrayList)root.get("CHILDREN"));
-        result.sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get("ID")))));
-        sortChildren(result);
+        if(StringUtils.equalsIgnoreCase("desc",fsorttype)){
+            result.sort(Comparator.comparing(a -> -NumberUtils.toLong(Utils.trimNull(((Map) a).get(fsort)))));
+        }else{
+            result.sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(fsort)))));
+        }
+        sortChildren(result,fsort,fsorttype);
         return result;
     }
-    private static void sortChildren(List<Map<String,Object>> nodes) {
+    private static void sortChildren(List<Map<String,Object>> nodes,String sort,String sorttype) {
         for (Map<String,Object> node : nodes) {
             if(isNotEmpty(((List)node.get("CHILDREN")))){
                 // Sort the current node's children by ID
-                ((List)node.get("CHILDREN")).sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get("ID")))));
-                // Recursively sort the children
-                sortChildren(((List)node.get("CHILDREN")));
-            }
-        }
-    }
-
-//    public static void main(String[] args) {
-//        System.out.println(NumberUtils.toLong("620000000000"));
-//    }
-
-    public static List<Map<String,Object>> flatTreeV2(List<Map<String,Object>> list){
-        Map  root=new HashMap();
-
-        root.put("ID","0");
-        if(list.size()>0&&list.get(0).containsKey("ROOT_ID")){
-            root.put("ID",list.get(0).get("ROOT_ID"));
-        }
-        AtomicInteger level=new AtomicInteger(0);
-        flatTree2(root,list,level);
-        return (List<Map<String,Object>>)root.get("CHILDREN");
-    }
-    static  void flatTree2( Map<String,Object>  root,List<Map<String,Object>> left,AtomicInteger level){
-        if(level.incrementAndGet()>4){
-            logger.warn("超过4层，存在溢出风险");
-            return;
-        }
-        for (int i = 0; i < left.size(); i++) {
-            Map cur=left.get(i);
-            if(StringUtils.equals(Utils.trimNull(cur.get("ID")),"0")){
-                continue;
-            }
-             if( StringUtils.equals(Utils.trimNull(cur.get("PARENT_ID")),Utils.trimNull(root.get("ID")))){
-                if(!root .containsKey("CHILDREN")){
-                    root.put("CHILDREN",new ArrayList<>());
+                if(StringUtils.equalsIgnoreCase("desc",sorttype)) {
+                    ((List) node.get("CHILDREN")).sort(Comparator.comparing(a -> -NumberUtils.toLong(Utils.trimNull(((Map) a).get(sort)))));
+                }else{
+                    ((List) node.get("CHILDREN")).sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(sort)))));
                 }
-                ArrayList<Map<String,Object>> cc=( ArrayList<Map<String,Object>>)root.get("CHILDREN");
-                cc.add(cur);
-                flatTree2(cur,left,level);
+                // Recursively sort the children
+                sortChildren(((List)node.get("CHILDREN")),sort,sorttype);
             }
         }
     }

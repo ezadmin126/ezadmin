@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${data.listName}">List</title>
     <link th:href="${contextName+'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
     <link th:href="${contextName+'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
@@ -32,7 +32,7 @@
 <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
 <input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${data.core.emptyname}">
-<div class="layui-container">
+<div  th:class="${'layui-'+layout}">
     <div class="layui-tab layui-tab-brief searchWrap">
         <ul class="layui-tab-title" id="list-tab" th:if="${not #lists.isEmpty(data.nav)}">
             <li th:item_id="${item.item_name}" th:item_name="${item.item_name}"
@@ -96,49 +96,53 @@
                 </div>
             </div><!--formitem-->
         </div><!--tab-content-->
-    </div><!--tab -->
-    <hr class="layui-border-blue">
-    <div class="layui-row">
-        <div class="layui-col-xs6">
-            <div class="  tableButton  " style="text-align: left">
+    </div>
+
+    <div class="layui-row layui-panel ez-table-tool" style="">
+        <div class="layui-col-xs6 layui-col-sm8" th:if="${#lists.size(data.tablebtn)>0}">
+            <div class="  tableButton layui-btn-container " style="text-align: left">&nbsp;
                 <div th:remove="tag" th:each="item:${data.tablebtn}" th:utext="${item.html}"></div>
             </div>
         </div>
-        <div class="layui-col-xs6" style="text-align: right;float:right">
+        <div class="layui-col-xs6 righttool layui-btn-group" th:classappend="${#lists.size(data.tablebtn)>0
+                    ?'layui-col-sm4':''
+            }" style="text-align: right;">
             <button title="上一页" type="button"
                     th:classappend="${data.page.currentPage<2?'layui-btn-disabled ':' page-button '}"
                     th:page="${ data.page.currentPage  - 1}" class=" layui-btn  layui-btn-sm  layui-btn-primary"
-            ><i style="font-size: 16px ;" class="layui-icon layui-icon-prev"></i></button>
+            ><i   class="layui-icon layui-icon-prev"></i></button>
             <button title="下一页" type="button" th:page="${ data.page.currentPage  + 1}"
-                    class=" layui-btn  layui-btn-sm  layui-btn-primary nextpage"
+                    class="nextpage layui-btn  layui-btn-sm  layui-btn-primary"
                     th:classappend="${ data.page.currentPage >= data.page.totalPage ?'layui-btn-disabled':'page-button'}"
-            ><i style="font-size: 16px ;" class="layui-icon layui-icon-next"></i></button>
+            ><i   class="layui-icon layui-icon-next"></i></button>
 
+            <button title="导出" type="button" id="export" class="layui-btn  layui-btn-sm layui-btn-primary" th:if="${data.core.export==1}"
 
-            <!--            <button type="button" id="tomobile" class="layui-btn  layui-btn-sm "-->
-<!--                    th:classappend="${_EZ_MOBILE_FLAG==1?'layui-btn-normal':'layui-btn-primary'}"-->
-<!--            ><i style="font-size: 16px !important;" class="layui-icon layui-icon-cellphone"></i></button>-->
-            <button type="button" id="customColAndSearch" class="layui-btn  layui-btn-sm  "
+            ><i   class="layui-icon layui-icon-export"></i></button>
+            <button title="设置" type="button" id="customColAndSearch" class="layui-btn  layui-btn-sm  "
+
                     th:classappend="${_EZ_CUSTOM_FLAG==1?'layui-btn-normal':'layui-btn-primary'}"><i
-                    style="font-size: 16px !important;" class="layui-icon layui-icon-set"></i>
+                    class="layui-icon layui-icon-set"></i>
             </button>
         </div>
     </div>
+
     <div class="layui-card">
-        <div class="layui-card-body" style=" border: 1px solid #eee; margin-top: 5px;
-">
+        <div class="layui-card-body"  >
             <div id="table-wrap">
                 <table
                        id="treetable"
                        class="layui-hide" >
 
                 </table>
+                <DIV class="layui-table-column layui-table-page">
+                    <div  class="layui-inline layui-table-pageview" style="margin-right: 10px;
+    margin-top: 8px;" th:utext="${data.page.html}"></div>
+                </DIV>
             </div>
 
         </div>
-        <DIV>
-            <div th:remove="tag" th:utext="${data.page.html}"></div>
-        </DIV>
+
     </div>
 </div>
 
@@ -166,5 +170,63 @@
 
 <script th:src="${contextName+'/webjars/topezadmin/layui/js/ezlist.js?v='+vi}" type="text/javascript"></script>
 
+<script>
+    layui.use(function(){
+        let treeTable=layui.treeTable;
+        console.log("初始化树形table");
+        if($("#coldata").val()!=undefined){
+            console.log("初始化树形table");
+            var json=JSON.parse($("#coldata").val());
+            var col=[];
+            col.push(json);
+            var inst = treeTable.render({
+                elem: '#treetable',
+                cellMinWidth:$("#cellMinWidth").val()||110,
+                url: '/topezadmin/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
+                //maxHeight: '501px',
+                cols: col,
+
+                tree:{
+                    view:
+                        {
+                            expandAllDefault:false
+                        },
+                    customName:{
+                        id:"ID",
+                        name:"NAME",
+                        pid:"PARENT_ID",
+                        isParent:"IS_PARENT",
+                        children: "CHILDREN"
+                    },
+                    data: {
+
+                    },
+                    callback: {
+                        onExpand:function(tableId, trData, expandFlag){
+                            console.log(tableId+trData+"\t"+expandFlag)
+                            if(expandFlag){
+                                doDropdown();
+                            }
+                        }
+                    }
+                },
+                done: function(res, curr, count, origin) {
+                    console.log("数据获取完成之后，开始初始化dropdown");
+                    doDropdown();
+                    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+' '+ getNow()});
+                    // doPage();
+                }
+            });
+        }
+    })
+</script>
+
+
+
+
 [(${data.core.append_foot})]
+
+
+
+
 </html>

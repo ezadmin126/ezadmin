@@ -125,7 +125,7 @@ $(function () {
                                }
                                return false;
                            })
-                       }else if(data.code=='200'){
+                       }else if(data.code=='500'){
                            layer.alert(data.message);
                        }  else {
                            layer.alert( "保存失败");

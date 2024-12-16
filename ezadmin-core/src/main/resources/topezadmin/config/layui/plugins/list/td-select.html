@@ -14,20 +14,12 @@
     <tr id="content">
         <td   th:ITEM_NAME="${item_name}" th:ITEM_ID="${item_name}"
             th:class="${' ezadmin-td ezadmin-td-'+item_name}" th:style="${style}"
-            ez-type="td-select"
-
-        >
-            <div class="  td-text" th:if="${not #lists.isEmpty(items)}" >
-                <div th:each="item:${items}" th:remove="tag"
-                     th:if="${dataInDb==null?false:#strings.equals(dataInDb+'',item.K+'')}"
-                     th:title="${item.V}"
-                     th:utext="${item.V}">
-                </div>
-            </div>
-            <div class="  td-text" th:if="${ #lists.isEmpty(items)}" th:utext="${dataInDb}">
-
-            </div>
-
+            ez-type="td-select">
+            <div class="  td-text"   th:each="item:${items}" th:remove="tag" th:if="${
+              (#lists.isEmpty(items) or dataInDb==null )?false:#strings.equals(dataInDb+'',item.K+'')}"
+                 th:title="${item.V}"
+                 th:utext="${item.V}"></div>
+            <div class="td-text" th:if="${ #lists.isEmpty(items)}" th:utext="${dataInDb}"></div>
         </td>
     </tr>
 </table>

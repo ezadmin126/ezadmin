@@ -135,13 +135,16 @@ public class ListController extends BaseController {
                 String laydata = Utils.getStringByObject(colList.get(i), JsoupUtil.LAYDATA);
                 col.add(JSONUtils.parseObjectMap(laydata));
             }
-            String layout = Utils.trimNull(core.get(JsoupUtil.LAYDATA));
-            Map m = JSONUtils.parseObjectMap(layout);
+            String btnlaydata = Utils.trimNull(core.get(JsoupUtil.LAYDATA));
+            Map m = JSONUtils.parseObjectMap(btnlaydata);
             m.put("title", "操作");
-            m.put("toolbar", "#TPL-treeTable-demo-tools");
             col.add(m);
             request.setAttribute("data", list);
             request.setAttribute("coldata", JSONUtils.toJSONString(col));
+
+            String layout = ""+core.getOrDefault("layout",EzClientBootstrap.instance().getLayout());
+
+            request.setAttribute("layout",layout);
             request.setAttribute(RequestParamConstants._SEARCH_ITEM_DISPLAY, request.getParameter("_SEARCH_ITEM_DISPLAY"));
             request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/tree-" + ENCRYPT_LIST_ID);
 
@@ -168,6 +171,7 @@ public class ListController extends BaseController {
         if(Utils.isEmpty(list)){
             throw new NotExistException();
         }
+        requestParamMap.put("perPageInt",10000);
         listService.fillTreeById(list, requestParamMap, sessionParamMap);
         Map<String, Object> core = (Map<String, Object>) list.get("core");
         return EzResult.instance().data(core.get("dataList"));

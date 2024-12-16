@@ -472,7 +472,7 @@ function renderTable() {
             //支持所有基础参数
             ,text: {none: '暂无数据'}
             ,done: function (res, curr, count,origin) {
-                console.log(" 初始化table完成 data："+JSON.stringify(res)+"\tpage:"+ curr+"\tcount:"+count+"\torigin:"+(origin||''))
+                console.log(" 初始化table完成 data："+JSON.stringify(res)+ "\tpage:"+ curr+"\tcount:"+count+"\torigin:"+(origin||''))
                 try {
                      if(origin=='reloadData'){
                     //     inited=true;
@@ -515,6 +515,7 @@ function renderTable() {
                 }
 
             }
+
         }
         var initSort={};
         if($("#orderBy").attr("name")!=null&&$("#orderBy").attr("name")!=''){
@@ -589,36 +590,6 @@ function renderTable() {
             }
             layui.form.render()
         });
-        console.log("初始化树形table");
-        if($("#coldata").val()!=undefined){
-            console.log("初始化树形table");
-            var json=JSON.parse($("#coldata").val());
-            var col=[];
-            col.push(json);
-            var inst = treeTable.render({
-                elem: '#treetable',
-                cellMinWidth:$("#cellMinWidth").val()||110,
-                url: '/topezadmin/list/treedata-'+$("#ENCRYPT_LIST_ID").val()+'?'+getSearchParams() , // 此处为静态模拟数据，实际使用时需换成真实接口
-                //maxHeight: '501px',
-                cols: col,
-                defaultToolbar:'',
-                tree:{
-                    view:
-                        {
-                            expandAllDefault:false
-                        },
-                    customName:{
-                        id:"ID",
-                        name:"NAME",
-                        pid:"PARENT_ID"
-                    }
-                },
-                done: function(res, curr, count, origin) {
-                    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+' '+ getNow()});
-                   // doPage();
-                }
-            });
-        }
     });
 }
 
