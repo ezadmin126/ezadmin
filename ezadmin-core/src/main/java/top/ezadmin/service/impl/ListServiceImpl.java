@@ -717,7 +717,7 @@ public class ListServiceImpl implements ListService {
                             String display = Utils.trimNull(item.get(JsoupUtil.DISPLAY));
                             if (StringUtils.isNotBlank(display)) {
                                 String re = MapParser.parseDefaultEmpty(display, dataRow).getResult();
-                                if (BooleanUtils.toBoolean(Utils.trimNull(re)) || "1".equals(Utils.trimNull(re))) {
+                                if (Utils.isTrue(re)) {
                                     tempRowItem.add(m);
                                 }
                             } else {
