@@ -472,7 +472,8 @@ function renderTable() {
             //支持所有基础参数
             ,text: {none: '暂无数据'}
             ,done: function (res, curr, count,origin) {
-                console.log(" 初始化table完成 data："+JSON.stringify(res)+ "\tpage:"+ curr+"\tcount:"+count+"\torigin:"+(origin||''))
+                //+JSON.stringify(res)
+                console.log(" 初始化table完成 data："+ "\tpage:"+ curr+"\tcount:"+count+"\torigin:"+(origin||''))
                 try {
                      if(origin=='reloadData'){
                     //     inited=true;

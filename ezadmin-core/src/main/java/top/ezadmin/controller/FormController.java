@@ -224,7 +224,7 @@ public class FormController extends BaseController {
                 EzResult  r= (EzResult)result;
                 rowId= r.getData();
                 if(!r.isSuccess()){
-                    r.code("200");
+                     r.code("200");
                   //  return r;
                 }
                 return r;

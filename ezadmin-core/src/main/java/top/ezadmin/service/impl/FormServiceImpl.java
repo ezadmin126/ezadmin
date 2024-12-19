@@ -232,6 +232,8 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
                         }
                         else if(Utils.trimNull(item.get("type")).equals("input-text")
+                                ||
+                                Utils.trimNull(item.get("type")).equalsIgnoreCase("password")
                         ){
                             Map<String,String> attrMap= (Map<String,String>)item.get("attrMap");
                             attrMap.put("value", StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName())+""));
@@ -239,6 +241,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                             attrMap.putIfAbsent("id","ITEM_ID_"+item.get(JsoupUtil.ITEM_NAME));
                             attrMap.putIfAbsent("lay-affix","clear" );
+                            if( Utils.trimNull(item.get("type")).equalsIgnoreCase("password")){
+                                attrMap.put("lay-affix","eye" );
+                            }
                             attrMap.putIfAbsent("lay-verify",attrMap.get(JsoupUtil.LAYVERIFY) );
                             attrMap.put("class","layui-input "+(Utils.trimNull(attrMap.get("class")).replace("layui-input ","")) );
                             StringBuilder sb=new StringBuilder("<input ");

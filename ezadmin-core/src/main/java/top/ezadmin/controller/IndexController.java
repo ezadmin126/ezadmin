@@ -35,6 +35,7 @@ public class IndexController extends BaseController {
                 request.setAttribute(entry.getKey() ,entry.getValue());
             }
         }
+        request.setAttribute("indexConfigJson",config);
         request.setAttribute("logo",bootstrap.getLogoUrl());
         request.setAttribute("systemName",bootstrap.getSystemName());
         request.setAttribute("navUrl",bootstrap.getNavUrl());

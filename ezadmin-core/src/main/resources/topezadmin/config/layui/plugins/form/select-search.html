@@ -58,6 +58,8 @@
                 <select th:classappend="${class}" th:v="${value}" th:label="${label}" th:style="${'width: 100%;'+style}" th:v="${value}" lay-search=""
                         th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
                         th:lay-filter="${'lay_filter_'+item_name}"
+                        th:lay-reqtext="${lay_reqtext}"
+
                         th:placeholder="${placeholder}"
                         th:id="${'ITEM_ID_' + item_name}"
                         th:name="${item_name}"

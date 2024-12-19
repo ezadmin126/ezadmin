@@ -569,7 +569,10 @@ public class ListServiceImpl implements ListService {
             List<Map<String, Object>> rowbtnList = (List<Map<String, Object>>) list.get("rowbtn");
 
 
-            String globalEmptyShow = getString(coreMap, "empty_show");
+            String globalEmptyShow = getString(coreMap, JsoupUtil.EMPTY_SHOW);
+                  if(StringUtils.isBlank(globalEmptyShow)){//兼容老数据
+                      globalEmptyShow= getString(coreMap,  "empty_show");
+                  }
 
             String datasourceCore = getString(coreMap, "datasource");
 
@@ -775,6 +778,9 @@ public class ListServiceImpl implements ListService {
 
 
             String globalEmptyShow = getString(coreMap, JsoupUtil.EMPTY_SHOW);
+            if(StringUtils.isBlank(globalEmptyShow)){//兼容老数据
+                globalEmptyShow= getString(coreMap,  "empty_show");
+            }
             String datasourceCore = getString(coreMap, JsoupUtil.DATASOURCE);
             DataSource dataSourceVO = EzClientBootstrap.instance().getDataSourceByKey(datasourceCore);
             //搜索项
@@ -1156,10 +1162,13 @@ public class ListServiceImpl implements ListService {
         List<Map<String,Object>> rowList=new ArrayList<>();
         List<Map<String, Object>> rowbtnList = (List<Map<String, Object>>) list.get("rowbtn");
 
-        String globalEmptyShow=getString(coreMap,JsoupUtil.EMPTY_SHOW);
+        String globalEmptyShow = getString(coreMap, JsoupUtil.EMPTY_SHOW);
+        if(StringUtils.isBlank(globalEmptyShow)){//兼容老数据
+            globalEmptyShow= getString(coreMap,  "empty_show");
+        }
         String listcode=getString(coreMap,"listcode");
         String datasourceCore=getString(coreMap,JsoupUtil.DATASOURCE);
-        String firstcol=getString(coreMap,"firstcol");
+
         DataSource dataSourceVO= EzClientBootstrap.instance().getDataSourceByKey(datasourceCore);
         //头部Nav
         if(Utils.isNotEmpty(tabList)){

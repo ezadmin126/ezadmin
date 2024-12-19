@@ -5,6 +5,8 @@ body{
     line-height: 38px !important;
     display: block !important;
     width: 100% !important;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 .invalid-feedback {

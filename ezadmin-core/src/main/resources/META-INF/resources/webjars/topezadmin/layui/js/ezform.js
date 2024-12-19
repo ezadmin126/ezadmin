@@ -125,17 +125,18 @@ $(function () {
                                }
                                return false;
                            })
-                       }else if(data.code=='500'){
+                       }else if(data.code=='200'){
                            layer.alert(data.message);
                        }  else {
-                           layer.alert( "保存失败");
+                           layer.alert( "保存失败,错误码500");
                            console.log(data.message )
                        }
                        canEzFormSubmit = true;
                    },
                    error: function (e) {
                        canEzFormSubmit = true;
-                       layer.alert("保存失败,网络异常" + e);
+                       layer.alert("保存失败,网络异常");
+                       console.log(e)
                    }
                });
            }catch (e) {

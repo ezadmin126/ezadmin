@@ -179,7 +179,7 @@ public class ListController extends BaseController {
 
     //
     @EzMapping("trace.html")
-    public void trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
         long start = System.currentTimeMillis();
@@ -214,6 +214,7 @@ public class ListController extends BaseController {
             }
         }
         try {
+            Utils.addLog("打印countSQL "  );
             listService.fillCountById(list, requestParamMap, sessionParamMap);
         }catch (Exception e){
             if (Utils.getLog() != null) {
@@ -221,26 +222,24 @@ public class ListController extends BaseController {
             }
         }
         try{
-            listService.fillListById(list, requestParamMap, sessionParamMap);
-        }catch (Exception e){
-            if (Utils.getLog() != null) {
-                Utils.addLog("查询数据异常",e);
-            }
-        }
-        try{
+            Utils.addLog("打印tree SQL "  );
         listService.fillTreeById(list, requestParamMap, sessionParamMap);
         }catch (Exception e){
             if (Utils.getLog() != null) {
                 Utils.addLog("查询树数据异常",e);
             }
         }
+        String result= list(request,response);
+
         request.setAttribute("data", list);
         request.setAttribute("_SEARCH_ITEM_DISPLAY", request.getParameter("_SEARCH_ITEM_DISPLAY"));
 
-        request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + ENCRYPT_LIST_ID);
+        request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/trace-" + ENCRYPT_LIST_ID);
         if (Utils.getLog() != null) {
             Utils.addLog("end list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
         }
+        request.setAttribute("cacheFlag",false);
+        return result;
     }
 
     @EzMapping("api.html")

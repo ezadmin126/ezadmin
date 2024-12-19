@@ -390,24 +390,25 @@ public class Dao {
                         }
                         objectValue = writer.toString();
                     }else if(objectValue !=null && objectValue instanceof  Boolean ){
-                        if( Boolean.parseBoolean(Utils.trimNull(objectValue))){
-                            objectValue="1";
-                        }else{
-                            objectValue="0";
-                        }
+                        //tinyint 默认转成int
+                        objectValue=resultSet.getInt(i);
+//
+//                        if( Boolean.parseBoolean(Utils.trimNull(objectValue))){
+//                            objectValue="1";
+//                        }else{
+//                            objectValue="0";
+//                        }
                     }
-
 
                     if(!(objectValue instanceof byte[])){
                         objectValue=Utils.trimNull(objectValue);
                     }else{
                         objectValue =new String((byte[]) objectValue);
                     }
-
                     if (StringUtils.isNotBlank(metaData.getColumnLabel(i))) {
                         String label=StringUtils.upperCase(metaData.getColumnLabel(i));
                         if(StringUtils.contains(label,"BOOLEAN")){
-                            rowMap.put(label, Boolean.parseBoolean(Utils.trimNull(objectValue))  );
+                            rowMap.put(label, Utils.isTrue(objectValue));
                         }else{
                             rowMap.put(label,  objectValue );
                         }
