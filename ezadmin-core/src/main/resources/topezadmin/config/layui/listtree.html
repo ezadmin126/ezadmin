@@ -72,6 +72,15 @@
                             <button type="button" id="resetBtn" class="layui-btn    layui-btn-primary layui-btn-sm ">
                                 重置
                             </button>
+                            <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/listEdit/loadEdit-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                图形编辑
+                            </button>
+                            <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/listEdit/sourceEdit-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                源码编辑
+                            </button>
+                            <button th:if="${not cacheFlag}" opentype="_BLANK_PARAM" type="button" th:url="${'/topezadmin/listEdit/trace-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                                查看SQL
+                            </button>
 
                             <button th:if="${#lists.size(data.search)>8}" type="button"
                                     th:style="${_SEARCH_ITEM_DISPLAY!=1?'':'display:none'}" id="downBtn"

@@ -63,7 +63,7 @@
                     prop.children = _this.attr("ez_children")||'CHILDREN';
                     prop.multiple = ($('[[${"#ITEM_ID_" + model.item_name}]]').attr("radio")||"false").toLowerCase()==="false"?true:false,
                     //单选且任意层级
-                    prop.checkStrictly = ($('[[${"#ITEM_ID_-" + model.item_name}]]').attr("checkStrictly")||"false").toLowerCase()==="true"?true:false,
+                    prop.checkStrictly = ($('[[${"#ITEM_ID_" + model.item_name}]]').attr("checkStrictly")||"false").toLowerCase()==="true"?true:false,
 
                         // res=flatToTree(res,0);
                         layCascader({

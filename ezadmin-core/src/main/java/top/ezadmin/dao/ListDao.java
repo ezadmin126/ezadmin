@@ -104,14 +104,6 @@ public class ListDao extends JsoupUtil {
                     Utils.putIfAbsentExclude0(layDataMap,attrNameNumber[i], NumberUtils.toInt(th.attr(attrNameNumber[i])));
                 }
             }
-//            //TODO width还有百分比的情况
-//            if(!isImageTd(th)){
-//                //不能加默认值，因为如果整个table宽度不足，会留空白
-//                // Utils.putIfAbsent(layDataMap,"minWidth",110);
-//            }else{
-//                //160+15+15
-//                layDataMap.put("width",Math.max(190,NumberUtils.toInt(""+layDataMap.get("width"))));
-//            }
             String style = th.attr(JsoupUtil.STYLE);
             //style会补充到 laydata里面
             if (StringUtils.isNotBlank(style)) {
@@ -236,25 +228,7 @@ public class ListDao extends JsoupUtil {
         //adminstyle
         Utils.putIfAbsent(coreMap,JsoupUtil.ADMINSTYLE,EzClientBootstrap.instance().getAdminStyle());
 
-        //默认linestyle
-        Element column = doc.getElementById("column");
-//        boolean haspic=false;
-//        if (column != null) {
-//            Elements thList=column.getElementsByTag("th");
-//            for (int x = 0; x < thList.size(); x++) {
-//                Element th=thList.get(x);
-//                if (th.id().equalsIgnoreCase("rowbutton")) {
-//                    continue;
-//                }
-//                if(isImageTd(th)){
-//                    haspic=true;break;
-//                }
-//            }
-//        }
-//        if(haspic&&!coreMap.containsKey("linestyle")){
-//            //100+6+6
-//            coreMap.put("linestyle","height:112px");
-//        }
+
     }
 
      public   Map<String, Object> selectAllListById(String listcode) {

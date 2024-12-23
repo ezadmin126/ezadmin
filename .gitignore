@@ -8,3 +8,4 @@
 /ezadmin-resource/target/
 /ezadmin-web/ez.mv.db
 /ezadmin-web/ez.trace.db
+/publish.sh

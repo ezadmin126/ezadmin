@@ -432,27 +432,27 @@ $(function (){
 function  initSettingsAll(){
 
     $(".layui-btn-preview").click(function(){
-        if($("#listCoreContainer").attr("ez-listcode")==''||$("#listCoreContainer").attr("ez-listcode")==undefined){
+        if($("#listCoreContainer").attr("ez-id")==''||$("#listCoreContainer").attr("ez-id")==undefined){
             layui.layer.alert("请先保存列表");
         }else{
-            openBlank("/topezadmin/listEdit/list-"+$("#listCoreContainer").attr("ez-listcode"));
+            openBlank("/topezadmin/listEdit/list-"+$("#listCoreContainer").attr("ez-id"));
         }
     })
 
     $(".layui-btn-sourceEdit").click(function(){
-        if($("#listCoreContainer").attr("ez-listcode")==''||$("#listCoreContainer").attr("ez-listcode")==undefined){
+        if($("#listCoreContainer").attr("ez-id")==''||$("#listCoreContainer").attr("ez-id")==undefined){
             layui.layer.alert("请先保存列表");
         }else{
-            openBlank("/topezadmin/listEdit/sourceEdit-"+$("#listCoreContainer").attr("ez-listcode"));
+            openBlank("/topezadmin/listEdit/sourceEdit-"+$("#listCoreContainer").attr("ez-id"));
         }
     })
 
     $(".layui-btn-publish").click(function(){
-        if($("#listCoreContainer").attr("ez-listcode")==''||$("#listCoreContainer").attr("ez-listcode")==undefined){
+        if($("#listCoreContainer").attr("ez-id")==''||$("#listCoreContainer").attr("ez-id")==undefined){
             layui.layer.alert("请先保存列表");
         }else{
             var title = "确认发布？";
-            var appendUrl="/topezadmin/listEdit/publish-"+$("#listCoreContainer").attr("ez-listcode");
+            var appendUrl="/topezadmin/listEdit/publish-"+$("#listCoreContainer").attr("ez-id");
             layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
                 $(".layuimini-loader").show();
                 $.getJSON(appendUrl, function (result) {
