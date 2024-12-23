@@ -1034,14 +1034,14 @@ function watermark(settings) {
         watermark_y: 20, //水印起始位置Y轴坐标
         watermark_rows: 0, //水印行数
         watermark_cols: 0, //水印列数
-        watermark_x_space: 100, //水印x轴间隔
+        watermark_x_space: 30, //水印x轴间隔
         watermark_y_space: 50, //水印y轴间隔
         watermark_color: '#aaa', //水印字体颜色
-        watermark_alpha: 0.2, //水印透明度
-        watermark_fontsize: '12px', //水印字体大小
-        watermark_font: '宋体', //水印字体
+        watermark_alpha: 0.1, //水印透明度
+        watermark_fontsize: '14px', //水印字体大小
+       // watermark_font: '宋体', //水印字体
         watermark_width: 210, //水印宽度
-        watermark_height: 80, //水印长度
+        watermark_height: 80, //水印高度
         watermark_angle: 20 //水印倾斜度数
     };
     if (arguments.length === 1 && typeof arguments[0] === "object") {
@@ -1074,11 +1074,13 @@ function watermark(settings) {
     for (var i = 0; i < defaultSettings.watermark_rows - 1; i++) {
         y = defaultSettings.watermark_y + (defaultSettings.watermark_y_space + defaultSettings.watermark_height) * i;
         for (var j = 0; j < defaultSettings.watermark_cols; j++) {
-            x = defaultSettings.watermark_x + (defaultSettings.watermark_width + defaultSettings.watermark_x_space) * j;
+            x = defaultSettings.watermark_x + (defaultSettings.watermark_width + defaultSettings.watermark_x_space) * j  ;
+
+            x=x+(i%2)*(defaultSettings.watermark_width/2);
             var mask_div = document.createElement('div');
             mask_div.id = 'mask_div' + i + j;
             mask_div.className = 'mask_div';
-            mask_div.appendChild(document.createTextNode(defaultSettings.watermark_txt));
+            mask_div.innerHTML=defaultSettings.watermark_txt;
             //设置水印div倾斜显示
             mask_div.style.webkitTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
             mask_div.style.MozTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
@@ -1095,12 +1097,13 @@ function watermark(settings) {
             mask_div.style.pointerEvents = 'none';
             mask_div.style.opacity = defaultSettings.watermark_alpha;
             mask_div.style.fontSize = defaultSettings.watermark_fontsize;
-            mask_div.style.fontFamily = defaultSettings.watermark_font;
+          //  mask_div.style.fontFamily = defaultSettings.watermark_font;
             mask_div.style.color = defaultSettings.watermark_color;
             mask_div.style.textAlign = "center";
             mask_div.style.width = defaultSettings.watermark_width + 'px';
             mask_div.style.height = defaultSettings.watermark_height + 'px';
             mask_div.style.display = "block";
+           // mask_div.style['line-height']  = defaultSettings.watermark_height + 'px';
             oTemp.appendChild(mask_div);
         }
         ;

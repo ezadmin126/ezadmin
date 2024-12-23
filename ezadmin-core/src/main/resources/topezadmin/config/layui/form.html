@@ -135,69 +135,72 @@
     });
 </script>
 
-
-</body>
 <div>
+    <style >
+
+        /* 目录 */
+        .site-dir {
+            display: none;width:10px
+        }
+        .site-dir:hover {
+            display: block;width:auto;
+        }
+
+        .site-dir li {
+            line-height: 26px;
+            margin-left: 20px;
+            overflow: visible;
+            list-style-type: disc;
+        }
+
+        .site-dir li a {
+            display: block;
+        }
+
+        .site-dir li a:active {
+            color: #01AAED;
+        }
+
+        .site-dir li a.layui-this {
+            color: #01AAED;
+        }
+
+        body .layui-layer-dir {
+            box-shadow: none;
+            border: 1px solid #d2d2d2;
+            opacity: 0.2
+        }
+
+        body .layui-layer-dir:hover {
+            opacity: 1
+        }
+
+        body .layui-layer-dir .layui-layer-content {
+            padding: 10px;
+        }
+
+        .site-dir a em {
+            padding-left: 5px;
+            font-size: 12px;
+            color: #c2c2c2;
+            font-style: normal;
+        }
+
+        .layui-menu li, .layui-menu-body-title a {
+            padding: 0px;
+        }
+
+        @media screen and (max-width: 992px) {
+            .layui-layer-dir {
+                display: none;
+            }
+        }
+        .layui-layer-dir .layui-layer-max{
+            display: none;
+        }
+    </style>
     <div>
-        <style>
-            /* 目录 */
-            .site-dir {
-                display: none;width:10px
-            }
-            .site-dir:hover {
-                display: block;width:auto;
-            }
 
-            .site-dir li {
-                line-height: 26px;
-                margin-left: 20px;
-                overflow: visible;
-                list-style-type: disc;
-            }
-
-            .site-dir li a {
-                display: block;
-            }
-
-            .site-dir li a:active {
-                color: #01AAED;
-            }
-
-            .site-dir li a.layui-this {
-                color: #01AAED;
-            }
-
-            body .layui-layer-dir {
-                box-shadow: none;
-                border: 1px solid #d2d2d2;
-                opacity: 0.2
-            }
-
-            body .layui-layer-dir:hover {
-                opacity: 1
-            }
-
-            body .layui-layer-dir .layui-layer-content {
-                padding: 10px;
-            }
-
-            .site-dir a em {
-                padding-left: 5px;
-                font-size: 12px;
-                color: #c2c2c2;
-                font-style: normal;
-            }
-
-            .layui-menu li, .layui-menu-body-title a {
-                padding: 0px;
-            }
-
-            @media screen and (max-width: 992px) {
-                .layui-layer-dir {
-                    display: none;
-                }
-            }
-        </style>
         <ul id="dianti" class="layui-menu site-dir layui-layer-wrap">
             <li th:each="card:${form.cards}"
                 th:if="${not #lists.isEmpty(form.cards) and not #strings.isEmpty(card.cardname)}">
@@ -205,8 +208,9 @@
             </li>
         </ul>
     </div>
-
 </div>
+</body>
+
 <input type="hidden" id='validateRules' name='validateRules' th:value="${form.core.validaterules}">
 <input type="hidden" id='validateMessages' name='validateMessages' th:value="${form.core.validatemessages}">
 <input type="hidden" id='formSubmitUrl' name='formSubmitUrl' th:value="${formSubmitUrl}">
@@ -228,6 +232,8 @@
                 , type: 1
                 , offset: 'r'
                 , shade: 0
+                ,moveOut:true
+                ,resize : false
                 , fixed: true
                 , minStack:true
                 , maxmin:true

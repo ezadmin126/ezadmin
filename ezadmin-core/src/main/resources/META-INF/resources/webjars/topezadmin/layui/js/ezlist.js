@@ -452,12 +452,15 @@ function renderTable() {
             form.render();
         });
         var inited=false;
-        var hh=0;
+        var hh=43+5;
         try{
-            hh=$(".ez-table-tool").offset().top+43+5;//分页的高度  51为tablebutton高度
             if($(".ez-table-tool").length>0){
                 hh=hh+51;
             }
+             //分页的高度
+            // if($(".ez-table-tool").length>0){ // 51为tablebutton高度
+            //     hh=hh+51;
+            // }
             console.log("计算table的高度："+hh);
         }catch (e) {
             console.log(e)
@@ -716,7 +719,7 @@ function doSystem() {
     $("[item_name='修改']").addClass("layui-border-blue");
     $("[item_name='编辑']").addClass("layui-border-blue");
     if($("#removewatermark").val()!=1){
-        watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() +' '+ getNow()});
+        watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() +'<br>'+ getNow()});
     }
     $('.viewer-image').each(function () {
         $(this).on('load', function () {
