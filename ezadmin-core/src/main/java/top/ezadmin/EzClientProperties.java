@@ -40,7 +40,7 @@ public class EzClientProperties {
     private String refreshClass;
     private String holiday;
 
-    private String layout="container";//container fluid
+    private String layout="fluid";//container fluid
 
 
     public String getAppName() {
