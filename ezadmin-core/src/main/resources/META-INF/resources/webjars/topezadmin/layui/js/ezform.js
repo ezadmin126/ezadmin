@@ -173,7 +173,7 @@ $(function () {
     })
     //end
    // $('.layuimini-loader').fadeOut();
-    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+ getNow()});
+    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+' '+ getNow()});
 
     //panel 扩大缩小
     $(".ez-form-panel  .layui-layer-min").click(function(){
