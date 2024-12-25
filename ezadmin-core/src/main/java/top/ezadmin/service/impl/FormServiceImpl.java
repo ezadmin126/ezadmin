@@ -1,6 +1,8 @@
 package top.ezadmin.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringEscapeUtils;
+import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.dao.FormDao;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.thymeleaf.context.Context;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -63,15 +66,32 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         if(form==null){
             return;
         }
-        Object core=form.get("core");
+        Map<String, Object> core=(Map<String, Object>)form.get("core");
         if(core!=null){
-            dataSource= EzClientBootstrap.instance().getDataSourceByKey(((Map<String, Object>)form.get("core")).get(JsoupUtil.DATASOURCE));
+            dataSource= EzClientBootstrap.instance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
         }else{
             form.put("core",new HashMap<>());
         }
-
-        Map<String, Object> initMap= Collections.unmodifiableMap(initMap(request,session,form,dataSource));
-
+        //
+        Map<String, Object> initMap = Collections.unmodifiableMap(initMap(request, session, form, dataSource));
+        try {
+            //foot 参数替换
+            String foot = Utils.trimNull(core.get(JsoupUtil.APPEND_FOOT));
+            if (StringUtils.isNotBlank(foot)) {
+                core.put(JsoupUtil.APPEND_FOOT, MapParser.parseDefaultEmpty(foot, initMap).getResult());
+            }
+        }catch (Exception e){
+            Utils.addLog("fillFormById",e);
+        }
+        try {
+            //HEAD 参数替换
+            String foot = Utils.trimNull(core.get(JsoupUtil.APPEND_HEAD));
+            if (StringUtils.isNotBlank(foot)) {
+                core.put(JsoupUtil.APPEND_HEAD, MapParser.parseDefaultEmpty(foot, initMap).getResult());
+            }
+        }catch (Exception e){
+            Utils.addLog("fillFormById",e);
+        }
         fillItem(request,initMap,form,session,dataSource );
     }
 
@@ -105,6 +125,7 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                     for (int j = 0; j < items.size(); j++) {
                         Map<String, Object> item = items.get(j);
                         String item_name = getStringValue(item, JsoupUtil.ITEM_NAME);
+                        String jdbcType = getStringValue(item, JsoupUtil.JDBCTYPE);
                         String defaultValue=getStringValue(item, "value");
                         String defaultValueS=getStringValue(item, "valueStart");
                         String defaultValueE=getStringValue(item, "valueEnd");
@@ -116,9 +137,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                         item.put(ParamNameEnum.itemParamValueStart.getName(), Utils.trimNullDefault(initItemMap.get(item_name + "_START"),defaultValueS));
                         item.put(ParamNameEnum.itemParamValueEnd.getName(), Utils.trimNullDefault(initItemMap.get(item_name + "_END"),defaultValueE));
 
-                        item.put("value", Utils.trimNullDefault(initItemMap.get(item_name),defaultValue));
-                        item.put("value_start", Utils.trimNullDefault(initItemMap.get(item_name + "_START"),defaultValueS));
-                        item.put("value_end", Utils.trimNullDefault(initItemMap.get(item_name + "_END"),defaultValueE));
+                        item.put("value", calulateData(Utils.trimNullDefault(initItemMap.get(item_name),defaultValue),"","",jdbcType));
+                        item.put("value_start", calulateData(Utils.trimNullDefault(initItemMap.get(item_name + "_START"),defaultValueS),"","",jdbcType));
+                        item.put("value_end",calulateData( Utils.trimNullDefault(initItemMap.get(item_name + "_END"),defaultValueE),"","",jdbcType));
                         Context context = new Context();
                         context.setVariable("uploadUrl", EzClientBootstrap.instance().getUploadUrl());
                         context.setVariable("downloadUrl", EzClientBootstrap.instance().getDownloadUrl());
@@ -460,6 +481,29 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
         c.put("EZ_NAME",Utils.trimNull(listMap.get("EZ_NAME")));
         c.put("DATASOURCE",Utils.trimNull(listMap.get("DATASOURCE")));
         return c;
+    }
+    private String calulateData(String dataInDb, String globalEmptyShow, String columnEmptyShow,String jdbcType) {
+        if(StringUtils.isBlank(dataInDb)){
+            return Utils.trimEmptyDefault(dataInDb,columnEmptyShow,globalEmptyShow);
+        }
+        switch (JdbcTypeEnum.get(jdbcType)){
+            case NUMBER:
+            case NUMBER2:
+                BigDecimal result=   new BigDecimal(dataInDb).setScale(2,BigDecimal.ROUND_HALF_UP);
+                return result.toString();
+            case NUMBER1:
+                return  new BigDecimal(dataInDb).setScale(1,BigDecimal.ROUND_HALF_UP).toString();
+            case NUMBER3:
+                return  new BigDecimal(dataInDb).setScale(3,BigDecimal.ROUND_HALF_UP).toString();
+            case NUMBER4:
+                return  new BigDecimal(dataInDb).setScale(4,BigDecimal.ROUND_HALF_UP).toString();
+            case DATE:
+                return  EzDateUtils.toDateFormat(dataInDb);
+            case DATETIME:
+                return  EzDateUtils.toDateTimeFormat(dataInDb);
+            default:
+                return dataInDb;
+        }
     }
 
 }

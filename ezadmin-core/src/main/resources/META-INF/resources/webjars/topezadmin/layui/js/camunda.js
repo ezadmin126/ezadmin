@@ -69,7 +69,7 @@ $(function(){
             })
             $(document).on("click",".history",function(){
                 param.pass=false;
-                openBlank("/mycamunda/check/history/"+dekey+"?id="+param.id)
+                openModel("/mycamunda/check/history/"+dekey+"?id="+param.id)
             })
 
 

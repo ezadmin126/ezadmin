@@ -754,7 +754,7 @@
 
     /**logo演示（缩放） */
     .layuimini-mini .layui-layout-admin .layuimini-logo {
-        width: 60px !important;
+        width: 50px !important;
     }
 
     .layuimini-mini .layui-layout-admin .layuimini-logo h1 {
@@ -767,7 +767,7 @@
     }
 
     .layuimini-mini .layui-side.layui-bg-black, .layuimini-mini .layuimini-menu-left > ul, .layuimini-mini .layuimini-menu-left > ul li i {
-        width: 60px !important;
+        width: 50px !important;
     }
 
     .layuimini-mini .layuimini-menu-left > ul li span:first-child {

@@ -41,6 +41,7 @@ public class ListController extends BaseController {
 
         requestParamMap.putIfAbsent("perPageInt",request.getParameter("perPageInt"));
         requestParamMap.putIfAbsent("currentPage",request.getParameter("page"));
+        requestParamMap.put("vi",request.getAttribute("vi"));
 
         requestParamMap.put("ContextPath", request.getContextPath());
 
@@ -118,6 +119,7 @@ public class ListController extends BaseController {
             requestParamMap.put("ContextPath", request.getContextPath());
             //是否加载数据，由于是异步加载，所以无需加载数据：：treedata.html
             requestParamMap.put("loadDataFlag", 0);
+        requestParamMap.put("vi",request.getAttribute("vi"));
             Map<String, String> sessionParamMap = sessionToMap(request.getSession());
 
         Map<String, Object>  list =JSONUtils.parseObjectMap(listService.selectPublishListById(ENCRYPT_LIST_ID)) ;

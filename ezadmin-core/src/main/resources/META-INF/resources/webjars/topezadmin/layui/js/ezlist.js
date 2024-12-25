@@ -458,7 +458,7 @@ function renderTable() {
             hh=hh+51;
         }
         if($(".searchWrap:visible").length>0){ //搜索
-            hh=hh+118;
+            hh=hh+$(".searchWrap").height();
         }
         console.log("计算table的高度："+hh);
         tableConfig={

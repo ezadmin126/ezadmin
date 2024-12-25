@@ -52,8 +52,8 @@
                        th:utext="${top_desc}" style="float:none"
                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
                 <div style="border: 1px solid #dae0e6;display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
-                <img th:data-original="${'/core/downloadDesc.html?fileId='+value}" style=" max-width: 150px; max-height: 150px" class="viewer-image layui-upload-img"
-                     th:src="${'/core/downloadDesc.html?fileId='+value}">
+                <img th:title="${label}" th:data-original="${downloadUrl+value}" style=" max-width: 150px; max-height: 150px" class="viewer-image layui-upload-img"
+                     th:src="${downloadUrl+value}">
                 </div>
                 <small
                        class="layui-form-mid layui-text-em item_desc"

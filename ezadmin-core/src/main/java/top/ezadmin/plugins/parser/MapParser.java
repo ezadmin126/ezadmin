@@ -63,8 +63,11 @@ public class MapParser {
       model2.setResult(string);
         return model2;
     }
-
-    variables.put(DEFULT_EMPTY_KEY,true);
+    try {
+      variables.put(DEFULT_EMPTY_KEY, true);
+    }catch (Exception e){//
+      //ignor
+        }
     return parse(string,variables);
   }
 

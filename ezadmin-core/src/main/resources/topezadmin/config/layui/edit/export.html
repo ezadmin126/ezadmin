@@ -15,7 +15,8 @@
     <script src="/webjars/edit/ace/beautify-html.js"></script>
     <style type="text/css" media="screen">
         html,body {
-            height:100%
+            height:100%;
+            overscroll-behavior: none;
         }
         .grid-demo {
             position:relative;
@@ -61,15 +62,15 @@
                     <button title="可视化编辑" type="button" id="preview" class="layui-btn layui-btn-primary layui-btn-sm">
                         <i class="layui-icon  layui-icon-eye"></i>预览
                     </button>
-                    <button title="复制" type="button" id="copy" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon layui-icon-file-b"></i>复制
-                    </button>
+<!--                    <button title="复制" type="button" id="copy" class="layui-btn layui-btn-primary layui-btn-sm">-->
+<!--                        <i class="layui-icon layui-icon-file-b"></i>复制-->
+<!--                    </button>-->
                     <button title="全屏"  type="button" id="full" class="layui-btn layui-btn-primary layui-btn-sm">
                         <i class="layui-icon layui-icon-screen-full"></i>全屏
                     </button>
-                    <button title="快捷键" type="button" id="keyboard" class="layui-btn layui-btn-primary layui-btn-sm">
-                        <i class="layui-icon layui-icon-more"></i>快捷键
-                    </button>
+<!--                    <button title="快捷键" type="button" id="keyboard" class="layui-btn layui-btn-primary layui-btn-sm">-->
+<!--                        <i class="layui-icon layui-icon-more"></i>快捷键-->
+<!--                    </button>-->
                 </div>
             </div>
             <pre id="editor"  class="grid-demo grid-demo-bg1"  th:text="${EZ_CONFIG}">
@@ -169,9 +170,11 @@
                     if(data.success){
                         location.reload();
                     }else{
+                        console.log(data.message)
                         layui.layer.alert(data.message);
                     }
                 }, 'json').fail(function() {
+                console.log('请求失败，网络异常')
                 layui.layer.alert('请求失败，网络异常');
             });
             layer.close(index);
@@ -179,17 +182,17 @@
         // var formattedCode = html_beautify(code, { indent_size: 2 });
         // editor.getSession().setValue(formattedCode);
     })
-    layui.jquery(document).on("click","#copy",function(){
-        layui.lay.clipboard.writeText({
-            text: editor.getValue(),
-            done: function() {
-                layer.msg('已复制', {icon: 1});
-            },
-            error: function() {
-                layer.msg('复制失败', {icon: 2});
-            }
-        });
-    })
+    // layui.jquery(document).on("click","#copy",function(){
+    //     layui.lay.clipboard.writeText({
+    //         text: editor.getValue(),
+    //         done: function() {
+    //             layer.msg('已复制', {icon: 1});
+    //         },
+    //         error: function() {
+    //             layer.msg('复制失败', {icon: 2});
+    //         }
+    //     });
+    // })
     layui.jquery(document).on("click","#keyboard",function(){
         editor.execCommand("showKeyboardShortcuts")
     })

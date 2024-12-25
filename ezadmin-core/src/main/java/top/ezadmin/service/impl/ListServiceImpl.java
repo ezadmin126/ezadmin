@@ -573,6 +573,26 @@ public class ListServiceImpl implements ListService {
                   if(StringUtils.isBlank(globalEmptyShow)){//兼容老数据
                       globalEmptyShow= getString(coreMap,  "empty_show");
                   }
+            try {
+                //foot 参数替换
+                String foot = Utils.trimNull(coreMap.get(JsoupUtil.APPEND_FOOT));
+                if (StringUtils.isNotBlank(foot)) {
+                    coreMap.put(JsoupUtil.APPEND_FOOT, MapParser.parseDefaultEmpty(foot, requestParamMap).getResult());
+                }
+            }catch (Exception e){
+                Utils.addLog("fillFormById",e);
+            }
+            try {
+                //HEAD 参数替换
+                String foot = Utils.trimNull(coreMap.get(JsoupUtil.APPEND_HEAD));
+                if (StringUtils.isNotBlank(foot)) {
+                    coreMap.put(JsoupUtil.APPEND_HEAD, MapParser.parseDefaultEmpty(foot, requestParamMap).getResult());
+                }
+            }catch (Exception e){
+                Utils.addLog("fillFormById",e);
+            }
+
+
 
             String datasourceCore = getString(coreMap, "datasource");
 
@@ -959,7 +979,7 @@ public class ListServiceImpl implements ListService {
                             context.setVariable("itemsJson", JSONUtils.toJSONString(items.getItems()));
                         } catch (Exception e) {
                            // if(Utils.getLog()!=null) {
-                                Utils.addLog("search error:"+coreMap.get("listcode"), e);
+                                Utils.addLog("search error:"+coreMap.get("id"), e);
                           //  }
                         }
                     }
@@ -1044,7 +1064,7 @@ public class ListServiceImpl implements ListService {
                     search.put("html",html);
                 } catch (Exception e) {
                     if(Utils.getLog()!=null) {
-                            Utils.addLog("search error:"+coreMap.get("listcode"), e);
+                            Utils.addLog("search error:"+coreMap.get("id"), e);
                     }
                 }
 
@@ -1166,7 +1186,7 @@ public class ListServiceImpl implements ListService {
         if(StringUtils.isBlank(globalEmptyShow)){//兼容老数据
             globalEmptyShow= getString(coreMap,  "empty_show");
         }
-        String listcode=getString(coreMap,"listcode");
+        String listcode=getString(coreMap,"id");
         String datasourceCore=getString(coreMap,JsoupUtil.DATASOURCE);
 
         DataSource dataSourceVO= EzClientBootstrap.instance().getDataSourceByKey(datasourceCore);
@@ -1358,7 +1378,7 @@ public class ListServiceImpl implements ListService {
 
     void page(Page pagination,Map<String, Object> list,Map<String, Object> requestParamMap ) throws Exception {
         Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
-        String listcode=getString(coreMap,"listcode");
+        String listcode=getString(coreMap,"id");
         //分页
         Context context = new Context();
         Map<String, Page> map = new HashMap<>();

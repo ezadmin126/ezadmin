@@ -113,7 +113,7 @@ $(function () {
                        if (data.code == 0) {
                            console.log("data::" + data.data);
                            layer.alert("保存成功", function (index) {
-                               if ('reload' == data.data) {
+                               if ('reload' == data.data || data.data == null) {
                                    canEzFormSubmit = true;
                                    window.parent.location.reload();
                                } else if ('reloadlocal' == data.data) {

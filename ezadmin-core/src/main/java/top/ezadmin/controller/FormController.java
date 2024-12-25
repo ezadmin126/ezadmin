@@ -58,6 +58,8 @@ public class FormController extends BaseController {
         searchParamsValues.put("FORM_ID",formId);
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",Utils.trimNull(ID));
+        searchParamsValues.put("vi",request.getAttribute("vi"));
+
         Map<String,Object>  form=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID)) ;
 
         if(Utils.isEmpty(form)){

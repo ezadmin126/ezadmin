@@ -197,7 +197,8 @@ public class ListDao extends JsoupUtil {
     void fillcore(Map<String,Object> coreMap,Document doc ){
         coreMap.put("listname", JsoupUtil.strip(doc.title()));
         coreMap.put("ENCRYPT_LIST_ID", JsoupUtil.strip(doc.body().attr("id")));
-        coreMap.put("listcode", JsoupUtil.strip(doc.body().attr("id")));
+
+        coreMap.put("id", JsoupUtil.strip(doc.body().attr("id")));
         coreMap.put("datasource", JsoupUtil.strip(doc.body().attr(JsoupUtil.DATASOURCE)));
         coreMap.put(JsoupUtil.APPEND_HEAD, doc.getElementById(JsoupUtil.APPEND_HEAD) == null ? "" : doc.getElementById(JsoupUtil.APPEND_HEAD).html());
         coreMap.put(JsoupUtil.APPEND_FOOT, doc.getElementById(JsoupUtil.APPEND_FOOT) == null ? "" : doc.getElementById(JsoupUtil.APPEND_FOOT).html());
@@ -519,7 +520,7 @@ public class ListDao extends JsoupUtil {
         List<Map<String,Object>> colList=(List<Map<String,Object>>)list.get("col");
         List<Map<String,Object>> rowbtnList=(List<Map<String,Object>>)list.get("rowbtn");
 
-        String listcode= Utils.trimNull( coreMap.get("listcode"));
+        String listcode= Utils.trimNullDefault( coreMap.get("id"));
         String listname=  Utils.trimNull( coreMap.get("listname"));
         String select_express=  Utils.trimNull( coreMap.get(JsoupUtil.SELECT_EXPRESS));
         String count_express=  Utils.trimNull( coreMap.get(JsoupUtil.COUNT_EXPRESS ));

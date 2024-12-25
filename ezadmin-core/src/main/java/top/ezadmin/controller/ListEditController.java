@@ -124,7 +124,7 @@ public class ListEditController extends BaseController {
         String html= ListDao.getInstance().updateList(list);
         if(StringUtils.isNotBlank(html)){
             Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
-            String listcode= Utils.trimNull( coreMap.get("listcode"));
+            String listcode= Utils.trimNull( coreMap.get("id"));
             String listname=  Utils.trimNull( coreMap.get("listname"));
             String DATASOURCE=  Utils.trimNull( coreMap.get(JsoupUtil.DATASOURCE));
             saveOrUpdate(listcode,listname,html,DATASOURCE);
@@ -270,7 +270,7 @@ public class ListEditController extends BaseController {
             Map<String, Object> list=ListDao.getInstance().selectAllListByHtml(data);
             String html= ListDao.getInstance().updateList(list);
             Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
-            String listcode= Utils.trimNull( coreMap.get("listcode"));
+            String listcode= Utils.trimNull( coreMap.get("id"));
             String listname=  Utils.trimNull( coreMap.get("listname"));
             String DATASOURCE=  Utils.trimNull( coreMap.get(JsoupUtil.DATASOURCE));
             saveOrUpdate(listcode,listname,html,DATASOURCE);
@@ -358,7 +358,7 @@ public class ListEditController extends BaseController {
     @EzMapping("importlist.html")
     public EzResult importlist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            String listcode = request.getParameter("listcode");
+            String listcode = request.getParameter("id");
             String formcode = request.getParameter("formcode");
             String fasttext = request.getParameter("listexpress");
             String datasource = request.getParameter("datasource");
@@ -390,7 +390,7 @@ public class ListEditController extends BaseController {
 
         Map<String,Object> core=new HashMap<>();
 
-        core.put("listcode",listId);
+        core.put("id",listId);
         core.put(JsoupUtil.DATASOURCE,"dataSource");
 
         List<Map<String, Object>> headList=new ArrayList<>();
@@ -502,7 +502,7 @@ public class ListEditController extends BaseController {
         String listhtml= ListDao.getInstance().updateList(list);
         if(StringUtils.isNotBlank(listhtml)){
             Map<String,Object> coreMap=(Map<String,Object>)list.get("core");
-            String listcode= Utils.trimNull( coreMap.get("listcode"));
+            String listcode= Utils.trimNull( coreMap.get("id"));
             String listname=  Utils.trimNull( coreMap.get("listname"));
             String DATASOURCE=  Utils.trimNull( coreMap.get(JsoupUtil.DATASOURCE));
             saveOrUpdate(listcode,listname,listhtml,DATASOURCE);
