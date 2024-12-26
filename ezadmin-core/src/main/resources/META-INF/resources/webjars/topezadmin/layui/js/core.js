@@ -597,6 +597,17 @@ function renderXmselect(xm) {
             tips: itemPlaceholder,
             data: JSON.parse(initdata),
             initValue: JSON.parse(initvalue)
+            ,model: {
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: xmel.attr("showCount")||1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                }
+            }
         })
     } catch (e) {
 

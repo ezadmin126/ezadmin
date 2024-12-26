@@ -85,25 +85,19 @@ public class BaseController {
     }
 
     public Map<String, String> sessionToMap(HttpSession session) {
+        Map<String, String> map =new HashMap<>();
         try {
             Object sessionParam = session.getAttribute(SessionConstants.EZ_SESSION_PARAM_KEY);
-            if(sessionParam==null){
-                return Collections.emptyMap();
+            if(sessionParam!=null&&sessionParam instanceof Map){
+                map = (Map<String, String>) sessionParam;
             }
-            if(sessionParam instanceof Map){
-                Map<String, String> map = (Map<String, String>) sessionParam;
-                map.put("EZ_SESSION_USER_ID_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));
-                map.put("EZ_SESSION_USER_NAME_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
-                map.put("EZ_SESSION_COMPANY_ID_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
-                map.put("COMPANY_ID",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
-
-                return map;
-            }else{
-              return  Collections.emptyMap();
-            }
-
         }catch (Exception e){
-            return  Collections.emptyMap();
+            logger.error("",e);
         }
+        map.put("EZ_SESSION_USER_ID_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));
+        map.put("EZ_SESSION_USER_NAME_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
+        map.put("EZ_SESSION_COMPANY_ID_KEY",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
+        map.put("COMPANY_ID",Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
+        return map;
     }
 }
