@@ -22,9 +22,9 @@ public class HandlerConfiguration {
     return (externalTask, externalTaskService) -> {
       Map<String, Object> variables = externalTask.getAllVariables();
      // Map<String,Object> variables = Variables.createVariables();
-      variables.put("pass",false );
+      variables.put("pass",true );
       taskService.createComment(externalTask.getId(), externalTask.getProcessInstanceId(),
-              "自动审核不通过"+System.currentTimeMillis());
+              "自动审核通过："+System.currentTimeMillis());
       externalTaskService.complete(externalTask, variables);
     };
   }

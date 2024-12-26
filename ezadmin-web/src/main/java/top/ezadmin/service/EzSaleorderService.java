@@ -24,9 +24,9 @@ public class EzSaleorderService {
 
 
     @Resource
-    private SaleorderMapper saleorderMapper;
+    private JxcSaleorderMapper saleorderMapper;
     @Resource
-    private SaleorderGoodsMapper saleorderGoodsMapper;
+    private JxcSaleorderGoodsMapper saleorderGoodsMapper;
     @Resource
     BaseTraderMapper  baseTraderMapper;
     @Resource
@@ -50,7 +50,7 @@ public class EzSaleorderService {
     public void doUpdate(Map<String, Object> request){
        // log.info("add order:{}",JSONUtils.toJSONString(request));
 
-        Saleorder saleorder = new Saleorder();
+        JxcSaleorder saleorder = new JxcSaleorder();
         saleorder.setTraderId(Utils.toLong(request.get("TRADER_ID")));
         saleorder.setTraderAddressId(Utils.toLong(request.get("TRADER_ADDRESS_ID")));
         saleorder.setTraderContactId(Utils.toLong(request.get("TRADER_CONTACT_ID")));
@@ -68,6 +68,7 @@ public class EzSaleorderService {
         saleorder.setLogisticsComments(Utils.trimNull(request.get("LOGISTICS_COMMENTS")));
 
         saleorder.setUserId(Utils.toLong(request.get("USER_ID")));
+        saleorder.setValidUserId(Utils.toLong(request.get("VALID_USER_ID")));
         saleorder.setTraderComments(Utils.trimNull(request.get("TRADER_COMMENTS")));
         saleorder.setAdditionalClause(Utils.trimNull(request.get("ADDITIONAL_CLAUSE")));
         saleorder.setComments(Utils.trimNull(request.get("COMMENTS")));
@@ -105,9 +106,9 @@ public class EzSaleorderService {
 //            saleorderMapper.insertSelective(saleorder);
         }
         BigDecimal totalPrice=BigDecimal.ZERO;
-        SaleorderGoodsExample example=new SaleorderGoodsExample();
+        JxcSaleorderGoodsExample example=new JxcSaleorderGoodsExample();
         example.createCriteria().andDeleteFlagEqualTo(0).andSaleorderIdEqualTo(saleorder.getSaleorderId());
-        List<SaleorderGoods> goodsList= saleorderGoodsMapper.selectByExample(example);
+        List<JxcSaleorderGoods> goodsList= saleorderGoodsMapper.selectByExample(example);
         if(Utils.isNotEmpty(goodsList)){
             for (int i = 0; i < goodsList.size(); i++) {
                 totalPrice=totalPrice.add(goodsList.get(i).getBasePrice().multiply(new BigDecimal(goodsList.get(i).getProdNum())));
@@ -119,7 +120,7 @@ public class EzSaleorderService {
                 saleorderGoodsMapper.updateByPrimaryKeySelective(goodsList.get(i));
             }
         }
-        Saleorder saleorderUpdate = new Saleorder();
+        JxcSaleorder saleorderUpdate = new JxcSaleorder();
         saleorderUpdate.setSaleorderId(saleorder.getSaleorderId());
         saleorderUpdate.setTotalAmount(totalPrice);
         saleorderMapper.updateByPrimaryKeySelective(saleorderUpdate);

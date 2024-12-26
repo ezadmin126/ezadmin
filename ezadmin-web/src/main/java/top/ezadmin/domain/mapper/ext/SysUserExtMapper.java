@@ -12,7 +12,7 @@ public interface SysUserExtMapper extends SysUserMapper {
 
     List<String> selectUserResources(Long userId);
 
-     SysUser  selectFirstUserByRoleName(@Param("roleName")String roleName,@Param("companyId")Long companyId);
+     SysUser selectFirstUserByRoleName(@Param("roleName")String roleName, @Param("companyId")Long companyId);
 
-    List<SysResource> selectUserResourcesByParentId(@Param("userId")Long userId,@Param("parentId") Long parentId);
+    List<SysResource> selectUserResourcesByParentId(@Param("userId")Long userId, @Param("parentId") Long parentId);
 }

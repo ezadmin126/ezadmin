@@ -18,6 +18,7 @@ import top.ezadmin.EzClientProperties;
 import top.ezadmin.blog.constants.Nologin;
 import top.ezadmin.blog.constants.SuffixType;
 import top.ezadmin.common.utils.JSONUtils;
+import top.ezadmin.common.utils.Resources;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.dao.Dao;
@@ -74,6 +75,14 @@ public class DownloadController {
              Calendar c=Calendar.getInstance();
              c.add(Calendar.MONTH,6);
              response.setDateHeader("Expires",c.getTime().getTime());
+             if(fileId==null){
+                 OutputStream outputStream = response.getOutputStream();
+                 response.setHeader("Access-Control-Allow-Origin","*");
+                 response.setContentType(SuffixType.getContentType(Utils.trimNull("jpeg")).getMime());
+                 IOUtils.copy(Resources.getResourceAsStream("static/images/error.jpeg"), outputStream);
+                 return  ;
+
+             }
             if(StringUtils.equals(uploadType,"OSS")&&fileId>0){
                  downloadOSS(fileCode, fileId, response );
             }else{
@@ -84,13 +93,11 @@ public class DownloadController {
             }
             return;
         } catch (Exception e) {
-           logger.error(""+fileCode+fileId );
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("text/html;charset=UTF-8");
-            Map<String, String> map = new HashMap<>();
-            map.put("code", "404");
-            map.put("message", "下载异常，" + e.getMessage());
-            response.getOutputStream().write(JSONUtils.toJSONString(map).getBytes());
+            logger.error(""+fileCode+fileId );
+             OutputStream outputStream = response.getOutputStream();
+             response.setHeader("Access-Control-Allow-Origin","*");
+             response.setContentType(SuffixType.getContentType(Utils.trimNull("jpeg")).getMime());
+             IOUtils.copy(Resources.getResourceAsStream("static/images/error.svg"), outputStream);
         } finally {
             response.getOutputStream().flush();
             response.getOutputStream().close();
@@ -99,16 +106,13 @@ public class DownloadController {
     @Autowired
     CoreFileMapper coreFileMapper;
     private boolean downloadOSS(String fileCode, Long fileId, HttpServletResponse response ) throws Exception {
-        OutputStream outputStream = response.getOutputStream();
-        CoreFile coreFile=coreFileMapper.selectByPrimaryKey(fileId);
 
+        CoreFile coreFile=coreFileMapper.selectByPrimaryKey(fileId);
         if (coreFile==null) {
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("text/html;charset=UTF-8");
-            Map<String, String> map = new HashMap<>();
-            map.put("code", "404");
-            map.put("message", "下载异常，" + fileId + fileCode);
-            outputStream.write(JSONUtils.toJSONString(map).getBytes());
+            OutputStream outputStream = response.getOutputStream();
+            response.setHeader("Access-Control-Allow-Origin","*");
+            response.setContentType(SuffixType.getContentType(Utils.trimNull("jpeg")).getMime());
+            IOUtils.copy(Resources.getResourceAsStream("static/images/error.svg"), outputStream);
             return true;
         }
 //        String uploadFold = DateFormatUtils.format(new Date(), "yyyyMMddHH");

@@ -13,8 +13,6 @@ import top.ezadmin.dao.Dao;
 import top.ezadmin.domain.mapper.ext.BaseProductExtendMapper;
 import top.ezadmin.domain.model.BaseProduct;
 import top.ezadmin.domain.model.ext.BaseProductExtend;
-import top.ezadmin.domain.mapper.BaseProductMapper;
-import top.ezadmin.domain.model.BaseProductExample;
 import top.ezadmin.web.EzResult;
 
 import javax.servlet.http.HttpServletRequest;

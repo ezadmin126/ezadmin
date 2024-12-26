@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -74,6 +73,8 @@ public class UploadController {
     @Value("${system.ossAccessKeySecret:}")
     private String ossAccessKeySecret;
 
+    @Resource
+    CoreFileMapper coreFileMapper;
 
     @Resource
     OSS ossClient;
@@ -193,8 +194,6 @@ public class UploadController {
 
         return JSONUtils.toJSONString(EzResult.instance().code("0").data(uploads));
     }
-    @Resource
-    CoreFileMapper coreFileMapper;
 
     public UploadDTO uploadOSS(String host, MultipartFile file1) throws Exception {
         CoreFile file= upload(file1.getOriginalFilename(),file1.getBytes(), ORI_FILE);
