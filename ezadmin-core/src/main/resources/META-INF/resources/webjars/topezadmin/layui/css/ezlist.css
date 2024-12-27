@@ -478,6 +478,18 @@ xm-select > .xm-body .scroll-body{
 
 
 
+/* tab 边框*/
+ .searchWrap{
+     margin-top:5px;
+     border:1px solid #eee;
+ }
+.searchWrap .layui-tab-item {
+    border:0px;
+}
+
+
+
+
 
 
 

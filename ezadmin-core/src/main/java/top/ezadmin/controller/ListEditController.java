@@ -358,7 +358,7 @@ public class ListEditController extends BaseController {
     @EzMapping("importlist.html")
     public EzResult importlist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            String listcode = request.getParameter("id");
+            String listcode = request.getParameter("listcode");
             String formcode = request.getParameter("formcode");
             String fasttext = request.getParameter("listexpress");
             String datasource = request.getParameter("datasource");

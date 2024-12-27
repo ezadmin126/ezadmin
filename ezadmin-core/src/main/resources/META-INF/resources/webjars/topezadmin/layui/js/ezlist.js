@@ -452,7 +452,7 @@ function renderTable() {
             form.render();
         });
         var inited=false;
-        var hh=43+5; //分页+padding
+        var hh=43+10; //分页+padding
 
         if($(".ez-table-tool:visible").length>0){ //表头
             hh=hh+51;
