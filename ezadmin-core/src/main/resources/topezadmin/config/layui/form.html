@@ -58,8 +58,9 @@
                                          [[${card.cardname}]]
                                         <div class="layui-layer-setwin  " style="top: 0px;line-height: 43px;position: absolute;">
                                             <div class="layui-btn-group custom-card-btn">
-                                            <button  th:if="${not #strings.isEmpty(card.btnname)}" class="ezopenbutton layui-btn layui-btn-sm layui-btn-normal"
+                                            <button  th:if="${not #strings.isEmpty(card.btnname)}" class=" layui-btn layui-btn-sm layui-btn-normal"
                                                   th:windowname="${card.btnname}"
+                                                  th:classappend="${#strings.equals('script',card.btnopentype)?'':'ezopenbutton'}"
                                                   th:url="${card.btnurl}" th:opentype="${card.btnopentype}" th:text="${card.btnname}">添加</button>
                                                 [(${card.btntemplate})]
                                             </div>

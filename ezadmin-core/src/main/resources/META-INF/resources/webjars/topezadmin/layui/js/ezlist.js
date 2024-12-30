@@ -711,9 +711,9 @@ function doPage(){
 
 function doSystem() {
     $('.layuimini-loader').fadeOut();
-    $("[item_name='删除']").addClass("layui-border-red");
-    $("[item_name='修改']").addClass("layui-border-blue");
-    $("[item_name='编辑']").addClass("layui-border-blue");
+    $("button[item_name='删除']").addClass("layui-border-red");
+    $("button[item_name='修改']").addClass("layui-border-blue");
+    $("button[item_name='编辑']").addClass("layui-border-blue");
     if($("#removewatermark").val()!=1){
         watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() +' '+ getNow()});
     }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>平铺行按钮</title>
+</head>
+<body id="button-bread" type="listbutton">
+<table>
+    <tr id="content">
+        <td class=' rowButtons  fixedCol '>
+                <span class="layui-breadcrumb" lay-separator="|">
+                    <a href="#" class="buttonbread"
+                        th:each="item:${rowButtonItemList}" th:style="${item.style}" th:text="${item.label}"
+                            th:if="${not #lists.isEmpty(rowButtonItemList) }"
+                            th:url="${item.url}" th:item_name="${item.item_name}" th:name="${item.item_name}"
+                            th:opentype="${item.opentype}"
+                            th:windowname="${item.windowname}" th:area="${item.area}" th:item_id="${item.item_id}"
+                            th:data-id="${item.rowdataid}"
+                            th:if="${item.display}"
+                            th:data-rowjson="${item.rowjson}"
+                            ez-type="button-bread" editor="button_row"
+                            th:classappend="${#strings.equals('script',item.opentype)?item.class:'ezopenbutton '+item.class }"
+                            class=" rowbutton     ">
+                    </a>
+
+                </span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

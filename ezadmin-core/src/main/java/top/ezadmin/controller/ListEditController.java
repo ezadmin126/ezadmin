@@ -555,6 +555,7 @@ public class ListEditController extends BaseController {
         sql.append(" from "+table +" where  "+idName+"=${ID}  " );
 
         StringBuilder sqlExpress=new StringBuilder(" ");
+        sqlExpress.append("if(isBlank(\"ID\")){\n return new HashMap();\n}                 		\n");
 
         sqlExpress.append("StringBuilder sql=new StringBuilder();");
         sqlExpress.append("\nsql.append(\""+sql.toString()+"\");");
@@ -578,7 +579,10 @@ public class ListEditController extends BaseController {
 
         String submitEx=generateFormExpress(table,idName,fieldNameList );
         form.put(JsoupUtil.SUBMIT_EXPRESS, submitEx);
-        form.put(JsoupUtil.DELETE_EXPRESS, "\nupdate(\"UPDATE "+table+" set delete_flag=1 where "+idName+"=${ID}\");");
+
+        form.put(JsoupUtil.DELETE_EXPRESS, "" +
+                "companyId=$$(\"COMPANY_ID\");                  		\n" +
+                "\nupdate(\"UPDATE "+table+" set delete_flag=1,UPDATE_TIME=NOW(),UPDATE_ID=\"+sessionUserId+\" where "+idName+"=${ID} and COMPANY_ID=\"+companyId);");
 
         form.put(JsoupUtil.STATUS_EXPRESS,"reload");
 
@@ -625,12 +629,72 @@ public class ListEditController extends BaseController {
         ex.append("import top.ezadmin.web.EzResult;                  		\n");
 
         ex.append("ID=$(\"ID\");                  		\n");
+        ex.append("companyId=$$(\"COMPANY_ID\");                  		\n");
+        ex.append("sessionUserId=$$(\"EZ_SESSION_USER_ID_KEY\");                  		\n");
+        ex.append("sessionUserName=$$(\"EZ_SESSION_USER_NAME_KEY\");                  		\n");
+
         ex.append("if(!isNotBlank(\"ID\")){                  		\n");
         ex.append("    param=new InsertParam();                		\n");
         ex.append("    param.table(\""+table+"\");               		\n");
 
         for (int i=0;i<fieldNameList.size();i++){
             if(fieldNameList.get(i).equalsIgnoreCase("ID")){
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("ADD_TIME")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("   param.add(\"#{ADD_TIME,value=NOW()}\");               		\n");
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("ADD_ID")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("  param.add(\"#{ADD_ID,value='\"+sessionUserId+\"'}\");            		\n");
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("UPDATE_TIME")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("   param.add(\"#{UPDATE_TIME,value=NOW()}\");               		\n");
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("UPDATE_ID")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("  param.add(\"#{UPDATE_ID,value='\"+sessionUserId+\"'}\");            		\n");
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("DELETE_FLAG")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("  param.add(\"#{DELETE_FLAG,value=0}\");            		\n");
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("STATUS")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("  param.add(\"#{STATUS,value=1}\");            		\n");
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("COMPANY_ID")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("     param.add(\"#{COMPANY_ID,value=\"+companyId+\"}\");\n          		\n");
                 continue;
             }
             StringBuilder pa=new StringBuilder();
@@ -650,6 +714,31 @@ public class ListEditController extends BaseController {
         ex.append("    param.table(\""+table+"\");               		\n");
 
         for (int i=0;i<fieldNameList.size();i++){
+            if(fieldNameList.get(i).equalsIgnoreCase("ID")
+                    ||fieldNameList.get(i).equalsIgnoreCase("ADD_TIME")
+                    ||fieldNameList.get(i).equalsIgnoreCase("ADD_ID")
+            ){
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("UPDATE_TIME")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("   param.add(\"#{UPDATE_TIME,value=NOW()}\");               		\n");
+                continue;
+            }
+            if(fieldNameList.get(i).equalsIgnoreCase("UPDATE_ID")){
+                StringBuilder pa=new StringBuilder();
+                pa.append("#{");
+                pa.append(fieldNameList.get(i));
+                pa.append("}");
+                ex.append("  param.add(\"#{UPDATE_ID,value='\"+sessionUserId+\"'}\");            		\n");
+                continue;
+            }
+
+
+
             StringBuilder pa=new StringBuilder();
             pa.append("#{");
             pa.append(fieldNameList.get(i));
@@ -660,6 +749,7 @@ public class ListEditController extends BaseController {
 
         ex.append("  StringBuilder updateSql=new StringBuilder();\n");
         ex.append("  updateSql.append(\" where "+idName+"=#{ID} \");\n");
+        ex.append("   updateSql.append(\" and COMPANY_ID= \"+companyId);\n");
 
         ex.append(" param.where(updateSql.toString());\n");
         ex.append(" updateSimple(param);\n");
