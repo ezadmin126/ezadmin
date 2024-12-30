@@ -1369,6 +1369,7 @@ public class ListServiceImpl implements ListService {
         String datasourceCore=getString(coreMap,"datasource");
         DataSource dataSourceVO= EzClientBootstrap.instance().getDataSourceByKey(datasourceCore);
         //填充数据
+        fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
         long count =getDataCountByListId(dataSourceVO, list, requestParamMap,sessionParamMap );
         pagination.setTotalRecord(count);
         page(pagination,list,requestParamMap);

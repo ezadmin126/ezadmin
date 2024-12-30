@@ -107,7 +107,7 @@ public class ListEditController extends BaseController {
         }else{
             Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
             coreMap.put(JsoupUtil.ADMINSTYLE,"layui");
-            coreMap.put(JsoupUtil.TEMPLATE,"list");
+            coreMap.putIfAbsent(JsoupUtil.TEMPLATE,"list");
             coreMap.putIfAbsent(JsoupUtil.APPEND_HEAD,"");
             coreMap.putIfAbsent(JsoupUtil.APPEND_FOOT,"");
         }

@@ -39,8 +39,7 @@
                     th:ez-datasource="${data.core.datasource}" config-form-type="listcore"
                     th:ez-id="${data.core.id}"
                     th:ez-listname="${data.core.listname}"
-                    th:ez-fixnumber="${data.core.fixnumber}"
-                    th:ez-fixnumberright="${data.core.fixnumberright}"
+
                     th:ez-empty_show="${data.core.empty_show}"
                     th:ez-pagesync="${data.core.pagesync}"
                     th:ez-firstcol="${data.core.firstcol}"
@@ -50,6 +49,8 @@
                     th:ez-linestyle="${data.core.linestyle}"
                     th:ez-rowbtnwidth="${data.core.rowbtnwidth}"
                     th:ez-rowbtnfixed="${data.core.rowbtnfixed}"
+                    th:ez-template="${data.core.template}"
+                    th:ez-layout="${data.core.layout}"
         >
             <span id="listname" th:text="${#strings.isEmpty(data.core.listname)?'点此配置列表信息':data.core.listname}">列表配置区</span>
         </blockquote>

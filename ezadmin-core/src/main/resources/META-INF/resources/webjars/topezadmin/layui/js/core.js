@@ -1144,6 +1144,11 @@ function getNow() {
 
 function ezopen(openType, title, appendUrl, area) {
     appendUrl = ($("#contextName").val()||'') + appendUrl;
+    if(openType.indexOf('parent.')>=0){
+        openType = openType.replace('parent.','');
+        parent.window.ezopen(openType, title, appendUrl, area);
+        return;
+    }
     switch (openType) {
         case 'APPEND_PARAM':
             if (appendUrl != null && appendUrl.indexOf('?') <= 0) {

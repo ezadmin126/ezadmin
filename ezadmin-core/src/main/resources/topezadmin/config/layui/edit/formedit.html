@@ -696,6 +696,7 @@
                     <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
                          th:ez-cardname="${card.cardname}" ez-type="card"
                          th:ez-col="${card.col}"
+                         th:ez-item_name="${card.item_name}"
                          th:ez-frameurl="${card.frameurl}"
                          th:ez-frameheight="${card.frameheight}"
                          th:ez-btnname="${card.btnname}"
@@ -710,6 +711,7 @@
                                     <div class="layui-btn-group custom-card-btn">
                                         <button  th:if="${not #strings.isEmpty(card.btnname)}" class="ezopenbutton layui-btn layui-btn-sm layui-btn-normal"
                                                  th:windowname="${card.btnname}"
+                                                 th:item_name="${card.item_name}"
                                                  th:url="${card.btnurl}" th:opentype="${card.btnopentype}" th:text="${card.btnname}">添加</button>
                                         [(${card.btntemplate})]
                                     </div>

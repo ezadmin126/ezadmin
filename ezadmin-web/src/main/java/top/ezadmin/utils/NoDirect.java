@@ -23,6 +23,9 @@ public class NoDirect {
     public static String saleorderNo(){
         return orderNo("S");
     }
+    public static String capitalNo(){
+        return orderNo("ZJ");
+    }
     public static void main(String[] args) throws Exception {
         for (int i = 0; i < 200; i++) {
             System.out.println(i+"\t"+saleorderNo());;

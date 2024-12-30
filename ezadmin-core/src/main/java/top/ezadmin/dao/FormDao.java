@@ -170,10 +170,12 @@ public class FormDao extends JsoupUtil {
 
                 Map<String,Object> cardEl=new HashMap<>();
                 cardEl.put("col",Utils.trimEmptyDefault(cardColList.get(i).attr("col"),"12"));
+                cardEl.put(JsoupUtil.ITEM_NAME,Utils.trimNull(cardColList.get(i).attr(JsoupUtil.ITEM_NAME)));
                 if(StringUtils.isNotBlank(Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FRAMEURL)))){
                     cardEl.put(JsoupUtil.FRAMEURL,Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FRAMEURL)));
                     cardEl.put(JsoupUtil.FRAMEHEIGHT,Utils.trimEmptyDefault(cardColList.get(i).attr(JsoupUtil.FRAMEHEIGHT),"527"));
                 }
+
                 if(StringUtils.isNotBlank(Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FORM_CARD_BTN_NAME)))){
                     cardEl.put(JsoupUtil.FORM_CARD_BTN_NAME,Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FORM_CARD_BTN_NAME)));
                     cardEl.put(JsoupUtil.FORM_CARD_BTN_URL,Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FORM_CARD_BTN_URL)));
@@ -386,6 +388,7 @@ public class FormDao extends JsoupUtil {
         String frameurl=Utils.trimNull(card.get("frameurl"));
         String frameheight=Utils.trimNull(card.get("frameheight"));
         String btnname=Utils.trimNull(card.get("btnname"));
+        String item_name=Utils.trimNull(card.get("item_name"));
         String btnurl=Utils.trimNull(card.get("btnurl"));
         String btnopentype=Utils.trimNull(card.get("btnopentype"));
         String btntemplate=Utils.trimNull(card.get("btntemplate"));
@@ -393,10 +396,10 @@ public class FormDao extends JsoupUtil {
         StringBuilder sb=new StringBuilder();
 
 
-        if(col.equals("12")||StringUtils.isNotBlank(col)){
-            sb.append("\n\t<div   class='layui-card'  cardname='"+cardName+"'");
+        if(col.equals("12")||StringUtils.isBlank(col)){
+            sb.append("\n\t<div   class='layui-card'  cardname='"+cardName+"' item_name='"+item_name+"'");
         }else{
-            sb.append("\n\t<div   class='layui-card'  col='"+col+"' cardname='"+cardName+"'");
+            sb.append("\n\t<div   class='layui-card'  col='"+col+"' cardname='"+cardName+"' item_name='"+item_name+"'");
         }
         if(StringUtils.isNotBlank(frameurl)){
             sb.append(" frameurl='"+frameurl+"' frameheight='"+frameheight+"'" );
