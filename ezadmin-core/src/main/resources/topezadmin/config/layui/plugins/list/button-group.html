@@ -8,7 +8,7 @@
 <table>
     <tr id="content">
         <td class='rowButtons  fixedCol '>
-            <div class="   dragula-container " th:if="${#lists.size(rowButtonItemList)>1 }">
+            <div class="   dragula-container " >
                 <button th:text="${rowButton0.label}"
                         th:url="${rowButton0.url}" th:item_name="${rowButton0.item_name}"
                         th:name="${rowButton0.item_name}" th:opentype="${rowButton0.opentype}"
@@ -18,7 +18,8 @@
                         th:data-id="${rowButton0.rowdataid}"
                         th:classappend="${  #strings.equals('script',rowButton0.opentype)?'':'ezopenbutton' }"
                         class="rowbutton    layui-btn layui-btn-sm layui-btn-primary  "></button>
-                <button class="layui-btn layui-btn-primary layui-btn-sm dropdown_button" th:itemsJson="${itemsJson}">
+                <button class="layui-btn layui-btn-primary layui-btn-sm dropdown_button" th:itemsJson="${itemsJson}"
+                        th:if="${#lists.size(rowButtonItemList)>1 }">
                     更多
                     <i class="layui-icon layui-icon-down layui-font-12"></i>
                 </button>

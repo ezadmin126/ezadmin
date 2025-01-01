@@ -760,6 +760,7 @@ public class ListServiceImpl implements ListService {
 
                             Map<String, String> buttonPlugin =
                                     loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list", Utils.getStringByObject(tempRowItem.get(0), JsoupUtil.TYPE));
+
                             context.setVariable("rowButton0", tempRowItem.get(0));
                             context.setVariable("rowButtonItemList", tempRowItem);
                             context.setVariable("rowButtons", tempRowItem);

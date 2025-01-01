@@ -17,7 +17,7 @@
             ez-type="td-select">
             <div class="  td-text"   th:each="item:${items}" th:remove="tag" th:if="${
               (#lists.isEmpty(items) or dataInDb==null )?false:#strings.equals(dataInDb+'',item.K+'')}"
-                 th:title="${item.V}"
+                 th:title="${item.V}" th:data-key="${item.K}"
                  th:utext="${item.V}"></div>
             <div class="td-text" th:if="${ #lists.isEmpty(items)}" th:utext="${dataInDb}"></div>
         </td>

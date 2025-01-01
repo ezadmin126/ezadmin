@@ -25,8 +25,11 @@ import net.sf.jsqlparser.util.TablesNamesFinder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.*;
-
+import java.sql.ResultSet;
 /**
  * : ListEditController
  * @author EzAdmin
@@ -361,6 +364,7 @@ public class ListEditController extends BaseController {
             String listcode = request.getParameter("listcode");
             String formcode = request.getParameter("formcode");
             String fasttext = request.getParameter("listexpress");
+
             String datasource = request.getParameter("datasource");
 
             EzResult result= sqlToList2(fasttext, listcode, formcode,datasource);
@@ -371,6 +375,61 @@ public class ListEditController extends BaseController {
             logger.error("e",e);
             return EzResult.instance().fail().message("SQL错误");
         }
+    }
+    /**
+     * 生成带字段备注别名的SQL查询语句
+     *
+     * @param tableName 表名
+     * @return 生成的SQL语句
+     */
+    public static String generateSQLWithColumnComments(String tableName) throws SQLException {
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT ");
+        Connection conn=null;
+        try {
+             conn= EzClientBootstrap.instance().getEzDataSource().getConnection();
+            // 3. 获取数据库元数据
+            DatabaseMetaData metaData =conn.getMetaData();
+
+            // 4. 获取表的列信息
+            ResultSet columns = metaData.getColumns(null, null, tableName, "%");
+
+            boolean isFirstColumn = true;
+            while (columns.next()) {
+                String columnName = columns.getString("COLUMN_NAME");
+                String columnComment = columns.getString("REMARKS");
+
+                if (!isFirstColumn) {
+                    sqlBuilder.append(", ");
+                }
+
+                // 如果列有备注，则添加别名
+                if (columnComment != null && !columnComment.isEmpty()) {
+                    sqlBuilder.append(columnName).append(" AS ").append(columnComment);
+                } else {
+                    sqlBuilder.append(columnName);
+                }
+
+                isFirstColumn = false;
+            }
+
+            // 5. 添加表名到SQL语句
+            sqlBuilder.append(" FROM ").append(tableName);
+
+        } catch (  SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 6. 关闭连接
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return sqlBuilder.toString();
     }
 
     private   EzResult sqlToList2(String sql, String listId, String formcode,String datasource) throws Exception {

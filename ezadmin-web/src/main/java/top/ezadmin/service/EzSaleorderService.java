@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.utils.NoDirect;
+import top.ezadmin.web.EzResult;
 
 @Service("orderService")
 @Slf4j
@@ -47,7 +48,7 @@ public class EzSaleorderService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void doUpdate(Map<String, Object> request){
+    public EzResult doUpdate(Map<String, Object> request){
        // log.info("add order:{}",JSONUtils.toJSONString(request));
 
         JxcSaleorder saleorder = new JxcSaleorder();
@@ -85,7 +86,11 @@ public class EzSaleorderService {
 
         BaseTraderAddress traderAddress= baseTraderAddressMapper.selectByPrimaryKey(saleorder.getTraderAddressId());
         saleorder.setTraderAddress(traderAddress.getTraderAddress());
+
         saleorder.setTraderRegion(traderAddress.getRegionId());
+
+
+
 
 
 
@@ -124,5 +129,6 @@ public class EzSaleorderService {
         saleorderUpdate.setSaleorderId(saleorder.getSaleorderId());
         saleorderUpdate.setTotalAmount(totalPrice);
         saleorderMapper.updateByPrimaryKeySelective(saleorderUpdate);
+        return EzResult.instance().data(saleorder.getSaleorderId());
     }
 }

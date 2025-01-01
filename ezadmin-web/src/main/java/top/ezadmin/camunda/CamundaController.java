@@ -176,6 +176,7 @@ public class CamundaController extends CustomBaseController {
             List<String> roles=userService.getUserRoles(user.getUserId());
             if(roles.contains(task.getName())||task.getAssignee().equals(DESUtils.encryptDES(user.getUserId()))){
                 task.setAssignee(DESUtils.encryptDES(user.getUserId()));
+                variables.put("parent",DESUtils.encrypt(user.getUserId()+""));
                 if(pass){
                     taskService.createComment(task.getId(), processInstance.getId(), "审核通过" );
                     variables.put("pass",true);

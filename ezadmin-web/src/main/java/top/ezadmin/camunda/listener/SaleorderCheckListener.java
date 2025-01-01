@@ -39,7 +39,7 @@ public class SaleorderCheckListener {
         product.setUpdateTime(new Date());
         JxcSaleorder order=jxcSaleorderMapper.selectByPrimaryKey(id);
         execution.setVariable("total",order.getTotalAmount());
-
+        execution.setVariable("orderNo",order.getSaleorderNo());
         jxcSaleorderMapper.updateByPrimaryKeySelective(product);
     }
 }

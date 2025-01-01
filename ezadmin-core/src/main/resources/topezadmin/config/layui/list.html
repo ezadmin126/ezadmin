@@ -148,7 +148,9 @@
         <div class="layui-card-body"  >
             <div id="table-wrap"  >
                 <table   th:lay-filter="${not #strings.equals('pure',data.core.tablestyle)?'mytable':''}"
-                       id="mytable" th:lineStyle="${data.core.linestyle}"
+                       id="mytable"
+                         th:lineStyle="${data.core.linestyle}"
+                            th:expandedMode="${data.core.expandedmode}"
                        class="  layui-table ez-table " >
                     <thead style="text-align: center">
                     <tr th:f="${data.core.firstcol}">
@@ -196,8 +198,8 @@
 <input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
 <input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
 <input type="hidden" id='IS_DEBUG' name='IS_DEBUG' th:value="${IS_DEBUG}">
-<input type="hidden" id='linestyle' name='linestyle'  th:lineStyle="${data.core.linestyle}">
-<input type="hidden" id='expandedMode' name='expandedMode'  th:lineStyle="${data.core.expandedMode}">
+<input type="hidden" id='linestyle' name='linestyle'  th:value="${data.core.linestyle}">
+<input type="hidden" id='expandedMode' name='expandedMode'  th:value="${data.core.expandedmode}">
 </body>
 <script th:src="${contextName+'/webjars/topezadmin/layui/js/py.js?v='+vi}" type="text/javascript"></script>
 

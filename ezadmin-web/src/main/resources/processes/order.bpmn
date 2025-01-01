@@ -10,7 +10,7 @@
       <bpmn:incoming>Flow_1xhumf8</bpmn:incoming>
       <bpmn:outgoing>Flow_1g7rnb9</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_1f0moz9" name="销售主管" camunda:assignee="${parent}">
+    <bpmn:userTask id="Activity_1f0moz9" name="销售主管" camunda:assignee="${parentUser}">
       <bpmn:incoming>Flow_1g7rnb9</bpmn:incoming>
       <bpmn:outgoing>Flow_04aavyb</bpmn:outgoing>
     </bpmn:userTask>
@@ -26,7 +26,7 @@
     <bpmn:sequenceFlow id="Flow_18ffy0u" name="金额大于10000" sourceRef="Gateway_0ox60qq" targetRef="Activity_10h8cjm">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${total&gt;10000}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="Activity_10h8cjm" name="经理审核" camunda:assignee="${parent}" camunda:candidateUsers="${parent}">
+    <bpmn:userTask id="Activity_10h8cjm" name="经理审核" camunda:assignee="${parentUser}" camunda:candidateUsers="${parentUser}">
       <bpmn:incoming>Flow_18ffy0u</bpmn:incoming>
       <bpmn:outgoing>Flow_1izuxe0</bpmn:outgoing>
     </bpmn:userTask>
