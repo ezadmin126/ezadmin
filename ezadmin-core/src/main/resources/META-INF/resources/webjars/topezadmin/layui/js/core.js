@@ -772,6 +772,13 @@ function getJsonCheckIds() {
     const uniqueArray = [...new Set(lines)];
     return JSON.stringify(uniqueArray);
 }
+function getCheckedIds() {
+    var lines = [];
+    $("input[name='list-body-checkbox']:not(:disabled):checked").each(function () {
+            lines.push($(this).attr("_CHECK_ID_VALUE"));
+    })
+    return  [...new Set(lines)];
+}
 
 function getJsonCheckIdAndNames() {
 
@@ -1144,7 +1151,7 @@ function getNow() {
 
 function ezopen(openType, title, appendUrl, area) {
     appendUrl = ($("#contextName").val()||'') + appendUrl;
-    if(openType.indexOf('parent.')>=0){
+    if(openType&&openType.indexOf('parent.')>=0){
         openType = openType.replace('parent.','');
         parent.window.ezopen(openType, title, appendUrl, area);
         return;
@@ -1305,19 +1312,15 @@ function parse(f) {
         .catch(err => layer.msg('读取失败：', err));
 
 }
-//
-// $(function(){
-//     var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?xx";
-//     var APPERANCE_KEY = "layui-theme-mode-prefer-dark";
-//     var savedPreferDark = localStorage.getItem(APPERANCE_KEY)||$.cookie(APPERANCE_KEY)||'';
-//     if(savedPreferDark=='dark'){
-//         if(!document.getElementById('layui_theme_css').hasAttribute("href")){
-//             document.getElementById('layui_theme_css').setAttribute('href',url);
-//             layui.form.render();
-//         }
-//     }else{
-//         document.getElementById('layui_theme_css').removeAttribute('href' );
-//         layui.form.render();
-//     }
-// })
 
+function mypost(url,param,success){
+    $.post(url , param,function(response) {
+        if(response.success){
+            success(response);
+        }else{
+            layui.layer.alert("服务端错误："+response.message);
+        }
+    } , 'json').fail(function () {
+        layui.layer.alert("网络异常");
+    });
+}

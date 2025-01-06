@@ -7,7 +7,7 @@
 <body id="uploadfile"  type="form" icon="layui-icon-upload-drag">
 
 <div id="template" >
-    <div class="layui-col-space10 selector layui-col-md12" ez-type="uploadimage">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="uploadfile">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">上传图片</label>
             <div class="layui-input-block">
@@ -19,7 +19,7 @@
     </div>
 </div>
 <div id="content">
-    <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}" ez-type="uploadimage"
+    <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}" ez-type="uploadfile"
          th:ez-label="${label}"
          th:ez-item_name="${item_name}"
          th:ez-placeholder="${placeholder}"
@@ -83,8 +83,8 @@
 
                         var conta = $("#layui-upload-list_[[${item_name}]]");
 
-                        var acceptMime = "images";
-                        var exts = "*";
+                        var acceptMime = "";
+                        var exts = "jpg|png|gif|bmp|jpeg|svg|pdf|doc|docx|xls|xlsx|ppt|pptx|zip|rar|7z|txt|mp4|mp3|avi|flv|rmvb|rm|wmv|mkv|mov|swf|wma|wav|ogg|ape|flac|aac|jpg|png|gif|bmp|jpeg|svg";
                         var verify = conta.attr("lay-verify");
                         var max = 1;
                         var min = 0;
@@ -120,7 +120,7 @@
 
                         conta.attr("item_max_upload_min", min);
                         conta.attr("item_max_upload_max", max);
-                        var image_width_height = conta.attr("image_width_height");
+
                         console.log(acceptMime + exts + max + '--' + min);
                         var config = {
                             elem: "#[[${'FILE_ITEM_ID_' + item_name}]]"
@@ -141,6 +141,7 @@
                                     return height;
                                 }
                             }
+                            , accept: 'file'
                             , acceptMime: acceptMime
                             , exts: exts
                             , size: size
