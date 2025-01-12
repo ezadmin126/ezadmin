@@ -1,7 +1,0 @@
-User-agent: *
-Disallow: /topezadmin/
-
-User-agent: SemrushBot
-Disallow: /
-
-Sitemap: https://www.ezadmin.top/sitemap-1.xml

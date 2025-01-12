@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-        <ezadmin.version>2.9.21-rc</ezadmin.version>
+        <ezadmin.version>2.9.21-SNAPSHOT</ezadmin.version>
         <camunda.version>7.15.0</camunda.version>
     </properties>
     <developers>
@@ -50,6 +50,11 @@
                 <groupId>org.camunda.bpm.springboot</groupId>
                 <artifactId>camunda-bpm-spring-boot-starter-external-task-client</artifactId>
                 <version>${camunda.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.ezadmin</groupId>
+                <artifactId>ezadmin-jxc</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>io.github.ezadmin126</groupId>
@@ -87,6 +92,11 @@
                     <artifactId>aliyun-sdk-oss</artifactId>
                     <version>3.10.2</version>
                 </dependency>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>5.1.30</version>
+                </dependency>
             </dependencies>
 
     </dependencyManagement>
@@ -115,7 +125,6 @@
     </scm>
     <modules>
         <module>ezadmin-core</module>
-        <module>ezadmin-web</module>
     </modules>
 
     <build>
