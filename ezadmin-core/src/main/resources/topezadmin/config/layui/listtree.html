@@ -24,7 +24,7 @@
 
     [(${data.core.append_head})]
 </head>
-<body>
+<body th:utext="${data.core.bodyTag}" th:remove="tag"> </body>
 
 <input type="hidden" ID="ENCRYPT_LIST_ID" name="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
 <input type="hidden" ID="EZ_SESSION_USER_NAME_KEY" name="EZ_SESSION_USER_NAME_KEY"
@@ -198,7 +198,7 @@
                 tree:{
                     view:
                         {
-                            expandAllDefault:false
+                            expandAllDefault:true
                         },
                     customName:{
                         id:"ID",

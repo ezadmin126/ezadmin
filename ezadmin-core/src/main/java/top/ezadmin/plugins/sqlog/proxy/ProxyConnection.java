@@ -15,11 +15,15 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
 
+import top.ezadmin.plugins.sqlog.po.JdbcMethod;
+import top.ezadmin.plugins.sqlog.po.Monitor;
 import top.ezadmin.plugins.sqlog.po.Params;
 
 /**
@@ -105,9 +109,9 @@ public class ProxyConnection implements Connection {
 
 	@Override
 	public void setAutoCommit(boolean autoCommit) throws SQLException {
-//		Monitor monitor = new Monitor(param);
+ 		Monitor monitor = new Monitor(param);
 		innerConnection.setAutoCommit(autoCommit);
-//		fillMonitor(monitor, JdbcMethod.COMMIT, "setAutoCommit"+autoCommit);
+ 		fillMonitor(monitor, JdbcMethod.COMMIT, "setAutoCommit"+autoCommit);
 	}
 
 	@Override
@@ -119,24 +123,34 @@ public class ProxyConnection implements Connection {
 	@Override
 	public void commit() throws SQLException {
 
-//		Monitor monitor = new Monitor(param);
-//		try {
+ 		Monitor monitor = new Monitor(param);
+ 		try {
 			innerConnection.commit();
-//		} finally {
-//			fillMonitor(monitor, JdbcMethod.COMMIT, JdbcMethod.COMMIT);
-//		}
+		} finally {
+			fillMonitor(monitor, JdbcMethod.COMMIT, JdbcMethod.COMMIT);
+		}
 
 	}
 
 	@Override
 	public void rollback() throws SQLException {
 
-//		Monitor monitor = new Monitor(param);
-//		try {
+		Monitor monitor = new Monitor(param);
+		try {
 			innerConnection.rollback();
-//		} finally {
-//			fillMonitor(monitor, JdbcMethod.ROLLBACK, JdbcMethod.ROLLBACK );
-//		}
+		} finally {
+			fillMonitor(monitor, JdbcMethod.ROLLBACK, JdbcMethod.ROLLBACK );
+		}
+	}
+
+	public void fillMonitor(Monitor monitor, String method, String i) {
+		monitor.setAppId(param.getAppId());
+		monitor.setConnName(innerConnection.toString());
+		monitor.setJdbcMethod(method);
+		monitor.setParameters(Collections.emptyMap());
+		monitor.setSql(method);
+		monitor.setRow("" + (i));
+		SQLContext.monitor(monitor);
 	}
 
 	@Override
@@ -147,12 +161,12 @@ public class ProxyConnection implements Connection {
 
 	@Override
 	public void close() throws SQLException {
-		//Monitor monitor = new Monitor(param);
-//		try {
+		Monitor monitor = new Monitor(param);
+		try {
 			innerConnection.close();
-//		} finally {
-//			//fillMonitor(monitor, "close", "close" );
-//		}
+		} finally {
+			 fillMonitor(monitor, "close", "close" );
+		}
 	}
 
 	@Override

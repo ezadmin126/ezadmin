@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>父窗口响应式图片</title>
+</head>
+<body id="td-pic-parent" type="td" icon="layui-icon-picture">
+<div id="template" >
+    <div class="layui-col-xs2 ez-plugin selector" config-form-type="colcore" ez-type="td-pic-parent">
+        <div class="   td-text  " >响应式图片</div> </div>
+</div>
+<table>
+    <tr id="content">
+        <td th:ITEM_NAME="${item_name}" th:COLOR_CIRCLE="${COLOR_CIRCLE}" th:ITEM_ID="${item_name}"
+            ez-type="td-pic"
+            th:class="${'ezadmin-td ezadmin-td-'+item_name}" th:style="${style}">
+            <div  class="td-pic-container">
+                <img onerror="this.src='/webjars/topezadmin/error.svg'"
+                     class="parent-viewer-image"
+                    th:ITEM_ID="${item_name+''+item_name}"
+                    th:orgsrc="${#strings.isEmpty(url)?downloadUrl+dataInDb:orgsrc}"
+                    th:src="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"
+            /></div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -92,8 +92,11 @@ public class ProxyPreparedStatement implements PreparedStatement {
 
 	@Override
 	public void close() throws SQLException {
-
-		innerPreparedStatement.close();
+		try {
+			innerPreparedStatement.close();
+		}catch (Exception e){
+			// ignor
+		}
 		innerPreparedStatement = null;
 	}
 

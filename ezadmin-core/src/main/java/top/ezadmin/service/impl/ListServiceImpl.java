@@ -739,9 +739,23 @@ public class ListServiceImpl implements ListService {
                             m.put("rowjson", dataRow.get("rowjson"));
                             String display = Utils.trimNull(item.get(JsoupUtil.DISPLAY));
                             if (StringUtils.isNotBlank(display)) {
-                                String re = MapParser.parseDefaultEmpty(display, dataRow).getResult();
+                                String re = MapParser.parseDefaultEmpty(display, nm).getResult();
                                 if (Utils.isTrue(re)) {
                                     tempRowItem.add(m);
+                                }else{
+                                    try {
+                                        ListExpressExecutor groupExe = ListExpressExecutor.createInstance();
+                                        groupExe.getOperatorParam().setListDto(list);
+                                        groupExe.express(re);
+                                        groupExe.addSessionParam(nm);
+                                        groupExe.addRequestParam(nm);
+                                        Object obj = groupExe.executeCount();
+                                        if (Utils.isTrue(obj)) {
+                                            tempRowItem.add(m);
+                                        }
+                                    }catch (Exception e){
+                                        LOG.warn("display error->ignor{}",display,e);
+                                    }
                                 }
                             } else {
                                 tempRowItem.add(m);

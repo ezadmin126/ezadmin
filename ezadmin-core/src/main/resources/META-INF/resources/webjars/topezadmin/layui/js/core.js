@@ -68,6 +68,47 @@ $(function (){
         e.stopPropagation();
         return false;
     })
+    $(document).on('click', '.parent-viewer-image', function (e) {
+
+        var _this = $(this);
+        var pid = _this.attr("pid");
+        ;
+        var data = [];
+        var item = {};
+        item.alt = _this.attr("alt");
+        item.pid = _this.attr("pid");
+        item.src = _this.attr("orgsrc")||_this.attr("src");
+        item.thumb = _this.attr("orgsrc");
+        data.push(item);
+        parent.window.layer.photos({
+            shade: 0.5,
+            photos: {
+                "title": _this.attr("title"),
+                "start": 0,
+                "data": data
+            },
+            footer: false // 是否隐藏底部栏 --- 2.8+
+            ,success:function(){
+                if($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height()>500){
+                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height","500px");
+                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width","auto");
+
+                    $(".layui-layer-photos").eq(0).css("top",$(window).height()/2-250)
+
+
+                }
+            }
+        });
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    })
+
+
+
+
+
+
 //行选择事件
     $(document).on('click', '.ezrowselectbutton', function (e) {
 
@@ -911,13 +952,16 @@ function openForm(url, name, area) {
         moveOut: true,
         success: function(layero, indexyyy, that){
             var body = layer.getChildFrame('body', indexyyy);
-            $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
-            $(body).on("click","#closeParent",function(e){
-                layui.layer.close(indexyyy);
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            })
+            try{
+                $(body).find('#submitbtnProxy').after("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+                $(body).on("click","#closeParent",function(e){
+                    layui.layer.close(indexyyy);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                })
+            }catch (e) {
+            }
         }
     });
     return index;

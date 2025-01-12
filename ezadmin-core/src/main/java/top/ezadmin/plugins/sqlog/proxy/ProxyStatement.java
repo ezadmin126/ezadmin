@@ -166,7 +166,9 @@ public class ProxyStatement implements Statement {
 	}
 
 	public void close() throws SQLException {
-		innerStatement.close();
+		try {
+			innerStatement.close();
+		}catch (Exception e){}
 		innerStatement = null;
 	}
 
