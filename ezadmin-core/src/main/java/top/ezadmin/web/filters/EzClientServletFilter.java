@@ -81,15 +81,13 @@ public class EzClientServletFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         try {
-            if(StringUtils.isBlank(MDC.get("traceId"))){
-                MDC.put("traceId",System.nanoTime()+"");
-            }
+
             ezBootstrap.doFilter(httpServletRequest, httpServletResponse,filterChain);
         } catch (Exception e) {
             LOGGE.error("", e);
             httpServletResponse.getWriter().println(error500+MDC.get("traceId")+end500);
         } finally {
-            MDC.clear();
+
             Utils.clearLog();
         }
     }
