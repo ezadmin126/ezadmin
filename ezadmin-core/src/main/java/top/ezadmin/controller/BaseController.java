@@ -9,7 +9,6 @@ import top.ezadmin.common.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,6 +80,7 @@ public class BaseController {
         searchParamsValues.put("EZ_CLIENT_IP", IpUtils.getRealIp(request));
         searchParamsValues.put("EZ_REFERER", request.getHeader("referer"));
         searchParamsValues.put("HttpServletRequest", request);
+        searchParamsValues.put("COMPANY_ID",Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
         return searchParamsValues;
     }
 

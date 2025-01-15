@@ -49,7 +49,7 @@ public class ListEditController extends BaseController {
 
         requestParamMap.putIfAbsent("perPageInt",request.getParameter("perPageInt"));
         requestParamMap.putIfAbsent("currentPage",request.getParameter("page"));
-
+        requestParamMap.put("vi",request.getAttribute("vi"));
         requestParamMap.put("ContextPath", request.getContextPath());
 
         Map<String, String> sessionParamMap = sessionToMap(request.getSession());

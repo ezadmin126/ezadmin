@@ -1,8 +1,8 @@
 package top.ezadmin.common.utils;
 
 
-
-
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -45,7 +45,7 @@ public abstract class BeanTools {
         }
         return d.get(className);
     }
-
+@Deprecated
     public static Object mapToBean(Map<String,String> map, Class  className) throws IllegalAccessException, InstantiationException {
         Object obj=className.newInstance();
         Map<String,String> map2=new HashMap<String,String>();
@@ -68,6 +68,7 @@ public abstract class BeanTools {
         }
         return obj;
     }
+   @Deprecated
     public static List<Field> getAllFieldsList(final Class<?> cls) {
         final List<Field> allFields = new ArrayList<Field>();
         Class<?> currentClass = cls;
@@ -80,5 +81,68 @@ public abstract class BeanTools {
         }
         return allFields;
     }
+
+    static {
+        // 注册自定义的 DateConverter
+        ConvertUtils.register(new DateConverter(), Date.class);
+    }
+    /**
+     * 将 Map 转换为 Java 对象
+     * map的字段是大写的数据库的字段 java是驼峰
+     *
+     * @param map  包含数据的 Map
+     * @param clazz 目标对象的 Class 类型
+     * @param <T>   目标对象的类型
+     * @return 转换后的对象
+     * @throws Exception 如果转换过程中发生异常
+     */
+    public static <T> T convertToEntity(Map<String, Object> map, Class<T> clazz) throws Exception {
+        // 创建目标对象实例
+        T entity = clazz.getDeclaredConstructor().newInstance();
+
+        // 将 Map 的 key 转换为驼峰命名
+        Map<String, Object> camelCaseMap = convertKeysToCamelCase(map);
+
+        // 使用 BeanUtils 将 Map 的值填充到对象中
+        BeanUtils.populate(entity, camelCaseMap);
+
+        return entity;
+    }
+
+
+    /**
+     * 将 Map 的 key 从大写转换为驼峰命名
+     *
+     * @param map 原始 Map
+     * @return 转换后的 Map
+     */
+    private static Map<String, Object> convertKeysToCamelCase(Map<String, Object> map) {
+        Map<String, Object> camelCaseMap = new java.util.HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String camelCaseKey = convertToCamelCase(entry.getKey());
+            camelCaseMap.put(camelCaseKey, entry.getValue());
+        }
+        return camelCaseMap;
+    }
+
+    /**
+     * 将大写字段名转换为驼峰字段名
+     *
+     * @param fieldName 大写字段名（例如：TRADER_TIME）
+     * @return 驼峰字段名（例如：traderTime）
+     */
+    private static String convertToCamelCase(String fieldName) {
+        if (fieldName == null || fieldName.isEmpty()) {
+            return fieldName;
+        }
+        String[] parts = fieldName.split("_");
+        StringBuilder camelCaseName = new StringBuilder(parts[0].toLowerCase());
+        for (int i = 1; i < parts.length; i++) {
+            camelCaseName.append(parts[i].substring(0, 1).toUpperCase())
+                    .append(parts[i].substring(1).toLowerCase());
+        }
+        return camelCaseName.toString();
+    }
+
 
 }

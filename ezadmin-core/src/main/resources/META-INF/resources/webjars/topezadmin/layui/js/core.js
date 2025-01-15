@@ -1362,9 +1362,9 @@ function mypost(url,param,success){
         if(response.success){
             success(response);
         }else{
-            layui.layer.alert("服务端错误："+response.message);
+             alert("服务端错误："+response.message);
         }
     } , 'json').fail(function () {
-        layui.layer.alert("网络异常");
+         alert("网络异常");
     });
 }

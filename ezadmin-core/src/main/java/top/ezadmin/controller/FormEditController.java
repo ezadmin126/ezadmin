@@ -2,14 +2,13 @@ package top.ezadmin.controller;
 
 import com.ql.util.express.exception.QLCompileException;
 import org.apache.commons.lang.exception.ExceptionUtils;
-
 import top.ezadmin.EzClientBootstrap;
 import top.ezadmin.common.EzAdminRuntimeException;
 import top.ezadmin.common.NotExistException;
+import top.ezadmin.common.annotation.EzMapping;
 import top.ezadmin.common.enums.ExceptionCode;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.FormDao;
-import top.ezadmin.dao.ListDao;
 import top.ezadmin.dao.PluginsDao;
 import top.ezadmin.plugins.express.InsertSimpleOperator;
 import top.ezadmin.plugins.express.OperatorParam;
@@ -20,13 +19,11 @@ import top.ezadmin.plugins.express.jdbc.UpdateParam;
 import top.ezadmin.plugins.parser.MapParser;
 import top.ezadmin.plugins.sqlog.EzSqlogDataSource;
 import top.ezadmin.service.FormService;
-import top.ezadmin.common.annotation.EzMapping;
 import top.ezadmin.web.EzResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -272,6 +269,7 @@ public class FormEditController extends BaseController {
         searchParamsValues.put("FORM_ID",formId);
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
         searchParamsValues.put("ID",Utils.trimNull(ID));
+        searchParamsValues.put("vi",request.getAttribute("vi"));
         Map<String,Object>  form= formService.selectConfigEditForm(ENCRYPT_FORM_ID)  ;
              //   new HashMap<>();
         if(Utils.isEmpty(form)){

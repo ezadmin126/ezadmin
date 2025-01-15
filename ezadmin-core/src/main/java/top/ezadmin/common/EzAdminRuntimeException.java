@@ -8,6 +8,9 @@ public class EzAdminRuntimeException extends RuntimeException  {
     private EzAdminRuntimeException(){
         super();
     }
+    public EzAdminRuntimeException(String message){
+        super(message);
+    }
     public EzAdminRuntimeException(String code,String message,  Throwable cause){
         super(message,cause);
         this.code=code;

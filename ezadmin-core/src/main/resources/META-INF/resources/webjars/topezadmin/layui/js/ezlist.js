@@ -667,7 +667,7 @@ function doPage(){
                     , curr: data.data.page.currentPage
                     , limit: data.data.page.perPageInt
                     , limits: [10, 20, 30, 40, 50, 100]
-                    , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    , layout: ['refresh','count', 'prev', 'page', 'next', 'limit', 'skip']
                     , jump: function (obj, first) {
                         if (!first) {
                             $("#perPageInt").val(obj.limit)

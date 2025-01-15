@@ -1,30 +1,14 @@
 package top.ezadmin.plugins.sqlog.proxy;
 
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.sql.Struct;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.Executor;
-
-
 import top.ezadmin.plugins.sqlog.po.JdbcMethod;
 import top.ezadmin.plugins.sqlog.po.Monitor;
 import top.ezadmin.plugins.sqlog.po.Params;
+
+import java.sql.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.Executor;
 
 /**
  *
@@ -156,7 +140,12 @@ public class ProxyConnection implements Connection {
 	@Override
 	public void rollback(Savepoint savepoint) throws SQLException {
 
-		innerConnection.rollback();
+		Monitor monitor = new Monitor(param);
+		try {
+			innerConnection.rollback(savepoint);
+		} finally {
+			fillMonitor(monitor, JdbcMethod.ROLLBACK+savepoint.getSavepointName(), JdbcMethod.ROLLBACK+savepoint.getSavepointName() );
+		}
 	}
 
 	@Override
