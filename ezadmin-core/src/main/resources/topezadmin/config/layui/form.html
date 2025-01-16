@@ -116,7 +116,7 @@
         <button th:if="${not cacheFlag}" opentype="FORM" type="button" th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"  class="layui-border-purple ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
             源码编辑
         </button>
-        <button th:if="${not cacheFlag}" opentype="FORM" type="button" th:url="${'/topezadmin/formEdit/trace-'+form.core.formcode}"  class="layui-border-purple ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+        <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/formEdit/trace-'+form.core.formcode}"  class="layui-border-purple ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
             查看SQL
         </button>
         <button th:if="${not cacheFlag}" onclick="javascript:location.reload()"   type="button"    class=" layui-border-purple  layui-btn    layui-btn-primary layui-btn-sm ">

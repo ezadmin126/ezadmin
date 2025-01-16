@@ -1,25 +1,22 @@
 package top.ezadmin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringEscapeUtils;
-import top.ezadmin.common.enums.JdbcTypeEnum;
-import top.ezadmin.common.utils.*;
-import top.ezadmin.dao.Dao;
-import top.ezadmin.dao.FormDao;
-import top.ezadmin.dao.ListDao;
-import top.ezadmin.dao.PluginsDao;
-import top.ezadmin.service.FormService;
-import top.ezadmin.service.ListService;
-import top.ezadmin.dao.model.ItemInitData;
-import top.ezadmin.common.annotation.EzCacheAnnotation;
-import top.ezadmin.common.enums.ParamNameEnum;
-import top.ezadmin.plugins.express.executor.DefaultExpressExecutor;
-import top.ezadmin.plugins.parser.MapParser;
-import top.ezadmin.EzClientBootstrap;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.context.Context;
+import top.ezadmin.EzClientBootstrap;
+import top.ezadmin.common.annotation.EzCacheAnnotation;
+import top.ezadmin.common.enums.JdbcTypeEnum;
+import top.ezadmin.common.enums.ParamNameEnum;
+import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.Dao;
+import top.ezadmin.dao.FormDao;
+import top.ezadmin.dao.PluginsDao;
+import top.ezadmin.dao.model.ItemInitData;
+import top.ezadmin.plugins.express.executor.DefaultExpressExecutor;
+import top.ezadmin.plugins.parser.MapParser;
+import top.ezadmin.service.FormService;
+import top.ezadmin.service.ListService;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -254,6 +251,8 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                         }
                         else if(Utils.trimNull(item.get("type")).equals("input-text")
                                 ||
+                                Utils.trimNull(item.get("type")).equals("input-text-group")
+                                ||
                                 Utils.trimNull(item.get("type")).equalsIgnoreCase("password")
                         ){
                             Map<String,String> attrMap= (Map<String,String>)item.get("attrMap");
@@ -261,7 +260,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                             attrMap.put("name",item.get(JsoupUtil.ITEM_NAME)+"");
                             //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                             attrMap.putIfAbsent("id","ITEM_ID_"+item.get(JsoupUtil.ITEM_NAME));
-                            attrMap.putIfAbsent("lay-affix","clear" );
+                            if( Utils.trimNull(item.get("type")).equalsIgnoreCase("input-text")){
+                                attrMap.put("lay-affix","clear" );
+                            }
                             if( Utils.trimNull(item.get("type")).equalsIgnoreCase("password")){
                                 attrMap.put("lay-affix","eye" );
                             }
@@ -284,6 +285,8 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                                 sb.append("'  ");
                             });
                             sb.append(">");
+
+                            context.setVariable("suffix",attrMap.get("suffix"));
                             context.setVariable("serverDom",sb.toString());
                             context.setVariable("attrMap",JSONUtils.toJSONString(attrMap));
                         }

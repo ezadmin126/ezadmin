@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>单行文本</title>
 </head>
-<body id="input-text"   alias2="input" type="form" icon="layui-icon-file">
+<body id="input-text-group"   alias2="input" type="form" icon="layui-icon-file">
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md12"   ez-type="input-text">
+    <div class="layui-col-space10 selector layui-col-md12"   ez-type="input-text-group">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">单行输入框</label>
             <div class="layui-input-block">
@@ -54,8 +54,10 @@
                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
 
-                <div class="layui-input-wrap" th:if="${not #strings.isEmpty(serverDom)}"  th:remove="tag">
+                <div class="layui-input-group" th:if="${not #strings.isEmpty(serverDom)}" >
                     [(${serverDom})]
+                    <div class="layui-input-suffix" th:if="${not #strings.isEmpty(suffix)}" th:utext="${suffix}">
+                    </div>
                 </div>
 
 

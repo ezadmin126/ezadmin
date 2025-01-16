@@ -1034,6 +1034,10 @@ function openModelReload(url, name, cancel) {
 
 
 function openTab(title, link) {
+    if(link==undefined){
+        link=title;
+        title="查看";
+    }
     try{
         if(window.top === window.self){
             return openBlank(link);

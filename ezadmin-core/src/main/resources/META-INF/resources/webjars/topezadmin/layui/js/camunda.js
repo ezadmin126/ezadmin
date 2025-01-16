@@ -32,7 +32,13 @@ function appendCheckButton(dekey,checkStatus,callback){
                 return false;
             }
             $(this).addClass("layui-btn-disabled");
+            $(".reject").addClass("layui-btn-disabled");
             param.pass=true;
+            var loadIndex = layer.msg('加载中', {
+                icon: 16,
+                shade: 0.01,
+                time: 0 // 不自动关闭
+            });
             $.post("/mycamunda/check/complete/"+dekey , param, function(response) {
                 if(response.success){
                     layui.layer.alert("操作成功",function(){
@@ -47,6 +53,8 @@ function appendCheckButton(dekey,checkStatus,callback){
             }, 'json').fail(function () {
                 console.log("error");
                 $(this).removeClass("layui-btn-disabled");
+                $(".reject").removeClass("layui-btn-disabled");
+                layui.layer.close(loadIndex)
             });
 
         })
@@ -56,6 +64,12 @@ function appendCheckButton(dekey,checkStatus,callback){
                 return false;
             }
             $(this).addClass("layui-btn-disabled");
+            $(".approve").addClass("layui-btn-disabled");
+            var loadIndex = layer.msg('加载中', {
+                icon: 16,
+                shade: 0.01,
+                time: 0 // 不自动关闭
+            });
             layer.prompt({title: '请输入审核意见', formType: 2}, function(value, index, elem){
                 if(value === '') return elem.focus();
                 param.comment=layui.util.escape(value);
@@ -73,21 +87,17 @@ function appendCheckButton(dekey,checkStatus,callback){
                 }, 'json').fail(function () {
                     console.log("error");
                     $(this).removeClass("layui-btn-disabled");
+                    $(".approve").removeClass("layui-btn-disabled");
+                    layer.close(loadIndex);
                 });
-
                 // 关闭 prompt
                 layer.close(index);
             });
-
-
-
         })
         $(document).on("click",".history",function(){
             param.pass=false;
             openModel("/mycamunda/check/history/"+dekey+"?id="+param.id)
         })
-
-
         $(document).on("click",".start",function(){
             if($(this).hasClass("layui-btn-disabled")){
                 return false;
