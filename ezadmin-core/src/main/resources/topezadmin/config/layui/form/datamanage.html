@@ -1,0 +1,104 @@
+<html>
+<head>
+  <title>数据集管理</title>
+</head>
+<body id="datamanage" datasource="dataSource" success_url="" formsubmiturl="">
+<div id="append_head"></div>
+<form id="inputForm">
+  <div class="layui-card" cardname="" item_name="">
+    <div class="layui-card-body">
+      <div class="layui-form-item">
+        <label>data</label>
+        <div>
+          <object item_name="DATA_CODE" placeholder="确保全局唯一" id="itemId-DATA_CODE" type="input-text"> </object>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label>datatype</label>
+        <div>
+          <object item_name="DATA_TYPE" id="itemId-DATA_TYPE" type="input-text"> </object>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label>配置项</label>
+        <div>
+          <object item_name="DATA_CONTENT" id="itemId-DATA_CONTENT" type="textarea"> </object>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label>备注</label>
+        <div>
+          <object item_name="COMMENTS" id="itemId-COMMENTS" type="textarea"> </object>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<form id="configForm">
+   <pre item_name="init_express" type="">
+<![CDATA[
+if(isBlank("ID")){
+ return new HashMap();
+}
+StringBuilder sql=new StringBuilder();
+sql.append("select DATA_CODE,DATA_TYPE,DATA_CONTENT,COMMENTS,DELETE_FLAG from T_EZADMIN_DATA where  ID=${ID}  ");
+return selectOne(sql);
+]]>
+
+   </pre>
+  <pre item_name="submit_express" type="">
+<![CDATA[
+import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.express.jdbc.InsertParam;
+import top.ezadmin.web.EzResult;
+ID=$("ID");
+companyId=$$("COMPANY_ID");
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");
+sessionUserName=$$("EZ_SESSION_USER_NAME_KEY");
+if(!isNotBlank("ID")){
+    param=new InsertParam();
+    param.table("T_EZADMIN_DATA");
+    param.add("#{DATA_CODE}");
+    param.add("#{DATA_TYPE}");
+    param.add("#{DATA_CONTENT}");
+    param.add("#{COMMENTS}");
+  param.add("#{DELETE_FLAG,value=0}");
+id=insertSimple(param);
+return id;
+}else{
+    param=new UpdateParam();
+    param.table("T_EZADMIN_DATA");
+    param.add("#{DATA_CODE}");
+    param.add("#{DATA_TYPE}");
+    param.add("#{DATA_CONTENT}");
+    param.add("#{COMMENTS}");
+
+  StringBuilder updateSql=new StringBuilder();
+  updateSql.append(" where ID=#{ID} ");
+
+ param.where(updateSql.toString());
+ updateSimple(param);
+ return ID;
+}
+]]>
+
+   </pre>
+  <pre item_name="delete_express" type="">
+<![CDATA[
+companyId=$$("COMPANY_ID");
+
+update("UPDATE T_EZADMIN_DATA set delete_flag=1,UPDATE_TIME=NOW(),UPDATE_ID="+sessionUserId+" where ID=${ID}  " );
+]]>
+
+   </pre>
+  <pre item_name="status_express" type="">
+<![CDATA[
+reload
+]]>
+
+   </pre>
+  <pre item_name="displayorder_express" type=""></pre>
+</form>
+<div id="append_foot"></div>
+</body>
+</html>

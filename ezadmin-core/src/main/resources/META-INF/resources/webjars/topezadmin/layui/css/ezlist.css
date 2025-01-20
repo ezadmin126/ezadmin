@@ -22,14 +22,14 @@ body{
     padding: 0;
 }
 
-.searchWrap,.searchWrap .layui-form-item{
-    margin-bottom: 0;
-    margin-top:0;
-}
-.searchWrap .layui-tab-item{
-    border: 1px solid #eee;border-radius: 2px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
-}
+/*.searchWrap,.searchWrap .layui-form-item{*/
+/*    margin-bottom: 0;*/
+/*    margin-top:0;*/
+/*}*/
+/*.searchWrap .layui-tab-item{*/
+/*    border: 1px solid #eee;border-radius: 2px;*/
+/*    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);*/
+/*}*/
 
 .layui-laypage .layui-laypage-curr .layui-laypage-em {
     background-color: #1E9FFF;
@@ -464,7 +464,7 @@ xm-select > .xm-body .scroll-body{
     margin-bottom:0px !important;
 }
 .layui-tab-title{
-    background: #fff;
+    /*background: #fff; 黑暗冲突*/
     margin-bottom: -5px;
 }
 
@@ -481,11 +481,20 @@ xm-select > .xm-body .scroll-body{
 /* tab 边框*/
  .searchWrap{
      margin-top:5px;
-     border:1px solid #eee;
+     margin-bottom: 0;
+     /*background-color: #fff;*/
+     /*border:1px solid #eee; 黑暗冲突*/
  }
-.searchWrap .layui-tab-item {
-    border:0px;
+.searchWrap .layui-form-item{
+    margin-bottom: 0;
+    margin-top:0;
 }
+.searchWrap .layui-tab-title{
+    background-color: #fff;
+}
+/*.searchWrap .layui-tab-item {*/
+/*    border:0px;*/
+/*}*/
 
 
 .buttonbread{

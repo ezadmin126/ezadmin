@@ -1368,7 +1368,8 @@ function mypost(url,param,success){
         }else{
              alert("服务端错误："+response.message);
         }
-    } , 'json').fail(function () {
+    } , 'json').fail(function (xhr, status, error)  {
          alert("网络异常");
+         console.log(xhr.responseText+JSON.stringify(error)+status);
     });
 }

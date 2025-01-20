@@ -35,8 +35,10 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
             String sql="select id,EZ_CODE,DATASOURCE,EZ_NAME,EZ_CONFIG from T_EZADMIN_PUBLISH where   EZ_CODE=? and EZ_TYPE=2 " ;
             Map<String, Object> listMap=null;
             try {
-                listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
-                        sql,new Object[]{ encodeId});
+                if(!StringUtils.contains("listmanage,formmanage,datamanage",encodeId)){
+                    listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
+                            sql,new Object[]{ encodeId});
+                }
             }catch (Exception ee){
             }
             if(Utils.isEmpty(listMap)){

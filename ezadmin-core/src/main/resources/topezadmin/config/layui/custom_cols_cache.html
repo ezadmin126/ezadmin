@@ -50,6 +50,9 @@
 <div class="layui-container">
     <input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
     <input type="hidden" name="IS_DEBUG" id="IS_DEBUG" th:value="${IS_DEBUG}">
+    <blockquote class="layui-elem-quote">
+        您也可以在列表页拖拽表头自定义列宽与显示顺序
+    </blockquote>
     <form class="layui-form" th:action="${contextName+'/topezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}" method="post"
           id="form">
         <div class="layui-card">

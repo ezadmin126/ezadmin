@@ -276,7 +276,7 @@ a:hover{color:var(--lay-color-text-3)}
 /* 按钮 */
 .layui-btn{border:1px solid transparent;background-color:var(--lay-color-primary);color: var(--lay-color-text-1)}
 .layui-btn:hover{color: var(--lay-color-text-2)}
-.layui-btn-primary{border-color:var(--lay-color-border-2);color:var(--lay-color-text-1);background-color: var(--lay-color-bg-4)}
+.layui-btn-primary{border-color:var(--lay-color-border-2);color:var(--lay-color-text-2);background-color: var(--lay-color-bg-4)}
 .layui-btn-primary:hover{border-color: transparent;color:var(--lay-color-text-2)}
 .layui-btn-normal{background-color: var(--lay-color-normal)}
 .layui-btn-warm{background-color:var(--lay-color-warning)}
@@ -799,10 +799,8 @@ iframe{
 .layuimini-menu-left .layui-nav-tree .layui-this, .layuimini-menu-left .layui-nav-tree .layui-this > a, .layuimini-menu-left .layui-nav-tree .layui-nav-child dd.layui-this, .layuimini-menu-left .layui-nav-tree .layui-nav-child dd.layui-this a, .layuimini-menu-left-zoom.layui-nav-tree .layui-this, .layuimini-menu-left-zoom.layui-nav-tree .layui-this > a, .layuimini-menu-left-zoom.layui-nav-tree .layui-nav-child dd.layui-this, .layuimini-menu-left-zoom.layui-nav-tree .layui-nav-child dd.layui-this a {
     background-color: var(--lay-color-black-5) !important;
 }
-.searchWrap .layui-tab-item{
-    border: 1px solid var(--lay-color-black-5);border-radius: 2px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
-}
+
+
 
 .layui-laypage .layui-laypage-curr .layui-laypage-em {
     color: var(--lay-color-text-2);
@@ -1032,6 +1030,15 @@ xm-select>.xm-body .xm-paging>span[style*=color]{
 }
 
 .layui-table-view:after {
-
     background-color: var(--lay-color-border-2);
+}
+
+.searchWrap{
+     /*background-color: var(--lay-color-bg-2);box-shadow:var(--lay-shadow-1)*/
+}
+.layui-tab-title{
+    background-color: var(--lay-color-bg-2) !important;
+}
+.layui-tab-title:after{
+    border-bottom-color: #2e2e30 !important;
 }

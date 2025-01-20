@@ -46,12 +46,12 @@
     <tbody>
     <tr id="column">
         <th id="rowbutton" width="200" fixed="right">
-            <button opentype="_BLANK" url="/topezadmin/formEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group"  class="layui-border-blue">可视化编辑</button>
-            <button opentype="_BLANK" url="/topezadmin/formEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single"  class="layui-border-orange">源码编辑</button>
-            <button opentype="_BLANK" url="/topezadmin/form/form-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single"   class="layui-border-orange">预览已发布</button>
+            <button opentype="FORM" url="/topezadmin/formEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group"  class="layui-border-blue">可视化编辑</button>
+            <button opentype="FORM" url="/topezadmin/formEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single"  class="layui-border-orange">源码编辑</button>
+            <button opentype="FORM" url="/topezadmin/form/form-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single"   class="layui-border-orange">预览已发布</button>
             <button opentype="MODEL" url="/topezadmin/list/list-formhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single"   class="layui-border-orange">发布历史</button>
         </th>
-        <th item_name="ID" head="th-numbers" width="60" minwidth="60" fixed="left">ID</th>
+        <th item_name="ID" head="th-numbers" body="td-numbers" width="60" minwidth="60" fixed="left">ID</th>
         <th item_name="EZ_CODE" url="/topezadmin/formEdit/form-${EZ_CODE}" body="td-link" opentype="_BLANK" fixed="left">表单编码</th>
         <th item_name="EZ_NAME">表单名称</th>
         <th item_name="ADD_TIME" jdbctype="DATETIME">添加时间</th>

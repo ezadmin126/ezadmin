@@ -666,7 +666,7 @@ function doPage(){
                     , count: data.data.page.totalRecord
                     , curr: data.data.page.currentPage
                     , limit: data.data.page.perPageInt
-                    , limits: [10, 20, 30, 40, 50, 100]
+                    , limits: [10,30, 50, 100, 500, 1000]
                     , layout: ['refresh','count', 'prev', 'page', 'next', 'limit', 'skip']
                     , jump: function (obj, first) {
                         if (!first) {

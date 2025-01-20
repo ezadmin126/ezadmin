@@ -453,7 +453,7 @@ public class ListServiceImpl implements ListService {
                     "";
             Map<String, Object> listMap=null;
             //系统list直接集成在jar包
-            if(!StringUtils.contains("listmanage,formmanage",encodeId)){
+            if(!StringUtils.contains("listmanage,formmanage,datamanage",encodeId)){
                 try {
                     listMap=Dao.getInstance().executeQueryOne(EzClientBootstrap.instance().getEzDataSource(),
                             sql, new Object[]{encodeId.toLowerCase()});

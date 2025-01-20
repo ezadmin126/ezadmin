@@ -156,15 +156,17 @@ $(function () {
 
 
 
+    if($.validator){
+        $.validator.addMethod("isMoney", function (value, element) {
+            //允许, 货币格式
+            return this.optional(element) || /^([1-9]{1}[0-9]{0,3}(\,[0-9]{3,4})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(value);
+        });
+        $.validator.addMethod("url", function() {
+            return true; // 始终返回 true，表示通过
+        }, "Please enter a valid URL.");
+        $("#inputForm").validate(config);
+    }
 
-    $.validator.addMethod("isMoney", function (value, element) {
-        //允许, 货币格式
-        return this.optional(element) || /^([1-9]{1}[0-9]{0,3}(\,[0-9]{3,4})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(value);
-    });
-    $.validator.addMethod("url", function() {
-        return true; // 始终返回 true，表示通过
-    }, "Please enter a valid URL.");
-    $("#inputForm").validate(config);
 
 
 
@@ -212,8 +214,8 @@ function upload_reCalId(itemId) {
 function upload_add(config,itemId, fileId) {
     layui.use(['form', 'laytpl'], function () {
         let laytpl = layui.laytpl;
-        var ctxName = document.getElementById("contextName").value;
-        var uurl = document.getElementById("downloadUrl").value;
+        var ctxName = document.getElementById("contextName")==null?'' :document.getElementById("contextName").value;
+        var uurl = document.getElementById("downloadUrl")==null?'' :document.getElementById("downloadUrl").value;
         var tmp=template;
         if(config.accept=='video'){
             tmp=template_v;
