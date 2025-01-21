@@ -51,7 +51,7 @@
                     <input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
 
                         <div class="layui-col-space10 layui-row ">
-                            <div th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}">
+                            <div th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}" th:card_item_name="${card.item_name}">
                                 <div class="layui-card"  >
                                     <div class="layui-card-header ez-form-panel" th:ID="${card.cardname}"
                                          th:if="${not #strings.isEmpty(card.cardname) and card.cardname!='EZ_DEFAULT_GROUP' }">

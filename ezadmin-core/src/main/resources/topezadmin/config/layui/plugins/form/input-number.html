@@ -51,7 +51,7 @@
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
                 <input th:classappend="${class}" th:style="${style}" autocomplete="off"  th:placeholder="${placeholder}" th:name="${item_name}"
-                       th:value="${#strings.isEmpty(value)?'0':value }" min="0"   class="layui-input" type="number" lay-affix="number"
+                       th:value="${#strings.isEmpty(value)?'':value }" min="0"   class="layui-input" type="number" lay-affix="number"
                        th:lay-verify="${#strings.isEmpty(lay_verify)?'number':'required|number'}"
                        th:step="${step}"
                        th:lay-precision="${lay_precision}"

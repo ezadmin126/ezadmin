@@ -57,7 +57,7 @@ public class FormController extends BaseController {
         searchParamsValues.put("ContextPath", request.getContextPath());
         searchParamsValues.put("FORM_ID",formId);
         searchParamsValues.put("ENCRYPT_FORM_ID",ENCRYPT_FORM_ID);
-        searchParamsValues.put("ID",Utils.trimNull(ID));
+
         searchParamsValues.put("vi",request.getAttribute("vi"));
 
         Map<String,Object>  form=JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID)) ;
@@ -66,7 +66,7 @@ public class FormController extends BaseController {
             return EzClientBootstrap.instance().getAdminStyle()+"/404";
         }
         formService.fillFormById(form,searchParamsValues,sessionMap);
-        request.setAttribute("ID",ID);
+        request.setAttribute("ID",Utils.trimEmptyDefault(ID,Utils.trimNull(searchParamsValues.get("ID"))));
         request.setAttribute("form",form);
         Map<String, Object>  core= (Map<String, Object>) form.get("core");
         if(StringUtils.isNotBlank(Utils.trimNull(core.get("formSubmitUrl")))){

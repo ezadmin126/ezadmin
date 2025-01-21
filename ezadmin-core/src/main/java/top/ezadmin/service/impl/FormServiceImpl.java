@@ -442,9 +442,9 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                  Utils.addLog(JSONUtils.toJSONString(form.get("core")),e);
             }
         }
-//        }else{
-//            ID="";
-//        }
+        if(initItemMap.containsKey(ID)&&StringUtils.isBlank(Utils.trimNull(requestParamMap.get(ID)))){
+            requestParamMap.put("ID",initItemMap.get("ID"));
+        }
         return initItemMap;
     }
 
