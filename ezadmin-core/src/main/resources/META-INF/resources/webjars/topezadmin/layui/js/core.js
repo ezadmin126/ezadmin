@@ -1064,6 +1064,34 @@ function openBlank(appendUrl) {
     a.remove();
 }
 
+/**
+ *
+ * @param  parent.refreshCard.prod
+ */
+function refreshCard(card_item_name){
+    card_item_name=card_item_name.toLowerCase();
+    if(card_item_name&&card_item_name.indexOf('parent.')>=0){
+        card_item_name = card_item_name.replace('parent.','');
+        window.parent.refreshCard(card_item_name);
+        return;
+    }
+    if(card_item_name.indexOf('refreshcard')>=0){
+        layer.closeAll();
+        const parts = card_item_name.split('.');
+        if (parts.length === 2 && parts[0] === "refreshcard") {
+            const cardItemName = parts[1]; // 获取第二个值，如 "prod"
+            // 找到对应的 iframe 并刷新
+            $("[card_item_name=" + cardItemName + "]").find("iframe").attr("src", function() {
+                const currentSrc = $(this).attr("src");
+                return currentSrc + (currentSrc.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
+            });
+            console.log("已刷新 card_item_name=" + cardItemName + " 的 iframe");
+        } else {
+            layer.message("参数配置错误，应为 reloadcard.xxx");
+        }
+    }
+}
+
 
 
 //parentid,id,name

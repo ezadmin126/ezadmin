@@ -119,7 +119,12 @@ $(function () {
                                } else if ('reloadlocal' == data.data) {
                                    canEzFormSubmit = true;
                                    window.location.reload();
-                               } else {
+                               }else if(data.data.toLowerCase().indexOf('refreshcard')>=0){
+                                   canEzFormSubmit = true;
+                                   refreshCard(data.data);
+                                   return;
+                               }
+                               else {
                                    canEzFormSubmit = true;
                                    location.href = data.data;
                                }

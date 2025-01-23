@@ -2,23 +2,20 @@ package top.ezadmin.common.utils;
 
 
 import org.apache.commons.lang.BooleanUtils;
-import top.ezadmin.common.enums.DefaultParamEnum;
-import top.ezadmin.common.enums.ColTypeEnum;
-import top.ezadmin.common.enums.JdbcTypeEnum;
-import top.ezadmin.common.enums.OperatorEnum;
-
-import top.ezadmin.web.JsonArrayResult;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.common.enums.ColTypeEnum;
+import top.ezadmin.common.enums.DefaultParamEnum;
+import top.ezadmin.common.enums.JdbcTypeEnum;
+import top.ezadmin.common.enums.OperatorEnum;
+import top.ezadmin.web.JsonArrayResult;
 
-import java.io.*;
-
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.math.BigDecimal;
-
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class Utils {
 
@@ -346,11 +343,9 @@ public class Utils {
     }
 
     /**
-     *
      * @param list
      * @param sort
      * @param sorttype  asc  desc ,默认asc
-     * @return
      */
     public static List<Map<String,Object>> flatTree(List<Map<String,Object>> list,String sort,String sorttype ){
         String fsort=Utils.trimEmptyDefault(sort,"ID");
@@ -448,9 +443,7 @@ public class Utils {
     }
 
     /**
-     *
      * @param obj  true  on  yes 1
-     * @return
      */
     public static boolean isTrue(Object obj){
         String s=trimNull(obj);
