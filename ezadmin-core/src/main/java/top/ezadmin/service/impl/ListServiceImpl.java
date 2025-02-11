@@ -56,6 +56,7 @@ public class ListServiceImpl implements ListService {
             listExpressExecutor.addParam("_CHECKD_IDS", Utils.getStringByObject(request, "_CHECKD_IDS"));
             listExpressExecutor.addParam("EZ_SUM_FLAG", Utils.getStringByObject(request, "EZ_SUM_FLAG"));
             listExpressExecutor.addParam("GROUP_BY", group);
+            page.setGroupBy(group);
             listExpressExecutor.addSessionParam(session);
             listExpressExecutor.addRequestParam(request);
             List<Map<String, Object>> dataList = (List<Map<String, Object>>) listExpressExecutor.execute();
@@ -1415,6 +1416,9 @@ public class ListServiceImpl implements ListService {
          Map<String,Object>  coreMap= (Map<String,Object> )list.get("core");
         if(Utils.isEmpty(colList)){
             return pagination;
+        }
+        if(StringUtils.equalsIgnoreCase(coreMap.get("dialect")+"","oracle")){
+            pagination.setDialect("oracle" );
         }
         for (int i = 0; i < colList.size(); i++) {
             Map<String,Object> item = colList.get(i);

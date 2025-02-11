@@ -1,17 +1,15 @@
 package top.ezadmin.plugins.express;
 
-import top.ezadmin.common.utils.*;
+import top.ezadmin.common.utils.Utils;
 import top.ezadmin.dao.Dao;
-import top.ezadmin.dao.model.CustomSearchDTO;
 import top.ezadmin.dao.model.CustomSearchGroup;
 import top.ezadmin.dao.model.CustomSearchOrder;
 import top.ezadmin.dao.model.CustomSearchSingle;
 import top.ezadmin.plugins.parser.CommentsSqlParser;
 import top.ezadmin.plugins.parser.parse.ResultModel;
-import top.ezadmin.plugins.sqlog.format.FormatStyle;
+import top.ezadmin.plugins.sqlgenerate.SqlGenerate;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,62 +21,19 @@ public class SearchOperator extends AbstractOperator {
         OperatorParam operatorParam=(OperatorParam) Utils.getParam();
         ResultModel modelY=null;String finalSql="";
         try {
-            if(logger.isDebugEnabled()){
-                logger.debug("开始执行脚本{}",sql);
-            }
-            Page page = operatorParam.getPage();
-            StringBuilder where = new StringBuilder(" ");
-
             Map<String, Object> list= operatorParam.getListDto();
-            List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
-             Map<String,Object>  core=( Map<String,Object>)list.get("core");
-
-             Map<String,Map<String,Object>> searchNameMap=new HashMap<>();
-             if(Utils.isNotEmpty(searchList)){
-                for (int i = 0; i < searchList.size(); i++) {
-                    Map<String,Object> search=searchList.get(i);
-                    String name=Utils.getStringByObject(search,JsoupUtil.ITEM_NAME);
-
-                    searchNameMap.put(name,search);
-                    where.append(SqlUtils.searchToSql(search,operatorParam.getRequestParams()));
-                }
-            }
-
-
-            String customJson =Utils.trimNull(operatorParam.getRequestParams().get("customSearch"));
-            Map<String,String> customSearch= SqlUtils.customSearchJsonToSql(customJson,searchNameMap);
-
-            if(customSearch.containsKey("customWhere")){
-                where.append(customSearch.get("customWhere"));
-            }
-
             String groupBy = " " + Utils.trimNull(operatorParam.getParams().get("GROUP_BY")) + " ";
-            String limit = " ", orderByClause = " ";
-            if (page != null) {
-                limit = " limit " + page.getStartRecord() + "," + page.getPerPageInt();
-                orderByClause = page.getOrderByClause();
-            }
-
-            if(StringUtils.isNotBlank(customSearch.get("customOrder"))){
-                orderByClause=customSearch.get("customOrder");
-            }
-
-              finalSql = SqlUtils.buildPageSql(sql,Utils.getStringByObject(core,"count_express"),
-                    where.toString(), orderByClause, groupBy,
-                    limit, operatorParam.isCount());
-
-              modelY = CommentsSqlParser.parse(finalSql, operatorParam.getRequestParams());
-
+            operatorParam.getPage().setGroupBy(groupBy);
+            SqlGenerate generate=  SqlGenerate.getSqlGenerate(operatorParam.getPage(),list,operatorParam.getRequestParams(),true  );
             if (operatorParam.isCount()) {
-                if(logger.isDebugEnabled()){
-                    logger.debug("开始执行脚本 生成SQL count: {}", FormatStyle.BASIC.getFormatter().format(modelY.getResult()));
-                }
+                finalSql=(generate.buildCountSql(sql,groupBy));
+                modelY = CommentsSqlParser.parse(finalSql, operatorParam.getRequestParams());
                 return Dao.getInstance().executeCountQuery(operatorParam.getDs(), modelY.getResult(), modelY.getParamsStatic());
+            }else{
+                finalSql=(generate.buildPageSql(sql,groupBy));
+                modelY = CommentsSqlParser.parse(finalSql, operatorParam.getRequestParams());
+                return Dao.getInstance().executeQuery(operatorParam.getDs(), modelY.getResult(), modelY.getParamsStatic());
             }
-            if(logger.isDebugEnabled()){
-                logger.debug("开始执行脚本 生成SQL select:{}",FormatStyle.BASIC.getFormatter().format(modelY.getResult()));
-            }
-            return Dao.getInstance().executeQuery(operatorParam.getDs(), modelY.getResult(), modelY.getParamsStatic());
         }catch (SQLException e){
             if(modelY!=null){
                 logger.error(modelY.toString(),e);

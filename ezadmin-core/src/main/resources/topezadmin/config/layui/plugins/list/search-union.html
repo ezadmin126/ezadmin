@@ -60,7 +60,7 @@
             </select>
         </div>
         <div  class="layui-input-block ">
-        <input th:id="${'itemId-' + model.item_name}" type="text"
+        <input th:id="${'itemId-' + model.item_name}" type="text" lay-affix="clear"
                th:placeholder="${model.placeholder}" th:title="${model.placeholder}"
                class="layui-input" th:value="${model.itemSearchConcatValue}" name="itemSearchConcatValue"
                >

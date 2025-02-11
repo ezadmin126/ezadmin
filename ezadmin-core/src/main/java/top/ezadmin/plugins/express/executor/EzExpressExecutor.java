@@ -115,7 +115,6 @@ public   class EzExpressExecutor {
         runner.addFunction("insertSimple",new InsertSimpleOperator( ));
         runner.addFunction("updateSimple",new UpdateSimpleOperator( ));
         runner.addFunction("prepareUpdate",new PrepareUpdateOperator( ));
-        runner.addFunction("unionall",new UnionOperator( ));
         runner.addFunction("split",new SplitOperator( ));
         runner.addFunction("env",new EnvOperator( ));
         runner.addFunction("imports",new ImportOperator( ));

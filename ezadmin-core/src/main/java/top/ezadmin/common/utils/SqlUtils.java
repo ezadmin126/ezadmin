@@ -1,19 +1,17 @@
 package top.ezadmin.common.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.ezadmin.common.constants.SelectKVContants;
 import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.common.enums.OperatorEnum;
 import top.ezadmin.common.enums.ParamNameEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import top.ezadmin.dao.model.CustomSearchDTO;
 import top.ezadmin.dao.model.CustomSearchGroup;
 import top.ezadmin.dao.model.CustomSearchOrder;
 import top.ezadmin.dao.model.CustomSearchSingle;
 
 import java.util.*;
-
-import static javax.management.Query.and;
 
 
 public class SqlUtils {
@@ -251,7 +249,7 @@ public class SqlUtils {
             if(JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)){
                 sb.append(value);
             }else{
-                sb.append("'"+value+"'");
+                sb.append("'").append(value).append("'");
             }
         }
         return sb.toString();
@@ -320,26 +318,48 @@ public class SqlUtils {
 
 
 
-    public static String buildPageSql(String body,String countExpress,String param,String order,String groupBy,String page,boolean isCount){
+    public static String buildPageSql(String body,String countExpress,String param,String order,String groupBy,Page page,boolean isCount){
         if(isCount){
             return buildCountSql(body,countExpress,param ,groupBy);
         }else{
             return buildSearchSql(body,param,order,groupBy,page);
         }
     }
-    public static String buildSearchSql(String body,String param,String order,String groupBy,String page){
+    public static String buildSearchSql(String body,String param,String order,String groupBy,Page page){
         StringBuilder sql=new StringBuilder();
-        sql.append(body);
-        sql.append(" "  );
-        sql.append( param );
-        sql.append(" "  );
-        if(StringUtils.isNotBlank(groupBy) ){
-            sql.append(groupBy );
+        if(page==null||StringUtils.equalsIgnoreCase(page.getDialect(),"mysql")){
+
+            sql.append(body);
+            sql.append(" "  );
+            sql.append( param );
+            sql.append(" "  );
+            if(StringUtils.isNotBlank(groupBy) ){
+                sql.append(groupBy );
+            }
+            if(StringUtils.isNotBlank(order) ){
+                sql.append(order );
+            }
+            sql.append(  " limit " + page.getStartRecord() + "," + page.getPerPageInt());
+        }else if(StringUtils.equalsIgnoreCase(page.getDialect(),"oracle")){
+
+            sql.append("select * from ( " );
+            sql.append("        select * from ( " );
+            sql.append("                select ez.*,rownum rowno from ( " );
+            sql.append(body);
+            sql.append("     ) ez where 1=1 " );
+            sql.append(" "  );
+            sql.append( param );
+            sql.append(" "  );
+            if(StringUtils.isNotBlank(groupBy) ){
+                sql.append(groupBy );
+            }
+            if(StringUtils.isNotBlank(order) ){
+                sql.append(order );
+            }
+            sql.append("  ) abc where abc.rowno <= "+ page.getEndRecord());
+            sql.append(" ) def where def.rowno > "+ page.getStartRecord());
+
         }
-        if(StringUtils.isNotBlank(order) ){
-            sql.append(order );
-        }
-        sql.append(  page);
         return sql.toString();
     }
     public static String buildCountSql(String body,String countExpress,String where,String groupBy){

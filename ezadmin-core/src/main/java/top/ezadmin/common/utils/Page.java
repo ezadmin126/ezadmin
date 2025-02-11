@@ -3,6 +3,9 @@ package top.ezadmin.common.utils;
 import java.util.Map;
 
 public class Page {
+    private String dialect = "mysql";
+    private String groupBy="";
+
     private int currentPage = 1;
     private int perPageInt = 10;
     private int startRecord = 0;
@@ -12,21 +15,21 @@ public class Page {
      */
     private long totalRecord = 0;
 
-    public int getStartForPage() {
-        return startForPage;
-    }
-
-    public void setStartForPage(int startForPage) {
-        this.startForPage = startForPage;
-    }
-
-    public int getEndForPage() {
-        return endForPage;
-    }
-
-    public void setEndForPage(int endForPage) {
-        this.endForPage = endForPage;
-    }
+//    public int getStartForPage() {
+//        return startForPage;
+//    }
+//
+//    public void setStartForPage(int startForPage) {
+//        this.startForPage = startForPage;
+//    }
+//
+//    public int getEndForPage() {
+//        return endForPage;
+//    }
+//
+//    public void setEndForPage(int endForPage) {
+//        this.endForPage = endForPage;
+//    }
 
     private int startForPage = 1, endForPage = 1;
 
@@ -72,8 +75,8 @@ public class Page {
         startRecord = ((currentPage - 1) < 0 ? 0 : (currentPage - 1)) * perPageInt;
         endRecord = currentPage * perPageInt > 1000 ? 1000 : currentPage * perPageInt;
 
-        endForPage = Math.min(Integer.valueOf(getTotalPage() + ""), currentPage + 5);
-        startForPage = Math.min(endForPage, Math.max(1, currentPage - 5));
+//        endForPage = Math.min(Integer.valueOf(getTotalPage() + ""), currentPage + 5);
+//        startForPage = Math.min(endForPage, Math.max(1, currentPage - 5));
     }
 
     public int getStartRecord() {
@@ -128,5 +131,21 @@ public class Page {
     }
     public String getOrderByClause() {
         return orderByClause;
+    }
+
+    public String getDialect() {
+        return dialect;
+    }
+
+    public void setDialect(String dialect) {
+        this.dialect = dialect;
+    }
+
+    public String getGroupBy() {
+        return groupBy;
+    }
+
+    public void setGroupBy(String groupBy) {
+        this.groupBy = groupBy;
     }
 }

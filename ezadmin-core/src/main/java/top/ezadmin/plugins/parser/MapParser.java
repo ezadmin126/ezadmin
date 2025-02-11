@@ -32,6 +32,7 @@ public class MapParser {
 
   private MapParser() {
     // Prevent Instantiation
+
   }
   private static String prefix="${";
   private static String sufix="}";
@@ -45,6 +46,7 @@ public class MapParser {
       model.setResult(string);
       return model;
     }
+
     VariableTokenHandler handler = new VariableTokenHandler(model,variables);
     GenericTokenParser parser = new GenericTokenParser(prefix, sufix, handler);
     String r= parser.parse(string);
@@ -63,6 +65,7 @@ public class MapParser {
       model2.setResult(string);
         return model2;
     }
+
     try {
       variables.put(DEFULT_EMPTY_KEY, true);
     }catch (Exception e){//
