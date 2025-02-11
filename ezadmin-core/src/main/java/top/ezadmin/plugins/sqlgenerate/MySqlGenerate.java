@@ -12,20 +12,25 @@ import java.util.Map;
 public class MySqlGenerate extends SqlGenerate{
     @Override
     public String buildPageSql(String body,String groupBy) {
-        StringBuilder sql=new StringBuilder();
+        return buildPageSqlWithWhere(body,groupBy,generateWhere());
+    }
 
+    @Override
+    public String buildPageSqlWithWhere(String body, String groupBy,String where) {
+        StringBuilder sql=new StringBuilder();
         sql.append(body);
         sql.append(" "  );
-        sql.append( generateWhere() );
+        sql.append( where);
         sql.append(" "  );
         if(StringUtils.isNotBlank(groupBy) ){
             sql.append(groupBy );
         }
-        if(StringUtils.isNotBlank(getPage().getOrderByClause()) ){
-            sql.append(getPage().getOrderByClause() );
+        if(getPage()!=null){
+            if(StringUtils.isNotBlank(getPage().getOrderByClause()) ){
+                sql.append(getPage().getOrderByClause() );
+            }
+            sql.append(  " limit " + getPage().getStartRecord() + "," +  getPage().getPerPageInt());
         }
-        sql.append(  " limit " + getPage().getStartRecord() + "," +  getPage().getPerPageInt());
-
         return sql.toString();
     }
 

@@ -328,7 +328,6 @@ public class SqlUtils {
     public static String buildSearchSql(String body,String param,String order,String groupBy,Page page){
         StringBuilder sql=new StringBuilder();
         if(page==null||StringUtils.equalsIgnoreCase(page.getDialect(),"mysql")){
-
             sql.append(body);
             sql.append(" "  );
             sql.append( param );
@@ -339,7 +338,9 @@ public class SqlUtils {
             if(StringUtils.isNotBlank(order) ){
                 sql.append(order );
             }
-            sql.append(  " limit " + page.getStartRecord() + "," + page.getPerPageInt());
+            if(page!=null){
+                sql.append(" limit " + page.getStartRecord() + "," + page.getPerPageInt());
+            }
         }else if(StringUtils.equalsIgnoreCase(page.getDialect(),"oracle")){
 
             sql.append("select * from ( " );

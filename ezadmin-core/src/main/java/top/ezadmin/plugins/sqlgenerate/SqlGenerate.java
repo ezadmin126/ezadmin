@@ -18,8 +18,6 @@ public abstract  class SqlGenerate {
    private Map<String, Object> list;
    private Map<String, Object> request;
 
-   private boolean prepare=false;
-
     /**
      * 获取sql生成器
      * @param page 分页对象
@@ -39,7 +37,6 @@ public abstract  class SqlGenerate {
         generate.page=page;
         generate.list=list;
         generate.request=request;
-        generate.prepare=prepare;
         return generate;
     }
 
@@ -226,6 +223,7 @@ public abstract  class SqlGenerate {
     }
 
     public abstract String buildPageSql(String sql,String groupBy);
+    public abstract String buildPageSqlWithWhere(String sql,String groupBy,String where);
     public abstract String buildCountSql(String sql,String groupBy);
 
     /**
