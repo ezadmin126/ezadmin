@@ -1368,7 +1368,12 @@ public class ListServiceImpl implements ListService {
                     }
                 rowList.add(dataRow);
             }
-            coreMap.put("dataList", Utils.flatTree(rowList,"DISPLAY_ORDER","desc"));
+            if(StringUtils.contains(Utils.trimNull(coreMap.get(JsoupUtil.ORDERBY_EXPRESS)),"desc")){
+                coreMap.put("dataList", Utils.flatTree(rowList,"DISPLAY_ORDER","desc"));
+            }else{
+                coreMap.put("dataList", Utils.flatTree(rowList,"DISPLAY_ORDER"," "));
+            }
+
         }
         page(pagination,list,requestParamMap);
     }

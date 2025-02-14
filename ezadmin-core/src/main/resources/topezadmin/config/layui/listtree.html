@@ -162,6 +162,7 @@
 <input type="hidden" id="fixNumberRight" name="fixNumberRight" th:v="${data.core.fixnumberright}"
        th:value="${data.core.fixnumberright}">
 <input type="hidden" id="firstCol" name="firstCol" th:value="${data.core.firstcol}">
+<input type="hidden" id="expandAllDefault" name="expandAllDefault" th:value="${data.core.expandalldefault}">
 
 <input type="hidden" id='validateRules' name='validateRules' th:value="${data.validateRules}">
 <input type="hidden" id='validateMessages' name='validateMessages' th:value="${data.validateMessages}">
@@ -198,7 +199,7 @@
                 tree:{
                     view:
                         {
-                            expandAllDefault:true
+                            expandAllDefault:istrue($("#expandAllDefault").val())
                         },
                     customName:{
                         id:"ID",

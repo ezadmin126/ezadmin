@@ -71,14 +71,7 @@ public class TreeSearchOperator extends AbstractOperator {
         //子查询不处理where条件
         Object filedId=current.get("ID");
 
-     //   Map<String, Object> list= operatorParam.getListDto();
-//        List<Map<String,Object>> searchList=(List<Map<String,Object>>)list.get("search");
-//        Map<String,Object>  core=( Map<String,Object>)list.get("core");
-
         String  finalSqlChild =generate.buildPageSqlWithWhere(sql,groupBy," and "+fieldParentIdName+"="+filedId +" ");
-//                SqlUtils.buildPageSql(sql,Utils.getStringByObject(core,"count_express"),
-//                " and "+fieldParentIdName+"="+filedId +" ", orderByClause, groupBy,
-//                null, operatorParam.isCount());
         ResultModel  modelz = CommentsSqlParser.parse(finalSqlChild, operatorParam.getRequestParams());
         try {
             List<Map<String, Object>> children = Dao.getInstance().executeQuery(operatorParam.getDs(), modelz.getResult(), modelz.getParamsStatic());

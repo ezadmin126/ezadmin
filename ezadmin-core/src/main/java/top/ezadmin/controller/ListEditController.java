@@ -290,6 +290,7 @@ public class ListEditController extends BaseController {
             c=listService.selectConfigHistoryList(ENCRYPT_LIST_ID,request.getParameter("version"));
         }
         request.setAttribute("EZ_CONFIG",c.get("EZ_CONFIG")+"");
+        request.setAttribute("treeFlag",((Map)c.get("core")).containsKey("expandalldefault"));
         request.setAttribute("ENCRYPT_LIST_ID",ENCRYPT_LIST_ID);
         request.setAttribute("EZ_TYPE",request.getParameter("EZ_TYPE"));
         requestToMap(request).forEach((k,v)->{

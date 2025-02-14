@@ -68,7 +68,7 @@
                         var layCascader=layui.layCascader;
                         var _this = $('[[${"#itemId-" + item_name}]]');
                         var prop = {};
-                        prop.value =  _this.attr("ez_value")||'VALUE';
+                        prop.value =  _this.attr("ez_value")||'ID';
                         prop.label = _this.attr("ez_treelabel")||_this.attr("ez_label")||'LABEL' ;
                         prop.children = _this.attr("ez_children")||'CHILDREN';
                         prop.multiple = ($('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?true:false,
