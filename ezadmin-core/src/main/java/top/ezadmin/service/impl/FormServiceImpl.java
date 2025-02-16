@@ -119,6 +119,10 @@ Logger logger= LoggerFactory.getLogger(FormServiceImpl.class);
                     String url = MapParser.parseDefaultEmpty(FORM_CARD_BTN_URL, requestParamMap).getResult();
                     cardList.get(i).put(JsoupUtil.FORM_CARD_BTN_URL,url);
                 }
+                String btntemplate=Utils.trimNull(cardList.get(i).get("btntemplate"));
+                String btntemplateMapstr = MapParser.parseDefaultEmpty(btntemplate, requestParamMap).getResult();
+                cardList.get(i).put("btntemplate",btntemplateMapstr);
+
                 if(Utils.isNotEmpty(items)) {
                    // continue;
                     for (int j = 0; j < items.size(); j++) {

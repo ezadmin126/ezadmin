@@ -133,9 +133,9 @@
             </div>
         </div>
         <div class="layui-card"  >
-            <div class="layui-card-header">综合排序，适用于多个字段同时排序的场景,按从上到下优先级排序。</div>
+            <div class="layui-card-header">综合排序</div>
             <div class="layui-card-body"  >
-                <table id="orderTable" style="width:500px" class="layui-table dragula-container"  >
+                <table id="orderTable" style="width:100%" class="layui-table dragula-container"  >
                     <tbody class=" dragula-container">
                     <tr  th:each="row:${fromColField}"  th:if="${row.order==1}">
                         <td>
@@ -166,10 +166,9 @@
 
         <!--        <a href="#" class="addOrderRow"><i class="layui-icon-add-circle layui-icon"></i>添加次要排序</a>-->
         <div class="layui-form-item">
-            <label class="layui-form-label"> </label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="margin-left:0px">
                 <button id="save" class="layui-btn layui-btn-primary layui-border layui-btn-sm">查询 <i class="layui-icon-search layui-icon"></i></button>
-                <button id="saveAs" class="layui-btn layui-btn-primary layui-border layui-btn-sm">保存为自定义查询 <i class="layui-icon-star layui-icon"></i></button>
+                <button id="saveAs" class="layui-btn layui-btn-primary layui-border layui-btn-sm">保存 <i class="layui-icon-star layui-icon"></i></button>
                 <button id="reset" class="layui-btn layui-btn-primary layui-border layui-btn-sm">重置 <i class="layui-icon-fonts-clear layui-icon"></i></button>
             </div>
         </div>

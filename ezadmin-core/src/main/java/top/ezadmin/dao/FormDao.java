@@ -1,22 +1,20 @@
 package top.ezadmin.dao;
 
-import top.ezadmin.EzClientBootstrap;
- import top.ezadmin.web.Config;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.EzClientBootstrap;
 import top.ezadmin.common.utils.JsoupUtil;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
+import top.ezadmin.web.Config;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -181,10 +179,10 @@ public class FormDao extends JsoupUtil {
                     cardEl.put(JsoupUtil.FORM_CARD_BTN_URL,Utils.trimNull(cardColList.get(i).attr(JsoupUtil.FORM_CARD_BTN_URL)));
                     cardEl.put("btnopentype",Utils.trimNull(cardColList.get(i).attr("btnopentype")));
                 }
-                if(StringUtils.isNotBlank(Utils.trimNull(cardColList.get(i).attr("btntemplate")))){
-                    cardEl.put("btntemplate",Utils.trimNull(cardColList.get(i).attr("btntemplate")));
+                Element element=cardColList.get(i).selectFirst(".layui-card-button");
+                if(element!=null){
+                    cardEl.put("btntemplate",element.html());
                 }
-
                 try {
                     cardEl.put("cardname", cardColList.get(i).selectFirst(".layui-card-header").html());
                 }catch(Exception e){}
@@ -407,14 +405,15 @@ public class FormDao extends JsoupUtil {
         if(StringUtils.isNotBlank(btnname)){
             sb.append(" btnname='"+btnname+"' btnurl='"+btnurl+"' btnopentype='" +btnopentype+"'" );
         }
-        if(StringUtils.isNotBlank(btntemplate)){
-            sb.append(" btntemplate='"+btntemplate+"'  " );
-        }
+//        if(StringUtils.isNotBlank(btntemplate)){
+//            sb.append(" btntemplate='"+btntemplate+"'  " );
+//        }
         sb.append("        > \n");
         if(StringUtils.isNotBlank(cardName)&&!StringUtils.equalsIgnoreCase(EZ_DEFAULT_GROUP,cardName)){
             sb.append(  "\t\t<div class=\"layui-card-header\">\n" +cardName +"  </div>\n" );
         }
         sb.append(  " \t\t<div class=\"layui-card-body\"> </div>\n" );
+        sb.append(  " \t\t<div class=\"layui-card-button\">"+btntemplate+" </div>\n" );
         sb.append("\t</div>\n\n");
         return Jsoup.parse(sb.toString()).body().child(0);
     }
