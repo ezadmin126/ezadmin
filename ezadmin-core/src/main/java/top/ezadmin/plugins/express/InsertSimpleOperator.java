@@ -1,14 +1,14 @@
 package top.ezadmin.plugins.express;
 
-import top.ezadmin.dao.Dao;
-import top.ezadmin.common.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import top.ezadmin.EzClientBootstrap;
 import top.ezadmin.common.utils.Utils;
+import top.ezadmin.dao.Dao;
 import top.ezadmin.plugins.express.jdbc.InsertParam;
 import top.ezadmin.plugins.parser.CommentsSqlParser;
 import top.ezadmin.plugins.parser.StandardSqlParser;
 import top.ezadmin.plugins.parser.parse.ResultModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class InsertSimpleOperator extends AbstractOperator {
 
@@ -23,7 +23,13 @@ public class InsertSimpleOperator extends AbstractOperator {
         if(logger.isDebugEnabled()){
             logger.debug("InsertSimple sql::{}",model.getResult());
         }
-        return ""+ Dao.getInstance().executeUpdate(operatorParam.getDs(),model.getResult(),model.getParamsStatic());
+        Object obj= ""+ Dao.getInstance().executeUpdate(operatorParam.getDs(),model.getResult(),model.getParamsStatic());
+        if(objects.length>1){
+            if(Utils.isTrue(objects[1])){
+                EzClientBootstrap.instance().getCache().clear();
+            }
+        }
+        return obj;
     }
 
     public ResultModel generateSql(InsertParam param){

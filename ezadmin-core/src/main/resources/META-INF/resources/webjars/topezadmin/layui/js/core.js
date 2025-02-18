@@ -1,8 +1,9 @@
 /*! ezadmin v1.0.0-SNAPSHOT |
  https://gitee.com/ezadmin/index.html
  | MIT /license */
+var holiday = [[], []];
 $(function (){
-    var holiday = [[], []];
+
     if ($("#holiday") != null && $("#holiday").val() != null) {
         try{
             holiday = JSON.parse($("#holiday").val());
@@ -103,12 +104,6 @@ $(function (){
         e.stopPropagation();
         return false;
     })
-
-
-
-
-
-
 //行选择事件
     $(document).on('click', '.ezrowselectbutton', function (e) {
 

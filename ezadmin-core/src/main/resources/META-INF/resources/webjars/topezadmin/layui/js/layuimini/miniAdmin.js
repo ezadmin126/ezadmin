@@ -266,17 +266,17 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
              */
             $('body').on('click', '[data-clear]', function () {
                 var loading = layer.load(0, {shade: false, time: 2 * 1000});
-                sessionStorage.clear();
+               // sessionStorage.clear();
 
                 // 判断是否清理服务端
                 var clearUrl = $(this).attr('data-href');
                 if (clearUrl != undefined && clearUrl != '' && clearUrl != null) {
                     $.getJSON(clearUrl, function (data, status) {
                         layer.close(loading);
-                        if (data.code != 1) {
-                            return miniAdmin.error(data.msg);
+                        if (!data.success) {
+                            return miniAdmin.error('清理缓存接口有误:'+data.message);
                         } else {
-                            return miniAdmin.success(data.msg);
+                            return miniAdmin.success(data.message);
                         }
                     }).fail(function () {
                         layer.close(loading);

@@ -57,6 +57,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
         ezBootstrap.setIndexUrl(ezClientProperties.getIndexUrl());
         ezBootstrap.setSignoutUrl(ezClientProperties.getSignoutUrl());
         ezBootstrap.setMessageUrl(ezClientProperties.getMessageUrl());
+        ezBootstrap.setClearUrl(ezClientProperties.getClearUrl());
 
         ezBootstrap.setChatUrl(ezClientProperties.getChatUrl());
         if(StringUtils.isNotBlank(ezClientProperties.getUploadPath())){

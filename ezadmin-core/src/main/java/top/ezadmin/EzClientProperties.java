@@ -24,6 +24,7 @@ public class EzClientProperties {
     private String signoutUrl="/signout";
     private String messageUrl;
     private String chatUrl;
+    private String clearUrl;
     private String adminStyle="layui";
     private String uploadPath="/data/upload/ezadmin";
 
@@ -287,5 +288,13 @@ public class EzClientProperties {
 
     public void setLayout(String layout) {
         this.layout = layout;
+    }
+
+    public String getClearUrl() {
+        return clearUrl;
+    }
+
+    public void setClearUrl(String clearUrl) {
+        this.clearUrl = clearUrl;
     }
 }

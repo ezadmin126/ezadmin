@@ -1,7 +1,6 @@
 package top.ezadmin.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
 import top.ezadmin.EzClientBootstrap;
 import top.ezadmin.common.annotation.EzMapping;
 import top.ezadmin.common.constants.SessionConstants;
@@ -13,7 +12,6 @@ import top.ezadmin.dao.ListDao;
 import top.ezadmin.dao.model.Info;
 import top.ezadmin.dao.model.InitVO;
 import top.ezadmin.web.EzResult;
-
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +43,7 @@ public class IndexController extends BaseController {
         request.setAttribute("signoutUrl",bootstrap.getSignoutUrl());
         request.setAttribute("messageUrl",bootstrap.getMessageUrl());
         request.setAttribute("chatUrl",bootstrap.getChatUrl());
+        request.setAttribute("clearUrl",bootstrap.getClearUrl());
         request.setAttribute("holiday",bootstrap.getHoliday());
         request.setAttribute("appName",bootstrap.getAppName());
         request.setAttribute("bootstrap",bootstrap);
@@ -71,7 +70,12 @@ public class IndexController extends BaseController {
         FormDao.getInstance().clear();
         EzClientBootstrap.instance().getCache().clear();
         ThymeleafUtils.clear();
-        return EzResult.instance().msg("0","OK");
+        return EzResult.instance().msg("0","清理缓存成功");
+    }
+    @EzMapping("clearCache.html")
+    public EzResult clearCache(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        EzClientBootstrap.instance().getCache().clear();
+        return EzResult.instance().msg("0","清理缓存成功");
     }
 
     @EzMapping("navs.html")

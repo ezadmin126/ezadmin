@@ -65,6 +65,7 @@ public class EzClientServletFilter implements Filter {
             ezBootstrap.setMessageUrl(filterConfig.getInitParameter("messageUrl"));
             ezBootstrap.setChatUrl(filterConfig.getInitParameter("chatUrl"));
             ezBootstrap.setAdminStyle(filterConfig.getInitParameter("adminStyle"));
+            ezBootstrap.setClearUrl(filterConfig.getInitParameter("clearUrl"));
             for (Map.Entry<String, DataSource> entry:appDatasource.entrySet()){
                 ezBootstrap.addBizDataSource(entry.getKey(), entry.getValue());
             }
