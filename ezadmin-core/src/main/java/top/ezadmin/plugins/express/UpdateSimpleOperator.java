@@ -26,10 +26,10 @@ public class UpdateSimpleOperator extends AbstractOperator {
                      EzClientBootstrap.instance().getCache().clear();
                  }
              }
-            return Dao.getInstance().executeUpdate(operatorParam.getDs(),model.getResult(),model.getParamsStatic());
+             return Dao.getInstance().executeUpdate(operatorParam.getDs(),model.getResult(),model.getParamsStatic());
         } catch (Exception throwables) {
-            logger.error(JSONUtils.toJSONString(objects) +model.getResult(),throwables);
-            throw throwables;
+             logger.error(JSONUtils.toJSONString(objects) +model.getResult(),throwables);
+             throw throwables;
         }
 
     }

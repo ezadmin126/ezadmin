@@ -1349,6 +1349,10 @@ function toFloat(num) {
     return result;
 }
 
+function isNumeric(value) {
+    return !isNaN(value) && !isNaN(parseFloat(value));
+}
+
 
 
 function isPositiveInteger(value) {

@@ -14,7 +14,7 @@ function appendCheckButton(dekey,checkStatus,callback){
                         `);
                     }
                 } else {
-                    if(checkStatus==2||checkStatus==0) {
+                    if(checkStatus==2||checkStatus==5) {
                         $("#submitButtonContainer").append(`<button  type="button"   class="  layui-btn  start layui-bg-blue ">
                             申请审核
                             </button>`);

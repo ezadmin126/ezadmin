@@ -68,6 +68,7 @@ public class FormEditController extends BaseController {
         request.setAttribute("vi",System.currentTimeMillis());
 
         Map<String,Object> searchParamsValues=requestToMap(request);
+        searchParamsValues.put("vi",request.getAttribute("vi"));
 
         Map<String, String> sessionMap = sessionToMap(request.getSession());
         Map<String, Object> form= formService.selectConfigEditForm(ENCRYPT_FORM_ID);

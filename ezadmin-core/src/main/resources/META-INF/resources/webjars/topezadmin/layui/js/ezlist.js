@@ -460,6 +460,10 @@ function renderTable() {
         if($(".searchWrap:visible").length>0){ //搜索
             hh=hh+$(".searchWrap").height()+5;
         }
+        if($(".appendhead").length>0){ //搜索
+            hh=hh+$(".appendhead").height() ;
+        }
+
         console.log("计算table的高度："+hh);
         tableConfig={
             height: 'full-'+hh  //设置高度

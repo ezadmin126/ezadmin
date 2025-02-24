@@ -328,7 +328,21 @@ public class FormController extends BaseController {
                 }
             }
             return EzResult.instance().data( toFormId(rowId,request) );
-        } catch (Exception e) {
+        } catch (EzAdminRuntimeException   e2){
+            logger.error("",e2);
+            if(ExceptionCode.QLBIZ.name().equalsIgnoreCase(e2.code())){
+                return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
+            }
+            return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
+        }
+        catch (QLBizException BE){
+            if(BE.getCause().getCause() instanceof  EzAdminRuntimeException){
+                return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
+            }else{
+                return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(BE));
+            }
+        }
+        catch (Exception e) {
             logger.error("保存表单失败{}"  ,ENCRYPT_FORM_ID,e);
             return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常"+ExceptionUtils.getFullStackTrace(e));
         }
