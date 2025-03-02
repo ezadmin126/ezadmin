@@ -187,6 +187,7 @@ $(function () {
         $(this).closest(".layui-card").find(".layui-card-body").hide();
         $(this).siblings().removeClass("layui-hide");
         $(this).addClass("layui-hide");
+        $(".layui-layer-dir").addClass('show');
     })
     $(".ez-form-panel  .layui-layer-maxmin").click(function(){
         $(this).closest(".layui-card").find(".layui-card-body").show();

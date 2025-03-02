@@ -5,8 +5,19 @@ var table;
 var laytable;
 var json = cacheConfig();
 var tableConfig;
-$(document).ready(function () {
-//获取form表单下所有name属性值
+
+// 添加字体大小设置
+$(document).ready(function() {
+    // 获取表格尺寸配置
+    var tableSize = json.tableSize || 'md';
+    // 如果是小尺寸,设置较小的字体
+    if(tableSize === 'sm') {
+        $('body').css('font-size', '12px');
+    } else {
+        $('body').css('font-size', ''); // 恢复默认字体大小
+    }
+    
+    //获取form表单下所有name属性值
     function getobj() {
         var elms = $("#searchForm [name]"); //formid 包含name属性的所有元素
         var obj = {};
@@ -465,6 +476,7 @@ function renderTable() {
         }
 
         console.log("计算table的高度："+hh);
+        var json = cacheConfig();
         tableConfig={
             height: 'full-'+hh  //设置高度
             ,escape: false
@@ -519,7 +531,7 @@ function renderTable() {
                 }
 
             }
-
+            ,size: json.tableSize || 'md',  // 默认使用中等尺寸
         }
         var initSort={};
         if($("#orderBy").attr("name")!=null&&$("#orderBy").attr("name")!=''){

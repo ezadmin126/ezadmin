@@ -215,4 +215,22 @@
 <script th:if="${#strings.equals('pure',data.core.tablestyle)}">
     afterAllDataLoad();
 </script>
+
+<script>
+// 在页面加载完成后执行
+$(function(){
+    // 获取全屏配置
+    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+    var config = localStorage.getItem(key);
+    
+    if(config) {
+        var json = JSON.parse(config);
+        // 如果有全屏设置,则覆盖layout
+        if(json.fullscreen) {
+            $('.layui-container,.layui-fluid').removeClass('layui-container layui-fluid')
+                .addClass('layui-' + json.fullscreen);
+        }
+    }
+});
+</script>
 </html>

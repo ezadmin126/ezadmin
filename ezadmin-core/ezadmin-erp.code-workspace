@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../../ezadmin-erp"
+		},
+		{
+			"path": "."
+		}
+	],
+    "settings": {
+        "java.compile.nullAnalysis.mode": "automatic"
+    }
+}

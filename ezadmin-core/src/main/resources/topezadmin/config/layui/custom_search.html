@@ -132,12 +132,12 @@
                 </ul>
             </div>
         </div>
-        <div class="layui-card"  >
+        <div class="layui-card"  th:if="${not #lists.isEmpty(fromColField)}">
             <div class="layui-card-header">综合排序</div>
             <div class="layui-card-body"  >
                 <table id="orderTable" style="width:100%" class="layui-table dragula-container"  >
                     <tbody class=" dragula-container">
-                    <tr  th:each="row:${fromColField}"  th:if="${row.order==1}">
+                    <tr  th:each="row:${fromColField}"  >
                         <td>
                             <select name="f" lay-search>
                                 <option value="">请选择排序字段</option>

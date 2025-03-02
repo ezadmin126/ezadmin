@@ -53,8 +53,39 @@
     <blockquote class="layui-elem-quote">
         您也可以在列表页拖拽表头自定义列宽与显示顺序
     </blockquote>
+
     <form class="layui-form" th:action="${contextName+'/topezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}" method="post"
           id="form">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <span class="layui-breadcrumb" lay-separator="|">
+                    <a href="#" style="color: #0052CC !important;font-size: 24px">基本设置</a>
+                </span>
+            </div>
+            <div class="layui-card-body layui-row layui-col-space15  ">
+
+                <div class="layui-col-md12  " >
+                    <div class="layui-form-item   "  style="border:none;margin-bottom: 0px">
+                        <label class="layui-form-label">宽窄屏显示</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="fullscreen" value="container" title="窄屏" checked>
+                            <input type="radio" name="fullscreen" value="fluid" title="宽屏">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md12  " >
+                    <div class="layui-form-item   " style="border:none;margin-bottom: 0px">
+                        <label class="layui-form-label">表格尺寸</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="tableSize" value="sm" title="小">
+                            <input type="radio" name="tableSize" value="md" title="中" checked>
+                            <input type="radio" name="tableSize" value="lg" title="大">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="layui-card">
             <div class="layui-card-header">
                 <span class="layui-breadcrumb" lay-separator="|">
@@ -173,8 +204,7 @@
             var json = JSON.parse(jsonconfig);
             var search = json.search||[];
             var column = json.column||[];
-            var fixNumber = json.fixNumber||0;
-            var fixNumberRight = json.fixNumberRight||0;
+
 
 
 
@@ -201,8 +231,17 @@
             }
 
 
-            $("#fixedNumber").val(fixNumber);
-            $("#fixNumberRight").val(fixNumberRight);
+            if (json.fullscreen == 'fluid') {
+                $("input[name=fullscreen][value=fluid]").prop("checked", true)
+            } else {
+                $("input[name=fullscreen][value=container]").prop("checked", true)
+            }
+
+            if (json.tableSize == 'sm' || json.tableSize == 'lg') {
+                $("input[name=tableSize][value=" + json.tableSize + "]").prop("checked", true)
+            } else {
+                $("input[name=tableSize][value=md]").prop("checked", true)
+            }
         } else {
             //默认全部选中
             $("input[name=searchId]").each(function () {
@@ -307,6 +346,8 @@
 
         json['search'] = search;
         json['column'] = column;
+        json['fullscreen'] = $("input[name=fullscreen]:checked").val();
+        json['tableSize'] = $("input[name=tableSize]:checked").val();
         // json['fixNumber'] = $("#fixedNumber").val();
         // json['fixNumberRight'] = $("#fixNumberRight").val();
         // if($("#IS_DEBUG").val()==1){

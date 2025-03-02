@@ -1,0 +1,284 @@
+<html>
+ <head>
+  <title>产品编辑</title>
+ </head>
+ <body id="base-product" datasource="dataSource" col="12" definitionkey="Process_product" type="formcore" encodeformid="base-product" form_name="base-product" success_url="" formsubmiturl="">
+  <div id="append_head"></div>
+  <form id="inputForm">
+   <div class="layui-card" cardname="基本信息" item_name="">
+    <div class="layui-card-header">
+     基本信息
+    </div>
+    <div class="layui-card-body">
+     <div class="layui-form-item">
+      <label>编码</label>
+      <div>
+       <object col="12" readonly item_name="PROD_CODE" placeholder="自动生成" id="itemId-PROD_CODE" type="input-span" class="layui-input"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>名称</label>
+      <div>
+       <object col="12" lay-verify="required" item_name="PROD_NAME" id="itemId-PROD_NAME" lay_verify="required" type="input-text" class="layui-input"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>审核状态</label>
+      <div>
+       <object col="12" data="[{
+	&quot;V&quot;: &quot;待提交&quot;,
+	&quot;K&quot;: &quot;0&quot;
+}, {
+	&quot;V&quot;: &quot;审核中&quot;,
+	&quot;K&quot;: &quot;1&quot;
+}, {
+	&quot;V&quot;: &quot;驳回&quot;,
+	&quot;K&quot;: &quot;2&quot;
+}, {
+	&quot;V&quot;: &quot;审核通过&quot;,
+	&quot;K&quot;: &quot;3&quot;
+}]" datatype="JSON" item_name="CHECK_STATUS" id="itemId-CHECK_STATUS" type="select-span"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>分类</label>
+      <div>
+       <object ez_value="ID" col="12" data="categorygroup" datatype="datagroup" ez_treelabel="NAME" item_name="CATEGORY_ID" id="itemId-CATEGORY_ID" type="cascadersql" radio="true"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>品牌</label>
+      <div>
+       <object col="12" data="brandgroup" datatype="datagroup" item_name="BRAND_ID" id="itemId-BRAND_ID" type="select-search"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>注册证</label>
+      <div>
+       <object col="12" data="select REGISTRATION_ID K,REGISTRATION_NO V from T_BASE_REGISTRATION WHERE DELETE_FLAG=0 AND COMPANY_ID=${COMPANY_ID}" datatype="KVSQL" item_name="REGISTRATION_ID" id="itemId-REGISTRATION_ID" type="select-search" lay_verify="required"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>图片</label>
+      <div>
+       <object col="12" item_name="PROD_PIC_IDS" id="itemId-PROD_PIC_IDS" type="uploadimage" class="layui-input"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>存储条件</label>
+      <div>
+       <object col="12" lay-verify="required" item_desc="-  常温0-30℃、 阴凉0-20℃、 冷藏2-10℃ <br>
+-  湿度1%-100% <br>
+-  其他如： 通风、干燥、避光、防潮、避热、密封、密闭、严封、 遮光 <br>
+-  请用半角逗号分隔填写" item_name="STORAGE_CONDITION" id="itemId-STORAGE_CONDITION" type="textarea" lay_verify="required" class="layui-input"> </object>
+      </div>
+     </div>
+    </div>
+    <div class="layui-card-button">
+    </div>
+   </div>
+   <div class="layui-card" cardname="产品属性" item_name="">
+    <div class="layui-card-header">
+     产品属性
+    </div>
+    <div class="layui-card-body">
+     <div class="layui-form-item">
+      <label>型号</label>
+      <div>
+       <object col="6" lay-verify="required" item_name="PROD_MODEL" id="itemId-PROD_MODEL" lay_verify="required" type="input-text" class="layui-input"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>规格</label>
+      <div>
+       <object col="6" lay-verify="required" item_name="PROD_SPEC" id="itemId-PROD_SPEC" lay_verify="required" type="input-text" class="layui-input"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>单位</label>
+      <div>
+       <object col="6" data="unitgroup" datatype="datagroup" item_name="BASE_UNIT_ID" id="itemId-BASE_UNIT_ID" lay_verify="required" type="select-search" class="layui-input"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>库存数量</label>
+      <div>
+       <object col="6" item_name="STOCK_NUM" id="itemId-STOCK_NUM" type="input-span"> </object>
+      </div>
+     </div>
+    </div>
+    <div class="layui-card-button">
+    </div>
+   </div>
+   <div class="layui-card" cardname="其他信息" item_name="">
+    <div class="layui-card-header">
+     其他信息
+    </div>
+    <div class="layui-card-body">
+     <div class="layui-form-item">
+      <label>出入库方式</label>
+      <div>
+       <object col="8" data="[{&quot;V&quot;:&quot;批次&quot;,&quot;K&quot;:&quot;0&quot;},{&quot;V&quot;:&quot;序列号&quot;,&quot;K&quot;:&quot;1&quot;}]" item_desc="- 批次：出入库时多个产品可同时设置批次号 <br>
+- 序列号： 出入库时每个产品都需要输入序列号" datatype="JSON" item_name="PROD_STOCK_TYPE" id="itemId-PROD_STOCK_TYPE" lay_verify="required" type="input-radio" class="layui-input"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>是否上架</label>
+      <div>
+       <object col="8" data="status" item_name="STATUS" id="itemId-STATUS" type="input-radio" class="layui-input"> </object>
+      </div>
+     </div>
+     <div class="layui-form-item">
+      <label>系统备注</label>
+      <div>
+       <object col="12" item_name="SYS_COMMENTS" id="itemId-SYS_COMMENTS" type="textarea" class="layui-input"> </object>
+      </div>
+     </div>
+    </div>
+    <div class="layui-card-button">
+    </div>
+   </div>
+   <div class="layui-card" cardname="审核记录" item_name="" frameurl="/mycamunda/check/history/Process_product?id=${ID}" frameheight="326">
+    <div class="layui-card-header">
+     审核记录
+    </div>
+    <div class="layui-card-body">
+    </div>
+    <div class="layui-card-button">
+    </div>
+   </div>
+  </form>
+  <form id="configForm">
+   <pre item_name="init_express" type="">
+<![CDATA[
+StringBuilder sql=new StringBuilder();
+sql.append("select PROD_CODE,COMPANY_ID,REGISTRATION_ID,CATEGORY_ID,PROD_NAME,PROD_MODEL,PROD_SPEC,BRAND_ID,BASE_UNIT_ID,BASE_PRICE,STATUS,PROD_KEYWORDS,PROD_DESC,
+PROD_PIC_IDS,STOCK_NUM,PROD_ATTRS_VALUE,MIN_ORDER,BUY_PRICE,STORAGE_CONDITION,
+PROD_COMMENT,SYS_COMMENTS,PROD_STOCK_TYPE,CHECK_STATUS from T_BASE_PRODUCT where  PROD_ID=${ID}  ");
+return select(sql).get(0);
+]]>
+
+   </pre>
+   <pre item_name="submit_express" type="">
+<![CDATA[
+import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.express.jdbc.InsertParam;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.web.EzResult;
+companyId=$$("COMPANY_ID");
+ID=$("ID");
+sessionUserId=$$("EZ_SESSION_USER_ID_KEY");
+if(!isNotBlank("ID")){
+    param=new InsertParam();
+    param.table("T_BASE_PRODUCT");
+     param.add("#{PROD_CODE}");
+     param.add("#{CATEGORY_ID,jdbcType=NUMBER}");
+    param.add("#{PROD_NAME}");
+    param.add("#{PROD_MODEL}");
+     param.add("#{PROD_SPEC}");
+    param.add("#{BRAND_ID,jdbcType=NUMBER}");
+    param.add("#{BASE_UNIT_ID,jdbcType=NUMBER}");
+    param.add("#{BASE_PRICE}");
+    param.add("#{STATUS}");
+    param.add("#{PROD_KEYWORDS}");
+    param.add("#{PROD_DESC}");
+    param.add("#{PROD_PIC_IDS}");
+    param.add("#{STOCK_NUM,value=0}");
+    param.add("#{PROD_ATTRS_VALUE}");
+    param.add("#{MIN_ORDER}");
+    param.add("#{BUY_PRICE}");
+    param.add("#{PROD_COMMENT}");
+    param.add("#{SYS_COMMENTS}");
+    param.add("#{REGISTRATION_ID}");
+    param.add("#{STORAGE_CONDITION}");
+    param.add("#{PROD_STOCK_TYPE,value=0}");
+    param.add("#{ADD_TIME,value=NOW()}");
+    param.add("#{ADD_ID,value='"+sessionUserId+"'}");
+     param.add("#{DELETE_FLAG,value=0}");
+     param.add("#{CHECK_STATUS,value=0}");
+        param.add("#{COMPANY_ID,value="+companyId+"}");
+
+  param.add("#{UPDATE_TIME,value=NOW()}");
+    param.add("#{UPDATE_ID,value='"+sessionUserId+"'}");
+
+
+id=insertSimple(param);
+code="P"+StringUtils.leftPad(id,8,"0");
+update("update T_BASE_PRODUCT set PROD_CODE='"+code+"'   where PROD_ID="+id);
+return id;
+}else{
+    param=new UpdateParam();
+    param.table("T_BASE_PRODUCT");
+     param.add("#{PROD_CODE}");
+
+    param.add("#{CATEGORY_ID}");
+    param.add("#{PROD_NAME}");
+     param.add("#{PROD_MODEL}");
+     param.add("#{PROD_SPEC}");
+    param.add("#{BRAND_ID,jdbcType=NUMBER}");
+    param.add("#{BASE_UNIT_ID,jdbcType=NUMBER}");
+    param.add("#{BASE_PRICE}");
+    param.add("#{STATUS}");
+    param.add("#{PROD_KEYWORDS}");
+    param.add("#{PROD_DESC}");
+    param.add("#{PROD_PIC_IDS}");
+    param.add("#{STOCK_NUM}");
+    param.add("#{PROD_ATTRS_VALUE}");
+    param.add("#{MIN_ORDER}");
+    param.add("#{BUY_PRICE}");
+    param.add("#{PROD_COMMENT}");
+      param.add("#{STORAGE_CONDITION}");
+    param.add("#{SYS_COMMENTS}");
+
+     param.add("#{REGISTRATION_ID}");
+         param.add("#{PROD_STOCK_TYPE,value=0}");
+
+      param.add("#{UPDATE_TIME,value=NOW()}");
+    param.add("#{UPDATE_ID,value='"+sessionUserId+"'}");
+
+
+
+  StringBuilder updateSql=new StringBuilder();
+  updateSql.append(" where PROD_ID=#{ID} ");
+ param.where(updateSql.toString());
+ updateSimple(param);
+ return ID;
+}
+]]>
+
+   </pre>
+   <pre item_name="delete_express" type="">
+<![CDATA[
+update("UPDATE T_BASE_PRODUCT set delete_flag=1 where PROD_ID=${ID}");
+]]>
+
+   </pre>
+   <pre item_name="status_express" type="">
+<![CDATA[
+reload
+]]>
+
+   </pre>
+   <pre item_name="displayorder_express" type=""></pre>
+  </form>
+  <div id="append_foot">
+   <script src="/webjars/topezadmin/layui/js/camunda.js?vi=${vi}" type="text/javascript"></script>
+   <script>
+          function selectuuid(data){
+            console.log(data)
+          }
+             $(function(){
+                 var dekey=$("body").attr("definitionKey");
+                if(dekey ){
+                    appendCheckButton(dekey,$("[name=CHECK_STATUS]").val(),function(){
+                        console.log(1);
+                    });
+                }
+            })
+
+
+
+          </script>
+  </div>
+ </body>
+</html>
