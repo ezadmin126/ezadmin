@@ -1,0 +1,58 @@
+<html>
+ <head>
+  <title>User List</title>
+ </head>
+ <body id="userlist" datasource="default" rowbtnwidth="175px" dialect="mysql" empty_show="-" tablestyle="layui" adminstyle="layui" export="true" pagesync="1" cellminwidth="110px">
+  <div id="append_head"></div>
+  <ul id="tab">
+    <li>
+        <a class="tablink" select="true" item_name="UserList" url="/topezadmin/list/userlist">User List</a>
+    </li>
+  </ul>
+  <form id="search">
+   <div>
+    <label>User ID</label>
+    <div>
+     <object item_name="USER_ID" type="input-text"></object>
+    </div>
+   </div>
+   <div>
+    <label>User Name</label>
+    <div>
+     <object item_name="USER_NAME" type="select-search" datatype="JSON" data='[{"V":"男","K":"1"},{"V":"女","K":"0"}]'></object>
+    </div>
+   </div>
+  </form>
+  <div id="tableButton">
+   <div>
+    <object item_name="ADD_USER" type="button-table">Add User</object>
+   </div>
+  </div>
+  <table>
+   <tbody>
+    <tr id="column">
+     <th id="rowbutton" width="200" fixed="right">
+      <button opentype="FORM" url="/topezadmin/userEdit/loadEdit-${USER_ID}" item_name="update" type="button-group" class="layui-border-blue" windowname="Edit User">Edit User</button>
+      <button opentype="FORM" url="/topezadmin/userEdit/delete-${USER_ID}" item_name="delete" type="button-single" class="layui-border-orange" windowname="Delete User">Delete User</button>
+     </th>
+     <th item_name="USER_ID" head="th-numbers" body="td-numbers" width="60" minwidth="60" fixed="left">User ID</th>
+     <th item_name="USER_NAME" body="td-text" fixed="left">User Name</th>
+    </tr>
+   </tbody>
+  </table>
+  <pre id="express" orderby="ORDER BY USER_ID ASC" groupby="">
+<![CDATA[
+StringBuilder sql=new StringBuilder();
+sql.append("SELECT user_id, user_name FROM t_user WHERE 1=1");
+return search(sql);
+]]>
+  </pre>
+  <pre id="count">
+  </pre>
+  <pre item_name="displayorder_express" type="">
+<![CDATA[
+]]>
+  </pre>
+  <div id="append_foot"></div>
+ </body>
+</html> 
