@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BaseController {
-    public Logger logger = LoggerFactory.getLogger(ExportController.class);
+    public Logger logger = LoggerFactory.getLogger(BaseController.class);
 
 
 
