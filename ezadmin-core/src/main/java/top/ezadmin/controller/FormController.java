@@ -258,12 +258,12 @@ public class FormController extends BaseController {
                 return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
             }else{
                 logger.warn("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID,ID,BE);
-                return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(BE));
+                return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
             }
         }
         catch (Exception e) {
             logger.error("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID,ID,e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(e));
+            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
         }
     }
     @EzMapping("doDelete.html")
@@ -344,7 +344,7 @@ public class FormController extends BaseController {
         }
         catch (Exception e) {
             logger.error("保存表单失败{}"  ,ENCRYPT_FORM_ID,e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常"+ExceptionUtils.getFullStackTrace(e));
+            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常" );
         }
     }
     @EzMapping("doStatus.html")

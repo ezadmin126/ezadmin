@@ -19,7 +19,8 @@
                      class="viewer-image"
                     th:ITEM_ID="${item_name+''+item_name}"
                     th:orgsrc="${#strings.isEmpty(url)?downloadUrl+dataInDb:orgsrc}"
-                    th:src="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"
+                    th:data-original="${#strings.isEmpty(url)?downloadUrl+dataInDb:orgsrc}"
+
             /></div>
         </td>
     </tr>

@@ -23,7 +23,7 @@ public abstract  class SqlGenerate {
      * @param page 分页对象
      * @param list 列表配置
      * @param request 请求参数
-     * @return
+     * @return sql
      */
     public static  SqlGenerate getSqlGenerate(Page page,Map<String, Object> list,Map<String, Object> request,boolean prepare){
         String dbType=page.getDialect();
@@ -232,7 +232,7 @@ public abstract  class SqlGenerate {
      * @param field
      * @param jdbcType
      * @param value
-     * @return
+     * @return sql
      */
     public abstract String eq(String union, String alias,String field,String jdbcType,String value,boolean prepare);
 
@@ -242,7 +242,7 @@ public abstract  class SqlGenerate {
      * @param field
      * @param jdbcType
      * @param value
-     * @return
+     * @return sql
      */
     public abstract String eqAll(String union, String alias,String field,String jdbcType,String value);
 
@@ -253,7 +253,7 @@ public abstract  class SqlGenerate {
      * @param jdbcType
      * @param valueS
      * @param valueE
-     * @return
+     * @return sql
      */
     public abstract String between(String union, String alias,String field,String jdbcType,String valueS,String valueE);
 
@@ -262,7 +262,7 @@ public abstract  class SqlGenerate {
      * @param field
      * @param jdbcType
      * @param value
-     * @return
+     * @return sql
      */
     public abstract String like(String union, String alias,String field,String jdbcType,String value  );
 
@@ -272,7 +272,7 @@ public abstract  class SqlGenerate {
      * @param field
      * @param jdbcType
      * @param value
-     * @return
+     * @return sql
      */
     public abstract String in(String union, String alias,String field,String jdbcType,String value );
     public abstract String find_in_set(String union, String alias,String field,String jdbcType,String value );

@@ -1400,3 +1400,66 @@ function mypost(url,param,success){
          console.log(xhr.responseText+JSON.stringify(error)+status);
     });
 }
+
+function lazyImage(){
+
+    // 选择所有需要懒加载的图片
+    const images = document.querySelectorAll('img[data-original]');
+
+    // 现代浏览器使用 Intersection Observer
+    if ('IntersectionObserver' in window) {
+        const observerOptions = {
+            rootMargin: '200px', // 提前200px加载
+            threshold: 0.01
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    const src = img.getAttribute('data-original');
+                    if (src) {
+                        img.src = src;
+                       // img.removeAttribute('data-original');
+                        observer.unobserve(img); // 停止观察已加载的图片
+                    }
+                }
+            });
+        }, observerOptions);
+
+        images.forEach(img => observer.observe(img));
+
+    } else {
+        // 旧浏览器回退方案：使用滚动和视口检测
+        const isInViewport = (element) => {
+            const rect = element.getBoundingClientRect();
+            return (
+                rect.top < window.innerHeight && rect.bottom > 0 &&
+                rect.left < window.innerWidth && rect.right > 0
+            );
+        };
+
+        const lazyLoad = () => {
+            images.forEach(img => {
+                if (img.hasAttribute('data-original') && isInViewport(img)) {
+                    img.src = img.getAttribute('data-original');
+                    img.removeAttribute('data-original');
+                }
+            });
+        };
+
+        // 防抖优化滚动和调整大小事件
+        const debounce = (func, wait = 100) => {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        };
+
+        window.addEventListener('scroll', debounce(lazyLoad));
+        window.addEventListener('resize', debounce(lazyLoad));
+        lazyLoad(); // 初始化加载可视图片
+    }
+}
+

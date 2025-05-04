@@ -1,5 +1,6 @@
 package top.ezadmin.plugins.sqlgenerate;
 
+import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.common.utils.EzDateUtils;
 import top.ezadmin.common.utils.SqlUtils;
 import top.ezadmin.common.utils.StringUtils;
@@ -87,6 +88,32 @@ public class OracleGenerate extends MySqlGenerate{
         sql.append("  ) abc where abc.rowno <= "+ getPage().getEndRecord());
         sql.append(" ) def where def.rowno > "+ getPage().getStartRecord());
         return sql.toString();
+    }
+
+    public String eq(String union, String alias, String field, String jdbcType, String value,boolean prepare) {
+        if (StringUtils.isBlank(value)) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        String fieldName = SqlUtils.alias(alias, field);
+        sb.append(union)
+                .append(fieldName)
+                .append(" = ") ;
+        if(prepare){
+            sb.append(PREFIX);//#{A,jdbcType=xx}
+            sb.append(field);
+            if(JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)){
+                sb.append(",jdbcType=NUMBER");
+            }
+            sb.append(SUFIX);
+        }else{
+            if(JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)){
+                sb.append(value);
+            }else{
+                sb.append("'").append(value).append("'");
+            }
+        }
+        return sb.toString();
     }
 
 }

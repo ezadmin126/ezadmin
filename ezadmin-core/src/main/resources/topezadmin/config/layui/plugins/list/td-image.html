@@ -19,8 +19,8 @@
             <div style="align-items: center;">
                 <img style="max-width:100px;max-height:100px;" class="viewer-image" onerror="this.src='/webjars/topezadmin/error.svg'"
                      th:ITEM_ID="${item_name+''+item_name}"
-                     th:data-original="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"
-                     th:src="${#strings.isEmpty(url)?downloadUrl+dataInDb:url}"
+                     th:orgsrc="${#strings.isEmpty(url)?downloadUrl+dataInDb:orgsrc}"
+                     th:data-original="${#strings.isEmpty(url)?downloadUrl+dataInDb:orgsrc}"
                 /></div>
         </td>
     </tr>

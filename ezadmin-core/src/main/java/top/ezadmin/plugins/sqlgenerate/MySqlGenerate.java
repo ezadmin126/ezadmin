@@ -80,7 +80,7 @@ public class MySqlGenerate extends SqlGenerate{
      * @param field
      * @param jdbcType
      * @param value
-     * @return
+     * @return sql
      */
     @Override
     public String eq(String union, String alias, String field, String jdbcType, String value,boolean prepare) {
@@ -88,8 +88,9 @@ public class MySqlGenerate extends SqlGenerate{
             return "";
         }
         StringBuilder sb = new StringBuilder();
+        String fieldName = SqlUtils.alias(alias, field);
         sb.append(union)
-                .append(field)
+                .append(fieldName)
                 .append(" = ") ;
         if(prepare){
             sb.append(PREFIX);//#{A,jdbcType=xx}
@@ -114,7 +115,7 @@ public class MySqlGenerate extends SqlGenerate{
      * @param field
      * @param jdbcType
      * @param value
-     * @return
+     * @return sql
      */
     @Override
     public String eqAll(String union, String alias, String field, String jdbcType, String value) {
@@ -158,7 +159,7 @@ public class MySqlGenerate extends SqlGenerate{
      * @param jdbcType
      * @param valueStart
      * @param valueEnd
-     * @return
+     * @return sql
      */
     @Override
     public String between(String union, String alias, String field, String jdbcType, String valueStart, String valueEnd) {
@@ -211,7 +212,7 @@ public class MySqlGenerate extends SqlGenerate{
      * @param field
      * @param jdbcType
      * @param value
-     * @return
+     * @return sql
      */
     @Override
     public String like(String union, String alias, String field, String jdbcType, String value) {
@@ -234,7 +235,7 @@ public class MySqlGenerate extends SqlGenerate{
      * @param field
      * @param jdbcType
      * @param value
-     * @return
+     * @return sql
      */
     @Override
     public String in(String union, String alias, String field, String jdbcType, String value) {

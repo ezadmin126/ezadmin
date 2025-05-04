@@ -271,3 +271,17 @@ display： 是否展示，表达式为1，代表展示
 3.button-break 文本链接按钮
 4.button-singleselectradio 行按钮-弹框单选按钮
 
+
+
+##生成文件规则，如果用户指定了ID，则使用用户的ID，如果没有指定ID，结合他的描述生成一个唯一ID
+文件生成后，在class类路径或者src/main/resources下：
+ 创建 topezadmin/config/layui/list下新建 列表配置
+ 创建 topezadmin/config/layui/form 下新建 表单配置
+
+
+
+
+
+
+
+

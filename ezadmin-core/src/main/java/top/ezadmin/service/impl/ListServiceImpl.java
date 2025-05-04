@@ -603,7 +603,7 @@ public class ListServiceImpl implements ListService {
             //表头
             fillcol(coreMap,colList,requestParamMap);
             page(pagination, list, requestParamMap);
-            //无需加载数据，比如tree,
+            //无需加载数据，比如tree,或者默认不需要加载数据
             if (StringUtils.equals("0", Utils.trimNull(requestParamMap.get("loadDataFlag")))) {
                 return;
             }
@@ -627,16 +627,16 @@ public class ListServiceImpl implements ListService {
                     String itemName = Utils.getStringByObject(th, JsoupUtil.ITEM_NAME);
                     String bodyPlugin = Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE);
                     String jdbcType = Utils.getStringByObject(th, JsoupUtil.JDBCTYPE);
-                    String url = Utils.getStringByObject(th, JsoupUtil.URL);
-                    String ORGSRC = Utils.getStringByObject(th, JsoupUtil.ORGSRC);
+                    //相互默认
+                    String ORGSRC = Utils.trimEmptyDefault(Utils.getStringByObject(th, JsoupUtil.ORGSRC),Utils.getStringByObject(th, JsoupUtil.URL));
+                    String url =Utils.trimEmptyDefault( Utils.getStringByObject(th, JsoupUtil.URL),Utils.getStringByObject(th, JsoupUtil.ORGSRC))  ;
                     String windowname = Utils.getStringByObject(th, JsoupUtil.WINDOW_NAME);
                     String dataInDb = ObjectUtils.toString(dataRow.get(itemName));
-
                     String columnEmptyShow = Utils.getStringByObject(th, JsoupUtil.EMPTY_SHOW);
 
                     dataInDb = calulateData(dataInDb, globalEmptyShow, columnEmptyShow, jdbcType);
 
-                    Map<String, String> plugin =  loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.BODY_PLUGIN_CODE));
+                    Map<String, String> plugin =  loadPlugin(Utils.trimEmptyDefault(coreMap.get(JsoupUtil.ADMINSTYLE),"layui"),"list",getString(th, JsoupUtil.BODY_PLUGIN_CODE));
                     if(StringUtils.isBlank(bodyPlugin)){
                         tds.add("<td class='  ezadmin-td ezadmin-td-'" + itemName + ">" + dataInDb + "</td>");
                         continue;
@@ -688,6 +688,10 @@ public class ListServiceImpl implements ListService {
                                     boolean containsStudent = items.getItems().stream()
                                             .anyMatch(student -> dataInDbf.equals(student.get("K")));
                                     if(containsStudent){
+                                        context.setVariable("items", items.getItems());
+                                    }
+                                    //列表 td-inputselect 始终展示items
+                                    if(bodyPlugin.equals("td-inputselect")){
                                         context.setVariable("items", items.getItems());
                                     }
                                 }

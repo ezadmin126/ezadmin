@@ -545,6 +545,9 @@ function renderTable() {
         if($("#mytable").attr("class")!=null&&$("#mytable").attr("class")!=''){
             tableConfig.className=$("#mytable").attr("class");
         }
+        if($("#mytable").attr("emptytext")!=null&&$("#mytable").attr("emptytext")!=''){
+            tableConfig.text.none=$("#mytable").attr("emptytext");
+        }
         if($("#cellMinWidth").val()!=null&&$("#cellMinWidth").val()!=''){
             tableConfig.cellMinWidth=$("#cellMinWidth").val();
         }else{
@@ -733,18 +736,19 @@ function doSystem() {
     if($("#removewatermark").val()!=1){
         watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() +' '+ getNow()});
     }
-    $('.viewer-image').each(function () {
-        $(this).on('load', function () {
-            // 在图片加载完成后执行的操作
-            // if (table) {
-            //     table.draw();
-            // }
-            // if (laytable) {
-            //     laytable.resize();
-            // }
-        });
-    })
+    //懒加载
+    // $('.viewer-image').each(function () {
+    //
+    //     $(this).on('load', function () {
+    //
+    //     });
+    // })
+    lazyImage();
+   // document.addEventListener('DOMContentLoaded', function() {
+
+   // });
 }
+
 
 
 

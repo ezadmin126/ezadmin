@@ -1,11 +1,15 @@
 package top.ezadmin.common.utils;
 
 
+import org.springframework.util.Base64Utils;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+
+import static top.ezadmin.common.utils.Utils.logger;
 
 
 public class DESUtils {
@@ -59,6 +63,25 @@ public class DESUtils {
      */
     public static String decryptDES(String data) throws Exception {
         return decrypt(data);
+    }
+    public static  String encodeSafeUrl(String key )  throws Exception{
+        // 加密
+        String ciphertext = encrypt(key );
+        String x= new String(Base64Utils.encodeUrlSafe(ciphertext.getBytes(StandardCharsets.UTF_8)),StandardCharsets.UTF_8);
+
+        return x;
+
+    }
+    public static  String decodeSafeFromUrl(String key )  throws Exception{
+        try {
+            String base64 = new String(Base64Utils.decodeUrlSafe(key.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+            // 加密
+            String ciphertext = decrypt(base64 );
+            return ciphertext;
+        }catch (Exception e){
+            logger.error(" aes {}  ",key);
+            return null;
+        }
     }
 
     public static String md5(InputStream inputStream){
