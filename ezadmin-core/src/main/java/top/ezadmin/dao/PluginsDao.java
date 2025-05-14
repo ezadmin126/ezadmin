@@ -122,9 +122,11 @@ public class PluginsDao {
                 item.setDoc(doc);
                 configMap.put(doc.body().id(),item);
                 configMap.put(doc.body().attr("alias"),item);
+                configMap.put(doc.body().attr("alias2"),item);
                 String[] path=item.getPath().substring(item.getPath().indexOf("topezadmin/config")+"topezadmin/config".length()).split("/");
                 configMap.put(path[1]+"_"+path[3]+"_"+doc.body().id(),item);
                 configMap.put(path[1]+"_"+path[3]+"_"+doc.body().attr("alias"),item);
+                configMap.put(path[1]+"_"+path[3]+"_"+doc.body().attr("alias2"),item);
                 //jar包中的流确保只用一次，初始化之后就关闭流
                 stream.close();
             }else{
@@ -133,9 +135,12 @@ public class PluginsDao {
                 item.setDoc(doc);
                 configMap.put(doc.body().id(),item);
                 configMap.put(doc.body().attr("alias"),item);
+                configMap.put(doc.body().attr("alias2"),item);
                 String[] path=item.getPath().substring(item.getPath().indexOf("topezadmin/config")+"topezadmin/config".length()).split("/");
                 configMap.put(path[1]+"_"+path[3]+"_"+doc.body().id(),item);
                 configMap.put(path[1]+"_"+path[3]+"_"+doc.body().attr("alias"),item);
+                configMap.put(path[1]+"_"+path[3]+"_"+doc.body().attr("alias2"),item);
+
                 stream.close();
             }
         }catch (Exception e){

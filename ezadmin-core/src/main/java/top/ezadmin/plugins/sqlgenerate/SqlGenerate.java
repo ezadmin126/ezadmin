@@ -158,7 +158,7 @@ public abstract  class SqlGenerate {
                     String cname=Utils.getStringByObject(c,"item_name") ;
                     String calias=Utils.getStringByObject(c,"alias") ;
                     if(StringUtils.equalsIgnoreCase(cname,itemSearchKey)){
-                        result.append(transOneFileSql(union,alias,name,itemSearchConcatValue,"","",
+                        result.append(transOneFileSql(union,calias,cname,itemSearchConcatValue,"","",
                                 jdbctype,OperatorEnum.LIKE.getOperC(),true));
                         break;
                     }

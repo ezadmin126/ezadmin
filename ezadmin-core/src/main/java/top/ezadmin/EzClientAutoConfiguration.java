@@ -121,7 +121,11 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
         top.ezadmin.web.filters.EzClientServletFilter customURLFilter = new top.ezadmin.web.filters.EzClientServletFilter();
         customURLFilter.setEzBootstrap(ezClientBootstrap());
         registrationBean.setFilter(customURLFilter);
-        registrationBean.addUrlPatterns("/topezadmin/*","/ezadmin/*","/ezcloud/*");
+        registrationBean.getUrlPatterns().add("/topezadmin/*");
+        if(!StringUtils.startsWith(ezClientProperties.getIndexUrl(),"/ezadmin")){
+            registrationBean.getUrlPatterns().add("/ezadmin/*");
+            registrationBean.getUrlPatterns().add("/ezcloud/*");
+        }
         registrationBean.setOrder(65);
         return registrationBean;
     }

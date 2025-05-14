@@ -1015,7 +1015,8 @@ public class ListServiceImpl implements ListService {
                             }
                             sb.append(k);
                             sb.append("='");
-                            sb.append(v);
+//                            sb.append(v);
+                            sb.append(v.replace("'", "&#39;"));
                             sb.append("'  ");
                         });
                         sb.append(">");
@@ -1036,7 +1037,7 @@ public class ListServiceImpl implements ListService {
                             }
                             sb.append(k);
                             sb.append("='");
-                            sb.append(v);
+                            sb.append(v.replace("'", "&#39;"));
                             sb.append("'  ");
                         });
                         sb.append("></div>");
@@ -1067,7 +1068,7 @@ public class ListServiceImpl implements ListService {
                             }
                             sb.append(k);
                             sb.append("='");
-                            sb.append(v);
+                            sb.append(v.replace("'", "&#39;"));
                             sb.append("'  ");
                         });
                         sb.append(" type='text'>");

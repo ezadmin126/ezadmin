@@ -138,8 +138,15 @@ public class JsoupUtil {
         return at;
     }
     public static void json2Attr(Element item,String json) {
-        Map<String,String> at=JSONUtils.parseMap(json);
-        attrAll(item,at);
+        if(item==null||StringUtils.isBlank(json)){
+            return;
+        }
+        try {
+            Map<String, String> at = JSONUtils.parseMap(json);
+            attrAll(item, at);
+        }catch (Exception e){
+            logger.warn("自定义配置异常,不是json格式：{}",json);
+        }
     }
 
 

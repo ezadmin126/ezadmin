@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 public class SQLContext {
 	private static Logger log = LoggerFactory.getLogger(SQLContext.class);
 
-
-
 	protected static void monitor(Monitor monitor) {
 		try {
 			monitor.setEnd(System.currentTimeMillis());
@@ -25,7 +23,7 @@ public class SQLContext {
 				Utils.addLog("ezsql\tinfo：： "+ monitor.sqlTime());
 			}
 			if (monitor.getParams().log()) {
-				log.info("{} {}",Utils.getRequestUrl(),monitor.toString());
+				log.info("{} {}",Utils.trimNull(Utils.getRequestUrl()),monitor.toString());
 			}
 			if (monitor.getParams().logOverTime() ) {
 				int overTime = Integer.parseInt(monitor.getParams().getLogType().split("-")[1]);

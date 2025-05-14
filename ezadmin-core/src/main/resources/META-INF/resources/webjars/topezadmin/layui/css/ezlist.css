@@ -390,9 +390,6 @@ th a {
 }
 
 
-xm-select > .xm-body .scroll-body{
-    max-width: 567px;
-}
 
 
 .td-pic-container{
@@ -505,6 +502,19 @@ xm-select > .xm-body .scroll-body{
 }
 
 
+
+xm-select > .xm-body .scroll-body{
+    max-width: 567px;
+}
+
+xm-select > .xm-body .xm-option {
+    max-width: 357px;
+}
+
+xm-select > .xm-body .xm-option-content {
+    overflow: scroll !important;
+
+}
 
 
 
