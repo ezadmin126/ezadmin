@@ -230,6 +230,10 @@ $(function(){
             $('.layui-container,.layui-fluid').removeClass('layui-container layui-fluid')
                 .addClass('layui-' + json.fullscreen);
         }
+    }else{
+        //默认宽屏
+        $('.layui-container').removeClass('layui-container')
+            .addClass('layui-fluid');
     }
 });
 </script>

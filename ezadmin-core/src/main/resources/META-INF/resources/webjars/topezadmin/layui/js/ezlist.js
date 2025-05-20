@@ -468,12 +468,16 @@ function renderTable() {
         if($(".ez-table-tool:visible").length>0){ //表头
             hh=hh+51;
         }
+        if($(".ez-table-tool-height:visible").length>0){ //表头
+            hh=hh+42;
+        }
         if($(".searchWrap:visible").length>0){ //搜索
             hh=hh+$(".searchWrap").height()+5;
         }
         if($(".appendhead").length>0){ //搜索
             hh=hh+$(".appendhead").height() ;
         }
+
 
         console.log("计算table的高度："+hh);
         var json = cacheConfig();
