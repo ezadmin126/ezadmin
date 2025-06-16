@@ -638,7 +638,7 @@ function renderXmselect(xm) {
                     type: 'block',
                     block: {
                         //最大显示数量, 0:不限制
-                        showCount: xmel.attr("showCount")||1,
+                        showCount: xmel.attr("showCount")||5,
                         //是否显示删除图标
                         showIcon: true,
                     }

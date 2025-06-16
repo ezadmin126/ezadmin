@@ -63,6 +63,7 @@ public class EzClientBootstrap {
     private String appendJs;
     private String searchUrl;
     private String indexUrl;
+    private String prefixUrl="/topezadmin";
     private String messageUrl;
     private String chatUrl;
     private String uploadPath="/data/ezadmin/upload/";
@@ -495,5 +496,13 @@ public class EzClientBootstrap {
 
     public void setLayout(String layout) {
         this.layout = layout;
+    }
+
+    public String getPrefixUrl() {
+        return prefixUrl;
+    }
+
+    public void setPrefixUrl(String prefixUrl) {
+        this.prefixUrl = prefixUrl;
     }
 }

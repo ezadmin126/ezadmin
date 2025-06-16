@@ -73,6 +73,7 @@ public class ListController extends BaseController {
         request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
         String adminStyle=Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
         String template=Utils.trimNullDefault(coreMap.get(JsoupUtil.TEMPLATE),"list");
+        request.setAttribute("prefixUrl",EzClientBootstrap.instance().getPrefixUrl());
         return adminStyle + "/"+template;
     }
 

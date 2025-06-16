@@ -167,7 +167,7 @@ $(document).ready(function() {
         $("#searchForm").submit();
     })
     $("#export").click(function () {
-        var url="/topezadmin/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?_BLANK_PARAM_COLUMN='+getCurrentCol()+"&"+getSearchParams();
+        var url=$("#prefixUrl").val()+"/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?_BLANK_PARAM_COLUMN='+getCurrentCol()+"&"+getSearchParams();
        openBlank(url)
     })
     function getCurrentCol(){
@@ -214,7 +214,7 @@ $(document).ready(function() {
             shade: 0.1,
             shadeClose: true,
             anim: 0,
-            content: $("#contextName").val() + "/topezadmin/list/selectCols-" + $("#ENCRYPT_LIST_ID").val()+"?IS_DEBUG="+$("#IS_DEBUG").val(),
+            content: $("#contextName").val() + $("#prefixUrl").val()+"/list/selectCols-" + $("#ENCRYPT_LIST_ID").val()+"?IS_DEBUG="+$("#IS_DEBUG").val(),
             moveOut: true,
             btnAlign: 'c',
             closeBtn: 1,
@@ -247,7 +247,7 @@ $(document).ready(function() {
 
     $("#customBtn").click(function(e){
         e.preventDefault();
-        openModel("/topezadmin/list/customSearch-"+$("#ENCRYPT_LIST_ID").val(),"高级查询")
+        openModel($("#prefixUrl").val()+"/list/customSearch-"+$("#ENCRYPT_LIST_ID").val(),"高级查询")
     })
     try{
         const customBtnKey="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
@@ -671,7 +671,7 @@ function doPage(){
         var laypage = layui.laypage
             , layer = layui.layer;
         if ($(".dataTables_empty").length == 0 && $("#PAGE_LAYUI").length > 0) {
-            $.get($("#contextName").val() + "/topezadmin/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
+            $.get($("#contextName").val() + $("#prefixUrl").val()+"/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
 
                 if(!data.success||data.code==500){
                     return;
@@ -757,7 +757,7 @@ function doSystem() {
 
 
 function refreshOrder(item_id,order,oldOrder) {
-    $.get("/topezadmin/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + item_id + "&displayOrder="+order+"&oldOrder="+oldOrder, function (data) {
+    $.get($("#prefixUrl").val()+"/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + item_id + "&displayOrder="+order+"&oldOrder="+oldOrder, function (data) {
         if (data.success) {
             location.reload();
         } else {

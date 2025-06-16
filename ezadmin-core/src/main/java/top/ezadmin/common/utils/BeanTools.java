@@ -59,11 +59,7 @@ public abstract class BeanTools {
             String lowFieldName=field.getName().toLowerCase(Locale.ROOT);
             if(map2.containsKey(lowFieldName)){
                 field.setAccessible(true);
-//                if(field.getGenericType() .getTypeName().equalsIgnoreCase("java.lang.Integer")){
-//                    field.set(obj,NumberUtils.toInt(map2.get(lowFieldName)));
-//                }else{
-                    field.set(obj,map2.get(lowFieldName));
-               // }
+                field.set(obj,map2.get(lowFieldName));
             }
         }
         return obj;

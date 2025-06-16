@@ -72,7 +72,8 @@ public class ControllerFilter extends Filter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
        String originatingUrl =   request.getRequestURI() ;
         originatingUrl= originatingUrl.replace("/ezadmin/","/topezadmin/")
-                .replace("/ezcloud/","/topezadmin/");
+                .replace("/ezcloud/","/topezadmin/")
+                .replace("/myadmin/","/topezadmin/");
         originatingUrl = originatingUrl.replaceAll("\\\\", "\\");
         int js=originatingUrl.indexOf(";");
         if(js>=0) {

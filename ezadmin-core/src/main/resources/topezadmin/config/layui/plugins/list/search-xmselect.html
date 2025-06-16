@@ -48,6 +48,7 @@
         <div  class="layui-input-block">
             <div th:itemPlaceholder="${model.placeholder}" th:itemsJson="${itemsJson}" class="ez-xmselect"
                  th:id="${'itemName-' + model.item_name}" th:name="${model.item_name}"
+                 th:showCount="${model.showCount}"
                  th:value="${#strings.isEmpty(model.itemParamValue)?'[]':'['+model.itemParamValue+']'}"></div>
         </div>
     </div>

@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>列表管理</title>
+    </head>
+    <body id="listall" datasource="dataSource">
+        <header id="append_head">
+            <![CDATA[
+            <style ></style>
+            ]]>
+        </header>
+        <ul id="tab">
+            <li select="true" item_name="Tab" url="/topezadmin/list/list-listall">列表</li>
+        </ul>
+        <form id="search">
+            <object item_name="EZ_CODE" alias="tec" type="input-text"  ></object>
+            <object item_name="ADD_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange"  ></object>
+        </form>
+        <div id="tableButton">
+            <button opentype="_BLANK" url="/topezadmin/listEdit/loadEdit-" item_name="addd" type="button-table">新增</button>
+            <button opentype="_BLANK" windowname="SQL生成列表" url="/topezadmin/listEdit/importSql-" item_name="addd2" type="button-table">SQL生成列表</button>
+        </div>
+        <table>
+            <tbody>
+            <tr id="column">
+                <th id="rowbutton" width="200" fixed="right">
+                    <button opentype="FORM" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" class="layui-border-blue" windowname="可视化编辑">可视化编辑</button>
+                </th>
+                <th item_name="ID" head="th-numbers" body="td-numbers" width="60" minwidth="60" fixed="left">ID</th>
+                <th item_name="EZ_CODE" url="/topezadmin/listEdit/list-${EZ_CODE}" body="td-link" opentype="_BLANK" fixed="left">列表编码</th>
+                <th item_name="EZ_NAME">列表名称</th>
+            </tr>
+            </tbody>
+        </table>
+        <select id="express" order="" group="">
+            <![CDATA[
+            SELECT
+            tec.ID,
+            tec.EZ_CODE,
+            tec.EZ_NAME,
+            tec.APP_NAME,
+            tec.ADD_TIME,
+            tec.UPDATE_TIME,
+            tec.DATASOURCE,
+            TEP.UPDATE_TIME AS PUB_TIME
+            FROM
+            T_EZADMIN_EDIT tec
+            LEFT JOIN T_EZADMIN_PUBLISH TEP
+            ON tec.EZ_TYPE = TEP.EZ_TYPE
+            AND tec.EZ_CODE = TEP.EZ_CODE
+            WHERE
+            tec.IS_DEL = 0
+            AND IFNULL(tec.APP_NAME, '') != 'EZ'
+            AND tec.EZ_TYPE = 1
+            ORDER BY
+            tec.UPDATE_TIME DESC
+            ]]>
+        </select>
+        <count  id="count"></count>
+        <footer id="footer">
+            <![CDATA[
+            <script></script>
+            ]]>
+        </footer>
+    </body>
+</html>

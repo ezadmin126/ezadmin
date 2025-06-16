@@ -40,6 +40,7 @@ public class IndexController extends BaseController {
         request.setAttribute("appendJs",bootstrap.getAppendJs());
         request.setAttribute("searchUrl",bootstrap.getSearchUrl());
         request.setAttribute("indexUrl",bootstrap.getIndexUrl());
+        request.setAttribute("prefixUrl",bootstrap.getPrefixUrl());
         request.setAttribute("signoutUrl",bootstrap.getSignoutUrl());
         request.setAttribute("messageUrl",bootstrap.getMessageUrl());
         request.setAttribute("chatUrl",bootstrap.getChatUrl());
