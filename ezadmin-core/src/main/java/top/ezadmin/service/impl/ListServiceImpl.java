@@ -14,6 +14,8 @@ import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.dao.ListDao;
 import top.ezadmin.dao.PluginsDao;
+import top.ezadmin.dao.model.CustomSearchDTO;
+import top.ezadmin.dao.model.CustomSearchOrder;
 import top.ezadmin.dao.model.ItemInitData;
 import top.ezadmin.plugins.cache.Callback;
 import top.ezadmin.plugins.express.executor.DefaultExpressExecutor;
@@ -1448,8 +1450,39 @@ public class ListServiceImpl implements ListService {
         }else{
             pagination.setOrderByClause(" order by "+pagination.getOrderByClause());
         }
+        try {
+            String customJson = Utils.trimNull(requestParamMap.get("customSearch"));
+            CustomSearchDTO customSearchDTO = JSONUtils.parseObject(customJson, CustomSearchDTO.class);
+            if(customSearchDTO!=null){
+                String customOrder = customOrder(customSearchDTO.getO());
+                if (StringUtils.isNotBlank(customOrder)) {
+                    pagination.setOrderByClause(customOrder);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return pagination;
     }
+    private  String customOrder(List<CustomSearchOrder> o) {
+        if(o==null||o.isEmpty()){
+            return "";
+        }
+        StringBuilder order=new StringBuilder();
+        for (int i = 0; i < o.size(); i++) {
+            if(StringUtils.isNotBlank(o.get(i).getF())&&StringUtils.isNotBlank(o.get(i).getO())){
+                order.append(", ")
+                        .append(StringUtils.safeDb(o.get(i).getF()))
+                        .append(" ")
+                        .append(StringUtils.safeDb(o.get(i).getO()));
+            }
+        }
+        if(order.length()>1){
+            return " order by "+order.substring(1);
+        }
+        return "";
+    }
+
     String getString(Map<String,Object> map,String key){
         return Utils.trimNullDefault(map.get(key));
     }

@@ -20,7 +20,14 @@ public class TraceLogFilter  extends Filter {
         super.initFilterBean();
     }
 
-
+    /**
+     * 打印sql
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws IOException
+     * @throws ServletException
+     */
     public void doFilter(HttpServletRequest request , HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         boolean include=include(request.getRequestURI());
         long start=System.currentTimeMillis();

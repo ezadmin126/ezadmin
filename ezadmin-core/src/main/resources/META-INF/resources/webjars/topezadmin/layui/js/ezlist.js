@@ -97,6 +97,7 @@ $(document).ready(function() {
 
     $("#submitBtn").click(function () {
         $("#currentPage").val(1);
+        $("#currentPage").val(1);
         $("#searchForm").submit();
     })
     layui.use(['table', 'form', 'layCascader'], function () {
@@ -167,7 +168,7 @@ $(document).ready(function() {
         $("#searchForm").submit();
     })
     $("#export").click(function () {
-        var url="/topezadmin/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?_BLANK_PARAM_COLUMN='+getCurrentCol()+"&"+getSearchParams();
+        var url=$("#prefixUrl").val()+"/list/export-"+$("#ENCRYPT_LIST_ID").val()+'?_BLANK_PARAM_COLUMN='+getCurrentCol()+"&"+getSearchParams();
        openBlank(url)
     })
     function getCurrentCol(){
@@ -214,7 +215,7 @@ $(document).ready(function() {
             shade: 0.1,
             shadeClose: true,
             anim: 0,
-            content: $("#contextName").val() + "/topezadmin/list/selectCols-" + $("#ENCRYPT_LIST_ID").val()+"?IS_DEBUG="+$("#IS_DEBUG").val(),
+            content: $("#contextName").val() + $("#prefixUrl").val()+"/list/selectCols-" + $("#ENCRYPT_LIST_ID").val()+"?IS_DEBUG="+$("#IS_DEBUG").val(),
             moveOut: true,
             btnAlign: 'c',
             closeBtn: 1,
@@ -247,165 +248,27 @@ $(document).ready(function() {
 
     $("#customBtn").click(function(e){
         e.preventDefault();
-        openModel("/topezadmin/list/customSearch-"+$("#ENCRYPT_LIST_ID").val(),"高级查询")
+        openModel($("#prefixUrl").val()+"/list/customSearch-"+$("#ENCRYPT_LIST_ID").val(),"高级查询")
     })
-    try{
-        const customBtnKey="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
-        const customBtnJSON=localStorage.getItem(customBtnKey);
-        if(customBtnJSON){
-            $("customSearch").val(customBtnJSON);
-            $("#customBtn").append("<span class=\"layui-badge-dot\"></span>");
-        }
-    }catch (e) {
-        
-    }
+    // try{  期望的是高级搜索不要影响到普通搜索
+    //     const customBtnKey="EZ_CUSTOM_SEARCH_"+document.getElementById("ENCRYPT_LIST_ID").value;
+    //     const customBtnJSON=localStorage.getItem(customBtnKey);
+    //     if(customBtnJSON){
+    //         $("#customSearch").val(customBtnJSON);
+    //         $("#customBtn").append("<span class=\"layui-badge-dot\"></span>");
+    //     }
+    // }catch (e) {
+    //
+    // }
 
+    $(".tracesql").click(function(){
+        $("#trace").val(1);
+        $("#searchForm").submit();
+    })
+    if($("#trace").val()==1){
+        window.scrollTo(0, $(window).height());
+    }
 });
-
-
-//计算搜索栏是否隐藏
-function calculateSearchItemDisplay() {
-
-    let search = json.search == undefined ? [] : json.search;
-
-    //搜索项的排序
-    if (search.length > 0) {
-        //显示隐藏
-        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
-            var _this=$(this);
-            //配置包含
-            if($.inArray(_this.attr("item_name"), search)>-1){
-                // $(".searchcontent").prepend(_this.detach());
-            }else{
-                _this.remove();
-            }
-        })
-        //排序
-        for (var i = search.length; i > 0; i--) {
-            var item = $(".searchcontent").find('.selector[item_name="' + search[i - 1] + '"]').detach();
-            if (!item.hasClass("list-item-hidden")) {
-                $(".searchcontent").prepend(item);
-            } else {
-                $(".searchcontent").append(item);
-            }
-        }
-    }
-    $("#upBtn").hide();
-    $("#downBtn").hide();
-    //如果是全部展示
-    if ($("#_SEARCH_ITEM_DISPLAY").val() == 1) {
-        $(".searchcontent > .selector").not(".list-item-hidden").show();
-        $("#upBtn").show(); //展示 展开 按钮就行了
-        $("#downBtn").hide();
-    }else{
-        var hasHidden=false;
-        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
-            if($("#searchForm").offset()){
-                if($(this).offset().top>$("#searchForm").offset().top+76){  //大于第二行就不展示
-                    $("#upBtn").hide();
-                    $("#downBtn").show();
-                    $(this).hide();
-                    hasHidden=true;
-                }else if($(this).offset().top==0){
-                    $("#downBtn").hide(); $("#upBtn").show();
-                    $(this).hide();
-                }else{
-                    $(this).show();
-                }
-            }
-        })
-        if(hasHidden){
-            $("#upBtn").hide(); //展示 展开 按钮就行了
-            $("#downBtn").show();
-        }
-    }
-}
-
-function cacheConfig() {
-    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
-    var jsonconfig = localStorage.getItem(key);
-    if (jsonconfig != undefined) {
-        var json = JSON.parse(jsonconfig);
-        return json;
-    }
-    return {};
-}
-function updateCacheConfig(value) {
-    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
-    localStorage.setItem(key,value);
-}
-
-function selfConfig() {
-    //根据本地缓存，去除部分字段
-    try {
-         var json = cacheConfig();
-
-        var search = json.search == undefined ? [] : json.search;
-        var column = json.column == undefined ? [] : json.column;
-        var colwidth = json.colwidth == undefined ? {} : json.colwidth;
-
-        for (let key in colwidth) {
-            if (colwidth.hasOwnProperty(key)) {
-                var value=colwidth[key];
-                var thoption=JSON.parse($('#mytable th[item_name="'+key+'"]').attr("lay-options"));
-                thoption.width=value;
-                $('#mytable th[item_name="'+key+'"]').attr("lay-options",JSON.stringify(thoption));
-            }
-        }
-
-        //第二行开始初始隐藏
-        calculateSearchItemDisplay();
-
-
-        if (column.length > 0) {
-
-            for (var i = 0; i < column.length; i++) {
-                $("#mytable thead tr").each(function () {
-                    $(this).find('th[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
-                })
-                $("#mytable tbody tr").each(function () {
-                    $(this).find('td[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
-                })
-            }
-
-            $("#mytable thead tr").each(function () {
-                $(this).find('.rowButtons').detach().appendTo($(this));
-            })
-
-            $("#mytable tbody tr").each(function () {
-                $(this).find('.rowButtons').detach().appendTo($(this));
-            })
-
-            $("#mytable th").each(function () {
-                if (column.includes($(this).attr("item_name"))
-                    ||$(this).attr("specialcol")==1
-                    ||$(this).attr("ez-fixed")!==undefined
-                   || $(this).hasClass("rowButtons")
-                ) {
-                    $(this).show();
-                } else {
-                    $(this).remove();
-                }
-            })
-            $("#mytable td").each(function () {
-                if ($("#mytable thead tr").find('th[ITEM_NAME="' + $(this).attr("item_name") + '"]').size()>0
-                    || $(this).hasClass("rowButtons")
-                    || $(this).attr("ez-fixed")!==undefined
-                    || $(this).hasClass("fixedCol")
-
-                ) {
-                    $(this).show();
-                } else {
-                    $(this).remove();
-                }
-            })
-        }
-
-    } catch (E) {
-        console.log(E);
-    }
-}
-
 function renderTable() {
     console.log("开始渲染table");
     if (table) {
@@ -494,40 +357,40 @@ function renderTable() {
                 //+JSON.stringify(res)
                 console.log(" 初始化table完成 data："+ "\tpage:"+ curr+"\tcount:"+count+"\torigin:"+(origin||''))
                 try {
-                     if(origin=='reloadData'){
-                    //     inited=true;
+                    if(origin=='reloadData'){
+                        //     inited=true;
                         if (typeof  afterAllDataLoad  == "function") {
                             afterAllDataLoad();
                         }
                         //
                         console.log("数据获取完成之后，开始初始化dropdown");
                         doDropdown();
-                         console.log("数据获取完成之后，开始初始化排序");
+                        console.log("数据获取完成之后，开始初始化排序");
 
-                         doOrder();
-                         console.log("数据获取完成之后，开始初始化dragula，页头拖拽排序");
-                         // 初始化 dragula
-                         dragula([$("[lay-table-id=mytable] thead tr").eq(0)[0]], {
-                             moves: function (el, container, handle) {
-                                 // 确保只有 span 元素可以触发拖拽
-                                 return   handle.tagName === 'SPAN'&&handle.className=='';
-                             }
-                         }).on('drop', function (el, target, source, sibling) {
-                             // 拖拽结束后的回调函数
+                        doOrder();
+                        console.log("数据获取完成之后，开始初始化dragula，页头拖拽排序");
+                        // 初始化 dragula
+                        dragula([$("[lay-table-id=mytable] thead tr").eq(0)[0]], {
+                            moves: function (el, container, handle) {
+                                // 确保只有 span 元素可以触发拖拽
+                                return   handle.tagName === 'SPAN'&&handle.className=='';
+                            }
+                        }).on('drop', function (el, target, source, sibling) {
+                            // 拖拽结束后的回调函数
                             // console.log('Element dropped');
                             var ths= $("[lay-table-id=mytable] thead").eq(0).find("th");
-                             var json=cacheConfig();
-                             var column =  [];
-                             ths.each(function(i,item){
-                                 console.log(i+"--"+$(item).attr("data-field"));
-                                 column.push($(item).attr("data-field"))
-                             })
-                             json.column=column;
-                             updateCacheConfig(JSON.stringify(json));
-                             location.reload();
-                         });
+                            var json=cacheConfig();
+                            var column =  [];
+                            ths.each(function(i,item){
+                                console.log(i+"--"+$(item).attr("data-field"));
+                                column.push($(item).attr("data-field"))
+                            })
+                            json.column=column;
+                            updateCacheConfig(JSON.stringify(json));
+                            location.reload();
+                        });
 
-                     }
+                    }
                     console.log("数据获取完成之后，开始初始化 水印，图片高度，按钮颜色等 ");
                     doSystem();
                 } catch (e) {
@@ -616,6 +479,151 @@ function renderTable() {
     });
 }
 
+//计算搜索栏是否隐藏
+function calculateSearchItemDisplay() {
+
+    let search = json.search == undefined ? [] : json.search;
+
+    //搜索项的排序
+    if (search.length > 0) {
+        //显示隐藏
+        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
+            var _this=$(this);
+            //配置包含
+            if($.inArray(_this.attr("item_name"), search)>-1){
+                // $(".searchcontent").prepend(_this.detach());
+            }else{
+                _this.remove();
+            }
+        })
+        //排序
+        for (var i = search.length; i > 0; i--) {
+            var item = $(".searchcontent").find('.selector[item_name="' + search[i - 1] + '"]').detach();
+            if (!item.hasClass("list-item-hidden")) {
+                $(".searchcontent").prepend(item);
+            } else {
+                $(".searchcontent").append(item);
+            }
+        }
+    }
+    $("#upBtn").hide();
+    $("#downBtn").hide();
+    //如果是全部展示
+    if ($("#_SEARCH_ITEM_DISPLAY").val() == 1) {
+        $(".searchcontent > .selector").not(".list-item-hidden").show();
+        $("#upBtn").show(); //展示 展开 按钮就行了
+        $("#downBtn").hide();
+    }else{
+        var hasHidden=false;
+        $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
+            if($("#searchForm").offset()){
+                if($(this).offset().top>$("#searchForm").offset().top+76){  //大于第二行就不展示
+                    $("#upBtn").hide();
+                    $("#downBtn").show();
+                    $(this).hide();
+                    hasHidden=true;
+                }else if($(this).offset().top==0){
+                    $("#downBtn").hide(); $("#upBtn").show();
+                    $(this).hide();
+                }else{
+                    $(this).show();
+                }
+            }
+        })
+        if(hasHidden){
+            $("#upBtn").hide(); //展示 展开 按钮就行了
+            $("#downBtn").show();
+        }
+    }
+}
+
+function cacheConfig() {
+    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+    var jsonconfig = localStorage.getItem(key);
+    if (jsonconfig != undefined) {
+        var json = JSON.parse(jsonconfig);
+        return json;
+    }
+    return {};
+}
+
+function updateCacheConfig(value) {
+    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+    localStorage.setItem(key,value);
+}
+
+function selfConfig() {
+    //根据本地缓存，去除部分字段
+    try {
+         var json = cacheConfig();
+
+        var search = json.search == undefined ? [] : json.search;
+        var column = json.column == undefined ? [] : json.column;
+        var colwidth = json.colwidth == undefined ? {} : json.colwidth;
+
+        for (let key in colwidth) {
+            if (colwidth.hasOwnProperty(key)) {
+                var value=colwidth[key];
+                var thoption=JSON.parse($('#mytable th[item_name="'+key+'"]').attr("lay-options"));
+                thoption.width=value;
+                $('#mytable th[item_name="'+key+'"]').attr("lay-options",JSON.stringify(thoption));
+            }
+        }
+
+        //第二行开始初始隐藏
+        calculateSearchItemDisplay();
+
+
+        if (column.length > 0) {
+
+            for (var i = 0; i < column.length; i++) {
+                $("#mytable thead tr").each(function () {
+                    $(this).find('th[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
+                })
+                $("#mytable tbody tr").each(function () {
+                    $(this).find('td[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
+                })
+            }
+
+            $("#mytable thead tr").each(function () {
+                $(this).find('.rowButtons').detach().appendTo($(this));
+            })
+
+            $("#mytable tbody tr").each(function () {
+                $(this).find('.rowButtons').detach().appendTo($(this));
+            })
+
+            $("#mytable th").each(function () {
+                if (column.includes($(this).attr("item_name"))
+                    ||$(this).attr("ez-fixed")!==undefined
+                   || $(this).hasClass("rowButtons")
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).remove();
+                }
+            })
+            $("#mytable td").each(function () {
+                if ($("#mytable thead tr").find('th[ITEM_NAME="' + $(this).attr("item_name") + '"]').size()>0
+                    || $(this).hasClass("rowButtons")
+                    || $(this).attr("ez-fixed")!==undefined
+                    || $(this).hasClass("fixedCol")
+
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).remove();
+                }
+            })
+        }
+
+    } catch (E) {
+        console.log(E);
+    }
+}
+
+
+
 function doDropdown(){
     var dropdown = layui.dropdown;
     if ($(".dropdown_button").length > 0) {
@@ -671,7 +679,7 @@ function doPage(){
         var laypage = layui.laypage
             , layer = layui.layer;
         if ($(".dataTables_empty").length == 0 && $("#PAGE_LAYUI").length > 0) {
-            $.get($("#contextName").val() + "/topezadmin/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
+            $.get($("#contextName").val() + $("#prefixUrl").val()+"/list/count-" + $("#ENCRYPT_LIST_ID").val() + "?" + getSearchParams(), function (data) {
 
                 if(!data.success||data.code==500){
                     return;
@@ -753,11 +761,8 @@ function doSystem() {
    // });
 }
 
-
-
-
 function refreshOrder(item_id,order,oldOrder) {
-    $.get("/topezadmin/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + item_id + "&displayOrder="+order+"&oldOrder="+oldOrder, function (data) {
+    $.get($("#prefixUrl").val()+"/list/doOrder-" + $("#ENCRYPT_LIST_ID").val() + "?orderId=" + item_id + "&displayOrder="+order+"&oldOrder="+oldOrder, function (data) {
         if (data.success) {
             location.reload();
         } else {
@@ -765,14 +770,3 @@ function refreshOrder(item_id,order,oldOrder) {
         }
     })
 }
-
-
-
-
-
-
-
-
-
-
-

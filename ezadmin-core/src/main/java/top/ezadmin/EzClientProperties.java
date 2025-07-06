@@ -21,6 +21,7 @@ public class EzClientProperties {
     private String appendJs ;
     private String searchUrl ;
     private String indexUrl;
+    private String prefixUrl="/topezadmin";
     private String signoutUrl="/signout";
     private String messageUrl;
     private String chatUrl;
@@ -296,5 +297,13 @@ public class EzClientProperties {
 
     public void setClearUrl(String clearUrl) {
         this.clearUrl = clearUrl;
+    }
+
+    public String getPrefixUrl() {
+        return prefixUrl;
+    }
+
+    public void setPrefixUrl(String prefixUrl) {
+        this.prefixUrl = prefixUrl;
     }
 }

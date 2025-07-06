@@ -58,7 +58,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
         ezBootstrap.setSignoutUrl(ezClientProperties.getSignoutUrl());
         ezBootstrap.setMessageUrl(ezClientProperties.getMessageUrl());
         ezBootstrap.setClearUrl(ezClientProperties.getClearUrl());
-
+        ezBootstrap.setPrefixUrl(ezClientProperties.getPrefixUrl());
         ezBootstrap.setChatUrl(ezClientProperties.getChatUrl());
         if(StringUtils.isNotBlank(ezClientProperties.getUploadPath())){
             ezBootstrap.setUploadPath(ezClientProperties.getUploadPath());
@@ -122,9 +122,14 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
         customURLFilter.setEzBootstrap(ezClientBootstrap());
         registrationBean.setFilter(customURLFilter);
         registrationBean.getUrlPatterns().add("/topezadmin/*");
-        if(!StringUtils.startsWith(ezClientProperties.getIndexUrl(),"/ezadmin")){
-            registrationBean.getUrlPatterns().add("/ezadmin/*");
-            registrationBean.getUrlPatterns().add("/ezcloud/*");
+        try {
+            if (!StringUtils.startsWith(ezClientProperties.getIndexUrl(), "/ezadmin") && StringUtils.isNotBlank(ezClientProperties.getIndexUrl())) {
+                registrationBean.getUrlPatterns().add("/ezadmin/*");
+                registrationBean.getUrlPatterns().add("/ezcloud/*");
+                registrationBean.getUrlPatterns().add(ezClientProperties.getIndexUrl().substring(0, ezClientProperties.getIndexUrl().indexOf("/", 1)) + "/*");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         registrationBean.setOrder(65);
         return registrationBean;

@@ -511,10 +511,11 @@ xm-select > .xm-body .xm-option {
     max-width: 357px;
 }
 
-xm-select > .xm-body .xm-option-content {
-    overflow: scroll !important;
 
-}
+/*xm-select > .xm-body .xm-option-content {*/
+/*    overflow: scroll !important;*/
+
+/*}*/
 
 
 

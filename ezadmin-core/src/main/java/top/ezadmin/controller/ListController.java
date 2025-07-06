@@ -1,28 +1,30 @@
 package top.ezadmin.controller;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import top.ezadmin.EzClientBootstrap;
 import top.ezadmin.common.NotExistException;
-import top.ezadmin.common.utils.*;
-import top.ezadmin.dao.ListDao;
-import top.ezadmin.dao.model.Info;
-import top.ezadmin.dao.model.InitVO;
-import top.ezadmin.plugins.express.executor.DefaultExpressExecutor;
-import top.ezadmin.service.ListService;
 import top.ezadmin.common.annotation.EzMapping;
 import top.ezadmin.common.constants.RequestParamConstants;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.model.Info;
+import top.ezadmin.dao.model.InitVO;
+import top.ezadmin.plugins.express.executor.DefaultExpressExecutor;
+import top.ezadmin.service.ListService;
 import top.ezadmin.web.EzResult;
-import top.ezadmin.EzClientBootstrap;
-
-
-import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
+/**
+ * 列表控制器
+ */
 @EzMapping("/topezadmin/list/")
 public class ListController extends BaseController {
 
@@ -30,7 +32,18 @@ public class ListController extends BaseController {
 
     @EzMapping("list.html")
     public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
+        if(StringUtils.isBlank(listUrlCode)){
+            throw new NotExistException();
+        }
+        //TODO 需要优化，如果列表是ajax请求，则返回ajaxList页面
 
+        return old(request,response);
+    }
+    
+
+
+    private String old(HttpServletRequest request, HttpServletResponse response)throws Exception{
         String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
         if(StringUtils.isBlank(listUrlCode)){
             throw new NotExistException();
@@ -73,12 +86,18 @@ public class ListController extends BaseController {
         request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
         String adminStyle=Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
         String template=Utils.trimNullDefault(coreMap.get(JsoupUtil.TEMPLATE),"list");
+        request.setAttribute("prefixUrl",EzClientBootstrap.instance().getPrefixUrl());
         return adminStyle + "/"+template;
     }
 
 
-
-
+    /**
+     * 异步加载列表总数
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @EzMapping("count.html")
     public EzResult count(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
@@ -107,7 +126,13 @@ public class ListController extends BaseController {
         }
     }
 
-
+    /**
+     * 树形列表
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @EzMapping("tree.html")
     public String tree(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
@@ -155,7 +180,13 @@ public class ListController extends BaseController {
         String adminStyle=Utils.trimNullDefault(core.get(JsoupUtil.ADMINSTYLE),EzClientBootstrap.instance().getAdminStyle());
         return adminStyle + "/listtree";
     }
-
+    /**
+     * 异步加载树形列表数据
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @EzMapping("treedata.html")
     public EzResult treedata(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
@@ -178,8 +209,13 @@ public class ListController extends BaseController {
         Map<String, Object> core = (Map<String, Object>) list.get("core");
         return EzResult.instance().data(core.get("dataList"));
     }
-
-    //
+    /**
+     * 打印sql
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @EzMapping("trace.html")
     public String trace(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
@@ -243,7 +279,13 @@ public class ListController extends BaseController {
         request.setAttribute("cacheFlag",false);
         return result;
     }
-
+    /**
+     * 列表api 接口数据
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @EzMapping("api.html")
     public EzResult api(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String listId = Utils.trimNull(request.getAttribute("LIST_ID"));
@@ -282,7 +324,13 @@ public class ListController extends BaseController {
         }
         return EzResult.instance().data(dataList).count(dataList.size());
     }
-
+    /**
+     * 选择列
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @EzMapping("selectCols.html")
     public String selectCols(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
@@ -301,7 +349,13 @@ public class ListController extends BaseController {
         request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
         return EzClientBootstrap.instance().getAdminStyle() + "/custom_cols_cache";
     }
-
+    /**
+     * 自定义搜索
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @EzMapping("customSearch.html")
     public String custom_search(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ENCRYPT_LIST_ID = Utils.trimNull(request.getAttribute("ENCRYPT_LIST_ID"));
@@ -341,9 +395,12 @@ public class ListController extends BaseController {
         return EzClientBootstrap.instance().getAdminStyle() + "/custom_search";
     }
 
-
-
-
+    /**
+     * 用于admin的默认导航
+     * @param request
+     * @param response
+     * @throws Exception
+     */
     @EzMapping("navs.html")
     public void navs(HttpServletRequest request, HttpServletResponse response) throws Exception {
         InitVO vo = new InitVO();
@@ -374,6 +431,13 @@ public class ListController extends BaseController {
                 .data(vo).printJSONUtils(response);
     }
 
+    /**
+     * 列表输入排序
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @EzMapping("doOrder.html")
     public EzResult doOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String formId =  Utils.trimNull(request.getAttribute("FORM_ID"));

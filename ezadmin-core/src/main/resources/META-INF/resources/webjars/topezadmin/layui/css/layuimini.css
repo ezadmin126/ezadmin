@@ -84,7 +84,8 @@
 
 .layui-layout-admin .layuimini-logo img {
     display: inline-block;
-    height: 50px;
+    max-height: 50px;
+    max-width: 200px;
     vertical-align: middle;
     margin-left: 0px;
 }

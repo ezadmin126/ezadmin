@@ -25,54 +25,43 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 控制器过滤器
+ * 通过url中的前缀来选择跳转到那个controller，第二个url参数对应controller中的方法
+ * list->ListController
+ * form->FormController
+ * listEdit->ListEditController
+ * formEdit->FormEditController
+ * detail->DetailController
+ * api->ApiController
+ * authc->AuthcController
+ * anon->AnonController
+ */
 public class ControllerFilter extends Filter {
-    Logger logger = LoggerFactory.getLogger(ControllerFilter.class);
-    public static String includeShow="/topezadmin/(list|form|listEdit|formEdit|detail|api)/([A-Za-z]+)-(.*)";
-    Map<String, Map<String, Object>> REQUEST_MAPPING = new HashMap<String, Map<String, Object>> ();
-    String pack = "top.ezadmin.controller";
-    public static String vesion=System.currentTimeMillis()+"";
-
-    Pattern pInclude = Pattern.compile(includeShow);
-
-    public ControllerFilter()  {
-        super.initFilterBean();
-        Set<String> controllersNew = ClassUtils.loadAllClassByPackage(pack );
-        for (String item:controllersNew) {
-            try {
-                if (item.endsWith("Controller")) {
-                    Object bean = BeanTools.applicationInstance(item);
-                    processEzMapping(bean);
-                }
-            } catch (Exception e) {
-                Utils.addLog(item, e);
-            }
-        }
-    }
-
-    private void processEzMapping(Object bean) {
-        EzMapping conAnno = bean.getClass().getAnnotation(EzMapping.class);
-        String controllerUrl = "";
-        if (conAnno != null) {
-            controllerUrl = conAnno.value();
-        }
-        Method[] method = bean.getClass().getDeclaredMethods();
-        for (int i1 = 0; i1 < method.length; i1++) {
-            EzMapping mAnno = method[i1].getAnnotation(EzMapping.class);
-            if (mAnno == null) {
-                continue;
-            }
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("controller", bean);
-            map.put("method", method[i1]);
-            REQUEST_MAPPING.put(controllerUrl + mAnno.value(), map);
-        }
-    }
-
+    
+    private static Logger logger = LoggerFactory.getLogger(ControllerFilter.class);
+    private static String includeShow="/topezadmin/(list|form|listEdit|formEdit|detail|api)/([A-Za-z]+)-(.*)";
+    private Map<String, Map<String, Object>> REQUEST_MAPPING = new HashMap<String, Map<String, Object>> ();
+    private String pack = "top.ezadmin.controller";
+    private static String vesion=System.currentTimeMillis()+"";
+    private Pattern pInclude = Pattern.compile(includeShow);
+    /**
+     * 通过url中的前缀来选择跳转到那个controller，第二个url参数对应controller中的方法
+     * list->ListController
+     * form->FormController
+     * listEdit->ListEditController
+     * formEdit->FormEditController
+     * detail->DetailController
+     * api->ApiController
+     * authc->AuthcController
+     * anon->AnonController
+     */
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
        String originatingUrl =   request.getRequestURI() ;
         originatingUrl= originatingUrl.replace("/ezadmin/","/topezadmin/")
-                .replace("/ezcloud/","/topezadmin/");
+                .replace("/ezcloud/","/topezadmin/")
+                .replace("/myadmin/","/topezadmin/");
         originatingUrl = originatingUrl.replaceAll("\\\\", "\\");
         int js=originatingUrl.indexOf(";");
         if(js>=0) {
@@ -177,7 +166,50 @@ public class ControllerFilter extends Filter {
         }
         getNext().doFilter(request, response,filterChain);
     }
+    public ControllerFilter()  {
+        super.initFilterBean();
+        Set<String> controllersNew = ClassUtils.loadAllClassByPackage(pack );
+        for (String item:controllersNew) {
+            try {
+                if (item.endsWith("Controller")) {
+                    Object bean = BeanTools.applicationInstance(item);
+                    processEzMapping(bean);
+                }
+            } catch (Exception e) {
+                Utils.addLog(item, e);
+            }
+        }
+    }
 
+    /**
+     * 初始化controller中的注解
+     * @param bean controller
+     */
+    private void processEzMapping(Object bean) {
+        EzMapping conAnno = bean.getClass().getAnnotation(EzMapping.class);
+        String controllerUrl = "";
+        if (conAnno != null) {
+            controllerUrl = conAnno.value();
+        }
+        Method[] method = bean.getClass().getDeclaredMethods();
+        for (int i1 = 0; i1 < method.length; i1++) {
+            EzMapping mAnno = method[i1].getAnnotation(EzMapping.class);
+            if (mAnno == null) {
+                continue;
+            }
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("controller", bean);
+            map.put("method", method[i1]);
+            REQUEST_MAPPING.put(controllerUrl + mAnno.value(), map);
+        }
+    }
+   
+    /**
+     * 渲染页面
+     * @param view 页面路径
+     * @param request 请求
+     * @param response 响应
+     */
     protected void view(String view, HttpServletRequest request, HttpServletResponse response) {
         WebContext context = new WebContext(request, response, request.getServletContext());
         try {

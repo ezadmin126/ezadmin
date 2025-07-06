@@ -58,6 +58,7 @@
                     <input type="hidden" id="currentPage" name="currentPage" th:value="${data.page.currentPage}">
                     <input type="hidden" id="perPageInt" name="perPageInt" th:value="${data.page.perPageInt}">
                     <input type="hidden" id="totalPage" name="totalPage" th:value="${data.page.totalPage}">
+                    <input type="hidden" id="trace" name="trace"  value="0">
                     <input type="hidden" id="totalRecord" name="totalRecord" th:value="${data.page.totalRecord}">
                     <div class="  searchcontent layui-row layui-col-space5">
                         <div th:style="${indexStat.index>8?'display:none':''}"  th:remove="tag"
@@ -66,7 +67,7 @@
                         </div>
                         <div class="form-group col-md-3 row orderBy" STYLE="display:none">
                             <input id="orderBy" th:name="${data.ezOrderName}" th:value="${data.ezOrderValue}">
-                            <input id="customSearch"  name="customSearch" th:value="${customSearch}">
+                            <input id="customSearch"  name="customSearch"  >
                         </div>
                         <input type="hidden" id="_SEARCH_ITEM_DISPLAY" name="_SEARCH_ITEM_DISPLAY"
                                th:value="${_SEARCH_ITEM_DISPLAY}">
@@ -91,7 +92,7 @@
                             <button th:if="${not cacheFlag}" opentype="FORM" type="button" th:url="${'/topezadmin/listEdit/sourceEdit-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
                                 源码编辑
                             </button>
-                            <button th:if="${not cacheFlag}" opentype="_BLANK" type="button" th:url="${'/topezadmin/listEdit/trace-'+ENCRYPT_LIST_ID}"  class="ezopenbutton layui-btn    layui-btn-primary layui-btn-sm ">
+                            <button th:if="${not cacheFlag}" opentype="script" type="button"    class=" tracesql layui-btn    layui-btn-primary layui-btn-sm ">
                                 查看SQL
                             </button>
 
@@ -199,6 +200,7 @@
 <input type="hidden" id='contextName' name='contextName' th:value="${contextName}">
 <input type="hidden" id='uploadUrl' name='uploadUrl' th:value="${uploadUrl}">
 <input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
+<input type="hidden" id='prefixUrl' name='prefixUrl' th:value="${prefixUrl}">
 <input type="hidden" id='holiday' name='holiday' th:value="${holiday}">
 <input type="hidden" id='IS_DEBUG' name='IS_DEBUG' th:value="${IS_DEBUG}">
 <input type="hidden" id='linestyle' name='linestyle'  th:value="${data.core.linestyle}">

@@ -15,31 +15,9 @@ public class Page {
      */
     private long totalRecord = 0;
 
-//    public int getStartForPage() {
-//        return startForPage;
-//    }
-//
-//    public void setStartForPage(int startForPage) {
-//        this.startForPage = startForPage;
-//    }
-//
-//    public int getEndForPage() {
-//        return endForPage;
-//    }
-//
-//    public void setEndForPage(int endForPage) {
-//        this.endForPage = endForPage;
-//    }
-
     private int startForPage = 1, endForPage = 1;
 
-
     private long totalPage;
-
-
-
-
-
 
     public int getCurrentPage() {
         return currentPage < 0 ? 0 : currentPage;

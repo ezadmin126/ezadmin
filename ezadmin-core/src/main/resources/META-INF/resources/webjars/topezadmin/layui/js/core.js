@@ -315,8 +315,7 @@ var rangeShortCut=[{
                 new Date(year, month + 1, 0, 23, 59, 59)
             ];
         }
-    }
-    ,
+    },
     {
         text: "去年",
         value: function(){
@@ -638,7 +637,7 @@ function renderXmselect(xm) {
                     type: 'block',
                     block: {
                         //最大显示数量, 0:不限制
-                        showCount: xmel.attr("showCount")||1,
+                        showCount: xmel.attr("showCount")||5,
                         //是否显示删除图标
                         showIcon: true,
                     }
@@ -1058,7 +1057,6 @@ function openBlank(appendUrl) {
     a.click();
     a.remove();
 }
-
 /**
  *
  * @param  parent.refreshCard.prod
@@ -1086,11 +1084,7 @@ function refreshCard(card_item_name){
         }
     }
 }
-
-
-
 //parentid,id,name
-
 function flatToTree(arr, parentId) {
     try {
         let tree = [];
@@ -1110,7 +1104,6 @@ function flatToTree(arr, parentId) {
     }
 
 }
-
 
 function watermark(settings) {
     if ($(".mask_div").length > 0) {
@@ -1217,8 +1210,6 @@ function getNow() {
     var time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + '';
     return time;
 }
-
-
 
 function ezopen(openType, title, appendUrl, area) {
     appendUrl = ($("#contextName").val()||'') + appendUrl;
@@ -1335,7 +1326,6 @@ function ezopen(openType, title, appendUrl, area) {
     }
 }
 
-
 //判断是否是手机
 function IsMobile() {
     return $("#_EZ_MOBILE_FLAG").val() === '1'
@@ -1353,8 +1343,6 @@ function isNumeric(value) {
     return !isNaN(value) && !isNaN(parseFloat(value));
 }
 
-
-
 function isPositiveInteger(value) {
     // 判断是否全是数字
     if (/^\d+$/.test(value)) {
@@ -1364,7 +1352,6 @@ function isPositiveInteger(value) {
         return false;
     }
 }
-
 
 function copy(text) {
     // navigator.clipboard.writeText(text)
