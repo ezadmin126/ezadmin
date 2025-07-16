@@ -40,6 +40,9 @@
 <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
 <input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${data.core.emptyname}">
+<input type="hidden" ID="customSearch_count" name="customSearch_count" th:value="${customSearch}">
+
+
 
 <div   th:class="${'layui-'+layout}" >
     <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap" >

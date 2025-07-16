@@ -289,9 +289,9 @@ public class FormEditController extends BaseController {
         String layout = ""+core.getOrDefault("layout",EzClientBootstrap.instance().getLayout());
 
         request.setAttribute("layout",layout);
-
-
-        return core.get(JsoupUtil.ADMINSTYLE)+"/form";
+        String template=Utils.trimNullDefault(core.get(JsoupUtil.TEMPLATE),"form");
+        request.setAttribute("prefixUrl",EzClientBootstrap.instance().getPrefixUrl());
+        return core.get(JsoupUtil.ADMINSTYLE) + "/"+template;
     }
 
     @EzMapping("doSubmit.html")
