@@ -162,7 +162,7 @@
 
 <script>
     function cacheConfig() {
-        var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+        var key = 'EZ_CONFIG_NEW' + $("#ENCRYPT_LIST_ID").val();
         var jsonconfig = localStorage.getItem(key);
         if (jsonconfig != undefined) {
             var json = JSON.parse(jsonconfig);
@@ -195,39 +195,32 @@
         }
     })
     var count = 0;
-    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+    var key = 'EZ_CONFIG_NEW' + $("#ENCRYPT_LIST_ID").val();
     layui.use(["form", 'element'], function () {
         var form = layui.form;
 
         var jsonconfig = localStorage.getItem(key);
         if (jsonconfig != null) {
             var json = JSON.parse(jsonconfig);
+
             var search = json.search||[];
             var column = json.column||[];
-
-
-
-
             if(search.length>0){
                 for (var i = 0; i < search.length; i++) {
-                    $(".searchDrage").find('[item_name="' + search[i] + '"]').detach().appendTo(".searchDrage");
+                    var item=$(".searchDrage").find('[item_name="' + search[i].k + '"]');
+                    item.detach().appendTo(".searchDrage");
+                    $(".searchDrage").find('[item_name="' + search[i].k + '"]').find("input").prop("checked", search[i].c);
+
                 }
-                $("input[name=searchId]").each(function () {
-                    if (!search.includes($(this).val())) {
-                        $(this).prop("checked", false)
-                    }
-                })
             }
 
             if(column.length>0){
                 for (var i = 0; i < column.length; i++) {
-                    $(".columnDrage").find('[item_name="' + column[i] + '"]').detach().appendTo(".columnDrage");
+                    var item=$(".columnDrage").find('[item_name="' + column[i].k + '"]');
+                    item.detach().appendTo(".columnDrage");
+                    $(".columnDrage").find('[item_name="' + column[i].k + '"]').find("input").prop("checked", column[i].c);
+
                 }
-                $("input[name=columnId]").each(function () {
-                    if (!column.includes($(this).val())) {
-                        $(this).prop("checked", false)
-                    }
-                })
             }
 
 
@@ -324,46 +317,33 @@
     }
 
     $("#save").click(function () {
-         ;
         count++;
         var json = cacheConfig();
         var search = [];
         var column = [];
 
-
-
-        $("input[name=searchId]:checked").each(function () {
-            search.push($(this).val());
+        $("input[name=searchId]").each(function () {
+            var so={};
+            so['k'] = $(this).val();
+            so['c'] = $(this).prop("checked");
+            search.push(so);
         })
-        $("input[name=columnId]:checked").each(function () {
+        $("input[name=columnId]").each(function () {
+            var so={};
+            so['k'] = $(this).val();
             if($(this).val()=='firstCol'){ //首列始终放在前面
+                so['c'] = true;
                 column.unshift($(this).val());
             }else{
-                column.push($(this).val());
+                so['c'] = $(this).prop("checked");
+                column.push(so);
             }
         })
-
-
         json['search'] = search;
         json['column'] = column;
         json['fullscreen'] = $("input[name=fullscreen]:checked").val();
         json['tableSize'] = $("input[name=tableSize]:checked").val();
-        // json['fixNumber'] = $("#fixedNumber").val();
-        // json['fixNumberRight'] = $("#fixNumberRight").val();
-        // if($("#IS_DEBUG").val()==1){
-        //     var url=$(".layui-form").attr("action");
-        //     json.search = JSON.stringify(search) ;
-        //     json.column  = JSON.stringify(column) ;
-        //     json.fixNumber  = $("#fixedNumber").val();
-        //     json.fixNumberRight  = $("#fixNumberRight").val();
-        //     $.post(url,  json , function(data) {
-        //         console.log(data)
-        //     }, 'json').fail(function() {
-        //         console.log('请求失败');
-        //     });
-        // }else{
-            localStorage.setItem(key, JSON.stringify(json));
-        //}
+        localStorage.setItem(key, JSON.stringify(json));
         return false;
     })
 

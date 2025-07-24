@@ -477,22 +477,26 @@ function renderTable() {
 function calculateSearchItemDisplay() {
 
     let search = json.search == undefined ? [] : json.search;
-
     //搜索项的排序
     if (search.length > 0) {
         //显示隐藏
         $(".searchcontent > .selector").not(".list-item-hidden").each(function () {
             var _this=$(this);
             //配置包含
-            if($.inArray(_this.attr("item_name"), search)>-1){
-                // $(".searchcontent").prepend(_this.detach());
-            }else{
+            var contains=false;
+            for (var i = search.length; i > 0; i--) {
+                if(_this.attr("item_name")==search[i - 1].k && search[i - 1].c==true){
+                    contains=true;
+                    break;
+                }
+            }
+            if(!contains){
                 _this.remove();
             }
         })
         //排序
         for (var i = search.length; i > 0; i--) {
-            var item = $(".searchcontent").find('.selector[item_name="' + search[i - 1] + '"]').detach();
+            var item = $(".searchcontent").find('.selector[item_name="' + search[i - 1].k + '"]').detach();
             if (!item.hasClass("list-item-hidden")) {
                 $(".searchcontent").prepend(item);
             } else {
@@ -532,7 +536,7 @@ function calculateSearchItemDisplay() {
 }
 
 function cacheConfig() {
-    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+    var key = 'EZ_CONFIG_NEW' + $("#ENCRYPT_LIST_ID").val();
     var jsonconfig = localStorage.getItem(key);
     if (jsonconfig != undefined) {
         var json = JSON.parse(jsonconfig);
@@ -542,7 +546,7 @@ function cacheConfig() {
 }
 
 function updateCacheConfig(value) {
-    var key = 'EZ_CONFIG_' + $("#ENCRYPT_LIST_ID").val();
+    var key = 'EZ_CONFIG_NEW' + $("#ENCRYPT_LIST_ID").val();
     localStorage.setItem(key,value);
 }
 
@@ -550,8 +554,6 @@ function selfConfig() {
     //根据本地缓存，去除部分字段
     try {
          var json = cacheConfig();
-
-        var search = json.search == undefined ? [] : json.search;
         var column = json.column == undefined ? [] : json.column;
         var colwidth = json.colwidth == undefined ? {} : json.colwidth;
 
@@ -569,16 +571,16 @@ function selfConfig() {
 
 
         if (column.length > 0) {
-
+            //先排序
             for (var i = 0; i < column.length; i++) {
                 $("#mytable thead tr").each(function () {
-                    $(this).find('th[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
+                    $(this).find('th[ITEM_NAME="' + column[i].k + '"]').detach().appendTo($(this));
                 })
                 $("#mytable tbody tr").each(function () {
-                    $(this).find('td[ITEM_NAME="' + column[i] + '"]').detach().appendTo($(this));
+                    $(this).find('td[ITEM_NAME="' + column[i].k + '"]').detach().appendTo($(this));
                 })
             }
-
+            //将按钮放到最后一列
             $("#mytable thead tr").each(function () {
                 $(this).find('.rowButtons').detach().appendTo($(this));
             })
@@ -586,35 +588,51 @@ function selfConfig() {
             $("#mytable tbody tr").each(function () {
                 $(this).find('.rowButtons').detach().appendTo($(this));
             })
-
+            //头的显影
             $("#mytable th").each(function () {
-                if (column.includes($(this).attr("item_name"))
-                    ||$(this).attr("ez-fixed")!==undefined
-                    || $(this).attr("specialcol") ==1
-                   || $(this).hasClass("rowButtons")
+                if ( $(this).attr("ez-fixed")!==undefined
+                    || $(this).attr("specialcol") ==1 //比如综合字段
+                    || $(this).hasClass("rowButtons")
                 ) {
                     $(this).show();
-                } else {
-                    var json=JSON.parse($(this).attr("lay-options"));
-                    json.hide=true;
-                    $(this).attr("lay-options",JSON.stringify(json));
+                    return;
+                }
+                for (var i = 0; i < column.length; i++) {
+                    if($(this).attr("item_name") != column[i].k){
+                        continue;
+                    }
+                    if ( column[i].c==true) {
+                        $(this).show();
+                    }else{
+                        var json=JSON.parse($(this).attr("lay-options"));
+                        json.hide=true;
+                        $(this).attr("lay-options",JSON.stringify(json));
+                    }
                 }
             })
+            //body的显影 todo
             $("#mytable td").each(function () {
-                if ($("#mytable thead tr").find('th[ITEM_NAME="' + $(this).attr("item_name") + '"]').size()>0
-                    || $(this).hasClass("rowButtons")
-                    || $(this).attr("ez-fixed")!==undefined
-                    || $(this).attr("specialcol") ==1
-                    || $(this).hasClass("fixedCol")
-
-                ) {
-                    $(this).show();
-                } else {
-                    var json=JSON.parse($(this).attr("lay-options"));
-                    json.hide=true;
-
-                    $(this).attr("lay-options",JSON.stringify(json));
-                }
+                // if ( $(this).hasClass("rowButtons")
+                //     || $(this).attr("ez-fixed")!==undefined
+                //     || $(this).attr("specialcol") ==1
+                //     || $(this).hasClass("fixedCol")
+                // ) {
+                //     $(this).show();return;
+                // }
+                //
+                //
+                //
+                //
+                //
+                // if ($("#mytable thead tr").find('th[ITEM_NAME="' + $(this).attr("item_name") + '"]').size()>0
+                //
+                // ) {
+                //     $(this).show();
+                // } else {
+                //     var json=JSON.parse($(this).attr("lay-options"));
+                //     json.hide=true;
+                //     $(this).attr("lay-options",JSON.stringify(json));
+                // }
             })
         }
 
