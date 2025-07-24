@@ -1039,7 +1039,31 @@ function openTab(title, link) {
     }catch (e) {
         console.log(e);
     }
+
+    // 检查父窗口和当前窗口的域名是否一致
+    let parentHost = '';
+    let currentHost = window.location.host;
+    let useAbsolute = false;
+    try {
+        parentHost = window.parent.location.host;
+        if (parentHost !== currentHost) {
+            useAbsolute = true;
+        }
+    } catch (e) {
+        // 跨域无法访问，必须用绝对地址
+        useAbsolute = true;
+    }
+
+    // 如果需要，转成绝对地址
+    if (useAbsolute && !/^https?:\/\//i.test(link)) {
+        // 相对路径转绝对路径
+        let a = document.createElement('a');
+        a.href = link;
+        link = a.href;
+    }
+
     var uniqueName = link.replace('./', '').replace(/["&'./:=%?[\]]/gi, '-').replace(/(--)/gi, '');
+
     window.parent.postMessage({
         from: 'ez',
         name: title,

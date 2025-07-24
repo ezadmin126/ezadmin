@@ -313,6 +313,8 @@ function renderTable() {
                 $(".list-head-checkbox").prop('checked', false);
 
             }
+            var _check_id_value=$(this).attr("_check_id_value");
+            $("[_check_id_value='"+_check_id_value+"']").prop("checked", data.elem.checked)
             form.render();
         });
         var inited=false;
@@ -452,10 +454,12 @@ function renderTable() {
             var fixedInput=obj.tr.eq(1).find("[name=list-body-checkbox]");
             if(input!=undefined&&input.length>0) {
                 var checked = input.prop("checked");
-                input.prop("checked", !checked);
-                if(fixedInput!=undefined&&fixedInput.length>0) {
-                    fixedInput.prop("checked", !checked);
-                }
+                var _check_id_value=input.attr("_check_id_value");
+                $("[_check_id_value='"+_check_id_value+"']").prop("checked", !checked)
+                // input.prop("checked", !checked);
+                // if(fixedInput!=undefined&&fixedInput.length>0) {
+                //     fixedInput.prop("checked", !checked);
+                // }
                 obj.setRowChecked({
                     type: input.attr('type') // radio 单选模式；checkbox 复选模式
                 });
