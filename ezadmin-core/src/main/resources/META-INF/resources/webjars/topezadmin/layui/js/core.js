@@ -424,6 +424,21 @@ function initForm() {
                 shortcuts:rangeShortCut
             });
         })
+        $(".dateinput").each(function () {
+            var _this = $(this);
+            var format = _this.attr("format") || 'yyyy-MM-dd';
+            var config = { elem: _this,
+                type: 'date',
+                holidays: holiday,
+                weekStart: 1
+            };
+            if(format=='yyyy-MM'){
+                config.type='month';
+            }else{
+                config.shortcuts=rangeShortCut
+            }
+            laydate.render(config);
+        })
         $(".datetimerangeinput").each(function () {
             var _this = $(this);
             laydate.render({
@@ -785,8 +800,8 @@ function getAllIds() {
 //获取表格中所有选中ID  name为list-body-checkbox
 function getCheckIdsUrl() {
     var goodsIdArr = "-1";
-    $("input[name='list-body-checkbox']:not(:disabled)").each(function () {
-        if (this.checked) {
+    $("#mytable input[name='list-body-checkbox']:not(:disabled) ").each(function () {
+        if (this.checked|| $(this).attr("checkedflag") == "1") {
             goodsIdArr += ',' + $(this).attr("_CHECK_ID_VALUE");
         }
     })
@@ -795,12 +810,11 @@ function getCheckIdsUrl() {
     }
     return "_CHECKD_IDS=" + encodeURI(goodsIdArr);
 }
-
 function getJsonCheckIds() {
 
     var lines = [];
-    $("input[name='list-body-checkbox']:not(:disabled)").each(function () {
-        if (this.checked) {
+    $("#mytable input[name='list-body-checkbox']:not(:disabled)").each(function () {
+        if (this.checked|| $(this).attr("checkedflag") == "1") {
             lines.push($(this).attr("_CHECK_ID_VALUE"));
         }
     })
@@ -809,17 +823,18 @@ function getJsonCheckIds() {
 }
 function getCheckedIds() {
     var lines = [];
-    $("input[name='list-body-checkbox']:not(:disabled):checked").each(function () {
+    $("#mytable input[name='list-body-checkbox']:not(:disabled)").each(function () {
+        if (this.checked|| $(this).attr("checkedflag") == "1") {
             lines.push($(this).attr("_CHECK_ID_VALUE"));
+        }
     })
     return  [...new Set(lines)];
 }
-
 function getJsonCheckIdAndNames() {
 
     var lines = [];
-    $("input[name='list-body-checkbox']:not(:disabled)").each(function () {
-        if (this.checked) {
+    $("#mytable input[name='list-body-checkbox']:not(:disabled)").each(function () {
+        if (this.checked|| $(this).attr("checkedflag") == "1") {
             var line = {};
 
             line.ID = $(this).attr("_CHECK_ID_VALUE");
@@ -838,10 +853,14 @@ function getJsonCheckIdAndNames() {
     return JSON.stringify(lines);
 }
 
+
+//radio的选中的数据
+
+
+
+
 function getJsonRowIds(row) {
-
     var lines = [];
-
     lines.push(row.find("[name='row_data_hidden_ID']").val());
     return JSON.stringify(lines);
 }

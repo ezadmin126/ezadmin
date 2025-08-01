@@ -312,6 +312,7 @@ public class JsoupUtil {
             Attribute attribute=list.get(i);
             String key=attribute.getKey().toLowerCase();
             if(key.startsWith("data-")){
+                ITEM_MAP.put(key.replace("data-",""), strip(attribute.getValue()));
                 ITEM_MAP.put(key, strip(attribute.getValue()));
             }
         };

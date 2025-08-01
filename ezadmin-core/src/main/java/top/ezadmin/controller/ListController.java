@@ -70,6 +70,7 @@ public class ListController extends BaseController {
         request.setAttribute("listUrl", request.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
         request.setAttribute("_EZ_SERVER_NAME", "//" + request.getServerName() + ":" + request.getServerPort());
         request.setAttribute("cacheFlag",EzClientBootstrap.instance().isSqlCache());
+        request.setAttribute("customSearchOpen",EzClientBootstrap.instance().isCustomSearchOpen());
 
         listService.fillListById(list, requestParamMap, sessionParamMap);
         request.setAttribute("data", list);

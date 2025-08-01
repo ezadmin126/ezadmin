@@ -51,11 +51,7 @@
                 <artifactId>camunda-bpm-spring-boot-starter-external-task-client</artifactId>
                 <version>${camunda.version}</version>
             </dependency>
-            <dependency>
-                <groupId>top.ezadmin</groupId>
-                <artifactId>ezadmin-jxc</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
+
             <dependency>
                 <groupId>io.github.ezadmin126</groupId>
                 <artifactId>ezadmin-core</artifactId>

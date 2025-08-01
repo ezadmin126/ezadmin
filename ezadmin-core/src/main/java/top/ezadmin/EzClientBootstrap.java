@@ -50,6 +50,8 @@ public class EzClientBootstrap {
     
     /** SQL缓存开关，控制是否启用SQL查询缓存 */
     private boolean sqlCache = false;
+
+    private boolean customSearchOpen = true;
     
     /** 列表配置资源列表，存储所有列表页面的配置信息 */
     private List<Config> listConfigResources;
@@ -598,5 +600,13 @@ private String indexUrl;
 
     public void setSqlCache(boolean aBoolean) {
         this.sqlCache=aBoolean;
+    }
+
+    public boolean isCustomSearchOpen() {
+        return customSearchOpen;
+    }
+
+    public void setCustomSearchOpen(boolean customSearchOpen) {
+        this.customSearchOpen = customSearchOpen;
     }
 }

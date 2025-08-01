@@ -66,6 +66,9 @@ public class BaseController {
                 if(StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_TODAY_DATE_NORMAL.name(),v[0])){
                     searchParamsValues.put(k,DefaultParamEnum.getValue(DefaultParamEnum.EZ_TODAY_DATE_NORMAL.name()));
                 }
+                if(StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_CURRENT_MONTH.name(),v[0])){
+                    searchParamsValues.put(k,DefaultParamEnum.getValue(DefaultParamEnum.EZ_CURRENT_MONTH.name()));
+                }
                 if(StringUtils.equalsIgnoreCase(SessionConstants.EZ_SESSION_USER_ID_KEY,v[0])){
                     searchParamsValues.put(k,Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));
                 }

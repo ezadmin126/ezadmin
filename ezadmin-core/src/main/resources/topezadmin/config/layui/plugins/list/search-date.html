@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>日期区间</title>
+</head>
+<body id="search-date" alias="date" type="search" icon="layui-icon-date">
+
+<div id="template" >
+    <div class="layui-col-md3  selector" config-form-type="searchcore" ez-type="date" ez-label="日期">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">日期</label>
+            <div class="layui-input-block"  >
+                <div class="layui-input-wrap">
+                    <div class="layui-input-prefix">
+                        <i class="layui-icon layui-icon-date"></i>
+                    </div>
+                    <input  PLACEHOLDER="开始时间"  autocomplete="off" type="text"
+                            class="layui-input dateinput"
+                            name="default" >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="content">
+
+
+     <div class="selector   list-item " config-form-type="searchcore" th:classappend="${'layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3'}"
+              th:style="${model.style}"
+              th:ITEM_NAME="${model.item_name}"
+              th:ez-name="${model.item_name}"
+          ez-type="daterange"
+          th:ez-label="${model.label}"
+          th:ez-item_name="${model.item_name}"
+          th:ez-placeholder="${model.placeholder}"
+          th:ez-alias="${model.alias}"
+          th:ez-col="${model.col}"
+          th:ez-url="${model.url}"
+          th:ez-oper="${model.oper}"
+          th:ez-data="${model.data}"
+          th:ez-format="${model.format}"
+          th:ez-datatype="${model.datatype}"
+          th:ez-item_desc="${model.item_desc}"
+          th:ez-top_desc="${model.top_desc}"
+          th:ez-jdbctype="${model.jdbctype}"
+          th:ez-lay_verify="${#strings.isEmpty(model.lay_verify)?'':model.lay_verify}"
+          th:ez-valid_rule="${model.valid_rule}"
+          th:ez-valid_msg="${model.valid_msg}"
+          th:ez-style="${model.style}"
+
+     >
+         <div  class="layui-form-item" >
+
+                <label class="layui-form-label" th:for="${'search-itemName-' + model.item_name}"
+                       th:text="${model.label+'：'}" th:title="${model.label}">Date range:</label>
+             <div class="layui-input-block">
+                 <div class="layui-input-wrap">
+                     <div class="layui-input-prefix">
+                         <i class="layui-icon layui-icon-date"></i>
+                     </div>
+                     <input th:placeholder="${model.placeholder}"
+                            type="text"   autocomplete="off"
+                            class="layui-input dateinput"
+                            th:maxlength="${model.maxlength}"
+                            th:format="${model.format}"
+                            th:value="${model.itemParamValue}" th:name="${model.item_name}"
+                            th:id="${'search-itemName-' + model.item_name}"       >
+                 </div>
+             </div>
+         </div>
+    </div>
+
+
+</div>
+ </body>
+</html>

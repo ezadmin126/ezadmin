@@ -14,6 +14,7 @@ import java.util.Date;
 public class EzDateUtils{
     private static String DATETIME="yyyy-MM-dd HH:mm:ss";
     private static String DATE="yyyy-MM-dd";
+    private static String MONTH="yyyy-MM";
     private static String DAY_START_SUF=" 00:00:00";
     private static String DAY_END_SUF=" 23:59:59";
 
@@ -162,6 +163,11 @@ public class EzDateUtils{
     }
     public static String todayDatetime() {
         SimpleDateFormat simple = new SimpleDateFormat(DATETIME);
+        return simple.format(new Date());
+    }
+
+    public static String currentMonth() {
+        SimpleDateFormat simple = new SimpleDateFormat(MONTH);
         return simple.format(new Date());
     }
 }

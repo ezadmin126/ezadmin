@@ -1,4 +1,4 @@
-
+//0 待提交 1待审核 2审核不通过 3审核通过 4 锁定 自动化审核中 5.待申请审核
 function appendCheckButton(dekey,checkStatus,callback){
     var param={};
     //param.definitionKey=dekey;
@@ -14,7 +14,7 @@ function appendCheckButton(dekey,checkStatus,callback){
                         `);
                     }
                 } else {
-                    if(checkStatus==2||checkStatus==5) {
+                    if( checkStatus==2||checkStatus==5) {
                         $("#submitButtonContainer").append(`<button  type="button"   class="  layui-btn  start layui-bg-blue ">
                             申请审核
                             </button>`);
@@ -22,7 +22,10 @@ function appendCheckButton(dekey,checkStatus,callback){
                 }
 
           //  $("#submitButtonContainer").append(`<button  type="button"   class="  layui-btn    layui-bg-blue history ">  审核记录  </button>`);
-            callback();
+             //判断有没有callbackcamunda函数，有的话，就执行
+            if(typeof callbackcamunda === "function"){
+                callbackcamunda();
+            }
         }, 'json').fail(function () {
             console.log("error");
         });
