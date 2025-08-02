@@ -799,23 +799,34 @@ function getAllIds() {
 
 //获取表格中所有选中ID  name为list-body-checkbox
 function getCheckIdsUrl() {
-    var goodsIdArr = "-1";
-    $("#mytable input[name='list-body-checkbox']:not(:disabled) ").each(function () {
-        if (this.checked|| $(this).attr("checkedflag") == "1") {
-            goodsIdArr += ',' + $(this).attr("_CHECK_ID_VALUE");
+    var goodsIdSet = new Set();
+    $("input[name='list-body-checkbox']:not(:disabled):checked ").each(function () {
+        var idValue = $(this).attr("_CHECK_ID_VALUE");
+        if (idValue) {
+            goodsIdSet.add(idValue);
         }
     })
-    if (goodsIdArr == "-1") {
+    
+    if (goodsIdSet.size === 0) {
         return "";
     }
+    
+    var goodsIdArr = "-1";
+    goodsIdSet.forEach(function(id) {
+        goodsIdArr += ',' + id;
+    });
+    
     return "_CHECKD_IDS=" + encodeURI(goodsIdArr);
 }
 function getJsonCheckIds() {
 
     var lines = [];
-    $("#mytable input[name='list-body-checkbox']:not(:disabled)").each(function () {
-        if (this.checked|| $(this).attr("checkedflag") == "1") {
-            lines.push($(this).attr("_CHECK_ID_VALUE"));
+    $("input[name='list-body-checkbox']:not(:disabled)").each(function () {
+        if (this.checked ) {
+            var idValue = $(this).attr("_CHECK_ID_VALUE");
+            if (idValue) {
+                lines.push(idValue);
+            }
         }
     })
     const uniqueArray = [...new Set(lines)];
@@ -823,38 +834,46 @@ function getJsonCheckIds() {
 }
 function getCheckedIds() {
     var lines = [];
-    $("#mytable input[name='list-body-checkbox']:not(:disabled)").each(function () {
-        if (this.checked|| $(this).attr("checkedflag") == "1") {
-            lines.push($(this).attr("_CHECK_ID_VALUE"));
+    $("input[name='list-body-checkbox']:not(:disabled):checked").each(function () {
+        var idValue = $(this).attr("_CHECK_ID_VALUE");
+        if (idValue) {
+            lines.push(idValue);
         }
     })
     return  [...new Set(lines)];
 }
 function getJsonCheckIdAndNames() {
 
-    var lines = [];
-    $("#mytable input[name='list-body-checkbox']:not(:disabled)").each(function () {
-        if (this.checked|| $(this).attr("checkedflag") == "1") {
-            var line = {};
-
-            line.ID = $(this).attr("_CHECK_ID_VALUE");
-
-            var inputs = $(this).parent().find("[type=hidden]");
-
-            for (let i = 0; i < inputs.length; i++) {
-                var cname = $(inputs[i]).attr("item_name");
-                var value = $(inputs[i]).val();
-                line[cname] = value;
-            }
-
-            lines.push(line);
+    var linesMap = new Map();
+    $("input[name='list-body-checkbox']:not(:disabled):checked").each(function () {
+        var idValue = $(this).attr("_CHECK_ID_VALUE");
+        if (!idValue) {
+            return;
         }
+        
+        var line = {};
+        line.ID = idValue;
+
+        var inputs = $(this).parent().find("[type=hidden]");
+
+        for (let i = 0; i < inputs.length; i++) {
+            var cname = $(inputs[i]).attr("item_name");
+            var value = $(inputs[i]).val();
+            line[cname] = value;
+        }
+
+        // 使用ID作为key，确保不重复，后面的会覆盖前面的
+        linesMap.set(idValue, line);
     })
+    
+    // 将Map转换为数组
+    var lines = Array.from(linesMap.values());
     return JSON.stringify(lines);
 }
 
 
 //radio的选中的数据
+
 
 
 

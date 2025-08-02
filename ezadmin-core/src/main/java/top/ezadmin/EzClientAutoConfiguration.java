@@ -123,10 +123,11 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
         registrationBean.setFilter(customURLFilter);
         registrationBean.getUrlPatterns().add("/topezadmin/*");
         try {
-            if (!StringUtils.startsWith(ezClientProperties.getIndexUrl(), "/ezadmin") && StringUtils.isNotBlank(ezClientProperties.getIndexUrl())) {
+            //自定义URL前缀
+            if (StringUtils.isNotBlank(ezClientProperties.getPrefixUrl())) {
                 registrationBean.getUrlPatterns().add("/ezadmin/*");
                 registrationBean.getUrlPatterns().add("/ezcloud/*");
-                registrationBean.getUrlPatterns().add(ezClientProperties.getIndexUrl().substring(0, ezClientProperties.getIndexUrl().indexOf("/", 1)) + "/*");
+                registrationBean.getUrlPatterns().add(ezClientProperties.getPrefixUrl()  + "/*");
             }
         }catch (Exception e){
             e.printStackTrace();

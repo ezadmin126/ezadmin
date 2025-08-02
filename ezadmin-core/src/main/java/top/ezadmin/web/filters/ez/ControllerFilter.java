@@ -164,6 +164,10 @@ public class ControllerFilter extends Filter {
             }
             return;
         }
+        if(getNext()==null){
+            filterChain.doFilter(request, response);
+            return;
+        }
         getNext().doFilter(request, response,filterChain);
     }
     public ControllerFilter()  {
