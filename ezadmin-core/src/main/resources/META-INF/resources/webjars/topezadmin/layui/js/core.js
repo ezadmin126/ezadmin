@@ -2,12 +2,12 @@
  https://gitee.com/ezadmin/index.html
  | MIT /license */
 var holiday = [[], []];
-$(function (){
+$(function () {
 
     if ($("#holiday") != null && $("#holiday").val() != null) {
-        try{
+        try {
             holiday = JSON.parse($("#holiday").val());
-        }catch (e) {
+        } catch (e) {
             console.log(e)
         }
     }
@@ -26,8 +26,8 @@ $(function (){
         ezopen(openType, title, url, area);
         return false;
     })
-    $(document).on("click",".ezopenredirect",function(e){
-        openBlank("/ezredirect.html?url="+encodeURIComponent($(this).attr("item_url")));
+    $(document).on("click", ".ezopenredirect", function (e) {
+        openBlank("/ezredirect.html?url=" + encodeURIComponent($(this).attr("item_url")));
         e.preventDefault();
         e.stopPropagation();
         return false;
@@ -43,7 +43,7 @@ $(function (){
         var item = {};
         item.alt = _this.attr("alt");
         item.pid = _this.attr("pid");
-        item.src = _this.attr("orgsrc")||_this.attr("src");
+        item.src = _this.attr("orgsrc") || _this.attr("src");
         item.thumb = _this.attr("orgsrc");
         data.push(item);
         layer.photos({
@@ -54,12 +54,12 @@ $(function (){
                 "data": data
             },
             footer: false // 是否隐藏底部栏 --- 2.8+
-            ,success:function(){
-                if($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height()>500){
-                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height","500px");
-                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width","auto");
+            , success: function () {
+                if ($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height() > 500) {
+                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height", "500px");
+                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width", "auto");
 
-                    $(".layui-layer-photos").eq(0).css("top",$(window).height()/2-250)
+                    $(".layui-layer-photos").eq(0).css("top", $(window).height() / 2 - 250)
 
 
                 }
@@ -78,7 +78,7 @@ $(function (){
         var item = {};
         item.alt = _this.attr("alt");
         item.pid = _this.attr("pid");
-        item.src = _this.attr("orgsrc")||_this.attr("src");
+        item.src = _this.attr("orgsrc") || _this.attr("src");
         item.thumb = _this.attr("orgsrc");
         data.push(item);
         parent.window.layer.photos({
@@ -89,12 +89,12 @@ $(function (){
                 "data": data
             },
             footer: false // 是否隐藏底部栏 --- 2.8+
-            ,success:function(){
-                if($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height()>500){
-                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height","500px");
-                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width","auto");
+            , success: function () {
+                if ($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height() > 500) {
+                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height", "500px");
+                    $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width", "auto");
 
-                    $(".layui-layer-photos").eq(0).css("top",$(window).height()/2-250)
+                    $(".layui-layer-photos").eq(0).css("top", $(window).height() / 2 - 250)
 
 
                 }
@@ -226,20 +226,20 @@ var shortcut = [
     }
 ];
 
-var rangeShortCut=[{
+var rangeShortCut = [{
     text: "昨天",
-    value: function(){
+    value: function () {
         var today = new Date();
-        const preday = new Date(today.getTime() - (  24 * 60 * 60 * 1000));
+        const preday = new Date(today.getTime() - (24 * 60 * 60 * 1000));
         return [
             preday,
             preday
         ];
     }
-} ,
+},
     {
         text: "上周",
-        value: function(){
+        value: function () {
             // 创建一个新的 Date 对象
             var today = new Date();
 
@@ -259,7 +259,7 @@ var rangeShortCut=[{
     },
     {
         text: "本周",
-        value: function(){
+        value: function () {
             // 创建一个新的 Date 对象
             var today = new Date();
             // 设置为本周第一天（星期日）
@@ -272,7 +272,7 @@ var rangeShortCut=[{
     },
     {
         text: "最近7天",
-        value: function(){
+        value: function () {
             var today = new Date();
             const thirtyDaysAgo = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
             return [
@@ -283,7 +283,7 @@ var rangeShortCut=[{
     },
     {
         text: "最近30天",
-        value: function(){
+        value: function () {
             var today = new Date();
             const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
             return [
@@ -294,7 +294,7 @@ var rangeShortCut=[{
     },
     {
         text: "上个月",
-        value: function(){
+        value: function () {
             var date = new Date();
             var year = date.getFullYear();
             var month = date.getMonth();
@@ -306,7 +306,7 @@ var rangeShortCut=[{
     },
     {
         text: "这个月",
-        value: function(){
+        value: function () {
             var date = new Date();
             var year = date.getFullYear();
             var month = date.getMonth();
@@ -318,7 +318,7 @@ var rangeShortCut=[{
     },
     {
         text: "去年",
-        value: function(){
+        value: function () {
             const now = new Date();
             const year = now.getFullYear();
             const januaryFirst = new Date(year - 1, 0, 1);
@@ -331,7 +331,7 @@ var rangeShortCut=[{
     },
     {
         text: "今年",
-        value: function(){
+        value: function () {
             const now = new Date();
             const year = now.getFullYear();
             const januaryFirst = new Date(year, 0, 1);
@@ -342,6 +342,7 @@ var rangeShortCut=[{
         }
     }
 ]
+
 function initForm() {
     layui.use(['form', 'laydate', 'table', 'dropdown', 'colorpicker'], function () {
         var
@@ -353,7 +354,7 @@ function initForm() {
         form.verify({
             required: function (value, item) { // value 为当前输入框的值，item 为当前输入框的 DOM 对象
                 if (!value) {
-                    return '请输入' + (item.getAttribute("label")||'');
+                    return '请输入' + (item.getAttribute("label") || '');
                 }
             }
         });
@@ -421,21 +422,22 @@ function initForm() {
                 range: true,
                 holidays: holiday,
                 weekStart: 1,
-                shortcuts:rangeShortCut
+                shortcuts: rangeShortCut
             });
         })
         $(".dateinput").each(function () {
             var _this = $(this);
             var format = _this.attr("format") || 'yyyy-MM-dd';
-            var config = { elem: _this,
+            var config = {
+                elem: _this,
                 type: 'date',
                 holidays: holiday,
                 weekStart: 1
             };
-            if(format=='yyyy-MM'){
-                config.type='month';
-            }else{
-                config.shortcuts=rangeShortCut
+            if (format == 'yyyy-MM') {
+                config.type = 'month';
+            } else {
+                config.shortcuts = rangeShortCut
             }
             laydate.render(config);
         })
@@ -451,7 +453,7 @@ function initForm() {
         })
     })
 
-    $(document).on("click",".ez-help",function(e){
+    $(document).on("click", ".ez-help", function (e) {
         var url = $(this).attr("src");
         var tips = $(this).attr("tips");
         var id = $(this).attr("id");
@@ -499,7 +501,7 @@ function renderCascader(cas) {
             var _this = $(cas);
             var url = _this.attr("url");
             var value = _this.attr("ez_value") || 'VALUE';
-            var label = _this.attr("ez_treelabel")|| _this.attr("ez_label") || 'LABEL';
+            var label = _this.attr("ez_treelabel") || _this.attr("ez_label") || 'LABEL';
             var children = _this.attr("ez_children") || 'CHILDREN';
             var multiple = istrue(_this.attr("multi"));
             var itemsJson = _this.attr("itemsJson");
@@ -513,8 +515,8 @@ function renderCascader(cas) {
 
             if (url) {
 
-                $.post(url, {}, function(response) {
-                    if(response.success){
+                $.post(url, {}, function (response) {
+                    if (response.success) {
                         var res = response.data;
                         var prop = {};
                         prop.value = value;
@@ -530,7 +532,7 @@ function renderCascader(cas) {
                             placeholder: itemPlaceholder,
                             collapseTags: collapseTags,
                             showAllLevels: showAllLevels,
-                            disabled : disable_flag=="true",
+                            disabled: disable_flag == "true",
                             value: paramValue,
                             options: res,
                             filterMethod: function (node, val) {//重写搜索方法。
@@ -558,7 +560,7 @@ function renderCascader(cas) {
                             c.html(
                                 "<span class='layui-text form-block-span'>" + text + "</span>")
                         }
-                    }else{
+                    } else {
 
                     }
 
@@ -577,28 +579,28 @@ function renderCascader(cas) {
 
 }
 
-var ezpingyin=function(value,text,id){
-    var { pinyin } = pinyinPro;
-    console.log(value+"\t"+text+"\t"+id)
+var ezpingyin = function (value, text, id) {
+    var {pinyin} = pinyinPro;
+    console.log(value + "\t" + text + "\t" + id)
     var result;
     if (escape(value).indexOf("%u") != -1) { //汉字
         result = text.indexOf(value) > -1;
     } else {
-        
-        value=value.toLowerCase();
-        try{
-        //var firstLetter=pinyinUtil.getFirstLetter(text, false).toLowerCase() ;
-        var firstLetter=pinyin(text, { pattern: 'first', toneType: 'none', type: 'array'}).join('');
-        //var pingyin=pinyinUtil.getPinyin(text,'',false,false).toLowerCase()
-        var pingyinq=pinyin(text, { toneType: 'none', type: 'array' }).join('');
 
-            console.log(value+"\t"+text+"\t"+id+"\t"+firstLetter+"\t"+pingyinq)
-        // console.log(firstLetter+"\t"+pingyin+"\t"+value+"\t"+text);
-        result = firstLetter.indexOf(value) > -1
-            || pingyinq.indexOf(value) > -1
-            || text.toLowerCase().indexOf(value) > -1
-            || (id === undefined ? false : id.indexOf(value) > -1);
-        }catch (e) {
+        value = value.toLowerCase();
+        try {
+            //var firstLetter=pinyinUtil.getFirstLetter(text, false).toLowerCase() ;
+            var firstLetter = pinyin(text, {pattern: 'first', toneType: 'none', type: 'array'}).join('');
+            //var pingyin=pinyinUtil.getPinyin(text,'',false,false).toLowerCase()
+            var pingyinq = pinyin(text, {toneType: 'none', type: 'array'}).join('');
+
+            console.log(value + "\t" + text + "\t" + id + "\t" + firstLetter + "\t" + pingyinq)
+            // console.log(firstLetter+"\t"+pingyin+"\t"+value+"\t"+text);
+            result = firstLetter.indexOf(value) > -1
+                || pingyinq.indexOf(value) > -1
+                || text.toLowerCase().indexOf(value) > -1
+                || (id === undefined ? false : id.indexOf(value) > -1);
+        } catch (e) {
             console.log(e);
         }
     }
@@ -636,7 +638,7 @@ function renderXmselect(xm) {
             },
             style: {
                 height: '26px',
-            },theme: {
+            }, theme: {
                 color: '#1e9fff',
             },
             prop: {
@@ -647,12 +649,12 @@ function renderXmselect(xm) {
             tips: itemPlaceholder,
             data: JSON.parse(initdata),
             initValue: JSON.parse(initvalue)
-            ,model: {
+            , model: {
                 label: {
                     type: 'block',
                     block: {
                         //最大显示数量, 0:不限制
-                        showCount: xmel.attr("showCount")||5,
+                        showCount: xmel.attr("showCount") || 5,
                         //是否显示删除图标
                         showIcon: true,
                     }
@@ -806,23 +808,24 @@ function getCheckIdsUrl() {
             goodsIdSet.add(idValue);
         }
     })
-    
+
     if (goodsIdSet.size === 0) {
         return "";
     }
-    
+
     var goodsIdArr = "-1";
-    goodsIdSet.forEach(function(id) {
+    goodsIdSet.forEach(function (id) {
         goodsIdArr += ',' + id;
     });
-    
+
     return "_CHECKD_IDS=" + encodeURI(goodsIdArr);
 }
+
 function getJsonCheckIds() {
 
     var lines = [];
     $("input[name='list-body-checkbox']:not(:disabled)").each(function () {
-        if (this.checked ) {
+        if (this.checked) {
             var idValue = $(this).attr("_CHECK_ID_VALUE");
             if (idValue) {
                 lines.push(idValue);
@@ -832,6 +835,7 @@ function getJsonCheckIds() {
     const uniqueArray = [...new Set(lines)];
     return JSON.stringify(uniqueArray);
 }
+
 function getCheckedIds() {
     var lines = [];
     $("input[name='list-body-checkbox']:not(:disabled):checked").each(function () {
@@ -840,8 +844,9 @@ function getCheckedIds() {
             lines.push(idValue);
         }
     })
-    return  [...new Set(lines)];
+    return [...new Set(lines)];
 }
+
 function getJsonCheckIdAndNames() {
 
     var linesMap = new Map();
@@ -850,7 +855,7 @@ function getJsonCheckIdAndNames() {
         if (!idValue) {
             return;
         }
-        
+
         var line = {};
         line.ID = idValue;
 
@@ -865,7 +870,7 @@ function getJsonCheckIdAndNames() {
         // 使用ID作为key，确保不重复，后面的会覆盖前面的
         linesMap.set(idValue, line);
     })
-    
+
     // 将Map转换为数组
     var lines = Array.from(linesMap.values());
     return JSON.stringify(lines);
@@ -873,9 +878,6 @@ function getJsonCheckIdAndNames() {
 
 
 //radio的选中的数据
-
-
-
 
 
 function getJsonRowIds(row) {
@@ -913,7 +915,7 @@ var getSearchParams = function () {
 var getSearchParamsNoParentId = function () {
     var params = [];
     $("#searchForm").find('input,select').each(function () {
-        if ($(this).attr('name')&&$(this).attr('name')!='PARENT_ID') {
+        if ($(this).attr('name') && $(this).attr('name') != 'PARENT_ID') {
             params.push($(this).attr('name') + '=' + encodeURI($(this).val()));
         }
     })
@@ -942,12 +944,12 @@ function openModel(url, name, area) {
         area: json,
         content: url,
         moveOut: true,
-        success: function(layero, indexyyy, that){
+        success: function (layero, indexyyy, that) {
 
             var body = layer.getChildFrame('body', indexyyy);
-            if($(body).find('#submitButtonContainer').length>0){
+            if ($(body).find('#submitButtonContainer').length > 0) {
                 $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
-                $(body).on("click","#closeParent",function(e){
+                $(body).on("click", "#closeParent", function (e) {
                     layui.layer.close(indexyyy);
                     e.preventDefault();
                     e.stopPropagation();
@@ -958,6 +960,7 @@ function openModel(url, name, area) {
     });
     return index;
 }
+
 function openForm(url, name, area) {
     var json = ['100%', '100%'];
     if (area !== undefined && area != '') {
@@ -977,29 +980,29 @@ function openForm(url, name, area) {
         type: 2,
         shade: 0.2,
         maxmin: true,
-        btnAlign:'c',
+        btnAlign: 'c',
         shadeClose: true,
         area: json,
         content: url,
         moveOut: true,
-        success: function(layero, indexyyy, that){
+        success: function (layero, indexyyy, that) {
             var body = layer.getChildFrame('body', indexyyy);
-            try{
+            try {
                 $(body).find('#submitbtnProxy').after("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
-                $(body).on("click","#closeParent",function(e){
+                $(body).on("click", "#closeParent", function (e) {
                     layui.layer.close(indexyyy);
                     e.preventDefault();
                     e.stopPropagation();
                     return false;
                 })
-            }catch (e) {
+            } catch (e) {
             }
         }
     });
     return index;
 }
 
-function openFull(url, name,yestxt,yesfunc,notxt,nofunc) {
+function openFull(url, name, yestxt, yesfunc, notxt, nofunc) {
     var json = ['100%', '100%'];
     name = name == undefined ? "窗口" : name;
     var index = layer.open({
@@ -1007,28 +1010,28 @@ function openFull(url, name,yestxt,yesfunc,notxt,nofunc) {
         type: 2,
         shade: 0.2,
         maxmin: true,
-        btnAlign:'c',
+        btnAlign: 'c',
         shadeClose: true,
         area: json,
         content: url,
         moveOut: true,
         btn: [yestxt, notxt],
         // 按钮1 的回调
-        btn1: function(index111, layero, that){
+        btn1: function (index111, layero, that) {
             yesfunc(index111, layero, that);
         },
-        btn2: function(index222, layero, that){
+        btn2: function (index222, layero, that) {
             nofunc(index222, layero, that);
         },
-        success: function(layero, indexyyy, that){
+        success: function (layero, indexyyy, that) {
             var body = layer.getChildFrame('body', indexyyy);
-           // $(body).find('#submitButtonContainer').html('');
+            // $(body).find('#submitButtonContainer').html('');
         }
     });
     return index;
 }
 
-function openModelSelect(url, name ) {
+function openModelSelect(url, name) {
     name = name == undefined ? "窗口" : name;
     var index = layer.open({
         title: name,
@@ -1038,10 +1041,10 @@ function openModelSelect(url, name ) {
         shadeClose: true,
         area: ['90%', '90%'],
         content: url,
-        moveOut: true ,
+        moveOut: true,
         btn: ['确定'],
         // 按钮1 的回调
-        btn1: function(indexxx, layero, that){
+        btn1: function (indexxx, layero, that) {
             var body = layer.getChildFrame('body', indexxx);
             $(body).find('#check_click_选择').click();
         }
@@ -1066,15 +1069,15 @@ function openModelReload(url, name, cancel) {
 
 
 function openTab(title, link) {
-    if(link==undefined){
-        link=title;
-        title="查看";
+    if (link == undefined) {
+        link = title;
+        title = "查看";
     }
-    try{
-        if(window.top === window.self){
+    try {
+        if (window.top === window.self) {
             return openBlank(link);
         }
-    }catch (e) {
+    } catch (e) {
         console.log(e);
     }
 
@@ -1119,24 +1122,25 @@ function openBlank(appendUrl) {
     a.click();
     a.remove();
 }
+
 /**
  *
  * @param  parent.refreshCard.prod
  */
-function refreshCard(card_item_name){
-    card_item_name=card_item_name.toLowerCase();
-    if(card_item_name&&card_item_name.indexOf('parent.')>=0){
-        card_item_name = card_item_name.replace('parent.','');
+function refreshCard(card_item_name) {
+    card_item_name = card_item_name.toLowerCase();
+    if (card_item_name && card_item_name.indexOf('parent.') >= 0) {
+        card_item_name = card_item_name.replace('parent.', '');
         window.parent.refreshCard(card_item_name);
         return;
     }
-    if(card_item_name.indexOf('refreshcard')>=0){
+    if (card_item_name.indexOf('refreshcard') >= 0) {
         layer.closeAll();
         const parts = card_item_name.split('.');
         if (parts.length === 2 && parts[0] === "refreshcard") {
             const cardItemName = parts[1]; // 获取第二个值，如 "prod"
             // 找到对应的 iframe 并刷新
-            $("[card_item_name=" + cardItemName + "]").find("iframe").attr("src", function() {
+            $("[card_item_name=" + cardItemName + "]").find("iframe").attr("src", function () {
                 const currentSrc = $(this).attr("src");
                 return currentSrc + (currentSrc.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
             });
@@ -1146,6 +1150,7 @@ function refreshCard(card_item_name){
         }
     }
 }
+
 //parentid,id,name
 function flatToTree(arr, parentId) {
     try {
@@ -1167,91 +1172,7 @@ function flatToTree(arr, parentId) {
 
 }
 
-function watermark(settings) {
-    if ($(".mask_div").length > 0) {
-        return;
-    }
-    //默认设置
-    var defaultSettings = {
-        watermark_txt: "",
-        watermark_x: 20, //水印起始位置x轴坐标
-        watermark_y: 20, //水印起始位置Y轴坐标
-        watermark_rows: 0, //水印行数
-        watermark_cols: 0, //水印列数
-        watermark_x_space: 100, //水印x轴间隔
-        watermark_y_space: 50, //水印y轴间隔
-        watermark_color: '#aaa', //水印字体颜色
-        watermark_alpha: 0.1, //水印透明度
-        watermark_fontsize: '14px', //水印字体大小
-        watermark_font: '宋体', //水印字体
-        watermark_width: 210, //水印宽度
-        watermark_height: 80, //水印长度
-        watermark_angle: 20 //水印倾斜度数
-    };
-    if (arguments.length === 1 && typeof arguments[0] === "object") {
-        var src = arguments[0] || {};
-        for (key in src) {
-            if (src[key] && defaultSettings[key] && src[key] === defaultSettings[key]) continue;
-            else if (src[key]) defaultSettings[key] = src[key];
-        }
-    }
-    var oTemp = document.createDocumentFragment();
-    //获取页面最大宽度
-    var page_width = Math.max(document.body.scrollWidth, document.body.clientWidth);
-    var cutWidth = page_width * 0.0150;
-    var page_width = page_width - cutWidth;
-    //获取页面最大高度
-    var page_height = Math.max(document.body.scrollHeight, document.body.clientHeight) + 30;
-    page_height = Math.max(page_height, window.innerHeight - 30);
-    //如果将水印列数设置为0，或水印列数设置过大，超过页面最大宽度，则重新计算水印列数和水印x轴间隔
-    if (defaultSettings.watermark_cols == 0 || (parseInt(defaultSettings.watermark_x + defaultSettings.watermark_width * defaultSettings.watermark_cols + defaultSettings.watermark_x_space * (defaultSettings.watermark_cols - 1)) > page_width)) {
-        defaultSettings.watermark_cols = parseInt((page_width - defaultSettings.watermark_x + defaultSettings.watermark_x_space) / (defaultSettings.watermark_width + defaultSettings.watermark_x_space));
-        defaultSettings.watermark_x_space = parseInt((page_width - defaultSettings.watermark_x - defaultSettings.watermark_width * defaultSettings.watermark_cols) / (defaultSettings.watermark_cols - 1));
-    }
-    //如果将水印行数设置为0，或水印行数设置过大，超过页面最大长度，则重新计算水印行数和水印y轴间隔
-    if (defaultSettings.watermark_rows == 0 || (parseInt(defaultSettings.watermark_y + defaultSettings.watermark_height * defaultSettings.watermark_rows + defaultSettings.watermark_y_space * (defaultSettings.watermark_rows - 1)) > page_height)) {
-        defaultSettings.watermark_rows = parseInt((defaultSettings.watermark_y_space + page_height - defaultSettings.watermark_y) / (defaultSettings.watermark_height + defaultSettings.watermark_y_space));
-        defaultSettings.watermark_y_space = parseInt(((page_height - defaultSettings.watermark_y) - defaultSettings.watermark_height * defaultSettings.watermark_rows) / (defaultSettings.watermark_rows - 1));
-    }
-    var x;
-    var y;
-    for (var i = 0; i < defaultSettings.watermark_rows - 1; i++) {
-        y = defaultSettings.watermark_y + (defaultSettings.watermark_y_space + defaultSettings.watermark_height) * i;
-        for (var j = 0; j < defaultSettings.watermark_cols; j++) {
-            x = defaultSettings.watermark_x + (defaultSettings.watermark_width + defaultSettings.watermark_x_space) * j;
-            var mask_div = document.createElement('div');
-            mask_div.id = 'mask_div' + i + j;
-            mask_div.className = 'mask_div';
-            mask_div.appendChild(document.createTextNode(defaultSettings.watermark_txt));
-            //设置水印div倾斜显示
-            mask_div.style.webkitTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-            mask_div.style.MozTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-            mask_div.style.msTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-            mask_div.style.OTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-            mask_div.style.transform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-            mask_div.style.visibility = "";
-            mask_div.style.position = "absolute";
-            mask_div.style.left = x + 'px';
-            mask_div.style.top = y + 'px';
-            mask_div.style.overflow = "hidden";
-            mask_div.style.zIndex = "9999";
-            //让水印不遮挡页面的点击事件
-            mask_div.style.pointerEvents = 'none';
-            mask_div.style.opacity = defaultSettings.watermark_alpha;
-            mask_div.style.fontSize = defaultSettings.watermark_fontsize;
-            mask_div.style.fontFamily = defaultSettings.watermark_font;
-            mask_div.style.color = defaultSettings.watermark_color;
-            mask_div.style.textAlign = "center";
-            mask_div.style.width = defaultSettings.watermark_width + 'px';
-            mask_div.style.height = defaultSettings.watermark_height + 'px';
-            mask_div.style.display = "block";
-            oTemp.appendChild(mask_div);
-        }
-        ;
-    }
-    ;
-    document.body.appendChild(oTemp);
-}
+
 function getNow() {
     var d = new Date();
     var year = d.getFullYear();
@@ -1274,9 +1195,9 @@ function getNow() {
 }
 
 function ezopen(openType, title, appendUrl, area) {
-    appendUrl = ($("#contextName").val()||'') + appendUrl;
-    if(openType&&openType.indexOf('parent.')>=0){
-        openType = openType.replace('parent.','');
+    appendUrl = ($("#contextName").val() || '') + appendUrl;
+    if (openType && openType.indexOf('parent.') >= 0) {
+        openType = openType.replace('parent.', '');
         parent.window.ezopen(openType, title, appendUrl, area);
         return;
     }
@@ -1296,14 +1217,14 @@ function ezopen(openType, title, appendUrl, area) {
             openForm(appendUrl, title, area);
             break;
         case 'FULL':
-            openFull(appendUrl, title ,'确定', function(index111, layero, that){
-            var body = layer.getChildFrame('body', index111);
+            openFull(appendUrl, title, '确定', function (index111, layero, that) {
+                    var body = layer.getChildFrame('body', index111);
 
-            $(body).find('#submitbtn').click();
-        },'取消',
-           function(index222, layero, that){
-                layer.close(index222);
-            });
+                    $(body).find('#submitbtn').click();
+                }, '取消',
+                function (index222, layero, that) {
+                    layer.close(index222);
+                });
             break;
         case 'CONFIRM_MODEL':
             layer.confirm('确认操作?', {icon: 3, title: '提示'}, function (index) {
@@ -1421,10 +1342,10 @@ function copy(text) {
     //     .catch(err => layer.msg('复制失败：', err));
     layui.lay.clipboard.writeText({
         text: text,
-        done: function() {
+        done: function () {
             layer.msg('已复制', {icon: 1});
         },
-        error: function() {
+        error: function () {
             layer.msg('复制失败', {icon: 2});
         }
     });
@@ -1437,20 +1358,20 @@ function parse(f) {
 
 }
 
-function mypost(url,param,success){
-    $.post(url , param,function(response) {
-        if(response.success){
+function mypost(url, param, success) {
+    $.post(url, param, function (response) {
+        if (response.success) {
             success(response);
-        }else{
-             alert("服务端错误："+response.message);
+        } else {
+            alert("服务端错误：" + response.message);
         }
-    } , 'json').fail(function (xhr, status, error)  {
-         alert("网络异常");
-         console.log(xhr.responseText+JSON.stringify(error)+status);
+    }, 'json').fail(function (xhr, status, error) {
+        alert("网络异常");
+        console.log(xhr.responseText + JSON.stringify(error) + status);
     });
 }
 
-function lazyImage(){
+function lazyImage() {
 
     // 选择所有需要懒加载的图片
     const images = document.querySelectorAll('img[data-original]');
@@ -1469,7 +1390,7 @@ function lazyImage(){
                     const src = img.getAttribute('data-original');
                     if (src) {
                         img.src = src;
-                       // img.removeAttribute('data-original');
+                        // img.removeAttribute('data-original');
                         observer.unobserve(img); // 停止观察已加载的图片
                     }
                 }

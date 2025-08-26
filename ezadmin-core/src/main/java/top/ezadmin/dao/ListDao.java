@@ -488,7 +488,7 @@ public class ListDao extends JsoupUtil {
                 listitem.putAll(loadDataAttrNoChild(item));
                 //special
                 Utils.putIfAbsent(listitem, JsoupUtil.LABEL,
-                        Utils.trimEmptyDefault(item.text(),strip(item.parent().parent().child(0).text()))
+                        Utils.trimEmptyDefault(item.text(), strip(item.parent().parent().child(0).text()))
                 );
                 Utils.putIfAbsent(listitem, "item_id", Utils.trimEmptyDefault(item.attr(JsoupUtil.ITEM_NAME)).replaceAll(",", "-"));
                 listitem.put(JsoupUtil.ITEM_NAME, Utils.trimEmptyDefault(item.attr(JsoupUtil.ITEM_NAME)));

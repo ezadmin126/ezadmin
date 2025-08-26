@@ -14,57 +14,57 @@ import java.util.stream.Stream;
 public class DefaultLocalFilter {
     private static final Logger logger = LoggerFactory.getLogger(DefaultLocalFilter.class);
 
-     private static Cache<String, String> BLACKLIST = null;
+    private static Cache<String, String> BLACKLIST = null;
 
 
-    public static void init(){
-        if(BLACKLIST != null){
+    public static void init() {
+        if (BLACKLIST != null) {
             return;
         }
-        BLACKLIST=Caffeine.newBuilder()
+        BLACKLIST = Caffeine.newBuilder()
                 .expireAfterWrite(1, TimeUnit.HOURS)
                 .maximumSize(50000)
                 .build();
 
-        SafeCallback urllimit=new SafeCallback() {
+        SafeCallback urllimit = new SafeCallback() {
             @Override
             public void doCallback(String ip, long count, long period, long max) {
-                logger.info("反爬告警 URL限流 {} {} {} {}",ip,count,period,max);
-                BLACKLIST.put(ip,"URL限流");
+                logger.info("反爬告警 URL限流 {} {} {} {}", ip, count, period, max);
+                BLACKLIST.put(ip, "URL限流");
             }
         };
-        SafeCallback pool=new SafeCallback() {
+        SafeCallback pool = new SafeCallback() {
             @Override
             public void doCallback(String ip, long count, long period, long max) {
-                logger.info("反爬告警 IP池 {} {} {} {}",ip,count,period,max);
-                BLACKLIST.put(ip,"IP池");
+                logger.info("反爬告警 IP池 {} {} {} {}", ip, count, period, max);
+                BLACKLIST.put(ip, "IP池");
             }
         };
-        SafeCallback night=new SafeCallback() {
+        SafeCallback night = new SafeCallback() {
             @Override
             public void doCallback(String ip, long count, long period, long max) {
-                logger.info("反爬告警 异常时间段访问 {} {} {} {}",ip,count,period,max);
-                BLACKLIST.put(ip,"异常时间段访问");
+                logger.info("反爬告警 异常时间段访问 {} {} {} {}", ip, count, period, max);
+                BLACKLIST.put(ip, "异常时间段访问");
             }
         };
-        SafeCallback per=new SafeCallback() {
+        SafeCallback per = new SafeCallback() {
             @Override
             public void doCallback(String ip, long count, long period, long max) {
-                logger.info("反爬告警  区间访问 {} {} {} {}",ip,count,period,max);
-                BLACKLIST.put(ip,"区间访问");
+                logger.info("反爬告警  区间访问 {} {} {} {}", ip, count, period, max);
+                BLACKLIST.put(ip, "区间访问");
             }
         };
-        RuleHolder.getInstance().init( urllimit,pool,night,per);
+        RuleHolder.getInstance().init(urllimit, pool, night, per);
     }
 
-    public static boolean isSafe(IpActionDto dto){
-        if(BLACKLIST.getIfPresent(dto.getIp())!=null){
-            logger.error("黑名单ip {} {}",dto.getIp(),BLACKLIST);
+    public static boolean isSafe(IpActionDto dto) {
+        if (BLACKLIST.getIfPresent(dto.getIp()) != null) {
+            logger.error("黑名单ip {} {}", dto.getIp(), BLACKLIST);
             return false;
         }
-        if(sql(dto.getP())||xss(dto.getP())){
-            logger.error("攻击代码 {}",dto.getP());
-            BLACKLIST.put(dto.getIp(),"攻击代码");
+        if (sql(dto.getP()) || xss(dto.getP())) {
+            logger.error("攻击代码 {}", dto.getP());
+            BLACKLIST.put(dto.getIp(), "攻击代码");
             return false;
         }
         RuleHolder.getInstance().onMessage(dto);
@@ -76,7 +76,7 @@ public class DefaultLocalFilter {
     private static Pattern sqlPattern = Pattern.compile(badStrReg, Pattern.CASE_INSENSITIVE);//整体都忽略大小写
 
 
-    private static boolean sql(String value)   {
+    private static boolean sql(String value) {
         try {
             String lowerValue = URLDecoder.decode(value, "UTF-8").toLowerCase();
             return Stream.of(lowerValue.split("\\&"))
@@ -88,10 +88,12 @@ public class DefaultLocalFilter {
                         }
                         return false;
                     });
-        }catch (Exception e){
-            logger.error(value,e);
-            return true;}
+        } catch (Exception e) {
+            logger.error(value, e);
+            return true;
+        }
     }
+
     private static final Pattern[] PATTERNS = {
             // Avoid anything in a <script> type of expression
             Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE),

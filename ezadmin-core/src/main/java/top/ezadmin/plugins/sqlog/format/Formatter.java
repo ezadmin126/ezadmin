@@ -13,9 +13,9 @@ package top.ezadmin.plugins.sqlog.format;
 
 /**
  * Formatter contract
- * 
+ *
  * @author Steve Ebersole
  */
 public interface Formatter {
-	public String format(String source);
+    public String format(String source);
 }

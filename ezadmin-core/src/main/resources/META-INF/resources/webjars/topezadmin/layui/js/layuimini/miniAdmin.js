@@ -87,11 +87,11 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
          * @param data
          */
         renderLogo: function (data) {
-            try{
-            var html = '<a href="' + data.href + '"><img  class="logoimg" src="' + data.image + '" alt="logo"><h1>' + data.title + '</h1></a>';
-            $('.layuimini-logo').html(html);
-            }catch (e) {
-                
+            try {
+                var html = '<a href="' + data.href + '"><img  class="logoimg" src="' + data.image + '" alt="logo"><h1>' + data.title + '</h1></a>';
+                $('.layuimini-logo').html(html);
+            } catch (e) {
+
             }
         },
 
@@ -100,7 +100,7 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
          * @param data
          */
         renderHome: function (data) {
-            try{
+            try {
                 if (data.href) {
                     sessionStorage.setItem('layuiminiHomeHref', data.href);
                     $('#layuiminiHomeTabId').html('<span class="layuimini-tab-active layui-icon-refresh layui-icon"></span><span class="disable-close">' + data.title + '</span><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>');
@@ -110,8 +110,8 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
                     $('#layuiminiHomeTabIframe').remove()
                     $('#layuiminiHomeTabId').remove()
                 }
-            }catch (e) {
-                
+            } catch (e) {
+
             }
         },
 
@@ -266,7 +266,7 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
              */
             $('body').on('click', '[data-clear]', function () {
                 var loading = layer.load(0, {shade: false, time: 2 * 1000});
-               // sessionStorage.clear();
+                // sessionStorage.clear();
 
                 // 判断是否清理服务端
                 var clearUrl = $(this).attr('data-href');
@@ -274,7 +274,7 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
                     $.getJSON(clearUrl, function (data, status) {
                         layer.close(loading);
                         if (!data.success) {
-                            return miniAdmin.error('清理缓存接口有误:'+data.message);
+                            return miniAdmin.error('清理缓存接口有误:' + data.message);
                         } else {
                             return miniAdmin.success(data.message);
                         }
@@ -317,7 +317,7 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
 
             $('body').on('click', '[data-note]', function () {
 
-                if($('.notelocal').parent().is(':visible')){
+                if ($('.notelocal').parent().is(':visible')) {
                     return false;
                 }
 

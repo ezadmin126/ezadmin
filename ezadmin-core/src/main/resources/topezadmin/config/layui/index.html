@@ -24,12 +24,14 @@
         .layuimini-tab .layui-tab-title .layui-this .layui-icon-refresh {
             color: #1e9fff;
         }
-        .layuimini-tab .layui-tab-title .layui-this .layuimini-tab-active{
+
+        .layuimini-tab .layui-tab-title .layui-this .layuimini-tab-active {
             background-color: snow;
         }
+
         .layuimini-tab .layui-tab-title .layuimini-tab-active {
 
-             background-color: snow;
+            background-color: snow;
 
             font-size: 12px;
             margin-right: 5px;
@@ -38,16 +40,19 @@
         .layui-layout-admin .layui-body {
             padding-bottom: 0px !important;
         }
-        @media screen and (min-width: 1025px){
-            .layuimini-mini .layuimini-menu-left .layui-left-nav{
-                display:none;
+
+        @media screen and (min-width: 1025px) {
+            .layuimini-mini .layuimini-menu-left .layui-left-nav {
+                display: none;
             }
         }
-        .layui-form-switch{
-         margin-top:0px;
+
+        .layui-form-switch {
+            margin-top: 0px;
         }
     </style>
-    <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?xx'+vi:''}"  >
+    <link id="layui_theme_css" rel="stylesheet"
+          th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?xx'+vi:''}">
 
 </head>
 <body class="layui-layout-body layuimini-all">
@@ -84,17 +89,19 @@
                     <a href="javascript:;" data-chat="聊天" th:src="${chatUrl}"><i
                             class="layui-icon-dialogue layui-icon"></i></a>
                 </li>
-                <li class="layui-nav-item" style="min-width: 60px" lay-unselect th:if="${not #strings.isEmpty(codecircle)}">
-                    <a href="javascript:;" data-codecircle="codecircle"  ><i
+                <li class="layui-nav-item" style="min-width: 60px" lay-unselect
+                    th:if="${not #strings.isEmpty(codecircle)}">
+                    <a href="javascript:;" data-codecircle="codecircle"><i
                             class="layui-icon-code-circle layui-icon"></i></a>
                 </li>
                 <li class="layui-nav-item" lay-unselect>
-                    <a href="javascript:;" data-refresh="刷新" title="刷新页面"><i class="layui-icon-refresh layui-icon"></i></a>
+                    <a href="javascript:;" data-refresh="刷新" title="刷新页面"><i
+                            class="layui-icon-refresh layui-icon"></i></a>
                 </li>
-                                <li class="layui-nav-item" lay-unselect th:if="${not #strings.isEmpty(clearUrl)}">
-                                    <a href="javascript:;" title="清理缓存" data-clear="清理缓存" class="layuimini-clear"><i class="layui-icon-delete
+                <li class="layui-nav-item" lay-unselect th:if="${not #strings.isEmpty(clearUrl)}">
+                    <a href="javascript:;" title="清理缓存" data-clear="清理缓存" class="layuimini-clear"><i class="layui-icon-delete
                  layui-icon"></i></a>
-                                </li>
+                </li>
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;" data-note="便签" class="layuimini-note"><i class="layui-icon-note
  layui-icon"></i></a>
@@ -106,9 +113,11 @@
 
                 <li class="layui-nav-item " lay-unselect>
                     <div class="  layui-form ws-header-theme">
-                        <input   th:if="${darkTheme eq 'dark'}" lay-filter="switchfilter" type="checkbox"  checked  name="CCC" value="1" lay-skin="switch">
-                        <input   th:if="${  darkTheme != 'dark'}" lay-filter="switchfilter" type="checkbox"     name="CCC" value="1" lay-skin="switch">
-                        <div lay-checkbox    >
+                        <input th:if="${darkTheme eq 'dark'}" lay-filter="switchfilter" type="checkbox" checked
+                               name="CCC" value="1" lay-skin="switch">
+                        <input th:if="${  darkTheme != 'dark'}" lay-filter="switchfilter" type="checkbox" name="CCC"
+                               value="1" lay-skin="switch">
+                        <div lay-checkbox>
                             <i class="layui-icon layui-icon-moon"></i> |
                             <i class="layui-icon layui-icon-light"></i>
                         </div>
@@ -120,23 +129,24 @@
                     <a href="javascript:;"
                        th:text="${#strings.isEmpty(EZ_SESSION_USER_NAME_KEY)?'未登陆':EZ_SESSION_USER_NAME_KEY}">admin</a>
                     <dl class="layui-nav-child">
-                        <dd  th:if="${not #strings.isEmpty(EZ_SESSION_USER_ORG_KEY)}">
+                        <dd th:if="${not #strings.isEmpty(EZ_SESSION_USER_ORG_KEY)}">
                             <a target="_blank" href="/login/selectorg.html"
                                th:if="${not #strings.isEmpty(EZ_SESSION_USER_ORG_KEY)}"
                                th:data-title="${EZ_SESSION_USER_ORG_KEY}" data-icon="fa fa-gears"
                                th:text="${EZ_SESSION_USER_ORG_KEY}"></a>
                         </dd>
-                        <dd  th:if="${not #strings.isEmpty(EZ_SESSION_USER_POSI_KEY)}">
+                        <dd th:if="${not #strings.isEmpty(EZ_SESSION_USER_POSI_KEY)}">
                             <a target="_blank" href="#"
                                th:if="${not #strings.isEmpty(EZ_SESSION_USER_POSI_KEY)}"
                                th:data-title="${EZ_SESSION_USER_POSI_KEY}" data-icon="fa fa-gears"
                                th:text="${EZ_SESSION_USER_POSI_KEY}"></a>
                         </dd>
 
-                            <dd>
-                                <span class="layui-badge-dot"></span>
-                                <a target="_blank" th:if="${not #strings.isEmpty(EZ_SESSION_USER_NAME_KEY)}" th:href="${resetPasswordUrl}" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
-                            </dd>
+                        <dd>
+                            <span class="layui-badge-dot"></span>
+                            <a target="_blank" th:if="${not #strings.isEmpty(EZ_SESSION_USER_NAME_KEY)}"
+                               th:href="${resetPasswordUrl}" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
+                        </dd>
                         <dd>
                             <hr>
                         </dd>
@@ -159,13 +169,13 @@
     <div class="layui-side layui-bg-black layuimini-menu-left">
     </div>
 
-<!--    &lt;!&ndash;初始化加载层&ndash;&gt;-->
-<!--    <div class="layuimini-loader">-->
-<!--        <div class="layuimini-loader-inner"></div>-->
-<!--    </div>-->
+    <!--    &lt;!&ndash;初始化加载层&ndash;&gt;-->
+    <!--    <div class="layuimini-loader">-->
+    <!--        <div class="layuimini-loader-inner"></div>-->
+    <!--    </div>-->
 
-<!--    &lt;!&ndash;手机端遮罩层&ndash;&gt;-->
-<!--    <div class="layuimini-make"></div>-->
+    <!--    &lt;!&ndash;手机端遮罩层&ndash;&gt;-->
+    <!--    <div class="layuimini-make"></div>-->
 
     <!-- 移动导航 -->
     <div class="layuimini-site-mobile"><i class="layui-icon layui-icon-spread-left"></i></div>
@@ -217,7 +227,7 @@
 <input type="hidden" id="indexConfigJson" th:value="${indexConfigJson}">
 
 <input type="hidden" id="contextName" th:value="${contextName}">
- <script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
+<script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
 <script th:src="${contextName+'/webjars/topezadmin/layui/js/jquery.cookie.js'}"></script>
 <script th:src="${contextName+'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
 <script th:src="${contextName+'/webjars/topezadmin/layui/js/index.js?v=202405'}" type="text/javascript"></script>
@@ -231,25 +241,25 @@
         var form = layui.form;
 
         form.render($("#switchtheme"));
-        form.on('switch(switchfilter)',function(data){
+        form.on('switch(switchfilter)', function (data) {
             var elem = data.elem; // 获得 checkbox 原始 DOM 对象
 
-            if(elem.checked){
-                var url="/webjars/topezadmin/layui/css/layui-theme-dark.css?xx"+[[${vi}]];
-                document.getElementById('layui_theme_css').setAttribute('href',url);
+            if (elem.checked) {
+                var url = "/webjars/topezadmin/layui/css/layui-theme-dark.css?xx" + [[${vi}]];
+                document.getElementById('layui_theme_css').setAttribute('href', url);
                 $("body").remove()
-                $.get("/topezadmin/dark.html?type=add",function(){
+                $.get("/topezadmin/dark.html?type=add", function () {
                     location.reload();
                 })
 
-            }else{
+            } else {
                 document.getElementById('layui_theme_css').removeAttribute('href');
 
-                $.get("/topezadmin/dark.html?type=delete",function(){
+                $.get("/topezadmin/dark.html?type=delete", function () {
 
                 })
             }
-           // location.reload();
+            // location.reload();
         });
 
         var options = {
@@ -270,8 +280,6 @@
             layer.msg('退出登录成功');
             window.location = $("#signoutUrl").val();
         });
-
-
 
 
     });

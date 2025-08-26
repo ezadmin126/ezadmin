@@ -10,12 +10,13 @@
     <h1>My Website</h1>
     <!-- Define a fragment named 'navigation' -->
     <div th:fragment="search">
-        <button type="button"  class="  ez-plugin layui-btn   layui-btn-primary layui-border-purple">
-             <i class="layui-icon  layui-icon-component"  ></i>
+        <button type="button" class="  ez-plugin layui-btn   layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"></i>
             <span>输入框</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
-             <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"  ez-type="input-text" config-form-type="searchcore">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     ez-type="input-text" config-form-type="searchcore">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">输入框</label>
                         <div class="layui-input-block">
@@ -25,12 +26,13 @@
                 </div>
             </script>
         </button>
-        <button type="button"  class="  ez-plugin layui-btn   layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+        <button type="button" class="  ez-plugin layui-btn   layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"></i>
             <span>隐藏域</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"  ez-type="input-hidden" config-form-type="searchcore">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     ez-type="input-hidden" config-form-type="searchcore">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">隐藏域</label>
                         <div class="layui-input-block">
@@ -40,12 +42,13 @@
                 </div>
             </script>
         </button>
-        <button type="button"  class="  ez-plugin layui-btn   layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+        <button type="button" class="  ez-plugin layui-btn   layui-btn-primary layui-border-purple">
+            <i class="layui-icon  layui-icon-component"></i>
             <span>隐藏域无where</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"  ez-type="hidden-nowhere" config-form-type="searchcore">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     ez-type="hidden-nowhere" config-form-type="searchcore">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">隐藏域无where</label>
                         <div class="layui-input-block">
@@ -57,11 +60,12 @@
         </button>
         <hr>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+            <i class="layui-icon  layui-icon-component"></i>
             <span>原生下拉</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3" ez-type="select" config-form-type="select">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     ez-type="select" config-form-type="select">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">原生下拉框</label>
                         <div class="layui-input-block">
@@ -74,15 +78,17 @@
             </script>
         </button>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+            <i class="layui-icon  layui-icon-component"></i>
             <span>搜索下拉</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3" ez-type="select-search"  config-form-type="select">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     ez-type="select-search" config-form-type="select">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">搜索下拉框</label>
                         <div class="layui-input-block">
-                            <select name="default" class=""> <option value="">请选择</option>
+                            <select name="default" class="">
+                                <option value="">请选择</option>
                             </select>
                         </div>
                     </div>
@@ -90,28 +96,32 @@
             </script>
         </button>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+            <i class="layui-icon  layui-icon-component"></i>
             <span>多选下拉</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
 
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3" config-form-type="searchcore" ez-type="xmselect">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     config-form-type="searchcore" ez-type="xmselect">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">多选下拉框</label>
                         <div class="layui-input-block">
-                            <select name="default" class=""><option value="">请选择</option></select>
+                            <select name="default" class="">
+                                <option value="">请选择</option>
+                            </select>
                         </div>
                     </div>
                 </div>
             </script>
         </button>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+            <i class="layui-icon  layui-icon-component"></i>
             <span>级联下拉</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
 
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3" config-form-type="cascader" ez-type="search-cascader">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     config-form-type="cascader" ez-type="search-cascader">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">级联下拉</label>
                         <div class="layui-input-block">
@@ -124,12 +134,13 @@
             </script>
         </button>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+            <i class="layui-icon  layui-icon-component"></i>
             <span>SQL级联</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
 
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3" config-form-type="cascader"    ez-type="cascadersql">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     config-form-type="cascader" ez-type="cascadersql">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">Sql级联下拉</label>
                         <div class="layui-input-block">
@@ -143,28 +154,31 @@
         </button>
         <HR>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-date"  ></i>
+            <i class="layui-icon  layui-icon-date"></i>
             <span>日期区间</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
 
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3  selector" config-form-type="searchcore" ez-type="daterange" ez-label="日期区间">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3  selector"
+                     config-form-type="searchcore" ez-type="daterange" ez-label="日期区间">
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">日期区间</label>
                         <div class="ez-daterange-parent  ">
 
-                            <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0;width:30px!important">
+                            <div class="layui-input-inline ez-range ez-daterange"
+                                 style="margin-right: 0;width:30px!important">
                                 <div class="layui-input-wrap">
                                     <div class="layui-input-prefix">
                                         <i class="layui-icon layui-icon-date"></i>
                                     </div>
-                                    <input  PLACEHOLDER="开始时间"  autocomplete="off" type="text"
-                                            class="layui-input layui-date"
-                                            name="default" >
+                                    <input PLACEHOLDER="开始时间" autocomplete="off" type="text"
+                                           class="layui-input layui-date"
+                                           name="default">
                                 </div>
                             </div>
                             <div class="layui-form-mid">-</div>
-                            <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0;width:30px!important">
+                            <div class="layui-input-inline ez-range ez-daterange"
+                                 style="margin-right: 0;width:30px!important">
 
                                 <div class="layui-input-wrap">
                                     <div class="layui-input-prefix">
@@ -180,29 +194,32 @@
             </script>
         </button>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-date"  ></i>
+            <i class="layui-icon  layui-icon-date"></i>
             <span>时间区间</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
 
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3   selector" config-form-type="searchcore" ez-type="datetimerange" ez-label="日期时间区间"
-                     >
+            <script type="text/x-template" class="template">
+                <div class="layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3   selector"
+                     config-form-type="searchcore" ez-type="datetimerange" ez-label="日期时间区间"
+                >
                     <div class="layui-form-item ">
                         <label class="layui-form-label  ">日期时间区间</label>
                         <div class="layui-input-block">
                             <div class="ez-daterange-parent  ">
-                                <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0;width:30px!important">
+                                <div class="layui-input-inline ez-range ez-daterange"
+                                     style="margin-right: 0;width:30px!important">
                                     <div class="layui-input-wrap">
                                         <div class="layui-input-prefix">
                                             <i class="layui-icon layui-icon-date"></i>
                                         </div>
-                                        <input  PLACEHOLDER="开始时间"  autocomplete="off" type="text"
-                                                class="layui-input layui-date"
-                                                name="default" >
+                                        <input PLACEHOLDER="开始时间" autocomplete="off" type="text"
+                                               class="layui-input layui-date"
+                                               name="default">
                                     </div>
                                 </div>
                                 <div class="layui-form-mid">-</div>
-                                <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0;width:30px!important">
+                                <div class="layui-input-inline ez-range ez-daterange"
+                                     style="margin-right: 0;width:30px!important">
 
                                     <div class="layui-input-wrap">
                                         <div class="layui-input-prefix">
@@ -220,17 +237,20 @@
         </button>
         <HR>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+            <i class="layui-icon  layui-icon-component"></i>
             <span>合并搜索</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
 
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3" ez-type="union"
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     ez-type="union"
                      config-form-type="searchcore">
                     <div class="layui-form-item ">
                         <div class="layui-input-inline edit-unionsearch " style="width:100px !important;padding:0px">
 
-                            <select name="default" class=""><option value="">请选择</option></select>
+                            <select name="default" class="">
+                                <option value="">请选择</option>
+                            </select>
                         </div>
                         <div class="layui-input-block">
                             <input type="text" name="default" placeholder="请输入" class="layui-input">
@@ -240,31 +260,36 @@
             </script>
         </button>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-date"  ></i>
+            <i class="layui-icon  layui-icon-date"></i>
             <span>合并时间</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
 
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3" ez-type="uniondate" config-form-type="searchcore">
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     ez-type="uniondate" config-form-type="searchcore">
                     <div class="layui-form-item ">
                         <div class="layui-input-inline edit-unionsearch " style="width:100px !important;padding:0px">
 
-                            <select name="default" class=""><option value="">请选择</option></select>
+                            <select name="default" class="">
+                                <option value="">请选择</option>
+                            </select>
                         </div>
 
                         <div class="ez-daterange-parent  ">
-                            <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0;width:30px!important">
+                            <div class="layui-input-inline ez-range ez-daterange"
+                                 style="margin-right: 0;width:30px!important">
                                 <div class="layui-input-wrap">
                                     <div class="layui-input-prefix">
                                         <i class="layui-icon layui-icon-date"></i>
                                     </div>
-                                    <input  PLACEHOLDER="开始时间"  autocomplete="off" type="text"
-                                            class="layui-input layui-date"
-                                            name="default" >
+                                    <input PLACEHOLDER="开始时间" autocomplete="off" type="text"
+                                           class="layui-input layui-date"
+                                           name="default">
                                 </div>
                             </div>
                             <div class="layui-form-mid">-</div>
-                            <div class="layui-input-inline ez-range ez-daterange" style="margin-right: 0;width:30px!important">
+                            <div class="layui-input-inline ez-range ez-daterange"
+                                 style="margin-right: 0;width:30px!important">
 
                                 <div class="layui-input-wrap">
                                     <div class="layui-input-prefix">
@@ -281,16 +306,19 @@
             </script>
         </button>
         <button type="button" class=" ez-plugin layui-btn     layui-btn-primary layui-border-purple">
-            <i class="layui-icon  layui-icon-component"  ></i>
+            <i class="layui-icon  layui-icon-component"></i>
             <span>合并或搜索</span>
             <i class="layui-icon layui-icon-down layui-font-12"></i>
 
-            <script type="text/x-template" class="template" >
-                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3" ez-type="unionor"
+            <script type="text/x-template" class="template">
+                <div class="layui-col-space10 selector layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3"
+                     ez-type="unionor"
                      config-form-type="searchcore">
                     <div class="layui-form-item ">
                         <div class="layui-input-inline edit-unionsearch " style="width:100px !important;padding:0px">
-                            <select name="default" class=""><option value="">请选择</option></select>
+                            <select name="default" class="">
+                                <option value="">请选择</option>
+                            </select>
                         </div>
                         <div class="layui-input-block">
                             <input type="text" name="default" placeholder="请输入" class="layui-input">

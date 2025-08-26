@@ -1,24 +1,23 @@
 package top.ezadmin.web.filters.ez;
 
- import top.ezadmin.common.NotExistException;
- import top.ezadmin.common.annotation.EzMapping;
- import top.ezadmin.EzClientBootstrap;
- import top.ezadmin.common.utils.*;
- import top.ezadmin.web.EzResult;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
- import org.thymeleaf.context.WebContext;
+import org.thymeleaf.context.WebContext;
+import top.ezadmin.EzClientBootstrap;
+import top.ezadmin.common.NotExistException;
+import top.ezadmin.common.annotation.EzMapping;
+import top.ezadmin.common.utils.*;
+import top.ezadmin.web.EzResult;
 
- import javax.servlet.FilterChain;
- import javax.servlet.ServletException;
- import javax.servlet.http.Cookie;
- import javax.servlet.http.HttpServletRequest;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
- import java.lang.reflect.InvocationTargetException;
- import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,13 +37,14 @@ import java.util.regex.Pattern;
  * anon->AnonController
  */
 public class ControllerFilter extends Filter {
-    
+
     private static Logger logger = LoggerFactory.getLogger(ControllerFilter.class);
-    private static String includeShow="/topezadmin/(list|form|listEdit|formEdit|detail|api)/([A-Za-z]+)-(.*)";
-    private Map<String, Map<String, Object>> REQUEST_MAPPING = new HashMap<String, Map<String, Object>> ();
+    private static String includeShow = "/topezadmin/(list|form|listEdit|formEdit|detail|api)/([A-Za-z]+)-(.*)";
+    private Map<String, Map<String, Object>> REQUEST_MAPPING = new HashMap<String, Map<String, Object>>();
     private String pack = "top.ezadmin.controller";
-    private static String vesion=System.currentTimeMillis()+"";
+    private static String vesion = System.currentTimeMillis() + "";
     private Pattern pInclude = Pattern.compile(includeShow);
+
     /**
      * 通过url中的前缀来选择跳转到那个controller，第二个url参数对应controller中的方法
      * list->ListController
@@ -58,13 +58,13 @@ public class ControllerFilter extends Filter {
      */
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-       String originatingUrl =   request.getRequestURI() ;
-        originatingUrl= originatingUrl.replace("/ezadmin/","/topezadmin/")
-                .replace("/ezcloud/","/topezadmin/")
-                .replace("/myadmin/","/topezadmin/");
+        String originatingUrl = request.getRequestURI();
+        originatingUrl = originatingUrl.replace("/ezadmin/", "/topezadmin/")
+                .replace("/ezcloud/", "/topezadmin/")
+                .replace("/myadmin/", "/topezadmin/");
         originatingUrl = originatingUrl.replaceAll("\\\\", "\\");
-        int js=originatingUrl.indexOf(";");
-        if(js>=0) {
+        int js = originatingUrl.indexOf(";");
+        if (js >= 0) {
             originatingUrl = originatingUrl.substring(0, js);
         }
         String contextName = request.getServletContext().getContextPath();
@@ -73,12 +73,12 @@ public class ControllerFilter extends Filter {
         request.setAttribute("cacheFlag", EzClientBootstrap.instance().isSqlCache());
         request.setAttribute("vi", vesion);
 
-        Cookie[] cookie=request.getCookies();
-        if(cookie!=null){
+        Cookie[] cookie = request.getCookies();
+        if (cookie != null) {
             for (int i = 0; i < cookie.length; i++) {
-                if(cookie[i].getName().equals("layui-theme-mode-prefer-dark")){
+                if (cookie[i].getName().equals("layui-theme-mode-prefer-dark")) {
                     try {
-                        request.setAttribute("darkTheme",cookie[i].getValue());
+                        request.setAttribute("darkTheme", cookie[i].getValue());
                     } catch (Exception e) {
 
                     }
@@ -87,61 +87,60 @@ public class ControllerFilter extends Filter {
         }
 
 
-        Matcher m=pInclude.matcher(originatingUrl);
-        if(m.find()&&m.groupCount()==3){
-             String contro=m.group(1);
-             String method=m.group(2);
-             String id=m.group(3);
-             if(id.endsWith("\\")){
-                id=id.substring(0,id.length()-2);
-             }
-             try {
-                 originatingUrl = "/topezadmin/" + contro + "/" + method+".html";
-                 switch (contro) {
-                     case "authc":
-                     case "anon":
-                     case "list":
-                     case "listEdit":
-                         request.setAttribute("ENCRYPT_LIST_ID", id);
-                         break;
-                     case "form":
-                     case "formEdit":
-                         request.setAttribute("ENCRYPT_FORM_ID", id);
-                     case "api":
-                         request.setAttribute("ENCRYPT_ID", id);
-                         break;
-                 }
-             }catch (IllegalArgumentException  ee){
-                 //ignor
-                 logger.warn("",ee);
-             }
-             catch (Exception e){
-                 logger.error("URL 错误：{}",originatingUrl,e);
-             }
+        Matcher m = pInclude.matcher(originatingUrl);
+        if (m.find() && m.groupCount() == 3) {
+            String contro = m.group(1);
+            String method = m.group(2);
+            String id = m.group(3);
+            if (id.endsWith("\\")) {
+                id = id.substring(0, id.length() - 2);
+            }
+            try {
+                originatingUrl = "/topezadmin/" + contro + "/" + method + ".html";
+                switch (contro) {
+                    case "authc":
+                    case "anon":
+                    case "list":
+                    case "listEdit":
+                        request.setAttribute("ENCRYPT_LIST_ID", id);
+                        break;
+                    case "form":
+                    case "formEdit":
+                        request.setAttribute("ENCRYPT_FORM_ID", id);
+                    case "api":
+                        request.setAttribute("ENCRYPT_ID", id);
+                        break;
+                }
+            } catch (IllegalArgumentException ee) {
+                //ignor
+                logger.warn("", ee);
+            } catch (Exception e) {
+                logger.error("URL 错误：{}", originatingUrl, e);
+            }
         }
         if (REQUEST_MAPPING.containsKey(originatingUrl)) {
             request.setAttribute("contextName", contextName);
-            request.setAttribute("uploadUrl",  request.getContextPath()+ EzClientBootstrap.instance().getUploadUrl());
-            if(StringUtils.startsWith(EzClientBootstrap.instance().getDownloadUrl(),"http")){
+            request.setAttribute("uploadUrl", request.getContextPath() + EzClientBootstrap.instance().getUploadUrl());
+            if (StringUtils.startsWith(EzClientBootstrap.instance().getDownloadUrl(), "http")) {
                 request.setAttribute("downloadUrl", EzClientBootstrap.instance().getDownloadUrl());
-            }else{
-                request.setAttribute("downloadUrl",request.getContextPath()+ EzClientBootstrap.instance().getDownloadUrl());
+            } else {
+                request.setAttribute("downloadUrl", request.getContextPath() + EzClientBootstrap.instance().getDownloadUrl());
             }
 
             request.setAttribute("adminStyle", EzClientBootstrap.instance().getAdminStyle());
 
             Map<String, Object> map = REQUEST_MAPPING.get(originatingUrl);
-            Object controller =  map.get("controller");
+            Object controller = map.get("controller");
             Method method = (Method) map.get("method");
             try {
                 if (method.getReturnType().equals(Void.TYPE)) {
                     method.invoke(controller, request, response);
                 } else if (method.getReturnType().equals(String.class)) {
                     String view = method.invoke(controller, request, response) + "";
-                    if(StringUtils.startsWith(view,"redirect:")){
-                        view=StringUtils.replace(view,"redirect:","");
+                    if (StringUtils.startsWith(view, "redirect:")) {
+                        view = StringUtils.replace(view, "redirect:", "");
                         response.sendRedirect(view);
-                    }else {
+                    } else {
                         view(view, request, response);
                     }
                 } else if (method.getReturnType().equals(EzResult.class)) {
@@ -150,30 +149,30 @@ public class ControllerFilter extends Filter {
                 } else {
                     method.invoke(controller, request, response);
                 }
-            }catch (InvocationTargetException vo){
-                if(vo.getTargetException() instanceof NotExistException){
-                    filterChain.doFilter(request,response);
+            } catch (InvocationTargetException vo) {
+                if (vo.getTargetException() instanceof NotExistException) {
+                    filterChain.doFilter(request, response);
                     return;
                 }
-                logger.error("找不到指定的方法",vo.getTargetException());
+                logger.error("找不到指定的方法", vo.getTargetException());
                 EzResult.instance().success(false).msg("500", ExceptionUtils.getFullStackTrace(vo.getTargetException())).printJSONUtils(response);
-            }
-            catch (Exception e) {
-                logger.error("找不到指定的方法",e);
+            } catch (Exception e) {
+                logger.error("找不到指定的方法", e);
                 EzResult.instance().success(false).msg("500", ExceptionUtils.getFullStackTrace(e)).printJSONUtils(response);
             }
             return;
         }
-        if(getNext()==null){
+        if (getNext() == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        getNext().doFilter(request, response,filterChain);
+        getNext().doFilter(request, response, filterChain);
     }
-    public ControllerFilter()  {
+
+    public ControllerFilter() {
         super.initFilterBean();
-        Set<String> controllersNew = ClassUtils.loadAllClassByPackage(pack );
-        for (String item:controllersNew) {
+        Set<String> controllersNew = ClassUtils.loadAllClassByPackage(pack);
+        for (String item : controllersNew) {
             try {
                 if (item.endsWith("Controller")) {
                     Object bean = BeanTools.applicationInstance(item);
@@ -187,6 +186,7 @@ public class ControllerFilter extends Filter {
 
     /**
      * 初始化controller中的注解
+     *
      * @param bean controller
      */
     private void processEzMapping(Object bean) {
@@ -207,11 +207,12 @@ public class ControllerFilter extends Filter {
             REQUEST_MAPPING.put(controllerUrl + mAnno.value(), map);
         }
     }
-   
+
     /**
      * 渲染页面
-     * @param view 页面路径
-     * @param request 请求
+     *
+     * @param view     页面路径
+     * @param request  请求
      * @param response 响应
      */
     protected void view(String view, HttpServletRequest request, HttpServletResponse response) {
@@ -219,7 +220,7 @@ public class ControllerFilter extends Filter {
         try {
             ThymeleafUtils.process(view, context, response.getWriter());
         } catch (IOException e) {
-            Utils.addLog("渲染页面失败"+view+ request.getRequestURI(),e);
+            Utils.addLog("渲染页面失败" + view + request.getRequestURI(), e);
         }
     }
 }

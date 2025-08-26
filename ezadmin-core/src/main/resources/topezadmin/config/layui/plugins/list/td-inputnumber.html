@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <title>表格-输入框</title>
 </head>
-<body id="td-inputnumber"  >
+<body id="td-inputnumber">
 <table>
     <tr id="content">
         <td
 
-            th:ITEM_NAME="${item_name}" th:title="${dataInDb}" th:ITEM_ID="${item_name}"
-            th:class="${ '    ezadmin-td ezadmin-td-'+item_name}"
+                th:ITEM_NAME="${item_name}" th:title="${dataInDb}" th:ITEM_ID="${item_name}"
+                th:class="${ '    ezadmin-td ezadmin-td-'+item_name}"
 
-            th:style="${style+(#strings.equals(jdbctype,'NUMBER')?';text-align:right':'')}"
+                th:style="${style+(#strings.equals(jdbctype,'NUMBER')?';text-align:right':'')}"
         >
-            <div class="  td-text  " >
+            <div class="  td-text  ">
                 <input
-                         autocomplete="off"
+                        autocomplete="off"
                         type="number"
                         th:lay-filter="${'lay_filter_'+item_name}"
-                         th:data-id="${ID}"
+                        th:data-id="${ID}"
                         class="layui-input layui-input-table "
                         th:value="${dataInDb}" th:name="${item_name}" th:id="${'search-itemName-' + item_name}">
 

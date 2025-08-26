@@ -7,11 +7,11 @@ import top.ezadmin.plugins.express.OperatorParam;
 public class SessionParamOperator extends AbstractOperator {
 
 
-
     @Override
     public Object executeInner(Object[] objects) throws Exception {
         String key = objects[0].toString();
-        try {        OperatorParam operatorParam=(OperatorParam)Utils.getParam();
+        try {
+            OperatorParam operatorParam = (OperatorParam) Utils.getParam();
 
 
             String value = Utils.trimNull(operatorParam.getSessionParams().get(key));
@@ -23,8 +23,8 @@ public class SessionParamOperator extends AbstractOperator {
 //            return result;
 //        }
             return value;
-        }catch(Exception e){
-            Utils.addLog("没有找到："+key);
+        } catch (Exception e) {
+            Utils.addLog("没有找到：" + key);
             return "";
         }
     }

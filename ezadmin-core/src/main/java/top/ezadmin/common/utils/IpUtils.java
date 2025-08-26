@@ -21,7 +21,7 @@ public class IpUtils {
     public static String getRealIp(HttpServletRequest request) {
         String ip = cut(request.getHeader(X_Real_IP));
         if (isIpUnknown(ip)) {
-          ip = cut(request.getHeader(X_FORWARDED_FOR));
+            ip = cut(request.getHeader(X_FORWARDED_FOR));
         }
         if (isIpUnknown(ip)) {
             ip = cut(request.getHeader(PROXY_CLIENT_IP));

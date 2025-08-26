@@ -1,20 +1,17 @@
 package top.ezadmin.plugins.parser.parse;
 
-import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.common.utils.ArrayUtils;
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class ResultModel {
-    private List<Params> params=new ArrayList<>();
-    private List<Object> paramsStatic=new ArrayList<>();
+    private List<Params> params = new ArrayList<>();
+    private List<Object> paramsStatic = new ArrayList<>();
     private String result;
-    public final static ResultModel EMPTY=new ResultModel();
+    public final static ResultModel EMPTY = new ResultModel();
+
     public static ResultModel getInstance() {
         return EMPTY;
     }
@@ -27,8 +24,8 @@ public class ResultModel {
                 '}';
     }
 
-    public void addParam(Params p){
-        if(p==null ){
+    public void addParam(Params p) {
+        if (p == null) {
             return;
         }
 //        if(StringUtils.isBlank(Utils.trimNull(p.getParamValue()))){
@@ -67,7 +64,7 @@ public class ResultModel {
         return ArrayUtils.toArray(paramsStatic);
     }
 
-    public List<Object> getParamStaticList(){
+    public List<Object> getParamStaticList() {
         return paramsStatic;
     }
 

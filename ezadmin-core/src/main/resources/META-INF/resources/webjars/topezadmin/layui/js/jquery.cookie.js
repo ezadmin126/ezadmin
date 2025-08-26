@@ -1,6 +1,3 @@
-
-
-
 /*!
  * jQuery Cookie Plugin v1.4.1
  * https://github.com/carhartl/jquery-cookie
@@ -47,7 +44,8 @@
             // If we can't parse the cookie, ignore it, it's unusable.
             s = decodeURIComponent(s.replace(pluses, ' '));
             return config.json ? JSON.parse(s) : s;
-        } catch(e) {}
+        } catch (e) {
+        }
     }
 
     function read(s, converter) {
@@ -70,9 +68,9 @@
             return (document.cookie = [
                 encode(key), '=', stringifyCookieValue(value),
                 options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-                options.path    ? '; path=' + options.path : '',
-                options.domain  ? '; domain=' + options.domain : '',
-                options.secure  ? '; secure' : ''
+                options.path ? '; path=' + options.path : '',
+                options.domain ? '; domain=' + options.domain : '',
+                options.secure ? '; secure' : ''
             ].join(''));
         }
 
@@ -110,7 +108,7 @@
 
     $.removeCookie = function (key, options) {
         // Must not alter options, thus extending a fresh object...
-        $.cookie(key, '', $.extend({}, options, { expires: -1 }));
+        $.cookie(key, '', $.extend({}, options, {expires: -1}));
         return !$.cookie(key);
     };
 

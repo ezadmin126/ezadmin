@@ -1,8 +1,8 @@
 package top.ezadmin.plugins.export;
 
-import top.ezadmin.common.utils.EzDateUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import top.ezadmin.common.utils.EzDateUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStreamWriter;
@@ -13,12 +13,13 @@ import java.util.List;
 
 /**
  * : CSVExport
+ *
  * @author EzAdmin
  */
 public class CSVExport implements EzExport {
 
     @Override
-    public void export(String name, List<List<String>> head, List<List<Object>> data,  HttpServletResponse response) throws Exception {
+    public void export(String name, List<List<String>> head, List<List<Object>> data, HttpServletResponse response) throws Exception {
         CSVPrinter printer = null;
         try {
             String fileName = name + "-" + EzDateUtils.todayDatetime();
@@ -31,7 +32,7 @@ public class CSVExport implements EzExport {
             response.getOutputStream().write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
             printer = new CSVPrinter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8), CSVFormat.EXCEL);
 
-            List<String> headList=new ArrayList<>();
+            List<String> headList = new ArrayList<>();
             for (int i = 0; i < head.size(); i++) {
                 headList.add(head.get(i).get(0));
             }
@@ -40,7 +41,7 @@ public class CSVExport implements EzExport {
                 printer.printRecord(data.get(i));
             }
             printer.flush();
-           // response.getWriter().flush();
+            // response.getWriter().flush();
         } finally {
             if (printer != null)
                 printer.close();

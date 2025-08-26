@@ -24,45 +24,46 @@ import java.util.Map;
 @EzMapping("/topezadmin/")
 public class IndexController extends BaseController {
 
-    EzClientBootstrap bootstrap= EzClientBootstrap.instance();
+    EzClientBootstrap bootstrap = EzClientBootstrap.instance();
+
     @EzMapping("index.html")
-    public String index(HttpServletRequest request, HttpServletResponse response)   {
-        Map<String,Object> config=bootstrap.getConfig();
-        if(config!=null){
-            for(Map.Entry<String,Object> entry:config.entrySet()){
-                request.setAttribute(entry.getKey() ,entry.getValue());
+    public String index(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> config = bootstrap.getConfig();
+        if (config != null) {
+            for (Map.Entry<String, Object> entry : config.entrySet()) {
+                request.setAttribute(entry.getKey(), entry.getValue());
             }
         }
-        request.setAttribute("indexConfigJson",config);
-        request.setAttribute("logo",bootstrap.getLogoUrl());
-        request.setAttribute("systemName",bootstrap.getSystemName());
-        request.setAttribute("navUrl",bootstrap.getNavUrl());
-        request.setAttribute("appendJs",bootstrap.getAppendJs());
-        request.setAttribute("searchUrl",bootstrap.getSearchUrl());
-        request.setAttribute("indexUrl",bootstrap.getIndexUrl());
-        request.setAttribute("prefixUrl",bootstrap.getPrefixUrl());
-        request.setAttribute("signoutUrl",bootstrap.getSignoutUrl());
-        request.setAttribute("messageUrl",bootstrap.getMessageUrl());
-        request.setAttribute("chatUrl",bootstrap.getChatUrl());
-        request.setAttribute("clearUrl",bootstrap.getClearUrl());
-        request.setAttribute("holiday",bootstrap.getHoliday());
-        request.setAttribute("appName",bootstrap.getAppName());
-        request.setAttribute("bootstrap",bootstrap);
+        request.setAttribute("indexConfigJson", config);
+        request.setAttribute("logo", bootstrap.getLogoUrl());
+        request.setAttribute("systemName", bootstrap.getSystemName());
+        request.setAttribute("navUrl", bootstrap.getNavUrl());
+        request.setAttribute("appendJs", bootstrap.getAppendJs());
+        request.setAttribute("searchUrl", bootstrap.getSearchUrl());
+        request.setAttribute("indexUrl", bootstrap.getIndexUrl());
+        request.setAttribute("prefixUrl", bootstrap.getPrefixUrl());
+        request.setAttribute("signoutUrl", bootstrap.getSignoutUrl());
+        request.setAttribute("messageUrl", bootstrap.getMessageUrl());
+        request.setAttribute("chatUrl", bootstrap.getChatUrl());
+        request.setAttribute("clearUrl", bootstrap.getClearUrl());
+        request.setAttribute("holiday", bootstrap.getHoliday());
+        request.setAttribute("appName", bootstrap.getAppName());
+        request.setAttribute("bootstrap", bootstrap);
         String username = Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_NAME_KEY));
-        request.setAttribute("EZ_SESSION_USER_NAME_KEY",username);
-        Cookie[] cookie=request.getCookies();
-        if(cookie!=null){
+        request.setAttribute("EZ_SESSION_USER_NAME_KEY", username);
+        Cookie[] cookie = request.getCookies();
+        if (cookie != null) {
             for (int i = 0; i < cookie.length; i++) {
-                if(cookie[i].getName().equals("layui-theme-mode-prefer-dark")){
+                if (cookie[i].getName().equals("layui-theme-mode-prefer-dark")) {
                     try {
-                        request.setAttribute("darkTheme",cookie[i].getValue());
+                        request.setAttribute("darkTheme", cookie[i].getValue());
                     } catch (Exception e) {
 
                     }
                 }
             }
         }
-        return bootstrap.getAdminStyle()+"/index";
+        return bootstrap.getAdminStyle() + "/index";
     }
 
     @EzMapping("clear.html")
@@ -71,12 +72,13 @@ public class IndexController extends BaseController {
         FormDao.getInstance().clear();
         EzClientBootstrap.instance().getCache().clear();
         ThymeleafUtils.clear();
-        return EzResult.instance().msg("0","清理缓存成功");
+        return EzResult.instance().msg("0", "清理缓存成功");
     }
+
     @EzMapping("clearCache.html")
     public EzResult clearCache(HttpServletRequest request, HttpServletResponse response) throws Exception {
         EzClientBootstrap.instance().getCache().clear();
-        return EzResult.instance().msg("0","清理缓存成功");
+        return EzResult.instance().msg("0", "清理缓存成功");
     }
 
     @EzMapping("navs.html")
@@ -124,15 +126,15 @@ public class IndexController extends BaseController {
 
 
     @EzMapping("dark.html")
-    public void dark(HttpServletRequest request,  HttpServletResponse response) throws IOException {
-        if(StringUtils.equals("add",request.getParameter("type"))){
-            Cookie cookie=new Cookie("layui-theme-mode-prefer-dark", "dark");
+    public void dark(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (StringUtils.equals("add", request.getParameter("type"))) {
+            Cookie cookie = new Cookie("layui-theme-mode-prefer-dark", "dark");
             cookie.setDomain(request.getServerName());
             cookie.setPath("/");
             cookie.setMaxAge(31536000);
             response.addCookie(cookie);
-        }else{
-            Cookie cookie=new Cookie("layui-theme-mode-prefer-dark", "1");
+        } else {
+            Cookie cookie = new Cookie("layui-theme-mode-prefer-dark", "1");
             cookie.setDomain(request.getServerName());
             cookie.setPath("/");
             cookie.setMaxAge(0);
@@ -143,7 +145,7 @@ public class IndexController extends BaseController {
 
 
     @EzMapping("dev.html")
-    public String dev(HttpServletRequest request,  HttpServletResponse response)throws IOException  {
+    public String dev(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return "redirect:/topezadmin/list/list-listall";
     }
 }

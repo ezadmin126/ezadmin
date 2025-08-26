@@ -16,43 +16,56 @@
     <div>
         <label>列表编码</label>
         <div>
-            <object item_name="EZ_CODE" alias="tec" type="input-text"  ></object>
+            <object item_name="EZ_CODE" alias="tec" type="input-text"></object>
         </div>
     </div>
     <div>
         <label>添加时间</label>
         <div>
-            <object item_name="ADD_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange"  ></object>
+            <object item_name="ADD_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange"></object>
         </div>
     </div>
     <div>
         <label>修改时间</label>
         <div>
-            <object item_name="UPDATE_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange"  ></object>
+            <object item_name="UPDATE_TIME" jdbctype="DATETIME" alias="tec" oper="BETWEEN" type="daterange"></object>
         </div>
     </div>
     <div>
         <label>数据源</label>
         <div>
-            <object item_name="DATASOURCE" alias="tec" type="input-text" ></object>
+            <object item_name="DATASOURCE" alias="tec" type="input-text"></object>
         </div>
     </div>
 </form>
 <div id="tableButton">
     <button opentype="_BLANK" url="/topezadmin/listEdit/loadEdit-" item_name="addd" type="button-table">新增</button>
-    <button opentype="_BLANK" windowname="SQL生成列表" url="/topezadmin/listEdit/importSql-" item_name="addd2" type="button-table">SQL生成列表</button>
+    <button opentype="_BLANK" windowname="SQL生成列表" url="/topezadmin/listEdit/importSql-" item_name="addd2"
+            type="button-table">SQL生成列表
+    </button>
 </div>
 <table>
     <tbody>
     <tr id="column">
         <th id="rowbutton" width="200" fixed="right">
-            <button opentype="FORM" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update" type="button-group" class="layui-border-blue" windowname="可视化编辑">可视化编辑</button>
-             <button opentype="FORM" url="/topezadmin/listEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export" type="button-single" class="layui-border-orange" windowname="源码编辑">源码编辑</button>
-             <button opentype="FORM" url="/topezadmin/list/list-${EZ_CODE}?EZ_TYPE=1" item_name="view" type="button-single" class="layui-border-orange" windowname="预览已发布">预览已发布</button>
-            <button opentype="MODEL" windowname="发布历史" url="/topezadmin/listEdit/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history" type="button-single" class="layui-border-orange" windowname="发布历史">发布历史</button>
+            <button opentype="FORM" url="/topezadmin/listEdit/loadEdit-${EZ_CODE}" item_name="update"
+                    type="button-group" class="layui-border-blue" windowname="可视化编辑">可视化编辑
+            </button>
+            <button opentype="FORM" url="/topezadmin/listEdit/sourceEdit-${EZ_CODE}?EZ_TYPE=1" item_name="export"
+                    type="button-single" class="layui-border-orange" windowname="源码编辑">源码编辑
+            </button>
+            <button opentype="FORM" url="/topezadmin/list/list-${EZ_CODE}?EZ_TYPE=1" item_name="view"
+                    type="button-single" class="layui-border-orange" windowname="预览已发布">预览已发布
+            </button>
+            <button opentype="MODEL" windowname="发布历史"
+                    url="/topezadmin/listEdit/list-listhistory?EZ_CODE=${EZ_CODE}" item_name="history"
+                    type="button-single" class="layui-border-orange" windowname="发布历史">发布历史
+            </button>
         </th>
         <th item_name="ID" head="th-numbers" body="td-numbers" width="60" minwidth="60" fixed="left">ID</th>
-        <th item_name="EZ_CODE" url="/topezadmin/listEdit/list-${EZ_CODE}" body="td-link" opentype="_BLANK" fixed="left">列表编码</th>
+        <th item_name="EZ_CODE" url="/topezadmin/listEdit/list-${EZ_CODE}" body="td-link" opentype="_BLANK"
+            fixed="left">列表编码
+        </th>
         <th item_name="EZ_NAME">列表名称</th>
         <th item_name="ADD_TIME" jdbctype="DATETIME">添加时间</th>
         <th item_name="UPDATE_TIME" jdbctype="DATETIME">修改时间</th>

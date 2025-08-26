@@ -1,13 +1,6 @@
 package top.ezadmin;
 
 
-import top.ezadmin.common.utils.JSONUtils;
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.plugins.express.executor.EzExpressExecutor;
-import top.ezadmin.web.SpringBeanOperator;
-import top.ezadmin.web.SpringContextHolder;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -19,6 +12,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.ezadmin.common.utils.JSONUtils;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.plugins.express.executor.EzExpressExecutor;
+import top.ezadmin.web.SpringBeanOperator;
+import top.ezadmin.web.SpringContextHolder;
 
 import javax.sql.DataSource;
 import java.util.Map;
@@ -36,11 +34,11 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
     @Bean
     public EzClientBootstrap ezClientBootstrap() {
         EzClientBootstrap ezBootstrap = EzClientBootstrap.instance();
-        String configJson= ezClientProperties.getConfigJson();
-        Map<String, Object> configMap= JSONUtils.parseObjectMap(configJson);
+        String configJson = ezClientProperties.getConfigJson();
+        Map<String, Object> configMap = JSONUtils.parseObjectMap(configJson);
         ezBootstrap.setConfig(configMap);
         ezBootstrap.setAppName(ezClientProperties.getAppName());
-        ezBootstrap.setSqlCache(StringUtils.toBoolean(ezClientProperties.isCacheFlag()+""));
+        ezBootstrap.setSqlCache(StringUtils.toBoolean(ezClientProperties.isCacheFlag() + ""));
 
         ezBootstrap.setUploadUrl(ezClientProperties.getUploadUrl());
         ezBootstrap.setDownloadUrl(ezClientProperties.getDownloadUrl());
@@ -60,7 +58,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
         ezBootstrap.setClearUrl(ezClientProperties.getClearUrl());
         ezBootstrap.setPrefixUrl(ezClientProperties.getPrefixUrl());
         ezBootstrap.setChatUrl(ezClientProperties.getChatUrl());
-        if(StringUtils.isNotBlank(ezClientProperties.getUploadPath())){
+        if (StringUtils.isNotBlank(ezClientProperties.getUploadPath())) {
             ezBootstrap.setUploadPath(ezClientProperties.getUploadPath());
         }
 
@@ -79,7 +77,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
             ezBootstrap.setRefreshClass(ezClientProperties.getRefreshClass());
         }
         if (StringUtils.isBlank(ezClientProperties.getDatasourceBeanNames())) {
-            ezClientProperties.setDatasourceBeanNames("dataSource,"+ ezClientProperties.getDatasourceBeanNames());//springboot 默认值
+            ezClientProperties.setDatasourceBeanNames("dataSource," + ezClientProperties.getDatasourceBeanNames());//springboot 默认值
         }
         String beanNames[] = org.apache.commons.lang.StringUtils.split(ezClientProperties.getDatasourceBeanNames(), ",");
         for (int i = 0; i < beanNames.length; i++) {
@@ -91,32 +89,33 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
             ezBootstrap.addBizDataSource(beanNames[i], dataSource);
         }
         try {
-           // logger.info("   开始初始化列表"+ ezClientProperties.getListResourceLocation());
-            ezBootstrap.setListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getListResourceLocation()+";"+listResourceLocation));
-          //  logger.info("   开始初始化列表插件{}"+ ezClientProperties.getPluginsListResourceLocation());
-            ezBootstrap.setPluginsListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsListResourceLocation()+";"+pluginsListResourceLocation));
-          //  logger.info("   开始初始化表单"+ ezClientProperties.getFormResourceLocation());
-            ezBootstrap.setFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getFormResourceLocation()+";"+formResourceLocation));
-          //  logger.info("   开始初始化表单插件"+ ezClientProperties.getPluginsFormResourceLocation());
-            ezBootstrap.setPluginsFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsFormResourceLocation()+";"+pluginsFormResourceLocation));
-            ezBootstrap.setPluginsDetailConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsDetailResourceLocation()+";"+pluginsDetailResourceLocation));
+            // logger.info("   开始初始化列表"+ ezClientProperties.getListResourceLocation());
+            ezBootstrap.setListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getListResourceLocation() + ";" + listResourceLocation));
+            //  logger.info("   开始初始化列表插件{}"+ ezClientProperties.getPluginsListResourceLocation());
+            ezBootstrap.setPluginsListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsListResourceLocation() + ";" + pluginsListResourceLocation));
+            //  logger.info("   开始初始化表单"+ ezClientProperties.getFormResourceLocation());
+            ezBootstrap.setFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getFormResourceLocation() + ";" + formResourceLocation));
+            //  logger.info("   开始初始化表单插件"+ ezClientProperties.getPluginsFormResourceLocation());
+            ezBootstrap.setPluginsFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsFormResourceLocation() + ";" + pluginsFormResourceLocation));
+            ezBootstrap.setPluginsDetailConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsDetailResourceLocation() + ";" + pluginsDetailResourceLocation));
             ezBootstrap.init();
 
         } catch (Exception throwables) {
             logger.error("   初始化异常", throwables);
-             throw new RuntimeException(throwables);
+            throw new RuntimeException(throwables);
         }
         return ezBootstrap;
     }
-    private String listResourceLocation="classpath*:/topezadmin/config/layui/list/**/*.html";
-    private String formResourceLocation="classpath*:/topezadmin/config/layui/form/**/*.html";
-    private String pluginsFormResourceLocation="classpath*:/topezadmin/config/layui/plugins/form/**/*.html";
-    private String pluginsListResourceLocation="classpath*:/topezadmin/config/layui/plugins/list/**/*.html";
-    private String pluginsDetailResourceLocation="classpath*:/topezadmin/config/layui/plugins/detail/**/*.html";
+
+    private String listResourceLocation = "classpath*:/topezadmin/config/layui/list/**/*.html";
+    private String formResourceLocation = "classpath*:/topezadmin/config/layui/form/**/*.html";
+    private String pluginsFormResourceLocation = "classpath*:/topezadmin/config/layui/plugins/form/**/*.html";
+    private String pluginsListResourceLocation = "classpath*:/topezadmin/config/layui/plugins/list/**/*.html";
+    private String pluginsDetailResourceLocation = "classpath*:/topezadmin/config/layui/plugins/detail/**/*.html";
 
 
     @Bean
-    public FilterRegistrationBean  ezClientFilterRegistrationBean() {
+    public FilterRegistrationBean ezClientFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         top.ezadmin.web.filters.EzClientServletFilter customURLFilter = new top.ezadmin.web.filters.EzClientServletFilter();
         customURLFilter.setEzBootstrap(ezClientBootstrap());
@@ -127,9 +126,9 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
             if (StringUtils.isNotBlank(ezClientProperties.getPrefixUrl())) {
                 registrationBean.getUrlPatterns().add("/ezadmin/*");
                 registrationBean.getUrlPatterns().add("/ezcloud/*");
-                registrationBean.getUrlPatterns().add(ezClientProperties.getPrefixUrl()  + "/*");
+                registrationBean.getUrlPatterns().add(ezClientProperties.getPrefixUrl() + "/*");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         registrationBean.setOrder(65);

@@ -12,38 +12,38 @@ import top.ezadmin.plugins.parser.parse.ResultModel;
 
 public class InsertSimpleOperator extends AbstractOperator {
 
-    Logger logger =LoggerFactory.getLogger(InsertSimpleOperator.class);
+    Logger logger = LoggerFactory.getLogger(InsertSimpleOperator.class);
 
     @Override
     public Object executeInner(Object[] objects) throws Exception {
-        OperatorParam operatorParam=(OperatorParam) Utils.getParam();
-        InsertParam param =(InsertParam)objects[0];
-        ResultModel model=generateSql(param);
+        OperatorParam operatorParam = (OperatorParam) Utils.getParam();
+        InsertParam param = (InsertParam) objects[0];
+        ResultModel model = generateSql(param);
 
-        if(logger.isDebugEnabled()){
-            logger.debug("InsertSimple sql::{}",model.getResult());
+        if (logger.isDebugEnabled()) {
+            logger.debug("InsertSimple sql::{}", model.getResult());
         }
-        Object obj= ""+ Dao.getInstance().executeUpdate(operatorParam.getDs(),model.getResult(),model.getParamsStatic());
-        if(objects.length>1){
-            if(Utils.isTrue(objects[1])){
+        Object obj = "" + Dao.getInstance().executeUpdate(operatorParam.getDs(), model.getResult(), model.getParamsStatic());
+        if (objects.length > 1) {
+            if (Utils.isTrue(objects[1])) {
                 EzClientBootstrap.instance().getCache().clear();
             }
         }
         return obj;
     }
 
-    public ResultModel generateSql(InsertParam param){
-        OperatorParam operatorParam=(OperatorParam) Utils.getParam();
+    public ResultModel generateSql(InsertParam param) {
+        OperatorParam operatorParam = (OperatorParam) Utils.getParam();
 
 
-        StringBuilder fields=new StringBuilder( );
-        StringBuilder values=new StringBuilder( );
+        StringBuilder fields = new StringBuilder();
+        StringBuilder values = new StringBuilder();
 
         for (int i = 0; i < param.getList().size(); i++) {
-            String fieldString=param.getList().get(i).toString();
-            String key=StandardSqlParser.getKey(fieldString);
-            fields.append(","+key);
-            values.append(","+fieldString);
+            String fieldString = param.getList().get(i).toString();
+            String key = StandardSqlParser.getKey(fieldString);
+            fields.append("," + key);
+            values.append("," + fieldString);
 //            ResultModel model = StandardSqlParser.parse(fieldString);
 //            String field=model.getParams().get(0).getParamKey();
 //            if(operatorParam!=null&&operatorParam.getParams()!=null&&operatorParam.getParams().containsKey(field)
@@ -56,7 +56,7 @@ public class InsertSimpleOperator extends AbstractOperator {
 //                values.append(","+model.getParams().get(0).getParamValue() );
 //            }
         }
-        StringBuilder sql=new StringBuilder("insert into ");
+        StringBuilder sql = new StringBuilder("insert into ");
         sql.append(param.getTable());
         sql.append("(");
         sql.append(fields.substring(1));
@@ -65,7 +65,7 @@ public class InsertSimpleOperator extends AbstractOperator {
         sql.append("(");
         sql.append(values.substring(1));
         sql.append(")");
-        ResultModel model= CommentsSqlParser.parse(sql.toString(),operatorParam.getParams());
+        ResultModel model = CommentsSqlParser.parse(sql.toString(), operatorParam.getParams());
         return model;
     }
 }

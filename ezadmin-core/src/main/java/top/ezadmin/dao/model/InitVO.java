@@ -5,28 +5,26 @@ import java.util.List;
 
 public class InitVO {
 
-    private Info homeInfo=new Info();
-    private Info logoInfo=new Info();
-    private List<Info> menuInfo=new ArrayList<>();
+    private Info homeInfo = new Info();
+    private Info logoInfo = new Info();
+    private List<Info> menuInfo = new ArrayList<>();
 
-    public static InitVO create(){
-        return new InitVO() ;
+    public static InitVO create() {
+        return new InitVO();
     }
-    public InitVO homeInfo(String title,String href){
+
+    public InitVO homeInfo(String title, String href) {
         homeInfo.setTitle(title);
         homeInfo.setHref(href);
         return this;
     }
-    public InitVO logoInfo(String title,String href,String image){
+
+    public InitVO logoInfo(String title, String href, String image) {
         logoInfo.setTitle(title);
         logoInfo.setHref(href);
         logoInfo.setImage(image);
         return this;
     }
-
-
-
-
 
 
     public Info getHomeInfo() {

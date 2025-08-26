@@ -16,12 +16,12 @@
 <body>
 <div class="layui-panel">
     <div style="padding: 32px;">
-        <form class="layui-form " ID="importFormSub"  action="/topezadmin/listEdit/importlist.html" method="POST" >
+        <form class="layui-form " ID="importFormSub" action="/topezadmin/listEdit/importlist.html" method="POST">
             <div class="layui-form-item" style="margin-top:10px">
                 <label class="layui-form-label">表单编码</label>
                 <div class="layui-input-block">
-                    <input type="text" name="formcode"  autocomplete="off"  class="layui-input">
-                    <small   class="layui-form-mid layui-text-em">
+                    <input type="text" name="formcode" autocomplete="off" class="layui-input">
+                    <small class="layui-form-mid layui-text-em">
                         系统自动生成表单，如为空，则不生成表单,此编码为URL中的唯一值。 /topezadmin/form/form-xxxx
                     </small>
                 </div>
@@ -29,17 +29,18 @@
             <div class="layui-form-item" style="margin-top:10px">
                 <label class="layui-form-label">数据源</label>
                 <div class="layui-input-block">
-                    <input type="text" lay-verify="required" name="datasource"  autocomplete="off" value="dataSource"  class="layui-input">
-                    <small   class="layui-form-mid layui-text-em">
-                          可以在表单或者列表编辑中修改
+                    <input type="text" lay-verify="required" name="datasource" autocomplete="off" value="dataSource"
+                           class="layui-input">
+                    <small class="layui-form-mid layui-text-em">
+                        可以在表单或者列表编辑中修改
                     </small>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">列表编码</label>
                 <div class="layui-input-block">
-                    <input type="text" name="listcode"  autocomplete="off"  class="layui-input">
-                    <small   class="layui-form-mid layui-text-em">
+                    <input type="text" name="listcode" autocomplete="off" class="layui-input">
+                    <small class="layui-form-mid layui-text-em">
                         系统自动生成列表，如为空，则不生成列表，此编码为URL中的唯一值。 /topezadmin/list/list-xxxx
                     </small>
                 </div>
@@ -47,16 +48,16 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">表达式</label>
                 <div class="layui-input-block">
-                    <small   class="layui-form-mid layui-text-em">
+                    <small class="layui-form-mid layui-text-em">
                         SQL示例,注意加上中文的别名，会自动替换为字段文字:<br>SELECT ID ID,NAME 名称 from T_USER WHERE 1=1
                     </small>
-                    <textarea   name="listexpress"  autocomplete="off"  class="layui-textarea" style="height:450px"
-                    placeholder="SELECT ID ID,NAME 名称 from T_USER WHERE 1=1,注意需要有字段名，否则无法生成列表。"></textarea>
+                    <textarea name="listexpress" autocomplete="off" class="layui-textarea" style="height:450px"
+                              placeholder="SELECT ID ID,NAME 名称 from T_USER WHERE 1=1,注意需要有字段名，否则无法生成列表。"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button type="button" id="submitbtn" class="layui-btn"  >立即提交</button>
+                    <button type="button" id="submitbtn" class="layui-btn">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -64,18 +65,18 @@
     </div>
 </div>
 <script>
-    $(function(){
-        $("#submitbtn").click(function(){
+    $(function () {
+        $("#submitbtn").click(function () {
             $("#importFormSub").ajaxSubmit({
                 url: $("#formSubmitUrl").val(),
                 dataType: 'json',
                 success: function (data) {
                     if (data.code == 0) {
                         layer.alert("保存成功", function (index) {
-                            if($("[name=\"listcode\"]").val()!=''){
-                                location.href="/topezadmin/listEdit/loadEdit-"+$("[name=\"listcode\"]").val();
-                            }else if($("[name=\"formcode\"]").val()!=''){
-                                location.href="/topezadmin/formEdit/loadEdit-"+$("[name=\"formcode\"]").val();
+                            if ($("[name=\"listcode\"]").val() != '') {
+                                location.href = "/topezadmin/listEdit/loadEdit-" + $("[name=\"listcode\"]").val();
+                            } else if ($("[name=\"formcode\"]").val() != '') {
+                                location.href = "/topezadmin/formEdit/loadEdit-" + $("[name=\"formcode\"]").val();
                             }
                         })
                     } else {

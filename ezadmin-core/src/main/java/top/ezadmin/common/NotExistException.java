@@ -1,4 +1,4 @@
 package top.ezadmin.common;
 
-public class NotExistException extends RuntimeException{
+public class NotExistException extends RuntimeException {
 }

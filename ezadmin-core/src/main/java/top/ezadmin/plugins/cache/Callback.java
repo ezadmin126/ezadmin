@@ -1,6 +1,6 @@
 package top.ezadmin.plugins.cache;
 
 public interface Callback {
-    public Object call(String  key);
+    public Object call(String key);
 
 }

@@ -1,4 +1,5 @@
 package top.ezadmin.dao.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,18 +11,19 @@ public class SysNavVO {
     private String text;
     private String iconCls;
     private String state;
-    private List<SysNavVO> children ;
+    private List<SysNavVO> children;
     private String navGroup;
     private String navUrl;
+
     public Long getId() {
         return id;
     }
 
-    public SysNavVO addReturnCurrent(Long id,String text, String iconCls, String url){
-        if(children==null){
-            children=new ArrayList<>();
+    public SysNavVO addReturnCurrent(Long id, String text, String iconCls, String url) {
+        if (children == null) {
+            children = new ArrayList<>();
         }
-        SysNavVO nav=new SysNavVO();
+        SysNavVO nav = new SysNavVO();
         nav.setText(text);
         nav.setId(id);
         nav.setIconCls(iconCls);
@@ -29,11 +31,12 @@ public class SysNavVO {
         children.add(nav);
         return this;
     }
-    public SysNavVO addReturnChild(String text, String iconCls, String url){
-        if(children==null){
-            children=new ArrayList<>();
+
+    public SysNavVO addReturnChild(String text, String iconCls, String url) {
+        if (children == null) {
+            children = new ArrayList<>();
         }
-        SysNavVO nav=new SysNavVO();
+        SysNavVO nav = new SysNavVO();
         nav.setText(text);
         nav.setIconCls(iconCls);
         nav.setNavUrl(url);
@@ -54,7 +57,7 @@ public class SysNavVO {
     }
 
     public String getIconCls() {
-        return iconCls ;
+        return iconCls;
     }
 
     public void setIconCls(String iconCls) {

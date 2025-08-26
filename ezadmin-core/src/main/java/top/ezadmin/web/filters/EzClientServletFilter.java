@@ -1,14 +1,13 @@
 package top.ezadmin.web.filters;
 
 
-import top.ezadmin.common.utils.JSONUtils;
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.Utils;
-import top.ezadmin.EzClientBootstrap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import top.ezadmin.EzClientBootstrap;
+import top.ezadmin.common.utils.JSONUtils;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.common.utils.Utils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -29,26 +28,26 @@ public class EzClientServletFilter implements Filter {
     EzClientBootstrap ezBootstrap;
 
     public void setEzBootstrap(EzClientBootstrap bootstrap) {
-        if(ezBootstrap==null){
+        if (ezBootstrap == null) {
             ezBootstrap = bootstrap;
         }
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-       // LOGGE.info("start init EzAdminFilter" + filterConfig.getInitParameterNames());
+        // LOGGE.info("start init EzAdminFilter" + filterConfig.getInitParameterNames());
         if (ezBootstrap == null) {
             ezBootstrap = EzClientBootstrap.instance();
-            String configJson=filterConfig.getInitParameter("configJson");
-            Map<String, Object> configMap=JSONUtils.parseObjectMap(configJson);
+            String configJson = filterConfig.getInitParameter("configJson");
+            Map<String, Object> configMap = JSONUtils.parseObjectMap(configJson);
             ezBootstrap.setConfig(configMap);
 
             ezBootstrap.setAppName(filterConfig.getInitParameter("appName"));
             ezBootstrap.setSqlCache(StringUtils.toBoolean(filterConfig.getInitParameter("cacheFlag")));
-            if(StringUtils.isNotBlank(filterConfig.getInitParameter("uploadUrl"))){
+            if (StringUtils.isNotBlank(filterConfig.getInitParameter("uploadUrl"))) {
                 ezBootstrap.setUploadUrl(filterConfig.getInitParameter("uploadUrl"));
             }
-            if(StringUtils.isNotBlank(filterConfig.getInitParameter("downloadUrl"))){
+            if (StringUtils.isNotBlank(filterConfig.getInitParameter("downloadUrl"))) {
                 ezBootstrap.setDownloadUrl(filterConfig.getInitParameter("downloadUrl"));
             }
             ezBootstrap.setLogType(filterConfig.getInitParameter("logType"));
@@ -66,7 +65,7 @@ public class EzClientServletFilter implements Filter {
             ezBootstrap.setChatUrl(filterConfig.getInitParameter("chatUrl"));
             ezBootstrap.setAdminStyle(filterConfig.getInitParameter("adminStyle"));
             ezBootstrap.setClearUrl(filterConfig.getInitParameter("clearUrl"));
-            for (Map.Entry<String, DataSource> entry:appDatasource.entrySet()){
+            for (Map.Entry<String, DataSource> entry : appDatasource.entrySet()) {
                 ezBootstrap.addBizDataSource(entry.getKey(), entry.getValue());
             }
             try {
@@ -83,10 +82,10 @@ public class EzClientServletFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         try {
 
-            ezBootstrap.doFilter(httpServletRequest, httpServletResponse,filterChain);
+            ezBootstrap.doFilter(httpServletRequest, httpServletResponse, filterChain);
         } catch (Exception e) {
             LOGGE.error("", e);
-            httpServletResponse.getWriter().println(error500+MDC.get("traceId")+end500);
+            httpServletResponse.getWriter().println(error500 + MDC.get("traceId") + end500);
         } finally {
 
             Utils.clearLog();
@@ -97,7 +96,8 @@ public class EzClientServletFilter implements Filter {
     public void destroy() {
 
     }
-    public static String error500="<!DOCTYPE html>\n" +
+
+    public static String error500 = "<!DOCTYPE html>\n" +
             "<html lang=\"zh-CN\">\n" +
             "<head>\n" +
             "    <meta charset=\"UTF-8\">\n" +
@@ -145,7 +145,7 @@ public class EzClientServletFilter implements Filter {
             "        <h1>500</h1>\n" +
             "        <p>抱歉，服务器内部发生了错误。</p>\n" +
             "        <p>错误码：";
-    private String end500="</p>\n" +
+    private String end500 = "</p>\n" +
             "        <p>您可以尝试刷新页面，或者 <a target='blank' href=\"/\">返回首页</a>。</p>\n" +
             "    </div>\n" +
             "</body>\n" +

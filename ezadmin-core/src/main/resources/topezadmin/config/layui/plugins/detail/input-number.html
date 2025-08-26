@@ -6,11 +6,12 @@
 </head>
 <body id="input-number" type="form" icon="layui-icon-rmb">
 <div id="template">
-    <div class="layui-col-space10 selector layui-col-md12"   ez-type="input-number">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="input-number">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">单行输入框</label>
             <div class="layui-input-block">
-                <input min="0" step="1" class="layui-input" type="number" lay-affix="number" name="default" placeholder="请输入" >
+                <input min="0" step="1" class="layui-input" type="number" lay-affix="number" name="default"
+                       placeholder="请输入">
             </div>
         </div>
     </div>
@@ -35,7 +36,7 @@
 
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  "   >
+            <label class="layui-form-label  ">
                 <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -63,7 +64,6 @@
     </div>
 
 </div>
-
 
 
 </body>

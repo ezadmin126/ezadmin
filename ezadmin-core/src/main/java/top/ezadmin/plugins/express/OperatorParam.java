@@ -1,17 +1,17 @@
 package top.ezadmin.plugins.express;
 
 
- import top.ezadmin.common.utils.Page;
+import top.ezadmin.common.utils.Page;
 
- import javax.sql.DataSource;
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class OperatorParam {
-     DataSource ds;
-   private Map<String, Object> listDto;
+    DataSource ds;
+    private Map<String, Object> listDto;
 
 //    public EzListDTO getListDTO() {
 //        return listDTO;
@@ -25,18 +25,17 @@ public class OperatorParam {
     /**
      * 用于配置的搜索参数
      */
-    Map<String,Object> params=new HashMap<>();
+    Map<String, Object> params = new HashMap<>();
     /**
      * 用于session参数
      */
-    private Map<String,Object> sessionParams=new HashMap<>();
+    private Map<String, Object> sessionParams = new HashMap<>();
     /**
      * 用于URL后面加特殊后缀,主要用 $,isNotBlank
      */
-    private Map<String,Object> requestParams=new HashMap<>();
+    private Map<String, Object> requestParams = new HashMap<>();
 
-    private Map<String,Object> envParams=new HashMap<>();
-
+    private Map<String, Object> envParams = new HashMap<>();
 
 
     public Map<String, Object> getSessionParams() {
@@ -56,9 +55,8 @@ public class OperatorParam {
     }
 
 
-
-    private List<Map<String, String>> items=new ArrayList<>();
-    private Page page=new Page();
+    private List<Map<String, String>> items = new ArrayList<>();
+    private Page page = new Page();
 
     public Map<String, Object> getParams() {
         return params;
@@ -87,7 +85,6 @@ public class OperatorParam {
     }
 
 
-
     public boolean isCount() {
         return count;
     }
@@ -96,8 +93,7 @@ public class OperatorParam {
         this.count = count;
     }
 
-    private boolean count=false;
-
+    private boolean count = false;
 
 
     public DataSource getDs() {
@@ -119,9 +115,10 @@ public class OperatorParam {
 
 
     public void setEnv(Map<String, Object> e) {
-        envParams=e;
+        envParams = e;
     }
-    public Object getEnv(String k){
+
+    public Object getEnv(String k) {
         return envParams.get(k);
     }
 }

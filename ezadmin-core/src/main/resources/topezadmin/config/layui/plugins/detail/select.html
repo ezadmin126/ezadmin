@@ -6,7 +6,7 @@
 </head>
 <body id="select" alias="6" type="form" icon="layui-icon-share">
 
-<div id="template" >
+<div id="template">
     <div class="layui-col-space10 selector layui-col-md12" ez-type="select">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">原生下拉框</label>
@@ -40,7 +40,7 @@
          th:ez-help="${help}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  "   >
+            <label class="layui-form-label  ">
                 <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -55,8 +55,9 @@
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
 
-                    <span class="layui-text form-block-span" th:if="${value==null?false:#strings.equals(value+'',item.K+'')}" th:value="${item.K}"
-                            th:text="${item.V}" th:each="item:${items}">Alaska
+                <span class="layui-text form-block-span"
+                      th:if="${value==null?false:#strings.equals(value+'',item.K+'')}" th:value="${item.K}"
+                      th:text="${item.V}" th:each="item:${items}">Alaska
                     </span>
                 <small
                         class="layui-form-mid layui-text-em item_desc"

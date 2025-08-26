@@ -33,7 +33,7 @@
          th:ez-help="${help}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  "   >
+            <label class="layui-form-label  ">
                 <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -48,7 +48,7 @@
                         th:if="${not #strings.isEmpty(top_desc)}"></small>
                 <small
                         class="layui-form-mid layui-text-em top_desc"
-                          style="float:none"
+                        style="float:none"
                         th:if="${#strings.isEmpty(top_desc)}">为了使用户在访问网站时有更好的体验，请尽量确保上传的文件大小在500KB以内。</small>
 
                 <!-- 内容状态 -->
@@ -152,7 +152,7 @@
                                 contentType: false,
                                 success: function (response) {
                                     try {
-                                        var uurl = response.data.src||response.data.url;
+                                        var uurl = response.data.src || response.data.url;
                                         if (!uurl.startsWith("http")) {
                                             uurl = $("#contextName").val() + uurl;
                                         }

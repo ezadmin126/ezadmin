@@ -71,7 +71,7 @@ public class Config {
         this.doc = doc;
     }
 
-    public boolean isJar(){
+    public boolean isJar() {
         return "jar".equals(protocol);
     }
 

@@ -34,10 +34,6 @@ public class EzPage {
     private long totalPage;
 
 
-
-
-
-
     public int getCurrentPage() {
         return currentPage < 0 ? 0 : currentPage;
     }
@@ -49,11 +45,11 @@ public class EzPage {
     }
 
     public int getPerPageInt() {
-        return perPageInt < 0 ? 0 : perPageInt>5000?5000:perPageInt;
+        return perPageInt < 0 ? 0 : perPageInt > 5000 ? 5000 : perPageInt;
     }
 
     public EzPage setPerPageInt(int perPageInt) {
-        this.perPageInt = perPageInt < 0 ? 0 : perPageInt>5000?5000:perPageInt;
+        this.perPageInt = perPageInt < 0 ? 0 : perPageInt > 5000 ? 5000 : perPageInt;
         calcSplitPage();
         return this;
     }
@@ -88,7 +84,7 @@ public class EzPage {
     }
 
     public long getTotalPage() {
-        if(getPerPageInt()==0){
+        if (getPerPageInt() == 0) {
             return 0;
         }
         totalPage = (totalRecord / getPerPageInt() == 0 ? 1
@@ -112,14 +108,15 @@ public class EzPage {
         this.orderByClause = orderByClause;
     }
 
-    public EzPage(Map<String,String> request) {
+    public EzPage(Map<String, String> request) {
         setCurrentPage(NumberUtils.toInt(request.get("currentPage"), 1));
         setPerPageInt(NumberUtils.toInt(request.get("perPageInt"), 10));
     }
 
     public void setOrderByClause(String orderByClause) {
-          this.orderByClause=orderByClause;
+        this.orderByClause = orderByClause;
     }
+
     public String getOrderByClause() {
         return orderByClause;
     }

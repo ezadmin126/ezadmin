@@ -15,11 +15,11 @@
  */
 package top.ezadmin.plugins.parser;
 
+import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.plugins.parser.parse.GenericTokenParser;
 import top.ezadmin.plugins.parser.parse.Params;
 import top.ezadmin.plugins.parser.parse.ResultModel;
 import top.ezadmin.plugins.parser.parse.TokenHandler;
-import top.ezadmin.common.utils.StringUtils;
 
 import java.util.Map;
 

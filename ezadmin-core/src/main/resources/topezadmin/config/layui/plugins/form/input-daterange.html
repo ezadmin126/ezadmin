@@ -4,34 +4,34 @@
     <meta charset="UTF-8">
     <title>日期区间</title>
 </head>
-<body id="input-daterange"   type="form" icon="layui-icon-date">
+<body id="input-daterange" type="form" icon="layui-icon-date">
 
-<div id="template" >
+<div id="template">
     <div class="layui-col-md12 layui-col-space10 selector" ez-type="input-daterange">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">日期区间</label>
             <div class="layui-input-block">
                 <div class="layui-input-inline">
                     <div class="layui-input-wrap">
-                    <div class="layui-input-prefix">
-                        <i class="layui-icon layui-icon-date"></i>
+                        <div class="layui-input-prefix">
+                            <i class="layui-icon layui-icon-date"></i>
+                        </div>
+                        <input autocomplete="off" type="text"
+                               class="layui-input layui-date-narmal"
+                               name="default">
                     </div>
-                    <input   autocomplete="off" type="text"
-                             class="layui-input layui-date-narmal"
-                             name="default" >
-                </div>
                 </div>
                 <div class="layui-form-mid">-</div>
                 <div class="layui-input-inline">
 
                     <div class="layui-input-wrap">
-                    <div class="layui-input-prefix">
-                        <i class="layui-icon layui-icon-date"></i>
+                        <div class="layui-input-prefix">
+                            <i class="layui-icon layui-icon-date"></i>
+                        </div>
+                        <input autocomplete="off" type="text"
+                               class="layui-input layui-date-narmal"
+                               name="default">
                     </div>
-                    <input   autocomplete="off" type="text"
-                             class="layui-input layui-date-narmal"
-                             name="default" >
-                </div>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
          th:ez-class="${class}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  "   >
+            <label class="layui-form-label  ">
                 <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -77,7 +77,8 @@
                             <i class="layui-icon layui-icon-date"></i>
                         </div>
 
-                        <input th:classappend="${class}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" autocomplete="off" type="text"
+                        <input th:classappend="${class}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                               autocomplete="off" type="text"
                                class="layui-input layui-date-narmal" th:value="${value_start}"
                                th:name="${item_name+'_START'}" th:id="${item_name+'_START_ID'}">
                     </div>
@@ -89,7 +90,8 @@
                         <div class="layui-input-prefix">
                             <i class="layui-icon layui-icon-date"></i>
                         </div>
-                        <input th:classappend="${class}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" autocomplete="off" type="text"
+                        <input th:classappend="${class}" th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                               autocomplete="off" type="text"
                                class="layui-input layui-date-narmal" th:value="${value_end}"
                                th:name="${item_name+'_END'}" th:id="${item_name+'_END_ID'}">
                     </div>

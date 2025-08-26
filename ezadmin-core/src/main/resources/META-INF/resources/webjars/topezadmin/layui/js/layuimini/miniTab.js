@@ -235,11 +235,11 @@ layui.define(["element", "layer", "jquery"], function (exports) {
                         isIframe: false,
                         maxTabNum: options.maxTabNum,
                     });
-                }else{
+                } else {
                     $(".layui-tab-title li").each(function () {
                         var checkTabId = $(this).attr('lay-id');
                         if (checkTabId != null && checkTabId === tabId) {
-                           $(this).find(".layui-icon-refresh").click();
+                            $(this).find(".layui-icon-refresh").click();
                         }
                     });
                 }

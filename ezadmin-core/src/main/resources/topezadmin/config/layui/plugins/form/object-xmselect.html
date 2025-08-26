@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>多选下拉框</title>
 </head>
-<body id="xmselect"  alias="object-xmselect"   type="form" icon="layui-icon-more">
+<body id="xmselect" alias="object-xmselect" type="form" icon="layui-icon-more">
 
-<div id="template" >
+<div id="template">
     <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">多选下拉框</label>
@@ -40,7 +40,7 @@
          th:ez-attrMap="${attrMap}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >
+            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}">
                 <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -48,24 +48,24 @@
                    th:src="${help}"></i>
                 [[${#strings.isEmpty(label)?'':label+'：' }]]
             </label>
-            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}" >
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
                 <small
                         class="layui-form-mid layui-text-em top_desc"
                         th:utext="${top_desc}" style="float:none"
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
                 [(${serverDom})]
-                <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}" >
+                <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}">
 
                 <script>
-                   //  var xmel = $('[[${"#itemId-" + item_name}]]');
+                    //  var xmel = $('[[${"#itemId-" + item_name}]]');
                     // var initdata = xmel.attr("itemsJson");
                     // var initvalue = xmel.attr("value");
                     var xmselect = xmSelect.render({
                         el: '[[${"#itemId-" + item_name}]]',
                         language: 'zn',
                         toolbar: {
-                            show: ($('[[${"#itemId-" + item_name}]]').attr("toolbar")||'true')=='true',
+                            show: ($('[[${"#itemId-" + item_name}]]').attr("toolbar") || 'true') == 'true',
                             list: ['ALL', 'REVERSE', 'CLEAR']
                         },
                         filterable: true,
@@ -75,17 +75,17 @@
                         prop: {
                             name: 'V',
                             value: 'K',
-                        },theme: {
+                        }, theme: {
                             color: '#1e9fff',
                         },
-                        radio:  ( $('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
-                        clickClose: ( $('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
+                        radio: ($('[[${"#itemId-" + item_name}]]').attr("radio") || "false").toLowerCase() === "false" ? false : true,
+                        clickClose: ($('[[${"#itemId-" + item_name}]]').attr("radio") || "false").toLowerCase() === "false" ? false : true,
                         name: '[[${item_name}]]',
                         tips: '[[${#strings.isEmpty(placeholder)?"请选择":placeholder}]]',
-                        data: function(){
-                            return  JSON.parse($('[[${"#itemdata-" + item_name}]]').val()||[]);
+                        data: function () {
+                            return JSON.parse($('[[${"#itemdata-" + item_name}]]').val() || []);
                         },
-                        initValue: $('[[${"#itemId-" + item_name}]]').attr("value")? $('[[${"#itemId-" + item_name}]]').attr("value").split(","):[]
+                        initValue: $('[[${"#itemId-" + item_name}]]').attr("value") ? $('[[${"#itemId-" + item_name}]]').attr("value").split(",") : []
                         ,
                         filterMethod: function (val, item, index, prop) {//重写搜索方法。
                             if (val == item.K) {//把value相同的搜索出来
@@ -95,7 +95,7 @@
                                 return true;
                             }
                             return !ezpingyin(val, item.V, item.K);
-                        },on: function(data){
+                        }, on: function (data) {
                             //arr:  当前多选已选中的数据
                             var arr = data.arr;
                             //change, 此次选择变化的数据,数组
@@ -103,16 +103,16 @@
                             //isAdd, 此次操作是新增还是删除
                             var isAdd = data.isAdd;
 
-                            var functionName=$('[[${"#itemId-" + item_name}]]').attr("on")
-                            if (functionName&&window[functionName]) {
+                            var functionName = $('[[${"#itemId-" + item_name}]]').attr("on")
+                            if (functionName && window[functionName]) {
                                 window[functionName](data);
                             }
-                        },model: {
+                        }, model: {
                             label: {
                                 type: 'block',
                                 block: {
                                     //最大显示数量, 0:不限制
-                                    showCount: $('[[${"#itemId-" + item_name}]]').attr("showCount")||5,
+                                    showCount: $('[[${"#itemId-" + item_name}]]').attr("showCount") || 5,
                                     //是否显示删除图标
                                     showIcon: true,
                                 }

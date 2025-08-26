@@ -1,10 +1,10 @@
 package top.ezadmin.common.utils;
 
-import top.ezadmin.plugins.parser.MapParser;
-import top.ezadmin.plugins.parser.parse.ResultModel;
+import org.apache.commons.lang.BooleanUtils;
 import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.dao.ClobParam;
-import org.apache.commons.lang.BooleanUtils;
+import top.ezadmin.plugins.parser.MapParser;
+import top.ezadmin.plugins.parser.parse.ResultModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -73,7 +73,6 @@ public class StringUtils {
     }
 
 
-
     public static boolean isJsBlank(String str) {
         if (isBlank(str)) {
             return true;
@@ -132,48 +131,49 @@ public class StringUtils {
         if (StringUtils.isBlank(searchFieldValue)) {
             return searchFieldValue;
         }
-        String result=StringUtils.replace(searchFieldValue, "'", "''");
-        result=StringUtils.replace(result, "\\", "\\\\");
+        String result = StringUtils.replace(searchFieldValue, "'", "''");
+        result = StringUtils.replace(result, "\\", "\\\\");
         return result;
     }
-    public static String replaceToSearch(String searchFieldValue){
+
+    public static String replaceToSearch(String searchFieldValue) {
         if (StringUtils.isBlank(searchFieldValue)) {
             return searchFieldValue;
         }
-        StringBuilder searchResult=new StringBuilder();
-        char[] chars=searchFieldValue.toCharArray();
+        StringBuilder searchResult = new StringBuilder();
+        char[] chars = searchFieldValue.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             switch (chars[i]) {
-                case '\'' :
+                case '\'':
                     searchResult.append("''");
                     break;
-                case ',' :
-                    appendSingle(searchResult,'%');
+                case ',':
+                    appendSingle(searchResult, '%');
                     break;
-                case '，' :
-                    appendSingle(searchResult,'%');
+                case '，':
+                    appendSingle(searchResult, '%');
                     break;
-                case '、' :
-                    appendSingle(searchResult,'%');
+                case '、':
+                    appendSingle(searchResult, '%');
                     break;
-                case ' ' ://避免多个空格
-                    appendSingle(searchResult,'%');
-                case '%' ://避免多个空格
-                    appendSingle(searchResult,'%');
+                case ' '://避免多个空格
+                    appendSingle(searchResult, '%');
+                case '%'://避免多个空格
+                    appendSingle(searchResult, '%');
                     break;
-                default:searchResult.append(chars[i]);
+                default:
+                    searchResult.append(chars[i]);
             }
         }
         return searchResult.toString();
     }
 
 
-    private static void appendSingle(StringBuilder searchResult,char c){
-        if(searchResult.length()>0&&searchResult.charAt(searchResult.length()-1)!=c){
+    private static void appendSingle(StringBuilder searchResult, char c) {
+        if (searchResult.length() > 0 && searchResult.charAt(searchResult.length() - 1) != c) {
             searchResult.append(c);
         }
     }
-
 
 
     public static String EMPTY = "";
@@ -354,16 +354,18 @@ public class StringUtils {
     public static boolean contains(String field_name, String time) {
         return org.apache.commons.lang.StringUtils.contains(field_name, time);
     }
-    public static int contains(String field_name ) {
-        return org.apache.commons.lang.StringUtils.length(field_name );
+
+    public static int contains(String field_name) {
+        return org.apache.commons.lang.StringUtils.length(field_name);
     }
 
 
     public static String[] split(String str, String separatorChars) {
         return org.apache.commons.lang.StringUtils.split(str, separatorChars);
     }
-    public static String[] split(String str, String separatorChars,int max) {
-        return org.apache.commons.lang.StringUtils.split(str, separatorChars,max);
+
+    public static String[] split(String str, String separatorChars, int max) {
+        return org.apache.commons.lang.StringUtils.split(str, separatorChars, max);
     }
 
     public static String[] splitByWholeSeparator(String selectSql, String startFixStr) {
@@ -379,16 +381,15 @@ public class StringUtils {
         return org.apache.commons.lang.StringUtils.trimToEmpty(s);
     }
 
-    public static String strip(String s ) {
+    public static String strip(String s) {
 
-        return org.apache.commons.lang.StringUtils.strip(s );
-    }
-    public static String leftPad(Object s,int size,String c ) {
-
-        return org.apache.commons.lang.StringUtils.leftPad(Utils.trimNull(s),size,c );
+        return org.apache.commons.lang.StringUtils.strip(s);
     }
 
+    public static String leftPad(Object s, int size, String c) {
 
+        return org.apache.commons.lang.StringUtils.leftPad(Utils.trimNull(s), size, c);
+    }
 
 
 //    public static boolean startWithTrim(String defaultGroup, String group_) {
@@ -402,24 +403,25 @@ public class StringUtils {
     public static String lowerCase(String key) {
         return org.apache.commons.lang.StringUtils.lowerCase(key);
     }
-    public static boolean toBoolean(String s){
+
+    public static boolean toBoolean(String s) {
         return BooleanUtils.toBoolean(s);
     }
 
     public static boolean startsWith(String view, String s) {
-        return org.apache.commons.lang.StringUtils.startsWith(view,s);
+        return org.apache.commons.lang.StringUtils.startsWith(view, s);
     }
 
-    public static String filterLetterOrDigit(String ori){
-        if(isBlank(ori)){
+    public static String filterLetterOrDigit(String ori) {
+        if (isBlank(ori)) {
             return trimEmpty(ori);
         }
-        StringBuilder sb=new StringBuilder();
-        for(char c:ori.toCharArray()){
-            if(Character.isLetterOrDigit(c)){
+        StringBuilder sb = new StringBuilder();
+        for (char c : ori.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
                 sb.append(c);
-            }else{
-                if(sb.length()>1&&sb.charAt(sb.length()-1)!='-'){
+            } else {
+                if (sb.length() > 1 && sb.charAt(sb.length() - 1) != '-') {
                     sb.append("-");
                 }
             }

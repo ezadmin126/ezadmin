@@ -8,14 +8,14 @@ import java.util.Map;
 
 public class JsonArrayResult {
     private String code;
-    private List<Map<String,Object>> data;
+    private List<Map<String, Object>> data;
 
-    public Map<String, Map<String, Object>> transToKeyMap(String key){
-        return Utils.listToMap(data,key);
+    public Map<String, Map<String, Object>> transToKeyMap(String key) {
+        return Utils.listToMap(data, key);
     }
 
-    public boolean success(){
-        return StringUtils.equals(code,"success")||StringUtils.equals(code,"0");
+    public boolean success() {
+        return StringUtils.equals(code, "success") || StringUtils.equals(code, "0");
     }
 
     public String getCode() {

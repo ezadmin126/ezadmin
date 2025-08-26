@@ -33,7 +33,7 @@ bindEvent(window, 'message', function (e) {
 function createSingleTab(name, url) {
     var fname = (name == undefined || name == "") ? "打开" : name;
     layui.use(['form', 'miniTab'], function () {
-        var  miniTab = layui.miniTab;
+        var miniTab = layui.miniTab;
         // 打开新的窗口
         miniTab.openNewTabByIframe({
             href: url,

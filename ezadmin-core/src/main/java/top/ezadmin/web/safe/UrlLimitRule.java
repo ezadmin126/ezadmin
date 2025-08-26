@@ -22,17 +22,18 @@ public class UrlLimitRule extends AbstractRule {
 
     private static Cache<String, AtomicLong> URL_LIMIT_CACHE5 = null;
     private static Cache<String, AtomicLong> URL_LIMIT_CACHE60 = null;
-    private SafeCallback callback=null;
+    private SafeCallback callback = null;
+
     public void init(SafeCallback c) {
-        callback=c;
+        callback = c;
         URL_LIMIT_CACHE5 = Caffeine.newBuilder()
                 .expireAfterWrite(5, TimeUnit.SECONDS)
                 .maximumSize(2500)
                 .removalListener(new RemovalListener<String, AtomicLong>() {
                     @Override
                     public void onRemoval(String s, AtomicLong atomicLong, RemovalCause removalCause) {
-                        if (atomicLong!=null&&atomicLong.get() > 30) {
-                             callback.doCallback(s, atomicLong.get(), 5, 30);
+                        if (atomicLong != null && atomicLong.get() > 30) {
+                            callback.doCallback(s, atomicLong.get(), 5, 30);
                         }
                     }
                 })
@@ -44,8 +45,8 @@ public class UrlLimitRule extends AbstractRule {
                 .removalListener(new RemovalListener<String, AtomicLong>() {
                     @Override
                     public void onRemoval(String s, AtomicLong atomicLong, RemovalCause removalCause) {
-                        if (atomicLong!=null&&atomicLong.get() > 100) {
-                             callback.doCallback(s, atomicLong.get(), 60, 100);
+                        if (atomicLong != null && atomicLong.get() > 100) {
+                            callback.doCallback(s, atomicLong.get(), 60, 100);
                         }
                     }
                 })
@@ -54,15 +55,15 @@ public class UrlLimitRule extends AbstractRule {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
         //5分钟执行一次IP监控
         Runnable task = () -> {
-             //   logger.info("UrlLimitRule  定时任务执行");
-                URL_LIMIT_CACHE5.cleanUp();
-                URL_LIMIT_CACHE60.cleanUp();
+            //   logger.info("UrlLimitRule  定时任务执行");
+            URL_LIMIT_CACHE5.cleanUp();
+            URL_LIMIT_CACHE60.cleanUp();
         };
         scheduler.scheduleAtFixedRate(task, 0, 5, TimeUnit.SECONDS);
     }
 
     public boolean onMessage(IpActionDto dto) {
-        String groupPatternUrl=getPatternGroupUrl(dto.getUri());
+        String groupPatternUrl = getPatternGroupUrl(dto.getUri());
         if (StringUtils.isNotBlank(groupPatternUrl)) {
             AtomicLong countUrlLimit = URL_LIMIT_CACHE5.get(groupPatternUrl, k -> new AtomicLong(0));
             AtomicLong countUrlLimit60 = URL_LIMIT_CACHE60.get(groupPatternUrl, k -> new AtomicLong(0));
@@ -71,10 +72,11 @@ public class UrlLimitRule extends AbstractRule {
         }
         return true;
     }
-    public String print(){
+
+    public String print() {
         StringBuilder result = new StringBuilder();
-        result.append("URL拦截器明细5:"+URL_LIMIT_CACHE5.asMap()+"\n<br>");
-        result.append("URL拦截器明细60:"+URL_LIMIT_CACHE60.asMap()+"\n<br>");
+        result.append("URL拦截器明细5:" + URL_LIMIT_CACHE5.asMap() + "\n<br>");
+        result.append("URL拦截器明细60:" + URL_LIMIT_CACHE60.asMap() + "\n<br>");
         return result.toString();
     }
 }

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>日期时间</title>
 </head>
-<body id="input-datetime" alias="DATETIME"  type="form" icon="layui-icon-date">
+<body id="input-datetime" alias="DATETIME" type="form" icon="layui-icon-date">
 
-<div id="template" >
+<div id="template">
     <div class="layui-col-md12  layui-col-space10 selector" ez-type="input-datetime">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">日期</label>
@@ -15,9 +15,9 @@
                     <div class="layui-input-prefix">
                         <i class="layui-icon layui-icon-date"></i>
                     </div>
-                    <input   autocomplete="off" type="text"
-                             class="layui-input layui-datetime-narmal"
-                             name="default" >
+                    <input autocomplete="off" type="text"
+                           class="layui-input layui-datetime-narmal"
+                           name="default">
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
          th:ez-class="${class}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  "   >
+            <label class="layui-form-label  ">
                 <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -58,14 +58,13 @@
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
 
 
-
                 <div class="layui-input-wrap datetimerange">
                     <div class="layui-input-prefix">
                         <i class="layui-icon layui-icon-date"></i>
                     </div>
                     <input th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
                            autocomplete="off" type="text" class="layui-input layui-datetime-narmal" th:value="${value}"
-                           th:classappend="${class}"    th:name="${item_name}" th:id="${item_name+'_ID'}">
+                           th:classappend="${class}" th:name="${item_name}" th:id="${item_name+'_ID'}">
                 </div>
 
 
@@ -76,7 +75,6 @@
             </div>
         </div>
     </div>
-
 
 
 </div>

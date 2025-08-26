@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>多选树下拉框SQL全量加载</title>
 </head>
-<body id="xmselect-tree" alias="object-xmselect-tree"  type="form" icon="layui-icon-more">
+<body id="xmselect-tree" alias="object-xmselect-tree" type="form" icon="layui-icon-more">
 
-<div id="template" >
+<div id="template">
     <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect-tree">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">多选树下拉框SQL全量加载</label>
@@ -41,7 +41,7 @@
          th:ez-data="${data}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}"  >
+            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}">
                 <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -55,34 +55,34 @@
                         th:utext="${top_desc}" style="float:none"
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
                 [(${serverDom})]
-                <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}" >
+                <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}">
                 <!--ID,PARENT_ID,CHILDREN-->
                 <script>
-                    $(function(){
+                    $(function () {
                         xmSelect.render({
                             el: '[[${"#itemId-" + item_name}]]',
                             autoRow: false,
-                            name:'[[${item_name}]]',
+                            name: '[[${item_name}]]',
                             filterable: true,
                             showCount: 5,
                             theme: {
-                                            color: '#1e9fff',
-                                 },
+                                color: '#1e9fff',
+                            },
                             prop: {
                                 name: 'NAME',
                                 value: 'ID',
-                                selected:"checked",
-                                disabled:"disabled",
-                                children:"CHILDREN",
-                                optgroup:"optgroup",
+                                selected: "checked",
+                                disabled: "disabled",
+                                children: "CHILDREN",
+                                optgroup: "optgroup",
                             },
                             tree: {
                                 show: true,
                                 showFolderIcon: true,
                                 showLine: true,
                                 indent: 20,
-                                expandedKeys: [ -3 ],
-                                strict:($('[[${"#itemId-" + item_name}]]').attr("strict")||"false".toLowerCase())==="false"?false:true,
+                                expandedKeys: [-3],
+                                strict: ($('[[${"#itemId-" + item_name}]]').attr("strict") || "false".toLowerCase()) === "false" ? false : true,
                             },
                             toolbar: {
                                 show: true,
@@ -90,11 +90,11 @@
                             },
                             filterable: true,
                             //height: 'auto',
-                            radio:  ( $('[[${"#itemId-" + item_name}]]').attr("radio")||"false").toLowerCase()==="false"?false:true,
-                            data: function(){
-                                return  JSON.parse($('[[${"#itemdata-" + item_name}]]').val()||[]);
+                            radio: ($('[[${"#itemId-" + item_name}]]').attr("radio") || "false").toLowerCase() === "false" ? false : true,
+                            data: function () {
+                                return JSON.parse($('[[${"#itemdata-" + item_name}]]').val() || []);
                             },
-                            initValue: $('[[${"#itemId-" + item_name}]]').attr("value")? $('[[${"#itemId-" + item_name}]]').attr("value").split(","):[]
+                            initValue: $('[[${"#itemId-" + item_name}]]').attr("value") ? $('[[${"#itemId-" + item_name}]]').attr("value").split(",") : []
                         })
                     })
                     // var xmel = $('[[${"#itemId-" + item_name}]]');

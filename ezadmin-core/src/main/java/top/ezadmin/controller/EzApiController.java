@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 @EzMapping("/topezadmin/api/")
 public class EzApiController extends BaseController {
 
-    EzClientBootstrap bootstrap= EzClientBootstrap.instance();
+    EzClientBootstrap bootstrap = EzClientBootstrap.instance();
 
     @EzMapping("datagroup.html")
     public void datagroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String listUrlCode = Utils.trimNull(request.getAttribute("ENCRYPT_ID"));
-        if(StringUtils.isBlank(listUrlCode)){
+        if (StringUtils.isBlank(listUrlCode)) {
             throw new NotExistException();
         }
         EzResult.instance().printJSONUtils(response);

@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InsertParam {
-   private List list=new ArrayList();
-   private String table;
+    private List list = new ArrayList();
+    private String table;
 
-   public InsertParam add(Object obj){
-       list.add(obj);
-       return this;
-   }
-    public InsertParam table(String obj){
-         table=obj;
+    public InsertParam add(Object obj) {
+        list.add(obj);
         return this;
     }
 
-
+    public InsertParam table(String obj) {
+        table = obj;
+        return this;
+    }
 
 
     public List getList() {

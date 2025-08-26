@@ -6,7 +6,7 @@
     <title>表单编辑</title>
     <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
     <link th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
-    <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"   />
+    <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"/>
     <link th:href="${'/webjars/topezadmin/layui/css/ezform.css?v='+vi}" rel="stylesheet">
     <link th:href="${'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
     <link th:href="${'/webjars/edit/css/formedit.css'}" rel="stylesheet">
@@ -14,7 +14,8 @@
     <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
     <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
     <script th:src="${'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
-    <script src="/webjars/dragula/3.7.3/dist/dragula.min.js"   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/webjars/dragula/3.7.3/dist/dragula.min.js" crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
 
     <script th:src="${'/webjars/topezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
     <script th:src="${'/webjars/topezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
@@ -37,8 +38,8 @@
 </head>
 
 
-<body th:utext="${form.core.bodyTag}" th:remove="tag"> </body>
- <div class="layui-fluid">
+<body th:utext="${form.core.bodyTag}" th:remove="tag"></body>
+<div class="layui-fluid">
     <div class="layui-row layui-col-space5">
         <div class="layui-col-md2 layui-col-xs3 left">
             <div class="layui-tab layui-tab-brief " lay-filter="test-hash">
@@ -47,20 +48,23 @@
                 </ul>
                 <div class="layui-tab-content lefttab">
                     <div class="layui-tab-item layui-show ">
-                        <div  class="layui-row layui-col-space5   " style="margin:10px" id="cardcontainer">
-                            <button type="button" ez-type="card"  class="leftcard  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                        <div class="layui-row layui-col-space5   " style="margin:10px" id="cardcontainer">
+                            <button type="button" ez-type="card"
+                                    class="leftcard  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
                                 <i class="layui-icon layui-icon-layer"></i>
                                 <span>面板</span>
                                 <!--                                <i class="layui-icon layui-icon-down layui-font-12"></i> -->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-md12 selector" ez-type="card" ez-label="面板" ez-cardname="面板"  ez-col="12"  >
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-md12 selector" ez-type="card" ez-label="面板"
+                                         ez-cardname="面板" ez-col="12">
                                         <div class="layui-card  ">
                                             <div class="layui-card-header  ">
                                                 面板
                                                 <a class="layui-icon-up layui-icon"> </a>
                                             </div>
                                             <div class="layui-card-body ">
-                                                <div class="layui-row  dragula-container form-item-container"   ez-col="12"  >
+                                                <div class="layui-row  dragula-container form-item-container"
+                                                     ez-col="12">
 
                                                 </div>
                                             </div>
@@ -71,12 +75,14 @@
                         </div>
                         <div class="layui-row layui-col-space5  dragula-container " id="leftContainer">
 
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>占位</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="占位" ez-type="emptycol">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="占位"
+                                         ez-type="emptycol">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">占位</label>
                                             <div class="layui-input-block form-block-span">
@@ -86,12 +92,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>纯文字渲染</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="纯文字渲染" ez-type="input-text">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="纯文字渲染"
+                                         ez-type="input-text">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">纯文字渲染</label>
                                             <div class="layui-input-block form-block-span">
@@ -101,57 +109,68 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>单行输入框</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="单行输入框" ez-type="input-text">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="单行输入框"
+                                         ez-type="input-text">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">单行输入框</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="default" placeholder="请输入" class="layui-input">
+                                                <input type="text" name="default" placeholder="请输入"
+                                                       class="layui-input">
                                             </div>
                                         </div>
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>数字输入框</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="数字输入框" ez-type="input-number">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="数字输入框"
+                                         ez-type="input-number">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">数字输入框</label>
                                             <div class="layui-input-block">
-                                                <input min="0" step="1" class="layui-input" type="number" lay-affix="number" name="default" placeholder="请输入">
+                                                <input min="0" step="1" class="layui-input" type="number"
+                                                       lay-affix="number" name="default" placeholder="请输入">
                                             </div>
                                         </div>
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>隐藏域</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="隐藏域" ez-type="input-hidden">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="隐藏域"
+                                         ez-type="input-hidden">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">隐藏域</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="default" placeholder="请输入" class="layui-input">
+                                                <input type="text" name="default" placeholder="请输入"
+                                                       class="layui-input">
                                             </div>
                                         </div>
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>多行输入框</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="多行输入框"  ez-type="textarea">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="多行输入框"
+                                         ez-type="textarea">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">多行输入框</label>
                                             <div class="layui-input-block">
@@ -161,12 +180,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>简约富文本</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12"  ez-label="简约富文本" ez-type="ueditor">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="简约富文本"
+                                         ez-type="ueditor">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">简约富文本</label>
                                             <div class="layui-input-block">
@@ -176,12 +197,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>百度富文本vdeditor，客户端实现</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12"  ez-label="百度富文本"  ez-type="vdeditor">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="百度富文本"
+                                         ez-type="vdeditor">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">百度富文本</label>
                                             <div class="layui-input-block">
@@ -191,12 +214,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>全功能富文本</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="全功能富文本"  ez-type="tinymce">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="全功能富文本"
+                                         ez-type="tinymce">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">全功能富文本</label>
                                             <div class="layui-input-block">
@@ -207,13 +232,14 @@
                                 </script>
                             </button>
                             <hr>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>日期</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
+                                <script type="text/x-template" class="template">
                                     <div class="layui-col-md12 layui-col-space10 selector"
-                                         ez-type="input-date"  ez-label="日期" >
+                                         ez-type="input-date" ez-label="日期">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">日期</label>
                                             <div class="layui-input-block">
@@ -221,21 +247,23 @@
                                                     <div class="layui-input-prefix">
                                                         <i class="layui-icon layui-icon-date"></i>
                                                     </div>
-                                                    <input   autocomplete="off" type="text"
-                                                             class="layui-input layui-date-narmal"
-                                                             name="default" >
+                                                    <input autocomplete="off" type="text"
+                                                           class="layui-input layui-date-narmal"
+                                                           name="default">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>日期区间</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-md12 layui-col-space10 selector" ez-label="日期区间"   ez-type="input-daterange">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-md12 layui-col-space10 selector" ez-label="日期区间"
+                                         ez-type="input-daterange">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">日期区间</label>
                                             <div class="layui-input-block">
@@ -244,9 +272,9 @@
                                                         <div class="layui-input-prefix">
                                                             <i class="layui-icon layui-icon-date"></i>
                                                         </div>
-                                                        <input   autocomplete="off" type="text"
-                                                                 class="layui-input layui-date-narmal"
-                                                                 name="default" >
+                                                        <input autocomplete="off" type="text"
+                                                               class="layui-input layui-date-narmal"
+                                                               name="default">
                                                     </div>
                                                 </div>
                                                 <div class="layui-form-mid">-</div>
@@ -256,9 +284,9 @@
                                                         <div class="layui-input-prefix">
                                                             <i class="layui-icon layui-icon-date"></i>
                                                         </div>
-                                                        <input   autocomplete="off" type="text"
-                                                                 class="layui-input layui-date-narmal"
-                                                                 name="default" >
+                                                        <input autocomplete="off" type="text"
+                                                               class="layui-input layui-date-narmal"
+                                                               name="default">
                                                     </div>
                                                 </div>
                                             </div>
@@ -266,12 +294,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>日期时间</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-md12  layui-col-space10 selector"  ez-label="日期时间" ez-type="input-datetime">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-md12  layui-col-space10 selector" ez-label="日期时间"
+                                         ez-type="input-datetime">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">日期时间</label>
                                             <div class="layui-input-block">
@@ -279,21 +309,23 @@
                                                     <div class="layui-input-prefix">
                                                         <i class="layui-icon layui-icon-date"></i>
                                                     </div>
-                                                    <input   autocomplete="off" type="text"
-                                                             class="layui-input layui-date-narmal"
-                                                             name="default" >
+                                                    <input autocomplete="off" type="text"
+                                                           class="layui-input layui-date-narmal"
+                                                           name="default">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>日期时间区间</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-md12 layui-col-space10 selector"ez-label="日期时间区间"  ez-type="input-datetimerange">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-md12 layui-col-space10 selector" ez-label="日期时间区间"
+                                         ez-type="input-datetimerange">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">日期时间区间</label>
                                             <div class="layui-input-block">
@@ -302,9 +334,9 @@
                                                         <div class="layui-input-prefix">
                                                             <i class="layui-icon layui-icon-date"></i>
                                                         </div>
-                                                        <input   autocomplete="off" type="text"
-                                                                 class="layui-input layui-date-narmal"
-                                                                 name="default" >
+                                                        <input autocomplete="off" type="text"
+                                                               class="layui-input layui-date-narmal"
+                                                               name="default">
                                                     </div>
                                                 </div>
                                                 <div class="layui-form-mid">-</div>
@@ -314,7 +346,8 @@
                                                         <div class="layui-input-prefix">
                                                             <i class="layui-icon layui-icon-date"></i>
                                                         </div>
-                                                        <input   autocomplete="off" type="text" class="layui-input layui-date-narmal"  name="default" >
+                                                        <input autocomplete="off" type="text"
+                                                               class="layui-input layui-date-narmal" name="default">
                                                     </div>
                                                 </div>
                                             </div>
@@ -323,58 +356,66 @@
                                 </script>
                             </button>
                             <hr>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>单选</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="单选框" ez-type="input-radio">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="单选框"
+                                         ez-type="input-radio">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">单选框</label>
                                             <div class="layui-input-block">
-                                                <input type="radio" name="default" placeholder="请输入"  >
+                                                <input type="radio" name="default" placeholder="请输入">
                                             </div>
                                         </div>
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>复选</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12"  ez-label="复选框"  ez-type="input-checkbox">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="复选框"
+                                         ez-type="input-checkbox">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">复选框</label>
                                             <div class="layui-input-block">
-                                                <input type="checkbox" name="default" placeholder="请输入"  >
+                                                <input type="checkbox" name="default" placeholder="请输入">
                                             </div>
                                         </div>
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>标签复选</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12"  ez-label="标签复选框"  ez-type="input-checkbox-tag">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="标签复选框"
+                                         ez-type="input-checkbox-tag">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">标签复选框</label>
                                             <div class="layui-input-block">
-                                                <input type="checkbox" name="default" title="默认" lay-skin="tag"  >
+                                                <input type="checkbox" name="default" title="默认" lay-skin="tag">
                                             </div>
                                         </div>
                                     </div>
                                 </script>
                             </button>
                             <hr>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>下拉纯文字渲染</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="下拉纯文字渲染" ez-type="select-span">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="下拉纯文字渲染"
+                                         ez-type="select-span">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">下拉纯文字渲染</label>
                                             <div class="layui-input-block">
@@ -384,16 +425,19 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>原生下拉</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="原生下拉"  ez-type="select">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="原生下拉"
+                                         ez-type="select">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">原生下拉</label>
                                             <div class="layui-input-block">
-                                                <select name="default" style="width:100%" class="custom-select" lay-ignore>
+                                                <select name="default" style="width:100%" class="custom-select"
+                                                        lay-ignore>
                                                     <option value="">请选择</option>
                                                 </select>
                                             </div>
@@ -401,12 +445,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>搜索下拉</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12"ez-label="搜索下拉框"  ez-type="select-search">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="搜索下拉框"
+                                         ez-type="select-search">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">搜索下拉框</label>
                                             <div class="layui-input-block">
@@ -418,12 +464,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>多选下拉</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="多选下拉框" ez-type="xmselect">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="多选下拉框"
+                                         ez-type="xmselect">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">多选下拉框</label>
                                             <div class="layui-input-block">
@@ -433,12 +481,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>SQL级联下拉</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="SQL级联下拉" ez-type="cascadersql">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="SQL级联下拉"
+                                         ez-type="cascadersql">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">SQL级联下拉</label>
                                             <div class="layui-input-block">
@@ -450,12 +500,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>JSON级联下拉</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="JSON级联下拉" ez-type="cascader">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="JSON级联下拉"
+                                         ez-type="cascader">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">JSON级联下拉</label>
                                             <div class="layui-input-block">
@@ -467,12 +519,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>xm级联</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="xm级联" ez-type="xmselect-cascader">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="xm级联"
+                                         ez-type="xmselect-cascader">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">xm级联</label>
                                             <div class="layui-input-block">
@@ -485,12 +539,14 @@
                                 </script>
                             </button>
 
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>xm远程</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="xm远程" ez-type="xmselect-remote">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="xm远程"
+                                         ez-type="xmselect-remote">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">xm远程</label>
                                             <div class="layui-input-block">
@@ -502,12 +558,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>xm树</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="xm远程" ez-type="xmselect-tree">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="xm远程"
+                                         ez-type="xmselect-tree">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">xm树</label>
                                             <div class="layui-input-block">
@@ -521,16 +579,19 @@
                             </button>
 
                             <hr>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>图片上传</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="图片上传"ez-type="uploadimage">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="图片上传"
+                                         ez-type="uploadimage">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">图片上传</label>
                                             <div class="layui-input-block">
-                                                <button type="button" name="default" th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
+                                                <button type="button" name="default"
+                                                        th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
                                                 ><i class="layui-icon layui-icon-upload"></i>图片上传
                                                 </button>
                                             </div>
@@ -538,16 +599,19 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>文件上传</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="文件上传"ez-type="uploadfile">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="文件上传"
+                                         ez-type="uploadfile">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">文件上传</label>
                                             <div class="layui-input-block">
-                                                <button type="button" name="default" th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
+                                                <button type="button" name="default"
+                                                        th:id="${'FILE_ITEM_ID_' + item_name}" class="layui-btn"
                                                 ><i class="layui-icon layui-icon-upload"></i>文件上传
                                                 </button>
                                             </div>
@@ -555,12 +619,14 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>表格</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="表格"ez-type="table">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="表格"
+                                         ez-type="table">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">表格</label>
                                             <div class="layui-input-block">
@@ -595,12 +661,13 @@
                                     </div>
                                 </script>
                             </button>
-                            <button type="button"  class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
-                                <i class="layui-icon  layui-icon-component"  ></i>
+                            <button type="button"
+                                    class="  ez-plugin layui-btn layui-btn-xs  layui-btn-primary layui-border-purple">
+                                <i class="layui-icon  layui-icon-component"></i>
                                 <span>树</span>
                                 <!--<i class="layui-icon layui-icon-down layui-font-12"></i>-->
-                                <script type="text/x-template" class="template" >
-                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="树"ez-type="tree">
+                                <script type="text/x-template" class="template">
+                                    <div class="layui-col-space10 selector layui-col-md12" ez-label="树" ez-type="tree">
                                         <div class="layui-form-item ">
                                             <label class="layui-form-label  ">树</label>
                                             <div class="layui-input-block">
@@ -613,43 +680,45 @@
                         </div>
                     </div>
                     <div class="layui-tab-item">
-                          上传接口返回数据规范，${ezcloud.uploadUrl}：
-                          入参：file
-                          出参：
-                            {
-                                "code": "success",
-                                "success": true,
-                                "message": "",
-                                "data": {
-                                    "fileName":"",
-                                    "size":0,
-                                    "url":"",
-                                    "resourceId":"${ezcloud.downloadUrl} 拼接 resourceId",
-                                }
-                            }
+                        上传接口返回数据规范，${ezcloud.uploadUrl}：
+                        入参：file
+                        出参：
+                        {
+                        "code": "success",
+                        "success": true,
+                        "message": "",
+                        "data": {
+                        "fileName":"",
+                        "size":0,
+                        "url":"",
+                        "resourceId":"${ezcloud.downloadUrl} 拼接 resourceId",
+                        }
+                        }
                     </div>
                 </div>
             </div>
         </div>
         <div class="layui-col-md8 layui-col-xs6 center">
             <div class="layui-card-header">
-                <blockquote class="layui-elem-quote selector"  ez-col="12"
+                <blockquote class="layui-elem-quote selector" ez-col="12"
                             th:ez-success_url="${form.core.success_url}"
                             th:ez-formsubmiturl="${form.core.formsubmiturl}"
-                            th:ez-datasource="${form.core.datasource}" id="formCoreContainer" ez-type="formcore" th:ez-encodeFormId="${form.core.formcode}"
+                            th:ez-datasource="${form.core.datasource}" id="formCoreContainer" ez-type="formcore"
+                            th:ez-encodeFormId="${form.core.formcode}"
                             th:ez-form_name="${form.core.form_name}">
-                    <span id="form_name" th:text="${#strings.isEmpty(form.core.form_name)?'点此配置表单信息':form.core.form_name}">
+                    <span id="form_name"
+                          th:text="${#strings.isEmpty(form.core.form_name)?'点此配置表单信息':form.core.form_name}">
                     </span>
                 </blockquote>
                 <div class="layui-row">
-                        <pre    id="init_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
-                                th:text="${form.core.init_express}"></pre>
-                        <pre    id="submit_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
-                                th:text="${form.core.submit_express}"></pre>
-                        <pre    id="delete_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
-                                th:text="${form.core.delete_express}"></pre>
-                        <pre    id="status_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
-                                th:text="${form.core.status_express}"></pre>
+                        <pre id="init_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
+                             th:text="${form.core.init_express}"></pre>
+                    <pre id="submit_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
+                         th:text="${form.core.submit_express}"></pre>
+                    <pre id="delete_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
+                         th:text="${form.core.delete_express}"></pre>
+                    <pre id="status_express1" style="display: none;height: 100%; width: 100%; z-index: 999; "
+                         th:text="${form.core.status_express}"></pre>
                     <pre style="display: none;height: 100%; width: 100%; z-index: 999; "
                          id="append_head_code1" th:text="${form.core.append_head}"></pre>
 
@@ -664,11 +733,17 @@
                     <input id="append_head_code" type="hidden" th:value="${form.core.append_head}">
                     <input id="append_foot_code" type="hidden" th:value="${form.core.append_foot}">
 
-                    <button type="button" class="layui-btn layui-btn-sm layui-btn-save  " ><i class="layui-icon layui-icon-ok-circle"></i>保存</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-save  "><i
+                            class="layui-icon layui-icon-ok-circle"></i>保存
+                    </button>
                     <button type="button" opentype="_BLANK" class="layui-btn layui-btn-sm  ezopenbutton  "
-                            th:url="${'/topezadmin/form/form-'+form.core.formcode}"> <i class="layui-icon layui-icon-component"></i> 预览</button>
+                            th:url="${'/topezadmin/form/form-'+form.core.formcode}"><i
+                            class="layui-icon layui-icon-component"></i> 预览
+                    </button>
                     <button type="button" opentype="_BLANK" class="layui-btn layui-btn-sm  ezopenbutton  "
-                            th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"> <i class="layui-icon layui-icon-component"></i> 源码编辑</button>
+                            th:url="${'/topezadmin/formEdit/sourceEdit-'+form.core.formcode}"><i
+                            class="layui-icon layui-icon-component"></i> 源码编辑
+                    </button>
 
                     <button opentype="CONFIRM_AJAX" windowname="确认发布？" type="button" id="publish"
                             th:url="${'/topezadmin/formEdit/publish-'+form.core.formcode}"
@@ -676,24 +751,38 @@
                         <i class="layui-icon  layui-icon-component"></i>发布
                     </button>
                     <button type="button" class="layui-btn layui-btn-sm layui-btn-core   "
-                    > <i class="layui-icon layui-icon-fonts-code"></i> 表单配置</button>
-                    <button type="button"  help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-head  "> <i class="layui-icon layui-icon-fonts-code"></i> 页头html</button>
-                    <button type="button" help="/welcome.html#card4"  class="layui-btn layui-btn-sm layui-btn-initex  "> <i class="layui-icon layui-icon-fonts-code"></i> 初始化表达式</button>
-                    <button type="button" help="/welcome.html#card4"  class="layui-btn layui-btn-sm layui-btn-subex  "> <i class="layui-icon layui-icon-fonts-code"></i> 提交表达式</button>
-                    <button type="button" help="/welcome.html#card4"  class="layui-btn layui-btn-sm layui-btn-delex  "> <i class="layui-icon layui-icon-fonts-code"></i> 删除表达式</button>
-                    <button type="button" help="/welcome.html#card4"  class="layui-btn layui-btn-sm layui-btn-staex  "> <i class="layui-icon layui-icon-fonts-code"></i> 状态表达式</button>
-                    <button type="button" help="/welcome.html#card4"  class="layui-btn layui-btn-sm layui-btn-foot  "> <i class="layui-icon layui-icon-fonts-code"></i> 页尾html</button>
+                    ><i class="layui-icon layui-icon-fonts-code"></i> 表单配置
+                    </button>
+                    <button type="button" help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-head  "><i
+                            class="layui-icon layui-icon-fonts-code"></i> 页头html
+                    </button>
+                    <button type="button" help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-initex  ">
+                        <i class="layui-icon layui-icon-fonts-code"></i> 初始化表达式
+                    </button>
+                    <button type="button" help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-subex  "><i
+                            class="layui-icon layui-icon-fonts-code"></i> 提交表达式
+                    </button>
+                    <button type="button" help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-delex  "><i
+                            class="layui-icon layui-icon-fonts-code"></i> 删除表达式
+                    </button>
+                    <button type="button" help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-staex  "><i
+                            class="layui-icon layui-icon-fonts-code"></i> 状态表达式
+                    </button>
+                    <button type="button" help="/welcome.html#card4" class="layui-btn layui-btn-sm layui-btn-foot  "><i
+                            class="layui-icon layui-icon-fonts-code"></i> 页尾html
+                    </button>
 
 
                 </div>
 
                 <hr>
                 <div class="body   layui-row layui-col-space16  layui-form " id="centerContainer">
-                    <div id="append_head" th:utext="${form.core.append_head}" >
+                    <div id="append_head" th:utext="${form.core.append_head}">
 
                     </div>
 
-                    <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}" th:each="card:${form.cards}"
+                    <div class=" selector cardcol " th:classappend="${'layui-col-md'+card.col}"
+                         th:each="card:${form.cards}"
                          th:ez-cardname="${card.cardname}" ez-type="card"
                          th:ez-col="${card.col}"
                          th:ez-item_name="${card.item_name}"
@@ -704,39 +793,43 @@
                          th:ez-btnopentype="${card.btnopentype}"
                          th:ez-btntemplate="${card.btntemplate}"
                     >
-                        <div class="layui-card"  >
-                            <div class="layui-card-header"  th:if="${not #strings.isEmpty(card.cardname)}" >
+                        <div class="layui-card">
+                            <div class="layui-card-header" th:if="${not #strings.isEmpty(card.cardname)}">
                                 [[${card.cardname}]]
-                                <div class="layui-layer-setwin  " style="top: 0px;line-height: 43px;position: absolute;">
+                                <div class="layui-layer-setwin  "
+                                     style="top: 0px;line-height: 43px;position: absolute;">
                                     <div class="layui-btn-group custom-card-btn">
-                                        <button  th:if="${not #strings.isEmpty(card.btnname)}" class="ezopenbutton layui-btn layui-btn-sm layui-btn-normal"
-                                                 th:windowname="${card.btnname}"
-                                                 th:item_name="${card.item_name}"
-                                                 th:url="${card.btnurl}" th:opentype="${card.btnopentype}" th:text="${card.btnname}">添加</button>
+                                        <button th:if="${not #strings.isEmpty(card.btnname)}"
+                                                class="ezopenbutton layui-btn layui-btn-sm layui-btn-normal"
+                                                th:windowname="${card.btnname}"
+                                                th:item_name="${card.item_name}"
+                                                th:url="${card.btnurl}" th:opentype="${card.btnopentype}"
+                                                th:text="${card.btnname}">添加
+                                        </button>
                                         [(${card.btntemplate})]
                                     </div>
                                     <span class="layui-layer-min" style=" "></span>
-                                    <span class="layui-layer-max layui-layer-maxmin layui-hide"  ></span>
+                                    <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
                                 </div>
                             </div>
                             <div class="layui-card-body   ">
                                 <div class="layui-row dragula-container form-item-container">
-                                    <div   th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
+                                    <div th:each="item,stat:${card.items}" th:remove="tag" th:utext="${item.html}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class=" selector cardcol layui-col-md12"  th:if="${form.cards==null}"
-                             ez-type="card" ez-col="12">
-                            <div class="layui-card"  >
-                                <div class="layui-card-body   ">
-                                    <div class="layui-row dragula-container">
+                    <div class=" selector cardcol layui-col-md12" th:if="${form.cards==null}"
+                         ez-type="card" ez-col="12">
+                        <div class="layui-card">
+                            <div class="layui-card-body   ">
+                                <div class="layui-row dragula-container">
 
-                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     <div id="append_foot" th:utext="${form.core.append_foot}">
                     </div>
                 </div>
@@ -745,7 +838,7 @@
         <div class="layui-col-md2 layui-col-xs3 right">
             <div class="layui-tab layui-tab-brief " lay-filter="test-hash">
                 <ul class="layui-tab-title">
-                    <li class="layui-this" >配置</li>
+                    <li class="layui-this">配置</li>
                 </ul>
                 <div class="layui-tab-content righttab">
 

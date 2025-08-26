@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class Page {
     private String dialect = "mysql";
-    private String groupBy="";
+    private String groupBy = "";
 
     private int currentPage = 1;
     private int perPageInt = 10;
@@ -34,13 +34,13 @@ public class Page {
     }
 
     public Page setPerPageInt(int perPageInt) {
-        this.perPageInt = perPageInt <= 0 ?10 : perPageInt;
+        this.perPageInt = perPageInt <= 0 ? 10 : perPageInt;
         calcSplitPage();
         return this;
     }
 
     public static void main(String[] args) {
-        Page page=new Page();
+        Page page = new Page();
         page.setPerPageInt(50000);
         page.setCurrentPage(1);
         System.out.println(page.getEndRecord());
@@ -81,7 +81,7 @@ public class Page {
                 : (totalRecord % getPerPageInt() > 0 ? (totalRecord / getPerPageInt() + 1)
                 : totalRecord / getPerPageInt()));
         //totalPage = currentPage > totalPage ? 0 : totalPage;
-       // totalRecord = currentPage > totalPage ? 0 : totalRecord;
+        // totalRecord = currentPage > totalPage ? 0 : totalRecord;
         //  currentPage=Math.min(Integer.valueOf(totalPage+""),currentPage);
         return totalPage;
     }
@@ -98,15 +98,16 @@ public class Page {
         this.orderByClause = orderByClause;
     }
 
-    public Page(Map<String,Object> request) {
-        setCurrentPage(NumberUtils.toInt(request.get("currentPage")+"", 1));
-        setPerPageInt(NumberUtils.toInt(request.get("perPageInt")+"", 10));
+    public Page(Map<String, Object> request) {
+        setCurrentPage(NumberUtils.toInt(request.get("currentPage") + "", 1));
+        setPerPageInt(NumberUtils.toInt(request.get("perPageInt") + "", 10));
         //orderByClause = request.getParameter("orderByClause");
     }
 
     public void setOrderByClause(String orderByClause) {
-          this.orderByClause=orderByClause;
+        this.orderByClause = orderByClause;
     }
+
     public String getOrderByClause() {
         return orderByClause;
     }

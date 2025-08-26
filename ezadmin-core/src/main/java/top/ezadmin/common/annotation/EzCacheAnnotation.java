@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 public @interface EzCacheAnnotation {
     String name() default "";
 
-    String  value() default "";
+    String value() default "";
 
 }

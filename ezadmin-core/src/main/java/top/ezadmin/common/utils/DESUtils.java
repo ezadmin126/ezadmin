@@ -29,7 +29,8 @@ public class DESUtils {
             key = password;
         }
     }
-    public static String encrypt(String plaintext ) throws Exception {
+
+    public static String encrypt(String plaintext) throws Exception {
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -37,54 +38,57 @@ public class DESUtils {
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public static String decrypt(String ciphertext ) throws Exception {
+    public static String decrypt(String ciphertext) throws Exception {
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(ciphertext));
         return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
+
     /**
      * DES加密
-     *
      */
     public static String encryptDES(Object object) throws Exception {
         return encryptDES(Utils.trimNull(object));
     }
+
     public static String encryptDES(String data) throws Exception {
         return encrypt(data);
     }
 
 
-
     /**
      * DES解密
+     *
      * @throws Exception
      */
     public static String decryptDES(String data) throws Exception {
         return decrypt(data);
     }
-    public static  String encodeSafeUrl(String key )  throws Exception{
+
+    public static String encodeSafeUrl(String key) throws Exception {
         // 加密
-        String ciphertext = encrypt(key );
-        String x= new String(Base64Utils.encodeUrlSafe(ciphertext.getBytes(StandardCharsets.UTF_8)),StandardCharsets.UTF_8);
+        String ciphertext = encrypt(key);
+        String x = new String(Base64Utils.encodeUrlSafe(ciphertext.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 
         return x;
 
     }
-    public static  String decodeSafeFromUrl(String key )  throws Exception{
+
+    public static String decodeSafeFromUrl(String key) throws Exception {
         try {
             String base64 = new String(Base64Utils.decodeUrlSafe(key.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
             // 加密
-            String ciphertext = decrypt(base64 );
+            String ciphertext = decrypt(base64);
             return ciphertext;
-        }catch (Exception e){
-            logger.error(" aes {}  ",key);
+        } catch (Exception e) {
+            logger.error(" aes {}  ", key);
             return null;
         }
     }
 
-    public static String md5(InputStream inputStream){
+    public static String md5(InputStream inputStream) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("MD5");

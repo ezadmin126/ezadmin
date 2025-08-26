@@ -4,11 +4,11 @@
 package top.ezadmin.common.utils;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.ezadmin.EzClientBootstrap;
 import top.ezadmin.common.annotation.EzCacheAnnotation;
 import top.ezadmin.plugins.cache.Callback;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -21,8 +21,6 @@ import java.util.Map;
 
 /**
  * ProxyHandle.java
- *
-
  */
 public class ProxyHandle implements InvocationHandler {
     private static Logger logger = LoggerFactory.getLogger(ProxyHandle.class);
@@ -41,7 +39,6 @@ public class ProxyHandle implements InvocationHandler {
     }
 
 
-
     private Object getImplInstanceByMethod(Method method) throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException {
         String clazzName = method.getDeclaringClass().getName().replace(method.getDeclaringClass().getSimpleName(),
                 "impl." + method.getDeclaringClass().getSimpleName()) + "Impl";
@@ -49,7 +46,7 @@ public class ProxyHandle implements InvocationHandler {
         return instance;
     }
 
-    private Object invokeMethod(final Object instance, final Method method,final  Object[] args) throws InvocationTargetException, IllegalAccessException {
+    private Object invokeMethod(final Object instance, final Method method, final Object[] args) throws InvocationTargetException, IllegalAccessException {
 
         Annotation annotation = method.getAnnotation(EzCacheAnnotation.class);
         if (annotation != null) {
@@ -59,8 +56,8 @@ public class ProxyHandle implements InvocationHandler {
                 public Object call(String key) {
 
                     try {
-                        Object obj= method.invoke(instance, args);
-                        if(obj==null) {
+                        Object obj = method.invoke(instance, args);
+                        if (obj == null) {
                             if (method.getReturnType().equals(List.class)) {
                                 return Collections.emptyList();
                             } else if (method.getReturnType().equals(Map.class)) {
@@ -69,10 +66,10 @@ public class ProxyHandle implements InvocationHandler {
                         }
                         return obj;
                     } catch (Exception e) {
-                        logger.warn("proxy error "+key + "::" + StringUtils.join(args), e);
-                        if( method.getReturnType().equals(List.class)){
+                        logger.warn("proxy error " + key + "::" + StringUtils.join(args), e);
+                        if (method.getReturnType().equals(List.class)) {
                             return Collections.emptyList();
-                        }else if( method.getReturnType().equals(Map.class)){
+                        } else if (method.getReturnType().equals(Map.class)) {
                             return Collections.emptyMap();
                         }
                         return "";

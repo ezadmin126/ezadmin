@@ -40,7 +40,7 @@
          th:ez-help="${help}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  "   >
+            <label class="layui-form-label  ">
                 <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -53,8 +53,9 @@
                         class="layui-form-mid layui-text-em top_desc"
                         th:utext="${top_desc}" style="float:none"
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
-                    <span class="layui-text form-block-span" th:if="${value==null?false:#strings.equals(value+'',item.K+'')}" th:value="${item.K}"
-                            th:text="${item.V}" th:each="item:${items}">Alaska
+                <span class="layui-text form-block-span"
+                      th:if="${value==null?false:#strings.equals(value+'',item.K+'')}" th:value="${item.K}"
+                      th:text="${item.V}" th:each="item:${items}">Alaska
                     </span>
                 <small
                         class="layui-form-mid layui-text-em item_desc"
@@ -63,7 +64,6 @@
             </div>
         </div>
     </div>
-
 
 
 </div>

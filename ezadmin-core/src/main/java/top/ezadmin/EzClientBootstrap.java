@@ -4,10 +4,16 @@
 
 package top.ezadmin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import top.ezadmin.common.utils.BeanTools;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.common.utils.ThymeleafUtils;
+import top.ezadmin.common.utils.Utils;
 import top.ezadmin.dao.FormDao;
 import top.ezadmin.dao.ListDao;
- import top.ezadmin.dao.PluginsDao;
+import top.ezadmin.dao.PluginsDao;
 import top.ezadmin.plugins.cache.EzCache;
 import top.ezadmin.plugins.export.EzExport;
 import top.ezadmin.plugins.refresh.EzRefresh;
@@ -16,15 +22,7 @@ import top.ezadmin.web.Config;
 import top.ezadmin.web.SpringContextHolder;
 import top.ezadmin.web.filters.ez.ControllerFilter;
 import top.ezadmin.web.filters.ez.Filter;
-import top.ezadmin.web.filters.ez.NotFoundFilter;
 import top.ezadmin.web.filters.ez.TraceLogFilter;
-
- import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import top.ezadmin.common.utils.BeanTools;
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.ThymeleafUtils;
-import top.ezadmin.common.utils.Utils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -42,185 +40,239 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class EzClientBootstrap {
 
-    /** 日志记录器 */
+    /**
+     * 日志记录器
+     */
     public static final Logger log = LoggerFactory.getLogger(EzClientBootstrap.class);
 
-   
-    
-    
-    /** SQL缓存开关，控制是否启用SQL查询缓存 */
+
+    /**
+     * SQL缓存开关，控制是否启用SQL查询缓存
+     */
     private boolean sqlCache = false;
 
     private boolean customSearchOpen = true;
-    
-    /** 列表配置资源列表，存储所有列表页面的配置信息 */
+
+    /**
+     * 列表配置资源列表，存储所有列表页面的配置信息
+     */
     private List<Config> listConfigResources;
-    
-    /** 表单配置资源列表，存储所有表单页面的配置信息 */
+
+    /**
+     * 表单配置资源列表，存储所有表单页面的配置信息
+     */
     private List<Config> formConfigResources;
-    
-    /** 插件表单配置资源列表，存储插件相关的表单配置 */
+
+    /**
+     * 插件表单配置资源列表，存储插件相关的表单配置
+     */
     private List<Config> pluginsFormConfigResources;
-    
-    /** 插件列表配置资源列表，存储插件相关的列表配置 */
+
+    /**
+     * 插件列表配置资源列表，存储插件相关的列表配置
+     */
     private List<Config> pluginsListConfigResources;
-    
-    /** 插件详情配置资源列表，存储插件相关的详情页面配置 */
+
+    /**
+     * 插件详情配置资源列表，存储插件相关的详情页面配置
+     */
     private List<Config> pluginsDetailConfigResources;
-    
-    /** 清除缓存URL，用于清除系统缓存的接口地址 */
+
+    /**
+     * 清除缓存URL，用于清除系统缓存的接口地址
+     */
     private String clearUrl;
 
-    /** 数据源映射表，key为数据源名称，value为对应的数据源对象 */
+    /**
+     * 数据源映射表，key为数据源名称，value为对应的数据源对象
+     */
     private Map<String, EzSqlogDataSource> queryDatasourceMap = new HashMap<>();
-    
-    /** 默认数据库键名，系统默认数据源的标识 */
-    public final static String DEFAULT_DB_KEY="System";
-    
-    /** 应用名称，默认为"ez" */
+
+    /**
+     * 默认数据库键名，系统默认数据源的标识
+     */
+    public final static String DEFAULT_DB_KEY = "System";
+
+    /**
+     * 应用名称，默认为"ez"
+     */
     private String appName = "ez";
-    
-    /** 管理界面样式，默认为"layui"，支持自定义UI框架 */
-    private String adminStyle="layui";
-    
-    /** 日志类型，用于控制日志输出级别和格式 */
+
+    /**
+     * 管理界面样式，默认为"layui"，支持自定义UI框架
+     */
+    private String adminStyle = "layui";
+
+    /**
+     * 日志类型，用于控制日志输出级别和格式
+     */
     private String logType = "1000";
-    
-    
-    
-    /** 前缀URL，系统所有接口的统一前缀路径 */
-    private String prefixUrl="/topezadmin";
-    
-   
 
-    /** 导出类名，指定数据导出功能的实现类 */
-    private String exportClass="top.ezadmin.plugins.export.CSVExport";
-    
-    /** 缓存类名，指定缓存功能的实现类 */
-    private String cacheClass="top.ezadmin.plugins.cache.CaffeineCache";
-    
-    /** 刷新类名，指定数据刷新功能的实现类 */
-    private String refreshClass="top.ezadmin.plugins.refresh.DefaultRefresh";
 
-    /** 节假日配置，JSON格式的节假日数据，用于日期计算 */
-    private String holiday="[[],[]]";
+    /**
+     * 前缀URL，系统所有接口的统一前缀路径
+     */
+    private String prefixUrl = "/topezadmin";
 
-    /** 文件上传URL，文件上传功能的接口地址 */
+
+    /**
+     * 导出类名，指定数据导出功能的实现类
+     */
+    private String exportClass = "top.ezadmin.plugins.export.CSVExport";
+
+    /**
+     * 缓存类名，指定缓存功能的实现类
+     */
+    private String cacheClass = "top.ezadmin.plugins.cache.CaffeineCache";
+
+    /**
+     * 刷新类名，指定数据刷新功能的实现类
+     */
+    private String refreshClass = "top.ezadmin.plugins.refresh.DefaultRefresh";
+
+    /**
+     * 节假日配置，JSON格式的节假日数据，用于日期计算
+     */
+    private String holiday = "[[],[]]";
+
+    /**
+     * 文件上传URL，文件上传功能的接口地址
+     */
     private String uploadUrl = "/topezadmin/form/upload.html";
-    
-    /** 文件下载URL，文件下载功能的接口地址 */
+
+    /**
+     * 文件下载URL，文件下载功能的接口地址
+     */
     private String downloadUrl = "/topezadmin/form/download.html?fileId=";
 
-    /** 单例实例，EzClientBootstrap的全局唯一实例 */
+    /**
+     * 单例实例，EzClientBootstrap的全局唯一实例
+     */
     private static EzClientBootstrap bootstrap = new EzClientBootstrap();
-    
-    /** 缓存对象，系统缓存功能的实现实例 */
+
+    /**
+     * 缓存对象，系统缓存功能的实现实例
+     */
     private EzCache ezCache;
-    
-    /** 导出对象，数据导出功能的实现实例 */
+
+    /**
+     * 导出对象，数据导出功能的实现实例
+     */
     private EzExport ezExport;
-    
-    /** 刷新对象，数据刷新功能的实现实例 */
+
+    /**
+     * 刷新对象，数据刷新功能的实现实例
+     */
     private EzRefresh ezRefresh;
-    
-    /** 布局类型，页面布局方式，如"container"或"fluid" */
+
+    /**
+     * 布局类型，页面布局方式，如"container"或"fluid"
+     */
     private String layout;//container fluid
 
-    /** 默认数据源，系统默认使用的数据源对象 */
-    private  DataSource ezDataSource;
+    /**
+     * 默认数据源，系统默认使用的数据源对象
+     */
+    private DataSource ezDataSource;
 
-    /** 
+    /**
      * 过滤器链，用于处理HTTP请求的过滤器
      * 1.TraceLogFilter 打印sql
      * 2.ControllerFilter 根据url前缀选择跳转到哪个controller
-     * 3.NotFoundFilter 404页面 @deprecated 
+     * 3.NotFoundFilter 404页面 @deprecated
      */
     private static Filter filter;
 
-    /** 私有构造函数，确保单例模式 */
+    /**
+     * 私有构造函数，确保单例模式
+     */
     private EzClientBootstrap() {
-    } 
+    }
 
     public static EzClientBootstrap instance() {
         return bootstrap;
     }
-    public Set<String> datasourceKeys(){
-            return queryDatasourceMap.keySet();
+
+    public Set<String> datasourceKeys() {
+        return queryDatasourceMap.keySet();
     }
-    public EzSqlogDataSource getDataSourceByKey(Object key){
-        if(StringUtils.equals("1",key+"") ){
-            key=DEFAULT_DB_KEY;
+
+    public EzSqlogDataSource getDataSourceByKey(Object key) {
+        if (StringUtils.equals("1", key + "")) {
+            key = DEFAULT_DB_KEY;
         }
         return queryDatasourceMap.get(StringUtils.lowerCase(Utils.trimNull(key)));
     }
-    public  DataSource getEzDataSource ( ){
-        if(ezDataSource!=null){
+
+    public DataSource getEzDataSource() {
+        if (ezDataSource != null) {
             return ezDataSource;
         }
         return queryDatasourceMap.get(datasourceKey("dataSource"));
     }
-    public  void setEzDataSource (DataSource source ){
-        if(source instanceof EzSqlogDataSource){
-            ezDataSource =source;
-        }else{
+
+    public void setEzDataSource(DataSource source) {
+        if (source instanceof EzSqlogDataSource) {
+            ezDataSource = source;
+        } else {
             EzSqlogDataSource source2 = new EzSqlogDataSource();
             source2.setRealDataSource(source);
             source2.setLogType(logType);
-            ezDataSource=source2;
+            ezDataSource = source2;
         }
     }
 
 
-    public void addBizDataSource(String key, DataSource ezSqlogDataSource){
+    public void addBizDataSource(String key, DataSource ezSqlogDataSource) {
 
         EzSqlogDataSource source = new EzSqlogDataSource();
         source.setRealDataSource(ezSqlogDataSource);
         source.setLogType(logType);
-        if(StringUtils.equalsIgnoreCase( DEFAULT_DB_KEY,key)){
-            throw new IllegalArgumentException( DEFAULT_DB_KEY+" 为系统关键词，不能使用");
+        if (StringUtils.equalsIgnoreCase(DEFAULT_DB_KEY, key)) {
+            throw new IllegalArgumentException(DEFAULT_DB_KEY + " 为系统关键词，不能使用");
         }
-        if(ezSqlogDataSource instanceof EzSqlogDataSource){
-            queryDatasourceMap.put(datasourceKey( key),(EzSqlogDataSource)ezSqlogDataSource);
-        }else{
-            queryDatasourceMap.put(datasourceKey( key) ,source);
-        }
-    }
-
-    private String datasourceKey( String key){
-        if(key.indexOf("-")>0){
-            return StringUtils.lowerCase( key);
-        }
-        else{
-            return StringUtils.lowerCase( key);
+        if (ezSqlogDataSource instanceof EzSqlogDataSource) {
+            queryDatasourceMap.put(datasourceKey(key), (EzSqlogDataSource) ezSqlogDataSource);
+        } else {
+            queryDatasourceMap.put(datasourceKey(key), source);
         }
     }
 
-    public void init(    ) throws  Exception {
+    private String datasourceKey(String key) {
+        if (key.indexOf("-") > 0) {
+            return StringUtils.lowerCase(key);
+        } else {
+            return StringUtils.lowerCase(key);
+        }
+    }
+
+    public void init() throws Exception {
         try {
             if (start.compareAndSet(false, true)) {
-              //  log.info("start init   plugins ");
+                //  log.info("start init   plugins ");
                 PluginsDao.getInstance().init();
-             //   log.info("start init   list ");
+                //   log.info("start init   list ");
                 ListDao.getInstance().init();
-              //  log.info("start init   form ");
+                //  log.info("start init   form ");
                 FormDao.getInstance().init();
-             //   log.info("end init     ");
+                //   log.info("end init     ");
                 ThymeleafUtils.init(sqlCache);
                 filter = new TraceLogFilter();
-                filter.next(new ControllerFilter()) ;
+                filter.next(new ControllerFilter());
                 //初始化导出 工具
                 ezExport = (EzExport) BeanTools.applicationInstance(getExportClass());
 
                 ezCache = (EzCache) BeanTools.applicationInstance(getCacheClass());
-                ezRefresh=(EzRefresh)  BeanTools.applicationInstance(getRefreshClass());
+                ezRefresh = (EzRefresh) BeanTools.applicationInstance(getRefreshClass());
                 getCache().cacheFlag(sqlCache);
                 ezRefresh.refreshAll();
             }
-        }catch (Exception e){
-            log.error("start init    ",e);
+        } catch (Exception e) {
+            log.error("start init    ", e);
         }
     }
-    public void initSpring(ApplicationContext applicationContext1){
+
+    public void initSpring(ApplicationContext applicationContext1) {
         SpringContextHolder.init(applicationContext1);
     }
 
@@ -233,66 +285,100 @@ public class EzClientBootstrap {
         try {
             request.setCharacterEncoding("UTF-8");
             response.setCharacterEncoding("UTF-8");
-            filter.doFilter(request, response,filterChain);
+            filter.doFilter(request, response, filterChain);
         } catch (Exception e) {
             log.error("", e);
         }
     }
 
- /**
+    /**
      * 用于admin框架的几个参数，只用列表无需关注  start----------------
      */
-/** 地区URL，用于地区数据查询的接口地址 */
-private String regionUrl;
-    
-/** 分类URL，用于分类数据查询的接口地址 */
-private String categoryUrl;
+    /**
+     * 地区URL，用于地区数据查询的接口地址
+     */
+    private String regionUrl;
 
-/** 组织URL，用于组织数据查询的接口地址 */
-private String orgUrl;
+    /**
+     * 分类URL，用于分类数据查询的接口地址
+     */
+    private String categoryUrl;
 
-/** 系统名称，显示在管理界面的系统标题 */
-private String systemName;
+    /**
+     * 组织URL，用于组织数据查询的接口地址
+     */
+    private String orgUrl;
 
-/** Logo图片URL，系统Logo的访问地址 */
-private String logoUrl;
+    /**
+     * 系统名称，显示在管理界面的系统标题
+     */
+    private String systemName;
 
-/** 系统配置映射表，存储各种系统级别的配置参数 */
-private Map<String,Object> config=new HashMap<>(8);
+    /**
+     * Logo图片URL，系统Logo的访问地址
+     */
+    private String logoUrl;
 
-/** 导航URL，系统导航菜单的接口地址 */
-private String navUrl;
+    /**
+     * 系统配置映射表，存储各种系统级别的配置参数
+     */
+    private Map<String, Object> config = new HashMap<>(8);
 
-/** 追加JavaScript代码，用于在页面中注入自定义JS脚本 */
-private String appendJs;
+    /**
+     * 导航URL，系统导航菜单的接口地址
+     */
+    private String navUrl;
 
-/** 搜索URL，全局搜索功能的接口地址 */
-private String searchUrl;
+    /**
+     * 追加JavaScript代码，用于在页面中注入自定义JS脚本
+     */
+    private String appendJs;
 
-/** 首页URL，系统首页的访问地址 */
-private String indexUrl;
- /** 消息URL，系统消息通知的接口地址 */
- private String messageUrl;
-    
- /** 聊天URL，系统聊天功能的接口地址 */
- private String chatUrl;
- 
- /** 退出登录URL，用户退出登录的接口地址 */
- private String signoutUrl;
- 
- /** 文件上传路径，系统文件上传的本地存储目录 */
- private String uploadPath="/data/ezadmin/upload/";
+    /**
+     * 搜索URL，全局搜索功能的接口地址
+     */
+    private String searchUrl;
 
- /** OSS端点地址，阿里云对象存储服务的访问端点 */
- private String ossEndpoint;
+    /**
+     * 首页URL，系统首页的访问地址
+     */
+    private String indexUrl;
+    /**
+     * 消息URL，系统消息通知的接口地址
+     */
+    private String messageUrl;
 
- /** OSS访问密钥ID，阿里云对象存储服务的访问密钥 */
- private String ossAccessKeyId;
- 
- /** OSS访问密钥Secret，阿里云对象存储服务的访问密钥 */
- private String ossAccessKeySecret;
+    /**
+     * 聊天URL，系统聊天功能的接口地址
+     */
+    private String chatUrl;
 
-     
+    /**
+     * 退出登录URL，用户退出登录的接口地址
+     */
+    private String signoutUrl;
+
+    /**
+     * 文件上传路径，系统文件上传的本地存储目录
+     */
+    private String uploadPath = "/data/ezadmin/upload/";
+
+    /**
+     * OSS端点地址，阿里云对象存储服务的访问端点
+     */
+    private String ossEndpoint;
+
+    /**
+     * OSS访问密钥ID，阿里云对象存储服务的访问密钥
+     */
+    private String ossAccessKeyId;
+
+    /**
+     * OSS访问密钥Secret，阿里云对象存储服务的访问密钥
+     */
+    private String ossAccessKeySecret;
+
+
     /**
      * 用于admin框架的几个参数，只用列表无需配置  end----------------
      */
@@ -308,7 +394,9 @@ private String indexUrl;
         return sqlCache;
     }
 
-    /** 系统启动状态标识，用于防止重复初始化 */
+    /**
+     * 系统启动状态标识，用于防止重复初始化
+     */
     public AtomicBoolean start = new AtomicBoolean(false);
 
     public String getLogType() {
@@ -356,7 +444,7 @@ private String indexUrl;
     }
 
     public void setAdminStyle(String adminStyle) {
-        if(StringUtils.isBlank(adminStyle)){
+        if (StringUtils.isBlank(adminStyle)) {
             return;
         }
         this.adminStyle = adminStyle;
@@ -377,7 +465,6 @@ private String indexUrl;
     public void setFormConfigResources(List<Config> formConfigResources) {
         this.formConfigResources = formConfigResources;
     }
-
 
 
     public String getClearUrl() {
@@ -461,7 +548,6 @@ private String indexUrl;
     }
 
 
-
     public String getCacheClass() {
         return cacheClass;
     }
@@ -501,6 +587,7 @@ private String indexUrl;
     public void setPrefixUrl(String prefixUrl) {
         this.prefixUrl = prefixUrl;
     }
+
     public String getOssEndpoint() {
         return ossEndpoint;
     }
@@ -599,7 +686,7 @@ private String indexUrl;
     }
 
     public void setSqlCache(boolean aBoolean) {
-        this.sqlCache=aBoolean;
+        this.sqlCache = aBoolean;
     }
 
     public boolean isCustomSearchOpen() {

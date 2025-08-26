@@ -6,42 +6,42 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "topezadmin")
 public class EzClientProperties {
 
-    private String appName="ez";
-    private boolean cacheFlag=true;
+    private String appName = "ez";
+    private boolean cacheFlag = true;
     private String uploadUrl;
     private String downloadUrl;
-    private String logType="1000-10000";
-    private String regionUrl ;
-    private String categoryUrl ;
-    private String orgUrl ;
-    private String datasourceBeanNames="dataSource";
-    private String systemName="System";
-    private String logoUrl="/static/logo.png" ;
-    private String navUrl="/topezadmin/navs.html" ;
-    private String appendJs ;
-    private String searchUrl ;
+    private String logType = "1000-10000";
+    private String regionUrl;
+    private String categoryUrl;
+    private String orgUrl;
+    private String datasourceBeanNames = "dataSource";
+    private String systemName = "System";
+    private String logoUrl = "/static/logo.png";
+    private String navUrl = "/topezadmin/navs.html";
+    private String appendJs;
+    private String searchUrl;
     private String indexUrl;
-    private String prefixUrl="/topezadmin";
-    private String signoutUrl="/signout";
+    private String prefixUrl = "/topezadmin";
+    private String signoutUrl = "/signout";
     private String messageUrl;
     private String chatUrl;
     private String clearUrl;
-    private String adminStyle="layui";
-    private String uploadPath="/data/upload/ezadmin";
+    private String adminStyle = "layui";
+    private String uploadPath = "/data/upload/ezadmin";
 
     private String editLocation;
-    private String listResourceLocation="classpath*:/topezadmin/config/layui/list/**/*.html";
-    private String formResourceLocation="classpath*:/topezadmin/config/layui/form/**/*.html";
-    private String pluginsFormResourceLocation="classpath*:/topezadmin/config/layui/plugins/form/**/*.html";
-    private String pluginsListResourceLocation="classpath*:/topezadmin/config/layui/plugins/list/**/*.html";
-    private String pluginsDetailResourceLocation="classpath*:/topezadmin/config/layui/plugins/detail/**/*.html";
-    private String configJson="{\"favicon\":\"/static/favicon.ico\",\"logo\":\"/static/logo.png\"}";
+    private String listResourceLocation = "classpath*:/topezadmin/config/layui/list/**/*.html";
+    private String formResourceLocation = "classpath*:/topezadmin/config/layui/form/**/*.html";
+    private String pluginsFormResourceLocation = "classpath*:/topezadmin/config/layui/plugins/form/**/*.html";
+    private String pluginsListResourceLocation = "classpath*:/topezadmin/config/layui/plugins/list/**/*.html";
+    private String pluginsDetailResourceLocation = "classpath*:/topezadmin/config/layui/plugins/detail/**/*.html";
+    private String configJson = "{\"favicon\":\"/static/favicon.ico\",\"logo\":\"/static/logo.png\"}";
 
 
     private String exportClass;
     private String refreshClass;
     private String holiday;
-    private String layout="container";//container fluid
+    private String layout = "container";//container fluid
 
     public String getAppName() {
         return appName;

@@ -3,12 +3,11 @@ package top.ezadmin.web.safe;
 import java.util.Map;
 
 
-
 public class IpActionDto {
     //app
-    private String  a;
+    private String a;
     //cookie
-    private Map<String,String> c;
+    private Map<String, String> c;
     //ip
     private String ip;
     //referer
@@ -24,10 +23,11 @@ public class IpActionDto {
     //time
     private Long t;
 
-    public boolean isWhite(){
+    public boolean isWhite() {
         return "3".equals(ty);
     }
-    public boolean isAttach(){
+
+    public boolean isAttach() {
         return "2".equals(ty);
     }
 

@@ -1,12 +1,12 @@
 package top.ezadmin;
 
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.web.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.web.Config;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,15 +19,17 @@ public class ConfigUtils {
         Resource[] rs = re.getResources("file:/data/logs/ez/**");
         System.out.println(rs);
     }
-    static Logger logger= LoggerFactory.getLogger(ConfigUtils.class);
-    public static  List<Config> loadFiles(String config) throws IOException {
 
-        List<Config> listConfig=new ArrayList();
-      //  logger.info(" topezadmin 开始加载文件{} ",config);
-        String paths[]= StringUtils.split(config,";");
-        for(int i=0;i<paths.length;i++){
+    static Logger logger = LoggerFactory.getLogger(ConfigUtils.class);
+
+    public static List<Config> loadFiles(String config) throws IOException {
+
+        List<Config> listConfig = new ArrayList();
+        //  logger.info(" topezadmin 开始加载文件{} ",config);
+        String paths[] = StringUtils.split(config, ";");
+        for (int i = 0; i < paths.length; i++) {
             try {
-                if(StringUtils.isBlank(paths[i])){
+                if (StringUtils.isBlank(paths[i])) {
                     continue;
                 }
                 ResourcePatternResolver re = new PathMatchingResourcePatternResolver();
@@ -48,11 +50,11 @@ public class ConfigUtils {
                     }
                     listConfig.add(c);
                 }
-            }catch(Exception e){
-                logger.error("  paths 加载异常"+paths[i],e);
+            } catch (Exception e) {
+                logger.error("  paths 加载异常" + paths[i], e);
             }
         }
-       // logger.info("   结束加载文件{} {}",config,listConfig.size());
+        // logger.info("   结束加载文件{} {}",config,listConfig.size());
         return listConfig;
     }
 }

@@ -20,8 +20,9 @@ public class NumberUtils {
     public static Integer toInt(String field_type, int defaultV) {
         return org.apache.commons.lang.math.NumberUtils.toInt(field_type, defaultV);
     }
-    public static boolean isNumber(String field_type ) {
-        return org.apache.commons.lang.math.NumberUtils.isNumber(field_type );
+
+    public static boolean isNumber(String field_type) {
+        return org.apache.commons.lang.math.NumberUtils.isNumber(field_type);
     }
 
 

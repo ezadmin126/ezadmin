@@ -2,23 +2,23 @@ package top.ezadmin.common.enums;
 
 import top.ezadmin.common.utils.StringUtils;
 
-public enum  OperatorEnum {
-    EQ("=","等于"),
+public enum OperatorEnum {
+    EQ("=", "等于"),
     //
-    NE("!=","不等于"),
+    NE("!=", "不等于"),
     //
-   // LT("<","小于"),
+    // LT("<","小于"),
     //
-    LTE( "<=","小于等于"),
-    BETWEEN("BETWEEN","区间"),
+    LTE("<=", "小于等于"),
+    BETWEEN("BETWEEN", "区间"),
     //
-   // GT(">","大于"),
+    // GT(">","大于"),
     //
     GTE(">=", "大于等于"),
     //
-    LIKE("LIKE","包含"),
+    LIKE("LIKE", "包含"),
     //
-    NOTLIKE("NOT LIKE","不包含"),
+    NOTLIKE("NOT LIKE", "不包含"),
     //
     //START_WITH("LIKE","开始于"),
     //
@@ -28,12 +28,12 @@ public enum  OperatorEnum {
     //
     //NOT_END_WITH("NOT LIKE ","不结束于"),
     //
-    IN("IN","IN"),
+    IN("IN", "IN"),
     //
-    NOT_IN("NOT IN","NOT IN"),
-    ALL_EQ("=","ALL_EQ"),
-    ALL_LIKE("LIKE","ALL_LIKE"),
-    ALL_FIND_IN_SET("ALL_FIND_IN_SET","ALL_FIND_IN_SET");
+    NOT_IN("NOT IN", "NOT IN"),
+    ALL_EQ("=", "ALL_EQ"),
+    ALL_LIKE("LIKE", "ALL_LIKE"),
+    ALL_FIND_IN_SET("ALL_FIND_IN_SET", "ALL_FIND_IN_SET");
 //    //
 //    IS_NULL(" IS NULL ","无效的"),
 //    //
@@ -49,24 +49,25 @@ public enum  OperatorEnum {
 
     String operC;
     String nameC;
-    private OperatorEnum(String oper,String name){
-        operC=oper ;
-        nameC=name;
+
+    private OperatorEnum(String oper, String name) {
+        operC = oper;
+        nameC = name;
     }
 
     public static OperatorEnum match(String oper) {
-        if(StringUtils.isBlank(oper)){
+        if (StringUtils.isBlank(oper)) {
             return LIKE;
         }
-        for(OperatorEnum e:values()){
-            if(StringUtils.equalsIgnoreCase(e.name(),oper.trim())){
+        for (OperatorEnum e : values()) {
+            if (StringUtils.equalsIgnoreCase(e.name(), oper.trim())) {
                 return e;
             }
         }
         return LIKE;
     }
 
-    public   String getNameC(){
+    public String getNameC() {
         return nameC;
     }
 

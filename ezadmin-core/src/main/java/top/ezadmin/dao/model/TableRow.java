@@ -4,8 +4,8 @@ import java.util.List;
 
 public class TableRow {
 
-    private List<String> rowButtons  ;
-    private List<String> tds  ;
+    private List<String> rowButtons;
+    private List<String> tds;
 
 
     public List<String> getRowButtons() {

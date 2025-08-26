@@ -4,25 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateParam {
-    private List list=new ArrayList();
+    private List list = new ArrayList();
     private String where;
     private String table;
-    private String idName="ID";
+    private String idName = "ID";
 
 
-    public UpdateParam add(Object obj){
+    public UpdateParam add(Object obj) {
         list.add(obj);
         return this;
     }
-    public UpdateParam table(String obj){
-        table=obj;
-        return this;
-    }
-    public UpdateParam where(String obj){
-        where=obj;
+
+    public UpdateParam table(String obj) {
+        table = obj;
         return this;
     }
 
+    public UpdateParam where(String obj) {
+        where = obj;
+        return this;
+    }
 
 
     public List getList() {

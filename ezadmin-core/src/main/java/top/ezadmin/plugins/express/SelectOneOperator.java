@@ -8,17 +8,16 @@ import top.ezadmin.plugins.parser.parse.ResultModel;
 public class SelectOneOperator extends AbstractOperator {
 
 
-
     @Override
     public Object executeInner(Object[] objects) throws Exception {
-        OperatorParam operatorParam=(OperatorParam) Utils.getParam();
-        String sql=objects[0].toString();
+        OperatorParam operatorParam = (OperatorParam) Utils.getParam();
+        String sql = objects[0].toString();
 
-        ResultModel model= CommentsSqlParser.parse(sql,operatorParam.getParams());
+        ResultModel model = CommentsSqlParser.parse(sql, operatorParam.getParams());
         try {
             return Dao.getInstance().executeQueryOne(operatorParam.getDs(), model.getResult(), model.getParamsStatic());
-        }catch (Exception e){
-            Utils.addLog(model.toString(),e);
+        } catch (Exception e) {
+            Utils.addLog(model.toString(), e);
             return null;
         }
     }

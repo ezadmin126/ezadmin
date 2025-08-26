@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ItemInitData {
-    public ItemInitData items(List<Map<String, Object>> item){
-        items=item;
+    public ItemInitData items(List<Map<String, Object>> item) {
+        items = item;
         return this;
     }
 
@@ -16,7 +16,7 @@ public class ItemInitData {
         return items;
     }
 
-    List<Map<String, Object>> items=new ArrayList<>();
+    List<Map<String, Object>> items = new ArrayList<>();
 
     public List<Map<String, Object>> getChildItems() {
         return childItems;
@@ -27,7 +27,7 @@ public class ItemInitData {
         return this;
     }
 
-    List<Map<String, Object>> childItems=new ArrayList<>();
+    List<Map<String, Object>> childItems = new ArrayList<>();
 
     public Map<String, Object> getOtherParams() {
         return otherParams;
@@ -37,7 +37,7 @@ public class ItemInitData {
         this.otherParams = otherParams;
     }
 
-    Map<String,Object> otherParams=new HashMap<>();
+    Map<String, Object> otherParams = new HashMap<>();
 
 
 }

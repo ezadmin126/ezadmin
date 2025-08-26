@@ -3,76 +3,80 @@ package top.ezadmin.dao.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public   class Info{
-        private String title;
-        private String id;
-        private String pid;
-        private String href;
-        private String image;
-        private String target;
-        private String icon;
-        private List<Info> child=new ArrayList<>();
-        public Info(){}
-        public Info(String title, String href, String image, String target, String icon) {
-            this.title = title;
-            this.href = href;
-            this.image = image;
-            this.target = target;
-            this.icon = icon;
-        }
-        public Info addChild(String title, String href, String image, String target, String icon) {
-            Info i=new Info(  title,   href,   image,   target,   icon);
-            child.add(i);
-           return this;
-        }
+public class Info {
+    private String title;
+    private String id;
+    private String pid;
+    private String href;
+    private String image;
+    private String target;
+    private String icon;
+    private List<Info> child = new ArrayList<>();
 
-        public String getTitle() {
-            return title;
-        }
+    public Info() {
+    }
 
-        public void setTitle(String title) {
-            this.title = title;
-        }
+    public Info(String title, String href, String image, String target, String icon) {
+        this.title = title;
+        this.href = href;
+        this.image = image;
+        this.target = target;
+        this.icon = icon;
+    }
 
-        public String getHref() {
-            return href;
-        }
+    public Info addChild(String title, String href, String image, String target, String icon) {
+        Info i = new Info(title, href, image, target, icon);
+        child.add(i);
+        return this;
+    }
 
-        public void setHref(String href) {
-            this.href = href;
-        }
+    public String getTitle() {
+        return title;
+    }
 
-        public String getImage() {
-            return image;
-        }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-        public void setImage(String image) {
-            this.image = image;
-        }
+    public String getHref() {
+        return href;
+    }
 
-        public String getTarget() {
-            return target;
-        }
+    public void setHref(String href) {
+        this.href = href;
+    }
 
-        public void setTarget(String target) {
-            this.target = target;
-        }
+    public String getImage() {
+        return image;
+    }
 
-        public String getIcon() {
-            return icon;
-        }
+    public void setImage(String image) {
+        this.image = image;
+    }
 
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
+    public String getTarget() {
+        return target;
+    }
 
-        public List<Info> getChild() {
-            return child;
-        }
+    public void setTarget(String target) {
+        this.target = target;
+    }
 
-        public void setChild(List<Info> child) {
-            this.child = child;
-        }
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public List<Info> getChild() {
+        return child;
+    }
+
+    public void setChild(List<Info> child) {
+        this.child = child;
+    }
 
     public String getId() {
         return id;

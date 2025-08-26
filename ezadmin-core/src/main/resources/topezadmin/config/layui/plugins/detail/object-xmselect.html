@@ -6,7 +6,7 @@
 </head>
 <body id="xmselect" alias="5" type="form" icon="layui-icon-more">
 
-<div id="template" >
+<div id="template">
     <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">多选下拉框</label>
@@ -38,7 +38,7 @@
          th:ez-help="${help}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  "   >
+            <label class="layui-form-label  ">
                 <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -64,11 +64,11 @@
                         language: 'zn',
                         style: {
                             height: '26px',
-                        },disabled: true,
+                        }, disabled: true,
                         prop: {
                             name: 'V',
                             value: 'K',
-                        },theme: {
+                        }, theme: {
                             color: '#1e9fff',
                         },
                         name: '[[${item_name}]]',

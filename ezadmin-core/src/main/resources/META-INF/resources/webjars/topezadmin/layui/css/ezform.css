@@ -1,6 +1,7 @@
-body{
+body {
     background-color: #f6f8fb;
 }
+
 .form-block-span {
     line-height: 38px !important;
     display: block !important;
@@ -21,7 +22,7 @@ body{
 .is-invalid {
     border-color: #dc3545 !important;
     padding-right: 2.25rem;
-   /*// -- background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");*/
+    /*// -- background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");*/
     background-repeat: no-repeat;
     background-position: right calc(.375em + .1875rem) center;
     background-size: calc(.75em + .375rem) calc(.75em + .375rem);
@@ -74,7 +75,7 @@ body{
     font-size: 14px !important;
 }
 
-.layui-upload-list{
+.layui-upload-list {
     display: flex;
     flex-wrap: wrap;
 }
@@ -86,47 +87,53 @@ small {
     font-size: 80%;
     font-weight: 400;
 }
-.custom-select{
+
+.custom-select {
     padding-left: 7px;
     height: 38px;
     border-width: 1px;
     border-style: solid;
     background-color: #fff;
-    color: rgba(0,0,0,.85);
+    color: rgba(0, 0, 0, .85);
     border-radius: 2px;
     border-color: #eee;
-    width:100%;
+    width: 100%;
 }
 
 
-@media screen and (max-device-width: 3400px){
-    .layui-input-block{
-        margin-left: 150px  !important;
+@media screen and (max-device-width: 3400px) {
+    .layui-input-block {
+        margin-left: 150px !important;
     }
-    .layui-form-label  {
-        width: 120px !important; ;
+
+    .layui-form-label {
+        width: 120px !important;;
     }
 }
 
 
-@media screen and (max-device-width: 450px){
+@media screen and (max-device-width: 450px) {
     .layui-form-item .layui-form-label {
         text-align: left !important;
-        width: 100%  !important;
+        width: 100% !important;
     }
+
     .layui-input-block {
-        margin-left:5px !important ;
+        margin-left: 5px !important;
     }
+
     .layui-form-select .layui-edge {
-        margin-top:16px !important;
+        margin-top: 16px !important;
     }
-    .layui-input-prefix,.layui-input-split,.layui-input-suffix,.layui-input-suffix .layui-input-affix {
+
+    .layui-input-prefix, .layui-input-split, .layui-input-suffix, .layui-input-suffix .layui-input-affix {
         top: 38px !important;
         height: 38px !important;
     }
+
     .layui-input-wrap .layui-input-number {
         top: 38px !important;
-        height:38px !important;
+        height: 38px !important;
     }
 
 }
@@ -150,35 +157,36 @@ small {
 /*}*/
 
 
-.el-cascader{
+.el-cascader {
     line-height: 38px !important;
 }
+
 .el-input__inner {
     height: 38px !important;
     line-height: 38px !important;
     border-radius: 0px !important;
 }
-.el-cascader__search-input{
+
+.el-cascader__search-input {
     min-width: 20px !important;
     /*margin-left:0px !important; 防止遮挡*/
 }
-.el-cascader__tags
-{
+
+.el-cascader__tags {
     flex-wrap: nowrap !important;
 }
-.el-input__suffix{
+
+.el-input__suffix {
     z-index: 9999;
 }
 
 
-
-
-.layui-card-header>.layui-icon{
+.layui-card-header > .layui-icon {
     position: absolute;
     right: 15px;
 }
 
-.formtopfixbuttons{
+.formtopfixbuttons {
     height: 58px;
     position: fixed !important;
     bottom: 0;
@@ -186,6 +194,7 @@ small {
     width: 100%;
     text-align: center;
 }
+
 .layuimini-loader {
     position: fixed;
     top: 0;
@@ -196,10 +205,9 @@ small {
     z-index: 999999;
 }
 
-.submitButtonContainerClass{
+.submitButtonContainerClass {
     box-shadow: 1px 1px 1px rgba(0, 0, 0, .3) !important;
 }
-
 
 
 /*修改layui样式*/
@@ -207,6 +215,6 @@ small {
     border-color: #1e9fff !important;
 }
 
-.custom-card-btn{
+.custom-card-btn {
 
 }

@@ -1,6 +1,6 @@
 package top.ezadmin.dao.model;
 
-public class CustomSearchSingle{
+public class CustomSearchSingle {
     private String t;
     private String f;
     private String o;

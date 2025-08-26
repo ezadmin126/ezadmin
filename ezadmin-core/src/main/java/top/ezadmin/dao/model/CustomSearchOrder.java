@@ -1,6 +1,6 @@
 package top.ezadmin.dao.model;
 
-public class CustomSearchOrder{
+public class CustomSearchOrder {
     private String f;
     private String o;
 

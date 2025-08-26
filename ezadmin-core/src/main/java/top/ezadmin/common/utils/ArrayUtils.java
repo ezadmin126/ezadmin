@@ -1,6 +1,6 @@
 package top.ezadmin.common.utils;
 
- import java.util.*;
+import java.util.List;
 
 
 public class ArrayUtils {
@@ -17,6 +17,6 @@ public class ArrayUtils {
     }
 
     public static boolean contains(String[] vs, Object k) {
-            return org.apache.commons.lang.ArrayUtils.contains(vs,k);
+        return org.apache.commons.lang.ArrayUtils.contains(vs, k);
     }
 }

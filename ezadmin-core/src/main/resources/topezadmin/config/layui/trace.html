@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title  >调试信息</title>
+    <title>调试信息</title>
     <link th:href="${'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
     <link th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" rel="stylesheet">
     <link th:href="${'/webjars/topezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
@@ -18,11 +18,11 @@
     <script th:src="${'/webjars/topezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
 </head>
 <body class="layui-bg-gray">
-<div   class="layui-fluid" >
-     <div class="layui-row " style="">
-         <div th:each="item,index:${list}"  class="layui-panel">
-                 <pre  class="layui-code code-demo" th:utext="${item}">面板任意内容</pre>
-         </div>
+<div class="layui-fluid">
+    <div class="layui-row " style="">
+        <div th:each="item,index:${list}" class="layui-panel">
+            <pre class="layui-code code-demo" th:utext="${item}">面板任意内容</pre>
+        </div>
     </div>
 </div>
 </div><!--container-->

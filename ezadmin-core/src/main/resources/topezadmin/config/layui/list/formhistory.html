@@ -2,7 +2,7 @@
 <head>
     <title>列表发布历史</title>
 </head>
-<body id="formhistory"   datasource="dataSource"  adminstyle="layui">
+<body id="formhistory" datasource="dataSource" adminstyle="layui">
 <div id="append_head"></div>
 <ul id="tab">
 </ul>
@@ -38,8 +38,13 @@
     <tbody>
     <tr id="column">
         <th id="rowbutton" width="175" fixed="right">
-            <button opentype="_BLANK" url="/topezadmin/formEdit/sourceEdit-${EZ_CODE}?version=${ID}" item_name="see" type="button-single">查看</button>
-            <button opentype="CONFIRM_AJAX" windowname="确定还原到${ID}版本？" url="/topezadmin/formEdit/reseto-${EZ_CODE}?version=${ID}" item_name="resetss" type="button-single">还原</button>
+            <button opentype="_BLANK" url="/topezadmin/formEdit/sourceEdit-${EZ_CODE}?version=${ID}" item_name="see"
+                    type="button-single">查看
+            </button>
+            <button opentype="CONFIRM_AJAX" windowname="确定还原到${ID}版本？"
+                    url="/topezadmin/formEdit/reseto-${EZ_CODE}?version=${ID}" item_name="resetss" type="button-single">
+                还原
+            </button>
         </th>
         <th item_name="ID" head="th-numbers" body="td-numbers" width="60" minwidth="60" fixed="left">序号</th>
         <th item_name="VID">版本号</th>

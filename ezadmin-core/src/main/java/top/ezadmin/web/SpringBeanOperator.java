@@ -1,7 +1,7 @@
 package top.ezadmin.web;
 
-import top.ezadmin.common.utils.Utils;
 import com.ql.util.express.Operator;
+import top.ezadmin.common.utils.Utils;
 
 public class SpringBeanOperator extends Operator {
     @Override

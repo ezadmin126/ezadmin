@@ -2,7 +2,7 @@ package top.ezadmin.dao.model;
 
 import java.util.List;
 
-public class CustomSearchGroup{
+public class CustomSearchGroup {
     private String t;
     private List<CustomSearchDTO> c;
 

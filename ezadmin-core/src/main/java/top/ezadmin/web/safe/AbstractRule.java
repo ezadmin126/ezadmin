@@ -13,53 +13,55 @@ public abstract class AbstractRule implements Rule {
     private static final Logger logger = LoggerFactory.getLogger(IpPoolRule.class);
 
 
-    private  static   String reg="/(blog).*";
-    private  static Pattern pattern=Pattern.compile(reg);
+    private static String reg = "/(blog).*";
+    private static Pattern pattern = Pattern.compile(reg);
 
-    public void clear(String ip){
+    public void clear(String ip) {
 
     }
-    public String print(){
+
+    public String print() {
         return "";
     }
 
-    public String getPatternGroupUrl(String url){
+    public String getPatternGroupUrl(String url) {
         try {
-            if(StringUtils.isBlank(reg)){
+            if (StringUtils.isBlank(reg)) {
                 return "";
             }
             Matcher matcher = pattern.matcher(url);
-            if (matcher.find()&&matcher.groupCount()==3) {
+            if (matcher.find() && matcher.groupCount() == 3) {
                 String g1 = matcher.group(1);
                 String g2 = matcher.group(2);
                 String g3 = matcher.group(3);
                 return g1.replace(g2, "") + g3;
             }
-        }catch (Exception e){
-           // logger.error(url,e);
+        } catch (Exception e) {
+            // logger.error(url,e);
         }
         return "";
     }
-    public Map<String,Integer> getIpGroup(Set<String> set){
-        Map<String, Integer> groupedNamesCount =new HashMap<>();
-        if(set==null||set.isEmpty()){
+
+    public Map<String, Integer> getIpGroup(Set<String> set) {
+        Map<String, Integer> groupedNamesCount = new HashMap<>();
+        if (set == null || set.isEmpty()) {
             return groupedNamesCount;
         }
-        String[]ips=set.toArray(new String[]{});
+        String[] ips = set.toArray(new String[]{});
         for (int i = 0; i < ips.length; i++) {
-            String ip=ips[i];
-            if(StringUtils.isNotBlank(ip)){
+            String ip = ips[i];
+            if (StringUtils.isNotBlank(ip)) {
                 try {
-                    String pre = StringUtils.substring(ip,0, ip.lastIndexOf("."));
+                    String pre = StringUtils.substring(ip, 0, ip.lastIndexOf("."));
                     //前3位IP
                     if (groupedNamesCount.containsKey(pre)) {
                         groupedNamesCount.put(pre, groupedNamesCount.get(pre) + 1);
                     } else {
                         groupedNamesCount.put(pre, 1);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
-                    logger.error(ip,e);
+                    logger.error(ip, e);
                 }
             }
         }

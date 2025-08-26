@@ -11,10 +11,10 @@
         th:src="${contextName+'/webjars/topezadmin/plugins/ztree/js/jquery.ztree.all.js'}"></script>
 <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}"
 >
-<ul th:id="${'TREE_ID_' + item_name}" class="ztree"></ul>
-<input type="hidden" th:itemsJson="${itemsJson}" th:value="${value}" th:name="${item_name}"
-       th:id="${'ITEM_ID_' + item_name}"
-       >
+    <ul th:id="${'TREE_ID_' + item_name}" class="ztree"></ul>
+    <input type="hidden" th:itemsJson="${itemsJson}" th:value="${value}" th:name="${item_name}"
+           th:id="${'ITEM_ID_' + item_name}"
+    >
 </div>
 <script>
     $(function () {

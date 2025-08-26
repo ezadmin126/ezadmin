@@ -10,11 +10,13 @@
                 padding: 0;
                 margin: 0 auto;
             }
+
             .layui-step-item {
                 display: inline-block;
                 position: relative;
                 font-size: 14px;
             }
+
             .layui-step-item-head {
                 position: relative;
                 display: inline-block;
@@ -25,23 +27,28 @@
                 border-radius: 50%;
                 background: #ffffff;
             }
+
             .layui-step-item-done > .layui-step-item-head > .layui-icon:before {
                 content: "\e605";
             }
+
             .layui-step-item-active > .layui-step-item-head {
                 background: #1e9fff;
                 color: #ffffff;
             }
+
             .layui-step-item-inactive > .layui-step-item-head {
                 color: #aab2bd;
                 border: 2px solid #aab2bd;
             }
+
             .layui-step-item-tail {
                 width: 100%;
                 position: absolute;
                 left: 0;
                 top: 15px;
             }
+
             .layui-step-item-tail i {
                 display: inline-block;
                 width: 100%;
@@ -50,9 +57,11 @@
                 background: #aab2bd;
                 position: relative;
             }
+
             .layui-step-item-done > .layui-step-item-tail i {
                 background: #1e9fff;
             }
+
             .layui-step-item-title {
                 display: block;
                 position: relative;
@@ -61,9 +70,11 @@
                 padding-left: 26px;
                 text-align: center;
             }
+
             .layui-step-item-active > .layui-step-item-title {
                 font-weight: bold;
             }
+
             .layui-step-item .layui-icon {
                 font-weight: bold;
                 display: inline-block;
@@ -99,26 +110,26 @@
         <div class="layui-card-body">
             <div class="layui-form-item" col="12">
                 <div>
-                    <object lay_verify="required" item_name="IMPORT_ID"   type="batchimport" col="12"
-                    item_desc="<span id=importtips>- 使用快捷键 ctrl +v 将Excel内容直接钻贴至文本框中；</span>"> </object>
+                    <object lay_verify="required" item_name="IMPORT_ID" type="batchimport" col="12"
+                            item_desc="<span id=importtips>- 使用快捷键 ctrl +v 将Excel内容直接钻贴至文本框中；</span>"></object>
                 </div>
             </div>
             <div class="layui-form-item" col="12">
                 <label>编号</label>
                 <div>
-                    <object   item_name="importservice"   type="input-hidden" col="12"> </object>
+                    <object item_name="importservice" type="input-hidden" col="12"></object>
                 </div>
             </div>
             <div class="layui-form-item" col="12">
                 <label>编号</label>
                 <div>
-                    <object   item_name="importname"   type="input-hidden" col="12"> </object>
+                    <object item_name="importname" type="input-hidden" col="12"></object>
                 </div>
             </div>
             <div class="layui-form-item" col="12">
                 <label>编号</label>
                 <div>
-                    <object   item_name="importtips"   type="input-hidden" col="12"> </object>
+                    <object item_name="importtips" type="input-hidden" col="12"></object>
                 </div>
             </div>
         </div>
@@ -133,9 +144,9 @@
 </form>
 <div id="append_foot">
     <script>
-        $(function(){
+        $(function () {
             $("#importtips").html(decodeURIComponent($("[name=importtips]").val()))
-            $("[name='IMPORT_ID']").attr("name",decodeURIComponent($("[name=importname]").val()));
+            $("[name='IMPORT_ID']").attr("name", decodeURIComponent($("[name=importname]").val()));
         })
     </script>
 

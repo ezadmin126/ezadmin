@@ -11,7 +11,6 @@ source ~/.bashrc
 4. 可以通过SQL直接生成列表和表单配置
 5. 配置文件保存在topezadmin/config/layui/目录下
 
-
 ## 列表生成规则
 
 1. 列表配置文件保存在topezadmin/config/layui/list/目录下
@@ -20,7 +19,6 @@ source ~/.bashrc
 4. 列表可以包含搜索区域、按钮区域、表格区域
 5. 列表数据通过express标签中的SQL语句获取
 6. 支持分页、排序、导出等功能
-
 
 ## 表单生成规则
 
@@ -31,7 +29,6 @@ source ~/.bashrc
 5. 表单数据通过init_express标签中的SQL语句获取
 6. 表单提交通过submit_express标签中的代码处理
 
-
 ## SQL生成列表/表单规则
 
 1. 通过/topezadmin/listEdit/importSql-访问SQL导入界面
@@ -40,7 +37,6 @@ source ~/.bashrc
 4. 可以修改字段的显示名称、控件类型、搜索条件等
 5. 生成的列表/表单配置会保存到对应目录
 6. 支持预览和修改生成的配置
-
 
 ## 插件使用规则
 
@@ -51,7 +47,6 @@ source ~/.bashrc
 5. 插件的属性决定了它的行为和显示方式
 6. 插件的HTML代码保存在plugins目录下
 
-
 ## 表达式使用规则
 
 1. 表达式用于获取数据、处理提交等
@@ -60,7 +55,6 @@ source ~/.bashrc
 4. 表达式中可以使用特殊函数如$()、$$()、search()等
 5. $()用于获取请求参数，$$()用于获取会话参数
 6. search()用于执行SQL查询并自动处理条件
-
 
 ## 配置项使用规则
 
@@ -72,7 +66,6 @@ source ~/.bashrc
 6. body：单元格内容显示方式，如td-text、td-link
 7. data：控件数据源，可以是SQL语句或静态数据
 
-
 ## 页面布局规则
 
 1. 页面布局通过col属性控制，基于layui的栅格系统
@@ -81,7 +74,6 @@ source ~/.bashrc
 4. 可以通过append_head和append_foot添加自定义代码
 5. 支持响应式布局，适应不同屏幕大小
 6. 可以设置tab实现多标签页切换
-
 
 ## 高级功能规则
 
@@ -92,7 +84,6 @@ source ~/.bashrc
 5. 支持自定义验证规则
 6. 支持数据导出和打印
 
-
 ## SQL直接生成列表示例
 
 1. 访问/topezadmin/listEdit/importSql-进入SQL导入界面
@@ -102,7 +93,6 @@ source ~/.bashrc
 5. 为每个字段配置显示名称、控件类型、是否搜索等
 6. 预览并保存生成的列表配置
 7. 访问/topezadmin/list/list-{生成的列表代码}查看列表
-
 
 ## 注意事项和最佳实践
 

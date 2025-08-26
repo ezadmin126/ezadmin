@@ -9,10 +9,10 @@ package top.ezadmin.plugins.sqlog.po;
  * @author ezadmin
  */
 public class JdbcMethod {
-	public static final String EXECUTE = "execute";
-	public static final String COMMIT = "commit";
-	public static final String ROLLBACK = "rollback";
-	public static final String SETCOMMIT = "SETCOMMIT";
-	public static String EXECUTEUPDATE = "executeUpdate";
-	public static String EXECUTEQUERY = "executeQuery";
+    public static final String EXECUTE = "execute";
+    public static final String COMMIT = "commit";
+    public static final String ROLLBACK = "rollback";
+    public static final String SETCOMMIT = "SETCOMMIT";
+    public static String EXECUTEUPDATE = "executeUpdate";
+    public static String EXECUTEQUERY = "executeQuery";
 }

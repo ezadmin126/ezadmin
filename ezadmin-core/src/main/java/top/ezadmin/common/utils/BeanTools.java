@@ -45,26 +45,28 @@ public abstract class BeanTools {
         }
         return d.get(className);
     }
-@Deprecated
-    public static Object mapToBean(Map<String,String> map, Class  className) throws IllegalAccessException, InstantiationException {
-        Object obj=className.newInstance();
-        Map<String,String> map2=new HashMap<String,String>();
-        for (Map.Entry<String,String> enty:map.entrySet())
-        {
-            map2.put(enty.getKey().replace("_","").toLowerCase(Locale.ROOT),enty.getValue());
-        } ;
-        List<Field> list=getAllFieldsList(className);
-        for (int i = 0; i <list.size(); i++) {
-            Field field=  list.get(i);
-            String lowFieldName=field.getName().toLowerCase(Locale.ROOT);
-            if(map2.containsKey(lowFieldName)){
+
+    @Deprecated
+    public static Object mapToBean(Map<String, String> map, Class className) throws IllegalAccessException, InstantiationException {
+        Object obj = className.newInstance();
+        Map<String, String> map2 = new HashMap<String, String>();
+        for (Map.Entry<String, String> enty : map.entrySet()) {
+            map2.put(enty.getKey().replace("_", "").toLowerCase(Locale.ROOT), enty.getValue());
+        }
+        ;
+        List<Field> list = getAllFieldsList(className);
+        for (int i = 0; i < list.size(); i++) {
+            Field field = list.get(i);
+            String lowFieldName = field.getName().toLowerCase(Locale.ROOT);
+            if (map2.containsKey(lowFieldName)) {
                 field.setAccessible(true);
-                field.set(obj,map2.get(lowFieldName));
+                field.set(obj, map2.get(lowFieldName));
             }
         }
         return obj;
     }
-   @Deprecated
+
+    @Deprecated
     public static List<Field> getAllFieldsList(final Class<?> cls) {
         final List<Field> allFields = new ArrayList<Field>();
         Class<?> currentClass = cls;
@@ -82,11 +84,12 @@ public abstract class BeanTools {
         // 注册自定义的 DateConverter
         ConvertUtils.register(new DateConverter(), Date.class);
     }
+
     /**
      * 将 Map 转换为 Java 对象
      * map的字段是大写的数据库的字段 java是驼峰
      *
-     * @param map  包含数据的 Map
+     * @param map   包含数据的 Map
      * @param clazz 目标对象的 Class 类型
      * @param <T>   目标对象的类型
      * @return 转换后的对象

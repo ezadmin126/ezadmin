@@ -3,16 +3,16 @@
  | MIT /license */
 $(function () {
     initForm();
-    var canEzFormSubmit=true;
+    var canEzFormSubmit = true;
     var config = {
         ignore: "",
         onfocusout: function (element) {
-             $(element).valid();
-           // this.element(element);
+            $(element).valid();
+            // this.element(element);
         },
         onkeyup: false,
         // 其他验证选项...
-        invalidHandler: function(event, validator) {
+        invalidHandler: function (event, validator) {
             // 找到第一个错误的元素
             var firstError = $(validator.errorList[0].element);
 
@@ -22,7 +22,7 @@ $(function () {
                 $('html, body').animate({
                     scrollTop: firstError.offset().top
                 }, 500);
-            }else{
+            } else {
                 // 聚焦到第一个错误的元素
                 firstError.focus();
             }
@@ -30,9 +30,9 @@ $(function () {
         errorElement: 'span',
         errorPlacement: function (error, element) {
             error.addClass('invalid-feedback');
-            if(element.parent().prop('tagName')=='XM-SELECT'){
+            if (element.parent().prop('tagName') == 'XM-SELECT') {
                 element.parent().parent().append(error);
-            }else{
+            } else {
                 element.parent().append(error);
             }
         },
@@ -41,155 +41,151 @@ $(function () {
         },
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass('is-invalid');
-            if($(element).parent().prop('tagName')=='XM-SELECT'){
+            if ($(element).parent().prop('tagName') == 'XM-SELECT') {
                 $(element).parent().parent().find(".error").remove();
-            }else{
+            } else {
                 $(element).parent().find(".error").remove();
             }
         },
         submitHandler: function (form) {
-            if (!canEzFormSubmit){
+            if (!canEzFormSubmit) {
                 return false;
             }
-            canEzFormSubmit=false;
-           try {
-               var fileerror = false;
-               $(".layui-upload-list").each(function () {
-                   if ($(this).children().length > $(this).attr("item_max_upload_max")
-                       || $(this).children().length < $(this).attr("item_max_upload_min")
-                   ) {
-                       var error = "不符合文件上传个数限制，最多" + $(this).attr("item_max_upload_max") + "个，最少" + $(this).attr("item_max_upload_min") + "个";
-                       $(this).parent().append("<span   class=\"error invalid-feedback\" style=\"display: inline;\">" + error + "</span>");
-                       layui.layer.msg(error)
-                       fileerror = true;
-                       canEzFormSubmit = true;
-                       return false;
-                   } else {
-                       $(this).parent().find(".error").remove();
-                   }
-               })
+            canEzFormSubmit = false;
+            try {
+                var fileerror = false;
+                $(".layui-upload-list").each(function () {
+                    if ($(this).children().length > $(this).attr("item_max_upload_max")
+                        || $(this).children().length < $(this).attr("item_max_upload_min")
+                    ) {
+                        var error = "不符合文件上传个数限制，最多" + $(this).attr("item_max_upload_max") + "个，最少" + $(this).attr("item_max_upload_min") + "个";
+                        $(this).parent().append("<span   class=\"error invalid-feedback\" style=\"display: inline;\">" + error + "</span>");
+                        layui.layer.msg(error)
+                        fileerror = true;
+                        canEzFormSubmit = true;
+                        return false;
+                    } else {
+                        $(this).parent().find(".error").remove();
+                    }
+                })
 
-               $(".tinymcetextarea").each(function () {
-                   if ($(this).attr("lay-verify") == 'required' && $(this).val() == '') {
-                       var error = "<span   class=\"error invalid-feedback\"  >请维护详细内容</span>"
-                       error.insertBefore($(this));
-                       fileerror = true;
-                       canEzFormSubmit = true;
-                       return false;
-                   } else {
-                       $(this).parent().find(".error").remove();
-                   }
-               })
+                $(".tinymcetextarea").each(function () {
+                    if ($(this).attr("lay-verify") == 'required' && $(this).val() == '') {
+                        var error = "<span   class=\"error invalid-feedback\"  >请维护详细内容</span>"
+                        error.insertBefore($(this));
+                        fileerror = true;
+                        canEzFormSubmit = true;
+                        return false;
+                    } else {
+                        $(this).parent().find(".error").remove();
+                    }
+                })
 
-               if (fileerror) {
-                   canEzFormSubmit = true;
-                   return false;
-               }
+                if (fileerror) {
+                    canEzFormSubmit = true;
+                    return false;
+                }
 
 
-               if (typeof submitHandler == "function") {
-                   try {
-                       if (!submitHandler()) {
-                           canEzFormSubmit = true;
-                           return false;
-                       }
-                   } catch (e) {
-                   }
-               }
+                if (typeof submitHandler == "function") {
+                    try {
+                        if (!submitHandler()) {
+                            canEzFormSubmit = true;
+                            return false;
+                        }
+                    } catch (e) {
+                    }
+                }
 
-               $(form).ajaxSubmit({
-                   url: $("#formSubmitUrl").val(),
-                   dataType: 'json',
-                   success: function (data) {
-                           if (typeof submitSuccess == "function") {
-                               try {
+                $(form).ajaxSubmit({
+                    url: $("#formSubmitUrl").val(),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (typeof submitSuccess == "function") {
+                            try {
                                 submitSuccess(data);
-                               } catch (e) {
-                                   console.log(e);
-                               }
-                               canEzFormSubmit = true;
-                               return;
-                           }
-                       if (data.code == 0) {
-                           console.log("data::" + data.data);
-                           layer.alert("保存成功", function (index) {
-                               if ('reload' == data.data || data.data == null) {
-                                   canEzFormSubmit = true;
-                                   window.parent.location.reload();
-                               } else if ('reloadlocal' == data.data) {
-                                   canEzFormSubmit = true;
-                                   window.location.reload();
-                               }else if(data.data.toLowerCase().indexOf('refreshcard')>=0){
-                                   canEzFormSubmit = true;
-                                   refreshCard(data.data);
-                                   return;
-                               }
-                               else {
-                                   canEzFormSubmit = true;
-                                   location.href = data.data;
-                               }
-                               return false;
-                           })
-                       }else if(data.code=='200'){
-                           layer.alert(data.message);
-                       }  else {
-                           layer.alert( "保存失败,错误码500");
-                           console.log(data.message )
-                       }
-                       canEzFormSubmit = true;
-                   },
-                   error: function (e) {
-                       canEzFormSubmit = true;
-                       layer.alert("保存失败,网络异常");
-                       console.log(e)
-                   }
-               });
-           }catch (e) {
-               console.log(e);
-               canEzFormSubmit=true;
-           }
+                            } catch (e) {
+                                console.log(e);
+                            }
+                            canEzFormSubmit = true;
+                            return;
+                        }
+                        if (data.code == 0) {
+                            console.log("data::" + data.data);
+                            layer.alert("保存成功", function (index) {
+                                if ('reload' == data.data || data.data == null) {
+                                    canEzFormSubmit = true;
+                                    window.parent.location.reload();
+                                } else if ('reloadlocal' == data.data) {
+                                    canEzFormSubmit = true;
+                                    window.location.reload();
+                                } else if (data.data.toLowerCase().indexOf('refreshcard') >= 0) {
+                                    canEzFormSubmit = true;
+                                    refreshCard(data.data);
+                                    return;
+                                } else {
+                                    canEzFormSubmit = true;
+                                    location.href = data.data;
+                                }
+                                return false;
+                            })
+                        } else if (data.code == '200') {
+                            layer.alert(data.message);
+                        } else {
+                            layer.alert("保存失败,错误码500");
+                            console.log(data.message)
+                        }
+                        canEzFormSubmit = true;
+                    },
+                    error: function (e) {
+                        canEzFormSubmit = true;
+                        layer.alert("保存失败,网络异常");
+                        console.log(e)
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+                canEzFormSubmit = true;
+            }
             return false;
         }
     };
     if ($("#validateRules").val() != null && $("#validateRules").val() != '') {
-        config.rules =validateRules;
+        config.rules = validateRules;
 
     }
     if ($("#validateMessages").val() != null && $("#validateMessages").val() != '') {
-        config.messages =validateMessages;
+        config.messages = validateMessages;
     }
 
 
-
-    if($.validator){
+    if ($.validator) {
         $.validator.addMethod("isMoney", function (value, element) {
             //允许, 货币格式
             return this.optional(element) || /^([1-9]{1}[0-9]{0,3}(\,[0-9]{3,4})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(value);
         });
-        $.validator.addMethod("url", function() {
+        $.validator.addMethod("url", function () {
             return true; // 始终返回 true，表示通过
         }, "Please enter a valid URL.");
         $("#inputForm").validate(config);
     }
 
 
-
-
-    $("body").on("click","#submitbtnProxy",function(){
+    $("body").on("click", "#submitbtnProxy", function () {
         $("#submitbtn").click();
     })
     //end
-   // $('.layuimini-loader').fadeOut();
-    watermark({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val()+' '+ getNow()});
+    // $('.layuimini-loader').fadeOut();
+    watermark.init({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + ' ' + getNow()});
 
     //panel 扩大缩小
-    $(".ez-form-panel  .layui-layer-min").click(function(){
+    $(".ez-form-panel  .layui-layer-min").click(function () {
         $(this).closest(".layui-card").find(".layui-card-body").hide();
         $(this).siblings().removeClass("layui-hide");
         $(this).addClass("layui-hide");
         $(".layui-layer-dir").addClass('show');
     })
-    $(".ez-form-panel  .layui-layer-maxmin").click(function(){
+    $(".ez-form-panel  .layui-layer-maxmin").click(function () {
         $(this).closest(".layui-card").find(".layui-card-body").show();
         $(this).addClass("layui-hide");
         $(this).siblings().removeClass("layui-hide");
@@ -217,20 +213,20 @@ function upload_reCalId(itemId) {
     inputHiddenNode.val([...fset]);
 }
 
-function upload_add(config,itemId, fileId) {
+function upload_add(config, itemId, fileId) {
     layui.use(['form', 'laytpl'], function () {
         let laytpl = layui.laytpl;
-        var ctxName = document.getElementById("contextName")==null?'' :document.getElementById("contextName").value;
-        var uurl = document.getElementById("downloadUrl")==null?'' :document.getElementById("downloadUrl").value;
-        var tmp=template;
-        if(config.accept=='video'){
-            tmp=template_v;
-        }else if(config.accept=='file'){
-            tmp=template_file;
+        var ctxName = document.getElementById("contextName") == null ? '' : document.getElementById("contextName").value;
+        var uurl = document.getElementById("downloadUrl") == null ? '' : document.getElementById("downloadUrl").value;
+        var tmp = template;
+        if (config.accept == 'video') {
+            tmp = template_v;
+        } else if (config.accept == 'file') {
+            tmp = template_file;
         }
         var uniqueName = fileId.replace('./', '').replace(/["&'./:=?[\]%]/gi, '-').replace(/(--)/gi, '');
         var imgShow = laytpl(tmp).render({
-            fileId: fileId, contextName: ctxName,uniqueName:uniqueName,
+            fileId: fileId, contextName: ctxName, uniqueName: uniqueName,
             downloadUrl: uurl,
             itemId: itemId,
         });

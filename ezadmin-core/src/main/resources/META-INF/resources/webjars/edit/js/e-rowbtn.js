@@ -1,4 +1,3 @@
-
 // tablebtn已经有所处理
 // $(function(){
 //     $(".config-buttoncore").find("input,textarea").not("[type=radio]")

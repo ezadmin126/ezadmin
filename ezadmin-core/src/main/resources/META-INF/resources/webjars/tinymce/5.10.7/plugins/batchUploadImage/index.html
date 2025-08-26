@@ -159,7 +159,7 @@
         background: #207ab7 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAiklEQVQ4je3U2wnCQBCF4ZRgCVtCOnBLSCdaQkpKJ6YD7eTzRWET12QwDxLIgQPLzM4Ph700za6F0aduW4BwRS4MbWQ44TwzXAK1VAP2lXhR9WsxcyBRhkj0HQHR4l70Hu8T/hU4GVrqHcCvwJPimc3W/702XWBfFwUO4hpWgS9oMv2yak4h2FY9AePc46ITbYMkAAAAAElFTkSuQmCC) no-repeat 50%;
         display: block
     }</style>
- </head>
+</head>
 <body>
 <div class="header">
     <div class="header-start">
@@ -170,7 +170,8 @@
             <span class="layui-badge layui-bg-green">2</span>
         </button> &gt;<button id="insert" class="layui-btn layui-btn-primary ">全部插入
         <span class="layui-badge layui-bg-green">3</span>
-    </button></div>
+    </button>
+    </div>
     <div class="header-end">
         <span class="tip">顺序点击按钮操作，一次最多上传10张图片</span>
     </div>
@@ -183,7 +184,7 @@
     <div class="footer-end">
         <button id="cancel" class="button">取消</button>
         <button id="empty" class="button">清空列表</button>
-<!--        <button id="insert" class="button primary">全部插入</button>-->
+        <!--        <button id="insert" class="button primary">全部插入</button>-->
     </div>
 </div>
 <script>"use strict";
@@ -229,28 +230,27 @@ function uploadQueue() {
     }))) : uploadButton.disabled = !1
 }
 
-layui.use(function(){
-    var $=layui.$;
-    $(document).on("click","#insert",function(){
-            var e="";
-            if(images.length>0){
-                var hasNotUpload=false;
-                for(var i=0;i<images.length;i++){
-                    if(images[i].url==''){
-                        hasNotUpload=true;
-                    }else{
-                        e += '<img src="'.concat(images[i].url, '" alt="" />')
-                    }
-                }
-                if(hasNotUpload){
-                    alert("存在未批量上传的图片，请先点击批量上传按钮或删除异常图片");
-                }
-                else{
-                    images.length = 0
-                    editor.insertContent(e);
-                    dialog.close()
+layui.use(function () {
+    var $ = layui.$;
+    $(document).on("click", "#insert", function () {
+        var e = "";
+        if (images.length > 0) {
+            var hasNotUpload = false;
+            for (var i = 0; i < images.length; i++) {
+                if (images[i].url == '') {
+                    hasNotUpload = true;
+                } else {
+                    e += '<img src="'.concat(images[i].url, '" alt="" />')
                 }
             }
+            if (hasNotUpload) {
+                alert("存在未批量上传的图片，请先点击批量上传按钮或删除异常图片");
+            } else {
+                images.length = 0
+                editor.insertContent(e);
+                dialog.close()
+            }
+        }
     })
 })
 

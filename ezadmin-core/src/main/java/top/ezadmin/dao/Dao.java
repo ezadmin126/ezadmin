@@ -1,30 +1,29 @@
 package top.ezadmin.dao;
 
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.ezadmin.common.utils.JSONUtils;
 import top.ezadmin.common.utils.NumberUtils;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.sql.DataSource;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.sql.Date;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Dao {
     public static final Logger log = LoggerFactory.getLogger(Dao.class);
 
     private static Dao dao = new Dao();
 
-    private static int IO_BUFFER_SIZE=4096;
+    private static int IO_BUFFER_SIZE = 4096;
 
     private Dao() {
 
@@ -44,7 +43,7 @@ public class Dao {
      *
      * @throws Exception
      */
-    public List<Map<String, String>> executeQueryString(DataSource dataSource, String sql, Object[] bindArgs) throws  Exception {
+    public List<Map<String, String>> executeQueryString(DataSource dataSource, String sql, Object[] bindArgs) throws Exception {
         List<Map<String, String>> datas = new ArrayList<>(0);
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -94,14 +93,13 @@ public class Dao {
             preparedStatement = connection.prepareStatement(sql);
             if (bindArgs != null) {
                 for (int i = 0; i < bindArgs.length; i++) {
-                     if(bindArgs[i] instanceof Integer){
-                         preparedStatement.setInt(i + 1, NumberUtils.toInt(Utils.trimNull(bindArgs[i])));
-                     }else if (bindArgs[i] instanceof String){
-                         preparedStatement.setString(i + 1, Utils.trimNull(bindArgs[i]));
-                     }
-                     else{
-                         preparedStatement.setObject(i + 1, bindArgs[i]);
-                     }
+                    if (bindArgs[i] instanceof Integer) {
+                        preparedStatement.setInt(i + 1, NumberUtils.toInt(Utils.trimNull(bindArgs[i])));
+                    } else if (bindArgs[i] instanceof String) {
+                        preparedStatement.setString(i + 1, Utils.trimNull(bindArgs[i]));
+                    } else {
+                        preparedStatement.setObject(i + 1, bindArgs[i]);
+                    }
                 }
             }
             resultSet = preparedStatement.executeQuery();
@@ -161,7 +159,7 @@ public class Dao {
                 return generateKey;
             }
         } catch (Exception e) {
-            Utils.addLog("sql:"+sql+",param:"+ JSONUtils.toJSONString(bindArgs),e);
+            Utils.addLog("sql:" + sql + ",param:" + JSONUtils.toJSONString(bindArgs), e);
             throw e;
         } finally {
             try {
@@ -329,13 +327,13 @@ public class Dao {
 
 
                         int ll = IO_BUFFER_SIZE;
-                        if (clob.length() >  IO_BUFFER_SIZE) {
+                        if (clob.length() > IO_BUFFER_SIZE) {
                             ll = Integer.valueOf(clob.length() + "");
                         }
                         StringWriter writer = new StringWriter(ll);
                         try (Reader reader = clob.getCharacterStream()) {
 
-                             Utils.copyAndCloseInput(reader, writer, ll);
+                            Utils.copyAndCloseInput(reader, writer, ll);
                         }
                         objectValue = writer.toString();
                     }
@@ -379,19 +377,19 @@ public class Dao {
                         Clob clob = (Clob) objectValue;
 
 
-                        int ll =  IO_BUFFER_SIZE;
-                        if (clob.length() >  IO_BUFFER_SIZE) {
+                        int ll = IO_BUFFER_SIZE;
+                        if (clob.length() > IO_BUFFER_SIZE) {
                             ll = Integer.valueOf(clob.length() + "");
                         }
                         StringWriter writer = new StringWriter(ll);
                         try (Reader reader = clob.getCharacterStream()) {
 
-                             Utils.copyAndCloseInput(reader, writer, ll);
+                            Utils.copyAndCloseInput(reader, writer, ll);
                         }
                         objectValue = writer.toString();
-                    }else if(objectValue !=null && objectValue instanceof  Boolean ){
+                    } else if (objectValue != null && objectValue instanceof Boolean) {
                         //tinyint 默认转成int
-                        objectValue=resultSet.getInt(i);
+                        objectValue = resultSet.getInt(i);
 //
 //                        if( Boolean.parseBoolean(Utils.trimNull(objectValue))){
 //                            objectValue="1";
@@ -400,20 +398,20 @@ public class Dao {
 //                        }
                     }
 
-                    if(!(objectValue instanceof byte[])){
-                        objectValue=Utils.trimNull(objectValue);
-                    }else{
-                        objectValue =new String((byte[]) objectValue);
+                    if (!(objectValue instanceof byte[])) {
+                        objectValue = Utils.trimNull(objectValue);
+                    } else {
+                        objectValue = new String((byte[]) objectValue);
                     }
                     if (StringUtils.isNotBlank(metaData.getColumnLabel(i))) {
-                        String label=StringUtils.upperCase(metaData.getColumnLabel(i));
-                        if(StringUtils.contains(label,"BOOLEAN")){
+                        String label = StringUtils.upperCase(metaData.getColumnLabel(i));
+                        if (StringUtils.contains(label, "BOOLEAN")) {
                             rowMap.put(label, Utils.isTrue(objectValue));
-                        }else{
-                            rowMap.put(label,  objectValue );
+                        } else {
+                            rowMap.put(label, objectValue);
                         }
                     } else {
-                        rowMap.put(StringUtils.upperCase(metaData.getColumnName(i)),  objectValue );
+                        rowMap.put(StringUtils.upperCase(metaData.getColumnName(i)), objectValue);
                     }
                 } catch (Exception e) {
                     log.error("", e);

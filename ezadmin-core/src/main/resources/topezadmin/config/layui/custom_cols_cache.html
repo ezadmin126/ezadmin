@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link th:href="${contextName+'/webjars/layuidist/css/layui.css?v2='+vi}" rel="stylesheet">
     <link th:href="${contextName+'/webjars/topezadmin/layui/css/ezlist.css?v='+vi}" rel="stylesheet">
-    <link id="layui_theme_css"  rel="stylesheet" th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?'+vi:''}"  >
+    <link id="layui_theme_css" rel="stylesheet"
+          th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?'+vi:''}">
     <style>
         .layui-btn:not(.layui-btn-lg ):not(.layui-btn-sm):not(.layui-btn-xs) {
             height: 34px;
@@ -19,10 +20,11 @@
         /*    margin-bottom: 0px;*/
         /*}*/
 
-         .layui-form-item   {
-             border: 1px dashed #d1d1d1;
+        .layui-form-item {
+            border: 1px dashed #d1d1d1;
 
-         }
+        }
+
         .gu-mirror {
 
             position: fixed !important;
@@ -37,7 +39,7 @@
             display: none;
         }
 
-        .move,.layui-form-label {
+        .move, .layui-form-label {
             cursor: move !important;
         }
 
@@ -54,7 +56,8 @@
         您也可以在列表页拖拽表头自定义列宽与显示顺序
     </blockquote>
 
-    <form class="layui-form" th:action="${contextName+'/topezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}" method="post"
+    <form class="layui-form" th:action="${contextName+'/topezadmin/list/selectColsSubmit-'+ENCRYPT_LIST_ID}"
+          method="post"
           id="form">
         <div class="layui-card">
             <div class="layui-card-header">
@@ -64,8 +67,8 @@
             </div>
             <div class="layui-card-body layui-row layui-col-space15  ">
 
-                <div class="layui-col-md12  " >
-                    <div class="layui-form-item   "  style="border:none;margin-bottom: 0px">
+                <div class="layui-col-md12  ">
+                    <div class="layui-form-item   " style="border:none;margin-bottom: 0px">
                         <label class="layui-form-label">宽窄屏显示</label>
                         <div class="layui-input-block">
                             <input type="radio" name="fullscreen" value="container" title="窄屏" checked>
@@ -74,7 +77,7 @@
                     </div>
                 </div>
 
-                <div class="layui-col-md12  " >
+                <div class="layui-col-md12  ">
                     <div class="layui-form-item   " style="border:none;margin-bottom: 0px">
                         <label class="layui-form-label">表格尺寸</label>
                         <div class="layui-input-block">
@@ -97,7 +100,7 @@
             <div class="layui-card-body layui-row layui-col-space15 searchDrage">
                 <div class="layui-col-md3  " th:each="item,idx:${fromSearchField}"
                      th:ITEM_NAME="${item.item_name}" th:classappend="${item.item_name !='firstCol' ?'move':''  }">
-                    <div class="layui-form-item   " >
+                    <div class="layui-form-item   ">
                         <label class="layui-form-label" th:title="${item.label}">[[${item.label}]] </label>
                         <div class="layui-input-block">
 
@@ -107,15 +110,15 @@
                                    type="checkbox" checked disabled name="searchId" th:value="${item.item_name}"
                                    lay-skin="primary" lay-filter="changeList">
 
-                        <input th:if="${not (item.plugin_code eq 'input-hidden' or item.plugin_code eq 'hidden'
+                            <input th:if="${not (item.plugin_code eq 'input-hidden' or item.plugin_code eq 'hidden'
                             or item.plugin_code eq '29' or item.plugin_code eq 'search'
                             )  and  idx.index!=0 }" checked
-                               type="checkbox" name="searchId" th:value="${item.item_name}"
-                               lay-skin="primary" lay-filter="changeList">
+                                   type="checkbox" name="searchId" th:value="${item.item_name}"
+                                   lay-skin="primary" lay-filter="changeList">
                         </div>
                     </div>
-                    </div>
                 </div>
+            </div>
 
         </div>
         <div class="layui-card">
@@ -127,19 +130,22 @@
             </div>
 
             <div class="layui-card-body layui-row layui-col-space15 columnDrage">
-                <div class="layui-col-md3 move" th:each="item,idx:${fromColField}" th:classappend="${item.specialcol =='1' ||  #strings.isEmpty(item.fixed) ?'':'move'  }"
-                     th:ITEM_NAME="${item.item_name}"  th:if="${ (item.specialcol == 1 && item.body=='td-pic') or (item.specialcol == 0 &&  #strings.isEmpty(item.fixed)) }">
-                    <div class="layui-form-item "    >
-                        <label class="layui-form-label"  th:title="${item.label}"
+                <div class="layui-col-md3 move" th:each="item,idx:${fromColField}"
+                     th:classappend="${item.specialcol =='1' ||  #strings.isEmpty(item.fixed) ?'':'move'  }"
+                     th:ITEM_NAME="${item.item_name}"
+                     th:if="${ (item.specialcol == 1 && item.body=='td-pic') or (item.specialcol == 0 &&  #strings.isEmpty(item.fixed)) }">
+                    <div class="layui-form-item ">
+                        <label class="layui-form-label" th:title="${item.label}"
                                th:text="${item.label}">Field E :</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="columnId" checked   lay-filter="changeList" th:value="${item.item_name}"
+                            <input type="checkbox" name="columnId" checked lay-filter="changeList"
+                                   th:value="${item.item_name}"
                                    lay-skin="primary">
-                         </div>
+                        </div>
                     </div>
                 </div>
 
-             </div>
+            </div>
         </div>
         <div class="layui-card">
         </div>
@@ -152,7 +158,7 @@
         </div>
     </form>
 </div>
- <script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
+<script th:src="${contextName+'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
 
 <script th:src="${contextName+'/webjars/layuidist/layui.js?v='+vi}" type="text/javascript"></script>
 <script th:src="${contextName+'/webjars/jqueryform/jquery.form.js?'}"></script>
@@ -170,6 +176,7 @@
         }
         return {};
     }
+
     var drake = dragula({
         isContainer: function (el) {
             return el.classList.contains('searchDrage');
@@ -203,20 +210,20 @@
         if (jsonconfig != null) {
             var json = JSON.parse(jsonconfig);
 
-            var search = json.search||[];
-            var column = json.column||[];
-            if(search.length>0){
+            var search = json.search || [];
+            var column = json.column || [];
+            if (search.length > 0) {
                 for (var i = 0; i < search.length; i++) {
-                    var item=$(".searchDrage").find('[item_name="' + search[i].k + '"]');
+                    var item = $(".searchDrage").find('[item_name="' + search[i].k + '"]');
                     item.detach().appendTo(".searchDrage");
                     $(".searchDrage").find('[item_name="' + search[i].k + '"]').find("input").prop("checked", search[i].c);
 
                 }
             }
 
-            if(column.length>0){
+            if (column.length > 0) {
                 for (var i = 0; i < column.length; i++) {
-                    var item=$(".columnDrage").find('[item_name="' + column[i].k + '"]');
+                    var item = $(".columnDrage").find('[item_name="' + column[i].k + '"]');
                     item.detach().appendTo(".columnDrage");
                     $(".columnDrage").find('[item_name="' + column[i].k + '"]').find("input").prop("checked", column[i].c);
 
@@ -323,18 +330,18 @@
         var column = [];
 
         $("input[name=searchId]").each(function () {
-            var so={};
+            var so = {};
             so['k'] = $(this).val();
             so['c'] = $(this).prop("checked");
             search.push(so);
         })
         $("input[name=columnId]").each(function () {
-            var so={};
+            var so = {};
             so['k'] = $(this).val();
-            if($(this).val()=='firstCol'){ //首列始终放在前面
+            if ($(this).val() == 'firstCol') { //首列始终放在前面
                 so['c'] = true;
                 column.unshift($(this).val());
-            }else{
+            } else {
                 so['c'] = $(this).prop("checked");
                 column.push(so);
             }

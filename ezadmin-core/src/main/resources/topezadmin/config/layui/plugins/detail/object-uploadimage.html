@@ -6,7 +6,7 @@
 </head>
 <body id="uploadimage" alias="LAYUI-UPLOAD" type="form" icon="layui-icon-upload-drag">
 
-<div id="template" >
+<div id="template">
     <div class="layui-col-space10 selector layui-col-md12" ez-type="uploadimage">
         <div class="layui-form-item ">
             <label class="layui-form-label  ">上传图片</label>
@@ -20,9 +20,9 @@
 </div>
 <div id="content">
     <style>
-        .upload-true .deleteFiles{
+        .upload-true .deleteFiles {
             font-size: 0 !important;
-            height:0px!important;
+            height: 0px !important;
         }
     </style>
     <div class=" selector" th:classappend="${'layui-col-md'+col}" ez-type="uploadimage"
@@ -42,7 +42,7 @@
          th:ez-help="${help}"
     >
         <div class="layui-form-item ">
-            <label class="layui-form-label  "   >
+            <label class="layui-form-label  ">
                 <span class="layui-badge-dot" th:if="${not #strings.isEmpty(redRequired)}"></span>
                 <i th:if="${not #strings.isEmpty(help)}"
                    th:id="${'ez-help-'+item_name}"
@@ -50,18 +50,20 @@
                    th:src="${help}"></i>
                 [[${#strings.isEmpty(label)?'':label+'：' }]]
             </label>
-            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}"  th:classappend="${  ' upload-'+disable_flag}">
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}"
+                 th:classappend="${  ' upload-'+disable_flag}">
                 <small
                         class="layui-form-mid layui-text-em top_desc"
                         th:utext="${top_desc}" style="float:none"
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
                 <div class="layui-upload">
-                    <div th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}" class="layui-upload-list dragula-container2"
+                    <div th:lay-verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+                         class="layui-upload-list dragula-container2"
                          th:id="${'layui-upload-list_'+item_name}"
                          th:accept="${accept}">
                     </div>
                 </div>
-                <input type="hidden" th:value="${value}" th:name="${item_name}" th:id="${'ITEM_ID_' + item_name}" >
+                <input type="hidden" th:value="${value}" th:name="${item_name}" th:id="${'ITEM_ID_' + item_name}">
 
 
                 <script>
@@ -108,7 +110,7 @@
                         if (currentIds != undefined && currentIds.length > 0) {
                             var split = currentIds.split(",");
                             for (let i = 0; i < split.length; i++) {
-                                upload_add(verifyJson,'[[${item_name}]]', split[i])
+                                upload_add(verifyJson, '[[${item_name}]]', split[i])
                                 ;
 
                             }
@@ -124,9 +126,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 
 </div>

@@ -10,9 +10,9 @@ public class SplitOperator extends AbstractOperator {
 
     @Override
     public Object executeInner(Object[] objects) throws Exception {
-        String key=objects[0].toString();
-        String k2=objects.length>1?objects[1].toString():"";
+        String key = objects[0].toString();
+        String k2 = objects.length > 1 ? objects[1].toString() : "";
 
-        return StringUtils.split(key,k2);
+        return StringUtils.split(key, k2);
     }
 }
