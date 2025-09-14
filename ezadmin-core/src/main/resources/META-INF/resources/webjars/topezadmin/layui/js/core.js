@@ -1275,11 +1275,11 @@ function ezopen(openType, title, appendUrl, area) {
         case 'AJAX':
             $.getJSON(appendUrl, function (result) {
                 if (result.success) {
-                    layer.alert("操作成功", function (index) {
+                    layer.msg("操作成功",{time:500}, function (index) {
                         location.reload();
                     })
                 } else {
-                    layer.alert("操作失败")
+                    layer.msg("操作失败:" + result.message)
                 }
             })
             // openTab(title,appendUrl)
@@ -1291,11 +1291,11 @@ function ezopen(openType, title, appendUrl, area) {
                 $.getJSON(appendUrl, function (result) {
                     $(".layuimini-loader").hide();
                     if (result.success) {
-                        layer.alert("操作成功", function (index) {
+                        layer.msg("操作成功",{time:500}, function (index) {
                             location.reload();
                         })
                     } else {
-                        layer.alert("操作失败:" + result.message)
+                        layer.msg("操作失败:" + result.message)
                     }
                 })
                 layer.close(index);

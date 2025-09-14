@@ -155,6 +155,7 @@ layui.define(["element", "layer", "jquery"], function (exports) {
                 '<dd><a href="javascript:;" layuimini-tab-menu-close="current">关 闭 当 前</a></dd>\n' +
                 '<dd><a href="javascript:;" layuimini-tab-menu-close="other">关 闭 其 他</a></dd>\n' +
                 '<dd><a href="javascript:;" layuimini-tab-menu-close="all">关 闭 全 部</a></dd>\n' +
+                '<dd><a href="javascript:;" layuimini-tab-menu-close="blank">新窗口打开</a></dd>\n' +
                 '</dl>\n' +
                 '</div>';
             var makeHtml = '<div class="layuimini-tab-make"></div>';
@@ -358,6 +359,8 @@ layui.define(["element", "layer", "jquery"], function (exports) {
                                 miniTab.delete(tabId);
                             } else if (closeType === 'other' && currentTabId !== tabId) {
                                 miniTab.delete(tabId);
+                            }else if (closeType === 'blank') {
+                                window.open(currentTabId, "_blank");
                             }
                         }
                     }
