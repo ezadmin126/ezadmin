@@ -148,7 +148,7 @@ public abstract class SqlGenerate {
             return result.toString();
         }
         //多字段搜索
-        if (plugin.equalsIgnoreCase("union") && StringUtils.isNotBlank(itemSearchConcatValue)) {
+        if ((plugin.equalsIgnoreCase("union")||plugin.equalsIgnoreCase("search-union")) && StringUtils.isNotBlank(itemSearchConcatValue)) {
             String itemSearchKey = Utils.getStringByObject(search, ParamNameEnum.itemSearchKey.getName());
             //选择了type
             if (StringUtils.isNotBlank(itemSearchKey)) {

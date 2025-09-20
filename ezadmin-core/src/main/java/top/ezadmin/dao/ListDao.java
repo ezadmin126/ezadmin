@@ -524,7 +524,7 @@ public class ListDao extends JsoupUtil {
     }
 
 
-    public String updateList(Map<String, Object> list) throws Exception {
+    public String updateList(Map<String, Object> list,boolean clearCache) throws Exception {
 
         Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
         List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
@@ -588,8 +588,13 @@ public class ListDao extends JsoupUtil {
         //处理列
         col(colList, body);
         doc.outputSettings().prettyPrint(true).outline(true).escapeMode();
-        EzClientBootstrap.instance().getEzCache().clear();
+        if(clearCache){
+            EzClientBootstrap.instance().getEzCache().clear();
+        }
         return doc.html();
+    }
+    public String updateList(Map<String, Object> list) throws Exception {
+        return updateList(list,true);
     }
 
     private void col(List<Map<String, Object>> colList, Element body) {

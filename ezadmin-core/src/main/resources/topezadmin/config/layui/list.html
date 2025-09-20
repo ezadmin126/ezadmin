@@ -233,7 +233,7 @@
 
 [(${data.core.append_foot})]
 
-<script th:if="${#strings.equals('pure',data.core.tablestyle)}">
+<script th:if="${not #strings.equals('pure',data.core.tablestyle)}">
     afterAllDataLoad();
 </script>
 

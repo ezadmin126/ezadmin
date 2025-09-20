@@ -272,7 +272,7 @@ public class FormDao extends JsoupUtil {
         return selectAllFormByHtml(doc.html());
     }
 
-    public String updateForm(Map<String, Object> form) throws IOException {
+    public String updateForm(Map<String, Object> form,boolean clearCache) throws IOException {
         Map<String, Object> coreMap = (Map<String, Object>) form.get("core");
 
         String formcode = Utils.trimNull(coreMap.get("formcode"));
@@ -376,8 +376,13 @@ public class FormDao extends JsoupUtil {
         }
         doc.outputSettings().prettyPrint(true).outline(true).escapeMode();
         String html = doc.html();
-        EzClientBootstrap.instance().getEzCache().clear();
+        if(clearCache){
+            EzClientBootstrap.instance().getEzCache().clear();
+        }
         return html;
+    }
+    public String updateForm(Map<String, Object> form) throws Exception {
+        return updateForm(form,true);
     }
 
 

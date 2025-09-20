@@ -1,5 +1,7 @@
 package top.ezadmin.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import top.ezadmin.EzClientBootstrap;
 import top.ezadmin.common.NotExistException;
@@ -330,7 +332,11 @@ public class ListController extends BaseController {
         if (Utils.getLog() != null) {
             Utils.addLog("结束执行列表 list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
         }
-        return EzResult.instance().data(dataList).count(dataList.size());
+
+        Map<String, Object> result=new HashMap<>();
+        result.put("body",dataList);
+        result.put("head",list.get("col"));
+        return EzResult.instance().data(result).count(dataList.size());
     }
 
     /**
