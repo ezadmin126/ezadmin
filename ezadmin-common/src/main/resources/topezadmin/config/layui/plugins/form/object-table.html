@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>表单表格</title>
+</head>
+<body id="table" alias="EZ-TABLE" type="form" icon="layui-icon-list">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="table">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">多行文本</label>
+            <div class="layui-input-block">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>人物</th>
+                        <th>民族</th>
+                        <th>格言</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>孔子</td>
+                        <td>华夏</td>
+                        <td>有朋至远方来，不亦乐乎</td>
+                    </tr>
+                    <tr>
+                        <td>孟子</td>
+                        <td>华夏</td>
+                        <td>穷则独善其身，达则兼济天下</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+
+    <div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" ez-type="table"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+         th:ez-url="${url}"
+         th:ez-data="${data}"
+         th:ez-datatype="${datatype}"
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}">
+                <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                <small
+                        class="layui-form-mid layui-text-em top_desc"
+                        th:utext="${top_desc}" style="float:none"
+                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+                <style>
+                    .gu-mirror .ezadmin-td {
+                        display: none;
+                    }
+
+                    .gu-mirror .layui-btn-group {
+                        width: 100px
+                    }
+                </style>
+                <table th:id="${'ITEM_ID_' + item_name}" th:lay-filter="${'ITEM_ID_' + item_name}"
+                       class="  layui-table propTable ez-table" style=" width:100%">
+                    <thead style="text-align: center">
+                    <tr>
+                        <th style="width:100px"
+                            lay-options='{"field":"oper","width":100,"fixed":"right","title":"操作","align":"","escape":false}'>
+                            操作
+                        </th>
+                        <th th:remove="tag" th:each="item:${subdata.col}" th:utext="${item.html}">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody style="border-bottom: 1px solid rgba(0,0,0,.125);" class="dragula-container">
+                    <tr th:each="row,rowStat:${subdata.core.dataList}" th:data-id="${row.id}">
+                        <td style="width: 40px;">
+                            <div class="layui-btn-group">
+                                <button style='cursor: move' type="button"
+                                        class="rowmove layui-btn layui-btn-xs layui-btn-primary">
+                                    <i class="rowmove layui-icon layui-icon-transfer"></i>
+                                </button>
+                                <button type="button" class="rowadd layui-btn layui-btn-xs layui-btn-primary">
+                                    <i class="layui-icon layui-icon-addition"></i>
+                                </button>
+                                <button type="button" class="rowdelete layui-btn layui-btn-xs layui-btn-primary">
+                                    <i class="layui-icon layui-icon-delete"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td th:each="td:${row.tds}" th:remove="tag" th:utext="${td}"></td>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+                <style>
+                    .gu-mirror {
+                        position: fixed !important;
+                        margin: 0 !important;
+                        z-index: 9999 !important;
+                        opacity: 0.8;
+                        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+                        filter: alpha(opacity=80);
+                    }
+
+                    .gu-hide {
+                        display: none !important;
+                    }
+
+                    .gu-unselectable {
+                        -webkit-user-select: none !important;
+                        -moz-user-select: none !important;
+                        -ms-user-select: none !important;
+                        user-select: none !important;
+                    }
+
+                    .gu-transit {
+                        opacity: 0.2;
+                        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+                        filter: alpha(opacity=20);
+                    }
+                </style>
+                <script>
+                    layui.use(['table', 'form', 'layCascader'], function () {
+                        var form = layui.form;
+                        var table2 = layui.table;
+                        var curTable = $("#[[${'ITEM_ID_' + item_name}]]");
+                        $(document).on("click", ".rowdelete", function () {
+                            var sibLength = $(this).parents("tr").siblings().length;
+                            if (sibLength >= 1) {
+                                $(this).parents("tr").remove();
+                            }
+                            if (sibLength <= 1) {
+                                curTable.find(".rowdelete").addClass("layui-btn-disabled")
+                            }
+                            form.render();
+                        })
+                        $(document).on("click", ".rowadd", function () {
+                            var cloneTr = $(this).parents("tr").clone();
+                            cloneTr.find("input").eq(0).val('');
+                            cloneTr.find("xm-select").remove();
+                            cloneTr.find("[xm-select]").removeAttr("xm-select");
+                            $(this).parents("tr").after(cloneTr);
+                            curTable.find(".rowdelete").removeClass("layui-btn-disabled")
+                            form.render();
+                            renderxm(cloneTr.find(".tdxmselect"));
+                        })
+                        dragula({
+                            isContainer: function (el) {
+                                return el.classList.contains('dragula-container');
+                            },
+                            // copy: true,
+                            //  removeOnSpill: true,
+                            revertOnSpill: true,
+                            //copySortSource: true,
+                            moves: function (el, container, handle) {
+
+                                return handle.classList.contains('rowmove');
+                            }, accepts: function (el, target) {
+
+                                return target.classList.contains('dragula-container');
+                            }
+                        })
+                        $(".tdxmselect").each(function () {
+                            renderxm($(this));
+                        });
+                    })
+
+                    function renderxm(othis) {
+                        console.log("初始化xmselect：：" + othis.attr("item_name"))
+                        var v = JSON.parse(othis.attr("value"));
+
+                        var initparam = {id: v[0], page: 1}
+                        $.post(othis.attr("url"), initparam, function (initresponse) {
+                            if (initresponse.success) {
+                                var initresp = initresponse.data;
+                                xmSelect.render({
+                                    el: othis[0],
+                                    language: 'zn',
+                                    filterable: true,
+                                    style: {
+                                        height: '26px',
+                                    },
+                                    toolbar: {
+                                        show: ($('[[${"#itemId-" + item_name}]]').attr("toolbar") || 'true') == 'true',
+                                        list: ['ALL', 'REVERSE', 'CLEAR']
+                                    }, theme: {
+                                        color: '#1e9fff',
+                                    },
+                                    prop: {
+                                        name: 'V',
+                                        value: 'K',
+                                    },
+                                    paging: true,
+                                    pageSize: 10,
+                                    delay: 1000,
+                                    pageRemote: true,
+                                    name: othis.attr("item_name"),
+                                    radio: (othis.attr("radio") || "false").toLowerCase() === "false" ? false : true,
+                                    tips: othis.attr("placeholder") || "请搜索",
+                                    remoteSearch: true,
+                                    remoteMethod: function (val, cb, show, pageIndex) {
+                                        console.log(val);
+                                        if (!val) {
+                                            return cb([]);
+                                        }
+
+                                        var param = {keyword: val, page: pageIndex}
+                                        $.post(othis.attr("url"), param, function (response) {
+                                            if (response.success) {
+                                                var res = response.data;
+                                                console.log(res);
+                                                cb(res, response.count);
+                                            } else {
+                                                cb([]);
+                                                console.log(response.message);
+                                            }
+                                        }, 'json').fail(function () {
+                                            console.log("网络异常");
+                                            cb([]);
+                                        });
+                                    },
+                                    data: initresp,
+                                    initValue: v,
+                                    create: function (val, arr) {
+                                        if (arr.length === 0) {
+                                            return {
+                                                V: '创建-' + val,
+                                                K: val
+                                            }
+                                        }
+                                    }
+                                })
+                            } else {
+                                console.log("初始化数据" + JSON.stringify(initresponse));
+                            }
+                        }, 'json').fail(function () {
+                            console.log("网络异常");
+                            alert('网络异常');
+                        });
+                    }
+                </script>
+
+
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

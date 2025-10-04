@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>多选下拉框</title>
+</head>
+<body id="xmselect" alias="object-xmselect" type="form" icon="layui-icon-more">
+
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="xmselect">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">多选下拉框</label>
+            <div class="layui-input-block">
+                <select name="default" class=""></select>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+
+
+    <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}" ez-type="xmselect"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+         th:ez-url="${url}"
+         th:ez-data="${data}"
+         th:ez-datatype="${datatype}"
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+         th:ez-class="${class}"
+         th:ez-attrMap="${attrMap}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}">
+                <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                <small
+                        class="layui-form-mid layui-text-em top_desc"
+                        th:utext="${top_desc}" style="float:none"
+                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+                [(${serverDom})]
+                <input type="hidden" th:id="${'itemdata-'+item_name}" th:value="${itemsJson}">
+
+                <script>
+                    //  var xmel = $('[[${"#itemId-" + item_name}]]');
+                    // var initdata = xmel.attr("itemsJson");
+                    // var initvalue = xmel.attr("value");
+                    var xmselect = xmSelect.render({
+                        el: '[[${"#itemId-" + item_name}]]',
+                        language: 'zn',
+                        toolbar: {
+                            show: ($('[[${"#itemId-" + item_name}]]').attr("toolbar") || 'true') == 'true',
+                            list: ['ALL', 'REVERSE', 'CLEAR']
+                        },
+                        filterable: true,
+                        style: {
+                            height: '26px',
+                        },
+                        prop: {
+                            name: 'V',
+                            value: 'K',
+                        }, theme: {
+                            color: '#1e9fff',
+                        },
+                        radio: ($('[[${"#itemId-" + item_name}]]').attr("radio") || "false").toLowerCase() === "false" ? false : true,
+                        clickClose: ($('[[${"#itemId-" + item_name}]]').attr("radio") || "false").toLowerCase() === "false" ? false : true,
+                        name: '[[${item_name}]]',
+                        tips: '[[${#strings.isEmpty(placeholder)?"请选择":placeholder}]]',
+                        data: function () {
+                            return JSON.parse($('[[${"#itemdata-" + item_name}]]').val() || []);
+                        },
+                        initValue: $('[[${"#itemId-" + item_name}]]').attr("value") ? $('[[${"#itemId-" + item_name}]]').attr("value").split(",") : []
+                        ,
+                        filterMethod: function (val, item, index, prop) {//重写搜索方法。
+                            if (val == item.K) {//把value相同的搜索出来
+                                return true;
+                            }
+                            if (item.V.indexOf(val) != -1) {//名称中包含的搜索出来
+                                return true;
+                            }
+                            return !ezpingyin(val, item.V, item.K);
+                        }, on: function (data) {
+                            //arr:  当前多选已选中的数据
+                            var arr = data.arr;
+                            //change, 此次选择变化的数据,数组
+                            var change = data.change;
+                            //isAdd, 此次操作是新增还是删除
+                            var isAdd = data.isAdd;
+
+                            var functionName = $('[[${"#itemId-" + item_name}]]').attr("on")
+                            if (functionName && window[functionName]) {
+                                window[functionName](data);
+                            }
+                        }, model: {
+                            label: {
+                                type: 'block',
+                                block: {
+                                    //最大显示数量, 0:不限制
+                                    showCount: $('[[${"#itemId-" + item_name}]]').attr("showCount") || 5,
+                                    //是否显示删除图标
+                                    showIcon: true,
+                                }
+                            }
+                        }
+                    })
+                </script>
+
+
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
