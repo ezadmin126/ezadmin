@@ -9,7 +9,16 @@ import java.util.Map;
 public class BaseController {
 
     public EzResult render(String path,Map<String,Object> templateParam) throws Exception {
-        templateParam.put("vi","3.0");
+        templateParam.put("vi","303");
+        templateParam.put("downloadUrl",EzBootstrap.config().getDownloadUrl());
+        templateParam.put("uploadUrl",EzBootstrap.config().getUploadUrl());
+        templateParam.putAll(EzBootstrap.config().getConfig());
+        templateParam.put("layout",EzBootstrap.config().getLayout());
+        templateParam.put("logoUrl",EzBootstrap.config().getLogoUrl());
+        templateParam.put("prefixUrl",EzBootstrap.config().getPrefixUrl());
+        templateParam.put("systemName",EzBootstrap.config().getSystemName());
+        templateParam.put("appName",EzBootstrap.config().getAppName());
+        templateParam.put("signoutUrl",EzBootstrap.config().getSignoutUrl());
        return EzResult.instance().data("html",EzBootstrap.config().getEzTemplate().renderFile(path,templateParam))
                .code("HTML");
     }

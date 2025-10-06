@@ -443,35 +443,35 @@ function renderTable() {
         });
         console.log("初始化行选择");
 
-        laytable.on('row(mytable)', function (obj) {
-            if (obj.e.target.tagName == 'IMG' || obj.e.target.tagName == 'INPUT'
-                || obj.e.target.tagName == 'BUTTON') {
-                return false;
-            }
-            var data = obj.data; // 获取当前行数据
-            var input = obj.tr.eq(0).find("[name=list-body-checkbox]");
-            var fixedInput = obj.tr.eq(1).find("[name=list-body-checkbox]");
-            if (input != undefined && input.length > 0) {
-                var checked = input.prop("checked");
-                // var _check_id_value=input.attr("_check_id_value");
-                //所有的设置选中
-                // $("[_check_id_value='"+_check_id_value+"']").prop("checked", !checked)
-                //只有checkbox这样处理
-                input.prop("checked", !checked);
-                if (fixedInput != undefined && fixedInput.length > 0) {
-                    fixedInput.prop("checked", !checked);
-                }
-                // $("[_check_id_value='"+_check_id_value+"']").attr("checkedflag", checked? '0' : '1');
-                obj.setRowChecked({
-                    type: input.attr('type') // radio 单选模式；checkbox 复选模式
-                });
-            } else {
-                obj.setRowChecked({
-                    type: 'radio'// radio 单选模式；checkbox 复选模式
-                });
-            }
-            layui.form.render()
-        });
+        // laytable.on('row(mytable)', function (obj) {
+        //     if (obj.e.target.tagName == 'IMG' || obj.e.target.tagName == 'INPUT'
+        //         || obj.e.target.tagName == 'BUTTON') {
+        //         return false;
+        //     }
+        //     var data = obj.data; // 获取当前行数据
+        //     var input = obj.tr.eq(0).find("[name=list-body-checkbox]");
+        //     var fixedInput = obj.tr.eq(1).find("[name=list-body-checkbox]");
+        //     if (input != undefined && input.length > 0) {
+        //         var checked = input.prop("checked");
+        //         // var _check_id_value=input.attr("_check_id_value");
+        //         //所有的设置选中
+        //         // $("[_check_id_value='"+_check_id_value+"']").prop("checked", !checked)
+        //         //只有checkbox这样处理
+        //         input.prop("checked", !checked);
+        //         if (fixedInput != undefined && fixedInput.length > 0) {
+        //             fixedInput.prop("checked", !checked);
+        //         }
+        //         // $("[_check_id_value='"+_check_id_value+"']").attr("checkedflag", checked? '0' : '1');
+        //         obj.setRowChecked({
+        //             type: input.attr('type') // radio 单选模式；checkbox 复选模式
+        //         });
+        //     } else {
+        //         obj.setRowChecked({
+        //             type: 'radio'// radio 单选模式；checkbox 复选模式
+        //         });
+        //     }
+        //     layui.form.render()
+        // });
     });
 }
 

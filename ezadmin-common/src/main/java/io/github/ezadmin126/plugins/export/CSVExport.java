@@ -9,7 +9,9 @@ import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CSV导出实现
@@ -19,7 +21,7 @@ import java.util.List;
 public class CSVExport implements EzExport {
 
     @Override
-    public byte[] export(String name, List<List<String>> head, List<List<Object>> data) throws Exception {
+    public EzExportResult export(String name, List<List<String>> head, List<List<Object>> data) throws Exception {
         CSVPrinter printer = null;
         try {
             String fileName = name + "-" + EzDateUtils.todayDatetime();
@@ -45,7 +47,11 @@ public class CSVExport implements EzExport {
             
             // 这里可以返回生成的CSV内容，或者通过其他方式处理
             // 例如：
-              return outputStream.toByteArray();
+            byte[] b= outputStream.toByteArray();
+            EzExportResult r=new EzExportResult();
+            r.setFile(b);
+            r.setContentType("text/csv; charset=utf-8");
+            return r;
         } finally {
             if (printer != null)
                 printer.close();

@@ -1,6 +1,7 @@
 package io.github.ezadmin126.controller;
 
 import io.github.ezadmin126.common.utils.*;
+import io.github.ezadmin126.plugins.export.EzExportResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.ezadmin126.EzBootstrap;
@@ -95,12 +96,16 @@ public class ExportController extends BaseController {
             }
             //  log.info("ezadmin start export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
             String fileName = Utils.trimNull(requestParamMap.get("EXPORT_FILE_NAME"));
+
+            EzExportResult bb= EzBootstrap.config().getEzExport().export(Utils.trimNullDefault(fileName,Utils.getStringByObject(coreMap, "listname")), head, data);
+            if (StringUtils.isBlank(fileName)) {
+                fileName = bb.getFileName();
+            }
             if (StringUtils.isBlank(fileName)) {
                 fileName = Utils.getStringByObject(coreMap, "listname");
             }
-            byte[] b= EzBootstrap.config().getEzExport().export(fileName, head, data);
-            //  log.info("ezadmin end export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
-            return EzResult.instance().success().dataMap("html",b)
+            return EzResult.instance().success().dataMap("html",bb.getFile())
+                    .dataMap("contentType",bb.getContentType())
                     .dataMap("fileName",fileName).code("EXPORT");
         } catch (Exception e) {
             log.error("", e);

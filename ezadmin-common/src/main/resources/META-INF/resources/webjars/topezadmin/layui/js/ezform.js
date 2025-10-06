@@ -51,6 +51,11 @@ $(function () {
             if (!canEzFormSubmit) {
                 return false;
             }
+            var loadIndex = layer.msg('加载中', {
+                icon: 16,
+                shade: 0.01,
+                time: 0 // 不自动关闭
+            });
             canEzFormSubmit = false;
             try {
                 var fileerror = false;
@@ -63,6 +68,7 @@ $(function () {
                         layui.layer.msg(error)
                         fileerror = true;
                         canEzFormSubmit = true;
+                        layer.close(loadIndex)
                         return false;
                     } else {
                         $(this).parent().find(".error").remove();
@@ -75,6 +81,7 @@ $(function () {
                         error.insertBefore($(this));
                         fileerror = true;
                         canEzFormSubmit = true;
+                        layer.close(loadIndex)
                         return false;
                     } else {
                         $(this).parent().find(".error").remove();
@@ -82,6 +89,7 @@ $(function () {
                 })
 
                 if (fileerror) {
+                    layer.close(loadIndex)
                     canEzFormSubmit = true;
                     return false;
                 }
@@ -91,6 +99,7 @@ $(function () {
                     try {
                         if (!submitHandler()) {
                             canEzFormSubmit = true;
+                            layer.close(loadIndex)
                             return false;
                         }
                     } catch (e) {
@@ -108,8 +117,10 @@ $(function () {
                                 console.log(e);
                             }
                             canEzFormSubmit = true;
+                            layer.close(loadIndex)
                             return;
                         }
+                        layer.close(loadIndex)
                         if (data.code == 0) {
                             console.log("data::" + data.data);
                             layer.alert("保存成功", function (index) {
@@ -139,12 +150,14 @@ $(function () {
                     },
                     error: function (e) {
                         canEzFormSubmit = true;
+                        layer.close(loadIndex)
                         layer.alert("保存失败,网络异常");
                         console.log(e)
                     }
                 });
             } catch (e) {
                 console.log(e);
+                layer.close(loadIndex)
                 canEzFormSubmit = true;
             }
             return false;

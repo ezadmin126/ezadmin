@@ -69,6 +69,7 @@ public class ListController extends BaseController {
         }
         String username = Utils.trimNull(sessionParamMap.get(SessionConstants.EZ_SESSION_USER_NAME_KEY));
         templateParam.put("EZ_SESSION_USER_NAME_KEY", username);
+        templateParam.putAll(sessionParamMap);
         String adminStyle = Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE), EzBootstrap.config().getAdminStyle());
         String template = Utils.trimNullDefault(coreMap.get(JsoupUtil.TEMPLATE), "list");
         templateParam.put("prefixUrl",EzBootstrap.config().getPrefixUrl());
@@ -162,7 +163,7 @@ public class ListController extends BaseController {
         templateParam.put("layout", layout);
         templateParam.put(RequestParamConstants._SEARCH_ITEM_DISPLAY, requestContext.getParameter("_SEARCH_ITEM_DISPLAY"));
         templateParam.put("listUrl", requestContext.getContextPath() + "/topezadmin/list/tree-" + ENCRYPT_LIST_ID);
-
+        templateParam.putAll(sessionParamMap);
         templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
         templateParam.put("prefixUrl",EzBootstrap.config().getPrefixUrl());
         String adminStyle = Utils.trimNullDefault(core.get(JsoupUtil.ADMINSTYLE), EzBootstrap.config().getAdminStyle());

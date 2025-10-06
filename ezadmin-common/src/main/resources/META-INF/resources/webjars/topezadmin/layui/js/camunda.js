@@ -44,6 +44,7 @@ function appendCheckButton(dekey, checkStatus, callback) {
                 time: 0 // 不自动关闭
             });
             $.post("/mycamunda/check/complete/" + dekey, param, function (response) {
+                layui.layer.close(loadIndex)
                 if (response.success) {
                     layui.layer.alert("操作成功", function () {
                         location.reload()
@@ -106,8 +107,14 @@ function appendCheckButton(dekey, checkStatus, callback) {
             if ($(this).hasClass("layui-btn-disabled")) {
                 return false;
             }
+            var loadIndex = layer.msg('加载中', {
+                icon: 16,
+                shade: 0.01,
+                time: 0 // 不自动关闭
+            });
             $(this).addClass("layui-btn-disabled");
             $.post("/mycamunda/check/start/" + dekey, param, function (response) {
+                layer.close(loadIndex)
                 if (response.success) {
                     layui.layer.alert("申请审核成功", function () {
                         location.reload()

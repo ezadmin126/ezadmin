@@ -1,6 +1,7 @@
 package io.github.ezadmin126.plugins.export;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 导出接口
@@ -17,5 +18,5 @@ public interface EzExport {
      * @param data 数据
      * @throws Exception 异常
      */
-    byte[] export(String name, List<List<String>> head, List<List<Object>> data) throws Exception;
+    EzExportResult export(String name, List<List<String>> head, List<List<Object>> data) throws Exception;
 }

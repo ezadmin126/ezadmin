@@ -67,6 +67,7 @@ public class FormController extends BaseController {
         templateParam.put("layout", layout);
         String username = Utils.trimNull(sessionMap.get(SessionConstants.EZ_SESSION_USER_NAME_KEY));
         templateParam.put("EZ_SESSION_USER_NAME_KEY", username);
+        templateParam.putAll(sessionMap);
         String adminStyle = Utils.trimNullDefault(core.get(JsoupUtil.ADMINSTYLE), EzBootstrap.config().getAdminStyle());
         String template = Utils.trimNullDefault(core.get(JsoupUtil.TEMPLATE), "form");
         templateParam.put("prefixUrl", EzBootstrap.config().getPrefixUrl());
