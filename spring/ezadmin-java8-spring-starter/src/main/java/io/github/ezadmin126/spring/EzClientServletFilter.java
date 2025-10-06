@@ -25,6 +25,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -147,10 +148,11 @@ public class EzClientServletFilter implements Filter {
                 return;
             }else if(result.isSuccess()&&StringUtils.equals(result.getCode(),"EXPORT")){
                 String fileName=((HashMap)result.getData()).get("fileName").toString();
+                String contentType=Utils.trimNullDefault(((HashMap)result.getData()).get("contentType"),"application/octet-stream");
                 byte[] data=(byte[]) ((HashMap)result.getData()).get("html");
-                httpServletResponse.setContentType("application/octet-stream");
+                httpServletResponse.setContentType(contentType);
                 httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), "ISO-8859-1"));
-                IOUtils.copy(IOUtils.toInputStream(new String(data), "UTF-8"),httpServletResponse.getOutputStream());
+                IOUtils.copy(new ByteArrayInputStream(data),httpServletResponse.getOutputStream());
                 return;
             }else  if(result.isSuccess()&&StringUtils.equals(result.getCode(),"JSON")){
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
