@@ -1,10 +1,12 @@
 package io.github.ezadmin126;
 
 import com.alibaba.fastjson.JSON;
-import io.github.ezadmin126.spring.ConfigUtils;
+import top.ezadmin.spring.ConfigUtils;
 import org.junit.Test;
-import io.github.ezadmin126.web.EzResult;
-import io.github.ezadmin126.web.RequestContext;
+import top.ezadmin.EzBootstrap;
+import top.ezadmin.EzBootstrapConfig;
+import top.ezadmin.web.EzResult;
+import top.ezadmin.web.RequestContext;
 
 import java.io.IOException;
 

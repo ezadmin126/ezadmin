@@ -1,10 +1,9 @@
-package io.github.ezadmin126.spring;
+package top.ezadmin.spring;
 
+import jakarta.servlet.http.HttpServletRequest;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.common.utils.Utils;
 
-import io.github.ezadmin126.common.utils.StringUtils;
-import io.github.ezadmin126.common.utils.Utils;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Pattern;
 
 

@@ -1,9 +1,9 @@
-package io.github.ezadmin126.plugins;
+package top.ezadmin.plugins;
 
 
 import com.ql.util.express.Operator;
-import io.github.ezadmin126.common.utils.Utils;
-import io.github.ezadmin126.spring.SpringContextHolder;
+import top.ezadmin.common.utils.Utils;
+import top.ezadmin.spring.SpringContextHolder;
 
 public class SpringBeanOperator extends Operator {
     @Override

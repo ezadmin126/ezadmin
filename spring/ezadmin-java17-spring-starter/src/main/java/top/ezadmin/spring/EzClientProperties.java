@@ -1,4 +1,4 @@
-package io.github.ezadmin126.spring;
+package top.ezadmin.spring;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,7 +10,7 @@ public class EzClientProperties {
     private boolean cacheFlag = true;
     private String uploadUrl;
     private String downloadUrl;
-    private String logType = "1000-10000";
+    private String logType = "0000-10000";
     private String regionUrl;
     private String categoryUrl;
     private String orgUrl;
@@ -34,6 +34,7 @@ public class EzClientProperties {
     private String formResourceLocation = "classpath*:/topezadmin/config/layui/form/**/*.html";
     private String pluginsFormResourceLocation = "classpath*:/topezadmin/config/layui/plugins/form/**/*.html";
     private String pluginsListResourceLocation = "classpath*:/topezadmin/config/layui/plugins/list/**/*.html";
+    private String pluginsDetailResourceLocation = "classpath*:/topezadmin/config/layui/plugins/detail/**/*.html";
     private String configJson = "{\"favicon\":\"/static/favicon.ico\",\"logo\":\"/static/logo.png\"}";
 
 
@@ -225,6 +226,14 @@ public class EzClientProperties {
 
     public void setPluginsListResourceLocation(String pluginsListResourceLocation) {
         this.pluginsListResourceLocation = pluginsListResourceLocation;
+    }
+
+    public String getPluginsDetailResourceLocation() {
+        return pluginsDetailResourceLocation;
+    }
+
+    public void setPluginsDetailResourceLocation(String pluginsDetailResourceLocation) {
+        this.pluginsDetailResourceLocation = pluginsDetailResourceLocation;
     }
 
     public String getConfigJson() {

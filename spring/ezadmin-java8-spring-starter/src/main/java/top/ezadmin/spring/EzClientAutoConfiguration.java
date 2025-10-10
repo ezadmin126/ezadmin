@@ -1,9 +1,9 @@
-package io.github.ezadmin126.spring;
+package top.ezadmin.spring;
 
-import io.github.ezadmin126.common.utils.StringUtils;
-import io.github.ezadmin126.plugins.ImportOperator;
-import io.github.ezadmin126.plugins.SpringBeanOperator;
-import io.github.ezadmin126.plugins.express.executor.EzExpressExecutor;
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.plugins.ImportOperator;
+import top.ezadmin.plugins.SpringBeanOperator;
+import top.ezadmin.plugins.express.executor.EzExpressExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

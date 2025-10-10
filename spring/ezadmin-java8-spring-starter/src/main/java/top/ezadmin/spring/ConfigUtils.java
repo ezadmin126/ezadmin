@@ -1,12 +1,12 @@
-package io.github.ezadmin126.spring;
+package top.ezadmin.spring;
 
+import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.web.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import io.github.ezadmin126.common.utils.StringUtils;
-import io.github.ezadmin126.web.Config;
 
 import java.io.IOException;
 import java.util.ArrayList;

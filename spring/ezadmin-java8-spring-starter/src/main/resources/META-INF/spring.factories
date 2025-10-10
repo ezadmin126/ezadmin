@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.github.ezadmin126.spring.EzClientAutoConfiguration
+top.ezadmin.spring.EzClientAutoConfiguration

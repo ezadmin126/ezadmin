@@ -4,10 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-java8-spring-starter</artifactId>
-    <version>3.0.2</version>
+    <version>3.0.3</version>
     <name>ezadmin-java8-spring-starter</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
     <description>ezadmin-java8-spring-starter</description>
+    <properties>
+        <ezadmin-common.version>${project.version}</ezadmin-common.version>
+    </properties>
     <developers>
         <developer>
             <name>ezadmin</name>
@@ -40,7 +43,7 @@
         <dependency>
             <groupId>io.github.ezadmin126</groupId>
             <artifactId>ezadmin-common</artifactId>
-            <version>3.0.2</version>
+            <version>${ezadmin-common.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>

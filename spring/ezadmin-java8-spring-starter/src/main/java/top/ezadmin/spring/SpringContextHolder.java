@@ -1,4 +1,4 @@
-package io.github.ezadmin126.spring;
+package top.ezadmin.spring;
 
 import org.springframework.context.ApplicationContext;
 

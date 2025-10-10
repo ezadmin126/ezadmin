@@ -1,12 +1,12 @@
-package io.github.ezadmin126.plugins;
+package top.ezadmin.plugins;
 
 
-import io.github.ezadmin126.common.utils.Utils;
-import io.github.ezadmin126.plugins.express.AbstractOperator;
-import io.github.ezadmin126.plugins.express.OperatorParam;
-import io.github.ezadmin126.plugins.imports.EzImport;
-import io.github.ezadmin126.spring.SpringContextHolder;
-import io.github.ezadmin126.web.EzResult;
+import top.ezadmin.spring.SpringContextHolder;
+import top.ezadmin.common.utils.Utils;
+import top.ezadmin.plugins.express.AbstractOperator;
+import top.ezadmin.plugins.express.OperatorParam;
+import top.ezadmin.plugins.imports.EzImport;
+import top.ezadmin.web.EzResult;
 
 public class ImportOperator extends AbstractOperator {
     public ImportOperator() {
