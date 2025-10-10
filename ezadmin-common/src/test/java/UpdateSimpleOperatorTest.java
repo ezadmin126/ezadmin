@@ -1,11 +1,11 @@
 
 import org.junit.Test;
-import io.github.ezadmin126.common.utils.JSONUtils;
-import io.github.ezadmin126.common.utils.Utils;
-import io.github.ezadmin126.plugins.express.OperatorParam;
-import io.github.ezadmin126.plugins.express.UpdateSimpleOperator;
-import io.github.ezadmin126.plugins.express.jdbc.UpdateParam;
-import io.github.ezadmin126.plugins.parser.parse.ResultModel;
+import top.ezadmin.common.utils.JSONUtils;
+import top.ezadmin.common.utils.Utils;
+import top.ezadmin.plugins.express.OperatorParam;
+import top.ezadmin.plugins.express.UpdateSimpleOperator;
+import top.ezadmin.plugins.express.jdbc.UpdateParam;
+import top.ezadmin.plugins.parser.parse.ResultModel;
 
 import static org.junit.Assert.assertEquals;
 
