@@ -1,3 +1,5 @@
+package io.github.ezadmin126;
+
 import org.junit.Test;
 
 public class CustomSearchTest {
@@ -12,4 +14,5 @@ public class CustomSearchTest {
     public static void main(String[] args) {
         new CustomSearchTest().test1();
     }
+   
 }

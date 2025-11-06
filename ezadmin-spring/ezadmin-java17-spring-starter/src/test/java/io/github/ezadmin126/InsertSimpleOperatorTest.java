@@ -1,7 +1,10 @@
+package io.github.ezadmin126;
 
 import org.junit.Test;
+import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.utils.JSONUtils;
 import top.ezadmin.common.utils.Utils;
+import top.ezadmin.plugins.EzFastJson2Impl;
 import top.ezadmin.plugins.express.InsertSimpleOperator;
 import top.ezadmin.plugins.express.OperatorParam;
 import top.ezadmin.plugins.express.jdbc.InsertParam;
@@ -12,9 +15,13 @@ import static org.junit.Assert.assertEquals;
 public class InsertSimpleOperatorTest {
 
     private static String TABLE = "table";
+    static{
+        EzBootstrap.config().setEzJson(new EzFastJson2Impl());
+    }
 
     @Test
     public void test1() {
+
         InsertSimpleOperator operator = new InsertSimpleOperator();
         InsertParam param = new InsertParam();
         param.table(TABLE);
