@@ -107,6 +107,11 @@ public class EzPage {
         setPerPageInt(j);
         this.orderByClause = orderByClause;
     }
+    public EzPage(int i, int j,long totalRecord ) {
+        setCurrentPage(i);
+        setPerPageInt(j);
+        setTotalRecord(totalRecord);
+    }
 
     public EzPage(Map<String, String> request) {
         setCurrentPage(NumberUtils.toInt(request.get("currentPage"), 1));
@@ -120,4 +125,5 @@ public class EzPage {
     public String getOrderByClause() {
         return orderByClause;
     }
+
 }

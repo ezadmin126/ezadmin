@@ -74,9 +74,9 @@
                     if (data.code == 0) {
                         layer.alert("保存成功", function (index) {
                             if ($("[name=\"listcode\"]").val() != '') {
-                                location.href = "/topezadmin/listEdit/loadEdit-" + $("[name=\"listcode\"]").val();
+                                location.href = "/topezadmin/listEdit/sourceEdit-" + $("[name=\"listcode\"]").val();
                             } else if ($("[name=\"formcode\"]").val() != '') {
-                                location.href = "/topezadmin/formEdit/loadEdit-" + $("[name=\"formcode\"]").val();
+                                location.href = "/topezadmin/formEdit/sourceEdit-" + $("[name=\"formcode\"]").val();
                             }
                         })
                     } else {

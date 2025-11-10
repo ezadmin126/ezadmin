@@ -19,7 +19,7 @@ public class EzBootstrap   {
     private static Logger logger = LoggerFactory.getLogger(EzBootstrap.class);
     //确保单例
     private static EzBootstrap bootstrap=new EzBootstrap();
-    private static EzBootstrapConfig ezBootstrapConfig;
+    private static EzBootstrapConfig ezBootstrapConfig=new EzBootstrapConfig();
 
     public static EzBootstrap getInstance(){
         return bootstrap;
@@ -77,6 +77,9 @@ public class EzBootstrap   {
         }
         //防止配置的前缀 有/
         originatingUrl = StringUtils.repaceAll(originatingUrl ,"//", "/");
+        if(originatingUrl.equals("/topezadmin/listEdit/importlist.html")){
+            originatingUrl="/topezadmin/listEdit/importlist-";
+        }
         Matcher m = pInclude.matcher(originatingUrl);
         if (m.find() && m.groupCount() == 3) {
             String contro = m.group(1);

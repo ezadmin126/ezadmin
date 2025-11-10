@@ -1,6 +1,4 @@
-/*
- * Copyright 2017 Focus Technology, Co., Ltd. All rights reserved.
- */
+
 package top.ezadmin.common.utils;
 
 

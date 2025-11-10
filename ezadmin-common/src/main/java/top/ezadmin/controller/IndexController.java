@@ -19,14 +19,7 @@ public class IndexController extends BaseController {
 
 
     public EzResult index(RequestContext requestContext )  {
-//        Map<String, Object> config = bootstrap.getConfig();
-//        if (config != null) {
-//            for (Map.Entry<String, Object> entry : config.entrySet()) {
-//                templateParam.put(entry.getKey(), entry.getValue());
-//            }
-//        }
         Map<String, Object> templateParam=new HashMap<>();
-      //  templateParam.put("indexConfigJson", config);
         templateParam.put("logo", EzBootstrap.config().getLogoUrl());
         templateParam.put("systemName", EzBootstrap.config().getSystemName());
         templateParam.put("navUrl", EzBootstrap.config().getNavUrl());
@@ -39,6 +32,7 @@ public class IndexController extends BaseController {
         templateParam.put("chatUrl", EzBootstrap.config().getChatUrl());
         templateParam.put("clearUrl", EzBootstrap.config().getClearUrl());
         templateParam.put("appName", EzBootstrap.config().getAppName());
+        templateParam.put("menuChildOpen", EzBootstrap.config().getAppName());
         String username = Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY));
         templateParam.put("EZ_SESSION_USER_NAME_KEY", username);
         Map<String, String> cookie = requestContext.getCookies();

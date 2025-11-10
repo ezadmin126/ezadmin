@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>单行文本</title>
+</head>
+<body id="attributes"   type="form" icon="layui-icon-file">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="attributes">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">单行输入框</label>
+            <div class="layui-input-block">
+                <input type="text" name="default" placeholder="请输入" class="layui-input">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class="layui-col-space10 selector" th:classappend="${'layui-col-md'+col}"
+
+         ez-type="attributes"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+         th:ez-maxlength="${maxlength}"
+         th:ez-readonly="${readonly}"
+         th:ez-disabled="${disabled}"
+         th:ez-class="${class}"
+         th:ez-attrMap="${attrMap}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  " th:if="${not #strings.isEmpty(label)}" th:for="${'ITEM_ID_' + item_name}">
+                <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                <small class="layui-form-mid layui-text-em top_desc"
+                       th:utext="${top_desc}" style="float:none"
+                       th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+                <div class="input-attr" style="width:500px" th:name="${item_name}"
+                     th:item_name="${item_name}"
+                     th:ez-attrmap="${attrMap}"
+                     th:data-json='${value}'></div>
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+
+    <script  >
+        (function ($) {
+            // 默认配置
+            const DEFAULT_CONFIG = {
+                maxrows: 20,
+                initdata: [],
+                name: 'attributes',
+                keyprefix: '名称',
+                valueprefix: '值'
+            };
+
+            // 创建属性编辑器组件
+            function createAttributeEditor(element) {
+                const $element = $(element);
+                const config = getConfig($element);
+
+                // 创建隐藏输入框用于存储JSON数据
+                const $hiddenInput = $('<input type="hidden" name="' + config.name + '" lay-verify="attributeRequired">');
+                $element.append($hiddenInput);
+
+                // 创建容器
+                const $container = $('<div style="padding: 0;"><div class="attribute-container"></div>' +
+                    '<div style="margin-top: 10px;">' +
+                    '<button type="button" class="layui-btn layui-btn-primary add-row-btn">' +
+                    '<i class="layui-icon">&#xe654;</i> 添加' +
+                    '</button>' +
+                    '<button type="button" class="layui-btn layui-btn-primary manual-edit-btn" style="margin-left: 10px;">' +
+                    '<i class="layui-icon">&#xe642;</i> 手动编辑' +
+                    '</button>' +
+                    '</div>' +
+                    '<div class="max-rows-warning" style="display: none; color: #ff5722; font-size: 14px; margin-top: 10px;">已达到最大行数限制</div>' +
+                    '</div>');
+
+                $element.append($container);
+
+                const $attributeContainer = $container.find('.attribute-container');
+                const $maxRowsWarning = $container.find('.max-rows-warning');
+                const $addRowBtn = $container.find('.add-row-btn');
+
+                let currentRows = 0;
+
+                // 初始化数据
+                if (config.initdata && config.initdata.length > 0) {
+                    $.each(config.initdata, function(index, item) {
+                        addRow($attributeContainer, item.K, item.V, config);
+                    });
+                } else {
+                    addRow($attributeContainer, '', '', config); // 默认添加一行
+                }
+
+                // 更新隐藏字段的值
+                function updateHiddenInput() {
+                    const formData = getFormData();
+                    // 总是更新隐藏字段，即使数据为空
+                    $hiddenInput.val(JSON.stringify(formData));
+                    // 重新渲染表单以应用验证
+                    if (typeof layui !== 'undefined' && layui.form) {
+                        layui.form.render();
+                    }
+                }
+
+                // 添加行函数
+                function addRow(container, key = '', value = '', config) {
+                    if (currentRows >= config.maxrows) {
+                        $maxRowsWarning.show();
+                        return;
+                    }
+
+                    currentRows++;
+                    const rowId = 'row_' + currentRows;
+
+                    const rowHtml = `
+        <div class="attribute-row" id="${rowId}" style="display: flex; align-items: center; margin-bottom: 10px; padding: 10px; border: 1px solid #e6e6e6; border-radius: 4px; background-color: #f9f9f9;">
+          <div style="flex: 1; margin-right: 10px;">
+            <div class="layui-input-group">
+              <div class="layui-input-split layui-input-prefix">${config.keyprefix}</div>
+              <input type="text" lay-verify="required" name="key_${currentRows}" value="${key}" placeholder="请输入属性名" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <div style="flex: 1; margin-right: 10px;">
+            <div class="layui-input-group">
+              <div class="layui-input-split layui-input-prefix">${config.valueprefix}</div>
+              <input type="text" lay-verify="required" name="value_${currentRows}" value="${value}" placeholder="请输入属性值" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <div style="flex-shrink: 0;">
+            <div class="row-delete-btn" style="cursor: pointer; color: #ff5722; font-size: 16px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;" title="删除此行">
+              <i class="layui-icon">&#xe640;</i>
+            </div>
+          </div>
+        </div>
+      `;
+
+                    container.append(rowHtml);
+                    // 重新渲染表单
+                    if (typeof layui !== 'undefined' && layui.form) {
+                        layui.form.render();
+                    }
+
+                    // 更新隐藏字段
+                    updateHiddenInput();
+
+                    // 隐藏警告信息
+                    $maxRowsWarning.hide();
+                }
+
+                // 删除指定行函数
+                function removeRow(rowElement) {
+                    if (currentRows <= 1) {
+                        layer.msg('至少保留一行');
+                        return;
+                    }
+
+                    $(rowElement).remove();
+                    currentRows--;
+
+                    // 更新隐藏字段
+                    updateHiddenInput();
+
+                    // 隐藏警告信息
+                    $maxRowsWarning.hide();
+                }
+
+                // 获取表单数据
+                function getFormData() {
+                    const formData = [];
+                    let hasEmptyFields = false;
+
+                    $attributeContainer.find('.attribute-row').each(function(index) {
+                        const key = $(this).find('input[name^="key_"]').val();
+                        const value = $(this).find('input[name^="value_"]').val();
+
+                        // 检查是否有空字段
+                        if (key === '' || value === '') {
+                            hasEmptyFields = true;
+                        }
+
+                        formData.push({
+                            K: key || '',
+                            V: value || ''
+                        });
+                    });
+
+                    // 返回所有数据，包括空字段的数据
+                    return formData;
+                }
+
+                // 验证表单数据（用于提交时检查）
+                function validateFormData() {
+                    // 如果没有任何行，认为是有效的
+                    if (currentRows === 0) {
+                        return true;
+                    }
+                    let isValid = true;
+                    $attributeContainer.find('.attribute-row').each(function(index) {
+                        const key = $(this).find('input[name^="key_"]').val();
+                        const value = $(this).find('input[name^="value_"]').val();
+                        // 简单验证
+                        if (key === '' || value === '') {
+                            isValid = false;
+                            return false; // 跳出循环
+                        }
+                    });
+                    return isValid;
+                }
+
+
+
+                // 绑定事件
+                $addRowBtn.on('click', function() {
+                    addRow($attributeContainer, '', '', config);
+                });
+
+                // 手动编辑按钮事件
+                const $manualEditBtn = $container.find('.manual-edit-btn');
+                $manualEditBtn.on('click', function() {
+                    // 获取当前数据
+                    const currentData = getFormData();
+                    const jsonData = JSON.stringify(currentData, null, 2);
+
+                    // 创建弹窗内容
+                    const dialogContent = `
+                        <div style="padding: 20px;">
+                            <div style="margin-bottom: 10px;">
+                                <label style="font-weight: bold;">编辑JSON数据:</label>
+                            </div>
+                            <textarea id="jsonEditor" style="width: 460px;
+    height: 200px;
+    font-family: monospace;
+    padding: 10px;
+    margin: 10px; font-family: monospace;  ">${jsonData}</textarea>
+                            <div style="margin-top: 10px; color: #666; font-size: 12px;">
+                                注意：请确保输入的是有效的JSON格式,可以让AI生成符合条件的JSON。如：请帮我按照这种格式生成数据，格式：[
+  {
+    "K": "高度",
+    "V": "3米"
+  }
+]
+                            </div>
+                        </div>
+                    `;
+
+                    // 弹出对话框
+                    layer.open({
+                        type: 1,
+                        title: '手动编辑属性数据',
+                        area: ['540px', '470px'],
+                        content: dialogContent,
+                        btn: ['保存', '取消'],
+                        yes: function(index, layero) {
+                            const newJsonData = $('#jsonEditor').val();
+                            try {
+                                // 验证JSON格式
+                                const parsedData = JSON.parse(newJsonData);
+
+                                // 更新组件数据
+                                const editorInstance = $element.data('attributeEditor');
+                                if (editorInstance && typeof editorInstance.setData === 'function') {
+                                    editorInstance.setData(parsedData);
+                                }
+
+                                // 关闭弹窗
+                                layer.close(index);
+
+                                // 显示成功消息
+                                layer.msg('数据更新成功', {icon: 1});
+                            } catch (e) {
+                                // JSON格式错误
+                                layer.msg('JSON格式错误: ' + e.message, {icon: 2});
+                            }
+                        }
+                    });
+                });
+
+                // 监听删除按钮点击事件
+                $container.on('click', '.row-delete-btn', function() {
+                    removeRow($(this).closest('.attribute-row'));
+                });
+
+                // 监听输入框变化事件，实时更新隐藏字段
+                $container.on('input', 'input[name^="key_"], input[name^="value_"]', function() {
+                    updateHiddenInput();
+                });
+
+                // 监听输入框失去焦点事件，用于验证
+                $container.on('blur', 'input[name^="key_"], input[name^="value_"]', function() {
+                    // 可以在这里添加验证逻辑
+                });
+
+                // 提供外部访问的方法
+                $element.data('attributeEditor', {
+                    getData: getFormData,
+                    setData: function(data) {
+                        // 清空现有内容
+                        $attributeContainer.empty();
+                        currentRows = 0;
+
+                        // 添加新数据
+                        if (data && data.length > 0) {
+                            $.each(data, function(index, item) {
+                                addRow($attributeContainer, item.K, item.V, config);
+                            });
+                        } else {
+                            addRow($attributeContainer, '', '', config); // 默认添加一行
+                        }
+
+                        // 更新隐藏字段
+                        updateHiddenInput();
+                    }
+                });
+            }
+
+            // 获取配置
+            function getConfig($element) {
+                let config={};
+                let jsonConfig ={};
+                try{
+                    jsonConfig= JSON.parse($element.attr('ez-attrmap'));
+                }catch (e){}
+                if (jsonConfig) {
+                    config = $.extend(DEFAULT_CONFIG,jsonConfig  );
+                }
+                // 获取name属性
+                const name = $element.attr('name');
+                if (name) {
+                    config.name = name;
+                }
+                // 获取初始数据
+                const jsonData = $element.attr('data-json');
+                if (jsonData) {
+                    try {
+                        config.initdata = JSON.parse(jsonData);
+                    } catch (e) {
+                        console.error('Invalid JSON data:', jsonData);
+                    }
+                }
+                console.log("attributes:config::"+ JSON.stringify(config));
+                return config;
+            }
+
+            // jQuery 插件
+            $.fn.attributeEditor = function(options) {
+                return this.each(function() {
+                    if (!$.data(this, 'attributeEditor')) {
+                        createAttributeEditor(this);
+                    }
+                });
+            };
+
+            // 自动初始化带有 .input-attr 类的元素
+            $(document).ready(function() {
+                // 确保layui已加载后再初始化
+                if (typeof layui !== 'undefined' && layui.form) {
+                    $('.input-attr').attributeEditor();
+                    // 重新渲染表单以确保验证规则生效
+                    layui.form.render();
+                } else {
+                    // 如果layui未加载，直接初始化
+                    $('.input-attr').attributeEditor();
+                }
+            });
+        })(jQuery);
+
+    </script>
+</div>
+</body>
+</html>

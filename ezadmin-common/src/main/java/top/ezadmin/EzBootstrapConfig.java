@@ -1,11 +1,14 @@
 package top.ezadmin;
 
+import top.ezadmin.common.utils.EzJson;
+import top.ezadmin.common.utils.EzJsonImpl;
 import top.ezadmin.plugins.cache.CaffeineCache;
 import top.ezadmin.plugins.cache.EzCache;
 import top.ezadmin.plugins.export.CSVExport;
 import top.ezadmin.plugins.export.EzExport;
 import top.ezadmin.plugins.refresh.DefaultRefresh;
 import top.ezadmin.plugins.refresh.EzRefresh;
+import top.ezadmin.plugins.sqlparser.EzSqlParser;
 import top.ezadmin.plugins.templates.EzTemplate;
 import top.ezadmin.plugins.templates.ThymeleafEzTemplate;
 import top.ezadmin.web.Config;
@@ -43,6 +46,11 @@ public class EzBootstrapConfig {
     private Map<String,javax.sql.DataSource> datasourceMap = new HashMap<>();
 
     private EzTemplate ezTemplate=new ThymeleafEzTemplate();
+
+    private EzJson ezJson;
+
+    private EzSqlParser ezSqlParser;
+
 
     /**
      * SQL缓存开关，控制是否启用SQL查询缓存
@@ -123,6 +131,7 @@ public class EzBootstrapConfig {
     private String clearUrl;
 
     private String appName;
+    private boolean menuChildOpen;
     /**
      * 上传url
      */
@@ -413,5 +422,29 @@ public class EzBootstrapConfig {
 
     public void setConfig(Map<String, Object> config) {
         this.config = config;
+    }
+
+    public EzJson getEzJson() {
+        return ezJson==null?new EzJsonImpl():ezJson;
+    }
+
+    public void setEzJson(EzJson ezJson) {
+        this.ezJson = ezJson;
+    }
+
+    public EzSqlParser getEzSqlParser() {
+        return ezSqlParser;
+    }
+
+    public void setEzSqlParser(EzSqlParser ezSqlParser) {
+        this.ezSqlParser = ezSqlParser;
+    }
+
+    public boolean isMenuChildOpen() {
+        return menuChildOpen;
+    }
+
+    public void setMenuChildOpen(boolean menuChildOpen) {
+        this.menuChildOpen = menuChildOpen;
     }
 }

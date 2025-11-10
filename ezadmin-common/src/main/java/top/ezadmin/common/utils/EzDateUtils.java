@@ -86,7 +86,7 @@ public class EzDateUtils {
         SimpleDateFormat simple2 = new SimpleDateFormat(DATETIME);
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
         try {
-            Date d = simple.parse(date);
+            Date d = simple.parse(date.replace("T"," "));
             return simple2.format(d);
         } catch (ParseException e) {
         }
@@ -98,7 +98,7 @@ public class EzDateUtils {
         SimpleDateFormat simple2 = new SimpleDateFormat(DATETIME);
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
         try {
-            Date d = simple.parse(date);
+            Date d = simple.parse(date.replace("T"," "));
             Date d3 = DateUtils.addSeconds(d, 86400 - 1);
             return simple2.format(d3);
         } catch (ParseException e) {
@@ -109,7 +109,7 @@ public class EzDateUtils {
     public static String toDateFormat(String date) {
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
         try {
-            Date d = simple.parse(date);
+            Date d = simple.parse(date.replace("T"," "));
             return simple.format(d);
         } catch (ParseException e) {
         }
@@ -119,7 +119,7 @@ public class EzDateUtils {
     public static String toDateTimeFormat(String date) {
         SimpleDateFormat simple = new SimpleDateFormat(DATETIME);
         try {
-            Date d = simple.parse(date);
+            Date d = simple.parse(date.replace("T"," "));
             return simple.format(d);
         } catch (ParseException e) {
         }
