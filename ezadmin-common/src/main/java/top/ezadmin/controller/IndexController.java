@@ -49,7 +49,7 @@ public class IndexController extends BaseController {
             );
         }
         try {
-            return render(EzBootstrap.config().getAdminStyle() + "/index", templateParam);
+            return render(EzBootstrap.config().getAdminStyle() + "/"+EzBootstrap.config().getAdminIndexHtml(), templateParam);
         }catch (Exception e){
             throw new EzAdminRuntimeException(ExceptionCode.RENDER_ERROR,e);
         }

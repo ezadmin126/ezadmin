@@ -44,6 +44,9 @@ public class EzClientProperties {
 
     private String layout = "container";//container fluid
 
+    //首页模板 默认index.html
+    private String adminIndexHtml="index";
+
     public String getAppName() {
         return appName;
     }

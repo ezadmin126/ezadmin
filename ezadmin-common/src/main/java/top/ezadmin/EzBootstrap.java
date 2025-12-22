@@ -65,6 +65,10 @@ public class EzBootstrap   {
         }
         String originatingUrl=requestContext.getRequestURI();
         originatingUrl = StringUtils.repaceAll(originatingUrl ,"\\\\", "\\");
+        int js = originatingUrl.indexOf(";");
+        if (js >= 0) {
+            originatingUrl = originatingUrl.substring(0, js);
+        }
         if(originatingUrl.startsWith("/ezadmin/")){
             originatingUrl=originatingUrl.replaceFirst("/ezadmin/","/topezadmin/");
         }else  if(StringUtils.isNotBlank(ezBootstrapConfig.getPrefixUrl())

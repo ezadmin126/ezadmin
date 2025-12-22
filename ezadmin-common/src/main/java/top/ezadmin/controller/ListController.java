@@ -161,7 +161,7 @@ public class ListController extends BaseController {
         templateParam.put("coldata", JSONUtils.toJSONString(col));
 
         String layout = "" + core.getOrDefault("layout", EzBootstrap.config().getLayout());
-
+        templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
         templateParam.put("layout", layout);
         templateParam.put(RequestParamConstants._SEARCH_ITEM_DISPLAY, requestContext.getParameter("_SEARCH_ITEM_DISPLAY"));
         templateParam.put("listUrl", requestContext.getContextPath() + "/topezadmin/list/tree-" + ENCRYPT_LIST_ID);

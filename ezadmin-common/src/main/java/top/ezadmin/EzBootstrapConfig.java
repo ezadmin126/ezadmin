@@ -69,6 +69,8 @@ public class EzBootstrapConfig {
 
     private String adminStyle="layui";
 
+    private String adminIndexHtml="index";//默认index
+
     /**
      * 列表配置资源列表，存储所有列表页面的配置信息
      */
@@ -446,5 +448,13 @@ public class EzBootstrapConfig {
 
     public void setMenuChildOpen(boolean menuChildOpen) {
         this.menuChildOpen = menuChildOpen;
+    }
+
+    public String getAdminIndexHtml() {
+        return adminIndexHtml;
+    }
+
+    public void setAdminIndexHtml(String adminIndexHtml) {
+        this.adminIndexHtml = adminIndexHtml;
     }
 }
