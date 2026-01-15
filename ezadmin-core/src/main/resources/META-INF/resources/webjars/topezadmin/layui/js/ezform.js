@@ -190,7 +190,14 @@ $(function () {
         $(this).addClass("layui-hide");
         $(this).siblings().removeClass("layui-hide");
     })
-
+    $("textarea").each(function(){
+        if($(this).attr("maxlength")){
+            $(this).on("keyup",function(){
+                var length = $(this).val().length;
+                $(this).parent().find(".layext-textool-count").text(length);
+            })
+        }
+    })
 })
 
 

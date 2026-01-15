@@ -372,7 +372,11 @@ function initForm() {
                 }
             }
         });
-        $(".colorpick").removeClass("layui-inline");
+        // Convert jQuery to vanilla JavaScript
+        var elements = document.querySelectorAll(".colorpick");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove("layui-inline");
+        }
 
 
         $(".J-reset").click(function () {
@@ -380,41 +384,56 @@ function initForm() {
         })
 
         var laydate = layui.laydate;
-        $(".ez-daterange-parent").each(function () {
-            var _this = $(this);
-            renderDateParent(_this);
-        })
-        $(".layui-date-input").each(function () {
-            var _this = $(this);
+        // Convert jQuery to vanilla JavaScript
+        var elements = document.querySelectorAll(".ez-daterange-parent");
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            renderDateParent(element);
+        }
+        // Convert jQuery to vanilla JavaScript
+        var elements = document.querySelectorAll(".layui-date-input");
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
             laydate.render({
-                elem: _this
+                elem: element
             });
-        })
+        }
 
 
-        $(".layui-date-narmal").each(function () {
-            var _this = $(this);
+        // Convert jQuery to vanilla JavaScript
+        var elements = document.querySelectorAll(".layui-date-narmal");
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
             laydate.render({
-                elem: _this,
+                elem: element,
                 type: 'date',
                 shortcuts: shortcut,
                 holidays: holiday
             });
-        })
-        $(".layui-datetime-narmal").each(function () {
-            var _this = $(this);
-            laydate.render({
-                elem: _this,
+        }
+        // Convert jQuery to vanilla JavaScript
+        var elements = document.querySelectorAll(".layui-datetime-narmal");
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            var config = {
+                elem: element,
                 type: 'datetime',
+                fullPanel: true,
                 shortcuts: shortcut,
                 holidays: holiday
-            });
-        })
+            };
+            if(element.getAttribute("format")){
+                config.format = element.getAttribute("format");
+            }
+            laydate.render(config);
+        }
 
         //联动日期区间
 
-        $(".daterangeinput").each(function () {
-            var _this = $(this);
+        // Convert jQuery to vanilla JavaScript
+        var elements = document.querySelectorAll(".daterangeinput");
+        for (var i = 0; i < elements.length; i++) {
+            var _this = elements[i];
             laydate.render({
                 elem: _this,
                 type: 'date',
@@ -423,25 +442,29 @@ function initForm() {
                 weekStart: 1,
                 shortcuts: rangeShortCut
             });
-        })
-        $(".dateinput").each(function () {
-            var _this = $(this);
-            var format = _this.attr("format") || 'yyyy-MM-dd';
+        }
+        // Convert jQuery to vanilla JavaScript
+        var elements = document.querySelectorAll(".dateinput");
+        for (var i = 0; i < elements.length; i++) {
+            var _this = elements[i];
+            var format = _this.getAttribute("format") || 'yyyy-M-d';
             var config = {
                 elem: _this,
                 type: 'date',
                 holidays: holiday,
                 weekStart: 1
             };
-            if (format == 'yyyy-MM') {
+            if (format == 'yyyy-M') {
                 config.type = 'month';
             } else {
                 config.shortcuts = rangeShortCut
             }
             laydate.render(config);
-        })
-        $(".datetimerangeinput").each(function () {
-            var _this = $(this);
+        }
+        // Convert jQuery to vanilla JavaScript
+        var elements = document.querySelectorAll(".datetimerangeinput");
+        for (var i = 0; i < elements.length; i++) {
+            var _this = elements[i];
             laydate.render({
                 elem: _this,
                 type: 'datetime',
@@ -449,7 +472,7 @@ function initForm() {
                 weekStart: 1,
                 range: true,
             });
-        })
+        }
     })
 
     $(document).on("click", ".ez-help", function (e) {
@@ -479,14 +502,18 @@ function initForm() {
     })
 
 
-    $(".ez-xmselect").each(function () {
-        var xmel = $(this);
+    // Convert jQuery to vanilla JavaScript
+    var elements = document.querySelectorAll(".ez-xmselect");
+    for (var i = 0; i < elements.length; i++) {
+        var xmel = elements[i];
         renderXmselect(xmel);
-    })
-    $(".ez-laycascader").each(function () {
-        var _this = $(this);
+    }
+    // Convert jQuery to vanilla JavaScript
+    var elements = document.querySelectorAll(".ez-laycascader");
+    for (var i = 0; i < elements.length; i++) {
+        var _this = elements[i];
         renderCascader(_this);
-    })
+    }
 }
 
 function istrue(c) {

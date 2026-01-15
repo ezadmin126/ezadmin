@@ -10,6 +10,7 @@ import top.ezadmin.common.utils.JSONUtils;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.common.utils.EzJsonImpl;
+import top.ezadmin.plugins.EzSqlParserImpl;
 import top.ezadmin.plugins.cache.EzCache;
 import top.ezadmin.plugins.export.EzExport;
 import top.ezadmin.plugins.refresh.EzRefresh;
@@ -89,6 +90,7 @@ public class EzClientServletFilter implements Filter {
         ezBootstrapConfig.setDownloadUrl(ezClientProperties.getDownloadUrl());
         ezBootstrapConfig.setUploadPath(ezClientProperties.getUploadPath());
         ezBootstrapConfig.setEzJson(new EzJsonImpl());
+        ezBootstrapConfig.setEzSqlParser(new EzSqlParserImpl());
 
         String configJson = ezClientProperties.getConfigJson();
         Map<String, Object> configMap = JSONUtils.parseObjectMap(configJson);
@@ -149,10 +151,10 @@ public class EzClientServletFilter implements Filter {
                 return;
             }else if(result.isSuccess()&&StringUtils.equals(result.getCode(),"EXPORT")){
                 String fileName=((HashMap)result.getData()).get("fileName").toString();
-                String contentType=Utils.trimNullDefault(((HashMap)result.getData()).get("contentType"),"application/octet-stream");
+                String contentType=Utils.trimEmptyDefault(((HashMap)result.getData()).get("contentType"),"application/octet-stream");
                 byte[] data=(byte[]) ((HashMap)result.getData()).get("html");
                 httpServletResponse.setContentType(contentType);
-                httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), "ISO-8859-1"));
+                httpServletResponse.setHeader("Content-Disposition", "attachment;filename*=utf-8''" + new String(fileName.getBytes(), "ISO-8859-1"));
                 IOUtils.copy(new ByteArrayInputStream(data),httpServletResponse.getOutputStream());
                 return;
             }else  if(result.isSuccess()&&StringUtils.equals(result.getCode(),"JSON")){

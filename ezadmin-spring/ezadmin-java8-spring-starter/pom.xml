@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-java8-spring-starter</artifactId>
-    <version>3.0.3</version>
+    <version>3.0.5-SNAPSHOT</version>
     <name>ezadmin-java8-spring-starter</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
     <description>ezadmin-java8-spring-starter</description>
@@ -160,7 +160,7 @@
                         <plugin>
                             <groupId>org.sonatype.central</groupId>
                             <artifactId>central-publishing-maven-plugin</artifactId>
-                            <version>0.5.0</version>
+                            <version>0.9.0</version>
                             <extensions>true</extensions>
                             <configuration>
                                 <publishingServerId>central</publishingServerId>

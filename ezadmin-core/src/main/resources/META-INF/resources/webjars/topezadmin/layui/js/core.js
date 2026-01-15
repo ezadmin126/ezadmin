@@ -406,7 +406,8 @@ function initForm() {
             var _this = $(this);
             laydate.render({
                 elem: _this,
-                type: 'datetime',
+                type: 'datetime' ,
+                fullPanel: true ,
                 shortcuts: shortcut,
                 holidays: holiday
             });

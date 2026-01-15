@@ -257,6 +257,12 @@ public class FormServiceImpl implements FormService {
                             context.put("attrMap", JSONUtils.toJSONString(attrMap));
                         } else if (Utils.trimNull(item.get("type")).equals("input-text")
                                 ||
+                                Utils.trimNull(item.get("type")).equals("input-number")
+                                ||
+                                Utils.trimNull(item.get("type")).equals("number")
+                                ||
+                                Utils.trimNull(item.get("type")).equals("input-datetime")
+                                ||
                                 Utils.trimNull(item.get("type")).equals("input-text-group")
                                 ||
                                 Utils.trimNull(item.get("type")).equalsIgnoreCase("password")
@@ -271,6 +277,12 @@ public class FormServiceImpl implements FormService {
                             }
                             if (Utils.trimNull(item.get("type")).equalsIgnoreCase("password")) {
                                 attrMap.put("lay-affix", "eye");
+                            }
+                            if (Utils.trimNull(item.get("type")).equalsIgnoreCase("input-number")) {
+                                attrMap.put("type", "number");
+                            }
+                            if (Utils.trimNull(item.get("type")).equalsIgnoreCase("input-datetime")) {
+                                attrMap.put("class", Utils.trimNull(attrMap.get("class"))+" layui-datetime-narmal");
                             }
                             attrMap.putIfAbsent("lay-verify", attrMap.get(JsoupUtil.LAYVERIFY));
                             attrMap.put("class", "layui-input " + (Utils.trimNull(attrMap.get("class")).replace("layui-input ", "")));
@@ -297,6 +309,7 @@ public class FormServiceImpl implements FormService {
                             context.put("serverDom", sb.toString());
                             context.put("attrMap", JSONUtils.toJSONString(attrMap));
                         } else if (Utils.trimNull(item.get("type")).equals("textarea")
+                                ||Utils.trimNull(item.get("type")).equals("input-textarea")
                         ) {
                             String value = StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + "");
                             Map<String, String> attrMap = (Map<String, String>) item.get("attrMap");

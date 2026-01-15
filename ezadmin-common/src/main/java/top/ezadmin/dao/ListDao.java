@@ -98,7 +98,7 @@ public class ListDao extends JsoupUtil {
             Utils.putIfAbsent(layDataMap, "title", Utils.trimNull(th.html()));
             layDataMap.put("escape", false);
             Utils.putIfAbsent(layDataMap, "fixed", Utils.trimNull(th.attr("fixed")));
-            Utils.putIfAbsent(layDataMap, "align", Utils.trimNullDefault(th.attr("align"), "left"));
+            Utils.putIfAbsent(layDataMap, "align", Utils.trimEmptyDefault(th.attr("align"), "left"));
 
             for (int i = 0; i < attrName.length; i++) {
                 if (StringUtils.isNotBlank(th.attr(attrName[i]))) {
@@ -620,7 +620,7 @@ public class ListDao extends JsoupUtil {
                 }
             }
 
-            tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL), "文案"));
+            tabHtml.html(Utils.trimEmptyDefault(tab.get(JsoupUtil.LABEL), "文案"));
             body.getElementById("column").append("\n\t\t\t" + tabHtml.outerHtml());
         }
     }
@@ -640,7 +640,7 @@ public class ListDao extends JsoupUtil {
                     rowbtn.attr(names[k], formItemAttrValue);
                 }
             }
-            rowbtn.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL), "文案"));
+            rowbtn.html(Utils.trimEmptyDefault(tab.get(JsoupUtil.LABEL), "文案"));
             body.getElementById("rowbutton").append("\n\t\t\t" + rowbtn.outerHtml());
         }
     }
@@ -658,7 +658,7 @@ public class ListDao extends JsoupUtil {
                     tabHtml.attr(names[k], formItemAttrValue);
                 }
             }
-            tabHtml.html(Utils.trimNullDefault(tab.get(JsoupUtil.LABEL), "文案"));
+            tabHtml.html(Utils.trimEmptyDefault(tab.get(JsoupUtil.LABEL), "文案"));
             body.getElementById("tableButton").append("\n" + tabHtml.outerHtml() + "\n");
         }
     }

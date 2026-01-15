@@ -286,7 +286,7 @@
 
 
     </style>
-    <div>
+    <div id="site-narrow-content">
         <div class="site-narrow" id="collapseMenuBtn">
             <i class="layui-icon layui-icon-shrink-right"></i>
         </div>
@@ -332,6 +332,8 @@
                 , content: $("#dianti")
             });
 
+        }else{
+            $("#site-narrow-content").hide();
         }
     })
     var validateRules = [(${#strings.isEmpty(form.core.validaterules)?"[]":form.core.validaterules})];

@@ -145,7 +145,7 @@ public class EzClientServletFilter implements Filter {
             }else
             if(result.isSuccess()&&StringUtils.equals(result.getCode(),"EXPORT")){
                 String fileName=((HashMap)result.getData()).get("fileName").toString();
-                String contentType= Utils.trimNullDefault(((HashMap)result.getData()).get("contentType"),"application/octet-stream");
+                String contentType= Utils.trimEmptyDefault(((HashMap)result.getData()).get("contentType"),"application/octet-stream");
                 byte[] data=(byte[]) ((HashMap)result.getData()).get("html");
                 httpServletResponse.setContentType(contentType);
                 httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), "ISO-8859-1"));

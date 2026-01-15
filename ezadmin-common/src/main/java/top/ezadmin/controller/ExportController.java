@@ -99,7 +99,7 @@ public class ExportController extends BaseController {
             //  log.info("ezadmin start export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
             String fileName = Utils.trimNull(requestParamMap.get("EXPORT_FILE_NAME"));
 
-            EzExportResult bb= EzBootstrap.config().getEzExport().export(Utils.trimNullDefault(fileName,Utils.getStringByObject(coreMap, "listname")), head, data);
+            EzExportResult bb= EzBootstrap.config().getEzExport().export(Utils.trimEmptyDefault(fileName,Utils.getStringByObject(coreMap, "listname")), head, data);
             if (StringUtils.isBlank(fileName)) {
                 fileName = bb.getFileName();
             }
