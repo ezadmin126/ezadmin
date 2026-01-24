@@ -1,0 +1,20 @@
+<script    >
+    Global.registry("columnRender").register("tdSelectMultiple",(name,d,component)=>{
+        const value=d[name];
+        let paramsJSON = component.data ;
+        if(!paramsJSON){
+            paramsJSON=[];
+        }
+        if(value&&value!='') {
+            const values = value.split(',');
+            const labels = values.map(function (v) {
+                const found = paramsJSON.find(function (opt) {
+                    return String(opt.value) === String(v);
+                });
+                return found ? found.label : v;
+            });
+            return labels.join(',')
+        }
+        return  value ||component.props.emptyShow ||'';
+    });
+</script>

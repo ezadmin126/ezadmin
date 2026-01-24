@@ -1,13 +1,14 @@
-package top.ezadmin.common.utils;
+package top.ezadmin.plugins;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import top.ezadmin.common.utils.EzJson;
 
 import java.util.*;
 
-public class EzJsonImpl implements EzJson {
+public class EzFastJson2Impl implements EzJson {
     @Override
     public String toJSONString(Object obj) {
         return JSON.toJSONString(obj);
@@ -24,18 +25,19 @@ public class EzJsonImpl implements EzJson {
     }
 
     public   Map<String, String> parseMap(String json) {
-        return JSON.parseObject(json, new TypeReference<Map<String, String>>() {
+        //
+        return JSON.parseObject(json, new com.alibaba.fastjson2.TypeReference<Map<String, String>>() {
         });
     }
 
     public   Map<String, Object> parseObjectMap(String json) {
-        return JSON.parseObject(json, new TypeReference<Map<String, Object>>() {
+        return JSON.parseObject(json, new com.alibaba.fastjson2.TypeReference<Map<String, Object>>() {
         });
     }
 
     public   List<Map<String, Object>> parseListMapString(String json) {
         try {
-            return JSON.parseObject(json, new TypeReference<List<Map<String, Object>>>() {
+            return JSON.parseObject(json, new com.alibaba.fastjson2.TypeReference<List<Map<String, Object>>>() {
             });
         } catch (Exception e) {
             throw e;
@@ -72,7 +74,7 @@ public class EzJsonImpl implements EzJson {
      */
     @SuppressWarnings("unchecked")
     private   Object convertValue(Object value) {
-        if (value instanceof  JSONObject) {
+        if (value instanceof JSONObject) {
             return toDeepMap((JSONObject) value);
         } else if (value instanceof JSONArray) {
             return convertArray((JSONArray) value);

@@ -1,0 +1,18 @@
+<script    >
+    Global.registry("columnRender").register("tdSelect",(name,d,component)=>{
+        const value=d[name];
+        let paramsJSON = component.data ;
+        if(!paramsJSON){
+            paramsJSON=[];
+        }
+        if(value&&value!=''){
+            var option = paramsJSON.find(function(item) {
+                return String(item.value) === String(value);
+            });
+            if (option) {
+               return option.label;
+            }
+        }
+        return value ||component.props.emptyShow ||'';
+    });
+</script>

@@ -1,0 +1,14 @@
+<script>
+    Global.registry("columnRender").register("tdCascader",(name,d,component)=>{
+        const value=d[name];
+        var paramsJSON = component.data ;
+        if(!paramsJSON){
+            paramsJSON=[];
+        }
+        if(value&&value!=''){
+            var labels = resolveTreeLabels(value, paramsJSON);
+            return labels.join(',');
+        }
+        return value ||component.props.emptyShow ||'';
+    });
+</script>

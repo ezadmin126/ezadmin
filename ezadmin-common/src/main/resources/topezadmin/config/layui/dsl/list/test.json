@@ -1,0 +1,335 @@
+{
+  "id": "test",
+  "title": "新增",
+  "dataSource": "dataSource",
+  "body": {
+    "adminStyle": "layui",
+    "emptyShow": "@",
+    "showIndex":true,
+    "selectable":true,
+    "rowActionWidth": 175
+  },
+  "appendHead": "",
+  "tabList": [
+    {
+      "item_name": "abc",
+      "label": "tab1"
+    }
+  ],
+  "search": [
+    {
+      "item_name": "ID",
+      "label": "序号",
+      "component": "hidden",
+      "alias": "a.students_id",
+      "jdbcType": "NUMBER",
+      "props": {
+        "type": "text",
+        "disabled": true,
+        "appendClass": "  layui-hide ",
+        "placeholder": "不参与搜索"
+      }
+    },
+    {
+      "item_name": "USER_NAME",
+      "label": "用户名",
+      "component": "input",
+      "operator": "like",
+      "alias": "a.username",
+      "props": {
+        "placeholder": "用户名"
+      }
+    },
+    {
+      "item_name": "USER_EMAIL",
+      "label": "邮箱",
+      "component": "input",
+      "operator": "like",
+      "alias": "a.username",
+      "props": {
+        "placeholder": "邮箱"
+      }
+    },
+    {
+      "item_name": "USER_SEX",
+      "label": "性别",
+      "component": "select",
+      "operator": "eq",
+      "alias": "a.usersex",
+      "jdbcType": "NUMBER",
+      "initData": {
+        "dataJson": [
+          {
+            "label": "男",
+            "value": "1"
+          },
+          {
+            "label": "女",
+            "value": "0"
+          }
+        ]
+      },
+      "props": {
+        "searchable": true,
+        "showCount": false,
+        "placeholder": "请选择"
+      }
+    },
+    {
+      "item_name": "ADD_TIME",
+      "label": "添加时间",
+      "component": "date",
+      "alias": "a.add_time",
+      "operator": "between",
+      "jdbcType": "DATETIME",
+      "props": {
+        "placeholder": " - ",
+        "range": true
+      }
+    },
+    {
+      "item_name": "UPDATE_TIME",
+      "label": "更新时间",
+      "alias": "a.update_time",
+      "operator": "between",
+      "jdbcType": "DATETIME",
+      "component": "date",
+      "props": {
+        "placeholder": " - ",
+        "range": true
+      }
+    },
+    {
+      "item_name": "RUXUE_DATE",
+      "label": "入学时间",
+      "jdbcType": "DATE",
+      "operator": "eq",
+      "component": "date",
+      "props": {
+        "placeholder": "请选择时间"
+      }
+    },
+    {
+      "item_name": "HOBBYS_IDS",
+      "label": "爱好",
+      "alias": "c.hobbys_id",
+      "operator": "in",
+      "jdbcType": "NUMBER",
+      "component": "select-multiple",
+      "initData": {
+        "dataSource": "dataSource",
+        "dataSql": "select hobbys_id value,name label from hobbys"
+      },
+      "props": {
+        "placeholder": "请选择爱好吧",
+        "model": {
+          "label": {
+            "type": "block",
+            "block": {
+              "showCount": 2,
+              "showIcon": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "item_name": "AREA_ID",
+      "label": "地区",
+      "alias": "a.area_id",
+      "operator": "in",
+      "jdbcType": "NUMBER",
+      "component": "cascader",
+      "initData":{
+        "dataSource": "dataSource",
+        "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
+      },
+      "props": {
+        "placeholder": "请选择地区吧",
+        "collapseTags": true,
+        "props": {
+          "multiple": true,
+          "value": "id",
+          "label": "name",
+          "parent_id": "parent_id",
+          "children": "children"
+        }
+      }
+    }
+  ],
+  "tableButton": [
+    {
+      "label": "新增",
+      "item_name": "add",
+      "component": "button-toolbar"
+    }
+  ],
+  "rowButton": [
+    {
+      "item_name": "新增",
+      "label": "编辑{{=d.USER_NAME}}",
+      "component":  "button-normal",
+      "props": {
+        "opentype": "MODAL",
+        "windowname": "打开{{=d.USER_NAME}}",
+        "area": "50,100",
+        "url": "/form/form/add-1764832568286?ID={{= d.ID }}",
+        "display": "{{ if( d.ID!=2   ){ }} block  {{ } else { }} none {{ } }}"
+      }
+
+    },
+    {
+      "item_name": "新增bread",
+      "label": "编辑{{=d.USER_NAME}}",
+      "component": "button-bread",
+      "props": {
+        "url": "/form/form/add-1764832568286?ID={{= d.ID }}",
+        "display": "{{ if( d.ID==2){ }} block  {{ } else { }} none {{ } }} "
+      }
+    },
+    {
+      "item_name": "新增bread",
+      "label": "编辑2",
+      "component": "button-bread",
+      "props": {
+        "url": "/form/form/add-1764832568286?ID={{= d.ID }}",
+        "display": "{{ if( d.ID==2){ }} block  {{ } else { }} none {{ } }} "
+      }
+    },
+    {
+      "item_name": "dropdown1",
+      "label": "dropdown1lable",
+      "component": "button-dropdown",
+      "props": {
+        "url": "/form/form/add-1764832568286?ID={{= d.ID }}",
+        "opentype": "_BLANK",
+        "windowname": "打开{{=d.USER_NAME}}",
+        "display": "{{ if( d.ID==3){ }} block  {{ } else { }} none {{ } }} "
+      }
+    },
+    {
+      "item_name": "dropdown2",
+      "label": "dropdown2lable",
+      "component": "button-dropdown",
+      "props": {
+        "url": "/form/form/add-1764832568286?ID={{= d.ID }}",
+        "opentype": "MODAL",
+        "windowname": "打开{{=d.USER_NAME}}",
+        "display": "{{ if( d.ID==3){ }} block  {{ } else { }} none {{ } }} "
+      }
+    }
+  ],
+  "column": [
+
+    {
+      "item_name": "ID",
+      "label": "序号"
+    },
+    {
+      "item_name": "USER_NAME",
+      "label": "用户名",
+      "component": "tdText",
+      "props": {
+        "edit": "textarea",
+        "url": "/form/form/add-1764832568286?ID={{= d.ID }}"
+      }
+    },
+    {
+      "item_name": "USER_EMAIL",
+      "label": "邮箱",
+      "component": "tdLink",
+      "props": {
+        "url": "/form/form/add-1764832568286?ID={{= d.ID }}"
+      }
+    },
+    {
+      "item_name": "USER_SEX",
+      "label": "性别2",
+      "component": "tdSelect",
+      "initData": {
+        "dataJson": [
+          {
+            "label": "男",
+            "value": "1"
+          },
+          {
+            "label": "女",
+            "value": "0"
+          }
+        ]
+      },
+      "props": {
+        "searchable": true,
+        "showCount": false,
+        "placeholder": "请选择"
+      }
+    },
+    {
+      "item_name": "ADD_TIME",
+      "label": "添加时间",
+      "component": "tdText",
+      "props": {
+        "placeholder": "请选择时间",
+        "format": "yyyy-MM-dd HH:mm",
+        "sort": true
+      }
+    },
+    {
+      "item_name": "RUXUE_DATE",
+      "label": "入学时间",
+      "component": "tdText",
+      "props": {
+        "placeholder": "请选择时间",
+        "format": "yyyy-MM-dd HH:mm"
+      }
+    },
+    {
+      "item_name": "HOBBYS_IDS",
+      "label": "爱好1",
+      "component": "tdSelectMultiple",
+      "initData": {
+        "dataSource": "dataSource",
+        "dataSql": "select hobbys_id value,name label from hobbys"
+      },
+      "props": {
+        "placeholder": "请选择爱好吧",
+        "model": {
+          "label": {
+            "type": "block",
+            "block": {
+              "showCount": 2,
+              "showIcon": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "item_name": "AREA_ID",
+      "label": "地区",
+      "component": "tdCascader",
+      "initData":{
+        "dataSource": "dataSource",
+        "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
+      },
+      "props": {
+        "placeholder": "请选择地区吧",
+        "collapseTags": true,
+        "props": {
+          "multiple": true,
+          "value": "id",
+          "label": "name",
+          "parent_id": "parent_id",
+          "children": "children"
+        }
+      }
+    }
+  ],
+  "express": {
+    "main": [ "StringBuilder sql=new StringBuilder(); sql.append(\"   select a.students_id ID ,a.ruxue_date RUXUE_DATE, a.useremail USER_EMAIL,a.username USER_NAME,a.usersex USER_SEX,a.area_id AREA_ID, a.add_time ADD_TIME,group_concat(c.hobbys_id) HOBBYS_IDS from students a left join  rel_students_hobbys rh on rh.students_id=a.students_id left join hobbys c on rh.hobbys_id=c.hobbys_id   where  a.delete_flag=0\"); return search(sql);"],
+    "orderBy": " order by a.students_id   ",
+    "groupBy": " group by a.students_id ",
+    "count": ""
+  },
+  "appendFoot": ""
+}

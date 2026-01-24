@@ -31,6 +31,9 @@ public class JSONUtils {
     public static Map<String, Object> parseObjectMap(String json) {
         return EzBootstrap.config().getEzJson().parseObjectMap(json);
     }
+    public static Map<String, Object> deepParseObjectMap(String json) {
+        return EzBootstrap.config().getEzJson().deepParseObjectMap(json);
+    }
 
     public static List<Map<String, Object>> parseListMapString(String json) {
         try {

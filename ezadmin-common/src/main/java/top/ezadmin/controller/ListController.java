@@ -7,15 +7,21 @@ import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.constants.RequestParamConstants;
 import top.ezadmin.common.constants.SessionConstants;
+import top.ezadmin.common.enums.DefaultParamEnum;
+import top.ezadmin.common.enums.OrderEnum;
+import top.ezadmin.common.enums.ParamNameEnum;
 import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.Dao;
+import top.ezadmin.dao.model.CustomSearchDTO;
+import top.ezadmin.dao.model.CustomSearchOrder;
+import top.ezadmin.plugins.express.executor.ListExpressExecutor;
 import top.ezadmin.service.ListService;
 import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -381,6 +387,376 @@ public class ListController extends BaseController {
         templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
         return render(EzBootstrap.config().getAdminStyle() + "/custom_search", templateParam);
     }
- 
 
+
+    public EzResult dsl(RequestContext requestContext, String method, String id) throws Exception {
+        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> list = JSONUtils.deepParseObjectMap(Resources.getResourceAsString("topezadmin/config/layui/dsl/list/"+id+".json"));
+        initSearch(requestContext,list);
+        Collection<String> tdtemplates=initTd(list);
+        if(list.get("initApi") == null){
+            list.put("initApi", "/topezadmin/list/data-" + id);
+        }
+        initRowBtn(list);
+        templateParam.put("list", list);
+        templateParam.put("tdTemplates", tdtemplates);
+        templateParam.put("requestContext",requestContext);
+        templateParam.put("downloadUrl",EzBootstrap.config().getDownloadUrl());
+        templateParam.putAll(EzBootstrap.config().getConfig());
+        return render("layui/dsl/listTemplate",templateParam);
+    }
+
+
+    public EzResult data(RequestContext requestContext, String method, String id) throws Exception {
+
+        Map<String, Object> list = JSONUtils.deepParseObjectMap(Resources.getResourceAsString("topezadmin/config/layui/dsl/list/"+id+".json"));
+        String select_express = Utils.expressToString( ((Map<String, Object>)list.get("express")).get("main"));
+        String orderBy = Utils.expressToString(((Map<String, Object>)list.get("express")).get("orderBy"));
+        String groupBy = Utils.expressToString(((Map<String, Object>)list.get("express")).get("groupBy"));
+        String count_express = Utils.expressToString(((Map<String, Object>)list.get("express")).get("count"));
+        //兼容老设计
+        list.put("orderby_express",orderBy);
+        list.put("count_express",count_express);
+        list.put("col", list.get("column"));
+        list.put("core",list.get("body"));
+
+
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
+        columnList.forEach(item->{
+            //兼容老设计
+            item.put("type",item.get("component"));
+        });
+
+        List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
+        fillinitRequestValue(searchList,requestContext.getRequestParams());
+
+      //  Page page = new Page(requestContext.getRequestParams());
+       Page page = loadingPage(list, requestContext.getRequestParams());
+
+        ListExpressExecutor listExpressExecutor = ListExpressExecutor.createInstance();
+        listExpressExecutor.datasource(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource")))
+                .express(select_express)
+                .page(page);
+        //兼容老设计
+        listExpressExecutor.getOperatorParam().setListDto(list);
+
+        //计算group by
+        String group = excuteGroup(groupBy, requestContext.getRequestParams(), requestContext.getSessionParams());
+
+        listExpressExecutor.addParam("_CHECKD_IDS", Utils.getStringByObject(requestContext.getRequestParams(), "_CHECKD_IDS"));
+        listExpressExecutor.addParam("EZ_SUM_FLAG", Utils.getStringByObject(requestContext.getRequestParams(), "EZ_SUM_FLAG"));
+        listExpressExecutor.addParam("GROUP_BY", group);
+        page.setGroupBy(group);
+        listExpressExecutor.addSessionParam(requestContext.getSessionParams());
+        listExpressExecutor.addRequestParam(requestContext.getRequestParams());
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>) listExpressExecutor.execute();
+        //查询总数
+        long count = getDataCountByListId(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource"))
+                , list,  requestContext.getRequestParams(), requestContext.getSessionParams());
+        return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(count).data(dataList));
+    }
+
+
+    private void initRowBtn(Map<String, Object> list) {
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("rowButton");
+        List<Map<String, Object>> normal = new ArrayList<>();
+        List<Map<String, Object>> bread = new ArrayList<>();
+        List<Map<String, Object>> dropdown = new ArrayList<>();
+        columnList.forEach(item->{
+            if(item.get("component")==null||StringUtils.isBlank((String) item.get("component"))||item.get("component").equals("button-normal")){
+                normal.add(item);
+            }else if(item.get("component").equals("button-bread")){
+                bread.add(item);
+            }else if(item.get("component").equals("button-dropdown")){
+                dropdown.add(item);
+            }
+        });
+        list.put("rowButtonNormal", normal);
+        list.put("rowButtonBread", bread);
+        list.put("rowButtonDropdown", dropdown);
+    }
+
+    private Collection<String> initTd(Map<String, Object> list) {
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
+        Map<String,Object> body=(Map<String,Object>) list.get("body");
+        Map<String,String> tdTemplates=new HashMap<>();
+        columnList.forEach(item->{
+            Map<String,Object> props=(Map<String,Object>) item.get("props");
+            if(props==null){
+                props=new HashMap<>();;
+            }
+            String emptyShow = (String) props.get("emptyShow");
+            props.put("emptyShow", Utils.trimEmptyDefault(emptyShow,Utils.trimNull(body.get("emptyShow"))));
+            item.put("propsJson", JSONUtils.toJSONString(item.get("props")));
+            //props不为空
+            item.put("props", props);
+            Map<String, Object> initData = (Map<String, Object>) item.get("initData");
+            if (initData != null) {
+                String dataUrl = (String) initData.get("dataUrl");
+                if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
+                    List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
+                    item.put("data", result);
+                    item.put("dataJson", JSONUtils.toJSONString(result));
+                }
+                else if(initData.containsKey("dataSql") && initData.get("dataSql") != null  ){
+                    String dataSql =  (String) initData.get("dataSql") ;
+                    String dataSource = (String) initData.get("dataSource");
+                    //
+                    DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
+                    if(dataSourceBean==null){
+                        dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
+                    }
+                    try {
+                        List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
+                                dataSql, null,false);
+                        item.put("data", result);
+                        item.put("dataJson", JSONUtils.toJSONString(result));
+                    } catch (Exception e) {
+                        logger.error("执行SQL错误",e);
+                    }
+                }else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
+                    //todo apiUrl
+                }
+            }
+            try {
+                String comp=Utils.trimEmptyDefault(item.get("component"), "tdText");
+                // component 不为空
+                item.put("component", comp);
+                if(!tdTemplates.containsKey(comp)){
+                    String temp=Resources.getResourceAsString("topezadmin/config/layui/dsl/component/"+comp+".html");
+                    tdTemplates.put(comp,temp);
+                }
+            } catch (IOException e) {
+                logger.warn("加载组件失败 {} {}", item.get("component"),"topezadmin/config/layui/dsl/component/"+item.get("component")+".html");
+            }
+        });
+        return tdTemplates.values();
+    }
+
+    private void initSearch(RequestContext requestContext,Map<String, Object> list) {
+        List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
+        searchList.forEach(search->{
+            if (search != null) {
+                Map<String, Object> initData = (Map<String, Object>) search.get("initData");
+                if (initData != null) {
+                    String dataUrl = (String) initData.get("dataUrl");
+                    if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
+                        List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
+                        search.put("data", result);
+                        search.put("dataJson", JSONUtils.toJSONString(result));
+                    }
+                    else if(initData.containsKey("dataSql") && initData.get("dataSql") != null  ){
+                        String dataSql =  (String) initData.get("dataSql") ;
+                        String dataSource = (String) initData.get("dataSource");
+                        //
+                        DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
+                        if(dataSourceBean==null){
+                            dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
+                        }
+                        try {
+                            List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
+                                    dataSql, null,false);
+                            search.put("data", result);
+                            search.put("dataJson", JSONUtils.toJSONString(result));
+                        } catch (Exception e) {
+                            logger.error("执行SQL错误",e);
+                        }
+                    }else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
+                        //todo apiUrl
+                    }
+                }
+            }
+        });
+    }
+
+    private String excuteGroup(String group, Map<String, Object> request, Map<String, String> session) {
+        try {
+            String groupByExpress =group;
+            //兼容老的 group by
+            if (StringUtils.startWithTrimAndLower(groupByExpress, "group ")) {
+                return Utils.trimNull(groupByExpress);
+            }
+            ListExpressExecutor groupExe = ListExpressExecutor.createInstance();
+            groupExe.getOperatorParam().setListDto(null);
+            groupExe.express(groupByExpress);
+            groupExe.addSessionParam(session);
+            groupExe.addRequestParam(request);
+            Object obj = groupExe.executeCount();
+            return Utils.trimNull(obj);
+        } catch (Exception e) {
+            logger.error("EZADMIN   group by 配置错误   ,", e);
+            return " ";
+        }
+    }
+    private void fillinitRequestValue(List<Map<String, Object>> searchList, Map<String, Object> requestParamMap) {
+        if (Utils.isEmpty(searchList)) {
+            return;
+        }
+        for (int i = 0; i < searchList.size(); i++) {
+            Map<String, Object> search = searchList.get(i);
+            String currentItemname = Utils.trimNull(search.get(JsoupUtil.ITEM_NAME));
+            String type = Utils.trimNull(search.get(JsoupUtil.TYPE));
+            String orgValue = Utils.trimNull(requestParamMap.get(currentItemname));
+            search.put(ParamNameEnum.itemParamValue.getName(), orgValue);
+            search.put(ParamNameEnum.itemParamValueStart.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_START")));
+            search.put(ParamNameEnum.itemParamValueEnd.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_END")));
+            //联动日期区间  -
+            if (type.contains("daterange") && StringUtils.isNotBlank(orgValue)) {
+                orgValue = DefaultParamEnum.getValue(orgValue);
+                String[] valueSplit = orgValue.split(" - ");
+                search.put(currentItemname, orgValue);
+                search.put(ParamNameEnum.itemParamValue.getName(), orgValue);
+                if (valueSplit.length == 2) {
+                    search.put(ParamNameEnum.itemParamValueStart.getName(), valueSplit[0]);
+                    search.put(ParamNameEnum.itemParamValueEnd.getName(), valueSplit[1]);
+                }
+            }
+
+            search.put(ParamNameEnum.itemParamOrderValue.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_ORDER")));
+
+            search.put(ParamNameEnum.itemSearchKey.getName(), Utils.getStringByObject(requestParamMap, "itemSearchKey"));
+            search.put(ParamNameEnum.itemSearchValue.getName(), Utils.getStringByObject(requestParamMap, "itemSearchValue"));
+            search.put(ParamNameEnum.itemSearchConcatValue.getName(), Utils.getStringByObject(requestParamMap, "itemSearchConcatValue"));
+            search.put(ParamNameEnum.itemSearchDateKey.getName(), Utils.getStringByObject(requestParamMap, "itemSearchDateKey"));
+
+
+            String start = DefaultParamEnum.getValue(Utils.trimNull(Utils.getStringByObject(requestParamMap, "itemSearchDateValueStart")));
+            String end = DefaultParamEnum.getValue(Utils.trimNull(Utils.getStringByObject(requestParamMap, "itemSearchDateValueEnd")));
+            search.put(ParamNameEnum.itemSearchDateValueStart.getName(), start);
+            search.put(ParamNameEnum.itemSearchDateValueEnd.getName(), end);
+
+            //联动日期区间  -
+            String itemSearchDateValue = Utils.trimNull(requestParamMap.get("itemSearchDateValue"));
+            if (StringUtils.isNotBlank(itemSearchDateValue)) {
+                itemSearchDateValue = DefaultParamEnum.getValue(itemSearchDateValue);
+                search.put("itemSearchDateValue", itemSearchDateValue);
+                String[] valueSplit = itemSearchDateValue.split(" - ");
+                search.put(currentItemname, itemSearchDateValue);
+                search.put(ParamNameEnum.itemParamValue.getName(), orgValue);
+                search.put(ParamNameEnum.itemSearchDateValueStart.getName(), valueSplit[0]);
+                search.put(ParamNameEnum.itemSearchDateValueEnd.getName(), valueSplit[1]);
+            }
+        }
+
+        for (int i = 0; i < searchList.size(); i++) {
+            Map<String, Object> search = searchList.get(i);
+            String currentItemname = Utils.trimNull(search.get(JsoupUtil.ITEM_NAME));
+            List<Map<String, Object>> childsearchList = chilrenByName(currentItemname, searchList);
+            //用于生成sql
+            search.put("children", childsearchList);
+        }
+    }
+
+    private List<Map<String, Object>> chilrenByName(String item_name, List<Map<String, Object>> searchList) {
+        if (!StringUtils.contains(item_name, ","))//多字段逗号分隔{
+        {
+            return new ArrayList<Map<String, Object>>();
+        }
+        List<Map<String, Object>> itemNameList = new ArrayList<Map<String, Object>>();
+        for (int j = 0; j < searchList.size(); j++) {
+            String itemName = Utils.trimNull(searchList.get(j).get(JsoupUtil.ITEM_NAME));
+            if (StringUtils.contains(itemName, ",")) {
+                //不可以嵌套联合
+                continue;
+            }
+            if (StringUtils.contains(item_name, itemName)) {
+                itemNameList.add(searchList.get(j));
+            }
+        }
+        // context.put("itemNameList", itemNameList);
+        return itemNameList;
+    }
+
+    private long getDataCountByListId(DataSource dataSource, Map<String, Object> list, Map<String, Object> request, Map<String, String> session) throws Exception {
+        Object select_expressObj = ((Map<String, Object>)list.get("express")).get("main");
+        String select_express = Utils.expressToString(select_expressObj);
+
+        String orderBy = Utils.expressToString(((Map<String, Object>)list.get("express")).get("orderBy"));
+        String groupBy = Utils.expressToString(((Map<String, Object>)list.get("express")).get("groupBy"));
+        String count_express = Utils.expressToString(((Map<String, Object>)list.get("express")).get("count"));
+
+        ListExpressExecutor listExpressExecutor = ListExpressExecutor.createInstance();
+        String countQl = "";
+        if (StringUtils.isBlank(count_express) ||
+                StringUtils.equalsIgnoreCase("count(1)", count_express.toLowerCase().trim())) {
+            countQl = transSqlCountToQl(select_express);
+        } else {
+            countQl = transSqlCountToQl(count_express);
+        }
+        listExpressExecutor.datasource(dataSource).express(countQl);
+        //计算group by
+        String group = excuteGroup(groupBy, request, session);
+        listExpressExecutor.listDTOAndSearchParam(list);
+        listExpressExecutor.addParam("_CHECKD_IDS", Utils.getStringByObject(request, "_CHECKD_IDS"));
+        listExpressExecutor.addParam("EZ_SUM_FLAG", Utils.getStringByObject(request, "EZ_SUM_FLAG"));
+        listExpressExecutor.addParam("GROUP_BY", group);
+        listExpressExecutor.addSessionParam(session);
+        listExpressExecutor.addRequestParam(request);
+        Object obj = listExpressExecutor.executeCount();
+        return NumberUtils.toLong(obj + "");
+    }
+
+    private String transSqlCountToQl(String ql) {
+        if (StringUtils.trimEmpty(ql).toLowerCase(Locale.ROOT).startsWith("select")) {
+            return "c=search(\"" + ql + "\");return c;";
+        }
+        return ql;
+    }
+
+    private Page loadingPage(Map<String, Object> list, Map<String, Object> requestParamMap) {
+        Page pagination = new Page(requestParamMap);
+        List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("column");
+        List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
+        if (Utils.isEmpty(colList)) {
+            return pagination;
+        }
+        final String orderByName=Utils.trimNull(requestParamMap.get("orderByName"));
+        final String orderByType=Utils.trimNull(requestParamMap.get("orderByType"));
+        //从search里面找到对应字段的alias
+        StringBuilder newOrderBy=new StringBuilder();
+        searchList.forEach(item -> {
+            if (StringUtils.equalsIgnoreCase(orderByName, Utils.trimNull(item.get(JsoupUtil.ITEM_NAME)))) {
+                String fieldName = SqlUtils.alias(Utils.trimNull(item.get(JsoupUtil.ALIAS)), Utils.trimNull(item.get(JsoupUtil.ITEM_NAME)));
+                newOrderBy.append(" order by "+fieldName +" "+orderByType);
+                return;
+            }
+        });
+
+        if(StringUtils.isBlank(newOrderBy.toString())){
+            String orderBy =(String)((Map<String, Object>)list.get("express")).get("orderBy");
+            newOrderBy.append(Utils.trimNull(orderBy));
+        }
+        pagination.setOrderByClause(newOrderBy.toString());
+        try {
+            String customJson = Utils.trimNull(requestParamMap.get("customSearch"));
+            CustomSearchDTO customSearchDTO = JSONUtils.parseObject(customJson, CustomSearchDTO.class);
+            if (customSearchDTO != null) {
+                String customOrder = customOrder(customSearchDTO.getO());
+                if (StringUtils.isNotBlank(customOrder)) {
+                    pagination.setOrderByClause(customOrder);
+                }
+            }
+        } catch (Exception e) {
+            logger.warn("",e);
+        }
+        return pagination;
+    }
+    private String customOrder(List<CustomSearchOrder> o) {
+        if (o == null || o.isEmpty()) {
+            return "";
+        }
+        StringBuilder order = new StringBuilder();
+        for (int i = 0; i < o.size(); i++) {
+            if (StringUtils.isNotBlank(o.get(i).getF()) && StringUtils.isNotBlank(o.get(i).getO())) {
+                order.append(", ")
+                        .append(StringUtils.safeDb(o.get(i).getF()))
+                        .append(" ")
+                        .append(StringUtils.safeDb(o.get(i).getO()));
+            }
+        }
+        if (order.length() > 1) {
+            return " order by " + order.substring(1);
+        }
+        return "";
+    }
 }

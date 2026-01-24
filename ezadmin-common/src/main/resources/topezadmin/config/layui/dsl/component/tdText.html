@@ -1,0 +1,6 @@
+<script  >
+    Global.registry("columnRender").register("tdText",(name,d,component)=>{
+        const value=d[name];
+        return value ||component.props.emptyShow ||'';
+    });
+</script>

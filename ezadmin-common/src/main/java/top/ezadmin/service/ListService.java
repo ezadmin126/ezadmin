@@ -40,4 +40,6 @@ public interface ListService {
 
 
     String selectDbPublishListById(String encryptListId) throws Exception;
+
+    Page loadingPage(Map<String, Object> list, Map<String, Object> requestParams);
 }

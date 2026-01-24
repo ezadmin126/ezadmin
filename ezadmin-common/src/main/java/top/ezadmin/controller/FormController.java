@@ -11,6 +11,7 @@ import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.enums.ExceptionCode;
 import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.Dao;
 import top.ezadmin.plugins.express.executor.DefaultExpressExecutor;
 import top.ezadmin.plugins.parser.MapParser;
 import top.ezadmin.service.FormService;
@@ -18,9 +19,7 @@ import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FormController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(FormController.class);
@@ -319,5 +318,109 @@ public class FormController extends BaseController {
             return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
         }
     }
+
+    /**
+     * 表单初始化UI
+     * @param requestContext
+     * @param method
+     * @param formUrlCode
+     * @return
+     * @throws Exception
+     */
+    public EzResult dsl(RequestContext requestContext, String method, String formUrlCode) throws Exception {
+        String formId = formUrlCode;
+        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> form = JSONUtils.deepParseObjectMap(Resources.getResourceAsString("topezadmin/config/layui/dsl/form/"+formId+".json"));
+        iniFormItem(requestContext,form);
+        templateParam.put("form", form);
+        templateParam.put("requestContext",requestContext);
+        templateParam.put("uploadUrl",EzBootstrap.config().getUploadUrl());
+        templateParam.put("downloadUrl",EzBootstrap.config().getDownloadUrl());
+        templateParam.put("formSubmitUrl", "/topezadmin/form/doSubmit-"+formUrlCode);
+        templateParam.putAll(EzBootstrap.config().getConfig());
+        return render("layui/dsl/formTemplate",templateParam);
+    }
+    private void iniFormItem(RequestContext requestContext,Map<String, Object> list) {
+        List<Map<String, Object>> cardList = (List<Map<String, Object>>) list.get("cardList");
+        cardList.forEach(card->{
+            List<Map<String, Object>> items = (List<Map<String, Object>>) card.get("fieldList");
+            if(items != null && items.size() > 0){
+                items.forEach(item->{
+                    Map<String, Object> initData = (Map<String, Object>) item.get("initData");
+                    if (initData != null) {
+                        String dataUrl = (String) initData.get("dataUrl");
+                        if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
+                            List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
+                            item.put("data", result);
+                            item.put("dataJson", JSONUtils.toJSONString(result));
+                        }
+                        else if(initData.containsKey("dataSql") && initData.get("dataSql") != null  ){
+                            String dataSql =  (String) initData.get("dataSql") ;
+                            String dataSource = (String) initData.get("dataSource");
+                            //
+                            DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
+                            if(dataSourceBean==null){
+                                dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
+                            }
+                            try {
+                                List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
+                                        dataSql, null,false);
+                                item.put("data", result);
+                                item.put("dataJson", JSONUtils.toJSONString(result));
+                            } catch (Exception e) {
+                                logger.error("执行SQL错误",e);
+                            }
+                        }else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
+                            //todo apiUrl
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    /**
+     * 表单初始化数据接口
+     * @param requestContext
+     * @param method
+     * @param formUrlCode
+     * @return
+     * @throws Exception
+     */
+    public EzResult data(RequestContext requestContext, String method, String formUrlCode) throws Exception {
+        String formId = formUrlCode;
+        Map<String, Object> form = JSONUtils.deepParseObjectMap(Resources.getResourceAsString("topezadmin/config/layui/dsl/form/"+formId+".json"));
+        iniFormItem(requestContext,form);
+        //只返回数据，屏蔽模板
+        String ID = Utils.getStringByObject(requestContext.getRequestParams(), "ID");
+        Map<String, Object> initItemMap = new HashMap<>();
+        initItemMap.putAll(requestContext.getRequestParams());
+        if (StringUtils.isNotBlank(ID)) {
+            try {
+                DefaultExpressExecutor expressExecutor = DefaultExpressExecutor.createInstance();
+                expressExecutor.datasource(EzBootstrap.getInstance().getDataSourceByKey(form.get("dataSource")));
+                String initExpress = Utils.expressToString( form.get("initExpress"));
+                expressExecutor.express(initExpress);
+
+                expressExecutor.addParam(requestContext.getRequestParams());
+                expressExecutor.addRequestParam(requestContext.getRequestParams());
+                expressExecutor.addSessionParam(requestContext.getSessionParams());
+                Map<String, Object> resultMap = expressExecutor.executeAndReturnMap();
+                for (Map.Entry<String, Object> entry : resultMap.entrySet()) {
+                    if (StringUtils.isNotBlank(Utils.trimNull(entry.getValue()))) {
+                        initItemMap.put(entry.getKey(), Utils.trimNull(entry.getValue()));
+                    }
+                }
+            } catch (Exception e) {
+                Utils.addLog(JSONUtils.toJSONString(form.get("core")), e);
+            }
+        }
+        if (initItemMap.containsKey(ID) && StringUtils.isBlank(Utils.trimNull(initItemMap.get(ID)))) {
+            initItemMap.put("ID", initItemMap.get("ID"));
+        }
+        return EzResult.instance().code("JSON") .data(EzResult.instance().data(initItemMap));
+    }
+
 
 }

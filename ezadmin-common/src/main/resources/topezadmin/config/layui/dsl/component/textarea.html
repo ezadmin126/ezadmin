@@ -1,0 +1,23 @@
+
+<div   class="layui-form-item">
+    <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
+        <span th:if="${props != null and props.required}" style="color: red;">*</span>
+        <span th:text="${label}+'：'">字段名</span>
+    </label>
+    <div class="layui-input-block">
+        <textarea
+                th:name="${item_name}"
+                class="layui-textarea"
+                th:attrs="${props}"
+                   th:data-propsJson="${propsJson}"
+        > </textarea>
+        <span   style=" position: relative; float: right; top: -21px;right: 1px;height: 0;" th:if="${props != null and props.maxlength != null } ">
+            <span style="  border-right: 0 none; border-radius: 15px 0 17px;   margin-right: 1px;" class="layui-badge layui-badge-rim">
+                <span class="layext-textool-length" style="display: inline-block;">
+                    <b class="layext-textool-count" title="当前字数"  >0</b>/<span class="layext-textool-max" title="最大字数">[[${props.maxlength}]]</span>
+                </span>
+            </span>
+        </span>
+        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:text="${props.description}"></div>
+    </div>
+</div>

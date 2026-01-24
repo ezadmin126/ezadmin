@@ -14,6 +14,7 @@ public interface EzJson {
     Map<String, String> parseMap(String json);
 
     Map<String, Object> parseObjectMap(String json);
+    Map<String, Object> deepParseObjectMap(String json);
 
     List<Map<String, Object>> parseListMapString(String json);
 }

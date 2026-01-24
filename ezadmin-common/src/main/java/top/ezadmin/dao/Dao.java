@@ -84,6 +84,9 @@ public class Dao {
     }
 
     public List<Map<String, Object>> executeQuery(DataSource dataSource, String sql, Object[] bindArgs) throws Exception {
+        return executeQuery(dataSource, sql, bindArgs,true);
+    }
+    public List<Map<String, Object>> executeQuery(DataSource dataSource, String sql, Object[] bindArgs,boolean upperCaseFieldName) throws Exception {
         List<Map<String, Object>> datas = new ArrayList<>(0);
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -91,7 +94,7 @@ public class Dao {
         try {
             if(dataSource==null){
                 Utils.addLog("dataSource is null");
-               return datas;
+                return datas;
             }
             connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sql);
@@ -107,7 +110,7 @@ public class Dao {
                 }
             }
             resultSet = preparedStatement.executeQuery();
-            datas = getDatas(resultSet);
+            datas = getDatas(resultSet,upperCaseFieldName);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -132,6 +135,7 @@ public class Dao {
         }
         return datas;
     }
+
 
     public long executeUpdate(DataSource dataSource, String sql, Object[] bindArgs) throws Exception {
         Connection connection = null;
@@ -364,7 +368,7 @@ public class Dao {
      * @param resultSet 结果多想
      * @throws Exception
      */
-    private static List<Map<String, Object>> getDatas(ResultSet resultSet) throws Exception {
+    private static List<Map<String, Object>> getDatas(ResultSet resultSet,boolean upperCaseFieldName) throws Exception {
         List<Map<String, Object>> datas = new ArrayList<>();
         /**获取结果集的数据结构对象**/
         ResultSetMetaData metaData = resultSet.getMetaData();
@@ -403,23 +407,36 @@ public class Dao {
                     }
 
                     if (!(objectValue instanceof byte[])) {
-                        objectValue = Utils.trimNull(objectValue);
+                        objectValue =  objectValue ;
                     } else {
                         objectValue = new String((byte[]) objectValue);
                     }
+
                     if (StringUtils.isNotBlank(metaData.getColumnLabel(i))) {
+                        String columnName =  metaData.getColumnLabel(i);
+                        if (upperCaseFieldName) {
+                            columnName=StringUtils.upperCase(metaData.getColumnLabel(i));
+                        }
                         String label = StringUtils.upperCase(metaData.getColumnLabel(i));
                         if (StringUtils.contains(label, "BOOLEAN")) {
-                            rowMap.put(label, Utils.isTrue(objectValue));
+                            rowMap.put(columnName, Utils.isTrue(objectValue));
                         } else {
-                            rowMap.put(label, objectValue);
+                            rowMap.put(columnName, objectValue);
                         }
                     } else {
-                        rowMap.put(StringUtils.upperCase(metaData.getColumnName(i)), objectValue);
+                        String columnName =  metaData.getColumnName(i);
+                        if (upperCaseFieldName) {
+                            columnName=StringUtils.upperCase(metaData.getColumnName(i));
+                        }
+                        rowMap.put(columnName, objectValue);
                     }
                 } catch (Exception e) {
                     log.error("", e);
-                    rowMap.put(StringUtils.upperCase(metaData.getColumnName(i)), "");
+                    String columnName =  metaData.getColumnName(i);
+                    if (upperCaseFieldName) {
+                        columnName=StringUtils.upperCase(metaData.getColumnName(i));
+                    }
+                    rowMap.put(columnName, "");
                 }
             }
             datas.add(rowMap);

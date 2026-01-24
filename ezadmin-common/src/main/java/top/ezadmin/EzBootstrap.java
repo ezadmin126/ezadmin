@@ -141,6 +141,10 @@ public class EzBootstrap   {
 
         // 实现列表控制器逻辑
         switch (method){
+            case "dsl":
+                return controller.dsl(  requestContext,method,id);
+            case "data":
+                return controller.data(  requestContext,method,id);
             case "list":
                 return controller.list(  requestContext,method,id);
             case "count":
@@ -167,6 +171,8 @@ public class EzBootstrap   {
         // 实现列表控制器逻辑
         EzResult result=EzResult.instance();
         switch (method){
+            case "dsl":
+                return controller.dsl(  requestContext,method,id);
             case "form":
                 return controller.form(  requestContext,method,id);
             case "trace":

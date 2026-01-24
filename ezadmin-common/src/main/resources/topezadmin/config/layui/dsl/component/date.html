@@ -1,0 +1,20 @@
+<div   class="layui-form-item">
+    <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
+        <span th:if="${props != null and props.required}" style="color: red;">*</span>
+        <span th:text="${label}+'：'">字段名</span>
+    </label>
+    <div class="layui-input-block">
+        <div class="layui-input-wrap">
+            <div class="layui-input-prefix">
+                <i class="layui-icon layui-icon-date"></i>
+            </div>
+            <input th:id="${'search-' +  item_name}"
+                    th:name="${item_name}"   autocomplete="off"
+                    class="layui-input ez-date"
+                    th:attrs="${props}"
+                       th:data-propsJson="${propsJson}"
+            >
+        </div>
+        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:text="${props.description}"></div>
+    </div>
+</div>

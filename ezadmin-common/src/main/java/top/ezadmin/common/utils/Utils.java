@@ -487,4 +487,16 @@ public class Utils {
         String s = trimNull(obj);
         return "1".equals(s) || BooleanUtils.toBoolean(s);
     }
+
+
+    public static String expressToString(Object select_expressObj){
+        String select_express = "";
+        if(select_expressObj instanceof List){
+            List<String> select_expressList = (List<String>) select_expressObj;
+            select_express = StringUtils.join(select_expressList, "\n");
+        }else{
+            select_express =  Utils.trimNull(select_expressObj);
+        }
+        return select_express;
+    }
 }

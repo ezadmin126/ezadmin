@@ -22,6 +22,8 @@ public class ThymeleafEzTemplate implements EzTemplate {
     private static TemplateEngine classPathEngine = new TemplateEngine();
 
     private static ThymeleafEzTemplate intance=new ThymeleafEzTemplate();
+    private static TemplateUtils utils=new TemplateUtils();
+
     public static ThymeleafEzTemplate getIntance(){
         return intance;
     }
@@ -31,6 +33,7 @@ public class ThymeleafEzTemplate implements EzTemplate {
         templateResolver.setCacheable(config.isSqlCache());
         templateResolver.setTemplateMode(TemplateMode.HTML);
         stringEngine.setTemplateResolver(templateResolver);
+        stringEngine.addDialect(new EzDialect());
         ClassLoaderTemplateResolver templateResolverClass = new ClassLoaderTemplateResolver();
         templateResolverClass.setPrefix("topezadmin/config/");
         templateResolverClass.setSuffix(".html");
@@ -38,12 +41,14 @@ public class ThymeleafEzTemplate implements EzTemplate {
         templateResolverClass.setCacheable(config.isSqlCache());
         templateResolverClass.setCharacterEncoding("UTF-8");
         classPathEngine.setTemplateResolver(templateResolverClass);
+        classPathEngine.addDialect(new EzDialect());
     }
 
     @Override
     public String renderString(String content, Map<String,Object>   data) {
         org.thymeleaf.context.Context ctx = new Context();
         ctx.setVariables(data);
+        ctx.setVariable("cr", utils);
         if (StringUtils.isBlank(content)) {
             return content;
         }
@@ -62,6 +67,7 @@ public class ThymeleafEzTemplate implements EzTemplate {
     public String renderFile(String path, Map<String,Object> data) {
         org.thymeleaf.context.Context ctx = new Context();
         ctx.setVariables(data);
+        ctx.setVariable("cr", utils);
         try {
             TemplateSpec spec = new TemplateSpec(path, null, ContentTypeEnum.HTML.value, null);
             return classPathEngine.process(spec, ctx);

@@ -265,4 +265,22 @@ public class Resources {
         Resources.charset = charset;
     }
 
+
+
+    public static String getResourceAsString(String resource) throws IOException {
+        InputStream in= getResourceAsStream(null, resource);
+        return inputStreamToString(in, charset==null ? "UTF-8" : charset.toString());
+    }
+    private static String inputStreamToString(InputStream inputStream, String charsetName)
+            throws IOException {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(inputStream, charsetName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append(System.lineSeparator());
+            }
+        }
+        return sb.toString();
+    }
 }

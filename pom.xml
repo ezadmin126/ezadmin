@@ -25,6 +25,11 @@
             <email>ezadmin@126.com</email>
         </developer>
     </developers>
+    <modules>
+        <module>ezadmin-common</module>
+        <module>ezadmin-java8-spring-starter</module>
+        <module>ezadmin-java17-spring-starter</module>
+    </modules>
 
 
     <distributionManagement>

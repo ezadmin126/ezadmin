@@ -1,0 +1,20 @@
+<div   class="layui-form-item">
+    <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
+        <span th:if="${props != null and props.required}" style="color: red;">*</span>
+        <span th:text="${label}+'：'">字段名</span>
+    </label>
+    <div class="layui-input-block">
+        <button type="button"
+                th:item_name="${item_name}"
+                class="layui-btn ez-upload layui-btn-normal"
+                th:attrs="${props}"
+                th:data-propsJson="${propsJson}"
+            >上传</button>
+        <div    class="layui-upload-list dragula-container2"
+             th:id="${'layui-upload-list_'+item_name}"
+        >
+        </div>
+        <input type="hidden"   th:name="${item_name}" th:id="${'ITEM_ID_' + item_name}">
+        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:text="${props.description}"></div>
+    </div>
+</div>
