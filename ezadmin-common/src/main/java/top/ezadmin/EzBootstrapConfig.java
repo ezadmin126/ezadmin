@@ -14,6 +14,7 @@ import top.ezadmin.plugins.templates.ThymeleafEzTemplate;
 import top.ezadmin.web.Config;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,22 +75,22 @@ public class EzBootstrapConfig {
     /**
      * 列表配置资源列表，存储所有列表页面的配置信息
      */
-    private List<Config> listConfigResources;
+    private List<Config> listConfigResources=new ArrayList<>();
 
     /**
      * 表单配置资源列表，存储所有表单页面的配置信息
      */
-    private List<Config> formConfigResources;
+    private List<Config> formConfigResources=new ArrayList<>();
 
     /**
      * 插件表单配置资源列表，存储插件相关的表单配置
      */
-    private List<Config> pluginsFormConfigResources;
+    private List<Config> pluginsFormConfigResources=new ArrayList<>();
 
     /**
      * 插件列表配置资源列表，存储插件相关的列表配置
      */
-    private List<Config> pluginsListConfigResources;
+    private List<Config> pluginsListConfigResources=new ArrayList<>();
 
     /**
      *  兼容首页start

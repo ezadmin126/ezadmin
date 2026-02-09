@@ -1,0 +1,50 @@
+{
+  "id": "test-express-ref",
+  "title": "测试表达式文件引用",
+  "description": "用于测试表达式从外部文件加载的功能",
+  "express": {
+    "main": "$test_select_express.txt",
+    "count": "$test_count_express.txt",
+    "orderBy": "create_time DESC",
+    "groupBy": "$test_group_express.txt"
+  },
+  "columns": [
+    {
+      "field": "id",
+      "title": "ID",
+      "width": 80
+    },
+    {
+      "field": "name",
+      "title": "名称",
+      "width": 200
+    },
+    {
+      "field": "status",
+      "title": "状态",
+      "width": 100
+    },
+    {
+      "field": "create_time",
+      "title": "创建时间",
+      "width": 150
+    }
+  ],
+  "search": [
+    {
+      "field": "name",
+      "title": "名称",
+      "type": "input",
+      "placeholder": "请输入名称"
+    },
+    {
+      "field": "status",
+      "title": "状态",
+      "type": "select",
+      "options": [
+        {"value": "1", "text": "启用"},
+        {"value": "0", "text": "禁用"}
+      ]
+    }
+  ]
+}

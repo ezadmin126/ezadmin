@@ -20,10 +20,10 @@ window.Global = window.Global || {
         return this.registries[name];
     },
     get(name) {
-        return this.registry['global'].get(name);
+        return this.registry('global').get(name);
     },
     set(name, value) {
-        this.registry['global'].register(name, value);
+        this.registry('global').register(name, value);
     },
 };
 const eventMap = Object.create(null);
@@ -58,7 +58,13 @@ Global.onClick('viewer-image', function (e) {
         photos: {
             "title": _this.getAttribute("title"),
             "start": 0,
-            "data": dataset
+            "data": [
+                {
+                    "alt": _this.getAttribute("title"),
+                    "pid": 0,
+                    "src": _this.getAttribute("src")||dataset.original
+                }
+            ]
         },
         footer: false // 是否隐藏底部栏 --- 2.8+
         , success: function () {
@@ -85,22 +91,19 @@ Global.onClick('ez-button', function (e) {
     if (this.__lock) return;
     this.__lock = true;
     setTimeout(() => this.__lock = false, 500);
-    const jsonStr = _this.getAttribute('data-dataJson');
+    const jsonStr = _this.getAttribute('data-propsjson');
     let cfg;
     try {
         cfg = JSON.parse(jsonStr);
     } catch (err) {
         cfg = {};
     }
-
     ezopen(cfg.opentype, cfg.windowname, cfg.url, cfg.area);
 
     e.preventDefault();
     e.stopPropagation();
     return false;
 });
-
-
 
 /**
  * 转成数字数组
@@ -183,155 +186,6 @@ Global.listToTree=function(list, idKey = 'id', parentKey = 'parentId', childrenK
 
 
 
-function ezopen(openType, title, appendUrl, area) {
-    var contextNameElement = document.getElementById('contextName');
-    appendUrl = (contextNameElement ? contextNameElement.value : '') + appendUrl;
-    if (openType && openType.indexOf('parent.') >= 0) {
-        openType = openType.replace('parent.', '');
-        parent.window.ezopen(openType, title, appendUrl, area);
-        return;
-    }
-    var params = [];
-    $("form").find('input,select').each(function () {
-        if ($(this).attr('name')) {
-            params.push($(this).attr('name') + '=' + encodeURI($(this).val()));
-        }
-    })
-    var searchParams = params.join('&');
-
-
-
-    switch (openType) {
-        case 'APPEND_PARAM':
-            if (appendUrl != null && appendUrl.indexOf('?') <= 0) {
-                appendUrl += '?' + searchParams  ;
-            } else {
-                appendUrl += '&' + searchParams  ;
-            }
-            openModel(appendUrl, title, area);
-            break;
-        case 'MODAL':
-            openModel(appendUrl, title, area);
-            break;
-        case 'FORM':
-            openForm(appendUrl, title, area);
-            break;
-        case 'FULL':
-            openFull(appendUrl, title, '确定', function (index111, layero, that) {
-                    var body = layer.getChildFrame('body', index111);
-
-                    var submitBtn = body.querySelector('#submitbtn');
-                    if (submitBtn) {
-                        submitBtn.click();
-                    }
-                }, '取消',
-                function (index222, layero, that) {
-                    layer.close(index222);
-                });
-            break;
-        case 'CONFIRM_MODEL':
-            layer.confirm('确认操作?', {icon: 3, title: '提示'}, function (index) {
-                layer.close(index);
-                openModel(appendUrl, title, area);
-            })
-            break;
-        case '_BLANK':
-            openBlank(appendUrl);
-            break;
-        case '_BLANK_PARAM':
-            if (appendUrl.indexOf('?') <= 0) {
-                appendUrl += '?' + searchParams ;
-            } else {
-                appendUrl += '&' + searchParams ;
-            }
-            openBlank(appendUrl);
-            break;
-        case '_BLANK_PARAM_COLUMN':
-            if (appendUrl.indexOf('?') <= 0) {
-                appendUrl += '?' + searchParams ;
-            } else {
-                appendUrl += '&' + searchParams ;
-            }
-            var encryptListIdElement = document.getElementById('ENCRYPT_LIST_ID');
-            var key = 'EZ_CONFIG_' + (encryptListIdElement ? encryptListIdElement.value : '');
-            var jsonconfig = localStorage.getItem(key);
-            if (jsonconfig != undefined) {
-                var json = JSON.parse(jsonconfig);
-                var search = json.search;
-                var column = json.column;
-                if (jsonconfig != column && column.length > 0) {
-                    var columnurl = "";
-                    for (let index = 0; index < column.length; index++) {
-                        columnurl += column[index] + ","
-                    }
-                    appendUrl += "_BLANK_PARAM_COLUMN=" + columnurl;
-                }
-            }
-            openBlank(appendUrl);
-            break;
-        case 'LOCATION':
-            location.href = appendUrl;
-            break;
-        case 'PARENT':
-            openTab(title, appendUrl)
-
-            break;
-        case 'AJAX':
-            fetch(appendUrl)
-                .then(response => response.json())
-                .then(function (result) {
-                    if (result.success) {
-                        layer.msg("操作成功",{time:500}, function (index) {
-                            location.reload();
-                        })
-                    } else {
-                        layer.msg("操作失败:" + result.message)
-                    }
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                });
-            // openTab(title,appendUrl)
-            break;
-        case 'CONFIRM_AJAX':
-            var title = title;
-            layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
-                var loaderElements = document.querySelectorAll('.layuimini-loader');
-                for (var i = 0; i < loaderElements.length; i++) {
-                    loaderElements[i].style.display = 'block';
-                }
-                fetch(appendUrl)
-                    .then(response => response.json())
-                    .then(function (result) {
-                        var loaderElements = document.querySelectorAll('.layuimini-loader');
-                        for (var i = 0; i < loaderElements.length; i++) {
-                            loaderElements[i].style.display = 'none';
-                        }
-                        if (result.success) {
-                            layer.alert("操作成功",  function (index) {
-                                location.reload();
-                            })
-                        } else {
-                            layer.alert("操作失败:" + result.message)
-                        }
-                    })
-                    .catch(function(error) {
-                        console.error('Error:', error);
-                        var loaderElements = document.querySelectorAll('.layuimini-loader');
-                        for (var i = 0; i < loaderElements.length; i++) {
-                            loaderElements[i].style.display = 'none';
-                        }
-                    });
-                layer.close(index);
-            });
-
-            // openTab(title,appendUrl)
-            break;
-        default:
-            openModel(appendUrl, title, area);
-            console.log('无opentype默认model')
-    }
-}
 
 
 
@@ -344,6 +198,28 @@ Global.logicTrue = function (c) {
     return ['true', '1', 'yes', 'on']
         .includes(String(c).toLowerCase());
 };
+
+
+// 安全解析JSON字符串或返回已解析的对象
+Global.safeParseJSON=function(data, defaultValue) {
+    if (!data) {
+        return defaultValue || null;
+    }
+    // 如果已经是对象，直接返回
+    if (typeof data === 'object') {
+        return data;
+    }
+    // 如果是字符串，尝试解析
+    if (typeof data === 'string') {
+        try {
+            return JSON.parse(data);
+        } catch (e) {
+            console.error('JSON解析失败:', e, '原始数据:', data);
+            return defaultValue || null;
+        }
+    }
+    return defaultValue || null;
+}
 
 var holiday = [[], []];
 var shortcut = [
@@ -553,4 +429,397 @@ var rangeShortCut = [{
             ];
         }
     }
-]
+];
+
+
+function ezopen(openType, title, appendUrl, area) {
+    var contextNameElement = document.getElementById('contextName');
+    appendUrl = (contextNameElement ? contextNameElement.value : '') + appendUrl;
+    if (openType && openType.indexOf('parent.') >= 0) {
+        openType = openType.replace('parent.', '');
+        parent.window.ezopen(openType, title, appendUrl, area);
+        return;
+    }
+    var params = [];
+    $("form").find('input,select').each(function () {
+        if ($(this).attr('name')) {
+            params.push($(this).attr('name') + '=' + encodeURI($(this).val()));
+        }
+    })
+    var searchParams = params.join('&');
+
+
+
+    switch (openType) {
+        case 'APPEND_PARAM':
+            if (appendUrl != null && appendUrl.indexOf('?') <= 0) {
+                appendUrl += '?' + searchParams  ;
+            } else {
+                appendUrl += '&' + searchParams  ;
+            }
+            openModel(appendUrl, title, area);
+            break;
+        case 'MODAL':
+            openModel(appendUrl, title, area);
+            break;
+        case 'FORM':
+            openForm(appendUrl, title, area);
+            break;
+        case 'FULL':
+            openFull(appendUrl, title, '确定', function (index111, layero, that) {
+                    var body = layer.getChildFrame('body', index111);
+
+                    var submitBtn = body.querySelector('#submitbtn');
+                    if (submitBtn) {
+                        submitBtn.click();
+                    }
+                }, '取消',
+                function (index222, layero, that) {
+                    layer.close(index222);
+                });
+            break;
+        case 'CONFIRM_MODEL':
+            layer.confirm('确认操作?', {icon: 3, title: '提示'}, function (index) {
+                layer.close(index);
+                openModel(appendUrl, title, area);
+            })
+            break;
+        case '_BLANK':
+            openBlank(appendUrl);
+            break;
+        case '_BLANK_PARAM':
+            if (appendUrl.indexOf('?') <= 0) {
+                appendUrl += '?' + searchParams ;
+            } else {
+                appendUrl += '&' + searchParams ;
+            }
+            openBlank(appendUrl);
+            break;
+        case '_BLANK_PARAM_COLUMN':
+            if (appendUrl.indexOf('?') <= 0) {
+                appendUrl += '?' + searchParams ;
+            } else {
+                appendUrl += '&' + searchParams ;
+            }
+            var encryptListIdElement = document.getElementById('ENCRYPT_LIST_ID');
+            var key = 'EZ_CONFIG_' + (encryptListIdElement ? encryptListIdElement.value : '');
+            var jsonconfig = localStorage.getItem(key);
+            if (jsonconfig != undefined) {
+                var json = JSON.parse(jsonconfig);
+                var search = json.search;
+                var column = json.column;
+                if (jsonconfig != column && column.length > 0) {
+                    var columnurl = "";
+                    for (let index = 0; index < column.length; index++) {
+                        columnurl += column[index] + ","
+                    }
+                    appendUrl += "_BLANK_PARAM_COLUMN=" + columnurl;
+                }
+            }
+            openBlank(appendUrl);
+            break;
+        case 'LOCATION':
+            location.href = appendUrl;
+            break;
+        case 'PARENT':
+            openTab(title, appendUrl)
+
+            break;
+        case 'AJAX':
+            fetch(appendUrl)
+                .then(response => response.json())
+                .then(function (result) {
+                    if (result.success) {
+                        layer.msg("操作成功",{time:500}, function (index) {
+                            location.reload();
+                        })
+                    } else {
+                        layer.msg("操作失败:" + result.message)
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });
+            // openTab(title,appendUrl)
+            break;
+        case 'CONFIRM_AJAX':
+            var title = title;
+            layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
+                var loadingIndex=layer.load(3, {shade: [1, '#FFF']});
+                fetch(appendUrl)
+                    .then(response => response.json())
+                    .then(function (result) {
+                        layer.close(loadingIndex);
+                        if (result.success) {
+                            layer.msg("操作成功",{time:500}, function (index) {
+                                location.reload();
+                            })
+                        } else {
+                            layer.alert("操作失败:" + result.message)
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error:', error);
+                        layer.close(loadingIndex);
+                    });
+                layer.close(index);
+            });
+            break;
+        case 'CONFIRM_AJAX_LIST':
+            var title = title;
+            layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
+                var loadingIndex=layer.load(3, {shade: [1, '#FFF']});
+                fetch(appendUrl)
+                    .then(response => response.json())
+                    .then(function (result) {
+                        layer.close(loadingIndex);
+                        if (result.success) {
+                            Global.get("table").reload({where: layui.form.val('searchForm')});
+                            layer.msg("操作成功")
+                        } else {
+                            layer.alert("操作失败:" + result.message)
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error:', error);
+                        layer.close(loadingIndex);
+                    });
+                layer.close(index);
+            });
+            break;
+        default:
+            openModel(appendUrl, title, area);
+            console.log('无opentype默认model')
+    }
+}
+
+function openModel(url, name, area) {
+    var json = ['90%', '90%'];
+    if (area !== undefined && area != '') {
+        try {
+            json = area.split(",");
+        } catch (e) {
+            json = area;
+        }
+        if (json.length == 1) {
+            json = area;
+        }
+    }
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        shadeClose: true,
+        area: json,
+        content: url,
+        moveOut: true,
+        success: function (layero, indexyyy, that) {
+
+            var body = layer.getChildFrame('body', indexyyy);
+            if ($(body).find('#submitButtonContainer').length > 0) {
+                $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+                $(body).on("click", "#closeParent", function (e) {
+                    layui.layer.close(indexyyy);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                })
+            }
+        }
+    });
+    return index;
+}
+
+function openForm(url, name, area) {
+    var json = ['100%', '100%'];
+    if (area !== undefined && area != '') {
+        try {
+            json = area.split(",");
+        } catch (e) {
+            json = area;
+        }
+        if (json.length == 1) {
+            json = area;
+        }
+    }
+    name = name == undefined ? "窗口" : name;
+
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        btnAlign: 'c',
+        shadeClose: true,
+        area: json,
+        content: url,
+        moveOut: true,
+        success: function (layero, indexyyy, that) {
+            var body = layer.getChildFrame('body', indexyyy);
+            try {
+                $(body).find('#submitbtnProxy').after("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+                $(body).on("click", "#closeParent", function (e) {
+                    layui.layer.close(indexyyy);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                })
+            } catch (e) {
+            }
+        }
+    });
+    return index;
+}
+
+function openFull(url, name, yestxt, yesfunc, notxt, nofunc) {
+    var json = ['100%', '100%'];
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        btnAlign: 'c',
+        shadeClose: true,
+        area: json,
+        content: url,
+        moveOut: true,
+        btn: [yestxt, notxt],
+        // 按钮1 的回调
+        btn1: function (index111, layero, that) {
+            yesfunc(index111, layero, that);
+        },
+        btn2: function (index222, layero, that) {
+            nofunc(index222, layero, that);
+        },
+        success: function (layero, indexyyy, that) {
+            var body = layer.getChildFrame('body', indexyyy);
+            // $(body).find('#submitButtonContainer').html('');
+        }
+    });
+    return index;
+}
+
+function openModelSelect(url, name) {
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        shadeClose: true,
+        area: ['90%', '90%'],
+        content: url,
+        moveOut: true,
+        btn: ['确定'],
+        // 按钮1 的回调
+        btn1: function (indexxx, layero, that) {
+            var body = layer.getChildFrame('body', indexxx);
+            $(body).find('#check_click_选择').click();
+        }
+    });
+    return index;
+}
+
+function openModelReload(url, name, cancel) {
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        shadeClose: true,
+        area: ['90%', '90%'],
+        content: url,
+        moveOut: true,
+        cancel: cancel
+    });
+}
+
+
+function openTab(title, link) {
+    if (link == undefined) {
+        link = title;
+        title = "查看";
+    }
+    try {
+        if (window.top === window.self) {
+            return openBlank(link);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+    // 检查父窗口和当前窗口的域名是否一致
+    let parentHost = '';
+    let currentHost = window.location.host;
+    let useAbsolute = false;
+    try {
+        parentHost = window.parent.location.host;
+        if (parentHost !== currentHost) {
+            useAbsolute = true;
+        }
+    } catch (e) {
+        // 跨域无法访问，必须用绝对地址
+        useAbsolute = true;
+    }
+
+    // 如果需要，转成绝对地址
+    if (useAbsolute && !/^https?:\/\//i.test(link)) {
+        // 相对路径转绝对路径
+        let a = document.createElement('a');
+        a.href = link;
+        link = a.href;
+    }
+
+    var uniqueName = link.replace('./', '').replace(/["&'./:=%?[\]]/gi, '-').replace(/(--)/gi, '');
+
+    window.parent.postMessage({
+        from: 'ez',
+        name: title,
+        url: link,
+        id: "tab-" + uniqueName
+    }, '*');
+}
+
+function openBlank(appendUrl) {
+    var a = document.createElement("a");
+    a.setAttribute("href", appendUrl);
+    a.setAttribute("target", "_blank");
+    a.setAttribute("id", "camnpr");
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+/**
+ *
+ * @param  parent.refreshCard.prod
+ */
+function refreshCard(card_item_name) {
+    card_item_name = card_item_name.toLowerCase();
+    if (card_item_name && card_item_name.indexOf('parent.') >= 0) {
+        card_item_name = card_item_name.replace('parent.', '');
+        window.parent.refreshCard(card_item_name);
+        return;
+    }
+    if (card_item_name.indexOf('refreshcard') >= 0) {
+        layer.closeAll();
+        const parts = card_item_name.split('.');
+        if (parts.length === 2 && parts[0] === "refreshcard") {
+            const cardItemName = parts[1]; // 获取第二个值，如 "prod"
+            // 找到对应的 iframe 并刷新
+            $("[card_item_name=" + cardItemName + "]").find("iframe").attr("src", function () {
+                const currentSrc = $(this).attr("src");
+                return currentSrc + (currentSrc.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
+            });
+            console.log("已刷新 card_item_name=" + cardItemName + " 的 iframe");
+        } else {
+            layer.message("参数配置错误，应为 reloadcard.xxx");
+        }
+    }
+}
+
+

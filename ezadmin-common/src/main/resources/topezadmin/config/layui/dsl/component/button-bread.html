@@ -1,9 +1,12 @@
 <a  href="#" class="buttonbread"
     data-click="ez-button"
     th:name="${item_name}"
+    th:item_name="${'button_'+item_name}"
     th:attrs="${props}"
     th:data-propsJson="${propsJson}"
     th:text="${label}"
+    th:style="${(props!=null&&props.containsKey('display'))?
+   'display:'+props.get('display'):''}"
 >
 
 </a>

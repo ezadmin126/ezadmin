@@ -23,19 +23,23 @@
     <script th:src="${'/webjars/topezadmin/layui/js/Global.js?v='+vi}" type="text/javascript"></script>
     <script th:src="${'/webjars/topezadmin/layui/js/ezdsl.js?v='+vi}" type="text/javascript"></script>
 
+    <link th:if="${not cacheFlag}"  th:href="${'/webjars/topezadmin/layui/js/inspector/ez-inspector.css'}" rel="stylesheet">
+    <script th:if="${not cacheFlag}" th:src="${'/webjars/topezadmin/layui/js/inspector/ez-inspector.js'}" type="text/javascript"></script>
 </head>
 <body>
 <input type="hidden" id="initApi" th:value="${list.initApi}">
+<input type="hidden" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
+<input type="hidden" id="downloadUrl" th:value="${downloadUrl}">
 <div th:utext="${col}" th:remove="tag"  th:each="col : ${tdTemplates}"></div>
-<div class="layuimini-loader"  >
-    <div class="layuimini-loader-inner"></div>
-</div>
-<div th:utext="${list.appendHead}" th:if="${not #strings.isEmpty(list.appendHead )}"></div>
+
+<div th:utext="${list.appendHead}" item_name="appendHead" th:if="${not #strings.isEmpty(list.appendHead )}"></div>
 
 
 <div  th:class="${ (#lists.isEmpty(list.search)?'':'layui-fluid')}">
-    <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap" th:style="${ (#lists.isEmpty(list.search)?'display:none':'')}">
-        <ul class="layui-tab-title" id="tab" th:if="${not #lists.isEmpty(list.tabList)}">
+    <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap"
+         th:style="${(#lists.isEmpty(list.search)||list.hideSearch?'display:none':'')}"
+    >
+        <ul class="layui-tab-title" id="tab" item_name="tabList" th:if="${not #lists.isEmpty(list.tabList)}">
             <li th:lay-id="${item.item_name}" th:item_id="${item.item_name}"
                 th:classappend="${item.select?'layui-this  ':' '}"
                 th:each="item:${list.tabList}">
@@ -49,11 +53,11 @@
                         <!-- 搜索表单 -->
                         <!-- 搜索表单组件 -->
                         <form class="layui-form"   id="searchForm" lay-filter="searchForm">
-                            <div class="  searchcontent layui-row layui-col-space5">
+                            <div class="  searchcontent layui-row layui-col-space5" item_name="searchcontent">
 
                                 <!-- 遍历查询条件，根据类型动态加载组件 -->
                                 <th:block th:each="search : ${list.search}">
-                                    <div  th:utext="${cr.render(search)}" class="selector   list-item  "  th:classappend="${ search.props!=null and  not #strings.isEmpty(search.props.appendClass) ?search.props.appendClass:'layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3'}" >
+                                    <div  th:utext="${cr.render(search)}" class=" selector   list-item  "  th:remove="tag"  >
 
                                     </div>
                                 </th:block>
@@ -98,8 +102,7 @@
 
     <div class="layui-card">
         <div class="layui-card-body">
-            <div id="table-wrap">
-
+            <div id="table-wrap" item_name="table-wrap">
                 <!-- 数据表格 -->
                 <table class="layui-hide" id="dataTable" lay-filter="dataTable">
                     <thead>
@@ -127,7 +130,7 @@
 
 
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
+    <div class="layui-btn-container" item_name="tableButton">
         <th:block th:each="toolbar : ${list.tableButton}">
             <div th:utext="${cr.render(toolbar)}" th:remove="tag"></div>
         </th:block>
@@ -135,7 +138,7 @@
 </script>
 <!-- 操作列模板 -->
 <script type="text/html" id="toolbarTpl" th:if="${not #lists.isEmpty(list.rowButton)}" >
-    <div style="display: flex">
+    <div style="display: flex" item_name="rowButton">
         <th:block th:each="action : ${list.rowButtonNormal}">
             <div th:utext="${cr.render(action)}" th:remove="tag"></div>
         </th:block>
@@ -161,13 +164,15 @@
     /*<![CDATA[*/
 
     layui.use(function(){
+        var table = layui.table;
+        var form = layui.form;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var laytpl = layui.laytpl;
+        var laypage = layui.laypage;
+        var loadIndex=layer.load(3, {shade: [1, '#FFF']});
         try {
-            var table = layui.table;
-            var form = layui.form;
-            var layer = layui.layer;
-            var laydate = layui.laydate;
-            var laytpl = layui.laytpl;
-            var laypage = layui.laypage;
+
 
             laytpl.config({
                 // open: '<%', // 自定义起始界定符
@@ -199,54 +204,53 @@
 
             // 数据列
             /*[# th:each="column : ${list.column}" ]*/
-            var columnConfig = {
-                field: '[(${column.item_name})]',
-                title: '[(${column.label})]'
-            };
-            // 将column.component.props里面所有的值，塞入 columnConfig
+                var columnConfig = {
+                    field: '[(${column.item_name})]',
+                    title: '[(${column.label})]'
+                };
 
-            /*[# th:if="${column.props != null}"]*/
-            /*[# th:each="entry : ${column.props.entrySet()}"]*/
-            var key = [[${entry.key}]];
-            columnConfig[key] = [[${entry.value}]];
-            /*[/]*/
-            /*[/]*/
-            //用户如果自己设置了宽度，以用户的为准 格式为 '{"colwidth":{"USER_NAME":232,"USER_SEX":234}}'
-            var colwidth = cacheJsonConfig.colwidth;
-            if (colwidth) {
-                if (colwidth[columnConfig.field]) {
-                    columnConfig.width = colwidth[columnConfig.field];
-                }
-            }
-
-            // 添加渲染器（RenderConfig）
-            /*[# th:if="${column.component != null   }"]*/
-            columnConfig.templet = function (d) {
-                var valueOrigin = d['[(${column.item_name})]'] || '';
-                var column = /*[[${column}]]*/;
-                var component = /*[[${column.component}]]*/ ;
-                var name =/*[[${column.item_name}]]*/;
-                const render = Global
-                    .registry("columnRender")
-                    .get(component);
-                var renderValue=valueOrigin;
-                if (render) {
-                    renderValue = render(name, d, column);
-                }
-                /*[# th:if="${column.props != null and  column.props.format !=null  }"]*/
-                var formatPattern = '[(${column.props.format})]';
-                if (formatPattern && valueOrigin) {
-                    try{
-                        renderValue = layui.util.toDateString(valueOrigin, formatPattern);
-                    }catch(e){
-                        console.log(e+"格式化错误"+valueOrigin+formatPattern);
+                // 添加渲染器（RenderConfig）
+                /*[# th:if="${column.component != null   }"]*/
+                columnConfig.templet = function (d) {
+                    var valueOrigin = d['[(${column.item_name})]'] || '';
+                    var column = /*[[${column}]]*/;
+                    var component = /*[[${column.component}]]*/ ;
+                    var name =/*[[${column.item_name}]]*/;
+                    const render = Global
+                        .registry("columnRender")
+                        .get(component);
+                    var renderValue=valueOrigin;
+                    if (render) {
+                        renderValue = render(name, d, column);
+                    }
+                    /*[# th:if="${column.props != null and  column.props.format !=null  }"]*/
+                        var formatPattern = '[(${column.props.format})]';
+                        if (formatPattern && valueOrigin) {
+                            try{
+                                renderValue = layui.util.toDateString(valueOrigin, formatPattern);
+                            }catch(e){
+                                console.log(e+"格式化错误"+valueOrigin+formatPattern);
+                            }
+                        }
+                    /*[/]*/
+                    return renderValue;
+                };
+                /*[/]*/
+                // 将column.component.props里面所有的值，塞入 columnConfig
+                /*[# th:if="${column.props != null}"]*/
+                    /*[# th:each="entry : ${column.props.entrySet()}"]*/
+                        var key = [[${entry.key}]];
+                        columnConfig[key] = [[${entry.value}]];
+                    /*[/]*/
+                /*[/]*/
+                //用户如果自己设置了宽度，以用户的为准 格式为 '{"colwidth":{"USER_NAME":232,"USER_SEX":234}}'
+                var colwidth = cacheJsonConfig.colwidth;
+                if (colwidth) {
+                    if (colwidth[columnConfig.field]) {
+                        columnConfig.width = colwidth[columnConfig.field];
                     }
                 }
-                /*[/]*/
-                return renderValue;
-            };
-            /*[/]*/
-            cols.push(columnConfig);
+                cols.push(columnConfig);
             /*[/]*/
 
             // 操作列
@@ -318,12 +322,16 @@
                             , value: input.checked
                         })
                     });
-
-                    document.querySelector(".layuimini-loader").style.display = "none";
-
+                    loadIndex && layer.close(loadIndex);
                 }
             }
 
+
+
+            /*[# th:if="${list.hideSearch}"]*/
+            tableConfig['toolbar'] =null;
+            tableConfig['defaultToolbar'] =[];
+            /*[/]*/
 
 
 
@@ -367,11 +375,13 @@
 
             // 搜索
             $('#searchBtn').on('click', function () {
-                $("#searchBtn").addClass("layui-btn-disabled");
-                document.getElementById('currentPage').value = 1;
-                document.getElementById('orderByName').value = '';
-                document.getElementById('orderByType').value = '';
-                tableIns.reload({where: form.val('searchForm')});
+                if(!$("#searchBtn").hasClass("layui-btn-disabled")){
+                    $("#searchBtn").addClass("layui-btn-disabled");
+                    document.getElementById('currentPage').value = 1;
+                    document.getElementById('orderByName').value = '';
+                    document.getElementById('orderByType').value = '';
+                    tableIns.reload({where: form.val('searchForm')});
+                }
             });
             $("#downBtn").click(function () {
                 $(this).hide();
@@ -385,15 +395,14 @@
             })
         }catch (e){
             console.log(e);
-            document.querySelector(".layuimini-loader").style.display = "none";
+            loadIndex && layui.layer.close(loadIndex);
         }
     });
     /*]]>*/
 
 
     function getCheckedIds() {
-        var table = Global.get("table");
-        var checkStatus = table.checkStatus('dataTable');
+        var checkStatus = layui.table.checkStatus('dataTable');
         // 获取选中行数据的ID数组,逗号分隔，并去重
         var ids = checkStatus.data.map(function (row) {
             return row.ID||row.id;
@@ -459,7 +468,7 @@
 
                 // 检查 data-json 中的 display
                 let jsonDisplay = null;
-                const jsonStr = a.getAttribute('data-dataJson');
+                const jsonStr = a.getAttribute('data-propsJson');
                 if (jsonStr) {
                     try {
                         const cfg = JSON.parse(jsonStr);
@@ -476,25 +485,6 @@
             // 全部隐藏 → 隐藏整个容器
             box.style.display = allHidden ? 'none' : 'flex';
         });
-
-
-        document.addEventListener('click', function (e) {
-            // 判断是否点击了 .ez-button 或 .ez-button 的子节点
-            const btn = e.target.closest('.ez-button');
-            if (!btn) return;
-
-            const jsonStr = btn.getAttribute('data-dataJson');
-            let cfg;
-
-            try {
-                cfg = JSON.parse(jsonStr);
-            } catch (err) {
-                cfg = {};
-            }
-
-            ezopen(cfg.opentype, cfg.windowname, cfg.url, cfg.area);
-        });
-
     }
     //解析树形标签
     function resolveTreeLabels(rawIds, treeData) {
@@ -576,7 +566,7 @@
 
 
 </script>
-<div th:utext="${list.appendFoot}" th:if="${not #strings.isEmpty(list.appendFoot )}"></div>
+<div th:utext="${list.appendFoot}" item_name="appendFoot" th:if="${not #strings.isEmpty(list.appendFoot )}"></div>
 
 </body>
 </html>

@@ -1,0 +1,14 @@
+// 初始化表达式：根据ID查询记录
+if(StringUtils.isNotBlank(id)){
+    Map<String,Object> data = selectOne("SELECT * FROM test_table WHERE id = {id} AND delete_flag = 0");
+    if(data != null){
+        // 设置表单初始值
+        setValue("name", data.get("name"));
+        setValue("status", data.get("status"));
+        setValue("remark", data.get("remark"));
+
+        // 设置只读字段
+        setReadonly("create_time", data.get("create_time"));
+        setReadonly("update_time", data.get("update_time"));
+    }
+}

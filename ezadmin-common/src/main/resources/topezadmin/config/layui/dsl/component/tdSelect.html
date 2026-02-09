@@ -1,18 +1,29 @@
 <script    >
     Global.registry("columnRender").register("tdSelect",(name,d,component)=>{
         const value=d[name];
+        var finalResult='';
         let paramsJSON = component.data ;
+        // 兼容字符串类型的paramsJSON
+        if(typeof paramsJSON === 'string' && paramsJSON){
+            try {
+                paramsJSON = JSON.parse(paramsJSON);
+            } catch(e) {
+                console.error('tdSelect: paramsJSON解析失败', e);
+                paramsJSON = [];
+            }
+        }
         if(!paramsJSON){
             paramsJSON=[];
         }
-        if(value&&value!=''){
+        if(value !== null && value !== undefined && value !== ''){
             var option = paramsJSON.find(function(item) {
-                return String(item.value) === String(value);
+               return String(item.value) === String(value);
             });
             if (option) {
-               return option.label;
+                finalResult= option.label;
             }
         }
-        return value ||component.props.emptyShow ||'';
+        finalResult= finalResult ||component.props.emptyShow ||'';
+        return   `<span item_name="`+name+`">`+ finalResult + `</span>`;
     });
 </script>

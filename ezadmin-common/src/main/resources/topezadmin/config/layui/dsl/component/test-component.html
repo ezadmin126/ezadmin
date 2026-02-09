@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="test-component">
+    <label th:text="${title}">标题</label>
+    <input type="text" th:name="${field}" th:value="${value}" />
+    <span class="help-text" th:text="${help}">帮助文本</span>
+    <!-- 这是一个测试组件模板，用于验证热加载功能 -->
+</div>
+</html>

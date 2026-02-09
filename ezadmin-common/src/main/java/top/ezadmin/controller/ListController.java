@@ -8,6 +8,7 @@ import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.constants.RequestParamConstants;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.enums.DefaultParamEnum;
+import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.common.enums.OrderEnum;
 import top.ezadmin.common.enums.ParamNameEnum;
 import top.ezadmin.common.utils.*;
@@ -389,16 +390,28 @@ public class ListController extends BaseController {
     }
 
 
-    public EzResult dsl(RequestContext requestContext, String method, String id) throws Exception {
+    public EzResult page(RequestContext requestContext, String method, String id) throws Exception {
         Map<String, Object> templateParam=new HashMap<>();
-        Map<String, Object> list = JSONUtils.deepParseObjectMap(Resources.getResourceAsString("topezadmin/config/layui/dsl/list/"+id+".json"));
+        String configPath = "topezadmin/config/layui/dsl/list/"+id+".json";
+        Map<String, Object> list = ConfigFileLoader.loadConfigFile(configPath);
+        // 处理表达式文件引用
+        ExpressFileLoader.processExpressReferences(list, configPath);
+        // 处理 appendHead 和 appendFoot 数组
+        ExpressFileLoader.processAppendFields(list);
         initSearch(requestContext,list);
         Collection<String> tdtemplates=initTd(list);
         if(list.get("initApi") == null){
             list.put("initApi", "/topezadmin/list/data-" + id);
         }
+        //默认你不隐藏头部
+        if(list.get("hideSearch") == null){
+            list.put("hideSearch", false);
+        }
+
         initRowBtn(list);
         templateParam.put("list", list);
+        templateParam.put("ENCRYPT_LIST_ID", id);
+        templateParam.put("cacheFlag",EzBootstrap.config().isSqlCache());
         templateParam.put("tdTemplates", tdtemplates);
         templateParam.put("requestContext",requestContext);
         templateParam.put("downloadUrl",EzBootstrap.config().getDownloadUrl());
@@ -409,7 +422,12 @@ public class ListController extends BaseController {
 
     public EzResult data(RequestContext requestContext, String method, String id) throws Exception {
 
-        Map<String, Object> list = JSONUtils.deepParseObjectMap(Resources.getResourceAsString("topezadmin/config/layui/dsl/list/"+id+".json"));
+        String configPath = "topezadmin/config/layui/dsl/list/"+id+".json";
+        Map<String, Object> list = ConfigFileLoader.loadConfigFile(configPath);
+        // 处理表达式文件引用
+        ExpressFileLoader.processExpressReferences(list, configPath);
+        // 处理 appendHead 和 appendFoot 数组
+        ExpressFileLoader.processAppendFields(list);
         String select_express = Utils.expressToString( ((Map<String, Object>)list.get("express")).get("main"));
         String orderBy = Utils.expressToString(((Map<String, Object>)list.get("express")).get("orderBy"));
         String groupBy = Utils.expressToString(((Map<String, Object>)list.get("express")).get("groupBy"));
@@ -463,12 +481,16 @@ public class ListController extends BaseController {
         List<Map<String, Object>> bread = new ArrayList<>();
         List<Map<String, Object>> dropdown = new ArrayList<>();
         columnList.forEach(item->{
-            if(item.get("component")==null||StringUtils.isBlank((String) item.get("component"))||item.get("component").equals("button-normal")){
+            if(item.get("component")==null||StringUtils.isBlank((String) item.get("component"))){
                 normal.add(item);
-            }else if(item.get("component").equals("button-bread")){
+                return;
+            }
+            if(item.get("component").equals("button-bread")){
                 bread.add(item);
             }else if(item.get("component").equals("button-dropdown")){
                 dropdown.add(item);
+            }else{
+                normal.add(item);
             }
         });
         list.put("rowButtonNormal", normal);
@@ -565,6 +587,21 @@ public class ListController extends BaseController {
                         //todo apiUrl
                     }
                 }
+
+                //props
+                try {
+                    Map<String, Object> props = (Map<String, Object>) search.get("props");
+                    if (props == null) {
+                        props = new HashMap<>();
+                    }
+                    props.putIfAbsent("lay-affix", "clear");
+                    search.put("props", props);
+                }catch (Exception e){
+
+                }
+                if(search.get("col") == null){
+                    search.put("col", 3);
+                }
             }
         });
     }
@@ -594,14 +631,24 @@ public class ListController extends BaseController {
         }
         for (int i = 0; i < searchList.size(); i++) {
             Map<String, Object> search = searchList.get(i);
+            Map<String, Object> props = (Map<String, Object>) search.get("props");
             String currentItemname = Utils.trimNull(search.get(JsoupUtil.ITEM_NAME));
-            String type = Utils.trimNull(search.get(JsoupUtil.TYPE));
+            String component = Utils.trimEmptyDefault(search.get("component"), "input");
             String orgValue = Utils.trimNull(requestParamMap.get(currentItemname));
+            //兼容
+            search.put(JsoupUtil.OPER, Utils.trimNull(search.get("operator")));
+            search.put(JsoupUtil.TYPE, component);
+            String newJdbcType=Utils.trimEmptyDefault(search.get("jdbcType"), JdbcTypeEnum.VARCHAR.getName());
+            search.putIfAbsent(JsoupUtil.JDBCTYPE, newJdbcType);
             search.put(ParamNameEnum.itemParamValue.getName(), orgValue);
             search.put(ParamNameEnum.itemParamValueStart.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_START")));
             search.put(ParamNameEnum.itemParamValueEnd.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_END")));
             //联动日期区间  -
-            if (type.contains("daterange") && StringUtils.isNotBlank(orgValue)) {
+            if (component.equalsIgnoreCase("date")
+                    && Utils.isTrue(props.get("range"))
+                    && StringUtils.isNotBlank(orgValue)) {
+                //默认datetime
+                search.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
                 orgValue = DefaultParamEnum.getValue(orgValue);
                 String[] valueSplit = orgValue.split(" - ");
                 search.put(currentItemname, orgValue);

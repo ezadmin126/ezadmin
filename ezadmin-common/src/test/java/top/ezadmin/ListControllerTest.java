@@ -116,7 +116,7 @@ public class ListControllerTest {
     @Test
     public void testDslListPage() throws Exception {
         RequestContext ctx = createRequestContext();
-        ctx.setRequestURI("/topezadmin/list/dsl-test");
+        ctx.setRequestURI("/topezadmin/list/page-test");
 
         EzResult result = EzBootstrap.getInstance().generate(ctx);
 
@@ -176,7 +176,7 @@ public class ListControllerTest {
         ListController controller = new ListController();
         RequestContext ctx = createRequestContext();
 
-        EzResult result = controller.dsl(ctx, "dsl", "test");
+        EzResult result = controller.page(ctx, "page", "test");
 
         assertNotNull("Result should not be null", result);
         System.out.println("=== testDirectControllerDsl ===");
@@ -252,7 +252,7 @@ public class ListControllerTest {
     @Test
     public void testSelectInitData() throws Exception {
         RequestContext ctx = createRequestContext();
-        ctx.setRequestURI("/topezadmin/list/dsl/test");
+        ctx.setRequestURI("/topezadmin/list/page-test");
 
         EzResult result = EzBootstrap.getInstance().generate(ctx);
 
@@ -326,6 +326,22 @@ public class ListControllerTest {
         System.out.println("=== testMultiSelectSearch ===");
         System.out.println("Multi-select search result: " + result.getData());
     }
+    @Test
+    public void testJDBCTYPE() throws Exception {
+        ListController controller = new ListController();
+        RequestContext ctx = createRequestContext();
+
+        Map<String, Object> params = ctx.getRequestParams();
+        params.put("page", 1);
+        params.put("perPageInt", 10);
+        params.put("USER_SEX", "1");  // 多选爱好
+
+        EzResult result = controller.data(ctx, "data", "test");
+
+        assertNotNull("Result should not be null", result);
+        System.out.println("=== testMultiSelectSearch ===");
+        System.out.println("Multi-select search result: " + result.getData());
+    }
 
     /**
      * 测试不存在的列表ID
@@ -333,7 +349,7 @@ public class ListControllerTest {
     @Test
     public void testNotExistList() {
         RequestContext ctx = createRequestContext();
-        ctx.setRequestURI("/topezadmin/list/dsl/notexist");
+        ctx.setRequestURI("/topezadmin/list/page-notexist");
 
         EzResult result = EzBootstrap.getInstance().generate(ctx);
 

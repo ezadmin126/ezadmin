@@ -63,6 +63,10 @@ public class EzAttrsProcessor extends AbstractAttributeTagProcessor {
             if (attrValue == null) {
                 continue;
             }
+            //jquery validate对range有拦截，影响date字段
+            if (StringUtils.equalsIgnoreCase(attrName, "range")) {
+                continue;
+            }
 
             // boolean 处理
             if (attrValue instanceof Boolean) {

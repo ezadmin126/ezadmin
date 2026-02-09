@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,6 +34,8 @@
 
     <script th:src="${'/webjars/topezadmin/layui/js/Global.js'}" type="text/javascript"></script>
     <script th:src="${'/webjars/topezadmin/layui/js/ezdsl.js'}" type="text/javascript"></script>
+    <link th:if="${not cacheFlag}"  th:href="${'/webjars/topezadmin/layui/js/inspector/ez-inspector.css'}" rel="stylesheet">
+    <script th:if="${not cacheFlag}" th:src="${'/webjars/topezadmin/layui/js/inspector/ez-inspector.js'}" type="text/javascript"></script>
     <style>
         .layui-col-md0{
             display: none;
@@ -41,89 +43,99 @@
     </style>
 </head>
 <body>
-<div class="appendHead" th:utext="${form.appendHead}"></div>
+<div class="appendHead" item_name="appendHead" th:remove="tag" th:if="${not #strings.isEmpty(form.appendHead)}" th:utext="${form.appendHead}"></div>
 
-<div class="layui-container"  >
-    <form ID="inputForm" method="post" style="padding-bottom: 60px"   class="layui-form inputForm" lay-filter="inputForm">
-        <!-- 循环渲染所有卡片 -->
-        <th:block th:each="cardItem,cardStat : ${form.cardList}">
-            <!-- 普通表单卡片 -->
-            <div th:if="${cardItem.type == 'card'}" class="layui-card" th:id="${cardItem.label}"
-                 th:classappend="${'layui-col-md'+(cardItem.get('col') != null ? cardItem.get('col') : 12)}"
-            >
-                <div class="layui-card-header ez-form-panel" >
-                    [(${cardItem.label})]   [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
-                    <div class="layui-layer-setwin  "  style="top: 0px;line-height: 43px;position: absolute;">
-                        <div class="layui-btn-group custom-card-btn " th:if="${not #lists.isEmpty(cardItem.buttonList) }">
-                            <th:block th:each="button : ${cardItem.buttonList}">
-                                <div th:utext="${cr.render(button)}" th:remove="tag"></div>
-                            </th:block>
-                        </div>
-                        <span class="layui-layer-min" style=" "></span>
-                        <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
-                    </div>
-                </div>
-                <div class="layui-card-body">
-                    <!-- 表单字段 -->
-                    <div class="layui-row layui-col-space20">
-                        <th:block th:each="field : ${cardItem.fieldList}">
+<form ID="inputForm" method="post" style="padding-bottom: 60px;"  class="layui-form inputForm" lay-filter="inputForm">
+    <div th:class="${'layui-'+ (#strings.isEmpty(form.layout)?'container':'fluid')}">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <input type="hidden" ID="ID" name="ID" th:VALUE="${ID}">
+                    <input type="hidden" ID="EZ_SESSION_USER_NAME_KEY" name="EZ_SESSION_USER_NAME_KEY"
+                           th:value="${EZ_SESSION_USER_NAME_KEY}">
+                    <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY"
+                           th:value="${EZ_SESSION_USER_ID_KEY}">
+                    <div class="layui-col-space10 layui-row ">
+                        <!-- 循环渲染所有卡片 -->
+                        <th:block th:each="cardItem,cardStat : ${form.cardList}">
+                            <!-- 普通表单卡片 -->
+                            <div th:if="${cardItem.type == 'card'}" class="layui-card" th:id="${cardItem.label}"
+                                 th:item_name="${'card-'+cardItem.label}"  th:classappend="${'layui-col-md'+(cardItem.get('col') != null ? cardItem.get('col') : 12)}"
+                            >
+                                <div class="layui-card-header ez-form-panel" >
+                                    [(${cardItem.label})]   [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
+                                    <div class="layui-layer-setwin  "  style="top: 0px;line-height: 43px;position: absolute;">
+                                        <div class="layui-btn-group custom-card-btn " th:if="${not #lists.isEmpty(cardItem.buttonList) }">
+                                            <th:block th:each="button : ${cardItem.buttonList}">
+                                                <div th:utext="${cr.render(button)}" th:remove="tag"></div>
+                                            </th:block>
+                                        </div>
+                                        <span class="layui-layer-min" style=" "></span>
+                                        <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
+                                    </div>
+                                </div>
+                                <div class="layui-card-body">
+                                    <!-- 表单字段 -->
+                                    <div class="layui-row layui-col-space5">
+                                        <th:block th:each="field : ${cardItem.fieldList}">
+                                                <div  th:utext="${cr.render(field)}"  th:remove="tag"></div>
+                                        </th:block>
+                                    </div>
 
-                            <div th:class="'layui-col-md' + ${  field.get('col') != null ? field.get('col') : 12}" >
-                                <div  th:utext="${cr.render(field)}"  th:remove="tag"></div>
+                                    <!--                    &lt;!&ndash; 卡片按钮 &ndash;&gt;-->
+                                    <!--                    <div th:if="${not #lists.isEmpty(cardItem.buttonList)}" class="layui-form-item" style="margin-top: 20px;">-->
+                                    <!--                        <div class="layui-input-block">-->
+                                    <!--                            <th:block th:each="button : ${cardItem.buttonList}">-->
+                                    <!--                                <div th:utext="${cr.render(button)}" th:remove="tag"></div>-->
+                                    <!--                            </th:block>-->
+                                    <!--                        </div>-->
+                                    <!--                    </div>-->
+                                    <!--                </form>-->
+                                </div>
                             </div>
+                            <!-- iframe卡片 -->
+                            <div  th:item_name="${'card-'+cardItem.label}" th:if="${cardItem.type == 'iframe'}" class="layui-card"   th:classappend="${'layui-col-md'+(cardItem.get('col') != null ? cardItem.get('col') : 12)}">
+                                <div class="layui-card-header ez-form-panel"  >
+                                    [(${cardItem.label})]    [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
+                                    <div class="layui-layer-setwin  "
+                                         style="top: 0px;line-height: 43px;position: absolute;">
+                                        <div class="layui-btn-group custom-card-btn" th:if="${not #lists.isEmpty(cardItem.buttonList)}">
+                                            <th:block th:each="button : ${cardItem.buttonList}">
+                                                <div th:utext="${cr.render(button)}" th:remove="tag"></div>
+                                            </th:block>
+                                        </div>
+                                        <span class="layui-layer-min" style=" "></span>
+                                        <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
+                                    </div>
+                                </div>
+                                <div class="layui-card-body" style="padding: 0;">
+                                    <iframe th:src="${cardItem.iframe.url}"
+                                            th:style="'display:block;width: ' + ${cardItem.iframe.width != null ? cardItem.iframe.width : '100%'} + '; height: ' + ${cardItem.iframe.height != null ? cardItem.iframe.height : '400px'} + '; border: none;'"
+                                            frameborder="0">
+                                    </iframe>
+                                </div>
+
+                            </div>
+
                         </th:block>
-                    </div>
 
-                    <!--                    &lt;!&ndash; 卡片按钮 &ndash;&gt;-->
-                    <!--                    <div th:if="${not #lists.isEmpty(cardItem.buttonList)}" class="layui-form-item" style="margin-top: 20px;">-->
-                    <!--                        <div class="layui-input-block">-->
-                    <!--                            <th:block th:each="button : ${cardItem.buttonList}">-->
-                    <!--                                <div th:utext="${cr.render(button)}" th:remove="tag"></div>-->
-                    <!--                            </th:block>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-                    <!--                </form>-->
-                </div>
-            </div>
-            <!-- iframe卡片 -->
-            <div th:if="${cardItem.type == 'iframe'}" class="layui-card"   th:classappend="${'layui-col-md'+(cardItem.get('col') != null ? cardItem.get('col') : 12)}">
-                <div class="layui-card-header ez-form-panel"  >
-                    [(${cardItem.label})]    [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
-                    <div class="layui-layer-setwin  "
-                         style="top: 0px;line-height: 43px;position: absolute;">
-                        <div class="layui-btn-group custom-card-btn" th:if="${not #lists.isEmpty(cardItem.buttonList)}">
-                            <th:block th:each="button : ${cardItem.buttonList}">
-                                <div th:utext="${cr.render(button)}" th:remove="tag"></div>
-                            </th:block>
-                        </div>
-                        <span class="layui-layer-min" style=" "></span>
-                        <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
                     </div>
-                </div>
-                <div class="layui-card-body" style="padding: 0;">
-                    <iframe th:src="${cardItem.iframe.url}"
-                            th:style="'display:block;width: ' + ${cardItem.iframe.width != null ? cardItem.iframe.width : '100%'} + '; height: ' + ${cardItem.iframe.height != null ? cardItem.iframe.height : '400px'} + '; border: none;'"
-                            frameborder="0">
-                    </iframe>
                 </div>
 
             </div>
-
-        </th:block>
-
+        </div>
+    </div>
         <!-- 提交按钮区域（在所有卡片之后） -->
         <div  class="layui-card layui-hide">
             <div class="layui-card-body">
                 <div class="layui-form-item" style="margin-top: 20px;">
                     <div class="layui-input-block">
-                        <button type="button"
-                                class="layui-btn layui-btn-normal "
-                                id="submitbtn">
-                            提交
+
+                        <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue layui-hide " lay-submit
+                                lay-filter="submitbtn">提交
                         </button>
-                        <th:block th:each="button : ${form.buttonList}" th:if="${not #lists.isEmpty(form.buttonList)}">
-                            <div th:utext="${cr.render(button)}" th:remove="tag"></div>
-                        </th:block>
+
+
                         <button type="button"
                                 class="layui-btn layui-btn-primary"
                                 onclick="javascript:history.back();">
@@ -133,12 +145,20 @@
                 </div>
             </div>
         </div>
-    </form>
-</div>
+</form>
+
 <div class="layui-panel formtopfix formtopfixbuttons">
-    <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer">
+    <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer"  item_name="submitButtonContainer">
         <button id="submitbtnProxy" class="layui-btn layui-bg-blue " >提交
         </button>
+        <th:block th:each="button : ${form.buttonList}" th:if="${not #lists.isEmpty(form.buttonList)}">
+            <div th:utext="${cr.render(button)}" th:remove="tag"></div>
+        </th:block>
+<!--        <button type="button"-->
+<!--                class="layui-btn layui-btn-primary"-->
+<!--                onclick="javascript:history.back();">-->
+<!--            返回-->
+<!--        </button>-->
     </div>
 </div>
 
@@ -306,7 +326,7 @@
 <script type="text/html" id="template-file">
     <div  class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}" style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
         <div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
-            <i  onclick="javascript:openBlank('` +   $("#downloadUrl").val() + `{{= d.fileId }}')" style="font-size:100px; max-width: 100%; max-height: 100%;"
+            <i  onclick="javascript:openBlank('{{= d.downloadUrl }}{{= d.fileId }}')" style="font-size:100px; max-width: 100%; max-height: 100%;"
             class=" layui-upload-img layui-icon-file-b layui-icon"></i>
         </div>
         <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}" class="layui-badge deleteFiles   ">
@@ -317,7 +337,7 @@
     <div  class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}" style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
         <div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
             <video  style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
-                    src="` +  $("#downloadUrl").val() + `{{= d.fileId }}" controls="controls"></video>
+                    src="{{= d.downloadUrl }}{{= d.fileId }}" controls="controls"></video>
         </div>
         <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}" class="layui-badge deleteFiles   ">
 <i class="layui-icon layui-icon-close"></i></span>
@@ -328,19 +348,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    // 获取 URL 参数
-    function getUrlParams() {
-        var params = {};
-        var queryString = window.location.search.substring(1);
-        if (queryString) {
-            var pairs = queryString.split('&');
-            for (var i = 0; i < pairs.length; i++) {
-                var pair = pairs[i].split('=');
-                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
-            }
-        }
-        return params;
-    }
+
     var template =  $("#template-image").html();
     var template_v =  $("#template-video").html();
     var template_file =  $("#template-file").html();
@@ -358,118 +366,42 @@
             tagStyle: 'modern' // 采用新版本的标签风格
         });
 
-
-        $(".ez-upload").each(function(){
-            var _this=$(this);
-            var config={
-                elem: _this,
-                "accept":"image",
-                "url":  document.getElementById("uploadUrl").value
-            };
-            var resultConfig={};
-            if(_this.attr('data-propsJson') != null){
-                var c = JSON.parse(_this.attr('data-propsJson'));
-                resultConfig= Global.deepUnion(c,config);
-            }else{
-                resultConfig=config;
-            }
-            resultConfig.done=function(res){
-                var respon = res;
-                try {
-                    respon = JSON.parse(res);
-                } catch (E) {
-                }
-                console.log(respon);
-                //如果上传失败
-                if (!respon.success) {
-                    return layer.msg('上传失败，原因：' + respon.message);
-                }
-                //上传成功的一些操作
-                for (var i = 0; i < respon.data.length; i++) {
-                    upload_add(resultConfig, _this.attr("item_name"), respon.data[i].fileId);
-                }
-
-            }
-            upload.render(resultConfig);
-            dragula([document.getElementById("layui-upload-list_"+_this.attr("item_name"))])
-                .on('drop', function (el) {
-                    console.log(el.classList);
-                    upload_reCalId(_this.attr("item_name"))
-                });
-        })
-
         // 如果有 initExpress，加载表单数据（编辑模式）
-
+        var index=layer.load(3, {shade: [1, '#FFF']});
+        initFormValue(urlParams);
+        layui.form.render();
         $.ajax({
-            url: '/form/dsl/data-' + /*[[${form.id}]]*/ '',
+            url: /*[[${form.initUrl}]]*/ '',
             type: 'POST',
             data: JSON.stringify(urlParams),
-            contentType: 'application/json',
+            contentType: 'application/json;charset=UTF-8',
             success: function(res){
                 if(res.code == '0' && res.data) {
                     if (Object.keys(res.data).length > 0) {
                         // 设置表单默认值（从 URL 参数）
                         initFormValue(res.data);
+                        //自定义函数
+                        if(typeof initFunction === 'function'){
+                            initFunction(res.data);
+                        }
                         // 刷新表单渲染（特别是 select）
                         form.render();
+
                     }
                 }
+                layui.layer.close(index);
             },
             error: function(){
                 layer.msg('加载数据失败');
+                form.render();
+                layui.layer.close(index);
             }
         });
-
-
-        function upload_add(config, itemId, fileId) {
-            layui.use(['form', 'laytpl'], function () {
-                let laytpl = layui.laytpl;
-                var ctxName = document.getElementById("contextName") == null ? '' : document.getElementById("contextName").value;
-                var uurl = document.getElementById("downloadUrl") == null ? '' : document.getElementById("downloadUrl").value;
-                var tmp = template;
-                if (config.accept == 'video') {
-                    tmp = template_v;
-                } else if (config.accept == 'file') {
-                    tmp = template_file;
-                }
-                var uniqueName = fileId.replace('./', '').replace(/["&'./:=?[\]%]/gi, '-').replace(/(--)/gi, '');
-                var imgShow = laytpl(tmp).render({
-                    fileId: fileId, contextName: ctxName, uniqueName: uniqueName,
-                    downloadUrl: uurl,
-                    itemId: itemId,
-                });
-                $("#layui-upload-list_" + itemId).append(imgShow);
-
-                upload_reCalId(itemId);
-            })
-
-        }
-        function upload_remove(itemId, fileId) {
-            var uniqueName = fileId.replace('./', '').replace(/["&'./:=?[\]%]/gi, '-').replace(/(--)/gi, '');
-            $("#layui-upload-list_" + itemId).find(".file_preview_" + uniqueName).remove();
-            upload_reCalId(itemId);
-        }
-        $(document).on('click', '.deleteFiles', function () {
-            var _this = $(this);
-            var itemId = _this.attr("item_id")
-            upload_remove(itemId, _this.parent().attr("file_id"));
-            if (typeof (eval("deleteFilesCallback")) == "function") {
-                deleteFilesCallback(_this);
-            }
-        });
-        function upload_reCalId(itemId) {
-            var fset = new Set();
-            $("#layui-upload-list_" + itemId).find(".file_preview").each(function () {
-                fset.add($(this).attr("file_id"))
-            })
-            let inputHiddenNode = $("#ITEM_ID_" + itemId);
-            inputHiddenNode.val([...fset]);
-        }
 
     });
     /*]]>*/
 
 </script>
-<div class="appendFoot" th:utext="${form.appendFoot}"></div>
+<div class="appendFoot" item_name="appendFoot"  th:remove="tag" th:if="${not #strings.isEmpty(form.appendFoot)}" th:utext="${form.appendFoot}"></div>
 </body>
 </html>

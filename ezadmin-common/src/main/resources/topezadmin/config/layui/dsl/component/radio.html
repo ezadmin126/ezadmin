@@ -1,12 +1,14 @@
+<div th:class="'col-'+${item_name}+' layui-col-md' + ${ col != null ? col: 12} ">
 
-<div   class="layui-form-item">
+<div   class="layui-form-item"  th:item_name="${item_name}">
     <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
         <span th:if="${props != null and props.required}" style="color: red;">*</span>
-        <span th:text="${label}+'：'">字段名</span>
+        <span th:utext="${label}+'：'">字段名</span>
     </label>
-    <div class="layui-input-block">
-        <input type="radio"  th:value="${option.value}"  th:each="option : ${data}" th:title="${option.label}"
+    <div class="layui-input-block"   >
+        <input type="radio" th:lay-filter="${'lay-filter-'+item_name}"    th:value="${option.value}"  th:each="option : ${data}" th:title="${option.label}"
                th:name="${item_name}" th:attrs="${props}" th:data-propsJson="${propsJson}"/>
-        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:text="${props.description}"></div>
+        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
     </div>
+</div>
 </div>

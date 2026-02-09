@@ -1,0 +1,33 @@
+{
+  "id": "test-array-express",
+  "title": "测试数组表达式引用",
+  "express": {
+    "main": "SELECT * FROM test_table",
+    "count": "SELECT COUNT(*) FROM test_table"
+  },
+  "appendHead": [
+    "<style>",
+    "  .custom-header { background: #f0f0f0; }",
+    "</style>"
+  ],
+  "appendFoot": [
+    "<script>",
+    "$infolist_foot.js",
+    "</script>"
+  ],
+  "customScripts": [
+    "$script1.js",
+    "console.log('inline script');",
+    "$script2.js"
+  ],
+  "nestedExample": {
+    "items": [
+      "normal string",
+      "$nested_item.txt",
+      {
+        "type": "object",
+        "content": "$nested_object_content.txt"
+      }
+    ]
+  }
+}

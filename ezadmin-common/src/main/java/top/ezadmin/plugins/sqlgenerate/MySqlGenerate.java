@@ -255,7 +255,7 @@ public class MySqlGenerate extends SqlGenerate {
             //K为多个需要分割参与搜索的情况
             String idArray[] = StringUtils.split(value, SelectKVContants.SPLIT.toString() + "|,");
             sql.append("   (");
-            StringBuilder sqlPice = new StringBuilder("'-1x'");
+            StringBuilder sqlPice = new StringBuilder();
             for (String id : idArray) {
                 if (StringUtils.isBlank(id)) {
                     continue;
@@ -264,7 +264,7 @@ public class MySqlGenerate extends SqlGenerate {
                 sqlPice.append(Utils.trimNull(id));
                 sqlPice.append("'");
             }
-            sql.append(sqlPice);
+            sql.append(sqlPice.length()>1?sqlPice.substring(1):sqlPice);
             sql.append(" )");
         } else {
             sql.append("  (" + value + ")");

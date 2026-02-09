@@ -38,6 +38,7 @@
         },
         "component":  "select" ,
         "props": {
+          "jdbcType": "NUMBER",
           "placeholder": "请选择性别"
         }
       },

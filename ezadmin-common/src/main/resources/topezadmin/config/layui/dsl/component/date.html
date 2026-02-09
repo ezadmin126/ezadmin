@@ -1,10 +1,12 @@
-<div   class="layui-form-item">
+<div th:class="'col-'+${item_name}+' layui-col-md' + ${ col != null ? col: 12} ">
+
+<div   class="layui-form-item"  th:item_name="${item_name}">
     <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
         <span th:if="${props != null and props.required}" style="color: red;">*</span>
         <span th:text="${label}+'：'">字段名</span>
     </label>
     <div class="layui-input-block">
-        <div class="layui-input-wrap">
+        <div class="layui-input-wrap"   >
             <div class="layui-input-prefix">
                 <i class="layui-icon layui-icon-date"></i>
             </div>
@@ -15,6 +17,7 @@
                        th:data-propsJson="${propsJson}"
             >
         </div>
-        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:text="${props.description}"></div>
+        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
     </div>
+</div>
 </div>

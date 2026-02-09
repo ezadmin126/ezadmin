@@ -4,6 +4,7 @@ import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
 import com.ql.util.express.Operator;
+import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.utils.Page;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
@@ -145,7 +146,7 @@ public class EzExpressExecutor {
             }
         }
 
-        Object r = runner.execute(express, context, null, true, false);
+        Object r = runner.execute(express, context, null, EzBootstrap.config().isSqlCache(),  !EzBootstrap.config().isSqlCache());
         result = r;
         return r;
 
