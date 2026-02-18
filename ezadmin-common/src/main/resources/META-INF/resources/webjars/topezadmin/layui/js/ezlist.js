@@ -780,7 +780,7 @@ function doSystem() {
     $("button[item_name='修改']").addClass("layui-border-blue");
     $("button[item_name='编辑']").addClass("layui-border-blue");
     if ($("#removewatermark").val() != 1) {
-       // watermark.init({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + ' ' + getNow()});
+        watermark.init({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + ' ' + getNow()});
     }
     //懒加载
     // $('.viewer-image').each(function () {

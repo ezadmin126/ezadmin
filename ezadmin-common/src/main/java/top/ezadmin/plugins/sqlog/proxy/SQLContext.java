@@ -8,6 +8,10 @@ import org.slf4j.LoggerFactory;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.plugins.sqlog.po.Monitor;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 /**
  * SQLContext.java
  *
@@ -15,7 +19,7 @@ import top.ezadmin.plugins.sqlog.po.Monitor;
  */
 public class SQLContext {
     private static Logger log = LoggerFactory.getLogger(SQLContext.class);
-
+    public static List<String> exclude=new ArrayList<>();
     protected static void monitor(Monitor monitor) {
         try {
             monitor.setEnd(System.currentTimeMillis());
@@ -23,6 +27,11 @@ public class SQLContext {
                 Utils.addLog("ezsql\tinfo：： " + monitor.sqlTime());
             }
             if (monitor.getParams().log()) {
+                for (int i = 0; i < exclude.size(); i++) {
+                    if (monitor.getSql().contains(exclude.get(i))) {
+                        return;
+                    }
+                }
                 log.info("{} {}", Utils.trimNull(Utils.getRequestUrl()), monitor.toString());
             }
             if (monitor.getParams().logOverTime()) {

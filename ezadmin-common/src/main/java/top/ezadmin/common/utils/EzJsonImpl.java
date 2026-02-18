@@ -14,6 +14,11 @@ public class EzJsonImpl implements EzJson {
     }
 
     @Override
+    public String toPrettyJSONString(Object obj) {
+        return JSON.toJSONString(obj, true);
+    }
+
+    @Override
     public <T> List<T> parseArray(String values, Class<T> clazz) {
         return JSON.parseArray(values, clazz);
     }

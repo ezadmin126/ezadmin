@@ -334,12 +334,12 @@ public class FormController extends BaseController {
     public EzResult page(RequestContext requestContext, String method, String formUrlCode) throws Exception {
         String formId = formUrlCode;
         Map<String, Object> templateParam=new HashMap<>();
-        String configPath = "topezadmin/config/layui/dsl/form/"+formId+".json";
-        Map<String, Object> form = ConfigFileLoader.loadConfigFile(configPath);
-        // 处理表达式文件引用
-        ExpressFileLoader.processExpressReferences(form, configPath);
-        // 处理 appendHead 和 appendFoot 数组
-        ExpressFileLoader.processAppendFields(form);
+        // 使用统一加载器（文件优先，数据库降级）
+        top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(formId, "form");
+        if (dslConfig == null) {
+            return EzResult.instance().code("404");
+        }
+        Map<String, Object> form = dslConfig.getConfig();
         if(StringUtils.isBlank((String)form.get("initUrl"))){
             form.put("initUrl", "/topezadmin/form/data-"+formUrlCode);
         }
@@ -351,82 +351,129 @@ public class FormController extends BaseController {
         templateParam.put("uploadUrl",EzBootstrap.config().getUploadUrl());
         templateParam.put("downloadUrl",EzBootstrap.config().getDownloadUrl());
         templateParam.put("formSubmitUrl", "/topezadmin/form/submit-"+formUrlCode);
+        templateParam.put("ENCRYPT_FORM_ID",  formUrlCode);
         templateParam.putAll(EzBootstrap.config().getConfig());
+        templateParam.put("EZ_SESSION_USER_NAME_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
+        templateParam.put("EZ_SESSION_USER_ID_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY)));
         return render("layui/dsl/formTemplate",templateParam);
     }
     private void iniFormItem(RequestContext requestContext,Map<String, Object> list) {
         List<Map<String, Object>> cardList = (List<Map<String, Object>>) list.get("cardList");
         cardList.forEach(card->{
-            List<Map<String, Object>> items = (List<Map<String, Object>>) card.get("fieldList");
-            if(items != null && items.size() > 0){
-                items.forEach(item->{
-                    Map<String, Object> initData = (Map<String, Object>) item.get("initData");
-                    if (initData != null) {
-                        String dataUrl = (String) initData.get("dataUrl");
-                        if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
-                            List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
-                            item.put("data", result);
-                            item.put("dataJson", JSONUtils.toJSONString(result));
-                        }
-                        else if(initData.containsKey("dataSql") && initData.get("dataSql") != null  ){
-                            String dataSql =  (String) initData.get("dataSql") ;
-                            String dataSource = (String) initData.get("dataSource");
-                            //
-                            DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
-                            if(dataSourceBean==null){
-                                dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
-                            }
-                            try {
-                                List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
-                                        dataSql, null,false);
-                                item.put("data", result);
-                                item.put("dataJson", JSONUtils.toJSONString(result));
-                            } catch (Exception e) {
-                                logger.error("执行SQL错误",e);
-                            }
-                        }else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
-                            //todo apiUrl
-                        }
-                    }
-                    try {
-                        Map<String, Object> props = (Map<String, Object>) item.get("props");
-                        if(props != null&&props.containsKey("lay-verify")){
-                            try {
-                                String layVerify = StringUtils.lowerCase((String) props.get("lay-verify"));
-                                if (StringUtils.contains(layVerify, "required")) {
-                                    props.put("required", true);
-                                } else {
-                                    props.put("required", false);
-                                }
-                            }catch (Exception e){
-                                logger.warn("配置错误，lay-verify必须是一个字符串");
-                                //ignore
-                            }
-                        }
-                        //props
-                        if(props != null && item.get("component") != null && item.get("component").equals("input")){
-                            props.putIfAbsent("lay-affix", "clear");
-                        }
-                        if (props != null && props.containsKey("validate")) {
-                            Map<String, Object> validate = (Map<String, Object>) props.get("validate");
-                            if (validate != null && validate.containsKey("rule")) {
-                                Map<String, Object> rules = (Map<String, Object>) validate.get("rule");
-                                if (rules != null && rules.containsKey("required")) {
-                                    Object required = rules.get("required");
-                                    if (required instanceof Boolean) {
-                                        props.put("required", (Boolean) required);
-                                    } else if (required instanceof String) {
-                                        props.put("required", StringUtils.equalsIgnoreCase((String) required, "true"));
-                                    }
-                                }
-                            }
-                        }
-                    }catch (Exception e){
-                        logger.info("props error{}", JSON.toJSONString(item), e);
-                    }
+            Object fieldListObj = card.get("fieldList");
+            List<List<Map<String, Object>>> fieldList = getFlattenedFieldList(fieldListObj);
+            if(fieldList != null ){
+                fieldList.forEach(row->{
+                    row.forEach(field -> processFormField(field));
                 });
             }
+            card.put("fieldList", fieldList);
         });
+    }
+
+    /**
+     * 处理单个表单字段的初始化
+     * @param item 字段配置
+     */
+    private void processFormField(Map<String, Object> item) {
+        Map<String, Object> initData = (Map<String, Object>) item.get("initData");
+        if (initData != null) {
+            String dataUrl = (String) initData.get("dataUrl");
+            if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
+                List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
+                item.put("data", result);
+                item.put("dataJson", JSONUtils.toJSONString(result));
+            }
+            else if(initData.containsKey("dataSql") && initData.get("dataSql") != null  ){
+                String dataSql =  (String) initData.get("dataSql") ;
+                String dataSource = (String) initData.get("dataSource");
+                //
+                DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
+                if(dataSourceBean==null){
+                    dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
+                }
+                try {
+                    List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
+                            dataSql, null,false);
+                    item.put("data", result);
+                    item.put("dataJson", JSONUtils.toJSONString(result));
+                } catch (Exception e) {
+                    logger.error("执行SQL错误",e);
+                }
+            }else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
+                //todo apiUrl
+            }
+        }
+        try {
+            Map<String, Object> props = (Map<String, Object>) item.get("props");
+            if(props != null&&props.containsKey("lay-verify")){
+                try {
+                    String layVerify = StringUtils.lowerCase((String) props.get("lay-verify"));
+                    if (StringUtils.contains(layVerify, "required")) {
+                        props.put("required", true);
+                    } else {
+                        props.put("required", false);
+                    }
+                }catch (Exception e){
+                    logger.warn("配置错误，lay-verify必须是一个字符串");
+                    //ignore
+                }
+            }
+            //props
+            if(props != null && item.get("component") != null && item.get("component").equals("input")){
+                props.putIfAbsent("lay-affix", "clear");
+            }
+            if (props != null && props.containsKey("validate")) {
+                Map<String, Object> validate = (Map<String, Object>) props.get("validate");
+                if (validate != null && validate.containsKey("rule")) {
+                    Map<String, Object> rules = (Map<String, Object>) validate.get("rule");
+                    if (rules != null && rules.containsKey("required")) {
+                        Object required = rules.get("required");
+                        if (required instanceof Boolean) {
+                            props.put("required", (Boolean) required);
+                        } else if (required instanceof String) {
+                            props.put("required", StringUtils.equalsIgnoreCase((String) required, "true"));
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            logger.info("props error{}", JSON.toJSONString(item), e);
+        }
+        if(item.get("classAppend") == null){
+            item.put("classAppend", " layui-col-md12");
+        }
+    }
+
+    /**
+     * 获取扁平化的字段列表（支持一维和二维数组）
+     * @param fieldListObj fieldList 对象
+     * @return 扁平化的字段列表
+     */
+    private List<List<Map<String, Object>>> getFlattenedFieldList(Object fieldListObj) {
+        try {
+            if (!(fieldListObj instanceof List)) {
+                return null;
+            }
+            List<Object> list = (List<Object>) fieldListObj;
+            if (list.isEmpty()) {
+                return null;
+            }
+            //如果第一个不是
+            if (!(list.get(0) instanceof List)) {
+                List<List<Map<String, Object>>> result=new ArrayList<>();
+                List<Map<String, Object>> row = new ArrayList<>();
+                for (int i = 0; i < list.size(); i++) {
+                    row.add((Map<String, Object>) list.get(i));
+                }
+                result.add(row);
+                return result;
+            }
+            return (List<List<Map<String, Object>>>) fieldListObj;
+        } catch (Exception e) {
+            logger.error("FieldList配置错误，请检查是否为二维数组格式{}", fieldListObj, e);
+        }
+        return null;
     }
 
     /**
@@ -439,12 +486,12 @@ public class FormController extends BaseController {
      */
     public EzResult data(RequestContext requestContext, String method, String formUrlCode) throws Exception {
         String formId = formUrlCode;
-        String configPath = "topezadmin/config/layui/dsl/form/"+formId+".json";
-        Map<String, Object> form = ConfigFileLoader.loadConfigFile(configPath);
-        // 处理表达式文件引用
-        ExpressFileLoader.processExpressReferences(form, configPath);
-        // 处理 appendHead 和 appendFoot 数组
-        ExpressFileLoader.processAppendFields(form);
+        // 使用统一加载器（文件优先，数据库降级）
+        top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(formId, "form");
+        if (dslConfig == null) {
+            return EzResult.instance().code("404");
+        }
+        Map<String, Object> form = dslConfig.getConfig();
         iniFormItem(requestContext,form);
         //只返回数据，屏蔽模板
         String ID = Utils.getStringByObject(requestContext.getRequestParams(), "ID");
@@ -490,17 +537,12 @@ public class FormController extends BaseController {
             if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            String configPath = "topezadmin/config/layui/dsl/form/"+formUrlCode+".json";
-            Map<String, Object> form = ConfigFileLoader.loadConfigFile(configPath);
-
-            if (form == null || form.isEmpty()) {
+            // 使用统一加载器（文件优先，数据库降级）
+            top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(formUrlCode, "form");
+            if (dslConfig == null) {
                 return EzResult.instance().code("404");
             }
-
-            // 处理表达式文件引用
-            ExpressFileLoader.processExpressReferences(form, configPath);
-            // 处理 appendHead 和 appendFoot 数组
-            ExpressFileLoader.processAppendFields(form);
+            Map<String, Object> form = dslConfig.getConfig();
 
             DataSource formDs =   EzBootstrap.getInstance().getDataSourceByKey(form.get("dataSource"));
 
@@ -513,32 +555,36 @@ public class FormController extends BaseController {
             if (Utils.isNotEmpty(cardList)) {
                 //把提交参数转换成 ez识别的参数
                 for (int i = 0; i < cardList.size(); i++) {
-                    List<Map<String, Object>> items = (List<Map<String, Object>>) cardList.get(i).get("fieldList");
-                    if (Utils.isNotEmpty(items)) {
-                        for (int j = 0; j < items.size(); j++) {
-                            Map<String, Object> item = items.get(j);
-                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
-                            String component = Utils.trimEmptyDefault(item.get("component"), "input");
-                            String orgValue = Utils.trimNull(requestContext.getRequestParams().get(item_name));
-                            Map<String, Object> props = new HashMap<>();
-                            try {
-                                props.putAll((Map<String, Object>) item.get("props"));
-                            }catch (Exception e){
-                                //
-                            }
+                    // 支持一维和二维数组格式
+                    List<List<Map<String, Object>>> items = getFlattenedFieldList(cardList.get(i).get("fieldList"));
+                    if (Utils.isNotEmpty(items)) {//一行
+                        for (int k = 0; k < items.size(); k++) {
+                            List<Map<String, Object>> row = items.get(k);
+                            for (int j = 0; j < row.size(); j++) {
+                                Map<String, Object> item = row.get(j);
+                                String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
+                                String component = Utils.trimEmptyDefault(item.get("component"), "input");
+                                String orgValue = Utils.trimNull(requestContext.getRequestParams().get(item_name));
+                                Map<String, Object> props = new HashMap<>();
+                                try {
+                                    props.putAll((Map<String, Object>) item.get("props"));
+                                }catch (Exception e){
+                                    //
+                                }
 
-                            //联动日期区间  -
-                            if (component.equalsIgnoreCase("date")
-                                    && Utils.isTrue(props.get("range"))
-                                    && StringUtils.isNotBlank(orgValue)) {
-                                //默认datetime
-                                item.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
-                                orgValue = DefaultParamEnum.getValue(orgValue);
-                                String[] valueSplit = orgValue.split(" - ");
-                                item.put(ParamNameEnum.itemParamValue.getName(), orgValue);
-                                if (valueSplit.length == 2) {
-                                    requestContext.getRequestParams().put(item_name+"_START", valueSplit[0]);
-                                    requestContext.getRequestParams().put(item_name+"_END", valueSplit[1]);
+                                //联动日期区间  -
+                                if (component.equalsIgnoreCase("date")
+                                        && Utils.isTrue(props.get("range"))
+                                        && StringUtils.isNotBlank(orgValue)) {
+                                    //默认datetime
+                                    item.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
+                                    orgValue = DefaultParamEnum.getValue(orgValue);
+                                    String[] valueSplit = orgValue.split(" - ");
+                                    item.put(ParamNameEnum.itemParamValue.getName(), orgValue);
+                                    if (valueSplit.length == 2) {
+                                        requestContext.getRequestParams().put(item_name+"_START", valueSplit[0]);
+                                        requestContext.getRequestParams().put(item_name+"_END", valueSplit[1]);
+                                    }
                                 }
                             }
                         }
@@ -612,17 +658,12 @@ public class FormController extends BaseController {
             if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            String configPath = "topezadmin/config/layui/dsl/form/"+formUrlCode+".json";
-            Map<String, Object> form = ConfigFileLoader.loadConfigFile(configPath);
-
-            if (form == null || form.isEmpty()) {
+            // 使用统一加载器（文件优先，数据库降级）
+            top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(formUrlCode, "form");
+            if (dslConfig == null) {
                 return EzResult.instance().code("404");
             }
-
-            // 处理表达式文件引用
-            ExpressFileLoader.processExpressReferences(form, configPath);
-            // 处理 appendHead 和 appendFoot 数组
-            ExpressFileLoader.processAppendFields(form);
+            Map<String, Object> form = dslConfig.getConfig();
 
             DataSource formDs =   EzBootstrap.getInstance().getDataSourceByKey(form.get("dataSource"));
 
@@ -635,12 +676,17 @@ public class FormController extends BaseController {
             List<Map<String, Object>> cardList = (List<Map<String, Object>>) form.get("cardList");
             if (Utils.isNotEmpty(cardList)) {
                 for (int i = 0; i < cardList.size(); i++) {
-                    List<Map<String, Object>> items = (List<Map<String, Object>>) cardList.get(i).get("fieldList");
+                    // 支持一维和二维数组格式
+                    List<List<Map<String, Object>>> items  = getFlattenedFieldList(cardList.get(i).get("fieldList"));
                     if (Utils.isNotEmpty(items)) {
-                        for (int j = 0; j < items.size(); j++) {
-                            Map<String, Object> item = items.get(j);
-                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
-                            paras.put(item_name, requestContext.getParameter(item_name));
+
+                        for (int k = 0; k < items.size(); k++) {
+                            List<Map<String, Object>> row = items.get(k);
+                            for (int j = 0; j < row.size(); j++) {
+                                Map<String, Object> item = row.get(j);
+                                String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
+                                paras.put(item_name, requestContext.getParameter(item_name));
+                            }
                         }
                     }
                 }
@@ -701,17 +747,12 @@ public class FormController extends BaseController {
             if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
                 return EzResult.instance().code("404");
             }
-            String configPath = "topezadmin/config/layui/dsl/form/"+formUrlCode+".json";
-            Map<String, Object> form = ConfigFileLoader.loadConfigFile(configPath);
-
-            if (form == null || form.isEmpty()) {
+            // 使用统一加载器（文件优先，数据库降级）
+            top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(formUrlCode, "form");
+            if (dslConfig == null) {
                 return EzResult.instance().code("404");
             }
-
-            // 处理表达式文件引用
-            ExpressFileLoader.processExpressReferences(form, configPath);
-            // 处理 appendHead 和 appendFoot 数组
-            ExpressFileLoader.processAppendFields(form);
+            Map<String, Object> form = dslConfig.getConfig();
 
             DataSource formDs =   EzBootstrap.getInstance().getDataSourceByKey(form.get("dataSource"));
 
@@ -723,12 +764,16 @@ public class FormController extends BaseController {
             List<Map<String, Object>> cardList = (List<Map<String, Object>>) form.get("cardList");
             if (Utils.isNotEmpty(cardList)) {
                 for (int i = 0; i < cardList.size(); i++) {
-                    List<Map<String, Object>> items = (List<Map<String, Object>>) cardList.get(i).get("fieldList");
+                    //  二维数组格式
+                    List<List<Map<String, Object>>> items = getFlattenedFieldList(cardList.get(i).get("fieldList"));
                     if (Utils.isNotEmpty(items)) {
-                        for (int j = 0; j < items.size(); j++) {
-                            Map<String, Object> item = items.get(j);
-                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
-                            paras.put(item_name, requestContext.getParameter(item_name));
+                        for (int k = 0; k < items.size(); k++) {
+                            List<Map<String, Object>> row = items.get(k);
+                            for (int j = 0; j < row.size(); j++) {
+                                Map<String, Object> item = row.get(j);
+                                String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
+                                paras.put(item_name, requestContext.getParameter(item_name));
+                            }
                         }
                     }
                 }

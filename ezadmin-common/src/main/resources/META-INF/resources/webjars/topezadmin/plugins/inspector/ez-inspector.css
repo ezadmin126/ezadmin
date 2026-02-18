@@ -1,50 +1,53 @@
-/**
- * EzInspector 样式文件 - layui 兼容版本
- * @version 2.0.0
- * 与 layui 框架兼容，使用 layui 的 layer 弹框
- */
+/*!***/
+/* * EzInspector 样式文件 - layui 兼容版本*/
+/* * @version 2.0.0*/
+/* * 与 layui 框架兼容，使用 layui 的 layer 弹框*/
+/* *!*/
 
-/* ==================== 高亮遮罩层 ==================== */
-.ez-inspector-highlighter {
-    all: initial !important;
-    position: absolute !important;
-    pointer-events: none !important;
-    z-index: 99999998 !important;
-    display: none !important;
-    box-sizing: border-box !important;
-    border: 2px solid #1890ff !important;
-    background-color: rgba(24, 144, 255, 0.1) !important;
-    transition: all 0.1s ease !important;
-    top: 0 !important;
-    left: 0 !important;
-}
+/*!* ==================== 高亮遮罩层 ==================== *!*/
+/*.ez-inspector-highlighter {*/
+/*    all: initial !important;*/
+/*    position: absolute !important;*/
+/*    pointer-events: none !important;*/
+/*    z-index: 99999998 !important;*/
+/*    display: none !important;*/
+/*    box-sizing: border-box !important;*/
+/*    border: 2px solid #1890ff !important;*/
+/*    background-color: rgba(24, 144, 255, 0.1) !important;*/
+/*    transition: all 0.1s ease !important;*/
+/*    top: 0 !important;*/
+/*    left: 0 !important;*/
+/*}*/
 
-/* ==================== 代码区域样式（在layer内使用） ==================== */
-.ez-inspector-code pre {
-    margin: 0 !important;
-    padding: 0 !important;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
-    font-size: 12px !important;
-    color: #d4d4d4 !important;
-    line-height: 1.6 !important;
-    white-space: pre-wrap !important;
-    word-wrap: break-word !important;
-    background: transparent !important;
-    border: none !important;
-}
+/*!* ==================== 代码区域样式（在layer内使用） ==================== *!*/
+/*.ez-inspector-code pre {*/
+/*    margin: 0 !important;*/
+/*    padding: 0 !important;*/
+/*    font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;*/
+/*    font-size: 12px !important;*/
+/*    color: #d4d4d4 !important;*/
+/*    line-height: 1.6 !important;*/
+/*    white-space: pre-wrap !important;*/
+/*    word-wrap: break-word !important;*/
+/*    background: transparent !important;*/
+/*    border: none !important;*/
+/*}*/
 
-.ez-inspector-code pre code {
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
-    font-size: 12px !important;
-    color: #d4d4d4 !important;
-    background: transparent !important;
-}
+/*.ez-inspector-code pre code {*/
+/*    font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;*/
+/*    font-size: 12px !important;*/
+/*    color: #d4d4d4 !important;*/
+/*    background: transparent !important;*/
+/*}*/
 
-/* ==================== 状态消息 ==================== */
-.ez-inspector-status {
-    display: none;
-    padding: 8px 12px;
-    border-radius: 2px;
-    font-size: 12px;
-    margin-top: 10px;
-}
+/*!* ==================== 状态消息 ==================== *!*/
+/*.ez-inspector-status {*/
+/*    display: none;*/
+/*    padding: 8px 12px;*/
+/*    border-radius: 2px;*/
+/*    font-size: 12px;*/
+/*    margin-top: 10px;*/
+/*}*/
+/*.ez-inspector-note{*/
+/*    height:236px;*/
+/*}*/

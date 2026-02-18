@@ -18,15 +18,16 @@
         }
 
         if(value !== null && value !== undefined && value !== '') {
-            const values = value.split(',');
+            var values=  String(value).split(',');
+
             const labels = values.map(function (v) {
                 const found = paramsJSON.find(function (opt) {
                     return String(opt.value) === String(v);
                 });
                 return found ? found.label : v;
             });
-            return `<span item_name=`+name+`>`+labels.join(',')+`</span>`
+            return `<span item_name=`+name+` component="tdSelectMultiple">`+labels.join(',')+`</span>`
         }
-        return   `<span item_name=`+name+`>`+value ||component.props.emptyShow ||''+`</span>`  ;
+        return   `<span item_name=`+name+` component="tdSelectMultiple">`+(value ||component.props.emptyShow ||'')+`</span>`  ;
     });
 </script>

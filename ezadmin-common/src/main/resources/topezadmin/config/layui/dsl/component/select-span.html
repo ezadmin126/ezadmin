@@ -1,6 +1,7 @@
-<div th:class="'col-'+${item_name}+' layui-col-md' + ${ col != null ? col: 12} ">
-
-<div   class="layui-form-item" th:item_name="${item_name}">
+<div th:class="'col-'+${item_name}"
+     th:classappend="${classAppend}"
+>
+<div   class="layui-form-item" th:item_name="${item_name}" component="select-span">
     <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
         <span th:if="${props != null and props.required}" style="color: red;">*</span>
         <span th:utext="${label}+'：'">字段名</span>

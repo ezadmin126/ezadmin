@@ -1,11 +1,14 @@
-<div th:class="'col-'+${item_name}+' layui-col-md' + ${ col != null ? col: 12} ">
-<div   class="layui-form-item">
+<div th:class="'col-'+${item_name}"
+     th:classappend="${classAppend}"
+>
+<div   class="layui-form-item"  th:item_name="${item_name}" component="upload">
     <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
         <span th:if="${props != null and props.required}" style="color: red;">*</span>
         <span th:utext="${label}+'：'">字段名</span>
     </label>
-    <div class="layui-input-block"  th:item_name="${item_name}">
+    <div class="layui-input-block" >
         <button type="button"
+                th:upload_item_name="${item_name}"
                 class="layui-btn ez-upload layui-btn-normal"
                 th:data-propsJson="${propsJson}"
             >上传</button>

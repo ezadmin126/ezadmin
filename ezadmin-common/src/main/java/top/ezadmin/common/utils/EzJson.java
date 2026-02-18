@@ -7,6 +7,8 @@ public interface EzJson {
 
       String toJSONString(Object obj) ;
 
+      String toPrettyJSONString(Object obj);
+
     <T> List<T> parseArray(String values, Class<T> clazz);
 
     <T> T parseObject(String json, Class<T> clazz);

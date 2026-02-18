@@ -1,0 +1,8 @@
+{
+	"deleteExpress":"DELETE FROM test WHERE id = #{ID}",
+	"submitExpress":"INSERT INTO test VALUES (#{id})",
+	"initExpress":"SELECT * FROM test WHERE id = #{ID}",
+	"id":"test-save-form",
+	"title":"测试保存表单",
+	"dataSource":"defaultDataSource"
+}

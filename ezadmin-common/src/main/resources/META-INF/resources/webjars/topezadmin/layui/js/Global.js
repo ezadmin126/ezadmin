@@ -495,35 +495,34 @@ function ezopen(openType, title, appendUrl, area) {
             }
             openBlank(appendUrl);
             break;
-        case '_BLANK_PARAM_COLUMN':
-            if (appendUrl.indexOf('?') <= 0) {
-                appendUrl += '?' + searchParams ;
-            } else {
-                appendUrl += '&' + searchParams ;
-            }
-            var encryptListIdElement = document.getElementById('ENCRYPT_LIST_ID');
-            var key = 'EZ_CONFIG_' + (encryptListIdElement ? encryptListIdElement.value : '');
-            var jsonconfig = localStorage.getItem(key);
-            if (jsonconfig != undefined) {
-                var json = JSON.parse(jsonconfig);
-                var search = json.search;
-                var column = json.column;
-                if (jsonconfig != column && column.length > 0) {
-                    var columnurl = "";
-                    for (let index = 0; index < column.length; index++) {
-                        columnurl += column[index] + ","
-                    }
-                    appendUrl += "_BLANK_PARAM_COLUMN=" + columnurl;
-                }
-            }
-            openBlank(appendUrl);
-            break;
+        // case '_BLANK_PARAM_COLUMN':
+        //     if (appendUrl.indexOf('?') <= 0) {
+        //         appendUrl += '?' + searchParams ;
+        //     } else {
+        //         appendUrl += '&' + searchParams ;
+        //     }
+        //     var encryptListIdElement = document.getElementById('ENCRYPT_LIST_ID');
+        //     var key = 'EZ_CONFIG_' + (encryptListIdElement ? encryptListIdElement.value : '');
+        //     var jsonconfig = localStorage.getItem(key);
+        //     if (jsonconfig != undefined) {
+        //         var json = JSON.parse(jsonconfig);
+        //         var search = json.search;
+        //         var column = json.column;
+        //         if (jsonconfig != column && column.length > 0) {
+        //             var columnurl = "";
+        //             for (let index = 0; index < column.length; index++) {
+        //                 columnurl += column[index] + ","
+        //             }
+        //             appendUrl += "_BLANK_PARAM_COLUMN=" + columnurl;
+        //         }
+        //     }
+        //     openBlank(appendUrl);
+        //     break;
         case 'LOCATION':
             location.href = appendUrl;
             break;
         case 'PARENT':
             openTab(title, appendUrl)
-
             break;
         case 'AJAX':
             fetch(appendUrl)

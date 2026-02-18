@@ -6,8 +6,8 @@
           var template =laytpl(url);
           var renderUrl=template.render(d);
           if(value){
-              return `<a  item_name="`+name+`"   class="layui-text" style="color:#01aaed" href="`+renderUrl+`" target="_blank">`+value ||component.props.emptyShow ||''+`</a>`;
+              return `<a  item_name="`+name+`"   component="tdLink" class="layui-text" style="color:#01aaed" href="`+renderUrl+`" target="_blank">`+value ||component.props.emptyShow ||''+`</a>`;
           }
-          return  `<span item_name="`+name+`">`+ value ||component.props.emptyShow ||'`+`</span>`;
+          return  `<span item_name="`+name+`" component="tdLink">`+ value ||component.props.emptyShow ||'`+`</span>`;
       });
 </script>

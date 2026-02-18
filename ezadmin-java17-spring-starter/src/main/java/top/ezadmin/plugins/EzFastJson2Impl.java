@@ -4,6 +4,7 @@ package top.ezadmin.plugins;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 import top.ezadmin.common.utils.EzJson;
 
 import java.util.*;
@@ -12,6 +13,11 @@ public class EzFastJson2Impl implements EzJson {
     @Override
     public String toJSONString(Object obj) {
         return JSON.toJSONString(obj);
+    }
+
+    @Override
+    public String toPrettyJSONString(Object obj) {
+        return JSON.toJSONString(obj, JSONWriter.Feature.PrettyFormat);
     }
 
     @Override

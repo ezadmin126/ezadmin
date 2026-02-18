@@ -23,7 +23,7 @@
                 finalResult= option.label;
             }
         }
-        finalResult= finalResult ||component.props.emptyShow ||'';
-        return   `<span item_name="`+name+`">`+ finalResult + `</span>`;
+        finalResult= finalResult ||value||component.props.emptyShow ||'';
+        return   `<span item_name="`+name+`" component="tdSelect">`+ finalResult + `</span>`;
     });
 </script>

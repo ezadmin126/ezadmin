@@ -268,3 +268,10 @@ small {
 .custom-card-btn {
 
 }
+
+.form-item-hidden{
+    display: none;
+}
+.layui-col-md0{
+    display: none;
+}

@@ -1,208 +1,208 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EZ Inspector - 自动激活示例</title>
+<!--<!DOCTYPE html>-->
+<!--<html lang="zh-CN">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>EZ Inspector - 自动激活示例</title>-->
 
-    <!-- 引入 layui -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui@2.8.18/dist/css/layui.css">
-    <script src="https://cdn.jsdelivr.net/npm/layui@2.8.18/dist/layui.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<!--    &lt;!&ndash; 引入 layui &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui@2.8.18/dist/css/layui.css">-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/layui@2.8.18/dist/layui.js"></script>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>-->
 
-    <!-- 引入 EZ Inspector - 会自动激活 -->
-    <link rel="stylesheet" href="../dist/ez-inspector.css">
-    <script src="../dist/ez-inspector.js"></script>
+<!--    &lt;!&ndash; 引入 EZ Inspector - 会自动激活 &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="../dist/ez-inspector.css">-->
+<!--    <script src="../dist/ez-inspector.js"></script>-->
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        h1 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: #999;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        .alert {
-            background: #e6f7ff;
-            border: 1px solid #91d5ff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            color: #1890ff;
-        }
-        .alert strong {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .demo-card {
-            background: #fafafa;
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px dashed #ddd;
-            transition: all 0.3s;
-        }
-        .demo-card:hover {
-            border-color: #667eea;
-            background: #f0f5ff;
-        }
-        .demo-card h3 {
-            margin-top: 0;
-            color: #333;
-        }
-        .demo-card p {
-            color: #666;
-            margin: 10px 0;
-            font-size: 14px;
-        }
-        code {
-            background: #f5f5f5;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 12px;
-            color: #e83e8c;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🎯 EZ Inspector - 自动激活测试</h1>
-        <p class="subtitle">V2.0 版本 - 零配置，引入即用</p>
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            padding: 40px;-->
+<!--            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--            min-height: 100vh;-->
+<!--        }-->
+<!--        .container {-->
+<!--            max-width: 1000px;-->
+<!--            margin: 0 auto;-->
+<!--            background: white;-->
+<!--            padding: 40px;-->
+<!--            border-radius: 12px;-->
+<!--            box-shadow: 0 10px 40px rgba(0,0,0,0.2);-->
+<!--        }-->
+<!--        h1 {-->
+<!--            color: #667eea;-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+<!--        .subtitle {-->
+<!--            color: #999;-->
+<!--            margin-bottom: 30px;-->
+<!--            font-size: 14px;-->
+<!--        }-->
+<!--        .alert {-->
+<!--            background: #e6f7ff;-->
+<!--            border: 1px solid #91d5ff;-->
+<!--            padding: 20px;-->
+<!--            border-radius: 8px;-->
+<!--            margin-bottom: 30px;-->
+<!--            color: #1890ff;-->
+<!--        }-->
+<!--        .alert strong {-->
+<!--            display: block;-->
+<!--            margin-bottom: 10px;-->
+<!--            font-size: 16px;-->
+<!--        }-->
+<!--        .demo-grid {-->
+<!--            display: grid;-->
+<!--            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));-->
+<!--            gap: 20px;-->
+<!--            margin-top: 30px;-->
+<!--        }-->
+<!--        .demo-card {-->
+<!--            background: #fafafa;-->
+<!--            padding: 20px;-->
+<!--            border-radius: 8px;-->
+<!--            border: 2px dashed #ddd;-->
+<!--            transition: all 0.3s;-->
+<!--        }-->
+<!--        .demo-card:hover {-->
+<!--            border-color: #667eea;-->
+<!--            background: #f0f5ff;-->
+<!--        }-->
+<!--        .demo-card h3 {-->
+<!--            margin-top: 0;-->
+<!--            color: #333;-->
+<!--        }-->
+<!--        .demo-card p {-->
+<!--            color: #666;-->
+<!--            margin: 10px 0;-->
+<!--            font-size: 14px;-->
+<!--        }-->
+<!--        code {-->
+<!--            background: #f5f5f5;-->
+<!--            padding: 2px 6px;-->
+<!--            border-radius: 3px;-->
+<!--            font-size: 12px;-->
+<!--            color: #e83e8c;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="container">-->
+<!--        <h1>🎯 EZ Inspector - 自动激活测试</h1>-->
+<!--        <p class="subtitle">V2.0 版本 - 零配置，引入即用</p>-->
 
-        <div class="alert">
-            <strong>🚀 已自动激活！</strong>
-            <p style="margin: 10px 0 0 0;">
-                页面加载后，Inspector 已自动启动。你可以：
-            </p>
-            <ul style="margin: 10px 0 0 20px;">
-                <li>鼠标悬停在带有 <code>item_name</code> 的元素上，会显示蓝色高亮框</li>
-                <li>点击元素，会显示绿色边框，并在面板中显示详细信息</li>
-                <li>在面板中输入备注，无需选中元素也可以提交</li>
-                <li>按 <code>Ctrl + Shift + I</code> 可以切换激活/停用</li>
-            </ul>
-        </div>
+<!--        <div class="alert">-->
+<!--            <strong>🚀 已自动激活！</strong>-->
+<!--            <p style="margin: 10px 0 0 0;">-->
+<!--                页面加载后，Inspector 已自动启动。你可以：-->
+<!--            </p>-->
+<!--            <ul style="margin: 10px 0 0 20px;">-->
+<!--                <li>鼠标悬停在带有 <code>item_name</code> 的元素上，会显示蓝色高亮框</li>-->
+<!--                <li>点击元素，会显示绿色边框，并在面板中显示详细信息</li>-->
+<!--                <li>在面板中输入备注，无需选中元素也可以提交</li>-->
+<!--                <li>按 <code>Ctrl + Shift + I</code> 可以切换激活/停用</li>-->
+<!--            </ul>-->
+<!--        </div>-->
 
-        <h2>测试区域</h2>
-        <p>下面的卡片都带有 <code>item_name</code> 属性，鼠标悬停试试：</p>
+<!--        <h2>测试区域</h2>-->
+<!--        <p>下面的卡片都带有 <code>item_name</code> 属性，鼠标悬停试试：</p>-->
 
-        <div class="demo-grid">
-            <div class="demo-card" item_name="card_feature_1">
-                <h3>✨ 零配置</h3>
-                <p>只需引入 JS 文件，无需调用任何初始化方法。</p>
-                <button class="layui-btn layui-btn-sm layui-btn-primary" item_name="btn_feature_1">
-                    测试按钮
-                </button>
-            </div>
+<!--        <div class="demo-grid">-->
+<!--            <div class="demo-card" item_name="card_feature_1">-->
+<!--                <h3>✨ 零配置</h3>-->
+<!--                <p>只需引入 JS 文件，无需调用任何初始化方法。</p>-->
+<!--                <button class="layui-btn layui-btn-sm layui-btn-primary" item_name="btn_feature_1">-->
+<!--                    测试按钮-->
+<!--                </button>-->
+<!--            </div>-->
 
-            <div class="demo-card" item_name="card_feature_2">
-                <h3>🎨 Layui 集成</h3>
-                <p>使用 Layui Layer 弹框和表单组件，风格统一。</p>
-                <button class="layui-btn layui-btn-sm layui-btn-primary" item_name="btn_feature_2">
-                    测试按钮
-                </button>
-            </div>
+<!--            <div class="demo-card" item_name="card_feature_2">-->
+<!--                <h3>🎨 Layui 集成</h3>-->
+<!--                <p>使用 Layui Layer 弹框和表单组件，风格统一。</p>-->
+<!--                <button class="layui-btn layui-btn-sm layui-btn-primary" item_name="btn_feature_2">-->
+<!--                    测试按钮-->
+<!--                </button>-->
+<!--            </div>-->
 
-            <div class="demo-card" item_name="card_feature_3">
-                <h3>🔍 智能选择</h3>
-                <p>只选中带有 item_name 属性的元素，避免误选。</p>
-                <button class="layui-btn layui-btn-sm layui-btn-primary" item_name="btn_feature_3">
-                    测试按钮
-                </button>
-            </div>
+<!--            <div class="demo-card" item_name="card_feature_3">-->
+<!--                <h3>🔍 智能选择</h3>-->
+<!--                <p>只选中带有 item_name 属性的元素，避免误选。</p>-->
+<!--                <button class="layui-btn layui-btn-sm layui-btn-primary" item_name="btn_feature_3">-->
+<!--                    测试按钮-->
+<!--                </button>-->
+<!--            </div>-->
 
-            <div class="demo-card" item_name="card_feature_4">
-                <h3>💡 简化样式</h3>
-                <p>选中状态使用简单边框，不影响页面布局。</p>
-                <button class="layui-btn layui-btn-sm layui-btn-primary" item_name="btn_feature_4">
-                    测试按钮
-                </button>
-            </div>
-        </div>
+<!--            <div class="demo-card" item_name="card_feature_4">-->
+<!--                <h3>💡 简化样式</h3>-->
+<!--                <p>选中状态使用简单边框，不影响页面布局。</p>-->
+<!--                <button class="layui-btn layui-btn-sm layui-btn-primary" item_name="btn_feature_4">-->
+<!--                    测试按钮-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
 
-        <div style="margin-top: 40px; padding: 20px; background: #fff7e6; border: 1px solid #ffd591; border-radius: 8px;">
-            <h3 style="margin-top: 0; color: #fa8c16;">💻 代码示例</h3>
-            <p>实现这个页面只需要：</p>
-            <pre style="background: #f5f5f5; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>&lt;!-- 1. 引入 Layui --&gt;
-&lt;link rel="stylesheet" href="layui.css"&gt;
-&lt;script src="layui.js"&gt;&lt;/script&gt;
-&lt;script src="jquery.js"&gt;&lt;/script&gt;
+<!--        <div style="margin-top: 40px; padding: 20px; background: #fff7e6; border: 1px solid #ffd591; border-radius: 8px;">-->
+<!--            <h3 style="margin-top: 0; color: #fa8c16;">💻 代码示例</h3>-->
+<!--            <p>实现这个页面只需要：</p>-->
+<!--            <pre style="background: #f5f5f5; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>&lt;!&#45;&#45; 1. 引入 Layui &#45;&#45;&gt;-->
+<!--&lt;link rel="stylesheet" href="layui.css"&gt;-->
+<!--&lt;script src="layui.js"&gt;&lt;/script&gt;-->
+<!--&lt;script src="jquery.js"&gt;&lt;/script&gt;-->
 
-&lt;!-- 2. 引入 EZ Inspector - 就这么简单！--&gt;
-&lt;link rel="stylesheet" href="ez-inspector.css"&gt;
-&lt;script src="ez-inspector.js"&gt;&lt;/script&gt;
+<!--&lt;!&#45;&#45; 2. 引入 EZ Inspector - 就这么简单！&#45;&#45;&gt;-->
+<!--&lt;link rel="stylesheet" href="ez-inspector.css"&gt;-->
+<!--&lt;script src="ez-inspector.js"&gt;&lt;/script&gt;-->
 
-&lt;!-- 3. 给需要检查的元素添加 item_name 属性 --&gt;
-&lt;div item_name="my_element"&gt;这个元素可以被选中&lt;/div&gt;</code></pre>
-        </div>
+<!--&lt;!&#45;&#45; 3. 给需要检查的元素添加 item_name 属性 &#45;&#45;&gt;-->
+<!--&lt;div item_name="my_element"&gt;这个元素可以被选中&lt;/div&gt;</code></pre>-->
+<!--        </div>-->
 
-        <div style="margin-top: 30px; padding: 20px; background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 8px;">
-            <h3 style="margin-top: 0; color: #52c41a;">📋 使用说明</h3>
-            <ol style="color: #666; line-height: 2;">
-                <li>页面加载后，Inspector 自动激活，检查面板会自动弹出</li>
-                <li>鼠标悬停在带有 <code>item_name</code> 的元素上会显示蓝色高亮框</li>
-                <li>点击元素，会在元素上显示绿色边框，面板中显示元素信息</li>
-                <li>在面板的备注框中输入说明，点击"提交"按钮（数据会输出到控制台）</li>
-                <li>打开浏览器控制台（F12）查看提交的数据</li>
-                <li>按 <code>Ctrl + Shift + I</code> 可以切换检查模式的激活/停用</li>
-            </ol>
-        </div>
-    </div>
+<!--        <div style="margin-top: 30px; padding: 20px; background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 8px;">-->
+<!--            <h3 style="margin-top: 0; color: #52c41a;">📋 使用说明</h3>-->
+<!--            <ol style="color: #666; line-height: 2;">-->
+<!--                <li>页面加载后，Inspector 自动激活，检查面板会自动弹出</li>-->
+<!--                <li>鼠标悬停在带有 <code>item_name</code> 的元素上会显示蓝色高亮框</li>-->
+<!--                <li>点击元素，会在元素上显示绿色边框，面板中显示元素信息</li>-->
+<!--                <li>在面板的备注框中输入说明，点击"提交"按钮（数据会输出到控制台）</li>-->
+<!--                <li>打开浏览器控制台（F12）查看提交的数据</li>-->
+<!--                <li>按 <code>Ctrl + Shift + I</code> 可以切换检查模式的激活/停用</li>-->
+<!--            </ol>-->
+<!--        </div>-->
+<!--    </div>-->
 
-    <script>
-        // 监听提交事件
-        window.addEventListener('ezinspector:submit', (event) => {
-            console.log('==================================');
-            console.log('📨 Inspector 提交的数据:');
-            console.log('==================================');
-            console.log('页面 URL:', event.detail.url);
+<!--    <script>-->
+<!--        // 监听提交事件-->
+<!--        window.addEventListener('ezinspector:submit', (event) => {-->
+<!--            console.log('==================================');-->
+<!--            console.log('📨 Inspector 提交的数据:');-->
+<!--            console.log('==================================');-->
+<!--            console.log('页面 URL:', event.detail.url);-->
 
-            if (event.detail.element) {
-                console.log('选中元素:');
-                console.log('  - Item Name:', event.detail.element.itemName);
-                console.log('  - Tag Name:', event.detail.element.tagName);
-                console.log('  - CSS Selector:', event.detail.element.cssSelector);
-                console.log('  - XPath:', event.detail.element.xpath);
-                console.log('  - HTML:', event.detail.element.html.substring(0, 200) + '...');
-            } else {
-                console.log('未选中元素');
-            }
+<!--            if (event.detail.element) {-->
+<!--                console.log('选中元素:');-->
+<!--                console.log('  - Item Name:', event.detail.element.itemName);-->
+<!--                console.log('  - Tag Name:', event.detail.element.tagName);-->
+<!--                console.log('  - CSS Selector:', event.detail.element.cssSelector);-->
+<!--                console.log('  - XPath:', event.detail.element.xpath);-->
+<!--                console.log('  - HTML:', event.detail.element.html.substring(0, 200) + '...');-->
+<!--            } else {-->
+<!--                console.log('未选中元素');-->
+<!--            }-->
 
-            console.log('用户备注:', event.detail.userNote || '(无)');
-            console.log('页面信息:', event.detail.pageInfo);
-            console.log('完整数据:', event.detail);
-            console.log('==================================');
+<!--            console.log('用户备注:', event.detail.userNote || '(无)');-->
+<!--            console.log('页面信息:', event.detail.pageInfo);-->
+<!--            console.log('完整数据:', event.detail);-->
+<!--            console.log('==================================');-->
 
-            // 显示提示
-            layui.use('layer', function() {
-                var layer = layui.layer;
-                layer.msg('数据已提交，请查看浏览器控制台（F12）', {
-                    icon: 1,
-                    time: 3000
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+<!--            // 显示提示-->
+<!--            layui.use('layer', function() {-->
+<!--                var layer = layui.layer;-->
+<!--                layer.msg('数据已提交，请查看浏览器控制台（F12）', {-->
+<!--                    icon: 1,-->
+<!--                    time: 3000-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->

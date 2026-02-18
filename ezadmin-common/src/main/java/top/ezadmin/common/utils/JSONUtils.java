@@ -15,6 +15,9 @@ public class JSONUtils {
     public static String toJSONString(Object obj) {
         return EzBootstrap.config().getEzJson().toJSONString(obj);
     }
+    public static String    toPrettyJSONString (Object obj) {
+        return EzBootstrap.config().getEzJson().toPrettyJSONString(obj);
+    }
 
     public static <T> List<T> parseArray(String values, Class<T> clazz) {
         return EzBootstrap.config().getEzJson().parseArray(values, clazz);

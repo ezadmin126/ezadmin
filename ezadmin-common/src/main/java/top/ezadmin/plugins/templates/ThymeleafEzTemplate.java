@@ -154,7 +154,8 @@ public class ThymeleafEzTemplate implements EzTemplate {
             }
         } catch (Exception e) {
             logger.error("processToString::{}", path, e);
-            return "<div style='display:none'>"+e.getMessage()+"</div>";
+            throw e;
+           // return "<div style='display:none'>"+e.getMessage()+"</div>";
         }
     }
     @Override

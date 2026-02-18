@@ -92,9 +92,19 @@ public class EzClientServletFilter implements Filter {
         ezBootstrapConfig.setEzJson(new EzJsonImpl());
         ezBootstrapConfig.setEzSqlParser(new EzSqlParserImpl());
 
+
+
+
         String configJson = ezClientProperties.getConfigJson();
         Map<String, Object> configMap = JSONUtils.parseObjectMap(configJson);
         ezBootstrapConfig.setConfig(configMap);
+
+        ezBootstrapConfig.setApiKey(ezClientProperties.getApiKey());
+        ezBootstrapConfig.setApiUrl(ezClientProperties.getApiUrl());
+        ezBootstrapConfig.setModel(ezClientProperties.getModel());
+        if(ezClientProperties.getTemperature()!=null){
+            ezBootstrapConfig.setTemperature(ezClientProperties.getTemperature());
+        }
 
 
         String beanNames[] = org.apache.commons.lang.StringUtils.split(ezClientProperties.getDatasourceBeanNames(), ",");
@@ -173,6 +183,30 @@ public class EzClientServletFilter implements Filter {
     //同
     private static Map<String, Object> requestToMap(HttpServletRequest request) {
         Map<String, Object> searchParamsValues = new HashMap<>();
+
+        String contentType = request.getContentType();
+        if (contentType != null && contentType.contains("application/json")) {
+            byte[] content = null;
+            try {
+                content = StringUtils.parseToByte(request.getInputStream() );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            if (content!=null&&content.length > 0) {
+                try {
+                    String jsonStr = new String(content, request.getCharacterEncoding());
+                    Map<String, Object> jsonParams = JSONUtils.parseObjectMap(jsonStr);
+                    if (jsonParams != null) {
+                        searchParamsValues.putAll(jsonParams);
+                    }
+                } catch (Exception e) {
+                    logger.error("解析JSON请求体失败", e);
+                }
+            }
+        }
+
+
+
         for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
             String[] v = entry.getValue();
             String k = entry.getKey();
@@ -183,17 +217,18 @@ public class EzClientServletFilter implements Filter {
                 searchParamsValues.put(k, v[0] == null ? null : v[0].trim());
                 if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_TODAY_DATE.name(), v[0])) {
                     searchParamsValues.put(k, DefaultParamEnum.getValue(DefaultParamEnum.EZ_TODAY_DATE.name()));
-                }
+                }else
                 if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_TODAY_DATE_NORMAL.name(), v[0])) {
                     searchParamsValues.put(k, DefaultParamEnum.getValue(DefaultParamEnum.EZ_TODAY_DATE_NORMAL.name()));
-                }
+                }else
                 if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_CURRENT_MONTH.name(), v[0])) {
                     searchParamsValues.put(k, DefaultParamEnum.getValue(DefaultParamEnum.EZ_CURRENT_MONTH.name()));
-                }
+                }else
                 if (StringUtils.equalsIgnoreCase(SessionConstants.EZ_SESSION_USER_ID_KEY, v[0])) {
                     searchParamsValues.put(k, Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));
+                }else{
+                    searchParamsValues.put(k+ "_ARRAY", v);
                 }
-                searchParamsValues.put(k + "_ARRAY", v);
             } else if (v.length > 1) {
                 searchParamsValues.put(k + "_ARRAY", request.getParameterValues(k));
                 searchParamsValues.put(k, JSONUtils.toJSONString(request.getParameterValues(k)));

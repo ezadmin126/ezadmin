@@ -43,7 +43,8 @@ public abstract class SqlGenerate {
 
     public String generateWhere() {
         StringBuilder where = new StringBuilder(" ");
-        List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");
+        // 支持一维和二维数组格式，扁平化处理
+        List<Map<String, Object>> searchList = getFlattenedSearchList(list.get("search"));
         Map<String, Map<String, Object>> searchNameMap = new HashMap<>();
         if (Utils.isNotEmpty(searchList)) {
             for (int i = 0; i < searchList.size(); i++) {
@@ -61,6 +62,32 @@ public abstract class SqlGenerate {
             where.append(customSearch.get("customWhere"));
         }
         return where.toString();
+    }
+
+    /**
+     * 获取扁平化的搜索字段列表（支持一维和二维数组）
+     * @param searchObj search 对象
+     * @return 扁平化的搜索字段列表
+     */
+    private List<Map<String, Object>> getFlattenedSearchList(Object searchObj) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        if (searchObj != null && searchObj instanceof List) {
+            List<?> searchList = (List<?>) searchObj;
+            if (!searchList.isEmpty()) {
+                // 检查是否为二维数组
+                if (searchList.get(0) instanceof List) {
+                    // 二维数组：扁平化
+                    for (Object rowObj : searchList) {
+                        List<Map<String, Object>> row = (List<Map<String, Object>>) rowObj;
+                        result.addAll(row);
+                    }
+                } else {
+                    // 一维数组：直接返回
+                    result = (List<Map<String, Object>>) searchList;
+                }
+            }
+        }
+        return result;
     }
 
     public String searchToSql(String union, Map<String, Object> search) {

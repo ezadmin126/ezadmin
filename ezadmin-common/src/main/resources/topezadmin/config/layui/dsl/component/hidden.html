@@ -1,6 +1,7 @@
-<div th:class="'col-'+${item_name}+' layui-col-md' + ${ col != null ? col: 12} " style="display: none">
+<div th:class="${' form-item-hidden   col-'+item_name} "
+     th:classappend="${classAppend}">
 
-<div   class="layui-form-item" >
+<div   class="layui-form-item"  th:item_name="${item_name}" component="hidden">
     <div class="layui-input-block">
         <input type="hidden"
                th:name="${item_name}"

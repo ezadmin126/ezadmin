@@ -19,8 +19,8 @@
 
         if(value&&value!=''){
             var labels = resolveTreeLabels(value, paramsJSON);
-            return `<span item_name=`+name+`>`+labels.join(',')+`</span>`
+            return `<span item_name=`+name+` component="tdCascader">`+labels.join(',')+`</span>`
         }
-        return  '<span item_name="'+name+'">'  + value ||component.props.emptyShow ||''+ '</span>';
+        return  '<span item_name="'+name+'"  component="tdCascader">'  + (value ||component.props.emptyShow ||'')+ '</span>';
     });
 </script>

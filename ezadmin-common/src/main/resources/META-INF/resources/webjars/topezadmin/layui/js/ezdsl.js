@@ -1,3 +1,5 @@
+
+
 layui.use(function(){
 
     try {
@@ -14,6 +16,7 @@ layui.use(function(){
         initXmselect();
         initLaycascader();
         initUpload();
+        initWater();
 
 
         $(".ez-form-panel  .layui-layer-min").click(function () {
@@ -35,6 +38,7 @@ layui.use(function(){
                 })
             }
         })
+
 
 
         form.render();
@@ -127,21 +131,6 @@ layui.use(function(){
                 // 原有的 upload 文件数量验证已移至 jQuery Validate 的 uploadMin 和 uploadMax 方法中
                 // 这样可以和其他表单验证保持一致，并正确显示验证错误信息
 
-                // $(".tinymcetextarea").each(function () {
-                //     if ($(this).attr("lay-verify") == 'required' && $(this).val() == '') {
-                //         var error = "<span   class=\"error invalid-feedback\"  >请维护详细内容</span>"
-                //         error.insertBefore($(this));
-                //         fileerror = true;
-                //         canEzFormSubmit = true;
-                //         layer.close(loadIndex)
-                //         return false;
-                //     } else {
-                //         $(this).parent().find(".error").remove();
-                //     }
-                // })
-
-
-
                 if (typeof submitHandler == "function") {
                     try {
                         if (!submitHandler()) {
@@ -157,19 +146,20 @@ layui.use(function(){
                     url: $("#formSubmitUrl").val(),
                     dataType: 'json',
                     success: function (data) {
-                        if (typeof submitSuccess == "function") {
-                            try {
-                                submitSuccess(data);
-                            } catch (e) {
-                                console.log(e);
-                            }
-                            canEzFormSubmit = true;
-                            layer.close(loadIndex)
-                            return;
-                        }
+
                         layer.close(loadIndex)
                         if (data.code == 0) {
                             console.log("data::" + data.data);
+                            if (typeof submitSuccess == "function") {
+                                try {
+                                    submitSuccess(data);
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                                canEzFormSubmit = true;
+                                layer.close(loadIndex)
+                                return;
+                            }
                             layer.alert("保存成功", function (index) {
                                 if ('reload' == data.data || data.data == null) {
                                     canEzFormSubmit = true;
@@ -328,6 +318,8 @@ function initDate(){
             type: 'date',
             weekStart: 1
         };
+        //去除type属性
+
         var resultConfig={};
         if(el.getAttribute('data-propsJson') != null){
             var c = Global.safeParseJSON(el.getAttribute('data-propsJson'), {});
@@ -338,6 +330,7 @@ function initDate(){
         if (resultConfig.format && resultConfig.format == 'yyyy-MM-dd') {
             resultConfig.shortcuts = rangeShortCut
         }
+        el.removeAttribute("type");
         layui.laydate.render(resultConfig);
     })
 }
@@ -358,7 +351,7 @@ function initLaycascader() {
 function initUpload() {
     $('button.ez-upload').each(function(){
         var _this=$(this);
-        var item_name=_this.attr("item_name");
+        var item_name=_this.attr("upload_item_name");
         var config={
             elem: _this,
             "accept":"image",
@@ -417,7 +410,27 @@ function initUpload() {
 
 }
 
-
+function initWater() {
+    try{
+        var d = new Date();
+        var year = d.getFullYear();
+        var month = change(d.getMonth() + 1);
+        var day = change(d.getDate());
+        var hour = change(d.getHours());
+        var minute = change(d.getMinutes());
+        var second = change(d.getSeconds());
+        function change(t) {
+            if (t < 10) {
+                return "0" + t;
+            } else {
+                return t;
+            }
+        }
+        var time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + '';
+        var name=document.getElementById("EZ_SESSION_USER_NAME_KEY").value;
+        watermark.init({ watermark_txt: name + ' ' + time ,watermark_fontsize:'14px'})
+    }catch(e){}
+}
 
 // 获取 URL 参数
 function getUrlParams() {

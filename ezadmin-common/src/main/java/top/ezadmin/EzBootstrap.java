@@ -27,7 +27,7 @@ public class EzBootstrap   {
 
     private EzBootstrap() {
     }
-    private static String includeShow = "/topezadmin/(list|form|listEdit|formEdit|detail|api|dsl)/([A-Za-z]+)-(.*)";
+    private static String includeShow = "/topezadmin/(list|form|listEdit|formEdit|detail|edit|dsl)/([A-Za-z]+)-(.*)";
     private Pattern pInclude =null;
 
    
@@ -114,10 +114,10 @@ public class EzBootstrap   {
                         return  handleListEditController(requestContext, method, id);
                     case "formEdit":
                         return  handleFormEditController(requestContext, method, id);
-                    // case "detail":
-                    //     return handleDetailController(requestContext, method, id);
-                    case "api":
-                        return  handleApiController(requestContext, method, id);
+                     case "edit":
+                        return handleEditController(requestContext, method, id);
+                    case "inspector":
+                        return  handleInspectorController(requestContext, method, id);
                     case "dsl":
                         return  handleDslController(requestContext, method, id);
                     default:
@@ -134,7 +134,18 @@ public class EzBootstrap   {
         return  EzResult.instance().fail("没有找到控制器");
     }
 
-   
+    private EzResult handleEditController(RequestContext requestContext, String method, String id) throws Exception {
+        DslEditController controller=new DslEditController();
+        if(method.equals("list")||method.equals("form")){
+            return controller.page(requestContext,method,id);
+        }
+        if(method.equals("submit")){
+            return controller.submit(requestContext,method,id);
+        }
+         return controller.page(requestContext,method,id);
+    }
+
+
     public EzResult refresh(String... key) {
         // 刷新逻辑
         return  EzResult.instance();
@@ -151,12 +162,19 @@ public class EzBootstrap   {
             ExportController controller=new ExportController();
             return controller.export(requestContext,method,id);
         }
+        if(method.equals("edit")){
+            DslEditController controller=new DslEditController();
+            return controller.page(requestContext,method,id);
+        }
+
         ListController controller=new ListController();
 
         // 实现列表控制器逻辑
         switch (method){
             case "page":
                 return controller.page(  requestContext,method,id);
+            case "exportpage":
+                return controller.exportpage(  requestContext,method,id);
             case "data":
                 return controller.data(  requestContext,method,id);
             case "list":
@@ -184,6 +202,10 @@ public class EzBootstrap   {
         FormController controller=new FormController();
         // 实现列表控制器逻辑
         EzResult result=EzResult.instance();
+        if(method.equals("edit")){
+            DslEditController controller1=new DslEditController();
+            return controller1.page(requestContext,method,id);
+        }
         switch (method){
             case "page":
                 return controller.page(  requestContext,method,id);
@@ -283,72 +305,31 @@ public class EzBootstrap   {
     }
  
 
-    private EzResult handleApiController(RequestContext requestContext, String method, String id) throws Exception {
+    private EzResult handleInspectorController(RequestContext requestContext, String method, String id) throws Exception {
         // 实现API控制器逻辑
+        // Inspector API: /topezadmin/api/submit-inspector
+        if ("list".equals(method) || "form".equals(method)) {
+            DslEditController controller = new DslEditController();
+            return controller.page(requestContext, method, id);
+        }
+        if ("submit".equals(method)  ) {
+            DslEditController controller = new DslEditController();
+            return controller.submit(requestContext, method, id);
+        }
         return  EzResult.instance();
     }
-
+    //dsl/list-xx  dsl/form-xx  dsl/listsave-xx
     private EzResult handleDslController(RequestContext requestContext, String method, String id) throws Exception {
         // 实现DSL编辑器控制器逻辑
-        DslEditorController controller = new DslEditorController();
-        EzResult result = EzResult.instance();
-
-        switch (method) {
-            case "editor":
-                // /topezadmin/dsl/editor → /topezadmin/dsl/editor-
-                return controller.editor(requestContext, method, id);
-            case "form":
-                // dsl/form 命名空间
-                // URL: /topezadmin/dsl/form/xxx 转换为 /topezadmin/dsl/form-xxx
-                // 然后正则匹配为：contro=dsl, method=form, id=xxx
-                // id可能是：list, get-{formId}, save-{formId}, delete-{formId}, create, editor-{formId}
-
-                if (id == null || id.isEmpty()) {
-                    return EzResult.instance().fail("缺少操作参数");
-                }
-
-                // 解析action和formId
-                String action;
-                String formId = "";
-
-                if (id.contains("-")) {
-                    // 格式：get-abc, save-abc, delete-abc, editor-abc
-                    int dashIndex = id.indexOf("-");
-                    action = id.substring(0, dashIndex);
-                    formId = id.substring(dashIndex + 1);
-                } else {
-                    // 格式：list, create
-                    action = id;
-                }
-
-                switch (action) {
-                    case "list":
-                        // /topezadmin/dsl/form/list
-                        return controller.formList(requestContext, action, formId);
-                    case "get":
-                        // /topezadmin/dsl/form/get-{formId}
-                        return controller.formGet(requestContext, action, formId);
-                    case "save":
-                        // /topezadmin/dsl/form/save-{formId}
-                        EzResult saveResult = controller.formSave(requestContext, action, formId);
-                        result.code("JSON").data(saveResult);
-                        return result;
-                    case "delete":
-                        // /topezadmin/dsl/form/delete-{formId}
-                        EzResult deleteResult = controller.formDelete(requestContext, action, formId);
-                        result.code("JSON").data(deleteResult);
-                        return result;
-                    case "create":
-                        // /topezadmin/dsl/form/create
-                        EzResult createResult = controller.formCreate(requestContext, action, formId);
-                        result.code("JSON").data(createResult);
-                        return result;
-                    case "editor":
-                        // /topezadmin/dsl/form/editor-{formId}
-                        return controller.formEditor(requestContext, action, formId);
-                    default:
-                        return EzResult.instance().fail("不支持的操作: " + action);
-                }
+        DslSourceEditorController controller = new DslSourceEditorController();
+        if ("list".equals(method) || "form".equals(method)) {
+            return controller.codeEditor(requestContext, method, id);
+        }
+        if ("listsave".equals(method)  ) {
+            return controller.listSave(requestContext, method, id);
+        }
+        if ("formsave".equals(method)) {
+            return controller.formSave(requestContext, method, id);
         }
         return EzResult.instance().fail("没有找到方法");
     }

@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
@@ -17,7 +17,7 @@ import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.plugins.express.executor.EzExpressExecutor;
 
 @Configuration
-@ConditionalOnClass(EzClientAutoConfiguration.class)
+@ConditionalOnBean(EzadminEnabledMarker.class)
 @EnableConfigurationProperties({EzClientProperties.class})
 public class EzClientAutoConfiguration implements ApplicationContextAware {
     Logger logger = LoggerFactory.getLogger(EzClientAutoConfiguration.class);
