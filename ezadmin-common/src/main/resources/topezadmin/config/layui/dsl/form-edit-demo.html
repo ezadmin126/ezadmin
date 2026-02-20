@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>表单可视化编辑 - 静态演示</title>
+
+    <!-- CDN 资源 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui@2.8.18/dist/css/layui.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/layui@2.8.18/dist/layui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .form-edit-container {
+            display: flex;
+            height: 100vh;
+            background: #f5f5f5;
+        }
+
+        /* 左侧组件面板 */
+        .components-panel {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e6e6e6;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .components-header {
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .components-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .component-group {
+            margin-bottom: 20px;
+        }
+
+        .component-group-title {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+            padding-left: 5px;
+            font-weight: 500;
+        }
+
+        .component-item {
+            background: #f8f9fa;
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            cursor: move;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .component-item:hover {
+            background: #e7f3ff;
+            border-color: #1890ff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+        }
+
+        .component-item i {
+            font-size: 16px;
+            color: #1890ff;
+        }
+
+        .component-item span {
+            font-size: 13px;
+            color: #333;
+        }
+
+        /* 中间预览面板 */
+        .preview-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .preview-toolbar {
+            height: 50px;
+            background: #fff;
+            border-bottom: 1px solid #e6e6e6;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        .toolbar-btn {
+            padding: 8px 16px;
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            color: #1890ff;
+            border-color: #1890ff;
+        }
+
+        .toolbar-btn.primary {
+            background: #1890ff;
+            color: #fff;
+            border-color: #1890ff;
+        }
+
+        .toolbar-btn.primary:hover {
+            background: #40a9ff;
+        }
+
+        .preview-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .form-preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 右侧聊天面板 */
+        .chat-panel {
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .chat-header {
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .chat-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: messageSlideIn 0.3s ease;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            max-width: 70%;
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            word-wrap: break-word;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* 拖拽相关样式 */
+        .gu-mirror {
+            position: fixed !important;
+            margin: 0 !important;
+            z-index: 9999 !important;
+            opacity: 0.8;
+            cursor: grabbing !important;
+        }
+
+        .gu-hide {
+            display: none !important;
+        }
+
+        .gu-unselectable {
+            user-select: none !important;
+        }
+
+        .gu-transit {
+            opacity: 0.5;
+        }
+
+        /* 编辑模式下的样式 */
+        .edit-mode .layui-card {
+            cursor: move;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .edit-mode .layui-card:hover {
+            box-shadow: 0 2px 12px rgba(24, 144, 255, 0.3);
+            border: 2px solid #1890ff;
+        }
+
+        .edit-mode .layui-row {
+            min-height: 60px;
+            transition: all 0.2s;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .edit-mode .layui-row:hover {
+            background: rgba(24, 144, 255, 0.05);
+            outline: 2px dashed #1890ff;
+        }
+
+        /* 行拖拽手柄 - 真实DOM元素 */
+        .row-drag-handle {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+            font-size: 16px;
+            cursor: move !important;
+            line-height: 1;
+            z-index: 10;
+            user-select: none;
+            padding: 5px;
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+        }
+
+        .row-drag-handle:hover {
+            color: #1890ff;
+            background: rgba(24, 144, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        /* 确保最外层的 layui-row 不显示拖拽手柄 */
+        .layui-row.layui-col-space10 > .row-drag-handle {
+            display: none !important;
+        }
+
+        /* 拖拽手柄样式 - 标签可以拖拽 */
+        .edit-mode .layui-form-label {
+            cursor: move;
+            position: relative;
+        }
+
+        .edit-mode .layui-form-label:hover {
+            background: rgba(24, 144, 255, 0.1);
+        }
+
+        .edit-mode .layui-form-label:hover::before {
+            content: '⋮⋮';
+            position: absolute;
+            left: 5px;
+            color: #1890ff;
+            font-weight: bold;
+        }
+
+        .edit-mode [component] {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .edit-mode [component]:hover::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #1890ff;
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 滚动条样式 */
+        .components-body::-webkit-scrollbar,
+        .preview-content::-webkit-scrollbar,
+        .chat-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .components-body::-webkit-scrollbar-track,
+        .preview-content::-webkit-scrollbar-track,
+        .chat-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .components-body::-webkit-scrollbar-thumb,
+        .preview-content::-webkit-scrollbar-thumb,
+        .chat-body::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .width-control {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e6e6e6;
+        }
+
+        .width-control-title {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        /* 属性表单样式 */
+        .property-section {
+            margin-bottom: 20px;
+        }
+
+        .property-section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            padding: 12px 0;
+            border-bottom: 1px solid #e6e6e6;
+            margin-bottom: 15px;
+        }
+
+        #propertyForm .layui-form-item {
+            margin-bottom: 12px;
+        }
+
+        #propertyForm .layui-form-label {
+            width: 90px;
+            font-size: 12px;
+            padding: 9px 10px;
+        }
+
+        #propertyForm .layui-input-block {
+            margin-left: 100px;
+        }
+
+        #propertyForm .layui-input,
+        #propertyForm .layui-select {
+            height: 32px;
+            line-height: 32px;
+            font-size: 12px;
+        }
+
+        #propertyForm .layui-btn-sm {
+            height: 32px;
+            line-height: 32px;
+            padding: 0 15px;
+            font-size: 12px;
+        }
+
+        /* initData 数据源切换 */
+        .data-source-tabs {
+            display: flex;
+            border: 1px solid #e6e6e6;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .data-source-tab {
+            flex: 1;
+            padding: 6px;
+            text-align: center;
+            font-size: 12px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            color: #666;
+        }
+
+        .data-source-tab.active {
+            background: #1890ff;
+            color: #fff;
+        }
+
+        .data-source-panel {
+            display: none;
+        }
+
+        .data-source-panel.active {
+            display: block;
+        }
+
+        #propertyForm textarea.layui-textarea {
+            height: 80px;
+            font-size: 12px;
+            font-family: monospace;
+            resize: vertical;
+        }
+
+        .validate-section {
+            border-top: 1px dashed #e6e6e6;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        .validate-section-title {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="form-edit-container">
+    <!-- 左侧组件面板 -->
+    <div class="components-panel">
+        <div class="components-header">
+            组件库
+        </div>
+        <div class="components-body" id="componentsBody">
+            <div class="component-group">
+                <div class="component-group-title">布局组件</div>
+                <div class="component-item" data-component="card" data-label="卡片">
+                    <i class="layui-icon layui-icon-template-1"></i>
+                    <span>卡片</span>
+                </div>
+                <div class="component-item" data-component="row" data-label="行容器">
+                    <i class="layui-icon layui-icon-cols"></i>
+                    <span>行容器</span>
+                </div>
+            </div>
+
+            <div class="component-group">
+                <div class="component-group-title">基础组件</div>
+                <div class="component-item" data-component="input" data-label="输入框">
+                    <i class="layui-icon layui-icon-edit"></i>
+                    <span>输入框</span>
+                </div>
+                <div class="component-item" data-component="textarea" data-label="多行输入">
+                    <i class="layui-icon layui-icon-form"></i>
+                    <span>多行输入</span>
+                </div>
+                <div class="component-item" data-component="select" data-label="下拉选择">
+                    <i class="layui-icon layui-icon-triangle-d"></i>
+                    <span>下拉选择</span>
+                </div>
+                <div class="component-item" data-component="radio" data-label="单选框">
+                    <i class="layui-icon layui-icon-radio"></i>
+                    <span>单选框</span>
+                </div>
+                <div class="component-item" data-component="checkbox" data-label="复选框">
+                    <i class="layui-icon layui-icon-ok-circle"></i>
+                    <span>复选框</span>
+                </div>
+                <div class="component-item" data-component="date" data-label="日期选择">
+                    <i class="layui-icon layui-icon-date"></i>
+                    <span>日期选择</span>
+                </div>
+                <div class="component-item" data-component="upload" data-label="文件上传">
+                    <i class="layui-icon layui-icon-upload"></i>
+                    <span>文件上传</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 中间预览面板 -->
+    <div class="preview-panel">
+        <div class="preview-toolbar">
+            <button class="toolbar-btn primary" id="saveBtn">
+                <i class="layui-icon layui-icon-ok"></i> 保存布局
+            </button>
+            <button class="toolbar-btn" id="toggleEditBtn" style="display: none;">
+                <i class="layui-icon layui-icon-edit"></i> 开始编辑
+            </button>
+            <button class="toolbar-btn" id="cancelEditBtn">
+                <i class="layui-icon layui-icon-close"></i> 取消编辑
+            </button>
+            <button class="toolbar-btn" id="testBtn">
+                <i class="layui-icon layui-icon-tips"></i> 测试
+            </button>
+            <div style="margin-left: 20px; color: #666; font-size: 12px;">
+                💡 拖拽提示：⋮⋮ 图标=拖拽行 | 标签=拖拽字段 | 标题=拖拽卡片
+            </div>
+        </div>
+        <div class="preview-content edit-mode" id="previewContent">
+            <div class="form-preview-container" id="formContainer">
+                <!-- 模拟表单结构 -->
+                <div class="layui-row layui-col-space10">
+                    <!-- 卡片1 -->
+                    <div class="layui-card" item_name="card-基本信息">
+                        <div class="layui-card-header">基本信息</div>
+                        <div class="layui-card-body">
+                            <!-- 行1 -->
+                            <div class="layui-row layui-col-space5">
+                                <div class="component-col  col-userName layui-col-md6">
+                                    <div class="layui-form-item" item_name="userName" component="input">
+                                        <label class="layui-form-label">用户名：</label>
+                                        <div class="layui-input-block">
+                                            <input name="userName" class="layui-input" placeholder="请输入用户名">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component-col col-email layui-col-md6">
+                                    <div class="layui-form-item" item_name="email" component="input">
+                                        <label class="layui-form-label">邮箱：</label>
+                                        <div class="layui-input-block">
+                                            <input name="email" class="layui-input" placeholder="请输入邮箱">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 行2 -->
+                            <div class="layui-row layui-col-space5">
+                                <div class="component-col col-phone layui-col-md12">
+                                    <div class="layui-form-item" item_name="phone" component="input">
+                                        <label class="layui-form-label">手机号：</label>
+                                        <div class="layui-input-block">
+                                            <input name="phone" class="layui-input" placeholder="请输入手机号">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 卡片2 -->
+                    <div class="layui-card" item_name="card-详细信息">
+                        <div class="layui-card-header">详细信息</div>
+                        <div class="layui-card-body">
+                            <div class="layui-row layui-col-space5">
+                                <div class="component-col col-address layui-col-md12">
+                                    <div class="layui-form-item" item_name="address" component="textarea">
+                                        <label class="layui-form-label">地址：</label>
+                                        <div class="layui-input-block">
+                                            <textarea name="address" class="layui-textarea" placeholder="请输入地址"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧属性配置面板 -->
+    <div class="chat-panel">
+        <div class="chat-header">
+            <div class="chat-title">属性配置</div>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+            <div class="empty-state" id="emptyState">
+                <div style="font-size: 48px; margin-bottom: 12px;">⚙️</div>
+                <div style="font-size: 14px; line-height: 1.6;">
+                    点击表单元素<br>
+                    在此配置其属性
+                </div>
+            </div>
+
+            <div id="propertyForm" style="display: none;">
+                <form class="layui-form" lay-filter="propertyForm">
+                    <!-- 基础属性 - 始终显示 -->
+                    <div class="property-section">
+                        <div class="property-section-title">基础属性</div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">字段名</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="prop-item_name" class="layui-input" placeholder="字段名">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">显示标签</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="prop-label" class="layui-input" placeholder="显示标签">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">组件类型</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="prop-component" class="layui-input" readonly>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">栅格宽度</label>
+                            <div class="layui-input-block">
+                                <select id="prop-classAppend" lay-filter="prop-classAppend">
+                                    <option value="layui-col-md12">12列(100%)</option>
+                                    <option value="layui-col-md8">8列(66%)</option>
+                                    <option value="layui-col-md6">6列(50%)</option>
+                                    <option value="layui-col-md4">4列(33%)</option>
+                                    <option value="layui-col-md3">3列(25%)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 动态配置区域 - 根据组件类型渲染 -->
+                    <div id="section-dynamic"></div>
+
+                    <div class="layui-form-item" style="margin-top: 20px;">
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn layui-btn-sm" id="applyPropsBtn">应用配置</button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" id="deleteElementBtn">删除元素</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let editMode = true;
+let dragulaInstances = [];
+let selectedElement = null;
+
+// 页面加载完成后初始化
+$(document).ready(function() {
+    initFormEditor();
+});
+
+function initFormEditor() {
+    console.log('初始化表单编辑器...');
+
+    // 初始化拖拽
+    initDragula();
+
+    // 初始化事件监听
+    initEventListeners();
+
+    console.log('✅ 表单编辑器已就绪');
+}
+
+function initDragula() {
+    console.log('初始化拖拽功能...');
+
+    // 按照从外到内的顺序初始化：卡片 -> 行 -> 字段 -> 新组件
+    initCardsDrag();
+    initRowsDrag();
+    initFieldsDrag();
+    initComponentsDrag();
+
+    console.log('✅ 拖拽功能初始化完成，共创建', dragulaInstances.length, '个拖拽实例');
+}
+
+function initCardsDrag() {
+    const cardsContainer = document.querySelector('#formContainer .layui-row.layui-col-space10');
+    if (!cardsContainer) return;
+
+    const drake = dragula([cardsContainer], {
+        moves: function (el, container, handle) {
+            // 必须是卡片元素
+            if (!el.classList.contains('layui-card')) {
+                return false;
+            }
+
+            // 如果点击的是行拖拽手柄，不允许拖拽卡片
+            if (handle.classList.contains('row-drag-handle') || handle.closest('.row-drag-handle')) {
+                console.log('Card moves 检查: 点击了行拖拽手柄，不拖拽卡片');
+                return false;
+            }
+
+            // 如果点击的是字段标签，不允许拖拽卡片
+            if (handle.classList.contains('layui-form-label')) {
+                console.log('Card moves 检查: 点击了字段标签，不拖拽卡片');
+                return false;
+            }
+
+            // 如果点击的是表单控件，不允许拖拽
+            const isFormControl = handle.tagName === 'INPUT' ||
+                                 handle.tagName === 'TEXTAREA' ||
+                                 handle.tagName === 'SELECT' ||
+                                 handle.tagName === 'BUTTON';
+
+            if (isFormControl) {
+                return false;
+            }
+
+            // 只允许拖拽卡片标题
+            const isCardHeader = handle.classList.contains('layui-card-header') ||
+                                handle.closest('.layui-card-header');
+
+            console.log('Card moves 检查:', {
+                el: el.className,
+                handle: handle.tagName + '.' + handle.className,
+                isCardHeader,
+                canMove: isCardHeader
+            });
+
+            return isCardHeader;
+        }
+    }).on('drop', function (el, target, source, sibling) {
+        console.log('📦 卡片顺序已调整');
+    });
+
+    dragulaInstances.push(drake);
+    console.log('✅ Cards 拖拽已初始化');
+}
+
+function initRowsDrag() {
+    const cards = document.querySelectorAll('#formContainer .layui-card');
+
+    cards.forEach((card, index) => {
+        const cardBody = card.querySelector('.layui-card-body');
+        if (!cardBody) return;
+
+        const rows = cardBody.querySelectorAll(':scope > .layui-row');
+        console.log(`  卡片 ${index + 1}: 找到 ${rows.length} 个行`);
+
+        // 为每个行添加拖拽手柄
+        rows.forEach(row => {
+            // 检查是否已经有拖拽手柄
+            if (!row.querySelector('.row-drag-handle')) {
+                const handle = document.createElement('span');
+                handle.className = 'row-drag-handle';
+                handle.textContent = '⋮⋮';
+                handle.title = '拖拽此图标可调整行顺序';
+                row.insertBefore(handle, row.firstChild);
+            }
+        });
+
+        const drake = dragula([cardBody], {
+            moves: function (el, container, handle) {
+                // 只有直接点击行容器或拖拽手柄时才允许拖拽
+                if (!el.classList.contains('layui-row')) {
+                    return false;
+                }
+
+                // 如果点击的是表单控件，不允许拖拽
+                const isFormControl = handle.tagName === 'INPUT' ||
+                                     handle.tagName === 'TEXTAREA' ||
+                                     handle.tagName === 'SELECT' ||
+                                     handle.tagName === 'BUTTON';
+
+                if (isFormControl) {
+                    return false;
+                }
+
+                // 检查是否点击了字段的 label（这种情况应该让字段拖拽处理）
+                const isFieldLabel = handle.classList.contains('layui-form-label');
+                if (isFieldLabel) {
+                    console.log('Row moves 检查: 点击了字段label，不拖拽行');
+                    return false;
+                }
+
+                // 检查是否点击了拖拽手柄
+                const isDragHandle = handle.classList.contains('row-drag-handle') ||
+                                    handle.closest('.row-drag-handle');
+
+                const canMove = isDragHandle || handle === el;
+
+                console.log('Row moves 检查:', {
+                    el: el.className.substring(0, 30),
+                    handle: handle.tagName + '.' + handle.className,
+                    isDragHandle,
+                    canMove
+                });
+
+                return canMove;
+            }
+        }).on('drop', function (el, target, source, sibling) {
+            console.log('📋 行顺序已调整');
+        });
+
+        dragulaInstances.push(drake);
+    });
+
+    console.log(`✅ Rows 拖拽已初始化 (${cards.length} 个卡片)`);
+}
+
+function initFieldsDrag() {
+    const rows = document.querySelectorAll('#formContainer .layui-row');
+
+    const targetRows = Array.from(rows).filter(row =>
+        !row.classList.contains('layui-col-space10')
+    );
+
+    console.log(`  找到 ${targetRows.length} 个可拖拽字段的行容器`);
+
+    // 统计所有字段数量
+    targetRows.forEach((row, index) => {
+        const fields = row.querySelectorAll(':scope > [class*="col-"]');
+        console.log(`    行 ${index + 1}: 找到 ${fields.length} 个字段`);
+    });
+
+    // 创建一个 dragula 实例，传入所有 row 容器，允许跨行拖拽
+    const drake = dragula(targetRows, {
+        moves: function (el, container, handle) {
+            // 必须是包含 component 的列元素
+            const hasComponent = el.querySelector('[component]');
+            if (!hasComponent) {
+                return false;
+            }
+
+            // 如果点击的是表单控件，不允许拖拽
+            const isFormControl = handle.tagName === 'INPUT' ||
+                                 handle.tagName === 'TEXTAREA' ||
+                                 handle.tagName === 'SELECT' ||
+                                 handle.tagName === 'BUTTON';
+
+            if (isFormControl) {
+                console.log('Field moves 检查: 点击了表单控件，不允许拖拽');
+                return false;
+            }
+
+            // 只有点击 label 时才允许拖拽字段
+            const canMove = handle.classList.contains('layui-form-label');
+
+            console.log('Field moves 检查:', {
+                el: el.className,
+                handle: handle.tagName + '.' + handle.className,
+                hasComponent: !!hasComponent,
+                isFormControl,
+                canMove
+            });
+
+            return canMove;
+        },
+        accepts: function (el, target, source, sibling) {
+            // 只允许放到 row 容器中(非顶层容器)
+            return target.classList.contains('layui-row') &&
+                   !target.classList.contains('layui-col-space10');
+        }
+    }).on('drop', function (el, target, source, sibling) {
+        if (target !== source) {
+            console.log('🔧 字段已跨行移动');
+        } else {
+            console.log('🔧 字段顺序已调整');
+        }
+    });
+
+    dragulaInstances.push(drake);
+
+    console.log(`✅ Fields 拖拽已初始化 (${targetRows.length} 个行, 支持跨行拖拽)`);
+}
+
+function initComponentsDrag() {
+    const cardsContainer = document.querySelector('#formContainer .layui-row.layui-col-space10');
+
+    // 获取所有现有的目标容器
+    const cardBodies = Array.from(document.querySelectorAll('#formContainer .layui-card-body'));
+    const rows = Array.from(document.querySelectorAll('#formContainer .layui-row')).filter(row =>
+        !row.classList.contains('layui-col-space10')
+    );
+
+    // 获取所有组件分组（作为源容器）
+    const componentGroups = Array.from(document.querySelectorAll('#componentsBody .component-group'));
+
+    const allTargets = [cardsContainer, ...cardBodies, ...rows];
+
+    console.log(`  组件库: ${componentGroups.length} 个分组`);
+    console.log(`  目标容器: 1 个主容器 + ${cardBodies.length} 个卡片体 + ${rows.length} 个行 = ${allTargets.length} 个`);
+
+    // 从组件分组拖拽到目标容器
+    const drake = dragula([...componentGroups, ...allTargets], {
+        copy: function (el, source) {
+            // 从组件分组拖拽时复制
+            const isCopy = componentGroups.includes(source);
+            return isCopy;
+        },
+        isContainer: function (el) {
+            // 额外的动态容器检测，支持新创建的容器
+            if (componentGroups.includes(el)) return true;
+            if (el.classList.contains('layui-col-space10') && el.closest('#formContainer')) return true;
+            if (el.classList.contains('layui-card-body')) return true;
+            if (el.classList.contains('layui-row') && !el.classList.contains('layui-col-space10')) return true;
+            return false;
+        },
+        accepts: function (el, target, source, sibling) {
+            // 不能拖回组件面板
+            if (componentGroups.includes(target)) return false;
+
+            const componentType = el.getAttribute('data-component');
+
+            // 卡片只能拖到最外层容器
+            if (componentType === 'card') {
+                return target === cardsContainer || (target.classList.contains('layui-col-space10') && target.closest('#formContainer'));
+            }
+
+            // 行容器只能拖到卡片body中
+            if (componentType === 'row') {
+                return target.classList.contains('layui-card-body');
+            }
+
+            // 其他组件只能拖到行容器中(不是最外层的那个)
+            if (target.classList.contains('layui-row') && !target.classList.contains('layui-col-space10')) {
+                return true;
+            }
+
+            return false;
+        },
+        moves: function (el, source, handle, sibling) {
+            // 只允许拖拽 component-item
+            const canMove = el.classList.contains('component-item');
+            return canMove;
+        }
+    }).on('drop', function (el, target, source, sibling) {
+        console.log('✓ drop 事件:', { el: el.className, target: target.className, source: source.className });
+        if (componentGroups.includes(source)) {
+            const componentType = el.getAttribute('data-component');
+
+            if (componentType === 'card') {
+                createCard(el, target, sibling);
+            } else if (componentType === 'row') {
+                createRow(el, target, sibling);
+            } else {
+                createFormComponent(el, target, sibling);
+            }
+        }
+    }).on('drag', function(el, source) {
+        console.log('✓ 开始拖拽:', { el: el.getAttribute('data-label'), source: source.className });
+    });
+
+    dragulaInstances.push(drake);
+    console.log(`✅ 组件拖拽已初始化 (${componentGroups.length} 个源容器, ${allTargets.length} 个目标容器)`);
+}
+
+function createCard(componentEl, targetContainer, sibling) {
+    const cardName = '新卡片_' + Date.now();
+
+    const cardHtml = `
+        <div class="layui-card" item_name="card-${cardName}">
+            <div class="layui-card-header">${cardName}</div>
+            <div class="layui-card-body">
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    拖入行容器或字段组件
+                </div>
+            </div>
+        </div>
+    `;
+
+    componentEl.remove();
+
+    if (sibling) {
+        sibling.insertAdjacentHTML('beforebegin', cardHtml);
+    } else {
+        targetContainer.insertAdjacentHTML('beforeend', cardHtml);
+    }
+
+    console.log(`✅ 已添加卡片: ${cardName}`);
+
+    setTimeout(() => {
+        reinitDragula();
+    }, 100);
+}
+
+function createRow(componentEl, targetCardBody, sibling) {
+    const rowHtml = `
+        <div class="layui-row layui-col-space5">
+            <span class="row-drag-handle" title="拖拽此图标可调整行顺序">⋮⋮</span>
+            <div style="text-align: center; padding: 20px; color: #999; min-height: 60px;">
+                拖入字段组件
+            </div>
+        </div>
+    `;
+
+    componentEl.remove();
+
+    if (sibling) {
+        sibling.insertAdjacentHTML('beforebegin', rowHtml);
+    } else {
+        targetCardBody.insertAdjacentHTML('beforeend', rowHtml);
+    }
+
+    console.log('✅ 已添加行容器');
+
+    setTimeout(() => {
+        reinitDragula();
+    }, 100);
+}
+
+function createFormComponent(componentEl, targetRow, sibling) {
+    const componentType = componentEl.getAttribute('data-component');
+    const componentLabel = componentEl.getAttribute('data-label');
+    const itemName = `${componentType}_${Date.now()}`;
+
+    let componentHtml = '';
+
+    // 移除占位提示
+    const placeholder = targetRow.querySelector('[style*="拖入字段组件"]');
+    if (placeholder) {
+        placeholder.remove();
+    }
+
+    switch (componentType) {
+        case 'input':
+            componentHtml = `
+                <div class="col-${itemName} layui-col-md12">
+                    <div class="layui-form-item" item_name="${itemName}" component="input">
+                        <label class="layui-form-label">${componentLabel}：</label>
+                        <div class="layui-input-block">
+                            <input name="${itemName}" class="layui-input" placeholder="请输入${componentLabel}">
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'textarea':
+            componentHtml = `
+                <div class="col-${itemName} layui-col-md12">
+                    <div class="layui-form-item" item_name="${itemName}" component="textarea">
+                        <label class="layui-form-label">${componentLabel}：</label>
+                        <div class="layui-input-block">
+                            <textarea name="${itemName}" class="layui-textarea" placeholder="请输入${componentLabel}"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'select':
+            componentHtml = `
+                <div class="col-${itemName} layui-col-md12">
+                    <div class="layui-form-item" item_name="${itemName}" component="select">
+                        <label class="layui-form-label">${componentLabel}：</label>
+                        <div class="layui-input-block">
+                            <select name="${itemName}">
+                                <option value="">请选择${componentLabel}</option>
+                                <option value="1">选项1</option>
+                                <option value="2">选项2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'radio':
+            componentHtml = `
+                <div class="col-${itemName} layui-col-md12">
+                    <div class="layui-form-item" item_name="${itemName}" component="radio">
+                        <label class="layui-form-label">${componentLabel}：</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="${itemName}" value="1" title="选项1">
+                            <input type="radio" name="${itemName}" value="2" title="选项2">
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'checkbox':
+            componentHtml = `
+                <div class="col-${itemName} layui-col-md12">
+                    <div class="layui-form-item" item_name="${itemName}" component="checkbox">
+                        <label class="layui-form-label">${componentLabel}：</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="${itemName}[]" value="1" title="选项1">
+                            <input type="checkbox" name="${itemName}[]" value="2" title="选项2">
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'date':
+            componentHtml = `
+                <div class="col-${itemName} layui-col-md12">
+                    <div class="layui-form-item" item_name="${itemName}" component="date">
+                        <label class="layui-form-label">${componentLabel}：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="${itemName}" class="layui-input" placeholder="请选择日期">
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'upload':
+            componentHtml = `
+                <div class="col-${itemName} layui-col-md12">
+                    <div class="layui-form-item" item_name="${itemName}" component="upload">
+                        <label class="layui-form-label">${componentLabel}：</label>
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="upload-${itemName}">
+                                <i class="layui-icon layui-icon-upload"></i> 选择文件
+                            </button>
+                            <span style="margin-left:8px; font-size:12px; color:#999;">未选择文件</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            break;
+    }
+
+    componentEl.remove();
+
+    if (sibling) {
+        sibling.insertAdjacentHTML('beforebegin', componentHtml);
+    } else {
+        targetRow.insertAdjacentHTML('beforeend', componentHtml);
+    }
+
+    layui.form.render();
+    console.log(`✅ 已添加组件: ${componentLabel}`);
+
+    // 重新初始化拖拽，使新添加的组件可以拖拽
+    setTimeout(() => {
+        reinitDragula();
+    }, 100);
+}
+
+function reinitDragula() {
+    console.log('重新初始化拖拽...');
+
+    dragulaInstances.forEach(instance => {
+        if (instance && instance.destroy) {
+            instance.destroy();
+        }
+    });
+    dragulaInstances = [];
+
+    initDragula();
+}
+
+function initEventListeners() {
+    document.getElementById('saveBtn').addEventListener('click', () => {
+        const layoutData = collectLayoutData();
+        console.log('收集到的布局数据:', layoutData);
+        layer.msg('布局数据已输出到控制台（按F12查看）');
+    });
+
+    document.getElementById('toggleEditBtn').addEventListener('click', toggleEditMode);
+    document.getElementById('cancelEditBtn').addEventListener('click', toggleEditMode);
+
+    document.getElementById('testBtn').addEventListener('click', () => {
+        layer.msg('测试功能：拖拽排序、添加组件等功能正常');
+    });
+
+    document.getElementById('formContainer').addEventListener('click', handleElementClick);
+
+    // 应用配置按钮
+    document.getElementById('applyPropsBtn').addEventListener('click', applyProperties);
+
+    // 删除元素按钮
+    document.getElementById('deleteElementBtn').addEventListener('click', deleteElement);
+}
+
+function toggleEditMode() {
+    editMode = !editMode;
+
+    const previewContent = document.getElementById('previewContent');
+    const toggleBtn = document.getElementById('toggleEditBtn');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+
+    if (editMode) {
+        previewContent.classList.add('edit-mode');
+        toggleBtn.style.display = 'none';
+        cancelBtn.style.display = 'inline-block';
+        console.log('✅ 已进入编辑模式');
+    } else {
+        previewContent.classList.remove('edit-mode');
+        toggleBtn.style.display = 'inline-block';
+        cancelBtn.style.display = 'none';
+        console.log('ℹ️ 已退出编辑模式');
+    }
+}
+
+function handleElementClick(event) {
+    if (!editMode) return;
+
+    const target = event.target.closest('[component]');
+    if (!target) {
+        // 点击空白处，隐藏属性面板
+        return;
+    }
+
+    event.stopPropagation();
+
+    // 移除之前选中元素的样式
+    if (selectedElement) {
+        selectedElement.style.outline = '';
+    }
+
+    // 标记新选中的元素
+    selectedElement = target;
+    selectedElement.style.outline = '2px solid #1890ff';
+
+    // 显示属性配置表单
+    showPropertyForm(target);
+}
+
+function showPropertyForm(element) {
+    const emptyState = document.getElementById('emptyState');
+    const propertyForm = document.getElementById('propertyForm');
+
+    emptyState.style.display = 'none';
+    propertyForm.style.display = 'block';
+
+    // 读取元素基础属性
+    const component = element.getAttribute('component');
+    const itemName = element.getAttribute('item_name');
+
+    const labelElement = element.querySelector('.layui-form-label');
+    const label = labelElement ? labelElement.textContent.replace(/：$/, '').trim() : '';
+
+    const colDiv = element.closest('[class*="layui-col-md"]');
+    const colClassMatch = colDiv?.className.match(/layui-col-md(\d+)/);
+    const classAppend = colClassMatch ? colClassMatch[0] : 'layui-col-md12';
+
+    // 读取已存在的 data-config-json
+    let existingConfig = {};
+    if (colDiv) {
+        const json = colDiv.getAttribute('data-config-json');
+        if (json) {
+            try { existingConfig = JSON.parse(json); } catch(e) {}
+        }
+    }
+
+    // 填充基础属性
+    document.getElementById('prop-item_name').value = itemName || '';
+    document.getElementById('prop-label').value = label || '';
+    document.getElementById('prop-component').value = component || '';
+    const classAppendSelect = document.getElementById('prop-classAppend');
+    classAppendSelect.value = classAppend;
+
+    // 渲染动态区域
+    renderDynamicSection(component, existingConfig, element);
+
+    // 重新渲染 layui select
+    layui.use('form', function() {
+        layui.form.render('select');
+    });
+
+    console.log(`✓ 已选中: ${component} (${itemName})`);
+}
+
+// 渲染每个组件特有的配置区域
+function renderDynamicSection(component, cfg, element) {
+    const container = document.getElementById('section-dynamic');
+    const props = cfg.props || {};
+    const initData = cfg.initData || {};
+    const validate = props.validate || {};
+
+    let html = '';
+
+    if (component === 'input') {
+        html = buildInputSection(props, validate);
+    } else if (component === 'textarea') {
+        html = buildTextareaSection(props, validate);
+    } else if (component === 'select') {
+        html = buildSelectSection(props, initData, validate);
+    } else if (component === 'radio') {
+        html = buildRadioSection(props, initData, validate);
+    } else if (component === 'checkbox') {
+        html = buildCheckboxSection(props, initData, validate);
+    } else if (component === 'date') {
+        html = buildDateSection(props, validate);
+    } else if (component === 'upload') {
+        html = buildUploadSection(props, validate);
+    }
+
+    container.innerHTML = html;
+
+    // 绑定 initData 数据源切换事件
+    const tabs = container.querySelectorAll('.data-source-tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const group = this.closest('.data-source-tabs').parentElement;
+            group.querySelectorAll('.data-source-tab').forEach(t => t.classList.remove('active'));
+            group.querySelectorAll('.data-source-panel').forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            const targetId = this.getAttribute('data-target');
+            const panel = group.querySelector('#' + targetId);
+            if (panel) panel.classList.add('active');
+        });
+    });
+}
+
+function fieldItem(label, inputHtml) {
+    return `<div class="layui-form-item">
+        <label class="layui-form-label">${label}</label>
+        <div class="layui-input-block">${inputHtml}</div>
+    </div>`;
+}
+
+function checkboxItem(checks) {
+    const items = checks.map(c =>
+        `<input type="checkbox" id="${c.id}" ${c.checked ? 'checked' : ''} lay-skin="primary" title="${c.title}">`
+    ).join('');
+    return `<div class="layui-form-item"><div class="layui-input-block">${items}</div></div>`;
+}
+
+function validateSection(validate) {
+    const rule = validate.rule ? JSON.stringify(validate.rule, null, 2) : '';
+    const msg = validate.message ? JSON.stringify(validate.message, null, 2) : '';
+    return `<div class="validate-section">
+        <div class="validate-section-title">jQuery Validate 配置</div>
+        ${fieldItem('验证规则', `<textarea id="prop-validate-rule" class="layui-textarea" placeholder='{"required":true,"minlength":2}'>${escHtml(rule)}</textarea>`)}
+        ${fieldItem('错误提示', `<textarea id="prop-validate-message" class="layui-textarea" placeholder='{"required":"请填写此项","minlength":"最少2位"}'>${escHtml(msg)}</textarea>`)}
+    </div>`;
+}
+
+function initDataSection(initData, idPrefix) {
+    const isStatic = !initData.dataSql;
+    const dataJsonStr = initData.dataJson ? JSON.stringify(initData.dataJson, null, 2) : '[\n  {"label":"选项1","value":"1"},\n  {"label":"选项2","value":"2"}\n]';
+    const dataSql = initData.dataSql || '';
+    const dataSource = initData.dataSource || 'dataSource';
+
+    return `<div class="property-section">
+        <div class="property-section-title">数据源配置</div>
+        <div class="data-source-tabs">
+            <button type="button" class="data-source-tab ${isStatic ? 'active' : ''}" data-target="${idPrefix}-static-panel">静态数据</button>
+            <button type="button" class="data-source-tab ${!isStatic ? 'active' : ''}" data-target="${idPrefix}-dynamic-panel">动态SQL</button>
+        </div>
+        <div id="${idPrefix}-static-panel" class="data-source-panel ${isStatic ? 'active' : ''}">
+            ${fieldItem('选项列表', `<textarea id="${idPrefix}-dataJson" class="layui-textarea" style="height:100px;font-family:monospace;">${escHtml(dataJsonStr)}</textarea>`)}
+        </div>
+        <div id="${idPrefix}-dynamic-panel" class="data-source-panel ${!isStatic ? 'active' : ''}">
+            ${fieldItem('数据源', `<input type="text" id="${idPrefix}-dataSource" class="layui-input" value="${escHtml(dataSource)}" placeholder="dataSource">`)}
+            ${fieldItem('查询SQL', `<textarea id="${idPrefix}-dataSql" class="layui-textarea">${escHtml(dataSql)}</textarea>`)}
+        </div>
+    </div>`;
+}
+
+function escHtml(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function buildInputSection(props, validate) {
+    return `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请输入...">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required|email">`)}
+        ${fieldItem('最大长度', `<input type="number" id="prop-maxlength" class="layui-input" value="${escHtml(props.maxlength||'')}" placeholder="最大字符数">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled},
+            {id:'prop-readonly', title:'只读', checked: props.readonly}
+        ])}
+        ${validateSection(validate)}
+    </div>`;
+}
+
+function buildTextareaSection(props, validate) {
+    return `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请输入...">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('最大长度', `<input type="number" id="prop-maxlength" class="layui-input" value="${escHtml(props.maxlength||'')}" placeholder="最大字符数">`)}
+        ${fieldItem('显示行数', `<input type="number" id="prop-rows" class="layui-input" value="${escHtml(props.rows||'')}" placeholder="文本域行数">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled},
+            {id:'prop-readonly', title:'只读', checked: props.readonly}
+        ])}
+        ${validateSection(validate)}
+    </div>`;
+}
+
+function buildSelectSection(props, initData, validate) {
+    return initDataSection(initData, 'select') + `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled},
+            {id:'prop-lay-search', title:'可搜索', checked: props['lay-search']}
+        ])}
+        ${validateSection(validate)}
+    </div>`;
+}
+
+function buildRadioSection(props, initData, validate) {
+    return initDataSection(initData, 'radio') + `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled}
+        ])}
+        ${validateSection(validate)}
+    </div>`;
+}
+
+function buildCheckboxSection(props, initData, validate) {
+    return initDataSection(initData, 'checkbox') + `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled}
+        ])}
+        ${validateSection(validate)}
+    </div>`;
+}
+
+function buildDateSection(props, validate) {
+    const typeOpts = ['date','datetime','year','month','time'].map(t =>
+        `<option value="${t}" ${props.type === t ? 'selected' : ''}>${t}</option>`
+    ).join('');
+    return `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('日期类型', `<select id="prop-date-type">${typeOpts}</select>`)}
+        ${fieldItem('日期格式', `<input type="text" id="prop-date-format" class="layui-input" value="${escHtml(props.format||'')}" placeholder="如: yyyy-MM-dd">`)}
+        ${fieldItem('最小日期', `<input type="text" id="prop-date-min" class="layui-input" value="${escHtml(props.min||'')}" placeholder="如: 2020-01-01">`)}
+        ${fieldItem('最大日期', `<input type="text" id="prop-date-max" class="layui-input" value="${escHtml(props.max||'')}" placeholder="如: 2030-12-31">`)}
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请选择日期">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled},
+            {id:'prop-date-range', title:'范围选择', checked: props.range}
+        ])}
+        ${validateSection(validate)}
+    </div>`;
+}
+
+function buildUploadSection(props, validate) {
+    const acceptOpts = ['images','file','video','audio'].map(t =>
+        `<option value="${t}" ${props.accept === t ? 'selected' : ''}>${t}</option>`
+    ).join('');
+    const uploadValidate = validate || {};
+    return `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('文件类型', `<select id="prop-upload-accept"><option value="">不限</option>${acceptOpts}</select>`)}
+        ${fieldItem('MIME类型', `<input type="text" id="prop-upload-acceptMime" class="layui-input" value="${escHtml(props.acceptMime||'')}" placeholder="如: image/png,image/jpeg">`)}
+        ${fieldItem('文件数量', `<input type="number" id="prop-upload-number" class="layui-input" value="${escHtml(props.number||'')}" placeholder="最多文件数">`)}
+        ${fieldItem('文件大小(KB)', `<input type="number" id="prop-upload-size" class="layui-input" value="${escHtml(props.size||'')}" placeholder="最大文件大小(KB)">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-upload-multiple', title:'多文件上传', checked: props.multiple}
+        ])}
+        <div class="validate-section">
+            <div class="validate-section-title">上传限制</div>
+            ${fieldItem('最多文件数', `<input type="number" id="prop-validate-uploadMax" class="layui-input" value="${escHtml(uploadValidate.uploadMax||'')}" placeholder="上传数量上限">`)}
+            ${fieldItem('最少文件数', `<input type="number" id="prop-validate-uploadMin" class="layui-input" value="${escHtml(uploadValidate.uploadMin||'')}" placeholder="上传数量下限">`)}
+        </div>
+    </div>`;
+}
+
+function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : '';
+}
+
+function isChecked(id) {
+    const el = document.getElementById(id);
+    return el ? el.checked : false;
+}
+
+function buildConfigFromForm(component) {
+    const config = {
+        item_name: getVal('prop-item_name'),
+        label: getVal('prop-label'),
+        component: component,
+        classAppend: getVal('prop-classAppend'),
+        props: {}
+    };
+
+    const props = config.props;
+
+    // 通用 props
+    const placeholder = getVal('prop-placeholder');
+    const layVerify = getVal('prop-lay-verify');
+    const description = getVal('prop-description');
+    if (placeholder) props.placeholder = placeholder;
+    if (layVerify) props['lay-verify'] = layVerify;
+    if (description) props.description = description;
+    if (isChecked('prop-required')) props.required = true;
+    if (isChecked('prop-disabled')) props.disabled = true;
+    if (isChecked('prop-readonly')) props.readonly = true;
+
+    // validate
+    const validateRuleStr = getVal('prop-validate-rule');
+    const validateMsgStr = getVal('prop-validate-message');
+    if (validateRuleStr || validateMsgStr) {
+        props.validate = {};
+        if (validateRuleStr) {
+            try { props.validate.rule = JSON.parse(validateRuleStr); } catch(e) { props.validate.rule = validateRuleStr; }
+        }
+        if (validateMsgStr) {
+            try { props.validate.message = JSON.parse(validateMsgStr); } catch(e) { props.validate.message = validateMsgStr; }
+        }
+    }
+
+    // 组件特有 props
+    if (component === 'textarea') {
+        const maxlength = getVal('prop-maxlength');
+        const rows = getVal('prop-rows');
+        if (maxlength) props.maxlength = parseInt(maxlength);
+        if (rows) props.rows = parseInt(rows);
+    } else if (component === 'input') {
+        const maxlength = getVal('prop-maxlength');
+        if (maxlength) props.maxlength = parseInt(maxlength);
+    } else if (component === 'date') {
+        const dateType = getVal('prop-date-type');
+        const format = getVal('prop-date-format');
+        const min = getVal('prop-date-min');
+        const max = getVal('prop-date-max');
+        if (dateType) props.type = dateType;
+        if (format) props.format = format;
+        if (min) props.min = min;
+        if (max) props.max = max;
+        if (isChecked('prop-date-range')) props.range = true;
+    } else if (component === 'upload') {
+        const accept = getVal('prop-upload-accept');
+        const acceptMime = getVal('prop-upload-acceptMime');
+        const number = getVal('prop-upload-number');
+        const size = getVal('prop-upload-size');
+        if (accept) props.accept = accept;
+        if (acceptMime) props.acceptMime = acceptMime;
+        if (number) props.number = parseInt(number);
+        if (size) props.size = parseInt(size);
+        if (isChecked('prop-upload-multiple')) props.multiple = true;
+        // upload validate
+        const uploadMax = getVal('prop-validate-uploadMax');
+        const uploadMin = getVal('prop-validate-uploadMin');
+        if (uploadMax || uploadMin) {
+            if (!props.validate) props.validate = {};
+            if (uploadMax) props.validate.uploadMax = parseInt(uploadMax);
+            if (uploadMin) props.validate.uploadMin = parseInt(uploadMin);
+        }
+    } else if (['select','radio','checkbox'].includes(component)) {
+        // initData
+        const prefix = component;
+        const staticPanel = document.getElementById(`${prefix}-static-panel`);
+        const isStatic = staticPanel && staticPanel.classList.contains('active');
+        config.initData = {};
+        if (isStatic) {
+            const jsonStr = getVal(`${prefix}-dataJson`);
+            if (jsonStr) {
+                try { config.initData.dataJson = JSON.parse(jsonStr); } catch(e) { config.initData.dataJson = jsonStr; }
+            }
+        } else {
+            const dataSource = getVal(`${prefix}-dataSource`);
+            const dataSql = getVal(`${prefix}-dataSql`);
+            if (dataSource) config.initData.dataSource = dataSource;
+            if (dataSql) config.initData.dataSql = dataSql;
+        }
+        if (component === 'select' && isChecked('prop-lay-search')) {
+            props['lay-search'] = true;
+        }
+    }
+
+    return config;
+}
+
+function applyProperties() {
+    if (!selectedElement) {
+        layer.msg('请先选择一个元素');
+        return;
+    }
+
+    const component = selectedElement.getAttribute('component');
+    const config = buildConfigFromForm(component);
+
+    // 更新 item_name 属性
+    if (config.item_name) {
+        selectedElement.setAttribute('item_name', config.item_name);
+    }
+
+    // 更新 label 显示文本
+    const labelElement = selectedElement.querySelector('.layui-form-label');
+    if (labelElement && config.label) {
+        labelElement.textContent = config.label + '：';
+    }
+
+    // 更新栅格宽度
+    const colDiv = selectedElement.closest('[class*="layui-col-md"]');
+    if (colDiv && config.classAppend) {
+        const oldClass = colDiv.className.match(/layui-col-md\d+/);
+        if (oldClass) colDiv.classList.remove(oldClass[0]);
+        colDiv.classList.add(config.classAppend);
+
+        // 写入 data-config-json 到最外层列div
+        colDiv.setAttribute('data-config-json', JSON.stringify(config));
+    }
+
+    // 更新 input/textarea/select 元素属性（保持DOM与配置同步）
+    const inputElement = selectedElement.querySelector('input:not([type="checkbox"]):not([type="radio"]), textarea, select:not([id^="prop-"])');
+    if (inputElement && config.props) {
+        const p = config.props;
+        if (p.placeholder !== undefined) inputElement.setAttribute('placeholder', p.placeholder);
+        if (p['lay-verify']) inputElement.setAttribute('lay-verify', p['lay-verify']);
+        else inputElement.removeAttribute('lay-verify');
+        if (p.maxlength) inputElement.setAttribute('maxlength', p.maxlength);
+        else inputElement.removeAttribute('maxlength');
+        if (p.disabled) inputElement.setAttribute('disabled', 'disabled');
+        else inputElement.removeAttribute('disabled');
+        if (p.readonly) inputElement.setAttribute('readonly', 'readonly');
+        else inputElement.removeAttribute('readonly');
+    }
+
+    layui.form.render();
+    layer.msg('配置已应用');
+    console.log('✓ 配置已应用', config);
+}
+
+function deleteElement() {
+    if (!selectedElement) {
+        layer.msg('请先选择一个元素');
+        return;
+    }
+
+    layer.confirm('确定要删除这个元素吗？', {icon: 3, title: '提示'}, function(index) {
+        // 找到包含元素的列
+        const colDiv = selectedElement.closest('[class*="layui-col-"]');
+        if (colDiv) {
+            colDiv.remove();
+        }
+
+        // 清空选中状态
+        selectedElement = null;
+
+        // 隐藏属性面板
+        document.getElementById('emptyState').style.display = 'block';
+        document.getElementById('propertyForm').style.display = 'none';
+
+        layer.close(index);
+        layer.msg('元素已删除');
+        console.log('✓ 元素已删除');
+    });
+}
+
+function collectLayoutData() {
+    const formContainer = document.getElementById('formContainer');
+    const cardsContainer = formContainer.querySelector('.layui-row.layui-col-space10');
+
+    const layoutData = {
+        cards: []
+    };
+
+    const cards = cardsContainer.querySelectorAll(':scope > .layui-card');
+
+    cards.forEach((card, cardIndex) => {
+        const cardItemName = card.getAttribute('item_name');
+
+        const cardData = {
+            item_name: cardItemName,
+            order: cardIndex,
+            rows: []
+        };
+
+        const cardBody = card.querySelector('.layui-card-body');
+        if (!cardBody) return;
+
+        const rows = cardBody.querySelectorAll(':scope > .layui-row');
+
+        rows.forEach((row, rowIndex) => {
+            if (row.classList.contains('layui-col-space10')) return;
+
+            const rowData = {
+                order: rowIndex,
+                fields: []
+            };
+
+            const colElements = row.querySelectorAll(':scope > [class*="layui-col-"]');
+
+            colElements.forEach((colElement, fieldIndex) => {
+                const componentElement = colElement.querySelector('[component]');
+                if (!componentElement) return;
+
+                const itemName = componentElement.getAttribute('item_name');
+                const component = componentElement.getAttribute('component');
+
+                const colClass = colElement.className.match(/layui-col-md(\d+)/);
+                const width = colClass ? parseInt(colClass[1]) : 12;
+
+                rowData.fields.push({
+                    item_name: itemName,
+                    component: component,
+                    order: fieldIndex,
+                    width: width
+                });
+            });
+
+            if (rowData.fields.length > 0) {
+                cardData.rows.push(rowData);
+            }
+        });
+
+        layoutData.cards.push(cardData);
+    });
+
+    return layoutData;
+}
+</script>
+</body>
+</html>
