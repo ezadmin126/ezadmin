@@ -10,93 +10,97 @@
     "rowActionWidth": 175
   },
   "search": [
-    [
-      {
-        "name": "NAME",
-        "label": "姓名",
-        "component": "input",
-        "operator": "like",
-        "props": {
-          "placeholder": "请输入姓名"
-        }
-      },
-      {
-        "name": "AGE",
-        "label": "年龄",
-        "component": "input",
-        "operator": "eq",
-        "props": {
-          "type": "number",
-          "placeholder": "请输入年龄"
-        }
-      },
-      {
-        "name": "STATUS",
-        "label": "状态",
-        "component": "select",
-        "operator": "eq",
-        "initData": {
-          "dataJson": [
-            {"label": "全部", "value": ""},
-            {"label": "启用", "value": "1"},
-            {"label": "禁用", "value": "0"}
-          ]
+    {
+      "row": [
+        {
+          "item_name": "NAME",
+          "label": "姓名",
+          "component": "input",
+          "operator": "like",
+          "props": {
+            "placeholder": "请输入姓名"
+          }
         },
-        "props": {
-          "placeholder": "请选择状态"
-        }
-      },
-      {
-        "name": "EMAIL",
-        "label": "邮箱",
-        "component": "input",
-        "operator": "like",
-        "props": {
-          "placeholder": "请输入邮箱"
-        }
-      }
-    ],
-    [
-      {
-        "name": "CREATE_TIME",
-        "label": "创建时间",
-        "component": "date",
-        "operator": "between",
-        "props": {
-          "placeholder": "请选择时间范围",
-          "range": true
-        }
-      },
-      {
-        "name": "DEPT_ID",
-        "label": "部门",
-        "component": "select",
-        "operator": "eq",
-        "initData": {
-          "dataJson": [
-            {"label": "技术部", "value": "1"},
-            {"label": "市场部", "value": "2"},
-            {"label": "运营部", "value": "3"}
-          ]
+        {
+          "item_name": "AGE",
+          "label": "年龄",
+          "component": "input",
+          "operator": "eq",
+          "props": {
+            "type": "number",
+            "placeholder": "请输入年龄"
+          }
         },
-        "props": {
-          "placeholder": "请选择部门"
+        {
+          "item_name": "STATUS",
+          "label": "状态",
+          "component": "select",
+          "operator": "eq",
+          "initData": {
+            "dataJson": [
+              {"label": "全部", "value": ""},
+              {"label": "启用", "value": "1"},
+              {"label": "禁用", "value": "0"}
+            ]
+          },
+          "props": {
+            "placeholder": "请选择状态"
+          }
+        },
+        {
+          "item_name": "EMAIL",
+          "label": "邮箱",
+          "component": "input",
+          "operator": "like",
+          "props": {
+            "placeholder": "请输入邮箱"
+          }
         }
-      },
-      {
-        "name": "PHONE",
-        "label": "手机号",
-        "component": "input",
-        "operator": "like",
-        "props": {
-          "placeholder": "请输入手机号"
+      ]
+    },
+    {
+      "row": [
+        {
+          "item_name": "CREATE_TIME",
+          "label": "创建时间",
+          "component": "date",
+          "operator": "between",
+          "props": {
+            "placeholder": "请选择时间范围",
+            "range": true
+          }
+        },
+        {
+          "item_name": "DEPT_ID",
+          "label": "部门",
+          "component": "select",
+          "operator": "eq",
+          "initData": {
+            "dataJson": [
+              {"label": "技术部", "value": "1"},
+              {"label": "市场部", "value": "2"},
+              {"label": "运营部", "value": "3"}
+            ]
+          },
+          "props": {
+            "placeholder": "请选择部门"
+          }
+        },
+        {
+          "item_name": "PHONE",
+          "label": "手机号",
+          "component": "input",
+          "operator": "like",
+          "props": {
+            "placeholder": "请输入手机号"
+          }
         }
-      }
-    ]
+      ]
+    }
   ],
   "column": [
     {
-      "name": "ID",
+      "item_name": "ID",
       "label": "ID",
       "component": "tdText",
       "props": {
@@ -105,7 +109,7 @@
       }
     },
     {
-      "name": "NAME",
+      "item_name": "NAME",
       "label": "姓名",
       "component": "tdText",
       "props": {
@@ -113,7 +117,7 @@
       }
     },
     {
-      "name": "AGE",
+      "item_name": "AGE",
       "label": "年龄",
       "component": "tdText",
       "props": {
@@ -121,7 +125,7 @@
       }
     },
     {
-      "name": "EMAIL",
+      "item_name": "EMAIL",
       "label": "邮箱",
       "component": "tdText",
       "props": {
@@ -129,7 +133,7 @@
       }
     },
     {
-      "name": "PHONE",
+      "item_name": "PHONE",
       "label": "手机号",
       "component": "tdText",
       "props": {
@@ -137,7 +141,7 @@
       }
     },
     {
-      "name": "STATUS",
+      "item_name": "STATUS",
       "label": "状态",
       "component": "tdSelect",
       "initData": {
@@ -151,7 +155,7 @@
       }
     },
     {
-      "name": "DEPT_ID",
+      "item_name": "DEPT_ID",
       "label": "部门",
       "component": "tdSelect",
       "initData": {
@@ -166,7 +170,7 @@
       }
     },
     {
-      "name": "CREATE_TIME",
+      "item_name": "CREATE_TIME",
       "label": "创建时间",
       "component": "tdText",
       "props": {
@@ -176,7 +180,7 @@
   ],
   "tableButton": [
     {
-      "name": "ADD",
+      "item_name": "ADD",
       "label": "新增",
       "component": "button-normal",
       "props": {
@@ -188,7 +192,7 @@
   ],
   "rowButton": [
     {
-      "name": "EDIT",
+      "item_name": "EDIT",
       "label": "编辑",
       "component": "button-normal",
       "props": {
@@ -198,7 +202,7 @@
       }
     },
     {
-      "name": "DELETE",
+      "item_name": "DELETE",
       "label": "删除",
       "component": "button-normal",
       "props": {

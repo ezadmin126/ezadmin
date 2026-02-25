@@ -138,9 +138,18 @@ public class EzBootstrap   {
         DslEditController controller=new DslEditController();
         if(method.equals("list")||method.equals("form")){
             return controller.page(requestContext,method,id);
-        }
+        }else
         if(method.equals("submit")){
             return controller.submit(requestContext,method,id);
+        }else
+        if(method.equals("saveLayout")){
+            return controller.saveLayout(requestContext,method,id);
+        }else
+        if(method.equals("create")){
+            return controller.create(requestContext,method,id);
+        }else
+        if(method.equals("getTables")){
+            return controller.getTables(requestContext,method,id);
         }
          return controller.page(requestContext,method,id);
     }

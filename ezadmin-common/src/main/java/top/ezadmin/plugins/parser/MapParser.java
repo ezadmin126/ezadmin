@@ -35,6 +35,12 @@ public class MapParser {
 
     }
 
+    public static void main(String[] args) {
+        Map<String, Object> map = new java.util.HashMap<>();
+        map.put("123", null);
+        System.out.println(MapParser.parse("123${123}", map));
+    }
+
     private static String PARAM_PREFIX = "${";
     private static String PARAM_SUFFIX = "}";
     private static String DEFAULT_EMPTY_KEY = "ResultModel.DEFAULT_EMPTY";
@@ -42,7 +48,7 @@ public class MapParser {
 
     public static ResultModel parse(String string, Map<String, Object> variables) {
         ResultModel model = new ResultModel();
-        if (variables == null || variables.isEmpty()) {
+        if (variables == null || variables.isEmpty() ) {
             model.setResult(string);
 
             return model;
@@ -102,7 +108,7 @@ public class MapParser {
                 k = content.substring(0, s);
                 v = content.substring(s + 1);
             }
-            if (variables.containsKey(k)) {
+            if (variables.containsKey(k)&&variables.get(k)!=null) {
                 Params p = new Params();
                 p.setParamValue(variables.get(k));
                 model.addParam(p);

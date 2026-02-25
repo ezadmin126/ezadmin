@@ -3,6 +3,7 @@ package top.ezadmin.spring;
 
 import top.ezadmin.EzBootstrap;
 import top.ezadmin.EzBootstrapConfig;
+import top.ezadmin.common.EzAdminRuntimeException;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.enums.DefaultParamEnum;
 import top.ezadmin.common.utils.BeanTools;
@@ -167,10 +168,18 @@ public class EzClientServletFilter implements Filter {
                 httpServletResponse.setHeader("Content-Disposition", "attachment;filename*=utf-8''" + new String(fileName.getBytes(), "ISO-8859-1"));
                 IOUtils.copy(new ByteArrayInputStream(data),httpServletResponse.getOutputStream());
                 return;
-            }else  if(result.isSuccess()&&StringUtils.equals(result.getCode(),"JSON")){
+            }else  if(StringUtils.equals(result.getCode(),"JSON")){
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
                 IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(result.getData()), "UTF-8"),httpServletResponse.getOutputStream());
-                return;
+            }else if(result.getCode().equals("404")){
+                httpServletResponse.sendRedirect("/404");
+            }
+            else if(result.getCode().equals("500")){
+                logger.error(JSONUtils.toJSONString(result));
+                throw new EzAdminRuntimeException(result.getMessage());
+            }else{
+                httpServletResponse.setContentType("application/json;charset=UTF-8");
+                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(EzResult.instance().message("没有找到渲染器")), "UTF-8"),httpServletResponse.getOutputStream());
             }
 
         } catch (Exception e) {
@@ -181,7 +190,7 @@ public class EzClientServletFilter implements Filter {
         }
     }
     //同
-    private static Map<String, Object> requestToMap(HttpServletRequest request) {
+    public static Map<String, Object> requestToMap(HttpServletRequest request) {
         Map<String, Object> searchParamsValues = new HashMap<>();
 
         String contentType = request.getContentType();

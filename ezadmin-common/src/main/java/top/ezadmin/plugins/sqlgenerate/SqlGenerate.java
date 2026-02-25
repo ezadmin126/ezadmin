@@ -65,26 +65,28 @@ public abstract class SqlGenerate {
     }
 
     /**
-     * 获取扁平化的搜索字段列表（支持一维和二维数组）
+     * 获取扁平化的搜索字段列表（支持新的对象数组格式）
      * @param searchObj search 对象
      * @return 扁平化的搜索字段列表
      */
     private List<Map<String, Object>> getFlattenedSearchList(Object searchObj) {
+        //老格式 不用处理
+        //新格式，map只含有一个row
         List<Map<String, Object>> result = new ArrayList<>();
         if (searchObj != null && searchObj instanceof List) {
             List<?> searchList = (List<?>) searchObj;
-            if (!searchList.isEmpty()) {
-                // 检查是否为二维数组
-                if (searchList.get(0) instanceof List) {
-                    // 二维数组：扁平化
-                    for (Object rowObj : searchList) {
-                        List<Map<String, Object>> row = (List<Map<String, Object>>) rowObj;
-                        result.addAll(row);
+            if (!searchList.isEmpty() && searchList.get(0) instanceof Map && ((Map) searchList.get(0)).containsKey("row")) {
+                for (Object rowObj : searchList) {
+                    if (rowObj instanceof Map) {
+                        Map row = (Map) rowObj;
+                        List<Map<String, Object>> rowFields = (List<Map<String, Object>>) row.get("row");
+                        if (rowFields != null) {
+                            result.addAll(rowFields);
+                        }
                     }
-                } else {
-                    // 一维数组：直接返回
-                    result = (List<Map<String, Object>>) searchList;
                 }
+            }else{
+                result = (List<Map<String, Object>>) searchObj;
             }
         }
         return result;

@@ -1,0 +1,3341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>列表可视化AI编辑  </title>
+
+    <link th:href="${'/webjars/topezadmin/layui/css/ezform.css?v='+vi}" rel="stylesheet">
+    <link rel="stylesheet" th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" href="https://unpkg.com/layui@2.9.20/dist/css/layui.css">
+    <link th:href="${'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
+
+
+    <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script th:src="${'/webjars/layuidist/layui.js?v='+vi}"  src="https://unpkg.com/layui@2.9.20/dist/layui.js"></script>
+
+
+    <script th:src="${'/webjars/topezadmin/layui/js/jquery.cookie.js'}"></script>
+
+    <script th:src="${'/webjars/topezadmin/plugins/cascader/cascader.js'}" type="text/javascript"></script>
+    <script th:src="${'/webjars/topezadmin/plugins/cascader/xm-select.js'}" type="text/javascript"></script>
+
+
+    <script th:src="${'/webjars/topezadmin/layui/js/watermark.js?v1='+vi}" type="text/javascript"></script>
+
+
+    <script th:src="${'/webjars/topezadmin/layui/js/py.js?v='+vi}" type="text/javascript"></script>
+    <script th:src="${'/webjars/jqueryform/jquery.form.js?'}"></script>
+    <script th:src="${'/webjars/jquery-validation/1.19.5/jquery.validate.js'}"></script>
+    <script th:src="${'/webjars/jquery-validation/1.19.5/additional-methods.min.js'}"></script>
+
+    <script th:src="${'/webjars/jquery-validation/1.19.5/localization/messages_zh.min.js'}"></script>
+    <script type='text/javascript'
+            th:src="${'/webjars/topezadmin/plugins/dragula/dragula.min.js'}"></script>
+    <script th:src="${'/webjars/tinymce/5.10.7/tinymce.min.js'}" type="text/javascript"></script>
+
+    <script th:src="${'/webjars/topezadmin/layui/js/watermark.js?v1='+vi}" type="text/javascript"></script>
+
+    <script th:src="${'/webjars/topezadmin/layui/js/Global.js'}" type="text/javascript"></script>
+    <script th:src="${'/webjars/topezadmin/layui/js/ezdsl.js'}" type="text/javascript"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .form-edit-container {
+            display: flex;
+            height: 100vh;
+            background: #f5f5f5;
+        }
+
+        /* 左侧组件面板 */
+        .components-panel {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e6e6e6;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .components-header {
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .components-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .component-group {
+            margin-bottom: 20px;
+        }
+
+        .component-group-title {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+            padding-left: 5px;
+            font-weight: 500;
+        }
+
+        .component-item {
+            background: #f8f9fa;
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            cursor: move;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .component-item:hover {
+            background: #e7f3ff;
+            border-color: #1890ff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+        }
+
+        .component-item i {
+            font-size: 16px;
+            color: #1890ff;
+        }
+
+        .component-item span {
+            font-size: 13px;
+            color: #333;
+        }
+
+        /* 中间预览面板 */
+        .preview-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .preview-toolbar {
+            height: 50px;
+            background: #fff;
+            border-bottom: 1px solid #e6e6e6;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        .toolbar-btn {
+            padding: 8px 16px;
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            color: #1890ff;
+            border-color: #1890ff;
+        }
+
+        .toolbar-btn.primary {
+            background: #1890ff;
+            color: #fff;
+            border-color: #1890ff;
+        }
+
+        .toolbar-btn.primary:hover {
+            background: #40a9ff;
+        }
+
+        .preview-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f5f5f5;
+            position: relative;
+        }
+
+        .form-preview-container {
+            min-width: 670px;
+            margin: 0 auto;
+        }
+
+        /* 右侧聊天面板 */
+        .chat-panel {
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .chat-header {
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .chat-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: messageSlideIn 0.3s ease;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            max-width: 70%;
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            word-wrap: break-word;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* 拖拽相关样式 */
+        .gu-mirror {
+            position: fixed !important;
+            margin: 0 !important;
+            z-index: 9999 !important;
+            opacity: 0.8;
+            cursor: grabbing !important;
+        }
+
+        .gu-hide {
+            display: none !important;
+        }
+
+        .gu-unselectable {
+            user-select: none !important;
+        }
+
+        .gu-transit {
+            opacity: 0.5;
+        }
+
+        /* 编辑模式下的样式 */
+        .edit-mode .layui-card {
+            cursor: move;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .edit-mode .layui-card:hover {
+            box-shadow: 0 2px 12px rgba(24, 144, 255, 0.3);
+            border: 2px solid #1890ff;
+        }
+
+        .edit-mode .layui-row {
+            min-height: 60px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .edit-mode .layui-row:hover {
+            background: rgba(24, 144, 255, 0.05);
+            outline: 2px dashed #1890ff;
+        }
+
+        /* 行拖拽手柄 - 真实DOM元素 */
+        .row-drag-handle {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+            font-size: 16px;
+            cursor: move !important;
+            line-height: 1;
+            z-index: 10;
+            user-select: none;
+            padding: 5px;
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+        }
+
+        .row-drag-handle:hover {
+            color: #1890ff;
+            background: rgba(24, 144, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        /* 确保最外层的 layui-row 不显示拖拽手柄 */
+        .layui-row.layui-col-space10 > .row-drag-handle {
+            display: none !important;
+        }
+
+        /* 拖拽手柄样式 - 标签可以拖拽 */
+        .edit-mode .layui-form-label {
+            cursor: move;
+            position: relative;
+        }
+
+        .edit-mode .layui-form-label:hover {
+            background: rgba(24, 144, 255, 0.1);
+        }
+
+        .edit-mode .layui-form-label:hover::before {
+            content: '⋮⋮';
+            position: absolute;
+            left: 5px;
+            color: #1890ff;
+            font-weight: bold;
+        }
+
+        .edit-mode [component] {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .edit-mode [component]:hover::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #1890ff;
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 滚动条样式 */
+        .components-body::-webkit-scrollbar,
+        .preview-content::-webkit-scrollbar,
+        .chat-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .components-body::-webkit-scrollbar-track,
+        .preview-content::-webkit-scrollbar-track,
+        .chat-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .components-body::-webkit-scrollbar-thumb,
+        .preview-content::-webkit-scrollbar-thumb,
+        .chat-body::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .width-control {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e6e6e6;
+        }
+
+        .width-control-title {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        /* 属性表单样式 */
+        .property-section {
+            margin-bottom: 20px;
+        }
+
+        .property-section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            padding: 12px 0;
+            border-bottom: 1px solid #e6e6e6;
+            margin-bottom: 15px;
+        }
+
+        /* 自定义属性样式 */
+        #custom-props-container {
+            padding: 8px 0;
+        }
+
+        .custom-prop-row {
+            margin-bottom: 8px;
+        }
+
+        .custom-prop-row .custom-prop-key,
+        .custom-prop-row .custom-prop-value {
+            font-size: 12px;
+            height: 32px;
+            line-height: 32px;
+        }
+
+        .custom-prop-row .remove-custom-prop {
+            flex-shrink: 0;
+            padding: 0 10px;
+            height: 32px;
+            line-height: 32px;
+        }
+
+        /* 属性配置 tab 面板样式 */
+        .property-tab-panel {
+            height: 100%;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* 只有当 tab 处于显示状态时才使用 flex 布局 */
+        .property-tab-panel.layui-show {
+            display: flex;
+        }
+
+        .property-tab-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        /* 固定底部操作栏样式 */
+        .property-action-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: linear-gradient(to top, #ffffff 0%, #f8f9fa 100%);
+            border-top: 2px solid #e6e6e6;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .property-action-bar .action-btn {
+            flex: 1;
+            max-width: 160px;
+            height: 42px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .property-action-bar .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-action-bar .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .property-action-bar .action-btn i {
+            font-size: 16px;
+            margin-right: 4px;
+        }
+
+        .property-action-bar .layui-btn-normal {
+            background: linear-gradient(135deg, #1E9FFF 0%, #0081FF 100%);
+        }
+
+        .property-action-bar .layui-btn-normal:hover {
+            background: linear-gradient(135deg, #0081FF 0%, #0066CC 100%);
+        }
+
+        .property-action-bar .layui-btn-danger {
+            background: linear-gradient(135deg, #FF5722 0%, #E53935 100%);
+        }
+
+        .property-action-bar .layui-btn-danger:hover {
+            background: linear-gradient(135deg, #E53935 0%, #C62828 100%);
+        }
+
+        #propertyForm .layui-form-item {
+            margin-bottom: 12px;
+        }
+
+        #propertyForm .layui-form-label {
+            width: 90px;
+            font-size: 12px;
+            padding: 9px 10px;
+        }
+
+        #propertyForm .layui-input-block {
+            margin-left: 100px;
+        }
+
+        #propertyForm .layui-input,
+        #propertyForm .layui-select {
+            height: 32px;
+            line-height: 32px;
+            font-size: 12px;
+        }
+
+        #propertyForm .layui-btn-sm {
+            height: 32px;
+            line-height: 32px;
+            padding: 0 15px;
+            font-size: 12px;
+        }
+
+        /* initData 数据源切换 */
+        .data-source-tabs {
+            display: flex;
+            border: 1px solid #e6e6e6;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .data-source-tab {
+            flex: 1;
+            padding: 6px;
+            text-align: center;
+            font-size: 12px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            color: #666;
+        }
+
+        .data-source-tab.active {
+            background: #1890ff;
+            color: #fff;
+        }
+
+        .data-source-panel {
+            display: none;
+        }
+
+        .data-source-panel.active {
+            display: block;
+        }
+
+        #propertyForm textarea.layui-textarea {
+            height: 80px;
+            font-size: 12px;
+            font-family: monospace;
+            resize: vertical;
+        }
+
+        .validate-section {
+            border-top: 1px dashed #e6e6e6;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        .validate-section-title {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        /* AI 对话框样式 */
+        .ai-chat-box {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #f8f9fa;
+        }
+
+        .ai-chat-box.minimized {
+            display: none;
+        }
+
+        .ai-chat-header {
+            display: none;
+        }
+
+        .ai-chat-title {
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-chat-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-chat-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .ai-chat-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+
+        .ai-message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            animation: messageSlideIn 0.3s ease;
+        }
+
+        .ai-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .ai-message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .ai-message.user .ai-message-avatar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .ai-message-content {
+            max-width: 75%;
+            background: #fff;
+            padding: 10px 14px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            word-wrap: break-word;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .ai-message.user .ai-message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .ai-message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .ai-chat-input-area {
+            padding: 12px 15px;
+            background: #fff;
+            border-top: 1px solid #e6e6e6;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            min-height: 168px;
+            max-height: 300px;
+            padding: 8px 12px;
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            resize: none;
+            font-size: 13px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .ai-chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .ai-chat-clear {
+            padding: 8px;
+            background: #f5f5f5;
+            color: #999;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+
+        .ai-chat-clear:hover {
+            background: #fee;
+            color: #f56c6c;
+        }
+
+        .ai-chat-send {
+            padding: 8px 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .ai-chat-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .ai-chat-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ai-chat-empty {
+            text-align: center;
+            padding: 30px 20px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .ai-chat-empty-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        /* 滚动条样式 */
+        .ai-chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ai-chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .ai-chat-messages::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .ai-chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* 右侧面板 tab 样式 */
+        .chat-panel .layui-tab-title {
+            background: #fff;
+        }
+
+        .chat-panel .layui-tab-title li {
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .chat-panel .layui-tab-content {
+            overflow: hidden;
+        }
+
+        .chat-panel .layui-tab-item {
+            position: relative;
+        }
+
+        /* 加载动画 */
+        .loading-dots::after {
+            content: '';
+            animation: loadingDots 1.5s infinite;
+        }
+
+        @keyframes loadingDots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        .example-prompts {
+            padding: 12px 20px;
+            border-top: 1px solid #e6e6e6;
+            background: #f8f9fa;
+            margin-left: -20px;
+            margin-right: -10px;
+        }
+
+        .example-prompts h4 {
+            font-size: 12px;
+            color: #909399;
+            margin-bottom: 8px;
+        }
+
+        .prompt-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 4px;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #606266;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .prompt-tag:hover {
+            background: #409eff;
+            color: #fff;
+            border-color: #409eff;
+        }
+    </style>
+</head>
+<body>
+<div class="form-edit-container">
+    <!-- 左侧组件面板 -->
+    <div class="components-panel">
+        <div class="components-header">
+            组件库
+        </div>
+        <div class="components-body" id="componentsBody">
+
+            <div class="component-group">
+                <div class="component-group-title">布局组件</div>
+                <div class="component-item" data-component="card" data-label="卡片">
+                    <i class="layui-icon layui-icon-template-1"></i>
+                    <span>卡片</span>
+                </div>
+                <div class="component-item" data-component="row" data-label="行容器">
+                    <i class="layui-icon layui-icon-cols"></i>
+                    <span>行容器</span>
+                </div>
+            </div>
+
+            <div class="component-group">
+                <div class="component-group-title">基础组件</div>
+                <div class="component-item" data-component="input" data-label="输入框">
+                    <i class="layui-icon layui-icon-edit"></i>
+                    <span>输入框</span>
+                </div>
+                <div class="component-item" data-component="textarea" data-label="多行输入">
+                    <i class="layui-icon layui-icon-form"></i>
+                    <span>多行输入</span>
+                </div>
+                <div class="component-item" data-component="select" data-label="下拉选择">
+                    <i class="layui-icon layui-icon-triangle-d"></i>
+                    <span>下拉选择</span>
+                </div>
+                <div class="component-item" data-component="radio" data-label="单选框">
+                    <i class="layui-icon layui-icon-radio"></i>
+                    <span>单选框</span>
+                </div>
+                <div class="component-item" data-component="checkbox" data-label="复选框">
+                    <i class="layui-icon layui-icon-ok-circle"></i>
+                    <span>复选框</span>
+                </div>
+                <div class="component-item" data-component="date" data-label="日期选择">
+                    <i class="layui-icon layui-icon-date"></i>
+                    <span>日期选择</span>
+                </div>
+                <div class="component-item" data-component="upload" data-label="文件上传">
+                    <i class="layui-icon layui-icon-upload"></i>
+                    <span>文件上传</span>
+                </div>
+            </div>
+
+            <div class="component-group">
+                <div class="component-group-title">高级组件</div>
+                <div class="component-item" data-component="select-multiple" data-label="下拉多选">
+                    <i class="layui-icon layui-icon-triangle-d"></i>
+                    <span>下拉多选</span>
+                </div>
+                <div class="component-item" data-component="cascader" data-label="级联选择">
+                    <i class="layui-icon layui-icon-subtraction"></i>
+                    <span>级联选择</span>
+                </div>
+                <div class="component-item" data-component="tinymce" data-label="富文本">
+                    <i class="layui-icon layui-icon-fonts-html"></i>
+                    <span>富文本</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 中间预览面板 -->
+    <div class="preview-panel">
+        <form class="layui-form">
+            <div class="preview-toolbar">
+                <button class="toolbar-btn primary" id="saveBtn">
+                    <i class="layui-icon layui-icon-ok"></i> 保存布局
+                </button>
+                <button class="toolbar-btn" id="toggleEditBtn" style="display: none;">
+                    <i class="layui-icon layui-icon-edit"></i> 开始编辑
+                </button>
+                <button class="toolbar-btn" id="cancelEditBtn">
+                    <i class="layui-icon layui-icon-close"></i> 取消编辑
+                </button>
+                <button class="toolbar-btn" id="testBtn">
+                    <i class="layui-icon layui-icon-tips"></i> 测试
+                </button>
+                <div style="margin-left: 20px; color: #666; font-size: 12px;">
+                    💡 拖拽提示：⋮⋮ 图标=拖拽
+                </div>
+            </div>
+            <div class="preview-content edit-mode" id="previewContent">
+                <div class="form-preview-container" id="formContainer">
+
+                    <input type="hidden" id="initApi" th:value="${list.initApi}">
+                    <input type="hidden" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
+                    <input type="hidden" id="downloadUrl" th:value="${downloadUrl}">
+                    <input type="hidden" ID="EZ_SESSION_USER_NAME_KEY" name="EZ_SESSION_USER_NAME_KEY"
+                           th:value="${EZ_SESSION_USER_NAME_KEY}">
+                    <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
+                    <div th:utext="${col}" th:remove="tag"  th:each="col : ${tdTemplates}"></div>
+
+                    <div th:utext="${list.appendHead}" item_name="appendHead" th:if="${not #strings.isEmpty(list.appendHead )}"></div>
+
+
+                    <div  th:class="${ (#lists.isEmpty(list.search)?'':'layui-fluid')}">
+                        <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap"
+                             th:style="${(#lists.isEmpty(list.search)||list.hideSearch?'display:none':'')}"
+                        >
+                            <ul class="layui-tab-title" id="tab" item_name="tabList" th:if="${not #lists.isEmpty(list.tabList)}">
+                                <li th:lay-id="${item.item_name}" th:item_id="${item.item_name}"
+                                    th:classappend="${item.select?'layui-this  ':' '}"
+                                    th:each="item:${list.tabList}">
+                                    <a th:item_name="${item.item_name}" th:href="${item.url}" th:text="${item.label}"></a>
+                                </li>
+                            </ul>
+                            <div class="layui-tab-content"  >
+                                <div class="layui-tab-item layui-show">
+                                    <div class="layui-card"    style="padding:10px;">
+                                        <div class="layui-card-body">
+
+                                            <form class="layui-form"   id="searchForm" lay-filter="searchForm">
+                                                <th:block th:if="${list.search != null and not #lists.isEmpty(list.search)}">
+                                                    <th:block th:each="rowObj : ${list.search}">
+                                                        <div class="  searchcontent layui-row layui-col-space5" item_name="searchcontent">
+                                                            <th:block th:each="search : ${rowObj.row}">
+                                                                <div th:utext="${cr.render(search)}" class="selector list-item" th:remove="tag"></div>
+                                                            </th:block>
+                                                        </div>
+                                                    </th:block>
+                                                </th:block>
+                                                <div class="layui-form-item searchButtonRow"  style=" text-align: center; "  >
+                                                    <!-- 查询按钮 -->
+                                                    <div class="layui-inline">
+                                                        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="searchBtn">查询</button>
+                                                        <button type="button"  data-click="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+                                                        <button type="button"
+                                                                id="downBtn"  style="display: none"
+                                                                class="layui-btn layui-btn-primary layui-btn-sm   "
+                                                                data-placement="top" title="展开">
+                                                            展开
+                                                            <i class="layui-icon layui-icon-down"></i>
+                                                        </button>
+                                                        <button type="button" id="upBtn" style="display: none"
+                                                                class="layui-btn layui-btn-primary layui-btn-sm   "
+                                                                data-placement="top" title="收起">
+                                                            收起
+                                                            <i class="layui-icon layui-icon-up"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-3 row orderBy" STYLE="display:none">
+                                                    <input type="hidden" id="currentPage" name="currentPage" >
+                                                    <input type="hidden" id="perPageInt" name="perPageInt" th:value="${perPageInt}">
+                                                    <input type="hidden" id="totalPage" name="totalPage" >
+                                                    <input type="hidden" id="trace" name="trace" value="0">
+                                                    <input type="hidden" id="totalRecord" name="totalRecord" >
+                                                    <input id="orderByName" name="orderByName" >
+                                                    <input id="orderByType" name="orderByType" >
+                                                    <input id="customSearch" name="customSearch">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div><!--formitem-->
+                            </div><!--tab-content-->
+                        </div><!--tab -->
+
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                                <div id="table-wrap" item_name="table-wrap">
+                                    <!-- 数据表格 -->
+                                    <table class="layui-hide" id="dataTable" lay-filter="dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th  th:each="column : ${list.column}" th:text="${column.label}"
+                                                 th:data-propsJson="${column.propsJson}"
+                                            >ID</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+
+                                    <DIV class="layui-table-column layui-table-page">
+                                        <div class="layui-inline layui-table-pageview" style="margin-right: 10px;
+                        margin-top: 8px;"  >
+                                            <div id="PAGE_LAYUI">
+                                            </div>
+                                        </div>
+                                    </DIV>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container" item_name="tableButton">
+                            <th:block th:each="toolbar : ${list.tableButton}">
+                                <div th:utext="${cr.render(toolbar)}" th:remove="tag"></div>
+                            </th:block>
+                        </div>
+                    </script>
+                    <!-- 操作列模板 -->
+                    <script type="text/html" id="toolbarTpl" th:if="${not #lists.isEmpty(list.rowButton)}" >
+                        <div style="display: flex" item_name="rowButton">
+                            <th:block th:each="action : ${list.rowButtonNormal}">
+                                <div th:utext="${cr.render(action)}" th:remove="tag"></div>
+                            </th:block>
+                            <div class="layui-breadcrumb" lay-separator="|"  th:if="${not #lists.isEmpty(list.rowButtonBread)}" >
+                                <div th:each="action : ${list.rowButtonBread}" th:utext="${cr.render(action)}" th:remove="tag"></div>
+                            </div>
+                            <div class="dropdown_button">
+                                <button class="layui-btn layui-btn-primary layui-btn-sm "
+                                        th:if="${not #lists.isEmpty(list.rowButtonDropdown)}"
+                                >
+                                    更多
+                                    <i class="layui-icon layui-icon-down layui-font-12"></i>
+                                </button>
+                                <th:block >
+                                    <ul   class="dropdown_button_item"  th:if="${not #lists.isEmpty(list.rowButtonDropdown)}">
+                                        <li th:each="action : ${list.rowButtonDropdown}" th:utext="${cr.render(action)}" th:remove="tag"></li>
+                                    </ul>
+                                </th:block>
+                            </div>
+                        </div>
+                    </script>
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
+
+                        layui.use(function(){
+                            var table = layui.table;
+                            var form = layui.form;
+                            var layer = layui.layer;
+                            var laydate = layui.laydate;
+                            var laytpl = layui.laytpl;
+                            var laypage = layui.laypage;
+                            var loadIndex=layer.load(3, {shade: [1, '#FFF']});
+                            try {
+
+
+                                laytpl.config({
+                                    // open: '<%', // 自定义起始界定符
+                                    // close: '%>', // 自定义起始界定符
+                                    tagStyle: 'modern' // 采用新版本的标签风格
+                                });
+                                var cacheJsonConfig = cacheConfig();
+
+                                // 获取 URL 参数
+                                var urlParams = getUrlParams();
+
+                                // 设置表单默认值（从 URL 参数）
+                                initFormValue(getUrlParams());
+
+                                calculateSearchItemDisplay();
+
+                                // 渲染表格
+                                var cols = [];
+
+                                // 序号列
+                                /*[# th:if="${list.body.showIndex}"]*/
+                                cols.push({type: 'numbers', title: '序号', width: 60, fixed: 'left'});
+                                /*[/]*/
+
+                                // 选择列
+                                /*[# th:if="${list.body.selectable}"]*/
+                                cols.push({type: 'checkbox', fixed: 'left'});
+                                /*[/]*/
+
+                                // 数据列
+                                /*[# th:each="column : ${list.column}" ]*/
+                                var columnConfig = {
+                                    field: '[(${column.item_name})]',
+                                    title: '<span component="[(${column.component})]" item_name="[(${column.item_name})]">[(${column.label})]</span>'
+                                };
+
+                                // 添加渲染器（RenderConfig）
+                                /*[# th:if="${column.component != null   }"]*/
+                                columnConfig.templet = function (d) {
+                                    var valueOrigin = d['[(${column.item_name})]'] || '';
+                                    var column = /*[[${column}]]*/;
+                                    var component = /*[[${column.component}]]*/ ;
+                                    var name =/*[[${column.item_name}]]*/;
+                                    const render = Global
+                                        .registry("columnRender")
+                                        .get(component);
+                                    var renderValue=valueOrigin;
+                                    if (render) {
+                                        renderValue = render(name, d, column);
+                                    }
+                                    /*[# th:if="${column.props != null and  column.props.format !=null  }"]*/
+                                    var formatPattern = '[(${column.props.format})]';
+                                    if (formatPattern && valueOrigin) {
+                                        try{
+                                            renderValue = layui.util.toDateString(valueOrigin, formatPattern);
+                                        }catch(e){
+                                            console.log(e+"格式化错误"+valueOrigin+formatPattern);
+                                        }
+                                    }
+                                    /*[/]*/
+                                    return renderValue;
+                                };
+                                /*[/]*/
+                                // 将column.component.props里面所有的值，塞入 columnConfig
+                                /*[# th:if="${column.props != null}"]*/
+                                /*[# th:each="entry : ${column.props.entrySet()}"]*/
+                                var key = [[${entry.key}]];
+                                columnConfig[key] = [[${entry.value}]];
+                                /*[/]*/
+                                /*[/]*/
+                                //用户如果自己设置了宽度，以用户的为准 格式为 '{"colwidth":{"USER_NAME":232,"USER_SEX":234}}'
+                                var colwidth = cacheJsonConfig.colwidth;
+                                if (colwidth) {
+                                    if (colwidth[columnConfig.field]) {
+                                        columnConfig.width = colwidth[columnConfig.field];
+                                    }
+                                }
+                                cols.push(columnConfig);
+                                /*[/]*/
+
+                                // 操作列
+                                /*[# th:if="${list.rowButton != null and !list.rowButton.isEmpty()}"]*/
+                                var rowActionConfig = {
+                                    title: '操作',
+                                    field: 'rowbutton',
+                                    fixed: 'right',
+                                    width: /*[[${list.body.rowActionWidth}]]*/,
+                                    toolbar: '#toolbarTpl'
+                                };
+
+                                if (colwidth && colwidth[rowActionConfig.field]) {
+                                    rowActionConfig.width = colwidth[rowActionConfig.field];
+                                }
+                                cols.push(rowActionConfig);
+                                /*[/]*/
+
+                                // 初始化筛选状态
+                                var local = layui.data('table-filter-test'); // 获取对应的本地记录
+                                layui.each(cols, function (index, item) {
+                                    if (item.field in local) {
+                                        item.hide = local[item.field];
+                                    }
+                                });
+
+                                var tableConfig = {
+                                    id: 'dataTable',
+                                    elem: '#dataTable',
+                                    height: 'full-' + tableHeight()  //设置高度
+                                    , escape: false
+                                    , autoSort: false,
+                                    cellMinWidth:100,
+                                    loading:false,
+                                    toolbar: '#toolbarDemo',
+                                    defaultToolbar: ['filter'],
+                                    cellExpandedMode: 'tips',
+                                    url:  document.getElementById("initApi").value,
+                                    where: form.val('searchForm'),  // 使用 URL 参数作为初始查询条件
+                                    page: false,
+                                    cols: [cols],
+                                    done: function (res, curr, count, origin) {
+                                        $("#searchBtn").removeClass("layui-btn-disabled");
+                                        $("#resetBtn").removeClass("layui-btn-disabled");
+                                        layui.element.render('breadcrumb');
+                                        doRowButton();
+
+
+                                        var pageConfig={
+                                            elem: 'PAGE_LAYUI'
+                                            , count: count
+                                            , curr: document.getElementById('currentPage').value
+                                            , limit: document.getElementById('perPageInt').value
+                                            , limits: [10, 20, 30, 40, 50, 100]
+                                            , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                                            , jump: function (obj, first) {
+                                                if (!first) {
+                                                    document.getElementById('perPageInt').value = obj.limit;
+                                                    document.getElementById('currentPage').value = obj.curr;
+                                                    tableIns.reload({where: form.val('searchForm')});
+                                                }
+                                            }
+                                        };
+
+                                        laypage.render(pageConfig);
+
+
+                                        // 记录筛选状态
+                                        var that = this;
+                                        that.elem.next().on('mousedown', 'input[lay-filter="LAY_TABLE_TOOL_COLS"]+', function () {
+                                            var input = $(this).prev()[0];
+                                            // 此处表名可任意定义
+                                            layui.data('table-filter-test', {
+                                                key: input.name
+                                                , value: input.checked
+                                            })
+                                        });
+                                        loadIndex && layer.close(loadIndex);
+                                    }
+                                    ,
+                                    error: function(e, msg) {
+                                        console.log(e, msg)
+                                        loadIndex && layer.close(loadIndex);
+                                        layer.msg("数据加载异常"+msg);
+
+                                    }
+                                }
+
+
+
+                                /*[# th:if="${list.hideSearch}"]*/
+                                tableConfig['toolbar'] =null;
+                                tableConfig['defaultToolbar'] =[];
+                                /*[/]*/
+
+
+
+                                //使用metadata里面的属性覆盖
+                                /*[# th:if="${list.body != null}"]*/
+                                /*[# th:each="entry : ${list.body.entrySet()}"]*/
+                                var key = [[${entry.key}]];
+                                tableConfig[key] = [[${entry.value}]];
+                                /*[/]*/
+                                /*[/]*/
+
+                                var tableIns = table.render(tableConfig);
+
+                                Global.set("table",tableIns);
+
+                                table.on('sort(dataTable)', function (obj) {
+                                    // $("#orderBy").attr("name", obj.field + "_ORDER");
+                                    if (obj.field && obj.type) {
+                                        $("#orderByName").val(obj.field);
+                                        $("#orderByType").val(obj.type);
+                                    } else {
+                                        $("#orderByName").val('');
+                                        $("#orderByType").val('');
+                                    }
+                                    tableIns.reload({where: form.val('searchForm')});
+                                });
+
+                                table.on('colResized(dataTable)', function (obj) {
+                                    var col = obj.col; // 获取当前列属性配置项
+                                    var options = obj.config; // 获取当前表格基础属性配置项
+
+                                    var field = obj.col.field;
+                                    var width = obj.col.width;
+
+                                    var json = cacheConfig();
+                                    var colwidth = json.colwidth == undefined ? {} : json.colwidth;
+                                    colwidth[field] = width;
+                                    json.colwidth = colwidth;
+                                    updateCacheConfig(JSON.stringify(json));
+                                });
+
+                                // 搜索
+                                $('#searchBtn').on('click', function () {
+                                    if(!$("#searchBtn").hasClass("layui-btn-disabled")){
+                                        $("#searchBtn").addClass("layui-btn-disabled");
+                                        document.getElementById('currentPage').value = 1;
+                                        document.getElementById('orderByName').value = '';
+                                        document.getElementById('orderByType').value = '';
+                                        tableIns.reload({where: form.val('searchForm')});
+                                    }
+                                });
+                                // 展开按钮：显示所有搜索条件
+                                $("#downBtn").click(function () {
+                                    $(this).hide();
+                                    $("#upBtn").show();
+                                    $(".searchcontent").children().not(".form-item-hidden").show();
+                                })
+                                // 收起按钮：恢复到只显示前2行
+                                $("#upBtn").click(function () {
+                                    $(this).hide();
+                                    $("#downBtn").show();
+                                    calculateSearchItemDisplay();
+                                })
+                            }catch (e){
+                                console.log(e);
+                                loadIndex && layui.layer.close(loadIndex);
+                            }
+                        });
+                        /*]]>*/
+
+
+                        function getCheckedIds() {
+                            var checkStatus = layui.table.checkStatus('dataTable');
+                            // 获取选中行数据的ID数组,逗号分隔，并去重
+                            var ids = checkStatus.data.map(function (row) {
+                                return row.ID||row.id;
+                            });
+                            return ids.join(",").split(",").filter(function (item, index, self) {
+                                return self.indexOf(item) === index;
+                            });
+                        }
+                        //处理行按钮
+                        function doRowButton() {
+                            var dropdown = layui.dropdown;
+                            document.querySelectorAll('.dropdown_button').forEach(function (box) {
+                                const btn = box.querySelector('button');
+                                const items = [];
+
+                                // 读取下拉列表项
+                                box.querySelectorAll('.dropdown_button_item li').forEach(function (a) {
+                                    const jsonStr = a.getAttribute('data-propsjson') || '{}';
+                                    let cfg;
+                                    try {
+                                        cfg = JSON.parse(jsonStr);
+                                    } catch (e) {
+                                        cfg = {};
+                                    }
+                                    if(cfg.display && cfg.display.trim()=="block"){
+                                        items.push({
+                                            title: a.innerText.trim(),
+                                            id: a.getAttribute('name'),
+                                            opentype: cfg.opentype,
+                                            url:cfg.url,
+                                            windowname: cfg.windowname
+                                        });
+                                    }
+                                });
+
+                                // 如果有可用项，初始化 dropdown
+                                if (items.length > 0) {
+                                    box.style.display = 'block';
+                                    dropdown.render({
+                                        elem: btn,
+                                        data: items,
+                                        click: function (cfg) {
+                                            // if (cfg.area == undefined) {
+                                            //     ezopen(cfg.opentype, cfg.windowname, cfg.url);
+                                            // } else {
+                                            ezopen(cfg.opentype, cfg.windowname, cfg.url, cfg.area);
+                                            //    }
+                                        }
+                                    });
+                                }else{
+                                    box.style.display = 'none';
+                                }
+                            });
+
+                            document.querySelectorAll('.layui-breadcrumb').forEach(function (box) {
+                                const links = box.querySelectorAll('a.buttonbread');
+
+                                let allHidden = true;
+
+                                links.forEach(a => {
+                                    // 检查 style 中是否隐藏
+                                    const styleDisplay = a.style.display?.trim();
+
+                                    // 检查 data-json 中的 display
+                                    let jsonDisplay = null;
+                                    const jsonStr = a.getAttribute('data-propsJson');
+                                    if (jsonStr) {
+                                        try {
+                                            const cfg = JSON.parse(jsonStr);
+                                            jsonDisplay = cfg.display?.trim();
+                                        } catch (e) {}
+                                    }
+
+                                    // 如果有任意一个是显示状态，则标记为 false
+                                    if (styleDisplay !== 'none' && jsonDisplay !== 'none') {
+                                        allHidden = false;
+                                    }
+                                });
+
+                                // 全部隐藏 → 隐藏整个容器
+                                box.style.display = allHidden ? 'none' : 'flex';
+                            });
+                        }
+                        //解析树形标签
+                        function resolveTreeLabels(rawIds, treeData) {
+                            var idMap = {};
+                            treeData.forEach(x => idMap[x.id] = x);
+                            function path(id) {
+                                var arr = [];
+                                var cur = idMap[id];
+                                while (cur) {
+                                    arr.unshift(cur.name);
+                                    cur = idMap[cur.parent_id];
+                                }
+                                return arr.join(" / ");
+                            }
+
+                            return (rawIds+'').split(',').map(id => path(id));
+                        }
+                        //获取缓存配置
+                        function cacheConfig() {
+                            var key = 'EZ_CONFIG_NEW' + $("#ENCRYPT_LIST_ID").val();
+                            var jsonconfig = localStorage.getItem(key);
+                            if (jsonconfig != undefined) {
+                                var json = JSON.parse(jsonconfig);
+                                return json;
+                            }
+                            return {};
+                        }
+                        //更新缓存配置
+                        function updateCacheConfig(value) {
+                            var key = 'EZ_CONFIG_NEW' + $("#ENCRYPT_LIST_ID").val();
+                            localStorage.setItem(key, value);
+                        }
+                        //计算表格高度
+                        function tableHeight(){
+                            var hh = 43 + 5; //分页+padding
+
+                            if ($(".ez-table-tool:visible").length > 0) { //表头
+                                hh = hh + 51;
+                            }
+                            if ($(".ez-table-tool-height:visible").length > 0) { //表头
+                                hh = hh + 42;
+                            }
+                            if ($(".searchWrap:visible").length > 0) { //搜索
+                                hh = hh + $(".searchWrap").height() + 5;
+                            }else{
+                                hh=hh-5;
+                            }
+                            if ($(".appendhead").length > 0) { //搜索
+                                hh = hh + $(".appendhead").height();
+                            }
+                            return hh;
+                        }
+                        //计算搜索栏是否隐藏
+                        function calculateSearchItemDisplay() {
+                            var $items = $(".searchcontent").children().not(".form-item-hidden");
+
+                            if ($items.length === 0) {
+                                $("#downBtn").hide();
+                                $("#upBtn").hide();
+                                return;
+                            }
+
+                            // 收集所有元素的位置信息
+                            var itemsInfo = [];
+                            $items.each(function(index) {
+                                var $this = $(this);
+                                var offset = $this.offset();
+                                if (offset && offset.top > 0) {  // 确保 offset 有效
+                                    itemsInfo.push({
+                                        element: $this,
+                                        top: offset.top,
+                                        index: index
+                                    });
+                                }
+                            });
+
+                            if (itemsInfo.length === 0) {
+                                $("#downBtn").hide();
+                                $("#upBtn").hide();
+                                return;
+                            }
+
+                            // 按 top 排序，并分组到行
+                            itemsInfo.sort(function(a, b) { return a.top - b.top; });
+
+                            var rows = [];
+                            var currentRow = [];
+                            var lastTop = itemsInfo[0].top;
+                            var rowThreshold = 10; // 10px 的容差，同一行内元素的 top 差异应该在这个范围内
+
+                            itemsInfo.forEach(function(item) {
+                                if (Math.abs(item.top - lastTop) <= rowThreshold) {
+                                    // 同一行
+                                    currentRow.push(item);
+                                } else {
+                                    // 新的一行
+                                    rows.push(currentRow);
+                                    currentRow = [item];
+                                    lastTop = item.top;
+                                }
+                            });
+
+                            // 别忘了最后一行
+                            if (currentRow.length > 0) {
+                                rows.push(currentRow);
+                            }
+
+                            // 判断是否需要展开/收起按钮
+                            if (rows.length <= 2) {
+                                // 总共不超过2行，不需要展开/收起功能
+                                $("#downBtn").hide();
+                                $("#upBtn").hide();
+                                $items.show();
+                            } else {
+                                // 超过2行，初始状态显示前2行，隐藏其余
+                                $("#downBtn").show();
+                                $("#upBtn").hide();
+
+                                // 显示前2行
+                                for (var i = 0; i < 2 && i < rows.length; i++) {
+                                    rows[i].forEach(function(item) {
+                                        item.element.show();
+                                    });
+                                }
+
+                                // 隐藏第3行及以后
+                                for (var i = 2; i < rows.length; i++) {
+                                    rows[i].forEach(function(item) {
+                                        item.element.hide();
+                                    });
+                                }
+                            }
+                        }
+
+
+                    </script>
+                    <div th:utext="${list.appendFoot}" item_name="appendFoot" th:if="${not #strings.isEmpty(list.appendFoot )}"></div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 右侧配置面板 -->
+    <div class="chat-panel">
+        <!-- 1. 头部 -->
+        <div class="chat-header">
+            <div class="chat-title">⚙️ 配置面板</div>
+        </div>
+
+        <!-- 2. 中间 Tab 区域 -->
+        <div class="chat-body" style="padding: 0;">
+            <div class="layui-tab layui-tab-brief" lay-filter="rightPanelTab" style="margin: 0; height: calc(100vh - 380px);">
+                <ul class="layui-tab-title" style="margin: 0; background: #fff;">
+                    <li>📝 属性配置</li>
+                    <li class="layui-this">🤖 AI 助手</li>
+                </ul>
+                <div class="layui-tab-content" style="padding: 0; height: calc(100vh - 420px);">
+                    <!-- Tab 1: 属性配置 -->
+                    <div class="layui-tab-item property-tab-panel">
+                        <div class="property-tab-scroll">
+
+                            <div id="propertyForm"  >
+
+                                <form class="layui-form"  style="height: calc(100vh - 420px); overflow: scroll;"  lay-filter="propertyForm">
+                                    <div class="layui-form-item" style="margin-bottom: 0px;text-align: right;">
+                                        <button type="button" class="layui-btn layui-btn-normal action-btn" id="applyPropsBtn">
+                                            <i class="layui-icon layui-icon-ok"></i> 应用配置
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-danger action-btn" id="deleteElementBtn">
+                                            <i class="layui-icon layui-icon-delete"></i> 删除元素
+                                        </button>
+                                    </div>
+                                    <!-- 基础属性 - 始终显示 -->
+                                    <div class="property-section">
+                                        <div class="property-section-title">基础属性</div>
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">字段名</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" id="prop-item_name" class="layui-input" placeholder="字段名">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">显示标签</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" id="prop-label" class="layui-input" placeholder="显示标签">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">组件类型</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" id="prop-component" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                        <label class="layui-form-label">栅格宽度</label>
+                                        <div class="layui-input-block">
+                                            <select id="prop-classAppend" lay-filter="prop-classAppend">
+                                                <option value="layui-col-md12">12列(100%)</option>
+                                                <option value="layui-col-md8">8列(66%)</option>
+                                                <option value="layui-col-md6">6列(50%)</option>
+                                                <option value="layui-col-md4">4列(33%)</option>
+                                                <option value="layui-col-md3">3列(25%)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <!-- 动态配置区域 - 根据组件类型渲染 -->
+                                    <div id="section-dynamic"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: AI 助手 -->
+                    <div class="layui-tab-item layui-show" style="height: 100%; padding: 0;   flex-direction: column;">
+                        <div class="ai-chat-box" id="aiChatBox" style="flex: 1; display: flex; flex-direction: column;">
+                            <!-- AI 消息区域 -->
+                            <div class="ai-chat-messages" id="aiChatMessages" style="flex: 1; overflow-y: auto; padding: 15px; background: #f8f9fa;">
+                                <div class="ai-chat-empty">
+                                    <div class="ai-chat-empty-icon">💬</div>
+                                    <div>让AI助手帮你编辑列表配置</div>
+                                    <div style="font-size: 12px; color: #ccc; margin-top: 8px;">输入您的需求，例如：添加搜索字段、修改列样式等</div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- AI 输入区域 -->
+            <div class="ai-chat-input-area">
+                <div class="layui-form" style="padding:10px">
+
+
+                    <!-- 4. 示例提示词（底部） -->
+                    <div class="example-prompts">
+                        <h4>💬 示例提示词</h4>
+                        <span class="prompt-tag" onclick="usePrompt('创建用户管理表单，包含用户名、邮箱、手机号、角色等字段')">用户管理表单</span>
+                        <span class="prompt-tag" onclick="usePrompt('生成商品列表，需要能够根据名称排序且能够按照价格排序功能')">商品列表</span>
+                        <span class="prompt-tag" onclick="usePrompt('SELECT USER_ID ID,USERNAME 用户名,EMAIL 邮箱,PHONE 手机号,ROLE 角色 FROM user')">从 SQL 生成</span>
+                    </div>
+                    <div class="layui-form-item  " >
+                        <div class="layui-input-block " style=" margin-left: 0px !important;">
+                            <textarea id="aiChatInput" class="layui-textarea" placeholder="输入您的需求，例如：把第一个输入框改为必填..." rows="1" style="padding: 15px; height: 134px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom: 0px;text-align: right;">
+                        <button class="layui-btn" id="aiSendBtn">发送</button>
+                        <button class="layui-btn" id="aiClearBtn" title="清空聊天记录">清空聊天记录 </button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let editMode = true;
+    let dragulaInstances = [];
+    let selectedElement = null;
+
+    // 页面加载完成后初始化
+    $(document).ready(function() {
+        initFormEditor();
+    });
+
+    function initFormEditor() {
+        console.log('初始化表单编辑器...');
+
+        // 初始化 layui tab
+        layui.use('element', function() {
+            const element = layui.element;
+            element.render('tab');
+        });
+
+        // 为现有的搜索行添加控制按钮
+        addControlsToExistingRows();
+
+        // 初始化拖拽
+        initDragula();
+
+        // 初始化事件监听
+        initEventListeners();
+
+        console.log('✅ 表单编辑器已就绪');
+    }
+
+    // 为现有的搜索行添加拖拽手柄和删除按钮
+    function addControlsToExistingRows() {
+        const searchRows = document.querySelectorAll('[item_name="searchcontent"]');
+
+        searchRows.forEach(row => {
+            // 检查是否已经有控制按钮
+            if (row.querySelector('.row-controls')) {
+                return; // 已经有了，跳过
+            }
+
+            // 添加样式
+            row.style.position = 'relative';
+            row.style.paddingLeft = '40px';
+            row.style.marginBottom = '10px';
+            row.style.paddingTop = '5px';
+            row.style.paddingBottom = '5px';
+
+            // 创建控制按钮容器（只有拖拽手柄）
+            const controlsHtml = `
+                <div class="row-controls" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%); display: flex; gap: 5px; z-index: 10;">
+                    <span class="row-drag-icon" style="cursor: move; color: #999; font-size: 16px;" title="拖拽排序">
+                        ⋮⋮
+                    </span>
+                </div>
+            `;
+
+            // 插入到行的开头
+            row.insertAdjacentHTML('afterbegin', controlsHtml);
+        });
+
+        console.log(`✅ 已为 ${searchRows.length} 个现有搜索行添加拖拽手柄`);
+    }
+
+    function initDragula() {
+        console.log('初始化拖拽功能...');
+
+        // 列表编辑只需要支持组件拖拽到搜索条件区域
+        initComponentsDrag();
+
+        console.log('✅ 拖拽功能初始化完成');
+    }
+
+    function initComponentsDrag() {
+        // 搜索条件容器 - 根据 item_name="searchcontent" 定位
+        const searchRows = document.querySelectorAll('[item_name="searchcontent"]');
+
+        if (searchRows.length === 0) {
+            console.log('⚠️ 未找到搜索条件容器');
+            return;
+        }
+
+        // 获取组件分组(源容器)
+        const componentGroups = Array.from(document.querySelectorAll('#componentsBody .component-group'));
+
+        // 获取搜索区域父容器（用于放置新 row）
+        const searchFormContainer = document.getElementById('searchForm');
+        const searchContentParent = searchRows[0]?.parentElement;
+
+        // 目标容器 = 组件分组 + 搜索条件行
+        const allContainers = [...componentGroups, ...Array.from(searchRows)];
+
+        // 1. 组件拖拽到搜索行（包括 row 和普通组件）
+        const drake = dragula(allContainers, {
+            copy: function (el, source) {
+                // 从组件分组拖拽时复制
+                return componentGroups.includes(source);
+            },
+            accepts: function (el, target, source, sibling) {
+                // 不能拖回组件面板
+                if (componentGroups.includes(target)) return false;
+
+                const componentType = el.getAttribute('data-component');
+
+                // row 组件不能拖到 searchcontent 行内
+                if (componentType === 'row') {
+                    return false;
+                }
+
+                // 普通组件只能拖到搜索条件行
+                return target.getAttribute('item_name') === 'searchcontent';
+            },
+            moves: function (el, source, handle, sibling) {
+                // 只允许拖拽 component-item（普通组件，非 row）
+                const isComponentItem = el.classList.contains('component-item');
+                const componentType = el.getAttribute('data-component');
+                return isComponentItem && componentType !== 'row';
+            }
+        }).on('drop', function (el, target, source, sibling) {
+            if (componentGroups.includes(source)) {
+                const componentType = el.getAttribute('data-component');
+                createSearchComponent(el, target, sibling);
+            }
+        });
+
+        dragulaInstances.push(drake);
+
+        // 2. 支持 row 组件拖拽到搜索区域外层
+        if (searchContentParent) {
+            const rowDrake = dragula([componentGroups[0], searchContentParent], {
+                copy: function (el, source) {
+                    return componentGroups.includes(source);
+                },
+                accepts: function (el, target, source, sibling) {
+                    const componentType = el.getAttribute('data-component');
+
+                    // 只接受 row 组件
+                    if (componentType !== 'row') return false;
+
+                    // 不能拖回组件面板
+                    if (componentGroups.includes(target)) return false;
+
+                    return true;
+                },
+                moves: function (el, source, handle, sibling) {
+                    const componentType = el.getAttribute('data-component');
+                    return el.classList.contains('component-item') && componentType === 'row';
+                }
+            }).on('drop', function (el, target, source, sibling) {
+                if (componentGroups.includes(source)) {
+                    createSearchRow(el, target, sibling);
+                }
+            });
+
+            dragulaInstances.push(rowDrake);
+        }
+
+        // 3. 支持 row 内字段的拖拽排序
+        initFieldsSorting();
+
+        // 4. 支持 row 的拖拽排序
+        initRowsSorting();
+
+        console.log(`✅ 搜索条件拖拽已初始化`);
+    }
+
+    // 初始化字段拖拽排序
+    function initFieldsSorting() {
+        const searchRows = Array.from(document.querySelectorAll('[item_name="searchcontent"]'));
+
+        if (searchRows.length === 0) return;
+
+        const fieldsDrake = dragula(searchRows, {
+            moves: function (el, container, handle, sibling) {
+                // 只允许拖拽 component-col（字段容器）
+                return el.classList.contains('component-col');
+            },
+            accepts: function (el, target, source, sibling) {
+                // 只能在 searchcontent 行之间拖拽
+                return target.getAttribute('item_name') === 'searchcontent';
+            }
+        });
+
+        dragulaInstances.push(fieldsDrake);
+        console.log('✅ 字段拖拽排序已初始化');
+    }
+
+    // 初始化 row 的拖拽排序
+    function initRowsSorting() {
+        const searchRows = document.querySelectorAll('[item_name="searchcontent"]');
+        if (searchRows.length === 0) return;
+
+        const searchContentParent = searchRows[0].parentElement;
+        if (!searchContentParent) return;
+
+        const rowsDrake = dragula([searchContentParent], {
+            moves: function (el, container, handle, sibling) {
+                // 只允许通过 row-delete-btn 旁边的拖拽手柄拖拽
+                return el.classList.contains('searchcontent') &&
+                       (handle.classList.contains('row-drag-icon') ||
+                        handle.closest('.row-drag-icon'));
+            }
+        });
+
+        dragulaInstances.push(rowsDrake);
+        console.log('✅ Row 拖拽排序已初始化');
+    }
+
+    // 创建新的搜索 row
+    function createSearchRow(componentEl, targetParent, sibling) {
+        const timestamp = Date.now();
+
+        const rowHtml = `
+            <div class="searchcontent layui-row layui-col-space5" item_name="searchcontent" style="position: relative; padding-left: 40px; margin-bottom: 10px; padding-top: 5px; padding-bottom: 5px;">
+                <div class="row-controls" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%); display: flex; gap: 5px; z-index: 10;">
+                    <span class="row-drag-icon" style="cursor: move; color: #999; font-size: 16px;" title="拖拽排序">
+                        ⋮⋮
+                    </span>
+                </div>
+            </div>
+        `;
+
+        componentEl.remove();
+
+        if (sibling) {
+            sibling.insertAdjacentHTML('beforebegin', rowHtml);
+        } else {
+            targetParent.insertAdjacentHTML('beforeend', rowHtml);
+        }
+
+        // 使用 setTimeout 异步重新初始化拖拽，避免递归调用
+        setTimeout(() => {
+            reinitDragula();
+        }, 10);
+
+        layer.msg('✅ 已添加新行，可从左侧拖拽组件到此行');
+        console.log('✅ 已创建新的搜索 row');
+    }
+
+    function createSearchComponent(componentEl, targetRow, sibling) {
+        const componentType = componentEl.getAttribute('data-component');
+        const componentLabel = componentEl.getAttribute('data-label');
+        const itemName = `${componentType}_${Date.now()}`;
+
+        let componentHtml = '';
+
+        // 根据组件类型生成搜索条件 HTML
+        switch (componentType) {
+            case 'input':
+                componentHtml = `
+                <div class="component-col col-${itemName} layui-col-md3">
+                    <div class="layui-form-item" item_name="${itemName}" component="input">
+                        <label class="layui-form-label">${componentLabel}:</label>
+                        <div class="layui-input-block">
+                            <input name="${itemName}" class="layui-input" placeholder="请输入${componentLabel}">
+                        </div>
+                    </div>
+                </div>
+            `;
+                break;
+
+            case 'textarea':
+                componentHtml = `
+                <div class="component-col col-${itemName} layui-col-md3">
+                    <div class="layui-form-item" item_name="${itemName}" component="textarea">
+                        <label class="layui-form-label">${componentLabel}:</label>
+                        <div class="layui-input-block">
+                            <textarea name="${itemName}" class="layui-textarea" placeholder="请输入${componentLabel}"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+                break;
+
+            case 'select':
+                componentHtml = `
+                <div class="component-col col-${itemName} layui-col-md3">
+                    <div class="layui-form-item" item_name="${itemName}" component="select">
+                        <label class="layui-form-label">${componentLabel}:</label>
+                        <div class="layui-input-block">
+                            <select name="${itemName}" class="layui-select">
+                                <option value="">请选择${componentLabel}</option>
+                                <option value="1">选项1</option>
+                                <option value="2">选项2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+                break;
+
+            case 'radio':
+                componentHtml = `
+                <div class="component-col col-${itemName} layui-col-md3">
+                    <div class="layui-form-item" item_name="${itemName}" component="radio">
+                        <label class="layui-form-label">${componentLabel}:</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="${itemName}" value="1" title="选项1">
+                            <input type="radio" name="${itemName}" value="2" title="选项2">
+                        </div>
+                    </div>
+                </div>
+            `;
+                break;
+
+            case 'checkbox':
+                componentHtml = `
+                <div class="component-col col-${itemName} layui-col-md3">
+                    <div class="layui-form-item" item_name="${itemName}" component="checkbox">
+                        <label class="layui-form-label">${componentLabel}:</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="${itemName}[]" value="1" title="选项1">
+                            <input type="checkbox" name="${itemName}[]" value="2" title="选项2">
+                        </div>
+                    </div>
+                </div>
+            `;
+                break;
+
+            case 'date':
+                componentHtml = `
+                <div class="component-col col-${itemName} layui-col-md3">
+                    <div class="layui-form-item" item_name="${itemName}" component="date">
+                        <label class="layui-form-label">${componentLabel}:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="${itemName}" class="layui-input" placeholder="请选择${componentLabel}">
+                        </div>
+                    </div>
+                </div>
+            `;
+                break;
+
+            case 'select-multiple':
+                componentHtml = `
+                <div class="component-col col-${itemName} layui-col-md3">
+                    <div class="layui-form-item" item_name="${itemName}" component="select-multiple">
+                        <label class="layui-form-label">${componentLabel}:</label>
+                        <div class="layui-input-block">
+                            <select name="${itemName}" class="layui-select" multiple>
+                                <option value="">请选择${componentLabel}</option>
+                                <option value="1">选项1</option>
+                                <option value="2">选项2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+                break;
+
+            case 'cascader':
+                componentHtml = `
+                <div class="component-col col-${itemName} layui-col-md3">
+                    <div class="layui-form-item" item_name="${itemName}" component="cascader">
+                        <label class="layui-form-label">${componentLabel}:</label>
+                        <div class="layui-input-block">
+                            <select name="${itemName}" class="layui-select" lay-search="">
+                                <option value="">请选择${componentLabel}</option>
+                                <option value="1">选项1</option>
+                                <option value="1-1">选项1-1</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+                break;
+
+            default:
+                console.warn(`⚠️ 不支持的搜索组件类型: ${componentType}`);
+                componentEl.remove();
+                return;
+        }
+
+        componentEl.remove();
+
+        if (sibling) {
+            sibling.insertAdjacentHTML('beforebegin', componentHtml);
+        } else {
+            targetRow.insertAdjacentHTML('beforeend', componentHtml);
+        }
+
+        layui.form.render();
+        console.log(`✅ 已添加搜索条件: ${componentLabel}`);
+    }
+
+    function reinitDragula() {
+        console.log('重新初始化拖拽...');
+
+        dragulaInstances.forEach(instance => {
+            if (instance && instance.destroy) {
+                instance.destroy();
+            }
+        });
+        dragulaInstances = [];
+
+        // 为新添加的行添加控制按钮
+        addControlsToExistingRows();
+
+        initDragula();
+    }
+
+    function initEventListeners() {
+        document.getElementById('saveBtn').addEventListener('click', (event) => {
+            event.preventDefault();
+            const layoutData = collectLayoutData();
+            console.log('收集到的布局数据（DSL格式）:', layoutData);
+            layoutData.dslType= 'list',
+            // TODO: 发送到服务端保存
+            // 这里可以添加实际的保存逻辑
+            fetch('/topezadmin/edit/saveLayout-'+$("#ENCRYPT_LIST_ID").val(), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(layoutData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success || data.code === '0') {
+                        layer.msg('✅ 布局保存成功');
+                        console.log('服务端响应:', data);
+                    } else {
+                        layer.msg('❌ 保存失败: ' + (data.message || '未知错误'));
+                    }
+                })
+                .catch(error => {
+                    console.error('保存失败:', error);
+                    layer.msg('❌ 保存失败: ' + error.message + '\n\n💡 布局数据已输出到控制台（按F12查看）');
+                });
+        });
+
+        document.getElementById('toggleEditBtn').addEventListener('click', toggleEditMode);
+        document.getElementById('cancelEditBtn').addEventListener('click', toggleEditMode);
+
+        document.getElementById('testBtn').addEventListener('click', () => {
+            layer.msg('测试功能：拖拽排序、添加组件等功能正常');
+        });
+
+        document.getElementById('formContainer').addEventListener('click', handleElementClick);
+
+        // 应用配置按钮
+        document.getElementById('applyPropsBtn').addEventListener('click', applyProperties);
+
+        // 删除元素按钮
+        document.getElementById('deleteElementBtn').addEventListener('click', deleteElement);
+    }
+
+    function toggleEditMode() {
+        editMode = !editMode;
+
+        const previewContent = document.getElementById('previewContent');
+        const toggleBtn = document.getElementById('toggleEditBtn');
+        const cancelBtn = document.getElementById('cancelEditBtn');
+
+        if (editMode) {
+            previewContent.classList.add('edit-mode');
+            toggleBtn.style.display = 'none';
+            cancelBtn.style.display = 'inline-block';
+            console.log('✅ 已进入编辑模式');
+        } else {
+            previewContent.classList.remove('edit-mode');
+            toggleBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'none';
+            console.log('ℹ️ 已退出编辑模式');
+        }
+    }
+
+    function handleElementClick(event) {
+        if (!editMode) return;
+
+        // 检查是否点击了行的拖拽手柄
+        const dragHandle = event.target.closest('.row-drag-icon');
+        if (dragHandle) {
+            // 选中整个搜索行
+            const searchRow = dragHandle.closest('[item_name="searchcontent"]');
+            if (searchRow) {
+                selectElement(searchRow);
+                event.stopPropagation();
+                return;
+            }
+        }
+
+        // 查找最近的具有 item_name 属性的元素
+        const target = event.target.closest('[item_name]');
+        if (!target) return;
+
+        // 排除顶层容器(如 searchcontent、table-wrap、tableButton、rowButton)
+        const itemName = target.getAttribute('item_name');
+        if (itemName === 'searchcontent' || itemName === 'table-wrap' ||
+            itemName === 'tableButton' || itemName === 'rowButton' ||
+            itemName === 'appendHead' || itemName === 'appendFoot' ||
+            itemName === 'tabList') {
+            return;
+        }
+
+        event.stopPropagation();
+
+        // 选中元素
+        selectElement(target);
+    }
+
+    function selectElement(target) {
+        // 移除之前选中元素的样式
+        if (selectedElement) {
+            selectedElement.style.outline = '';
+        }
+
+        // 标记新选中的元素
+        selectedElement = target;
+        selectedElement.style.outline = '2px solid #1890ff';
+
+        // 显示属性配置表单
+        showPropertyForm(target);
+    }
+
+    function showPropertyForm(element) {
+     //   const emptyState = document.getElementById('emptyState');
+        const propertyForm = document.getElementById('propertyForm');
+      //  const propertyActionBar = document.getElementById('propertyActionBar');
+
+    //    emptyState.style.display = 'none';
+        propertyForm.style.display = 'block';
+      //  propertyActionBar.style.display = 'flex';
+
+        // 读取元素基础属性
+        const component = element.getAttribute('component');
+        const itemName = element.getAttribute('item_name');
+
+        const labelElement = element.querySelector('.layui-form-label');
+        const label = labelElement ? labelElement.textContent.replace(/：$/, '').trim() : '';
+
+        // 从 component-col 读取已存在的 data-config-json
+        const colDiv = element.closest('.component-col');
+        let existingConfig = {};
+        if (colDiv) {
+            const json = colDiv.getAttribute('data-config-json');
+            if (json) {
+                try {
+                    existingConfig = JSON.parse(json);
+                    console.log('✓ 从 component-col 读取配置:', existingConfig);
+                } catch(e) {
+                    console.error('解析 data-config-json 失败:', e);
+                }
+            }
+        }
+
+        // 如果没有配置，从DOM提取基本信息
+        if (!existingConfig || Object.keys(existingConfig).length === 0) {
+            const colClassMatch = colDiv?.className.match(/layui-col-md(\d+)/);
+            const classAppend = colClassMatch ? colClassMatch[0] : 'layui-col-md12';
+
+            existingConfig = {
+                item_name: itemName,
+                label: label,
+                component: component,
+                classAppend: classAppend
+            };
+        }
+
+        // 填充基础属性
+        document.getElementById('prop-item_name').value = existingConfig.item_name || '';
+        document.getElementById('prop-label').value = existingConfig.label || '';
+        document.getElementById('prop-component').value = existingConfig.component || '';
+        const classAppendSelect = document.getElementById('prop-classAppend');
+        classAppendSelect.value = existingConfig.classAppend || 'layui-col-md12';
+
+        // 渲染动态区域
+        renderDynamicSection(component, existingConfig, element);
+
+        // 重新渲染 layui select
+        layui.use('form', function() {
+            layui.form.render('select');
+        });
+
+        console.log(`✓ 已选中: ${component} (${itemName})`);
+
+        // 在 AI 助手中显示选中的元素信息
+        updateAISelectedInfo(element, component, itemName, label);
+    }
+
+    // 渲染每个组件特有的配置区域
+    function renderDynamicSection(component, cfg, element) {
+        const container = document.getElementById('section-dynamic');
+        const props = cfg.props || {};
+        const initData = cfg.initData || {};
+        const validate = props.validate || {};
+
+        let html = '';
+
+        if (component === 'input') {
+            html = buildInputSection(props, validate);
+        } else if (component === 'textarea') {
+            html = buildTextareaSection(props, validate);
+        } else if (component === 'select') {
+            html = buildSelectSection(props, initData, validate);
+        } else if (component === 'select-multiple') {
+            html = buildSelectSection(props, initData, validate);
+        } else if (component === 'cascader') {
+            html = buildSelectSection(props, initData, validate);
+        } else if (component === 'tinymce') {
+            html = buildTextareaSection(props, validate);
+        } else if (component === 'radio') {
+            html = buildRadioSection(props, initData, validate);
+        } else if (component === 'checkbox') {
+            html = buildCheckboxSection(props, initData, validate);
+        } else if (component === 'date') {
+            html = buildDateSection(props, validate);
+        } else if (component === 'upload') {
+            html = buildUploadSection(props, validate);
+        }
+
+        container.innerHTML = html;
+
+        // 绑定 initData 数据源切换事件
+        const tabs = container.querySelectorAll('.data-source-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const group = this.closest('.data-source-tabs').parentElement;
+                group.querySelectorAll('.data-source-tab').forEach(t => t.classList.remove('active'));
+                group.querySelectorAll('.data-source-panel').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                const targetId = this.getAttribute('data-target');
+                const panel = group.querySelector('#' + targetId);
+                if (panel) panel.classList.add('active');
+            });
+        });
+    }
+
+    function fieldItem(label, inputHtml) {
+        return `<div class="layui-form-item">
+        <label class="layui-form-label">${label}</label>
+        <div class="layui-input-block">${inputHtml}</div>
+    </div>`;
+    }
+
+    function checkboxItem(checks) {
+        const items = checks.map(c =>
+            `<input type="checkbox" id="${c.id}" ${c.checked ? 'checked' : ''} lay-skin="primary" title="${c.title}">`
+        ).join('');
+        return `<div class="layui-form-item"><div class="layui-input-block">${items}</div></div>`;
+    }
+
+    function validateSection(validate) {
+        const rule = validate.rule ? JSON.stringify(validate.rule, null, 2) : '';
+        const msg = validate.message ? JSON.stringify(validate.message, null, 2) : '';
+        return `<div class="validate-section">
+        <div class="validate-section-title">jQuery Validate 配置</div>
+        ${fieldItem('验证规则', `<textarea id="prop-validate-rule" class="layui-textarea" placeholder='{"required":true,"minlength":2}'>${escHtml(rule)}</textarea>`)}
+        ${fieldItem('错误提示', `<textarea id="prop-validate-message" class="layui-textarea" placeholder='{"required":"请填写此项","minlength":"最少2位"}'>${escHtml(msg)}</textarea>`)}
+    </div>`;
+    }
+
+    function initDataSection(initData, idPrefix) {
+        const isStatic = !initData.dataSql;
+        const dataJsonStr = initData.dataJson ? JSON.stringify(initData.dataJson, null, 2) : '[\n  {"label":"选项1","value":"1"},\n  {"label":"选项2","value":"2"}\n]';
+        const dataSql = initData.dataSql || '';
+        const dataSource = initData.dataSource || 'dataSource';
+
+        return `<div class="property-section">
+        <div class="property-section-title">数据源配置</div>
+        <div class="data-source-tabs">
+            <button type="button" class="data-source-tab ${isStatic ? 'active' : ''}" data-target="${idPrefix}-static-panel">静态数据</button>
+            <button type="button" class="data-source-tab ${!isStatic ? 'active' : ''}" data-target="${idPrefix}-dynamic-panel">动态SQL</button>
+        </div>
+        <div id="${idPrefix}-static-panel" class="data-source-panel ${isStatic ? 'active' : ''}">
+            ${fieldItem('选项列表', `<textarea id="${idPrefix}-dataJson" class="layui-textarea" style="height:100px;font-family:monospace;">${escHtml(dataJsonStr)}</textarea>`)}
+        </div>
+        <div id="${idPrefix}-dynamic-panel" class="data-source-panel ${!isStatic ? 'active' : ''}">
+            ${fieldItem('数据源', `<input type="text" id="${idPrefix}-dataSource" class="layui-input" value="${escHtml(dataSource)}" placeholder="dataSource">`)}
+            ${fieldItem('查询SQL', `<textarea id="${idPrefix}-dataSql" class="layui-textarea">${escHtml(dataSql)}</textarea>`)}
+        </div>
+    </div>`;
+    }
+
+    function escHtml(str) {
+        return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function buildInputSection(props, validate) {
+        return `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请输入...">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required|email">`)}
+        ${fieldItem('最大长度', `<input type="number" id="prop-maxlength" class="layui-input" value="${escHtml(props.maxlength||'')}" placeholder="最大字符数">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled},
+            {id:'prop-readonly', title:'只读', checked: props.readonly}
+        ])}
+        ${validateSection(validate)}
+    </div>${buildCustomPropsSection(props)}`;
+    }
+
+    function buildTextareaSection(props, validate) {
+        return `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请输入...">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('最大长度', `<input type="number" id="prop-maxlength" class="layui-input" value="${escHtml(props.maxlength||'')}" placeholder="最大字符数">`)}
+        ${fieldItem('显示行数', `<input type="number" id="prop-rows" class="layui-input" value="${escHtml(props.rows||'')}" placeholder="文本域行数">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled},
+            {id:'prop-readonly', title:'只读', checked: props.readonly}
+        ])}
+        ${validateSection(validate)}
+    </div>${buildCustomPropsSection(props)}`;
+    }
+
+    function buildSelectSection(props, initData, validate) {
+        return initDataSection(initData, 'select') + `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled},
+            {id:'prop-lay-search', title:'可搜索', checked: props['lay-search']}
+        ])}
+        ${validateSection(validate)}
+    </div>${buildCustomPropsSection(props)}`;
+    }
+
+    function buildRadioSection(props, initData, validate) {
+        return initDataSection(initData, 'radio') + `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled}
+        ])}
+        ${validateSection(validate)}
+    </div>${buildCustomPropsSection(props)}`;
+    }
+
+    function buildCheckboxSection(props, initData, validate) {
+        return initDataSection(initData, 'checkbox') + `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled}
+        ])}
+        ${validateSection(validate)}
+    </div>${buildCustomPropsSection(props)}`;
+    }
+
+    function buildDateSection(props, validate) {
+        const typeOpts = ['date','datetime','year','month','time'].map(t =>
+            `<option value="${t}" ${props.type === t ? 'selected' : ''}>${t}</option>`
+        ).join('');
+        return `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('日期类型', `<select id="prop-date-type">${typeOpts}</select>`)}
+        ${fieldItem('日期格式', `<input type="text" id="prop-date-format" class="layui-input" value="${escHtml(props.format||'')}" placeholder="如: yyyy-MM-dd">`)}
+        ${fieldItem('最小日期', `<input type="text" id="prop-date-min" class="layui-input" value="${escHtml(props.min||'')}" placeholder="如: 2020-01-01">`)}
+        ${fieldItem('最大日期', `<input type="text" id="prop-date-max" class="layui-input" value="${escHtml(props.max||'')}" placeholder="如: 2030-12-31">`)}
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请选择日期">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-disabled', title:'禁用', checked: props.disabled},
+            {id:'prop-date-range', title:'范围选择', checked: props.range}
+        ])}
+        ${validateSection(validate)}
+    </div>${buildCustomPropsSection(props)}`;
+    }
+
+    function buildUploadSection(props, validate) {
+        const acceptOpts = ['images','file','video','audio'].map(t =>
+            `<option value="${t}" ${props.accept === t ? 'selected' : ''}>${t}</option>`
+        ).join('');
+        const uploadValidate = validate || {};
+        return `<div class="property-section">
+        <div class="property-section-title">Props 属性</div>
+        ${fieldItem('文件类型', `<select id="prop-upload-accept"><option value="">不限</option>${acceptOpts}</select>`)}
+        ${fieldItem('MIME类型', `<input type="text" id="prop-upload-acceptMime" class="layui-input" value="${escHtml(props.acceptMime||'')}" placeholder="如: image/png,image/jpeg">`)}
+        ${fieldItem('文件数量', `<input type="number" id="prop-upload-number" class="layui-input" value="${escHtml(props.number||'')}" placeholder="最多文件数">`)}
+        ${fieldItem('文件大小(KB)', `<input type="number" id="prop-upload-size" class="layui-input" value="${escHtml(props.size||'')}" placeholder="最大文件大小(KB)">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${checkboxItem([
+            {id:'prop-required', title:'必填项', checked: props.required},
+            {id:'prop-upload-multiple', title:'多文件上传', checked: props.multiple}
+        ])}
+        <div class="validate-section">
+            <div class="validate-section-title">上传限制</div>
+            ${fieldItem('最多文件数', `<input type="number" id="prop-validate-uploadMax" class="layui-input" value="${escHtml(uploadValidate.uploadMax||'')}" placeholder="上传数量上限">`)}
+            ${fieldItem('最少文件数', `<input type="number" id="prop-validate-uploadMin" class="layui-input" value="${escHtml(uploadValidate.uploadMin||'')}" placeholder="上传数量下限">`)}
+        </div>
+    </div>${buildCustomPropsSection(props)}`;
+    }
+
+    // 构建自定义属性区域
+    function buildCustomPropsSection(props) {
+        // 提取自定义属性（排除已知的标准属性）
+        const knownProps = ['placeholder', 'lay-verify', 'maxlength', 'rows', 'description', 'required',
+                           'disabled', 'readonly', 'validate', 'type', 'format', 'min', 'max', 'range',
+                           'accept', 'acceptMime', 'number', 'size', 'multiple', 'lay-search'];
+
+        const customProps = {};
+        for (const key in props) {
+            if (!knownProps.includes(key)) {
+                customProps[key] = props[key];
+            }
+        }
+
+        let customPropsHtml = '';
+        for (const key in customProps) {
+            const value = customProps[key];
+            customPropsHtml += `
+                <div class="custom-prop-row" data-custom-key="${escHtml(key)}">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="text" class="layui-input custom-prop-key" value="${escHtml(key)}"
+                               placeholder="属性名" style="flex: 1;">
+                        <input type="text" class="layui-input custom-prop-value" value="${escHtml(value)}"
+                               placeholder="属性值" style="flex: 1;">
+                        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs remove-custom-prop"
+                                onclick="removeCustomProp(this)">删除</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="property-section" id="custom-props-section">
+                <div class="property-section-title">
+                    自定义属性
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal"
+                            style="float: right; margin-top: -2px;" onclick="addCustomProp()">
+                        + 添加属性
+                    </button>
+                </div>
+                <div id="custom-props-container">
+                    ${customPropsHtml || '<div style="color: #999; font-size: 12px; padding: 8px 0;">暂无自定义属性，点击上方按钮添加</div>'}
+                </div>
+            </div>
+        `;
+    }
+
+    // 添加自定义属性行
+    function addCustomProp() {
+        const container = document.getElementById('custom-props-container');
+
+        // 移除空状态提示
+        if (container.querySelector('[style*="暂无自定义属性"]')) {
+            container.innerHTML = '';
+        }
+
+        const timestamp = Date.now();
+        const newRow = document.createElement('div');
+        newRow.className = 'custom-prop-row';
+        newRow.setAttribute('data-custom-key', `custom_${timestamp}`);
+        newRow.innerHTML = `
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                <input type="text" class="layui-input custom-prop-key" value=""
+                       placeholder="属性名（如: customName）" style="flex: 1;">
+                <input type="text" class="layui-input custom-prop-value" value=""
+                       placeholder="属性值（如: myusername）" style="flex: 1;">
+                <button type="button" class="layui-btn layui-btn-danger layui-btn-xs remove-custom-prop"
+                        onclick="removeCustomProp(this)">删除</button>
+            </div>
+        `;
+        container.appendChild(newRow);
+
+        // 聚焦到新添加的属性名输入框
+        newRow.querySelector('.custom-prop-key').focus();
+
+        console.log('✓ 已添加自定义属性行');
+    }
+
+    // 删除自定义属性行
+    function removeCustomProp(btn) {
+        const row = btn.closest('.custom-prop-row');
+        const container = document.getElementById('custom-props-container');
+
+        row.remove();
+
+        // 如果没有自定义属性了，显示空状态
+        if (container.querySelectorAll('.custom-prop-row').length === 0) {
+            container.innerHTML = '<div style="color: #999; font-size: 12px; padding: 8px 0;">暂无自定义属性，点击上方按钮添加</div>';
+        }
+
+        console.log('✓ 已删除自定义属性行');
+    }
+
+    function getVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    }
+
+    function isChecked(id) {
+        const el = document.getElementById(id);
+        return el ? el.checked : false;
+    }
+
+    function buildConfigFromForm(component) {
+        // 按照DSL格式构建配置
+        const config = {
+            item_name: getVal('prop-item_name'),
+            label: getVal('prop-label'),
+            component: component,
+            classAppend: getVal('prop-classAppend'),
+            props: {}
+        };
+
+        const props = config.props;
+
+        // 通用 props
+        const placeholder = getVal('prop-placeholder');
+        const layVerify = getVal('prop-lay-verify');
+        const description = getVal('prop-description');
+        if (placeholder) props.placeholder = placeholder;
+        if (layVerify) props['lay-verify'] = layVerify;
+        if (description) props.description = description;
+        if (isChecked('prop-required')) props.required = true;
+        if (isChecked('prop-disabled')) props.disabled = true;
+        if (isChecked('prop-readonly')) props.readonly = true;
+
+        // validate - 按照DSL格式，validate应该在props内
+        const validateRuleStr = getVal('prop-validate-rule');
+        const validateMsgStr = getVal('prop-validate-message');
+        if (validateRuleStr || validateMsgStr) {
+            props.validate = {};
+            if (validateRuleStr) {
+                try { props.validate.rule = JSON.parse(validateRuleStr); } catch(e) { props.validate.rule = validateRuleStr; }
+            }
+            if (validateMsgStr) {
+                try { props.validate.message = JSON.parse(validateMsgStr); } catch(e) { props.validate.message = validateMsgStr; }
+            }
+        }
+
+        // 组件特有 props
+        if (component === 'textarea') {
+            const maxlength = getVal('prop-maxlength');
+            const rows = getVal('prop-rows');
+            if (maxlength) props.maxlength = parseInt(maxlength);
+            if (rows) props.rows = parseInt(rows);
+        } else if (component === 'input') {
+            const maxlength = getVal('prop-maxlength');
+            if (maxlength) props.maxlength = parseInt(maxlength);
+        } else if (component === 'date') {
+            const dateType = getVal('prop-date-type');
+            const format = getVal('prop-date-format');
+            const min = getVal('prop-date-min');
+            const max = getVal('prop-date-max');
+            if (dateType) props.type = dateType;
+            if (format) props.format = format;
+            if (min) props.min = min;
+            if (max) props.max = max;
+            if (isChecked('prop-date-range')) props.range = true;
+        } else if (component === 'upload') {
+            const accept = getVal('prop-upload-accept');
+            const acceptMime = getVal('prop-upload-acceptMime');
+            const number = getVal('prop-upload-number');
+            const size = getVal('prop-upload-size');
+            if (accept) props.accept = accept;
+            if (acceptMime) props.acceptMime = acceptMime;
+            if (number) props.number = parseInt(number);
+            if (size) props.size = parseInt(size);
+            if (isChecked('prop-upload-multiple')) props.multiple = true;
+            // upload validate
+            const uploadMax = getVal('prop-validate-uploadMax');
+            const uploadMin = getVal('prop-validate-uploadMin');
+            if (uploadMax || uploadMin) {
+                if (!props.validate) props.validate = {};
+                if (uploadMax) props.validate.uploadMax = parseInt(uploadMax);
+                if (uploadMin) props.validate.uploadMin = parseInt(uploadMin);
+            }
+        } else if (['select','select-multiple','cascader','radio','checkbox'].includes(component)) {
+            // initData - 按照DSL格式，initData应该在顶层
+            const prefix = component === 'select-multiple' ? 'select' : (component === 'cascader' ? 'select' : component);
+            const staticPanel = document.getElementById(`${prefix}-static-panel`);
+            const isStatic = staticPanel && staticPanel.classList.contains('active');
+
+            if (isStatic || !isStatic) { // 总是创建initData对象
+                config.initData = {};
+                if (isStatic) {
+                    const jsonStr = getVal(`${prefix}-dataJson`);
+                    if (jsonStr) {
+                        try { config.initData.dataJson = JSON.parse(jsonStr); } catch(e) { config.initData.dataJson = jsonStr; }
+                    }
+                } else {
+                    const dataSource = getVal(`${prefix}-dataSource`);
+                    const dataSql = getVal(`${prefix}-dataSql`);
+                    if (dataSource) config.initData.dataSource = dataSource;
+                    if (dataSql) config.initData.dataSql = dataSql;
+                }
+            }
+
+            if ((component === 'select' || component === 'select-multiple' || component === 'cascader') && isChecked('prop-lay-search')) {
+                props['lay-search'] = true;
+            }
+        }
+
+        // 收集自定义属性
+        const customPropRows = document.querySelectorAll('.custom-prop-row');
+        customPropRows.forEach(row => {
+            const keyInput = row.querySelector('.custom-prop-key');
+            const valueInput = row.querySelector('.custom-prop-value');
+
+            if (keyInput && valueInput) {
+                const key = keyInput.value.trim();
+                const value = valueInput.value.trim();
+
+                if (key && value) {
+                    // 尝试解析 JSON 值（支持数字、布尔值、JSON对象等）
+                    try {
+                        props[key] = JSON.parse(value);
+                    } catch (e) {
+                        // 如果不是 JSON，保存为字符串
+                        props[key] = value;
+                    }
+                }
+            }
+        });
+
+        // 清理空的props
+        if (Object.keys(props).length === 0) {
+            delete config.props;
+        }
+
+        // 清理空的initData
+        if (config.initData && Object.keys(config.initData).length === 0) {
+            delete config.initData;
+        }
+
+        return config;
+    }
+
+    function applyProperties() {
+        if (!selectedElement) {
+            layer.msg('请先选择一个元素');
+            return;
+        }
+
+        // 普通组件的配置应用
+        const component = selectedElement.getAttribute('component');
+        const config = buildConfigFromForm(component);
+
+        // 更新 item_name 属性
+        if (config.item_name) {
+            selectedElement.setAttribute('item_name', config.item_name);
+        }
+
+        // 更新 label 显示文本
+        const labelElement = selectedElement.querySelector('.layui-form-label');
+        if (labelElement && config.label) {
+            labelElement.textContent = config.label + '：';
+        }
+
+        // 找到最外层的 component-col
+        const colDiv = selectedElement.closest('.component-col');
+        if (colDiv && config.classAppend) {
+            // 更新栅格宽度
+            const oldClass = colDiv.className.match(/layui-col-md\d+/);
+            if (oldClass) colDiv.classList.remove(oldClass[0]);
+            colDiv.classList.add(config.classAppend);
+
+            // 写入 data-config-json 到 component-col
+            colDiv.setAttribute('data-config-json', JSON.stringify(config));
+            console.log('✓ 配置已保存到 component-col:', config);
+        } else {
+            console.warn('⚠️ 未找到 component-col，配置未保存');
+        }
+
+        // 更新 input/textarea/select 元素属性（保持DOM与配置同步）
+        const inputElement = selectedElement.querySelector('input:not([type="checkbox"]):not([type="radio"]), textarea, select:not([id^="prop-"])');
+        if (inputElement && config.props) {
+            const p = config.props;
+            if (p.placeholder !== undefined) inputElement.setAttribute('placeholder', p.placeholder);
+            if (p['lay-verify']) inputElement.setAttribute('lay-verify', p['lay-verify']);
+            else inputElement.removeAttribute('lay-verify');
+            if (p.maxlength) inputElement.setAttribute('maxlength', p.maxlength);
+            else inputElement.removeAttribute('maxlength');
+            if (p.disabled) inputElement.setAttribute('disabled', 'disabled');
+            else inputElement.removeAttribute('disabled');
+            if (p.readonly) inputElement.setAttribute('readonly', 'readonly');
+            else inputElement.removeAttribute('readonly');
+        }
+
+        layui.form.render();
+        layer.msg('配置已应用');
+        console.log('✓ 配置已应用（DSL格式）', config);
+    }
+
+    function deleteElement() {
+        if (!selectedElement) {
+            layer.msg('请先选择一个元素');
+            return;
+        }
+
+        // 判断选中的是行还是字段
+        const itemName = selectedElement.getAttribute('item_name');
+        const isRow = itemName === 'searchcontent';
+
+        const confirmMsg = isRow
+            ? '确定要删除此搜索行及其中的所有字段吗？'
+            : '确定要删除这个元素吗？';
+
+        layer.confirm(confirmMsg, {icon: 3, title: '提示'}, function(index) {
+            if (isRow) {
+                // 删除整个搜索行
+                selectedElement.remove();
+                layer.msg('✅ 搜索行已删除');
+                console.log('✓ 搜索行已删除');
+            } else {
+                // 删除字段列
+                const colDiv = selectedElement.closest('[class*="layui-col-"]');
+                if (colDiv) {
+                    colDiv.remove();
+                    layer.msg('✅ 元素已删除');
+                    console.log('✓ 元素已删除');
+                }
+            }
+
+            // 清空选中状态
+            selectedElement = null;
+
+            // 隐藏属性面板
+            document.getElementById('propertyForm').style.display = 'none';
+
+            layer.close(index);
+        });
+    }
+    // ==================== 使用示例提示词 ====================
+    function usePrompt(prompt) {
+        $('#aiChatInput').val(prompt);
+        $('#aiChatInput').focus();
+    }
+    function collectLayoutData() {
+        const layoutData = {
+            search: [] // 列表页面收集搜索条件数据
+        };
+
+        // 查找搜索条件行
+        const searchRows = document.querySelectorAll('[item_name="searchcontent"]');
+
+        searchRows.forEach((row, rowIndex) => {
+            const rowFields = [];
+            const colElements = row.querySelectorAll(':scope > .component-col');
+
+            colElements.forEach((colElement) => {
+                const componentElement = colElement.querySelector('[item_name]');
+                if (!componentElement) return;
+
+                // 读取配置 - 优先从 data-config-json 读取
+                const configJson = colElement.getAttribute('data-config-json');
+                let fieldConfig = null;
+
+                if (configJson) {
+                    try {
+                        fieldConfig = JSON.parse(configJson);
+                        console.log('✓ 从 data-config-json 读取配置:', fieldConfig);
+                    } catch (e) {
+                        console.error('解析配置失败:', e);
+                    }
+                }
+
+                // 如果没有配置,从 DOM 提取
+                if (!fieldConfig) {
+                    const itemName = componentElement.getAttribute('item_name');
+                    const component = componentElement.getAttribute('component');
+                    const labelElement = componentElement.querySelector('.layui-form-label');
+                    const label = labelElement ? labelElement.textContent.replace(/：?$/, '').trim() : '';
+                    const colClass = colElement.className.match(/layui-col-md(\d+)/);
+                    const classAppend = colClass ? colClass[0] : 'layui-col-md3';
+
+                    fieldConfig = {
+                        item_name: itemName,
+                        label: label,
+                        component: component,
+                        classAppend: classAppend
+                    };
+
+                    console.warn('⚠️ 未找到 data-config-json，使用基本配置:', fieldConfig);
+                }
+
+                rowFields.push(fieldConfig);
+            });
+
+            if (rowFields.length > 0) {
+                layoutData.search.push({
+                    row: rowFields
+                });
+            }
+        });
+
+        console.log('✓ 收集到的搜索条件数据:', layoutData);
+        return layoutData;
+    }
+
+    // ==================== AI 对话框功能 ====================
+
+    // 更新 AI 助手中的选中元素信息
+    function updateAISelectedInfo(element, component, itemName, label) {
+        const messagesContainer = document.getElementById('aiChatMessages');
+
+        // 移除空状态提示
+        const emptyState = messagesContainer.querySelector('.ai-chat-empty');
+        if (emptyState) {
+            emptyState.remove();
+        }
+
+        // 移除之前的选中信息消息
+        const existingInfo = messagesContainer.querySelector('.selected-info-message');
+        if (existingInfo) {
+            existingInfo.remove();
+        }
+
+        // 读取元素配置
+        const colDiv = element.closest('[class*="layui-col-md"]');
+        let existingConfig = {};
+        if (colDiv) {
+            const json = colDiv.getAttribute('data-config-json');
+            if (json) {
+                try { existingConfig = JSON.parse(json); } catch(e) {}
+            }
+        }
+
+        const componentTypeMap = {
+            'input': '输入框',
+            'textarea': '多行输入',
+            'select': '下拉选择',
+            'select-multiple': '下拉多选',
+            'cascader': '级联选择',
+            'tinymce': '富文本',
+            'radio': '单选框',
+            'checkbox': '复选框',
+            'date': '日期选择',
+            'upload': '文件上传'
+        };
+
+        const componentName = componentTypeMap[component] || component;
+
+        const infoHtml = `
+        <div class="ai-message selected-info-message" style="background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%); border: 1px solid #91d5ff; border-left: 4px solid #1890ff; padding: 16px 18px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(24, 144, 255, 0.08);">
+            <div style="font-weight: 600; color: #1890ff; margin-bottom: 12px; font-size: 14px; display: block; align-items: center; gap: 6px;">
+                <span style="font-size: 16px;">📌</span>
+                <span>当前选中字段</span>
+            </div>
+            <div style="display: grid; gap: 10px; margin-bottom: 12px;">
+                <div style="background: #fff; padding: 8px 12px; border-radius: 4px; display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                    <span style="color: #666; font-size: 12px; min-width: 60px;">类型</span>
+                    <span style="color: #333; font-size: 13px; font-weight: 500;">${componentName}</span>
+                </div>
+                <div style="background: #fff; padding: 8px 12px; border-radius: 4px; display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                    <span style="color: #666; font-size: 12px; min-width: 60px;">字段名</span>
+                    <span style="color: #333; font-size: 13px; font-weight: 500;">${itemName || '未设置'}</span>
+                </div>
+                <div style="background: #fff; padding: 8px 12px; border-radius: 4px; display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                    <span style="color: #666; font-size: 12px; min-width: 60px;">标签</span>
+                    <span style="color: #333; font-size: 13px; font-weight: 500;">${label || '未设置'}</span>
+                </div>
+            </div>
+            <div style="background: rgba(24, 144, 255, 0.05); padding: 10px 12px; border-radius: 4px; font-size: 12px; color: #666; line-height: 1.6; border-left: 3px solid #1890ff;">
+                💡 您可以告诉我对这个字段的需求，例如："改为必填"、"添加验证规则"、"调整宽度"等
+            </div>
+        </div>
+    `;
+
+        messagesContainer.insertAdjacentHTML('beforeend', infoHtml);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // 初始化 AI 对话框
+    // ==================== AI 聊天记录缓存管理 ====================
+    const AI_CHAT_STORAGE_KEY = 'ez-form-ai-chat-history';
+    const MAX_CHAT_HISTORY = 50;
+
+    // 保存聊天记录到 localStorage
+    function saveChatMessage(text, type, timestamp) {
+        try {
+            // 读取现有记录
+            let history = JSON.parse(localStorage.getItem(AI_CHAT_STORAGE_KEY) || '[]');
+
+            // 添加新消息
+            history.push({
+                text: text,
+                type: type,
+                timestamp: timestamp || new Date().toISOString()
+            });
+
+            // 限制最多保存 50 条
+            if (history.length > MAX_CHAT_HISTORY) {
+                history = history.slice(-MAX_CHAT_HISTORY);
+            }
+
+            // 保存回 localStorage
+            localStorage.setItem(AI_CHAT_STORAGE_KEY, JSON.stringify(history));
+            console.log('✓ 聊天记录已保存，当前共 ' + history.length + ' 条');
+        } catch (e) {
+            console.error('保存聊天记录失败:', e);
+        }
+    }
+
+    // 加载聊天历史记录
+    function loadChatHistory() {
+        try {
+            const history = JSON.parse(localStorage.getItem(AI_CHAT_STORAGE_KEY) || '[]');
+            console.log('✓ 加载了 ' + history.length + ' 条聊天记录');
+            return history;
+        } catch (e) {
+            console.error('加载聊天记录失败:', e);
+            return [];
+        }
+    }
+
+    // 清空聊天历史记录
+    function clearChatHistory() {
+        try {
+            localStorage.removeItem(AI_CHAT_STORAGE_KEY);
+            const messagesContainer = document.getElementById('aiChatMessages');
+            messagesContainer.innerHTML = `
+                <div class="ai-chat-empty">
+                    <div style="font-size: 32px; margin-bottom: 8px;">💬</div>
+                    <div style="color: #999;">还没有对话记录</div>
+                    <div style="color: #ccc; font-size: 12px; margin-top: 4px;">输入消息开始对话吧</div>
+                </div>
+            `;
+            console.log('✓ 聊天记录已清空');
+            layer.msg('聊天记录已清空');
+        } catch (e) {
+            console.error('清空聊天记录失败:', e);
+        }
+    }
+
+    // 渲染聊天历史记录
+    function renderChatHistory() {
+        const history = loadChatHistory();
+        if (history.length === 0) {
+            console.log('ℹ️ 没有历史聊天记录');
+            return;
+        }
+
+        const messagesContainer = document.getElementById('aiChatMessages');
+
+        // 移除空状态提示
+        const emptyState = messagesContainer.querySelector('.ai-chat-empty');
+        if (emptyState) {
+            emptyState.remove();
+        }
+
+        // 渲染所有历史消息
+        history.forEach(msg => {
+            const isUser = msg.type === 'user';
+            const timestamp = new Date(msg.timestamp);
+            const time = timestamp.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+
+            const messageHtml = `
+                <div class="ai-message ${isUser ? 'user' : ''}">
+                    <div class="ai-message-avatar">${isUser ? '我' : 'AI'}</div>
+                    <div>
+                        <div class="ai-message-content">${escapeHtml(msg.text)}</div>
+                        <div class="ai-message-time">${time}</div>
+                    </div>
+                </div>
+            `;
+
+            messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+        });
+
+        // 滚动到底部
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        console.log('✓ 已渲染 ' + history.length + ' 条历史聊天记录');
+    }
+
+    function initAIChatBox() {
+        const sendBtn = document.getElementById('aiSendBtn');
+        const clearBtn = document.getElementById('aiClearBtn');
+        const chatInput = document.getElementById('aiChatInput');
+
+        // 加载历史聊天记录
+        renderChatHistory();
+
+        // 发送消息
+        sendBtn.addEventListener('click', () => {
+            sendAIMessage();
+        });
+
+        // 清空聊天记录
+        clearBtn.addEventListener('click', () => {
+            layer.confirm('确定要清空所有聊天记录吗？', {
+                icon: 3,
+                title: '确认清空',
+                btn: ['确定', '取消']
+            }, function(index) {
+                clearChatHistory();
+                layer.close(index);
+            });
+        });
+
+        // 回车发送（Shift+Enter 换行）
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendAIMessage();
+            }
+        });
+
+        // 自动调整输入框高度
+        chatInput.addEventListener('input', () => {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 80) + 'px';
+        });
+
+        console.log('✅ AI 对话框已初始化');
+    }
+
+    // 发送 AI 消息
+    function sendAIMessage() {
+        const chatInput = document.getElementById('aiChatInput');
+        const message = chatInput.value.trim();
+
+        if (!message) {
+            layer.msg('请输入消息内容');
+            return;
+        }
+
+        // 添加用户消息
+        addAIChatMessage(message, 'user');
+
+        // 清空输入框
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+
+        // 禁用发送按钮
+        const sendBtn = document.getElementById('aiSendBtn');
+        sendBtn.disabled = true;
+        sendBtn.textContent = '发送中...';
+
+        // 添加加载消息
+        addLoadingMessage();
+        // 构建请求数据
+        const requestData = {
+            dslType: 'list',
+            userRequirement: message,
+            isNew: false,
+            dslFileName:document.getElementById("ENCRYPT_LIST_ID").value
+        };
+
+
+        // 如果有选中的元素，添加元素信息
+        if (selectedElement) {
+            const component = selectedElement.getAttribute('component');
+            const itemName = selectedElement.getAttribute('item_name');
+            requestData.item_name=itemName;
+            requestData.component=component;
+        }
+        // 获取当前列表布局
+        requestData.listLayout = collectLayoutData();
+        // 发送到服务端
+        fetch('/topezadmin/edit/submit-', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('收到 AI 响应:', data);
+                removeLoadingMessage();
+
+                if (data.success) {
+                    const summary = data.data?.summary || data.message || 'AI 处理完成';
+                    addAIChatMessage(summary, 'ai');
+
+                    // // 如果返回了更新后的配置，应用到选中的元素
+                    // if (data.data?.updatedConfig && selectedElement) {
+                    //     applyAIUpdatedConfig(data.data.updatedConfig);
+                    // }
+                    location.reload();
+                } else {
+                    addAIChatMessage('❌ 处理失败: ' + (data.message || '未知错误'), 'ai');
+                }
+            })
+            .catch(error => {
+                console.error('请求失败:', error);
+                removeLoadingMessage();
+                addAIChatMessage('❌ 请求失败: ' + error.message + '\n\n💡 当前为演示模式，使用模拟回复', 'ai');
+
+                // 降级到模拟回复
+                setTimeout(() => {
+                    const aiResponse = getAIResponse(message);
+                    addAIChatMessage(aiResponse, 'ai');
+                }, 500);
+            })
+            .finally(() => {
+                // 恢复发送按钮
+                sendBtn.disabled = false;
+                sendBtn.textContent = '发送';
+            });
+    }
+
+    // 添加加载消息
+    function addLoadingMessage() {
+        const messagesContainer = document.getElementById('aiChatMessages');
+
+        const loadingHtml = `
+        <div class="ai-message loading-message">
+            <div class="ai-message-avatar">AI</div>
+            <div>
+                <div class="ai-message-content">
+                    <span class="loading-dots">正在思考中</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+        messagesContainer.insertAdjacentHTML('beforeend', loadingHtml);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // 移除加载消息
+    function removeLoadingMessage() {
+        const loadingMessage = document.querySelector('.loading-message');
+        if (loadingMessage) {
+            loadingMessage.remove();
+        }
+    }
+
+    // 应用 AI 返回的配置更新
+    function applyAIUpdatedConfig(updatedConfig) {
+        if (!selectedElement) return;
+
+        const colDiv = selectedElement.closest('[class*="layui-col-md"]');
+        if (!colDiv) return;
+
+        // 更新 data-config-json
+        colDiv.setAttribute('data-config-json', JSON.stringify(updatedConfig));
+
+        // 刷新属性面板显示
+        showPropertyForm(selectedElement);
+
+        layer.msg('✅ 配置已更新', { icon: 1 });
+    }
+
+    // 添加聊天消息
+    function addAIChatMessage(text, type = 'ai') {
+        const messagesContainer = document.getElementById('aiChatMessages');
+
+        // 移除空状态提示
+        const emptyState = messagesContainer.querySelector('.ai-chat-empty');
+        if (emptyState) {
+            emptyState.remove();
+        }
+
+        const isUser = type === 'user';
+        const timestamp = new Date();
+        const time = timestamp.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+
+        const messageHtml = `
+        <div class="ai-message ${isUser ? 'user' : ''}">
+            <div class="ai-message-avatar">${isUser ? '我' : 'AI'}</div>
+            <div>
+                <div class="ai-message-content">${escapeHtml(text)}</div>
+                <div class="ai-message-time">${time}</div>
+            </div>
+        </div>
+    `;
+
+        messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+
+        // 滚动到底部
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // 保存消息到 localStorage
+        saveChatMessage(text, type, timestamp.toISOString());
+    }
+
+    // 获取 AI 回复（模拟）
+    function getAIResponse(userMessage) {
+        const msg = userMessage.toLowerCase();
+
+        // 简单的关键词匹配回复
+        if (msg.includes('必填') || msg.includes('验证')) {
+            return '要添加必填验证，请点击字段，在右侧属性面板中勾选"必填项"，或在"验证规则"中输入 "required"。';
+        } else if (msg.includes('宽度') || msg.includes('布局')) {
+            return '可以通过拖拽字段的 label 来调整字段在行内的顺序。要改变字段宽度，请在右侧属性面板的"栅格宽度"中选择合适的列数（1-12列）。';
+        } else if (msg.includes('拖拽') || msg.includes('移动')) {
+            return '使用拖拽功能：\n- 拖拽 ⋮⋮ 图标可以调整行的顺序\n- 拖拽字段的 label 可以调整字段顺序或移动到其他行\n- 拖拽卡片标题可以调整卡片顺序';
+        } else if (msg.includes('保存') || msg.includes('提交')) {
+            return '点击顶部工具栏的"保存布局"按钮即可保存您的表单设计。保存后，布局信息会提交到后端进行持久化存储。';
+        } else if (msg.includes('组件') || msg.includes('添加') || msg.includes('有哪些')) {
+            return '可用组件包括：\n\n基础组件：\n- 输入框、多行输入、下拉选择\n- 单选框、复选框\n- 日期选择、文件上传\n\n高级组件：\n- 下拉多选：支持多选的下拉框\n- 级联选择：支持级联选择的下拉框\n- 富文本：支持富文本编辑\n\n布局组件：\n- 卡片、行容器\n\n从左侧组件面板拖拽到表单中即可使用。';
+        } else if (msg.includes('删除') || msg.includes('移除')) {
+            return '要删除元素，请先点击选中该元素，然后在右侧属性面板底部点击"删除元素"按钮。';
+        } else if (msg.includes('多选') || msg.includes('select-multiple')) {
+            return '下拉多选组件支持用户选择多个选项。从左侧"高级组件"中拖拽"下拉多选"到表单中即可。您可以在属性面板中配置选项内容。';
+        } else if (msg.includes('级联') || msg.includes('cascader')) {
+            return '级联选择组件支持层级选择，适合省市区等场景。从左侧"高级组件"中拖拽"级联选择"到表单中即可使用。';
+        } else if (msg.includes('富文本') || msg.includes('编辑器') || msg.includes('tinymce')) {
+            return '富文本组件支持格式化文本编辑。从左侧"高级组件"中拖拽"富文本"到表单中即可。富文本区域支持文本格式、图片、链接等内容编辑。';
+        } else {
+            return '您好！我是 AI 助手。您可以向我咨询关于表单编辑的问题，例如：\n- 如何添加必填验证？\n- 如何调整字段宽度？\n- 有哪些可用组件？\n- 如何使用高级组件（多选、级联、富文本）？\n- 如何保存布局？';
+        }
+    }
+
+    // HTML 转义函数（防止 XSS）
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML.replace(/\n/g, '<br>');
+    }
+
+    // 在页面加载时初始化 AI 对话框
+    document.addEventListener('DOMContentLoaded', function() {
+        initAIChatBox();
+    });
+</script>
+</body>
+</html>

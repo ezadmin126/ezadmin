@@ -1,6 +1,7 @@
 package top.ezadmin.spring;
 
 
+import com.alibaba.fastjson2.JSON;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -163,13 +164,14 @@ public class EzClientServletFilter implements Filter {
                 IOUtils.copy(new ByteArrayInputStream(data),httpServletResponse.getOutputStream());
                 return;
             }else
-            if(result.isSuccess()&&StringUtils.equals(result.getCode(),"JSON")){
+            if(StringUtils.equals(result.getCode(),"JSON")){
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
                 IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(result.getData()), "UTF-8"),httpServletResponse.getOutputStream());
             }else if(result.getCode().equals("404")){
                 httpServletResponse.sendRedirect("/404");
             }
             else if(result.getCode().equals("500")){
+                logger.error(JSON.toJSONString(result));
                 throw new EzAdminRuntimeException(result.getMessage());
             }else{
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
@@ -183,7 +185,7 @@ public class EzClientServletFilter implements Filter {
         }
     }
     //同
-    private static Map<String, Object> requestToMap(HttpServletRequest request) {
+    public static Map<String, Object> requestToMap(HttpServletRequest request) {
         Map<String, Object> searchParamsValues = new HashMap<>();
 
         String contentType = request.getContentType();

@@ -313,10 +313,32 @@ layui.use(function(){
 
 function initDate(){
     document.querySelectorAll(".ez-date").forEach(function (el) {
+
+        var name=el.getAttribute('name');
         var config = {
             elem: el,
             type: 'date',
-            weekStart: 1
+            weekStart: 1,
+            done: function(value, date, endDate){
+                try{
+                     var v=value.split( " - ");
+                     if(v.length==2){ //这边逻辑不太合适
+                         //v[0]包含空格,则不处理
+                         if(v[0].indexOf(" ")>=0){
+                             document.getElementById("search-start-"+name).value=v[0] ;
+                             document.getElementById("search-end-"+name).value=v[1] ;
+                         }else{
+                             document.getElementById("search-start-"+name).value=v[0]+' 00:00:00';
+                             document.getElementById("search-end-"+name).value=v[1]+' 23:59:59';
+                         }
+                     }
+                }catch (e) {
+                    console.log(e);
+                }
+                // console.log(value); // 日期字符，如： 2017-08-18
+                // console.log(date); // 包含年月日时分秒各项值的对象
+                // console.log(endDate); // 结束日期时间对象，当设置 range 时才会返回。对象成员同上。
+            }
         };
         //去除type属性
 
@@ -507,6 +529,8 @@ function initFormValue(data){
                                 break;
                             }
                         }
+                    }else if(span){
+                        span.innerHTML =  data[key];
                     }
                     input.value = data[key];
                 } else if (type == 'radio') {
@@ -576,7 +600,7 @@ function renderCascader(cas) {
         }
         if(currentDom.getAttribute('data-dataJson') != null){
             var dataArray=Global.safeParseJSON(currentDom.getAttribute('data-dataJson'), []);
-            var id=resultConfig.props&&resultConfig.props.id||'id';
+            var id=resultConfig.props&&resultConfig.props.value||'value';
             var parent_id=resultConfig.props&&resultConfig.props.parent_id||'parent_id';
             var label=resultConfig.props&&resultConfig.props.label||'label';
             var children=resultConfig.props&&resultConfig.props.children||'children';

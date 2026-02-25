@@ -1,5 +1,5 @@
 <div th:class="'component-col col-'+${item_name}"
-     th:classappend="${classAppend}"
+     th:classappend="${classAppend}" th:data-config-json="${componentJson}"
 >
 <div   class="layui-form-item"  th:item_name="${item_name}" component="dates">
     <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
@@ -16,6 +16,14 @@
                     class="layui-input ez-date"
                     th:attrs="${props}"
                        th:data-propsJson="${propsJson}"
+            >
+            <input th:id="${'search-start-' +  item_name}"
+                   th:name="${item_name+'_START'}"   autocomplete="off"
+                 type="hidden"
+            >
+            <input th:id="${'search-end-' +  item_name}"
+                   th:name="${item_name+'_END'}"   autocomplete="off"
+                   type="hidden"
             >
         </div>
         <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>

@@ -26,16 +26,6 @@
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
-<!--        <repository>-->
-<!--            <id>third</id>-->
-<!--            <name>Team Vedeng Release Repository</name>-->
-<!--            <url>http://nexus.ivedeng.com/repository/third/</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>snapshots</id>-->
-<!--            <name>maven-snapshots</name>-->
-<!--            <url>http://nexus.ivedeng.com/repository/maven-snapshots/</url>-->
-<!--        </snapshotRepository>-->
     </distributionManagement>
     <licenses>
         <license>
@@ -148,49 +138,49 @@
                                 </execution>
                             </executions>
                         </plugin>
-<!--                        <plugin>-->
-<!--                            <groupId>org.apache.maven.plugins</groupId>-->
-<!--                            <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--                            <version>3.5.0</version>-->
-<!--                            <configuration>-->
-<!--                                <additionalJOptions>-->
-<!--                                    <additionalJOption>-Xdoclint:none</additionalJOption>-->
-<!--                                </additionalJOptions>-->
-<!--                                <source>1.8</source>-->
-<!--                            </configuration>-->
-<!--                            <executions>-->
-<!--                                <execution>-->
-<!--                                    <id>attach-javadocs</id>-->
-<!--                                    <goals>-->
-<!--                                        <goal>jar</goal>-->
-<!--                                    </goals>-->
-<!--                                </execution>-->
-<!--                            </executions>-->
-<!--                        </plugin>-->
-<!--                        <plugin>-->
-<!--                            <groupId>org.sonatype.central</groupId>-->
-<!--                            <artifactId>central-publishing-maven-plugin</artifactId>-->
-<!--                            <version>0.9.0</version>-->
-<!--                            <extensions>true</extensions>-->
-<!--                            <configuration>-->
-<!--                                <publishingServerId>central</publishingServerId>-->
-<!--                                <deploymentName>${project.version}</deploymentName>-->
-<!--                            </configuration>-->
-<!--                        </plugin>-->
-<!--                        <plugin>-->
-<!--                            <groupId>org.apache.maven.plugins</groupId>-->
-<!--                            <artifactId>maven-gpg-plugin</artifactId>-->
-<!--                            <version>3.1.0</version>-->
-<!--                            <executions>-->
-<!--                                <execution>-->
-<!--                                    <id>sign-artifacts</id>-->
-<!--                                    <phase>verify</phase>-->
-<!--                                    <goals>-->
-<!--                                        <goal>sign</goal>-->
-<!--                                    </goals>-->
-<!--                                </execution>-->
-<!--                            </executions>-->
-<!--                        </plugin>-->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>3.5.0</version>
+                            <configuration>
+                                <additionalJOptions>
+                                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                                </additionalJOptions>
+                                <source>1.8</source>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>attach-javadocs</id>
+                                    <goals>
+                                        <goal>jar</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.sonatype.central</groupId>
+                            <artifactId>central-publishing-maven-plugin</artifactId>
+                            <version>0.9.0</version>
+                            <extensions>true</extensions>
+                            <configuration>
+                                <publishingServerId>central</publishingServerId>
+                                <deploymentName>${project.version}</deploymentName>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>3.1.0</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
         </plugins>
     </build>
 

@@ -21,6 +21,7 @@ public class TemplateUtils {
         String type= Utils.trimEmptyDefault(param.get("component"),"input");
 
         param.put("propsJson", JSONUtils.toJSONString(param.get("props")));
+        param.put("componentJson", JSONUtils.toJSONString(param));
 
         String result=  EzBootstrap.config().getEzTemplate().renderFile("layui/dsl/component/"+type, param);
         if(logger.isDebugEnabled()){

@@ -57,9 +57,9 @@
 
                         <form class="layui-form"   id="searchForm" lay-filter="searchForm">
                             <th:block th:if="${list.search != null and not #lists.isEmpty(list.search)}">
-                                <th:block th:each="row : ${list.search}">
+                                <th:block th:each="rowObj : ${list.search}">
                                     <div class="  searchcontent layui-row layui-col-space5" item_name="searchcontent">
-                                        <th:block th:each="search : ${row}">
+                                        <th:block th:each="search : ${rowObj.row}">
                                             <div th:utext="${cr.render(search)}" class="selector list-item" th:remove="tag"></div>
                                         </th:block>
                                     </div>
@@ -208,7 +208,7 @@
             /*[# th:each="column : ${list.column}" ]*/
                 var columnConfig = {
                     field: '[(${column.item_name})]',
-                    title: '<div component="[(${column.component})]" item_name="[(${column.item_name})]">[(${column.label})]</div>'
+                    title: '<span component="[(${column.component})]" item_name="[(${column.item_name})]">[(${column.label})]</span>'
                 };
 
                 // 添加渲染器（RenderConfig）
@@ -331,6 +331,12 @@
                         })
                     });
                     loadIndex && layer.close(loadIndex);
+                },
+                error: function(e, msg) {
+                    console.log(e, msg)
+                    loadIndex && layer.close(loadIndex);
+                    layer.msg("数据加载异常"+msg);
+
                 }
             }
 

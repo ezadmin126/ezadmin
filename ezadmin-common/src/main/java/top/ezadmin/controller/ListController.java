@@ -624,7 +624,7 @@ public class ListController extends BaseController {
 
 
 
-    private void initRowBtn(Map<String, Object> list) {
+    public void initRowBtn(Map<String, Object> list) {
         List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("rowButton");
         List<Map<String, Object>> normal = new ArrayList<>();
         List<Map<String, Object>> bread = new ArrayList<>();
@@ -647,7 +647,7 @@ public class ListController extends BaseController {
         list.put("rowButtonDropdown", dropdown);
     }
 
-    private Collection<String> initTd(Map<String, Object> list) {
+    public Collection<String> initTd(Map<String, Object> list) {
         List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
         Map<String,Object> body=(Map<String,Object>) list.get("body");
         Map<String,String> tdTemplates=new HashMap<>();
@@ -704,7 +704,7 @@ public class ListController extends BaseController {
         return tdTemplates.values();
     }
 
-    private void initSearch(RequestContext requestContext,Map<String, Object> list) {
+    public void initSearch(RequestContext requestContext,Map<String, Object> list) {
         Object searchObj = list.get("search");
         // 支持一维和二维数组格式
         List<List<Map<String, Object>>> searchList = getFlattenedSearchList(searchObj);
@@ -764,7 +764,7 @@ public class ListController extends BaseController {
     }
 
     /**
-     * 获取扁平化的搜索字段列表（支持一维和二维数组）
+     * 获取扁平化的搜索字段列表（支持新的对象数组格式）
      * @param searchObj search 对象
      * @return 扁平化的搜索字段列表
      */
@@ -777,19 +777,27 @@ public class ListController extends BaseController {
             if (list.isEmpty()) {
                 return null;
             }
-            //如果第一个不是
-            if (!(list.get(0) instanceof List)) {
-                List<List<Map<String, Object>>> result=new ArrayList<>();
-                List<Map<String, Object>> row = new ArrayList<>();
-                for (int i = 0; i < list.size(); i++) {
-                    row.add((Map<String, Object>) list.get(i));
+
+            // 新格式：[{row:[...]}, {row:[...]}]
+            if (list.get(0) instanceof Map) {
+                Map firstItem = (Map) list.get(0);
+                if (firstItem.containsKey("row")) {
+                    List<List<Map<String, Object>>> result = new ArrayList<>();
+                    for (Object item : list) {
+                        Map rowObj = (Map) item;
+                        List<Map<String, Object>> row = (List<Map<String, Object>>) rowObj.get("row");
+                        if (row != null) {
+                            result.add(row);
+                        }
+                    }
+                    return result;
                 }
-                result.add(row);
-                return result;
             }
-            return (List<List<Map<String, Object>>>) searchObj;
+
+            logger.error("Search配置错误，应该使用对象数组格式: [{\"row\":[...]}, {\"row\":[...]}]");
+            return null;
         } catch (Exception e) {
-            logger.error("FieldList配置错误，请检查是否为二维数组格式{}", searchObj, e);
+            logger.error("Search配置错误，请检查格式{}", searchObj, e);
         }
         return null;
     }
@@ -846,6 +854,7 @@ public class ListController extends BaseController {
                     if (valueSplit.length == 2) {
                         search.put(ParamNameEnum.itemParamValueStart.getName(), valueSplit[0]);
                         search.put(ParamNameEnum.itemParamValueEnd.getName(), valueSplit[1]);
+
                     }
                 }
 

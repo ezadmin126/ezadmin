@@ -1118,11 +1118,11 @@ public class ListServiceImpl implements ListService {
                 if (valueSplit.length == 2) {
                     search.put(ParamNameEnum.itemParamValueStart.getName(), valueSplit[0]);
                     search.put(ParamNameEnum.itemParamValueEnd.getName(), valueSplit[1]);
+                    requestParamMap.put(currentItemname + "_START", valueSplit[0]);
+                    requestParamMap.put(currentItemname + "_END", valueSplit[1]);
                 }
             }
-
             search.put(ParamNameEnum.itemParamOrderValue.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_ORDER")));
-
             search.put(ParamNameEnum.itemSearchKey.getName(), Utils.getStringByObject(requestParamMap, "itemSearchKey"));
             search.put(ParamNameEnum.itemSearchValue.getName(), Utils.getStringByObject(requestParamMap, "itemSearchValue"));
             search.put(ParamNameEnum.itemSearchConcatValue.getName(), Utils.getStringByObject(requestParamMap, "itemSearchConcatValue"));

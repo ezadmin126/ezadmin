@@ -125,7 +125,11 @@ public class DslAiService {
             responseData.put("dslId", dslId);
             responseData.put("dslType", dslType);
             responseData.put("filePath", getDslFilePath(dslId, dslType));
-
+            if(dslType.equals("form")){
+                responseData.put("redirectUrl", "/topezadmin/edit/form-"+dslId);
+            }else{
+                responseData.put("redirectUrl", "/topezadmin/edit/list-"+dslId);
+            }
             resultInfoMessage.append("DSL文件保存失败").append("\n");
             responseData.put("summary", resultInfoMessage);
 
@@ -159,7 +163,7 @@ public class DslAiService {
         return "";
     }
 
-    private String getTablesFromDataSource(DataSource dataSource1) {
+    public String getTablesFromDataSource(DataSource dataSource1) {
         try {
             List<Map<String, Object>> tables = Dao.getInstance().executeQuery(dataSource1, "SELECT  TABLE_NAME,TABLE_COMMENT FROM information_schema.tables where TABLE_TYPE='BASE TABLE' AND TABLE_SCHEMA=DATABASE()\n",
                     null);
@@ -317,6 +321,209 @@ public class DslAiService {
             log.error("保存 DSL 失败", e);
             return false;
         }
+    }
+
+    /**
+     * 保存布局（表单或列表）
+     * 根据前端传来的布局数据重新排序 DSL
+     *
+     * @param dslId DSL ID
+     * @param dslType DSL 类型：form 或 list
+     * @param layoutData 布局数据
+     * @return 保存结果
+     */
+    public EzResult saveLayout(String dslId, String dslType, Map<String, Object> layoutData) {
+        try {
+            log.info("开始保存布局: dslId={}, type={}", dslId, dslType);
+
+            // 1. 加载现有的 DSL 文件
+            Map<String, Object> dslContent = loadDslFile(dslId, dslType);
+            if (dslContent == null) {
+                return EzResult.instance().fail("DSL 文件不存在: " + dslId);
+            }
+
+            // 2. 根据类型处理不同的布局数据
+            if ("form".equals(dslType)) {
+                // 处理表单布局
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> cardsLayout = (List<Map<String, Object>>) layoutData.get("cardList");
+
+                if (cardsLayout == null || cardsLayout.isEmpty()) {
+                    return EzResult.instance().fail("表单布局数据为空");
+                }
+
+                // 更新 DSL 中的 cardList
+                dslContent.put("cardList", cardsLayout);
+
+            } else if ("list".equals(dslType)) {
+                // 处理列表布局
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> searchLayout = (List<Map<String, Object>>) layoutData.get("search");
+
+                if (searchLayout == null || searchLayout.isEmpty()) {
+                    return EzResult.instance().fail("列表搜索布局数据为空");
+                }
+
+                // 更新 DSL 中的 search
+                dslContent.put("search", searchLayout);
+
+            } else {
+                return EzResult.instance().fail("不支持的 DSL 类型: " + dslType);
+            }
+
+            // 3. 保存 DSL 文件
+            boolean success = saveDslFile(dslId, dslType, dslContent);
+
+            if (success) {
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("summary", dslType.equals("form") ? "表单布局保存成功" : "列表搜索布局保存成功");
+                responseData.put("dslId", dslId);
+                responseData.put("dslType", dslType);
+                return EzResult.instance().success().data(responseData);
+            } else {
+                return EzResult.instance().fail("保存 DSL 文件失败");
+            }
+
+        } catch (Exception e) {
+            log.error("保存布局失败: dslId=" + dslId + ", type=" + dslType, e);
+            return EzResult.instance().fail("保存失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 重新排序 cards
+     */
+    private List<Map<String, Object>> reorderCards(
+            List<Map<String, Object>> originalCards,
+            List<Map<String, Object>> cardsLayout) {
+
+        List<Map<String, Object>> newCardList = new java.util.ArrayList<>();
+
+        for (Map<String, Object> cardLayout : cardsLayout) {
+            String targetItemName = (String) cardLayout.get("item_name");
+
+            // 在原始 cardList 中查找对应的 card
+            Map<String, Object> originalCard = findCardByItemName(originalCards, targetItemName);
+
+            if (originalCard != null) {
+                // 重新排序 card 内的 rows 和 fields
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> rowsLayout = (List<Map<String, Object>>) cardLayout.get("rows");
+
+                if (rowsLayout != null && !rowsLayout.isEmpty()) {
+                    Map<String, Object> reorderedCard = reorderCardFields(originalCard, rowsLayout);
+                    newCardList.add(reorderedCard);
+                } else {
+                    newCardList.add(originalCard);
+                }
+            } else {
+                log.warn("未找到 item_name={} 的 card", targetItemName);
+            }
+        }
+
+        return newCardList;
+    }
+
+    /**
+     * 根据 item_name 查找 card
+     */
+    private Map<String, Object> findCardByItemName(List<Map<String, Object>> cards, String itemName) {
+        for (Map<String, Object> card : cards) {
+            String cardLabel = (String) card.get("label");
+            if (cardLabel != null && ("card-" + cardLabel).equals(itemName)) {
+                return card;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 重新排序 card 内的 fields
+     */
+    private Map<String, Object> reorderCardFields(
+            Map<String, Object> originalCard,
+            List<Map<String, Object>> rowsLayout) {
+
+        // 创建 card 的副本
+        Map<String, Object> newCard = new HashMap<>(originalCard);
+
+        @SuppressWarnings("unchecked")
+        List<List<Map<String, Object>>> originalFieldList =
+                (List<List<Map<String, Object>>>) originalCard.get("fieldList");
+
+        if (originalFieldList == null || originalFieldList.isEmpty()) {
+            return newCard;
+        }
+
+        // 创建新的 fieldList
+        List<List<Map<String, Object>>> newFieldList = new java.util.ArrayList<>();
+
+        for (Map<String, Object> rowLayout : rowsLayout) {
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> fieldsLayout = (List<Map<String, Object>>) rowLayout.get("fields");
+
+            if (fieldsLayout == null || fieldsLayout.isEmpty()) {
+                continue;
+            }
+
+            List<Map<String, Object>> newRow = new java.util.ArrayList<>();
+
+            for (Map<String, Object> fieldLayout : fieldsLayout) {
+                String targetItemName = (String) fieldLayout.get("item_name");
+                Integer targetWidth = (Integer) fieldLayout.get("width");
+
+                // 在原始 fieldList 中查找对应的 field
+                Map<String, Object> originalField = findFieldByItemName(originalFieldList, targetItemName);
+
+                if (originalField != null) {
+                    // 创建 field 的副本并更新宽度
+                    Map<String, Object> newField = new HashMap<>(originalField);
+
+                    // 更新 classAppend 中的宽度
+                    if (targetWidth != null) {
+                        String classAppend = (String) newField.get("classAppend");
+                        if (classAppend != null) {
+                            // 移除旧的 layui-col-md*
+                            classAppend = classAppend.replaceAll("layui-col-md\\d+", "");
+                        } else {
+                            classAppend = "";
+                        }
+                        // 添加新的宽度
+                        classAppend = ("layui-col-md" + targetWidth + " " + classAppend).trim();
+                        newField.put("classAppend", classAppend);
+                    }
+
+                    newRow.add(newField);
+                } else {
+                    log.warn("未找到 item_name={} 的 field", targetItemName);
+                }
+            }
+
+            if (!newRow.isEmpty()) {
+                newFieldList.add(newRow);
+            }
+        }
+
+        newCard.put("fieldList", newFieldList);
+        return newCard;
+    }
+
+    /**
+     * 在所有 rows 中查找指定 item_name 的 field
+     */
+    private Map<String, Object> findFieldByItemName(
+            List<List<Map<String, Object>>> fieldList,
+            String itemName) {
+
+        for (List<Map<String, Object>> row : fieldList) {
+            for (Map<String, Object> field : row) {
+                String fieldItemName = (String) field.get("item_name");
+                if (itemName.equals(fieldItemName)) {
+                    return field;
+                }
+            }
+        }
+        return null;
     }
 
     /**

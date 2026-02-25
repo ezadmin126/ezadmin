@@ -43,164 +43,168 @@
     {
       "type": "card",
       "label": "用户信息",
-      "fieldList": [[
+      "fieldList": [
         {
-          "name": "ID",
-          "label": "ID",
-          "component":  "hidden",
-          "props": {}
-        },
-        {
-          "name": "USER_SEX",
-          "label": "JSON下拉",
-          "initData": {
-            "dataJson": [
-              {
-                "label": "男",
-                "value": "1"
+          "row": [
+            {
+              "name": "ID",
+              "label": "ID",
+              "component":  "hidden",
+              "props": {}
+            },
+            {
+              "name": "USER_SEX",
+              "label": "JSON下拉",
+              "initData": {
+                "dataJson": [
+                  {
+                    "label": "男",
+                    "value": "1"
+                  },
+                  {
+                    "label": "女",
+                    "value": "0"
+                  }
+                ]
               },
-              {
-                "label": "女",
-                "value": "0"
+              "component":  "select" ,
+              "props": {
+                "jdbcType": "NUMBER",
+                "placeholder": "请选择性别"
               }
-            ]
-          },
-          "component":  "select" ,
-          "props": {
-            "jdbcType": "NUMBER",
-            "placeholder": "请选择性别"
-          }
-        },
-        {
-          "name": "USER_NAME",
-          "label": "单行文本",
-          "component":"input",
-          "props": {
-            "placeholder": "单行文本"
-          }
-        },
-        {
-          "name": "USER_EMAIL",
-          "label": "多行文本",
-          "component": "textarea",
-          "props": {
-            "placeholder": "多行文本"
-          }
-        },
-        {
-          "name": "ADD_TIME",
-          "label": "时间",
-          "component": "date"
-        },
-        {
-          "name": "RUXUE_DATE",
-          "label": "时间区间",
-          "component": "date",
-          "jdbcType": "DATETIME",
-          "props": {
-            "placeholder": " - ",
-            "range": true
-          }
-        },
-        {
-          "name": "HOBBYS_IDS",
-          "label": "checkbox",
-          "jdbcType": "NUMBER",
-          "component": "select-multiple",
-          "initData": {
-            "dataSource": "dataSource",
-            "dataSql": "select hobbys_id value,name label from hobbys"
-          },
-          "props": {
-            "placeholder": "请选择爱好吧",
-            "model": {
-              "label": {
-                "type": "block",
-                "block": {
-                  "showCount": 2,
-                  "showIcon": true
+            },
+            {
+              "name": "USER_NAME",
+              "label": "单行文本",
+              "component":"input",
+              "props": {
+                "placeholder": "单行文本"
+              }
+            },
+            {
+              "name": "USER_EMAIL",
+              "label": "多行文本",
+              "component": "textarea",
+              "props": {
+                "placeholder": "多行文本"
+              }
+            },
+            {
+              "name": "ADD_TIME",
+              "label": "时间",
+              "component": "date"
+            },
+            {
+              "name": "RUXUE_DATE",
+              "label": "时间区间",
+              "component": "date",
+              "jdbcType": "DATETIME",
+              "props": {
+                "placeholder": " - ",
+                "range": true
+              }
+            },
+            {
+              "name": "HOBBYS_IDS",
+              "label": "checkbox",
+              "jdbcType": "NUMBER",
+              "component": "select-multiple",
+              "initData": {
+                "dataSource": "dataSource",
+                "dataSql": "select hobbys_id value,name label from hobbys"
+              },
+              "props": {
+                "placeholder": "请选择爱好吧",
+                "model": {
+                  "label": {
+                    "type": "block",
+                    "block": {
+                      "showCount": 2,
+                      "showIcon": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "HOBBYS_ID2S",
+              "label": "checkbox多选",
+              "jdbcType": "NUMBER",
+              "component": "checkbox",
+              "initData": {
+                "dataSource": "dataSource",
+                "dataSql": "select hobbys_id value,name label from hobbys"
+              },
+              "props": {
+                "placeholder": "请选择爱好吧"
+              }
+            },
+            {
+              "name": "STATUS",
+              "label": "单选",
+              "jdbcType": "NUMBER",
+              "component": "radio",
+              "initData":{
+                "dataJson": [
+                  {
+                    "label": "男",
+                    "value": "1"
+                  },
+                  {
+                    "label": "女",
+                    "value": "0"
+                  }
+                ]
+              },
+              "props": {
+                "placeholder": "请选择爱好吧"
+              }
+            },
+            {
+              "name": "AREA_ID",
+              "label": "多选级联",
+              "jdbcType": "NUMBER",
+              "component": "cascader",
+              "initData":{
+                "dataSource": "dataSource",
+                "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
+              },
+              "props": {
+                "placeholder": "请选择地区吧",
+                "collapseTags": true,
+                "props": {
+                  "multiple": true,
+                  "value": "id",
+                  "label": "name",
+                  "parent_id": "parent_id",
+                  "children": "children"
+                }
+              }
+            },
+            {
+              "name": "AREA_ID2",
+              "label": "单选级联",
+              "jdbcType": "NUMBER",
+              "component": "cascader",
+              "initData":{
+                "dataSource": "dataSource",
+                "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
+              },
+              "props": {
+                "placeholder": "请选择地区吧",
+                "collapseTags": true,
+                "props": {
+                  "multiple": false,
+                  "value": "id",
+                  "label": "name",
+                  "parent_id": "parent_id",
+                  "children": "children"
                 }
               }
             }
-          }
-        },
-        {
-          "name": "HOBBYS_ID2S",
-          "label": "checkbox多选",
-          "jdbcType": "NUMBER",
-          "component": "checkbox",
-          "initData": {
-            "dataSource": "dataSource",
-            "dataSql": "select hobbys_id value,name label from hobbys"
-          },
-          "props": {
-            "placeholder": "请选择爱好吧"
-          }
-        },
-        {
-          "name": "STATUS",
-          "label": "单选",
-          "jdbcType": "NUMBER",
-          "component": "radio",
-          "initData":{
-            "dataJson": [
-              {
-                "label": "男",
-                "value": "1"
-              },
-              {
-                "label": "女",
-                "value": "0"
-              }
-            ]
-          },
-          "props": {
-            "placeholder": "请选择爱好吧"
-          }
-        },
-        {
-          "name": "AREA_ID",
-          "label": "多选级联",
-          "jdbcType": "NUMBER",
-          "component": "cascader",
-          "initData":{
-            "dataSource": "dataSource",
-            "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
-          },
-          "props": {
-            "placeholder": "请选择地区吧",
-            "collapseTags": true,
-            "props": {
-              "multiple": true,
-              "value": "id",
-              "label": "name",
-              "parent_id": "parent_id",
-              "children": "children"
-            }
-          }
-        },
-        {
-          "name": "AREA_ID2",
-          "label": "单选级联",
-          "jdbcType": "NUMBER",
-          "component": "cascader",
-          "initData":{
-            "dataSource": "dataSource",
-            "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
-          },
-          "props": {
-            "placeholder": "请选择地区吧",
-            "collapseTags": true,
-            "props": {
-              "multiple": false,
-              "value": "id",
-              "label": "name",
-              "parent_id": "parent_id",
-              "children": "children"
-            }
-          }
+          ]
         }
-      ]],
+      ],
       "buttonList": [
 
       ]
@@ -231,13 +235,18 @@
       "label": "富文本",
       "fieldList": [
         {
-          "name": "Rich",
-          "label": "描述",
-          "component": "tinymce",
-           "props": {
-            "placeholder": "这是富文本"
-          }
-      }]
+          "row": [
+            {
+              "name": "Rich",
+              "label": "描述",
+              "component": "tinymce",
+              "props": {
+                "placeholder": "这是富文本"
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "buttonList": [

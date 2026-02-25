@@ -63,7 +63,7 @@ public class FormController extends BaseController {
         templateParam.put("ID", Utils.trimEmptyDefault(ID, Utils.trimNull(searchParamsValues.get("ID"))));
             templateParam.put("form", form);
         Map<String, Object> core = (Map<String, Object>) form.get("core");
-        if (StringUtils.isNotBlank(Utils.trimNull(core.get("formSubmitUrl")))) {
+        if (core!=null&&StringUtils.isNotBlank(Utils.trimNull(core.get("formSubmitUrl")))) {
             templateParam.put("formSubmitUrl", core.get("formSubmitUrl"));
         } else {
             templateParam.put("formSubmitUrl", requestContext.getContextPath() + "/topezadmin/form/doSubmit-" + ENCRYPT_FORM_ID);
@@ -194,7 +194,8 @@ public class FormController extends BaseController {
             if (core != null) {
                 formDs = EzBootstrap.getInstance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
             } else {
-                form.put("core", new HashMap<>());
+                core=new HashMap<>();
+                form.put("core", core);
             }
             String express = Utils.trimNull(core.get(JsoupUtil.DELETE_EXPRESS));
             Map<String, Object> paras = new HashMap<>();
@@ -275,7 +276,8 @@ public class FormController extends BaseController {
             if (core != null) {
                 formDs = EzBootstrap.getInstance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
             } else {
-                form.put("core", new HashMap<>());
+                core = new HashMap<>();
+                form.put("core", core);
             }
             String express = Utils.trimNull(core.get(JsoupUtil.STATUS_EXPRESS));
             Map<String, Object> paras = new HashMap<>();
@@ -337,10 +339,11 @@ public class FormController extends BaseController {
         // 使用统一加载器（文件优先，数据库降级）
         top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(formId, "form");
         if (dslConfig == null) {
-            return EzResult.instance().code("404");
+            //跳转到一个全新的 静态页面
+            return  EzResult.instance().code("404") ;
         }
         Map<String, Object> form = dslConfig.getConfig();
-        if(StringUtils.isBlank((String)form.get("initUrl"))){
+        if(form!=null&&StringUtils.isBlank((String)form.get("initUrl"))){
             form.put("initUrl", "/topezadmin/form/data-"+formUrlCode);
         }
         iniFormItem(requestContext,form);
@@ -357,17 +360,33 @@ public class FormController extends BaseController {
         templateParam.put("EZ_SESSION_USER_ID_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY)));
         return render("layui/dsl/formTemplate",templateParam);
     }
-    private void iniFormItem(RequestContext requestContext,Map<String, Object> list) {
+    public void iniFormItem(RequestContext requestContext,Map<String, Object> list) {
         List<Map<String, Object>> cardList = (List<Map<String, Object>>) list.get("cardList");
+        if(Utils.isEmpty(cardList)){
+            return;
+        }
         cardList.forEach(card->{
+            Map<String,Object> componentJson=new HashMap<>();
+
+            componentJson.put("type",card.get("type"));
+            componentJson.put("label",card.get("label"));
+            componentJson.put("iframe",card.get("iframe"));
+            componentJson.put("description",card.get("description"));
+            componentJson.put("buttonList",card.get("buttonList"));
+
+            card.put("componentJson",JSONUtils.toJSONString(componentJson));
+
             Object fieldListObj = card.get("fieldList");
             List<List<Map<String, Object>>> fieldList = getFlattenedFieldList(fieldListObj);
-            if(fieldList != null ){
+            if(Utils.isNotEmpty(fieldList ) ){
                 fieldList.forEach(row->{
-                    row.forEach(field -> processFormField(field));
+                    if(Utils.isNotEmpty(row)){
+                        row.forEach(field -> processFormField(field));
+                    }
                 });
             }
-            card.put("fieldList", fieldList);
+            // Don't replace the original fieldList - keep object array format for template
+            // card.put("fieldList", fieldList);
         });
     }
 
@@ -377,7 +396,7 @@ public class FormController extends BaseController {
      */
     private void processFormField(Map<String, Object> item) {
         Map<String, Object> initData = (Map<String, Object>) item.get("initData");
-        if (initData != null) {
+        if (Utils.isNotEmpty(initData)) {
             String dataUrl = (String) initData.get("dataUrl");
             if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
                 List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
@@ -446,7 +465,7 @@ public class FormController extends BaseController {
     }
 
     /**
-     * 获取扁平化的字段列表（支持一维和二维数组）
+     * 获取扁平化的字段列表（支持新的对象数组格式）
      * @param fieldListObj fieldList 对象
      * @return 扁平化的字段列表
      */
@@ -459,19 +478,27 @@ public class FormController extends BaseController {
             if (list.isEmpty()) {
                 return null;
             }
-            //如果第一个不是
-            if (!(list.get(0) instanceof List)) {
-                List<List<Map<String, Object>>> result=new ArrayList<>();
-                List<Map<String, Object>> row = new ArrayList<>();
-                for (int i = 0; i < list.size(); i++) {
-                    row.add((Map<String, Object>) list.get(i));
+
+            // 新格式：[{row:[...]}, {row:[...]}]
+            if (list.get(0) instanceof Map) {
+                Map firstItem = (Map) list.get(0);
+                if (firstItem.containsKey("row")) {
+                    List<List<Map<String, Object>>> result = new ArrayList<>();
+                    for (Object item : list) {
+                        Map rowObj = (Map) item;
+                        List<Map<String, Object>> row = (List<Map<String, Object>>) rowObj.get("row");
+                        if (row != null) {
+                            result.add(row);
+                        }
+                    }
+                    return result;
                 }
-                result.add(row);
-                return result;
             }
-            return (List<List<Map<String, Object>>>) fieldListObj;
+
+            logger.error("FieldList配置错误，应该使用对象数组格式: [{\"row\":[...]}, {\"row\":[...]}]");
+            return null;
         } catch (Exception e) {
-            logger.error("FieldList配置错误，请检查是否为二维数组格式{}", fieldListObj, e);
+            logger.error("FieldList配置错误，请检查格式{}", fieldListObj, e);
         }
         return null;
     }
@@ -489,9 +516,12 @@ public class FormController extends BaseController {
         // 使用统一加载器（文件优先，数据库降级）
         top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(formId, "form");
         if (dslConfig == null) {
-            return EzResult.instance().code("404");
+            return  EzResult.instance().code("JSON").data(EzResult.instance().code("404"));
         }
         Map<String, Object> form = dslConfig.getConfig();
+        if (form == null) {
+            return EzResult.instance().code("JSON").data(EzResult.instance().code("404"));
+        }
         iniFormItem(requestContext,form);
         //只返回数据，屏蔽模板
         String ID = Utils.getStringByObject(requestContext.getRequestParams(), "ID");

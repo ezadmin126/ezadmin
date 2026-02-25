@@ -1,5 +1,5 @@
 <div th:class="'component-col col-'+${item_name}"
-     th:classappend="${classAppend}"
+     th:classappend="${classAppend}" th:data-config-json="${componentJson}"
 >
 <div   class="layui-form-item"  th:item_name="${item_name}" component="tinymce">
 <!--    <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">-->

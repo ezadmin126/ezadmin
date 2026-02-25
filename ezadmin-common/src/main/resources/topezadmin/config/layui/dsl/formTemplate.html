@@ -63,6 +63,7 @@
                             <!-- 普通表单卡片 -->
                             <div th:if="${cardItem.type == 'card'}" class="layui-card" th:id="${cardItem.label}"
                                  th:item_name="${'card-'+cardItem.label}"  th:classappend="${ (cardItem.get('classAppend') != null ? cardItem.get('classAppend') : '')}"
+                                 th:data-card-config="${cardItem.componentJson}"
                             >
                                 <div class="layui-card-header ez-form-panel" >
                                     [(${cardItem.label})]   [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
@@ -79,9 +80,9 @@
                                 <div class="layui-card-body">
 
                                     <th:block th:if="${cardItem.fieldList != null and not #lists.isEmpty(cardItem.fieldList)}">
-                                           <th:block th:each="row : ${cardItem.fieldList}">
+                                           <th:block th:each="rowObj : ${cardItem.fieldList}">
                                                 <div class="layui-row layui-col-space5">
-                                                    <th:block th:each="field : ${row}">
+                                                    <th:block th:each="field : ${rowObj.row}">
                                                         <div th:utext="${cr.render(field)}" th:remove="tag"></div>
                                                     </th:block>
                                                 </div>
