@@ -16,8 +16,6 @@ layui.use(function(){
         initXmselect();
         initLaycascader();
         initUpload();
-        initWater();
-
 
         $(".ez-form-panel  .layui-layer-min").click(function () {
             $(this).closest(".layui-card").find(".layui-card-body").hide();
@@ -449,9 +447,24 @@ function initWater() {
             }
         }
         var time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + '';
-        var name=document.getElementById("EZ_SESSION_USER_NAME_KEY").value;
-        watermark.init({ watermark_txt: name + ' ' + time ,watermark_fontsize:'14px'})
-    }catch(e){}
+
+        // 安全获取用户名
+        var nameElement = document.getElementById("EZ_SESSION_USER_NAME_KEY");
+        var name = nameElement ? (nameElement.value || '用户') : '用户';
+
+        // 检查 watermark 对象是否存在
+        if (typeof watermark !== 'undefined' && watermark.init) {
+            watermark.init({
+                watermark_txt: name + ' ' + time,
+                watermark_fontsize: '14px'
+            });
+            console.log('✅ 水印已初始化:', name + ' ' + time);
+        } else {
+            console.warn('⚠️ watermark 对象未定义，水印初始化失败');
+        }
+    } catch(e) {
+        console.error('❌ 水印初始化失败:', e);
+    }
 }
 
 // 获取 URL 参数
