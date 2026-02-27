@@ -42,7 +42,7 @@ public class DslDbService {
             Map<String, Object> row = Dao.getInstance().executeQueryOne(ds, sql, new Object[]{formId});
 
             if (row == null || row.isEmpty()) {
-                log.debug("表单 {} 在数据库中不存在", formId);
+                log.info("表单 {} 在数据库中不存在", formId);
                 return null;
             }
 
@@ -66,7 +66,7 @@ public class DslDbService {
             return config;
 
         } catch (Exception e) {
-            log.error("从数据库加载表单DSL失败: {}", formId, e);
+         //   log.error("从数据库加载表单DSL失败: {}", formId, e);
             return null;
         }
     }
@@ -86,7 +86,7 @@ public class DslDbService {
             Map<String, Object> row = Dao.getInstance().executeQueryOne(ds, sql, new Object[]{listId});
 
             if (row == null || row.isEmpty()) {
-                log.debug("列表 {} 在数据库中不存在", listId);
+                log.info("列表 {} 在数据库中不存在", listId);
                 return null;
             }
 
@@ -113,7 +113,7 @@ public class DslDbService {
             return config;
 
         } catch (Exception e) {
-            log.error("从数据库加载列表DSL失败: {}", listId, e);
+          //  log.error("从数据库加载列表DSL失败: {}", listId, e);
             return null;
         }
     }

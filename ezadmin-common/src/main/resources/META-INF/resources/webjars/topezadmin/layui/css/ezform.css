@@ -270,8 +270,8 @@ small {
 }
 
 .form-item-hidden{
-    display: none;
+    display: none !important;
 }
 .layui-col-md0{
-    display: none;
+    display: none !important;
 }

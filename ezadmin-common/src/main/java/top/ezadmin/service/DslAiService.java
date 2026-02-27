@@ -14,6 +14,8 @@ import top.ezadmin.common.utils.ProjectPathUtils;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.dao.dto.DslModificationRequest;
+import top.ezadmin.dao.dto.FormDsl;
+import top.ezadmin.dao.dto.ListDsl;
 import top.ezadmin.web.EzResult;
 
 import javax.sql.DataSource;
@@ -354,6 +356,11 @@ public class DslAiService {
 
                 // 更新 DSL 中的 cardList
                 dslContent.put("cardList", cardsLayout);
+                //使用FormDsl格式化，防止冗余节点
+                FormDsl DSL=JSONUtils.parseObject(JSONUtils.toJSONString(dslContent), FormDsl.class);
+
+                dslContent=JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(DSL));
+
 
             } else if ("list".equals(dslType)) {
                 // 处理列表布局
@@ -366,6 +373,11 @@ public class DslAiService {
 
                 // 更新 DSL 中的 search
                 dslContent.put("search", searchLayout);
+
+                //使用FormDsl格式化，防止冗余节点
+                ListDsl DSL=JSONUtils.parseObject(JSONUtils.toJSONString(dslContent), ListDsl.class);
+
+                dslContent=JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(DSL));
 
             } else {
                 return EzResult.instance().fail("不支持的 DSL 类型: " + dslType);

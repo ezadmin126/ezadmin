@@ -1,0 +1,247 @@
+{
+	"id":"student-list",
+	"name":"学生表单",
+	"dataSource":"dataSource",
+	"successUrl":"/topezadmin/list/page-student-list",
+	"cardList":[
+		{
+			"type":"card",
+			"label":"学生证书信息",
+			"item_name":"card-学生证书信息",
+			"order":0,
+			"fieldList":[
+				{
+					"row":[
+						{
+							"item_name":"certificate_ids",
+							"label":"所有整数",
+							"component":"select-multiple",
+							"props":{
+								"placeholder":"请选择学生证书（可多选）"
+							},
+							"initData":{
+								"dataSource":"dataSource",
+								"dataSql":"SELECT certificate_id value, name label FROM certificate ORDER BY certificate_id"
+							},
+							"data":[
+								
+							],
+							"dataJson":"[]",
+							"classAppend":" layui-col-md12",
+							"propsJson":"{\"placeholder\":\"请选择学生证书（可多选）\"}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type":"card",
+			"label":"基本信息",
+			"item_name":"card-基本信息",
+			"order":1,
+			"fieldList":[
+				{
+					"row":[
+						{
+							"item_name":"username",
+							"label":"学生姓名",
+							"component":"input",
+							"classAppend":"layui-col-md8",
+							"props":{
+								"placeholder":"请输入学生姓名",
+								"lay-verify":"required",
+								"description":"请输入真实姓名",
+								"required":true,
+								"lay-affix":"clear",
+								"a":"b"
+							}
+						}
+					]
+				},
+				{
+					"row":[
+						{
+							"item_name":"students_id",
+							"label":"ID",
+							"component":"hidden",
+							"classAppend":"layui-col-md0",
+							"propsJson":"null"
+						},
+						{
+							"item_name":"area_id",
+							"label":"地区",
+							"component":"select",
+							"classAppend":"layui-col-md4",
+							"props":{
+								"placeholder":"请选择地区",
+								"lay-verify":"required",
+								"required":true
+							},
+							"initData":{
+								"dataSource":"dataSource",
+								"dataSql":"SELECT region_id value, name label FROM regions WHERE parent_id=0 ORDER BY region_id"
+							},
+							"data":[
+								{
+									"label":"中国",
+									"value":1
+								}
+							],
+							"dataJson":"[{\"label\":\"中国\",\"value\":1}]",
+							"propsJson":"{\"placeholder\":\"请选择地区\",\"lay-verify\":\"required\",\"required\":true}"
+						},
+						{
+							"item_name":"ruxue_date",
+							"label":"入学日期",
+							"component":"date",
+							"classAppend":"layui-col-md12",
+							"props":{
+								"placeholder":"请选择入学日期",
+								"type":"date"
+							},
+							"propsJson":"{\"placeholder\":\"请选择入学日期\",\"type\":\"date\"}"
+						},
+						{
+							"item_name":"hobbys_ids",
+							"label":"爱好",
+							"component":"select-multiple",
+							"classAppend":"layui-col-md12",
+							"props":{
+								"placeholder":"请选择爱好（可多选）"
+							},
+							"initData":{
+								"dataSource":"dataSource",
+								"dataSql":"SELECT hobbys_id value, name label FROM hobbys ORDER BY hobbys_id"
+							},
+							"data":[
+								{
+									"label":"足球",
+									"value":1
+								},
+								{
+									"label":"篮球",
+									"value":2
+								},
+								{
+									"label":"羽毛球",
+									"value":3
+								},
+								{
+									"label":"乒乓球",
+									"value":4
+								}
+							],
+							"dataJson":"[{\"label\":\"足球\",\"value\":1},{\"label\":\"篮球\",\"value\":2},{\"label\":\"羽毛球\",\"value\":3},{\"label\":\"乒乓球\",\"value\":4}]",
+							"propsJson":"{\"placeholder\":\"请选择爱好（可多选）\"}"
+						},
+						{
+							"item_name":"add_time",
+							"label":"添加时间",
+							"component":"date",
+							"classAppend":"layui-col-md6",
+							"props":{
+								"placeholder":"请选择添加时间",
+								"type":"date"
+							},
+							"propsJson":"{\"placeholder\":\"请选择添加时间\",\"type\":\"date\"}"
+						},
+						{
+							"item_name":"useremail",
+							"label":"邮箱",
+							"component":"select-multiple",
+							"classAppend":"layui-col-md6",
+							"props":{
+								"placeholder":"请选择爱好（可多选）"
+							},
+							"propsJson":"{\"placeholder\":\"请选择爱好（可多选）\"}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"initExpress":[
+		"if(isNotBlank('students_id')) {",
+		"  student = selectOne('SELECT * FROM students WHERE students_id=${students_id}');",
+		"  hobbys = select('SELECT hobbys_id FROM rel_students_hobbys WHERE students_id=${students_id}');",
+		"  certificates = select('SELECT certificate_id FROM rel_students_certificate WHERE students_id=${students_id}');",
+		"  hobbysList = new ArrayList();",
+		"  for(i=0; i<hobbys.size(); i++) {",
+		"    hobbysList.add(hobbys.get(i).get('hobbys_id'));",
+		"  }",
+		"  certList = new ArrayList();",
+		"  for(i=0; i<certificates.size(); i++) {",
+		"    certList.add(certificates.get(i).get('certificate_id'));",
+		"  }",
+		"  student.put('hobbys_ids', hobbysList);",
+		"  student.put('certificate_ids', certList);",
+		"  return student;",
+		"} else {",
+		"  return null;",
+		"}"
+	],
+	"submitExpress":[
+		"if(!isNotBlank('students_id')) {",
+		"  // 新增学生",
+		"  param = new InsertParam();",
+		"  param.table('students');",
+		"  param.add('#{username}');",
+		"  param.add('#{useremail}');",
+		"  param.add('#{usersex}');",
+		"  param.add('#{area_id}');",
+		"  param.add('#{ruxue_date}');",
+		"  param.add('#{delete_flag,value=0}');",
+		"  param.add('#{add_time,value=NOW()}');",
+		"  param.add('#{update_time,value=NOW()}');",
+		"  insertSimple(param);",
+		"  newId = selectOne('SELECT LAST_INSERT_ID() as id').get('id');",
+		"  // 插入爱好关系",
+		"  if(isNotBlank('hobbys_ids')) {",
+		"    hobbyIds = $('hobbys_ids').split(',');",
+		"    for(i=0; i<hobbyIds.length; i++) {",
+		"      insert('INSERT INTO rel_students_hobbys(students_id, hobbys_id) VALUES('+newId+','+hobbyIds[i]+')');",
+		"    }",
+		"  }",
+		"  // 插入证书关系",
+		"  if(isNotBlank('certificate_ids')) {",
+		"    certIds = $('certificate_ids').split(',');",
+		"    for(i=0; i<certIds.length; i++) {",
+		"      insert('INSERT INTO rel_students_certificate(students_id, certificate_id) VALUES('+newId+','+certIds[i]+')');",
+		"    }",
+		"  }",
+		"} else {",
+		"  // 更新学生",
+		"  param = new UpdateParam();",
+		"  param.table('students');",
+		"  param.add('#{username}');",
+		"  param.add('#{useremail}');",
+		"  param.add('#{usersex}');",
+		"  param.add('#{area_id}');",
+		"  param.add('#{ruxue_date}');",
+		"  param.add('#{update_time,value=NOW()}');",
+		"  param.where('students_id=#{students_id}');",
+		"  updateSimple(param);",
+		"  // 删除旧的爱好关系",
+		"  update('DELETE FROM rel_students_hobbys WHERE students_id=${students_id}');",
+		"  // 插入新的爱好关系",
+		"  if(isNotBlank('hobbys_ids')) {",
+		"    hobbyIds = $('hobbys_ids').split(',');",
+		"    for(i=0; i<hobbyIds.length; i++) {",
+		"      insert('INSERT INTO rel_students_hobbys(students_id, hobbys_id) VALUES(${students_id},'+hobbyIds[i]+')');",
+		"    }",
+		"  }",
+		"  // 删除旧的证书关系",
+		"  update('DELETE FROM rel_students_certificate WHERE students_id=${students_id}');",
+		"  // 插入新的证书关系",
+		"  if(isNotBlank('certificate_ids')) {",
+		"    certIds = $('certificate_ids').split(',');",
+		"    for(i=0; i<certIds.length; i++) {",
+		"      insert('INSERT INTO rel_students_certificate(students_id, certificate_id) VALUES(${students_id},'+certIds[i]+')');",
+		"    }",
+		"  }",
+		"}"
+	],
+	"deleteExpress":[
+		"update('UPDATE students SET delete_flag=1 WHERE students_id=${students_id}');"
+	]
+}
