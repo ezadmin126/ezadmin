@@ -2,6 +2,7 @@ package top.ezadmin.service;
 
 import top.ezadmin.common.utils.Page;
 import top.ezadmin.dao.model.ItemInitData;
+import top.ezadmin.web.RequestContext;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -42,4 +43,11 @@ public interface ListService {
     String selectDbPublishListById(String encryptListId) throws Exception;
 
     Page loadingPage(Map<String, Object> list, Map<String, Object> requestParams);
+
+    /**
+     * 初始化组件的initData与props
+     * @param component
+     */
+    void initComponentData(RequestContext context,Map<String, Object> component) ;
+
 }

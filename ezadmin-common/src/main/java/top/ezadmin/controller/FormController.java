@@ -1,6 +1,6 @@
 package top.ezadmin.controller;
 
-import com.alibaba.fastjson.JSON;
+
 import com.ql.util.express.exception.QLBizException;
 import com.ql.util.express.exception.QLCompileException;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -19,6 +19,7 @@ import top.ezadmin.dao.Dao;
 import top.ezadmin.plugins.express.executor.DefaultExpressExecutor;
 import top.ezadmin.plugins.parser.MapParser;
 import top.ezadmin.service.FormService;
+import top.ezadmin.service.ListService;
 import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
 
@@ -29,6 +30,7 @@ public class FormController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(FormController.class);
 
     FormService formService = EzProxy.singleInstance(FormService.class);
+    private ListService listService = EzProxy.singleInstance(ListService.class);
 
     //
     public EzResult trace(RequestContext requestContext, String method, String formUrlCode) throws Exception {
@@ -381,7 +383,7 @@ public class FormController extends BaseController {
             if(Utils.isNotEmpty(fieldList ) ){
                 fieldList.forEach(row->{
                     if(Utils.isNotEmpty(row)){
-                        row.forEach(field -> processFormField(field));
+                        row.forEach(field -> processFormField(requestContext,field));
                     }
                 });
             }
@@ -394,34 +396,10 @@ public class FormController extends BaseController {
      * 处理单个表单字段的初始化
      * @param item 字段配置
      */
-    private void processFormField(Map<String, Object> item) {
+    private void processFormField(RequestContext requestContext, Map<String, Object> item) {
         Map<String, Object> initData = (Map<String, Object>) item.get("initData");
         if (Utils.isNotEmpty(initData)) {
-            String dataUrl = (String) initData.get("dataUrl");
-            if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
-                List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
-                item.put("data", result);
-                item.put("dataJson", JSONUtils.toJSONString(result));
-            }
-            else if(initData.containsKey("dataSql") && initData.get("dataSql") != null  ){
-                String dataSql =  (String) initData.get("dataSql") ;
-                String dataSource = (String) initData.get("dataSource");
-                //
-                DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
-                if(dataSourceBean==null){
-                    dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
-                }
-                try {
-                    List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
-                            dataSql, null,false);
-                    item.put("data", result);
-                    item.put("dataJson", JSONUtils.toJSONString(result));
-                } catch (Exception e) {
-                    logger.error("执行SQL错误",e);
-                }
-            }else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
-                //todo apiUrl
-            }
+            listService.initComponentData(requestContext, item);
         }
         try {
             Map<String, Object> props = (Map<String, Object>) item.get("props");
@@ -456,8 +434,9 @@ public class FormController extends BaseController {
                     }
                 }
             }
+
         }catch (Exception e){
-            logger.info("props error{}", JSON.toJSONString(item), e);
+            logger.info("props error{}", JSONUtils.toJSONString(item), e);
         }
         if(item.get("classAppend") == null){
             item.put("classAppend", " layui-col-md12");

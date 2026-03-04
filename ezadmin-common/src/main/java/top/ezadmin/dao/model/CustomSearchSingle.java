@@ -1,9 +1,21 @@
 package top.ezadmin.dao.model;
 
 public class CustomSearchSingle {
+    /**
+     * 连接类型  AND  OR
+     */
     private String t;
+    /**
+     * 字段
+     */
     private String f;
+    /**
+     * 操作符  =  !=  >  <  >=  <=  like
+     */
     private String o;
+    /**
+     * 值
+     */
     private String v;
 
     public String getT() {

@@ -79,8 +79,8 @@ public class DslLoader {
             // 处理表达式文件引用（$xxx.txt）
             ExpressFileLoader.processExpressReferences(dslConfig, configPath);
 
-            // 处理 appendHead 和 appendFoot 数组
-            ExpressFileLoader.processAppendFields(dslConfig);
+            // 处理 appendHead 和 appendFoot 数组（支持表达式文件引用）
+            ExpressFileLoader.processAppendFields(dslConfig, configPath);
 
             // 构建DslConfig对象
             DslConfig config = new DslConfig(id, type, dslConfig, "file");

@@ -51,9 +51,9 @@ public class ExpressFileLoaderTest {
         System.out.println("  count: " + countBefore);
         System.out.println("  groupBy: " + groupBefore);
 
-        assertTrue("main 应该以 $ 开头", mainBefore.startsWith("$"));
-        assertTrue("count 应该以 $ 开头", countBefore.startsWith("$"));
-        assertTrue("groupBy 应该以 $ 开头", groupBefore.startsWith("$"));
+        assertTrue("main 应该以 $$ 开头", mainBefore.startsWith("$$"));
+        assertTrue("count 应该以 $$ 开头", countBefore.startsWith("$$"));
+        assertTrue("groupBy 应该以 $$ 开头", groupBefore.startsWith("$$"));
 
         // 处理表达式引用
         ExpressFileLoader.processExpressReferences(config, configPath);
@@ -71,9 +71,9 @@ public class ExpressFileLoaderTest {
         System.out.println("  orderBy: " + orderBy);
 
         // 验证文件内容已经被加载
-        assertFalse("main 不应该再以 $ 开头", mainAfter.startsWith("$"));
-        assertFalse("count 不应该再以 $ 开头", countAfter.startsWith("$"));
-        assertFalse("groupBy 不应该再以 $ 开头", groupAfter.startsWith("$"));
+        assertFalse("main 不应该再以 $$ 开头", mainAfter.startsWith("$$"));
+        assertFalse("count 不应该再以 $$ 开头", countAfter.startsWith("$$"));
+        assertFalse("groupBy 不应该再以 $$ 开头", groupAfter.startsWith("$$"));
 
         assertTrue("main 应该包含 SELECT", mainAfter.contains("SELECT"));
         assertTrue("count 应该包含 COUNT", countAfter.contains("COUNT"));
@@ -114,9 +114,9 @@ public class ExpressFileLoaderTest {
         System.out.println("  submit: " + submitBefore);
         System.out.println("  delete: " + deleteBefore);
 
-        assertTrue("init 应该以 $ 开头", initBefore.startsWith("$"));
-        assertTrue("submit 应该以 $ 开头", submitBefore.startsWith("$"));
-        assertTrue("delete 应该以 $ 开头", deleteBefore.startsWith("$"));
+        assertTrue("init 应该以 $$ 开头", initBefore.startsWith("$$"));
+        assertTrue("submit 应该以 $$ 开头", submitBefore.startsWith("$$"));
+        assertTrue("delete 应该以 $$ 开头", deleteBefore.startsWith("$$"));
 
         // 处理表达式引用
         ExpressFileLoader.processExpressReferences(config, configPath);
@@ -132,9 +132,9 @@ public class ExpressFileLoaderTest {
         System.out.println("  delete 长度: " + deleteAfter.length() + " 字符");
 
         // 验证文件内容已经被加载
-        assertFalse("init 不应该再以 $ 开头", initAfter.startsWith("$"));
-        assertFalse("submit 不应该再以 $ 开头", submitAfter.startsWith("$"));
-        assertFalse("delete 不应该再以 $ 开头", deleteAfter.startsWith("$"));
+        assertFalse("init 不应该再以 $$ 开头", initAfter.startsWith("$$"));
+        assertFalse("submit 不应该再以 $$ 开头", submitAfter.startsWith("$$"));
+        assertFalse("delete 不应该再以 $$ 开头", deleteAfter.startsWith("$$"));
 
         assertTrue("init 应该包含初始化逻辑", initAfter.contains("setValue"));
         assertTrue("submit 应该包含提交逻辑", submitAfter.contains("UPDATE") || submitAfter.contains("INSERT"));
@@ -168,7 +168,7 @@ public class ExpressFileLoaderTest {
 
         // 验证文件内容已经被加载
         String mainAfter = (String) express.get("main");
-        assertFalse("main 不应该再以 $ 开头", mainAfter.startsWith("$"));
+        assertFalse("main 不应该再以 $$ 开头", mainAfter.startsWith("$$"));
         assertTrue("main 应该包含 SELECT", mainAfter.contains("SELECT"));
 
         System.out.println("生产模式下也能正确加载表达式文件");
@@ -196,7 +196,7 @@ public class ExpressFileLoaderTest {
 
             // 创建引用该文件的配置
             String configPath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/list/test_hot_config.json";
-            String configContent = "{\"express\": {\"main\": \"$test_hot_reload.txt\"}}";
+            String configContent = "{\"express\": {\"main\": \"$$test_hot_reload.txt\"}}";
             Files.write(Paths.get(configPath), configContent.getBytes(StandardCharsets.UTF_8));
 
             // 第一次加载
@@ -263,7 +263,7 @@ public class ExpressFileLoaderTest {
 
         String footItem2Before = (String) appendFootBefore.get(1);
         System.out.println("处理前 appendFoot[1]: " + footItem2Before);
-        assertTrue("appendFoot[1] 应该以 $ 开头", footItem2Before.startsWith("$"));
+        assertTrue("appendFoot[1] 应该以 $$ 开头", footItem2Before.startsWith("$$"));
 
         // 处理前 - 检查 customScripts 数组
         @SuppressWarnings("unchecked")
@@ -274,8 +274,8 @@ public class ExpressFileLoaderTest {
         String script3Before = (String) customScriptsBefore.get(2);
         System.out.println("处理前 customScripts[0]: " + script1Before);
         System.out.println("处理前 customScripts[2]: " + script3Before);
-        assertTrue("customScripts[0] 应该以 $ 开头", script1Before.startsWith("$"));
-        assertTrue("customScripts[2] 应该以 $ 开头", script3Before.startsWith("$"));
+        assertTrue("customScripts[0] 应该以 $$ 开头", script1Before.startsWith("$$"));
+        assertTrue("customScripts[2] 应该以 $$ 开头", script3Before.startsWith("$$"));
 
         // 处理表达式引用
         ExpressFileLoader.processExpressReferences(config, configPath);
@@ -293,7 +293,7 @@ public class ExpressFileLoaderTest {
         System.out.println("  [2]: " + footItem3After);
 
         assertEquals("第1个元素应该保持不变", "<script>", footItem1After);
-        assertFalse("第2个元素不应该再以 $ 开头", footItem2After.startsWith("$"));
+        assertFalse("第2个元素不应该再以 $$ 开头", footItem2After.startsWith("$$"));
         assertTrue("第2个元素应该包含加载的JS内容", footItem2After.contains("InfoList footer loaded"));
         assertEquals("第3个元素应该保持不变", "</script>", footItem3After);
 
@@ -309,10 +309,10 @@ public class ExpressFileLoaderTest {
         System.out.println("  [1]: " + script2After);
         System.out.println("  [2]: " + script3After);
 
-        assertFalse("第1个脚本不应该再以 $ 开头", script1After.startsWith("$"));
+        assertFalse("第1个脚本不应该再以 $$ 开头", script1After.startsWith("$$"));
         assertTrue("第1个脚本应该包含加载的内容", script1After.contains("Script 1 loaded"));
         assertEquals("第2个脚本应该保持不变", "console.log('inline script');", script2After);
-        assertFalse("第3个脚本不应该再以 $ 开头", script3After.startsWith("$"));
+        assertFalse("第3个脚本不应该再以 $$ 开头", script3After.startsWith("$$"));
         assertTrue("第3个脚本应该包含加载的内容", script3After.contains("Script 2 loaded"));
 
         // 验证嵌套结构
@@ -327,11 +327,11 @@ public class ExpressFileLoaderTest {
         Map<String, Object> item3 = (Map<String, Object>) items.get(2);
 
         assertEquals("普通字符串应该保持不变", "normal string", item1);
-        assertFalse("引用文件应该被替换", item2.startsWith("$"));
+        assertFalse("引用文件应该被替换", item2.startsWith("$$"));
         assertTrue("应该包含文件内容", item2.contains("nested_item.txt"));
 
         String nestedContent = (String) item3.get("content");
-        assertFalse("嵌套对象中的引用也应该被替换", nestedContent.startsWith("$"));
+        assertFalse("嵌套对象中的引用也应该被替换", nestedContent.startsWith("$$"));
         assertTrue("应该包含嵌套对象的文件内容", nestedContent.contains("nested object file"));
 
         System.out.println("\n✅ 数组中的表达式文件引用测试通过");
@@ -363,7 +363,7 @@ public class ExpressFileLoaderTest {
         assertTrue("appendHead 处理前应该是 List", appendHeadBeforeConcat instanceof List);
 
         // 调用 processAppendFields 进行数组拼接
-        ExpressFileLoader.processAppendFields(config);
+        ExpressFileLoader.processAppendFields(config, configPath);
 
         // 验证处理后的数据类型和内容
         Object appendFootAfterConcat = config.get("appendFoot");

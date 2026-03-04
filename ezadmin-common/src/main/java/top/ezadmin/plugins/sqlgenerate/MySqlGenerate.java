@@ -10,6 +10,8 @@ import top.ezadmin.common.utils.Utils;
 import java.util.Map;
 
 public class MySqlGenerate extends SqlGenerate {
+
+
     @Override
     public String buildPageSql(String body, String groupBy) {
         return buildPageSqlWithWhere(body, groupBy, generateWhere());
@@ -190,16 +192,23 @@ public class MySqlGenerate extends SqlGenerate {
             default:
                 break;
         }
-        if (StringUtils.isNotBlank(valueStart)) {
+        if (StringUtils.isNotBlank(valueStart) && StringUtils.isNotBlank(valueEnd)) {
             sql.append(union);
             sql.append(SqlUtils.alias(alias, field));
+            sql.append(" between  " + finalStart);
+            sql.append(" and  " + finalEnd);
+        }else{
+            if (StringUtils.isNotBlank(valueStart)) {
+                sql.append(union);
+                sql.append(SqlUtils.alias(alias, field));
 
-            sql.append(" >=  " + finalStart);
-        }
-        if (StringUtils.isNotBlank(valueEnd)) {
-            sql.append(union);
-            sql.append(SqlUtils.alias(alias, field));
-            sql.append(" <=  " + finalEnd);
+                sql.append(" >=  " + finalStart);
+            }
+            if (StringUtils.isNotBlank(valueEnd)) {
+                sql.append(union);
+                sql.append(SqlUtils.alias(alias, field));
+                sql.append(" <=  " + finalEnd);
+            }
         }
         sql.append(" ");
         return sql.toString();
@@ -308,6 +317,87 @@ public class MySqlGenerate extends SqlGenerate {
         }
         sql.append(" )");
         return sql.toString();
+    }
+
+    @Override
+    protected String gte(String union, String alias, String field, String jdbcType, String value, boolean prepare) {
+        if (StringUtils.isBlank(value)) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        String fieldName = SqlUtils.alias(alias, field);
+        sb.append(union)
+                .append(fieldName)
+                .append(" >= ");
+        if (prepare) {
+            sb.append(PREFIX);//#{A,jdbcType=xx}
+            sb.append(field);
+            if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)) {
+                sb.append(",jdbcType=NUMBER");
+            }
+            sb.append(SUFIX);
+        } else {
+            if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)) {
+                sb.append(value);
+            } else {
+                sb.append("'").append(value).append("'");
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
+    protected String lte(String union, String alias, String field, String jdbcType, String value, boolean prepare) {
+        if (StringUtils.isBlank(value)) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        String fieldName = SqlUtils.alias(alias, field);
+        sb.append(union)
+                .append(fieldName)
+                .append(" <= ");
+        if (prepare) {
+            sb.append(PREFIX);//#{A,jdbcType=xx}
+            sb.append(field);
+            if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)) {
+                sb.append(",jdbcType=NUMBER");
+            }
+            sb.append(SUFIX);
+        } else {
+            if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)) {
+                sb.append(value);
+            } else {
+                sb.append("'").append(value).append("'");
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
+    protected String ne(String union, String alias, String field, String jdbcType, String value, boolean prepare) {
+        if (StringUtils.isBlank(value)) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        String fieldName = SqlUtils.alias(alias, field);
+        sb.append(union)
+                .append(fieldName)
+                .append(" != ");
+        if (prepare) {
+            sb.append(PREFIX);//#{A,jdbcType=xx}
+            sb.append(field);
+            if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)) {
+                sb.append(",jdbcType=NUMBER");
+            }
+            sb.append(SUFIX);
+        } else {
+            if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)) {
+                sb.append(value);
+            } else {
+                sb.append("'").append(value).append("'");
+            }
+        }
+        return sb.toString();
     }
 
 

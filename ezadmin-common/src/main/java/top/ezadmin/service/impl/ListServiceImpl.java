@@ -23,6 +23,7 @@ import top.ezadmin.plugins.parser.CommentsSqlParser;
 import top.ezadmin.plugins.parser.MapParser;
 import top.ezadmin.plugins.parser.parse.ResultModel;
 import top.ezadmin.service.ListService;
+import top.ezadmin.web.RequestContext;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -1465,6 +1466,64 @@ public class ListServiceImpl implements ListService {
             e.printStackTrace();
         }
         return pagination;
+    }
+
+    @Override
+    public void initComponentData(RequestContext context, Map<String, Object> component) {
+        if(Utils.isEmpty(component)){
+            return;
+        }
+        //data
+        Map<String, Object> initData = (Map<String, Object>) component.get("initData");
+        if (initData != null) {
+            String dataUrl = (String) initData.get("dataUrl");
+            if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
+                List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
+                component.put("data", result);
+                component.put("dataJson", JSONUtils.toJSONString(result));
+            }
+            else if(initData.containsKey("dataSql") && initData.get("dataSql") != null  ){
+                String dataSql =  (String) initData.get("dataSql") ;
+                // context.put(JsoupUtil.ORGSRC, MapParser.parseDefaultEmpty(ORGSRC, dataRow).getResult());  替换参数
+                Map<String,Object> params=new HashMap<>();
+                params.putAll(context.getRequestParams());
+                params.putAll(context.getSessionParams());
+                ResultModel model=CommentsSqlParser.parse(dataSql, params);
+
+                String dataSource = Utils.trimEmptyDefault(initData.get("dataSource"),"datasource");
+                //
+                DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
+                if(dataSourceBean==null){
+                    dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
+                }
+                try {
+                    List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
+                            model.getResult(), model.getParamsStatic(),false);
+                    component.put("data", result);
+                    component.put("dataJson", JSONUtils.toJSONString(result));
+                } catch (Exception e) {
+                    LOG.error("执行SQL错误",e);
+                }
+            }else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
+                //todo apiUrl
+            }
+        }
+        //props
+        try {
+            Map<String, Object> props = (Map<String, Object>) component.get("props");
+            if (props == null) {
+                props = new HashMap<>();
+            }
+            if(props != null && component.get("component") != null && component.get("component").equals("input")){
+                props.putIfAbsent("lay-affix", "clear");
+            }
+            component.put("props", props);
+            component.put("propsJson", JSONUtils.toJSONString(component.get("props")));
+        }catch (Exception e){
+
+        }
+
+
     }
 
     private String customOrder(List<CustomSearchOrder> o) {

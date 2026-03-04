@@ -275,7 +275,7 @@
             display: block;
         }
     </style>
-    <div>
+    <div   id="site-narrow-content">
         <div class="site-narrow" id="collapseMenuBtn">
             <i class="layui-icon layui-icon-shrink-right"></i>
         </div>
@@ -305,7 +305,8 @@
                     , closeBtn: 0
                     , content: $("#dianti")
                 });
-
+            }else{
+                $("#site-narrow-content").hide();
             }
         })
     </script>
@@ -384,8 +385,9 @@
                             initFunction(res.data);
                         }
                         // 刷新表单渲染（特别是 select）
+                        $(".layui-form-checkbox").remove();
+                        $(".layui-form-radio").remove();
                         form.render();
-
                     }
                 }
                 initWater();

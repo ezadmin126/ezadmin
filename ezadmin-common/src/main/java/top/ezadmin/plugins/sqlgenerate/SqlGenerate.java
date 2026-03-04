@@ -58,8 +58,8 @@ public abstract class SqlGenerate {
         String customJson = Utils.trimNull(getRequest().get("customSearch"));
         Map<String, String> customSearch = customSearchJsonToSql(customJson, searchNameMap);
 
-        if (customSearch.containsKey("customWhere")) {
-            where.append(customSearch.get("customWhere"));
+        if (customSearch.containsKey("customWhere")&& StringUtils.isNotBlank(customSearch.get("customWhere"))) {
+            where.append(" and  "+customSearch.get("customWhere"));
         }
         return where.toString();
     }
@@ -221,10 +221,16 @@ public abstract class SqlGenerate {
         OperatorEnum operatorEnum = OperatorEnum.match(oper);
         switch (operatorEnum) {
             case EQ:
-            case NE:
-            case LTE:
-            case GTE:
                 result = eq(union, alias, field, jdbcType, value, prepare);
+                break;
+            case NE:
+                result = ne(union, alias, field, jdbcType, value, prepare);
+                break;
+            case LTE:
+                result = lte(union, alias, field, jdbcType, value, prepare);
+                break;
+            case GTE:
+                result = gte(union, alias, field, jdbcType, value, prepare);
                 break;
             case BETWEEN:
                 result = between(union, alias, field, jdbcType, valueS, valueE);
@@ -250,6 +256,12 @@ public abstract class SqlGenerate {
         }
         return result.toString();
     }
+
+    protected abstract String gte(String union, String alias, String field, String jdbcType, String value, boolean prepare);
+
+    protected abstract String lte(String union, String alias, String field, String jdbcType, String value, boolean prepare);
+
+    protected abstract String ne(String union, String alias, String field, String jdbcType, String value, boolean prepare);
 
     public abstract String buildPageSql(String sql, String groupBy);
 
@@ -373,34 +385,57 @@ public abstract class SqlGenerate {
     private String customWhere(List<CustomSearchGroup> g, List<CustomSearchSingle> s, Map<String, Map<String, Object>> searchNameMap) {
         StringBuilder sql = new StringBuilder();
         if (Utils.isNotEmpty(s)) {
+            sql.append("(");
             for (int i = 0; i < s.size(); i++) {
                 String field = StringUtils.safeDb(s.get(i).getF());
                 String type = StringUtils.safeDb(" " + s.get(i).getT() + " ");
+                if(i==0){
+                   type="";
+                }
                 Map<String, Object> search = searchNameMap == null ? new HashMap<>() : searchNameMap.get(field);
 
                 String jdbctype = Utils.getStringByObject(search, JsoupUtil.JDBCTYPE);
                 String alias = Utils.getStringByObject(search, JsoupUtil.ALIAS);
 
+                String value = StringUtils.safeDb(s.get(i).getV());
+                String valueS = "";
+                String valueE = "";
+                String operator = StringUtils.safeDb(s.get(i).getO());
+
+                // 如果操作符是 BETWEEN 且值包含 " - "，则分割为开始和结束值
+                if ("BETWEEN".equalsIgnoreCase(operator) && value.contains(" - ")) {
+                    String[] valueSplit = value.split(" - ");
+                    if (valueSplit.length == 2) {
+                        valueS = valueSplit[0].trim();
+                        valueE = valueSplit[1].trim();
+                        value = "";  // 清空 value，使用 valueS 和 valueE
+                    }
+                }
+
                 String w =
                         transOneFileSql(type, alias, field,
-                                StringUtils.safeDb(s.get(i).getV()), "", "", jdbctype,
-                                StringUtils.safeDb(s.get(i).getO()), false);
-                if (i == 0) {
-                    w = w.trim().replaceFirst(type, "");
-                }
+                                value, valueS, valueE, jdbctype,
+                                operator, false);
                 sql.append(w);
             }
+            sql.append(")");
         }
         if (Utils.isNotEmpty(g)) {
+            sql.append(" (");
             for (int i = 0; i < g.size(); i++) {
+                String type= g.get(i).getT();
+                if(i==0){
+                    type="";
+                }
                 if (g != null && Utils.isNotEmpty(g.get(i).getC())) {
-                    sql.append(" " + g.get(i).getT() + " ( ");
+                    sql.append(" " + type + "   ");
                     g.get(i).getC().forEach(item -> {
                         sql.append(customWhere(item.getG(), item.getS(), searchNameMap));
                     });
-                    sql.append(" )");
+                    sql.append("  ");
                 }
             }
+            sql.append(" )");
         }
 
         return sql.toString();

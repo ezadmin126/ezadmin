@@ -3,10 +3,10 @@
   "title": "测试表达式文件引用",
   "description": "用于测试表达式从外部文件加载的功能",
   "express": {
-    "main": "$test_select_express.txt",
-    "count": "$test_count_express.txt",
+    "main": "$$test_select_express.txt",
+    "count": "$$test_count_express.txt",
     "orderBy": "create_time DESC",
-    "groupBy": "$test_group_express.txt"
+    "groupBy": "$$test_group_express.txt"
   },
   "columns": [
     {

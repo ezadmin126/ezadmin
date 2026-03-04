@@ -80,7 +80,7 @@ public class DslEditController extends BaseController {
             }
             Map<String, Object> list = dslConfig.getConfig();
             listController.initSearch(requestContext,list);
-            Collection<String> tdtemplates=listController.initTd(list);
+            Collection<String> tdtemplates=listController.initTd(requestContext,list);
             if(list.get("initApi") == null){
                 list.put("initApi", "/topezadmin/list/data-" + id);
             }

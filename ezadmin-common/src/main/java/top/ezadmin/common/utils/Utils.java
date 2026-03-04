@@ -9,6 +9,7 @@ import top.ezadmin.common.enums.ColTypeEnum;
 import top.ezadmin.common.enums.DefaultParamEnum;
 import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.common.enums.OperatorEnum;
+import top.ezadmin.dao.model.TreeConfig;
 import top.ezadmin.web.JsonArrayResult;
 
 import java.io.IOException;
@@ -418,23 +419,136 @@ public class Utils {
         } else {
             result.sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(fsort)))));
         }
-        sortChildren(result, fsort, fsorttype);
+        TreeConfig config=new TreeConfig();
+        config.setTreeId("ID");
+        sortChildren(result, fsort, fsorttype, config);
         return result;
     }
 
-    private static void sortChildren(List<Map<String, Object>> nodes, String sort, String sorttype) {
+//    /**
+//     * @param list
+//     * @param sort
+//     * @param sorttype asc  desc ,默认asc
+//     */
+//    public static List<Map<String, Object>> flatLabelValueTree(List<Map<String, Object>> list, String sort, String sorttype) {
+//        return flatLabelValueTree(list, sort, sorttype, null);
+//    }
+
+    /**
+     * @param list 树节点列表
+     * @param sort 排序字段
+     * @param sorttype asc  desc ,默认asc
+     * @param searchKeyword 搜索关键词，匹配节点的LABEL字段（忽略大小写）
+     */
+    public static List<Map<String, Object>> flatLabelValueTree(List<Map<String, Object>> list, String sort, String sorttype,
+                                                               String searchKeyword
+    , TreeConfig config
+    ) {
+
+
+        String fsort = Utils.trimEmptyDefault(sort, "ID");
+        String fsorttype = trimEmptyDefault(sorttype, "asc");
+        Map root = new HashMap();
+        root.put(config.getTreeId(), "0");
+        if (StringUtils.isNotBlank(config.getRootPid())) {
+            root.put(config.getTreeId(), config.getRootPid());
+        }
+        root.put(config.getTreeChildren(), new ArrayList<>());
+        //1转成Map
+        Map<String, Map<String, Object>> idMap = new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            // 清除旧的 CHILDREN 字段，避免重复调用时累积
+            list.get(i).remove(config.getTreeChildren());
+            list.get(i).remove(config.getTreeIsParent());
+            idMap.put(Utils.trimNull(list.get(i).get(config.getTreeId())), list.get(i));
+        }
+
+        idMap.forEach((k, v) -> {
+            String parentId = Utils.trimNull(v.get(config.getTreePid()));
+            if (StringUtils.equals(Utils.trimNull(root.get(config.getTreeId())), parentId)) {
+                ((ArrayList) root.get(config.getTreeChildren())).add(v);
+                root.put(config.getTreeIsParent(), true);
+            } else {
+                if (idMap.containsKey(parentId)) {
+                    if (!idMap.get(parentId).containsKey(config.getTreeChildren())) {
+                        idMap.get(parentId).put(config.getTreeChildren(), new ArrayList<Map<String, Object>>());
+                    }
+                    idMap.get(parentId).put(config.getTreeIsParent(), true);
+                    ((List) idMap.get(parentId).get(config.getTreeChildren())).add(v);
+                }
+            }
+        });
+
+        List<Map<String, Object>> result = ((ArrayList) root.get(config.getTreeChildren()));
+        if (StringUtils.equalsIgnoreCase("desc", fsorttype)) {
+            result.sort(Comparator.comparing(a -> -NumberUtils.toLong(Utils.trimNull(((Map) a).get(fsort)))));
+        } else {
+            result.sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(fsort)))));
+        }
+        sortChildren(result, fsort, fsorttype,config);
+        // 如果有搜索关键词，进行过滤
+        if (StringUtils.isNotBlank(searchKeyword)) {
+            result = filterTreeByKeyword(result, searchKeyword, config);
+        }
+
+        return result;
+    }
+
+    private static void sortChildren(List<Map<String, Object>> nodes, String sort, String sorttype , TreeConfig config) {
         for (Map<String, Object> node : nodes) {
-            if (isNotEmpty(((List) node.get("CHILDREN")))) {
+            if (isNotEmpty(((List) node.get(config.getTreeChildren())))) {
                 // Sort the current node's children by ID
                 if (StringUtils.equalsIgnoreCase("desc", sorttype)) {
-                    ((List) node.get("CHILDREN")).sort(Comparator.comparing(a -> -NumberUtils.toLong(Utils.trimNull(((Map) a).get(sort)))));
+                    ((List) node.get(config.getTreeChildren())).sort(Comparator.comparing(a -> -NumberUtils.toLong(Utils.trimNull(((Map) a).get(sort)))));
                 } else {
-                    ((List) node.get("CHILDREN")).sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(sort)))));
+                    ((List) node.get(config.getTreeChildren())).sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(sort)))));
                 }
                 // Recursively sort the children
-                sortChildren(((List) node.get("CHILDREN")), sort, sorttype);
+                sortChildren(((List) node.get(config.getTreeChildren())), sort, sorttype,config);
             }
         }
+    }
+
+    /**
+     * 递归过滤树节点，保留包含搜索关键词的节点及其所有子节点
+     *
+     * @param nodes 树节点列表
+     * @param keyword 搜索关键词
+     * @return 过滤后的节点列表
+     */
+    private static List<Map<String, Object>> filterTreeByKeyword(List<Map<String, Object>> nodes, String keyword, TreeConfig config) {
+        if (nodes == null || nodes.isEmpty() || StringUtils.isBlank(keyword)) {
+            return nodes;
+        }
+
+        List<Map<String, Object>> filteredNodes = new ArrayList<>();
+        String lowerKeyword = keyword.toLowerCase();
+
+        for (Map<String, Object> node : nodes) {
+            // 检查当前节点的 LABEL 是否包含关键词
+            String label = Utils.trimNull(node.get(config.getTreeLabel())).toLowerCase();
+            boolean currentMatches = label.contains(lowerKeyword);
+
+            // 判断是否保留当前节点
+            if (currentMatches) {
+                // 当前节点匹配：保留节点及所有原始子节点，不需要再递归过滤
+                filteredNodes.add(node);
+            } else {
+                // 当前节点不匹配：递归处理子节点
+                List<Map<String, Object>> children = (List<Map<String, Object>>) node.get(config.getTreeChildren());
+                if (children != null && !children.isEmpty()) {
+                    List<Map<String, Object>> filteredChildren = filterTreeByKeyword(children, keyword, config);
+                    if (filteredChildren != null && !filteredChildren.isEmpty()) {
+                        // 子节点中有匹配：保留当前节点及过滤后的子节点
+                        Map<String, Object> clonedNode = new HashMap<>(node);
+                        clonedNode.put(config.getTreeChildren(), filteredChildren);
+                        filteredNodes.add(clonedNode);
+                    }
+                }
+            }
+        }
+
+        return filteredNodes;
     }
 
     public static BigDecimal toTax(BigDecimal price) {

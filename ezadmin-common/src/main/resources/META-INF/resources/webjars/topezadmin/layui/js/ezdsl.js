@@ -456,7 +456,7 @@ function initWater() {
         if (typeof watermark !== 'undefined' && watermark.init) {
             watermark.init({
                 watermark_txt: name + ' ' + time,
-                watermark_fontsize: '14px'
+                watermark_fontsize: '18px'
             });
             console.log('✅ 水印已初始化:', name + ' ' + time);
         } else {

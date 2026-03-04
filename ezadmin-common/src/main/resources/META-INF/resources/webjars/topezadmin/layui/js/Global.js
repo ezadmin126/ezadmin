@@ -184,6 +184,27 @@ Global.listToTree=function(list, idKey = 'id', parentKey = 'parentId', childrenK
     return tree;
 }
 
+Global.getAllValues = function (tree) {
+    const values = [];
+
+    function traverse(nodes) {
+        if (!nodes || !Array.isArray(nodes)) return;
+
+        nodes.forEach(node => {
+            if (node.value !== undefined) {
+                values.push(node.value);
+            }
+            if (node.children && node.children.length > 0) {
+                traverse(node.children);
+            }
+        });
+    }
+
+    traverse(tree);
+    return values;
+}
+
+
 
 
 

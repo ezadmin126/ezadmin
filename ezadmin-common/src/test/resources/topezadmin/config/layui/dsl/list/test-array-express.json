@@ -12,21 +12,21 @@
   ],
   "appendFoot": [
     "<script>",
-    "$infolist_foot.js",
+    "$$infolist_foot.js",
     "</script>"
   ],
   "customScripts": [
-    "$script1.js",
+    "$$script1.js",
     "console.log('inline script');",
-    "$script2.js"
+    "$$script2.js"
   ],
   "nestedExample": {
     "items": [
       "normal string",
-      "$nested_item.txt",
+      "$$nested_item.txt",
       {
         "type": "object",
-        "content": "$nested_object_content.txt"
+        "content": "$$nested_object_content.txt"
       }
     ]
   }

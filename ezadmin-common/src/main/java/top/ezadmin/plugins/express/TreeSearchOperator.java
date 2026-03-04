@@ -78,14 +78,21 @@ public class TreeSearchOperator extends AbstractOperator {
             current.put("id", current.get(fieldIdName));
             current.put("parentId", current.get(fieldParentIdName));
             current.put("name", current.get(fieldName));
+            current.put("CHILDREN", children);
+            current.put("VALUE", current.get(fieldIdName));
+            current.put("ID", current.get(fieldIdName));
+            current.put("PARENT_ID", current.get(fieldParentIdName));
+            current.put("LABEL", current.get(fieldName));
             if (Utils.isNotEmpty(children)) {
                 current.put("isParent", true);
+                current.put("IS_PARENT", true);
                 for (int i = 0; i < children.size(); i++) {
                     Map<String, Object> child = children.get(i);
                     fillChild(child, sql, fieldName, fieldIdName, fieldParentIdName, groupBy, operatorParam, generate);
                 }
             } else {
                 current.put("isParent", false);
+                current.put("IS_PARENT", false);
             }
         } catch (Exception e) {
             logger.error("curren=" + current, e);

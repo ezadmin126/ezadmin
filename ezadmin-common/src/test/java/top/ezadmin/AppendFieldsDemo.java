@@ -55,7 +55,7 @@ public class AppendFieldsDemo {
         System.out.println("-----------------------------------");
 
         // 处理 appendHead 和 appendFoot，将数组拼接成换行的字符串
-        ExpressFileLoader.processAppendFields(config);
+        ExpressFileLoader.processAppendFields(config, configPath);
 
         System.out.println("数组已拼接为多行字符串");
 

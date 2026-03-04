@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * 表达式文件加载工具类
- * 支持在JSON配置中通过 $filename 引用外部文件作为表达式内容
+ * 支持在JSON配置中通过 $$filename 引用外部文件作为表达式内容
  */
 public class ExpressFileLoader {
 
@@ -24,7 +24,7 @@ public class ExpressFileLoader {
 
     /**
      * 处理配置中的所有表达式引用
-     * 将以 $ 开头的值替换为对应文件的内容
+     * 将以 $$ 开头的值替换为对应文件的内容
      *
      * @param config 配置对象
      * @param configPath 配置文件的路径，用于确定相对路径
@@ -53,7 +53,7 @@ public class ExpressFileLoader {
         processExpressField(config, "submit_express", configPath);
         processExpressField(config, "delete_express", configPath);
         processExpressField(config, "status_express", configPath);
-        processExpressField(config, "displayorder_express", configPath);
+//        processExpressField(config, "displayorder_express", configPath);
 
         // 处理所有字段（包括普通字段和嵌套结构）
         for (Map.Entry<String, Object> entry : config.entrySet()) {
@@ -63,8 +63,8 @@ public class ExpressFileLoader {
             // 处理字符串值
             if (value instanceof String) {
                 String strValue = (String) value;
-                if (strValue.startsWith("$")) {
-                    String fileName = strValue.substring(1);
+                if (strValue.startsWith("$$")) {
+                    String fileName = strValue.substring(2);
                     String content = loadExpressFile(fileName, configPath);
                     if (content != null) {
                         config.put(key, content);
@@ -96,9 +96,9 @@ public class ExpressFileLoader {
         processExpressField(expressMap, "count", configPath);
         processExpressField(expressMap, "orderBy", configPath);
         processExpressField(expressMap, "groupBy", configPath);
-        processExpressField(expressMap, "select", configPath);
-        processExpressField(expressMap, "where", configPath);
-        processExpressField(expressMap, "having", configPath);
+//        processExpressField(expressMap, "select", configPath);
+//        processExpressField(expressMap, "where", configPath);
+//        processExpressField(expressMap, "having", configPath);
 
         // 处理表单相关的 express 字段
         processExpressField(expressMap, "init", configPath);
@@ -118,9 +118,9 @@ public class ExpressFileLoader {
         Object value = map.get(fieldName);
         if (value instanceof String) {
             String strValue = (String) value;
-            if (strValue.startsWith("$")) {
-                // 去掉 $ 前缀，获取文件名
-                String fileName = strValue.substring(1);
+            if (strValue.startsWith("$$")) {
+                // 去掉 $$ 前缀，获取文件名
+                String fileName = strValue.substring(2);
                 String content = loadExpressFile(fileName, configPath);
                 if (content != null) {
                     map.put(fieldName, content);
@@ -132,7 +132,7 @@ public class ExpressFileLoader {
 
     /**
      * 处理数组中的表达式引用
-     * 遍历数组，将以 $ 开头的字符串元素替换为对应文件的内容
+     * 遍历数组，将以 $$ 开头的字符串元素替换为对应文件的内容
      *
      * @param list 要处理的数组
      * @param configPath 配置文件路径，用于确定相对路径
@@ -146,9 +146,9 @@ public class ExpressFileLoader {
             Object item = list.get(i);
             if (item instanceof String) {
                 String strValue = (String) item;
-                if (strValue.startsWith("$")) {
-                    // 去掉 $ 前缀，获取文件名
-                    String fileName = strValue.substring(1);
+                if (strValue.startsWith("$$")) {
+                    // 去掉 $$ 前缀，获取文件名
+                    String fileName = strValue.substring(2);
                     String content = loadExpressFile(fileName, configPath);
                     if (content != null) {
                         list.set(i, content);
@@ -332,33 +332,38 @@ public class ExpressFileLoader {
      * 如果这些字段是数组，则将数组元素拼接成换行的字符串
      *
      * @param config 配置对象
+     * @param configPath 配置文件路径，用于加载表达式文件引用
      */
-    public static void processAppendFields(Map<String, Object> config) {
+    public static void processAppendFields(Map<String, Object> config, String configPath) {
         if (config == null) {
             return;
         }
 
         // 处理 appendHead
-        processAppendField(config, "appendHead");
+        processAppendField(config, "appendHead", configPath);
 
         // 处理 appendFoot
-        processAppendField(config, "appendFoot");
+        processAppendField(config, "appendFoot", configPath);
     }
 
     /**
      * 处理单个 append 字段
-     * 如果字段是数组，则将数组元素用换行符拼接成字符串
+     * 如果字段是数组，则先处理表达式文件引用，再将数组元素用换行符拼接成字符串
      *
      * @param config 配置对象
      * @param fieldName 字段名（appendHead 或 appendFoot）
+     * @param configPath 配置文件路径，用于加载表达式文件引用
      */
-    private static void processAppendField(Map<String, Object> config, String fieldName) {
+    private static void processAppendField(Map<String, Object> config, String fieldName, String configPath) {
         Object value = config.get(fieldName);
         if (value instanceof List) {
             @SuppressWarnings("unchecked")
             List<Object> list = (List<Object>) value;
 
             if (!list.isEmpty()) {
+                // 先处理数组中的表达式文件引用（$$xxx.txt）
+                processExpressListReferences(list, configPath);
+
                 // 将数组元素拼接成字符串，每个元素一行
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < list.size(); i++) {
@@ -374,6 +379,8 @@ public class ExpressFileLoader {
                 // 替换原来的数组为拼接后的字符串
                 config.put(fieldName, sb.toString());
                 logger.debug("Converted {} array to string with {} lines", fieldName, list.size());
+            }else{
+                config.put(fieldName, "");
             }
         }
     }
