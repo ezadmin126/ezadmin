@@ -375,9 +375,9 @@ public class FormController extends BaseController {
             componentJson.put("iframe",card.get("iframe"));
             componentJson.put("description",card.get("description"));
             componentJson.put("buttonList",card.get("buttonList"));
-
-            card.put("componentJson",JSONUtils.toJSONString(componentJson));
-
+            if(!EzBootstrap.config().isSqlCache()) {
+                card.put("componentJson", JSONUtils.toJSONString(componentJson));
+            }
             Object fieldListObj = card.get("fieldList");
             List<List<Map<String, Object>>> fieldList = getFlattenedFieldList(fieldListObj);
             if(Utils.isNotEmpty(fieldList ) ){

@@ -115,9 +115,13 @@ public class EzBootstrap   {
                     case "formEdit":
                         return  handleFormEditController(requestContext, method, id);
                      case "edit":
-                        return handleEditController(requestContext, method, id);
+                         if(!EzBootstrap.config().isSqlCache()){
+                             return handleEditController(requestContext, method, id);
+                         }
                     case "inspector":
-                        return  handleInspectorController(requestContext, method, id);
+                        if(!EzBootstrap.config().isSqlCache()) {
+                            return handleInspectorController(requestContext, method, id);
+                        }
                     case "dsl":
                         return  handleDslController(requestContext, method, id);
                     default:

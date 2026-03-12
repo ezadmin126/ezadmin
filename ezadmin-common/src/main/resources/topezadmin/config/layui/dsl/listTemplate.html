@@ -21,6 +21,29 @@
     <script th:src="${'/webjars/topezadmin/layui/js/watermark.js?v1='+vi}" type="text/javascript"></script>
     <script th:src="${'/webjars/topezadmin/layui/js/Global.js?v='+vi}" type="text/javascript"></script>
     <script th:src="${'/webjars/topezadmin/layui/js/ezdsl.js?v='+vi}" type="text/javascript"></script>
+<style>
+
+    .layui-side-scroll{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .layui-side-scroll .layui-card{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .layui-side-scroll .layui-card-body{
+        flex: 1;
+        overflow: auto;
+    }
+    .layui-layout-admin:not(:has(.layui-side)) .layui-body{
+        left:0;
+    }
+</style>
 
 </head>
 <body>
@@ -34,112 +57,111 @@
 
 <div th:utext="${list.appendHead}" item_name="appendHead" th:if="${not #strings.isEmpty(list.appendHead )}"></div>
 
-
-<div  th:class="${ (#lists.isEmpty(list.search)?'':'layui-fluid')}">
-
-    <div class="layui-layout">
-        <div class="layui-side  " th:if="${not #maps.isEmpty(list.menu)}" style="top: 10px;">
-            <div class="layui-side-scroll  layui-panel"  style="padding-top:10px">
-                <div class="ez-search-menu" th:id="${'ez-tree-'+list.menu.item_name}"
-                     th:data-dataJson="${list.menu.dataJson}"
-                     th:data-propsJson="${list.menu.propsJson}"
-                     th:item_name="${list.menu.item_name}"
-                ></div>
-            </div>
-        </div>
-        <div class="layui-body" th:style="${not #maps.isEmpty(list.menu)?'width: calc(100% - 200px);':'left:0px !important'}">
-            <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap"
-                 th:style="${(#lists.isEmpty(list.search)||list.hideSearch?'display:none':'')}"
-            >
-                <ul class="layui-tab-title" id="tab" item_name="tabList" th:if="${not #lists.isEmpty(list.tabList)}">
-                    <li th:lay-id="${item.item_name}" th:item_id="${item.item_name}"
-                        th:classappend="${item.select?'layui-this  ':' '}"
-                        th:each="item:${list.tabList}">
-                        <a th:item_name="${item.item_name}" th:href="${item.url}" th:text="${item.label}"></a>
-                    </li>
-                </ul>
-                <div class="layui-tab-content"  >
-                    <div class="layui-tab-item layui-show">
-                        <div class="layui-card"    style="padding:10px;">
-                            <div class="layui-card-body">
-
-                                <form class="layui-form"   id="searchForm" lay-filter="searchForm">
-                                    <th:block th:if="${list.search != null and not #lists.isEmpty(list.search)}">
-                                        <th:block th:each="rowObj : ${list.search}">
-                                            <div class="  searchcontent layui-row layui-col-space5" item_name="searchcontent">
-                                                <th:block th:each="search : ${rowObj.row}">
-                                                    <div th:utext="${cr.render(search)}" class="selector list-item" th:remove="tag"></div>
-                                                </th:block>
-                                            </div>
-                                        </th:block>
-                                    </th:block>
-                                    <div class="layui-form-item searchButtonRow"  style=" text-align: center; "  >
-                                        <!-- 查询按钮 -->
-                                        <div class="layui-inline">
-                                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="searchBtn">查询</button>
-                                            <button type="button"  data-click="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
-                                            <button type="button"
-                                                    id="downBtn"  style="display: none"
-                                                    class="layui-btn layui-btn-primary layui-btn-sm   "
-                                                    data-placement="top" title="展开">
-                                                展开
-                                                <i class="layui-icon layui-icon-down"></i>
-                                            </button>
-                                            <button type="button" id="upBtn" style="display: none"
-                                                    class="layui-btn layui-btn-primary layui-btn-sm   "
-                                                    data-placement="top" title="收起">
-                                                收起
-                                                <i class="layui-icon layui-icon-up"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-3 row orderBy" STYLE="display:none">
-                                        <input type="hidden" id="currentPage" name="currentPage" >
-                                        <input type="hidden" id="perPageInt" name="perPageInt" th:value="${perPageInt}">
-                                        <input type="hidden" id="totalPage" name="totalPage" >
-                                        <input type="hidden" id="trace" name="trace" value="0">
-                                        <input type="hidden" id="totalRecord" name="totalRecord" >
-                                        <input id="orderByName" name="orderByName" >
-                                        <input id="orderByType" name="orderByType" >
-                                        <input id="customSearch" name="customSearch">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div><!--formitem-->
-                </div><!--tab-content-->
-            </div><!--tab -->
+<div class=" layui-layout layui-layout-admin" th:classappend="${ (#lists.isEmpty(list.search)?'':'layui-fluid')}">
+    <div class="layui-side " style="top:10px" th:if="${list.menu!=null}">
+        <div class="layui-side-scroll">
             <div class="layui-card">
+                <div class="layui-card-header" th:text="${list.menu.label}">卡片面板</div>
                 <div class="layui-card-body">
-                    <div id="table-wrap" item_name="table-wrap">
-                        <!-- 数据表格 -->
-                        <table class="layui-hide" id="dataTable" lay-filter="dataTable">
-                            <thead>
-                            <tr>
-                                <th  th:each="column : ${list.column}" th:text="${column.label}"
-                                     th:data-propsJson="${column.propsJson}"
-                                >ID</th>
-                            </tr>
-                            </thead>
-                        </table>
-
-                        <DIV class="layui-table-column layui-table-page">
-                            <div class="layui-inline layui-table-pageview" style="margin-right: 10px;
-                        margin-top: 8px;"  >
-                                <div id="PAGE_LAYUI">
-                                </div>
-                            </div>
-                        </DIV>
-
-                    </div>
+                    <div class="ez-search-menu" th:id="${'ez-tree-'+list.menu.item_name}"
+                         th:data-dataJson="${list.menu.dataJson}"
+                         th:data-propsJson="${list.menu.propsJson}"
+                         th:item_name="${list.menu.item_name}"
+                    ></div>
                 </div>
-
             </div>
         </div>
     </div>
+    <div class="layui-body" style="top:0">
+        <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap"
+             th:style="${(#lists.isEmpty(list.search)||list.hideSearch?'display:none':'')}"
+        >
+            <ul class="layui-tab-title" id="tab" item_name="tabList" th:if="${not #lists.isEmpty(list.tabList)}">
+                <li th:lay-id="${item.item_name}" th:item_id="${item.item_name}"
+                    th:classappend="${item.select?'layui-this  ':' '}"
+                    th:each="item:${list.tabList}">
+                    <a th:item_name="${item.item_name}" th:href="${item.url}" th:text="${item.label}"></a>
+                </li>
+            </ul>
+            <div class="layui-tab-content"  >
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-card"    style="padding:10px;">
+                        <div class="layui-card-body">
 
+                            <form class="layui-form"   id="searchForm" lay-filter="searchForm">
+                                <th:block th:if="${list.search != null and not #lists.isEmpty(list.search)}">
+                                    <th:block th:each="rowObj : ${list.search}">
+                                        <div class="  searchcontent layui-row layui-col-space5" item_name="searchcontent">
+                                            <th:block th:each="search : ${rowObj.row}">
+                                                <div th:utext="${cr.render(search)}" class="selector list-item" th:remove="tag"></div>
+                                            </th:block>
+                                        </div>
+                                    </th:block>
+                                </th:block>
+                                <div class="layui-form-item searchButtonRow"  style=" text-align: center; "  >
+                                    <!-- 查询按钮 -->
+                                    <div class="layui-inline">
+                                        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" id="searchBtn">查询</button>
+                                        <button type="button"  data-click="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+                                        <button type="button"
+                                                id="downBtn"  style="display: none"
+                                                class="layui-btn layui-btn-primary layui-btn-sm   "
+                                                data-placement="top" title="展开">
+                                            展开
+                                            <i class="layui-icon layui-icon-down"></i>
+                                        </button>
+                                        <button type="button" id="upBtn" style="display: none"
+                                                class="layui-btn layui-btn-primary layui-btn-sm   "
+                                                data-placement="top" title="收起">
+                                            收起
+                                            <i class="layui-icon layui-icon-up"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-3 row orderBy" STYLE="display:none">
+                                    <input type="hidden" id="currentPage" name="currentPage" >
+                                    <input type="hidden" id="perPageInt" name="perPageInt" th:value="${perPageInt}">
+                                    <input type="hidden" id="totalPage" name="totalPage" >
+                                    <input type="hidden" id="trace" name="trace" value="0">
+                                    <input type="hidden" id="totalRecord" name="totalRecord" >
+                                    <input id="orderByName" name="orderByName" >
+                                    <input id="orderByType" name="orderByType" >
+                                    <input id="customSearch" name="customSearch">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div><!--formitem-->
+            </div><!--tab-content-->
+        </div><!--tab -->
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div id="table-wrap" item_name="table-wrap">
+                    <!-- 数据表格 -->
+                    <table class="layui-hide" id="dataTable" lay-filter="dataTable">
+                        <thead>
+                        <tr>
+                            <th  th:each="column : ${list.column}" th:text="${column.label}"
+                                 th:data-propsJson="${column.propsJson}"
+                            >ID</th>
+                        </tr>
+                        </thead>
+                    </table>
+
+                    <DIV class="layui-table-column layui-table-page">
+                        <div class="layui-inline layui-table-pageview" style="margin-right: 10px;
+                        margin-top: 8px;"  >
+                            <div id="PAGE_LAYUI">
+                            </div>
+                        </div>
+                    </DIV>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
-
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container" item_name="tableButton">
@@ -232,7 +254,7 @@
             var cacheJsonConfig = cacheConfig();
 
             // 获取 URL 参数
-            var urlParams = getUrlParams();
+          //  var urlParams = getUrlParams();
 
             // 设置表单默认值（从 URL 参数）
             initFormValue(getUrlParams());
@@ -327,7 +349,7 @@
                 }
             });
 
-
+            var initWhereParam=mergeWhereParams();
             var tableConfig = {
                 id: 'dataTable',
                 elem: '#dataTable',
@@ -341,10 +363,7 @@
                 cellExpandedMode: 'tips',
                 url:  document.getElementById("initApi").value,
                 method:'post',
-                where: function(){
-                    // 合并参数：URL参数 -> 表单参数 -> menu参数（后者覆盖前者）
-                    return mergeWhereParams();
-                },  // 使用 URL 参数作为初始查询条件
+                where: initWhereParam,  // 使用 URL 参数作为初始查询条件
                 page: false,
                 cols: [cols],
                 done: function (res, curr, count, origin) {
@@ -464,7 +483,8 @@
                     $("#orderByName").val('');
                     $("#orderByType").val('');
                 }
-                tableIns.reload({where:  mergeWhereParams()});
+                var currentWhereParam=mergeWhereParams();
+                tableIns.reload({where: currentWhereParam});
             });
 
             table.on('colResized(dataTable)', function (obj) {
@@ -488,7 +508,8 @@
                     document.getElementById('currentPage').value = 1;
                     document.getElementById('orderByName').value = '';
                     document.getElementById('orderByType').value = '';
-                    tableIns.reload({where: mergeWhereParams()});
+                    var currentWhereParam=mergeWhereParams();
+                    tableIns.reload({where:currentWhereParam});
                 }
             });
             // 展开按钮：显示所有搜索条件

@@ -2,7 +2,9 @@ package top.ezadmin.common.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.EzBootstrap;
 import top.ezadmin.dao.dto.DslConfig;
+import top.ezadmin.plugins.cache.Callback;
 import top.ezadmin.service.DslDbService;
 
 import java.util.Map;
@@ -31,14 +33,27 @@ public class DslLoader {
             log.warn("DSL ID不能为空");
             return null;
         }
-
         if (!"form".equals(type) && !"list".equals(type)) {
             log.warn("不支持的DSL类型: {}", type);
             return null;
         }
-
-        log.debug("开始加载DSL: id={}, type={}", id, type);
-
+        return (DslConfig)EzBootstrap.config().getEzCache().get("TEMPLATE_DSL", type + "-" + id,
+                new Callback() {
+                    @Override
+                    public Object call(String key) {
+                        return loadDslDirect(id, type);
+                    }
+                });
+    }
+    private static DslConfig loadDslDirect(String id, String type) {
+        if (id == null || id.isEmpty()) {
+            log.warn("DSL ID不能为空");
+            return null;
+        }
+        if (!"form".equals(type) && !"list".equals(type)) {
+            log.warn("不支持的DSL类型: {}", type);
+            return null;
+        }
         // 1. 优先尝试从文件加载
         DslConfig fileConfig = loadFromFile(id, type);
         if (fileConfig != null) {
@@ -57,6 +72,7 @@ public class DslLoader {
         log.warn("✗ DSL不存在: id={}, type={}", id, type);
         return null;
     }
+
 
     /**
      * 从文件加载DSL配置

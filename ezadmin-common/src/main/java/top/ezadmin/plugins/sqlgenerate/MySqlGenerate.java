@@ -399,6 +399,32 @@ public class MySqlGenerate extends SqlGenerate {
         }
         return sb.toString();
     }
-
-
+    @Override
+    protected String oper(String union, String alias, String field, String jdbcType, String value, boolean prepare, String operC) {
+        if (StringUtils.isBlank(value)) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        String fieldName = SqlUtils.alias(alias, field);
+        sb.append(union)
+                .append(fieldName)
+                .append(" ")
+                .append(operC)
+                .append(" ");
+        if (prepare) {
+            sb.append(PREFIX);//#{A,jdbcType=xx}
+            sb.append(field);
+            if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)) {
+                sb.append(",jdbcType=NUMBER");
+            }
+            sb.append(SUFIX);
+        } else {
+            if (JdbcTypeEnum.NUMBER.getName().equalsIgnoreCase(jdbcType)) {
+                sb.append(value);
+            } else {
+                sb.append("'").append(value).append("'");
+            }
+        }
+        return sb.toString();
+    }
 }

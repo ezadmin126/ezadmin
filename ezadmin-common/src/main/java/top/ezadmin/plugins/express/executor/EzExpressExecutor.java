@@ -93,7 +93,8 @@ public class EzExpressExecutor {
      * @param operator
      */
      public static void addExtendFunction(String key,Operator operator) {
-        if(runner.getFunction(key)==null){
+        if(runner.getOperatorFactory()!=null
+                && runner.getOperatorFactory().getOperator(key)==null){
             try {
                 runner.addFunction(key, operator);
             } catch (Exception e) {

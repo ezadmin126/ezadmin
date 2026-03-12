@@ -1504,7 +1504,52 @@ public class ListServiceImpl implements ListService {
                 } catch (Exception e) {
                     LOG.error("执行SQL错误",e);
                 }
-            }else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
+            }
+            else if(initData.containsKey("dataTreeSql") && initData.get("dataTreeSql") != null  ){
+                //递归获取数据，根据parentId
+                String dataTreeSql =  (String) initData.get("dataTreeSql") ;
+                String dataTreeSqlRoot =Utils.trimEmptyDefault(initData.get("dataTreeSqlRoot"),dataTreeSql ) ;
+
+                Map<String,Object> params=new HashMap<>();
+                params.putAll(context.getRequestParams());
+                params.putAll(context.getSessionParams());
+
+                String dataSource = Utils.trimEmptyDefault(initData.get("dataSource"),"datasource");
+                DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
+                if(dataSourceBean==null){
+                    dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
+                }
+
+                try {
+                    // 查询第一层级数据
+                    // 优先使用 dataTreeSqlRoot，如果没有配置则使用 dataTreeSql
+                    String rootSql = StringUtils.isNotBlank(dataTreeSqlRoot) ? dataTreeSqlRoot : dataTreeSql;
+                    ResultModel model=CommentsSqlParser.parse(rootSql, params);
+                    List<Map<String, Object>> rootNodes = Dao.getInstance().executeQuery(dataSourceBean,
+                            model.getResult(), model.getParamsStatic(),false);
+
+                    // 创建结果列表，先添加第一层数据
+                    List<Map<String, Object>> allData = new ArrayList<>();
+                    if (Utils.isNotEmpty(rootNodes)) {
+                        allData.addAll(rootNodes);
+                    }
+
+                    // 获取最大递归深度，默认5层
+                    int maxDepth = NumberUtils.toInt(Utils.trimNull(initData.get("maxDepth")), 5);
+
+                    // 递归查询子节点（从第2层开始，深度为1）
+                    // 使用 dataTreeSql 作为子层级查询的SQL模板
+                    // 将所有子层级数据收集到 allData 中
+                    buildTreeRecursively(dataSourceBean, dataTreeSql, rootNodes, params, 1, maxDepth, allData);
+
+                    // 返回扁平的列表，包含所有层级的数据
+                    component.put("data", allData);
+                    component.put("dataJson", JSONUtils.toJSONString(allData));
+                } catch (Exception e) {
+                    LOG.error("执行SQL错误",e);
+                }
+            }
+            else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
                 //todo apiUrl
             }
         }
@@ -1524,6 +1569,69 @@ public class ListServiceImpl implements ListService {
         }
 
 
+    }
+
+    /**
+     * 递归查询树形数据，根据parentId逐层查询，将所有数据收集到一个扁平列表中
+     * @param dataSource 数据源
+     * @param sqlTemplate SQL模板，需要包含 ${parentId} 占位符
+     * @param parentNodes 父节点列表
+     * @param baseParams 基础参数
+     * @param currentDepth 当前深度
+     * @param maxDepth 最大深度（默认5层）
+     * @param resultList 结果列表，用于收集所有查询到的数据
+     */
+    private void buildTreeRecursively(DataSource dataSource, String sqlTemplate,
+                                      List<Map<String, Object>> parentNodes,
+                                      Map<String, Object> baseParams,
+                                      int currentDepth, int maxDepth,
+                                      List<Map<String, Object>> resultList) {
+        // 如果达到最大深度或父节点为空，停止递归
+        if (currentDepth >= maxDepth || Utils.isEmpty(parentNodes)) {
+            return;
+        }
+
+        // 收集当前层级的所有子节点
+        List<Map<String, Object>> allChildren = new ArrayList<>();
+
+        // 遍历每个父节点
+        for (Map<String, Object> parentNode : parentNodes) {
+            try {
+                // 获取父节点的ID作为查询参数
+                String parentId = Utils.trimNull(parentNode.get("value"));
+                if (StringUtils.isBlank(parentId)) {
+                    continue;
+                }
+
+                // 构建查询参数
+                Map<String, Object> queryParams = new HashMap<>();
+                queryParams.putAll(baseParams);
+                queryParams.put("parentId", parentId);
+                queryParams.put("PARENT_ID", parentId);
+
+                // 解析SQL并执行查询
+                ResultModel model = CommentsSqlParser.parse(sqlTemplate, queryParams);
+                List<Map<String, Object>> children = Dao.getInstance().executeQuery(
+                    dataSource,
+                    model.getResult(),
+                    model.getParamsStatic(),
+                    false
+                );
+
+                // 如果有子节点，添加到结果列表和当前层级列表
+                if (Utils.isNotEmpty(children)) {
+                    resultList.addAll(children);
+                    allChildren.addAll(children);
+                }
+            } catch (Exception e) {
+                LOG.error("递归查询树形数据错误，parentNode=" + parentNode, e);
+            }
+        }
+
+        // 递归查询下一层级
+        if (Utils.isNotEmpty(allChildren)) {
+            buildTreeRecursively(dataSource, sqlTemplate, allChildren, baseParams, currentDepth + 1, maxDepth, resultList);
+        }
     }
 
     private String customOrder(List<CustomSearchOrder> o) {

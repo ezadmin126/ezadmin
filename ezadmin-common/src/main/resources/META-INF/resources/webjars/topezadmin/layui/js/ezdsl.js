@@ -475,6 +475,23 @@ function getUrlParams() {
         var pairs = queryString.split('&');
         for (var i = 0; i < pairs.length; i++) {
             var pair = pairs[i].split('=');
+            //pair[1]==EZ_CURRENT_MONTH_RANGE 则生成  2026-03-01 - 2026-03-31 这种格式的数据当做value
+            if (pair[1] == 'EZ_CURRENT_MONTH_RANGE') {
+                // 获取当前日期
+                const d = new Date();
+                const year = d.getFullYear();
+// 月份补零：getMonth() 返回 0-11，+1 后可能是一位数，用 padStart 补成两位
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+// 当月第一天（固定为 01）
+                const firstDay = `${year}-${month}-01`;
+
+// 当月最后一天的日期数字（如 31、30、28等）
+                const lastDayNum = new Date(year, month, 0).getDate();  // month 此时已是补零后的字符串，但在 new Date 中会自动转为数字
+// 最后一天日期也要补零
+                const lastDay = `${year}-${month}-${String(lastDayNum).padStart(2, '0')}`;
+                console.log(`${firstDay} - ${lastDay}`);
+                pair[1] =`${firstDay} - ${lastDay}`;
+            }
             params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
         }
     }
@@ -620,18 +637,52 @@ function renderCascader(cas) {
             var tree=Global.listToTree(dataArray,id,parent_id,children);
             resultConfig.options =tree;
         }
-        var value= currentDom.value;
-        if (value != undefined && value != '') {
-            resultConfig.value = value.split(",");
+        if(currentDom.getAttribute('data-dataApi') != null){
+            var url=currentDom.getAttribute('data-dataApi');
+            //ajax 获取数据
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if(data.success){
+
+                        resultConfig.options =data.data;
+
+                        var value= currentDom.value;
+                        if (value != undefined && value != '') {
+                            resultConfig.value = value.split(",");
+                        }
+                        try {
+                            var layCascader = layui.layCascader;
+                            var ins= layCascader(resultConfig);//这里获取不到实例
+                            Global.registry("Cascader").register(resultConfig.name,ins);
+                        } catch (e) {
+                            console.log(e)
+                        }
+                    }else{
+                        console.log("接口异常"+url);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+        else{
+            var value= currentDom.value;
+            if (value != undefined && value != '') {
+                resultConfig.value = value.split(",");
+            }
+            try {
+                var layCascader = layui.layCascader;
+                var ins= layCascader(resultConfig);//这里获取不到实例
+                Global.registry("Cascader").register(resultConfig.name,ins);
+            } catch (e) {
+                console.log(e)
+            }
         }
 
-        try {
-            var layCascader = layui.layCascader;
-            var ins= layCascader(resultConfig);//这里获取不到实例
-            Global.registry("Cascader").register(resultConfig.name,ins);
-        } catch (e) {
-            console.log(e)
-        }
 
     } catch (e) {
         console.log(e)

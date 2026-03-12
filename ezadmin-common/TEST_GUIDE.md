@@ -176,3 +176,13 @@ ezadmin-common/
 2. 在实际应用中访问 `/topezadmin/list/page-test-db-list`
 3. 使用AI修改DSL，验证双写功能
 4. 删除文件，验证数据库降级功能
+
+"menu": {
+"item_name": "CATEGORY_ID",
+"label": "分类",
+"alias": "A",
+"initData": {
+"dataSource": "dataSource",
+"dataSql": "SELECT ID value, CATEGORY_NAME label FROM  T_DOC_CATEGORY WHERE DELETE_FLAG=0"
+}
+}

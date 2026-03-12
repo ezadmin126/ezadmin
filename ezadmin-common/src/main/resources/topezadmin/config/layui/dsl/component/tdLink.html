@@ -1,13 +1,22 @@
-<script >
-      Global.registry("columnRender").register("tdLink",(name,d,component)=>{
-          const value=d[name];
-          const url=component.props.url;  //有layui模版语法
-          var laytpl = layui.laytpl;
-          var template =laytpl(url);
-          var renderUrl=template.render(d);
-          if(value){
-              return `<a  item_name="`+name+`"   component="tdLink" class="layui-text" style="color:#01aaed" href="`+renderUrl+`" target="_blank">`+ (value ||component.props.emptyShow )+`</a>`;
-          }
-          return  `<span item_name="`+name+`" component="tdLink">`+ (value ||component.props.emptyShow )+`</span>`;
-      });
+<script>
+    Global.registry("columnRender").register("tdLink",(name,d,component)=>
+    {
+        const value=d[name];
+        const url=component.props.url;  //有layui模版语法
+        var laytpl = layui.laytpl;
+        var template =laytpl(url);
+        var renderUrl=template.render(d);
+        if(value){
+            return `<a  item_name="`+name+`"   component="tdLink" class="layui-text" style="color:#01aaed"
+     data-click="ez-button" href="javascript:void(0)" opentype="`+component.props.opentype+`"
+     windowname="`+component.props.windowname+`"
+      area="`+component.props.area+`"
+     url="`+renderUrl+`"
+    data-propsjson="`+JSON.stringify(component.props)+`"
+      >`+
+                (value ||component.props.emptyShow )+
+                `</a>`;
+        }
+        return  `<span item_name="`+name+`" component="tdLink">`+ (value ||component.props.emptyShow )+`</span>`;
+    });
 </script>

@@ -158,6 +158,7 @@ public class EzDateUtils {
     public static void main(String[] args) throws ParseException {
         SimpleDateFormat simple = new SimpleDateFormat(DATETIME);
         System.out.println(yearStart());
+        System.out.println(currentMonthRange() );
     }
 
     public static String todayDate() {
@@ -179,4 +180,25 @@ public class EzDateUtils {
         SimpleDateFormat simple = new SimpleDateFormat(MONTH);
         return simple.format(new Date());
     }
+
+    public static String currentMonthRange() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simple = new SimpleDateFormat(DATE);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        //  calendar.add(Calendar.MONTH,1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        Date start=calendar.getTime();
+        calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.SECOND, -1);
+        Date end=calendar.getTime();
+        return simple.format(start) + " - " + simple.format(end);
+    }
+
+
 }

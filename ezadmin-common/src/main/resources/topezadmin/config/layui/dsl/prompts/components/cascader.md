@@ -18,7 +18,6 @@
   "item_name": "region_id",
   "label": "地区",
   "component": "cascader",
-  "col": 6,
   "initData": {
     "dataJson": [
       {
@@ -393,6 +392,9 @@ CREATE TABLE regions (
 SELECT id value, name label, parent_id FROM regions WHERE status=1 ORDER BY sort
 ```
 
+
+
+
 系统会自动将扁平数据转换为树形结构。
 
 ## 注意事项
@@ -425,6 +427,43 @@ lay-cascader 默认只能选择叶子节点（最后一级）。
 ### 如何实现动态加载？
 
 可以配合后端接口实现懒加载，需要自定义实现。
+
+### 如何使用外部URL作为数据源？
+
+```json
+{
+          "item_name": "CURRENT_ORG_ID",
+          "label": "销售部门",
+          "component": "cascader",
+          "operator": "IN",
+          "alias": "tsd",
+          "initData": {
+            "dataApi": "/ezadmin/api/org.html?level=10&parentId=2"
+          },
+          "props": {
+            "placeholder": "请选择部门",
+            "props": {
+              "multiple": true,
+              "value": "orgId",
+              "label": "orgName",
+              "children": "organizations"
+            }
+          }
+        }
+```
+
+### 如果一条sql无法查出来所有数据怎么办
+服务端将 递归5层 获取子数据 ，最终前端 树形展示
+```json
+{
+ "initData": {
+   "dataTreeSqlRoot": "SELECT * FROM menu WHERE parent_id IS NULL OR parent_id = ''",
+   "dataTreeSql": "SELECT * FROM menu WHERE parent_id = ${parentId}",
+   "dataSource": "datasource",
+   "maxDepth": 5
+ }
+}
+```
 
 ## 相关组件
 

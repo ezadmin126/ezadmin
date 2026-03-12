@@ -252,10 +252,13 @@ public abstract class SqlGenerate {
             case ALL_LIKE:
                 //todo
             default:
+                result = oper(union, alias, field, jdbcType, value, prepare,operatorEnum.getOperC());
                 break;
         }
         return result.toString();
     }
+
+    protected abstract String oper(String union, String alias, String field, String jdbcType, String value, boolean prepare, String operC);
 
     protected abstract String gte(String union, String alias, String field, String jdbcType, String value, boolean prepare);
 

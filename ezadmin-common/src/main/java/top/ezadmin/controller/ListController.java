@@ -68,6 +68,7 @@ public class ListController extends BaseController {
         templateParam.put("listUrl", requestContext.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
         templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
         templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
+        templateParam.put("ENCRYPT_LIST_ID",listUrlCode);
         templateParam.put("customSearchOpen", EzBootstrap.config().isCustomSearchOpen());
 
         listService.fillListById(list, requestParamMap, sessionParamMap);
@@ -974,8 +975,8 @@ public class ListController extends BaseController {
         }
 
         if(StringUtils.isBlank(newOrderBy.toString())){
-            String orderBy =(String)((Map<String, Object>)list.get("express")).get("orderby_express");
-            newOrderBy.append(Utils.trimNull(orderBy));
+            String orderBy = Utils.trimNull(list.get("orderby_express"));
+            newOrderBy.append(orderBy);
         }
         pagination.setOrderByClause(newOrderBy.toString());
         try {

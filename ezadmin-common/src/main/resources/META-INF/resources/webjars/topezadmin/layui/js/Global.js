@@ -98,7 +98,9 @@ Global.onClick('ez-button', function (e) {
     } catch (err) {
         cfg = {};
     }
-    ezopen(cfg.opentype, cfg.windowname, cfg.url, cfg.area);
+    ezopen(cfg.opentype|| _this.getAttribute("opentype"),
+        cfg.windowname|| _this.getAttribute("windowname"),
+        cfg.url|| _this.getAttribute("url"), cfg.area);
 
     e.preventDefault();
     e.stopPropagation();
@@ -615,7 +617,7 @@ function ezopen(openType, title, appendUrl, area) {
 
 function openModel(url, name, area) {
     var json = ['90%', '90%'];
-    if (area !== undefined && area != '') {
+    if (area !== undefined &&area !== "undefined" && area != '') {
         try {
             json = area.split(",");
         } catch (e) {

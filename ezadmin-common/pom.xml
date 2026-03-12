@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-common</artifactId>
-    <version>3.0.7</version>
+    <version>3.0.9</version>
     <packaging>jar</packaging>
     <name>ezadmin-common</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
@@ -28,7 +28,6 @@
         </developer>
     </developers>
     <distributionManagement>
-
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
@@ -64,12 +63,7 @@
         </repository>
     </repositories>
     <dependencies>
-        <!--HTTP客户端工具包 - hutool-->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-http</artifactId>
-            <version>5.8.16</version>
-        </dependency>
+
          <!--导出-->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -127,7 +121,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>QLExpress</artifactId>
-            <version>3.3.1</version>
+            <version>3.3.4</version>
         </dependency>
         <!-- JSON Patch RFC6902 -->
         <dependency>

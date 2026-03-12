@@ -200,7 +200,8 @@ StringBuilder sql = new StringBuilder();
 sql.append("SELECT * FROM users WHERE delete_flag=0");
 return search(sql);
 ```
-系统会自动根据请求里面的参数拼接SQL语句
+系统会自动根据请求里面的参数拼接SQL语句，注意多行不需要 循环用 sql.append,表达式不要每行sql.append ,
+直接把sql当做一个整体，便于复制完整sql
 
 ## 四点五、JSON Patch 修改规则（RFC6902）
 

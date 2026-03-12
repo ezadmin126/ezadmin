@@ -1,12 +1,16 @@
 package top.ezadmin.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.utils.JSONUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,15 +75,12 @@ public class ChatGptService {
 
             log.info("AI 请求: {}", JSONUtils.toJSONString(requestBody ));
 
-            // 发送请求
-            HttpResponse response = HttpRequest.post(EzBootstrap.config().getApiUrl())
-                    .header("Authorization", "Bearer " + EzBootstrap.config().getApiKey())
-                    .header("Content-Type", "application/json")
-                    .body(JSONUtils.toJSONString(requestBody))
-                    .timeout(120000) // 120秒超时
-                    .execute();
-
-            String responseBody = response.body();
+            // 发送请求（使用 JDK 自带的 HttpURLConnection）
+            String responseBody = sendPostRequest(
+                    EzBootstrap.config().getApiUrl(),
+                    JSONUtils.toJSONString(requestBody),
+                    EzBootstrap.config().getApiKey()
+            );
             log.info("AI 响应: {}", responseBody);
 
             // 解析响应
@@ -159,5 +160,66 @@ public class ChatGptService {
         }
 
         return response;
+    }
+
+    /**
+     * 使用 JDK 自带的 HttpURLConnection 发送 POST 请求
+     * 兼容 JDK8/JDK17
+     *
+     * @param url     请求 URL
+     * @param jsonBody JSON 请求体
+     * @param apiKey  API 密钥
+     * @return 响应内容
+     */
+    private String sendPostRequest(String url, String jsonBody, String apiKey) throws Exception {
+        HttpURLConnection connection = null;
+        try {
+            // 创建连接
+            URL urlObj = new URL(url);
+            connection = (HttpURLConnection) urlObj.openConnection();
+
+            // 设置请求方法和属性
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Authorization", "Bearer " + apiKey);
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+
+            // 设置超时时间（120秒）
+            connection.setConnectTimeout(120000);
+            connection.setReadTimeout(120000);
+
+            // 允许输出
+            connection.setDoOutput(true);
+
+            // 写入请求体
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonBody.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            // 读取响应
+            int responseCode = connection.getResponseCode();
+            BufferedReader reader;
+
+            if (responseCode >= 200 && responseCode < 300) {
+                reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+            } else {
+                reader = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8));
+            }
+
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            return response.toString();
+
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
     }
 }
