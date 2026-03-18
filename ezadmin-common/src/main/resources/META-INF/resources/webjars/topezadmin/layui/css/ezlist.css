@@ -154,7 +154,7 @@ th a {
 .layui-table-page {
     text-align: right;
     padding: 0;
-    border: 1px solid #eee;
+    /*border: 1px solid #eee;*/
 }
 
 .ez-table-tool {

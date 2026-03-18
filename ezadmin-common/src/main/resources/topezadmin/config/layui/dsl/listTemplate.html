@@ -59,7 +59,7 @@
 
 <div th:utext="${list.appendHead}" item_name="appendHead" th:if="${not #strings.isEmpty(list.appendHead )}"></div>
 
-<div class=" layui-layout layui-layout-admin" th:classappend="${ (#lists.isEmpty(list.search)?'':'layui-fluid')}">
+<div class=" layui-layout layui-layout-admin" >
     <div class="layui-side " style="top:10px" th:if="${list.menu!=null}">
         <div class="layui-side-scroll">
             <div class="layui-card">
@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-    <div class="layui-body" style="top:0">
+    <div class="layui-body" style="top:0" th:classappend="${ (#lists.isEmpty(list.search)?'':'layui-fluid')}">
         <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap"
              th:style="${(#lists.isEmpty(list.search)||list.hideSearch?'display:none':'')}"
         >
@@ -392,7 +392,6 @@
                         })
                     });
                     initWater();
-
                      if(typeof initFunction === 'function'){
                           initFunction(res, curr, count, origin);
                      }
@@ -498,7 +497,7 @@
                     document.getElementById('orderByName').value = '';
                     document.getElementById('orderByType').value = '';
                     var currentWhereParam=mergeWhereParams();
-                    tableIns.reload({where:currentWhereParam});
+                    tableIns.reload({height: 'full-'+tableHeight(),where:currentWhereParam});
                 }
             });
             // 展开按钮：显示所有搜索条件
@@ -506,14 +505,14 @@
                 $(this).hide();
                 $("#upBtn").show();
                 $(".searchcontent").children().not(".form-item-hidden").show();
-                Global.get("table").reload({height: 'full-'+tableHeight()})
+             //   Global.get("table").reload({height: 'full-'+tableHeight()})
             })
             // 收起按钮：恢复到只显示前2行
             $("#upBtn").click(function () {
                 $(this).hide();
                 $("#downBtn").show();
                 calculateSearchItemDisplay();
-                Global.get("table").reload({height: 'full-'+tableHeight()})
+              //  Global.get("table").reload({height: 'full-'+tableHeight()})
             })
         }catch (e){
             console.log(e);
