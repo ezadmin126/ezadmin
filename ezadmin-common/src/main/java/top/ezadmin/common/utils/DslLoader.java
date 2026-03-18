@@ -189,7 +189,7 @@ public class DslLoader {
                     log.info("✓ DSL保存到数据库成功: id={}, type={}", id, type);
                 } else {
                     log.error("✗ DSL保存到数据库失败: id={}, type={}", id, type);
-                    success = false;
+                  //  success = false;
                 }
             } catch (Exception e) {
                 log.error("保存DSL到数据库失败: id={}, type={}", id, type, e);

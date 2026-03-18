@@ -457,7 +457,7 @@ var rangeShortCut = [{
 
 function ezopen(openType, title, appendUrl, area) {
     var contextNameElement = document.getElementById('contextName');
-    appendUrl = (contextNameElement ? contextNameElement.value : '') + appendUrl;
+    appendUrl = (contextNameElement ? contextNameElement.value : '') + appendUrl.trim();
     if (openType && openType.indexOf('parent.') >= 0) {
         openType = openType.replace('parent.', '');
         parent.window.ezopen(openType, title, appendUrl, area);

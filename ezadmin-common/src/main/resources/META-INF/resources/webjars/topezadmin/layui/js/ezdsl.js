@@ -458,7 +458,7 @@ function initWater() {
                 watermark_txt: name + ' ' + time,
                 watermark_fontsize: '18px'
             });
-            console.log('✅ 水印已初始化:', name + ' ' + time);
+           // console.log('✅ 水印已初始化:', name + ' ' + time);
         } else {
             console.warn('⚠️ watermark 对象未定义，水印初始化失败');
         }
@@ -656,6 +656,25 @@ function renderCascader(cas) {
                         try {
                             var layCascader = layui.layCascader;
                             var ins= layCascader(resultConfig);//这里获取不到实例
+                            //  是否严格的遵守父子节点不互相关联 如果是关联的，则需要把父节点的ID也塞进去
+                            if(!resultConfig.props.checkStrictly){
+                                ins.changeEvent(function(value2, node) {
+                                    console.log('关闭级联窗口', value2, node);
+                                    var checkedNodes = ins.getCheckedNodes();
+                                    var value = [];
+                                    checkedNodes.forEach(function(row) {
+                                        row.forEach(function(node) {
+                                            if (node._checked == 1) {
+                                                value.push(node.value);
+                                            }
+                                        });
+                                    });
+                                    console.log('close 选中的值:', value);
+                                    $("[name="+name+"]").val(value);
+                                    return value;
+                                });
+
+                            }
                             Global.registry("Cascader").register(resultConfig.name,ins);
                         } catch (e) {
                             console.log(e)
@@ -677,6 +696,24 @@ function renderCascader(cas) {
             try {
                 var layCascader = layui.layCascader;
                 var ins= layCascader(resultConfig);//这里获取不到实例
+                //  是否严格的遵守父子节点不互相关联 如果是关联的，则需要把父节点的ID也塞进去
+                if(!resultConfig.props.checkStrictly){
+                    ins.changeEvent(function(value2, node) {
+                        console.log('关闭级联窗口', value2, node);
+                        var checkedNodes = ins.getCheckedNodes();
+                        var value = [];
+                        checkedNodes.forEach(function(row) {
+                            row.forEach(function(node) {
+                                if (node._checked == 1) {
+                                    value.push(node.value);
+                                }
+                            });
+                        });
+                        console.log('close 选中的值:', value);
+                        $("[name="+name+"]").val(value);
+                        return value;
+                    });
+                }
                 Global.registry("Cascader").register(resultConfig.name,ins);
             } catch (e) {
                 console.log(e)

@@ -190,6 +190,8 @@ public class EzBootstrap   {
                 return controller.exportpage(  requestContext,method,id);
             case "data":
                 return controller.data(  requestContext,method,id);
+            case "countpage":
+                return controller.countpage(  requestContext,method,id);
             case "list":
                 return controller.list(  requestContext,method,id);
             case "count":

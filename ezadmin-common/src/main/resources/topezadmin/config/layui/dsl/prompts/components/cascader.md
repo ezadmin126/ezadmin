@@ -455,13 +455,25 @@ lay-cascader 默认只能选择叶子节点（最后一级）。
 ### 如果一条sql无法查出来所有数据怎么办
 服务端将 递归5层 获取子数据 ，最终前端 树形展示
 ```json
+ 
 {
- "initData": {
-   "dataTreeSqlRoot": "SELECT * FROM menu WHERE parent_id IS NULL OR parent_id = ''",
-   "dataTreeSql": "SELECT * FROM menu WHERE parent_id = ${parentId}",
-   "dataSource": "datasource",
-   "maxDepth": 5
- }
+"row": [
+    {
+        "item_name": "CATEGORY_ID",
+        "label": "分类",
+        "component": "cascader",
+        "classAppend": "layui-col-md12",
+        "initData": {
+            "dataSource": "dataSource",
+            "dataTreeSqlRoot": "SELECT  ID value, CATEGORY_NAME label,PARENT_ID parent_id FROM T_CATEGORY WHERE  DELETE_FLAG=0 AND (parent_id IS NULL OR parent_id =0)",
+            "dataTreeSql": "SELECT ID value, CATEGORY_NAME label,PARENT_ID parent_id FROM  T_CATEGORY WHERE DELETE_FLAG=0 and parent_id=${PARENT_ID}",
+            "maxDepth": 4
+        },
+        "props": {
+            
+        }
+    }
+  ]
 }
 ```
 

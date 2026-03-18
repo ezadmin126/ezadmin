@@ -410,7 +410,10 @@ public class ListController extends BaseController {
         initTree(requestContext,list);
         Collection<String> tdtemplates=initTd(requestContext,list);
         if(list.get("initApi") == null){
-            list.put("initApi", "/topezadmin/list/data-" + id);
+            list.put("initApi", EzBootstrap.config().getPrefixUrl()+"/list/data-" + id);
+        }
+        if(list.get("countApi") == null){
+            list.put("countApi", EzBootstrap.config().getPrefixUrl()+"/list/countpage-" + id);
         }
         //默认你不隐藏头部
         if(list.get("hideSearch") == null){
@@ -507,18 +510,11 @@ public class ListController extends BaseController {
         listExpressExecutor.addRequestParam(requestContext.getRequestParams());
         List<Map<String, Object>> dataList = (List<Map<String, Object>>) listExpressExecutor.execute();
         //查询总数
-        long count =0;
+        long count =page.getPerPageInt();
         if(list.get("tree")!=null
                 &&Utils.isNotEmpty((Map<String, Object>)list.get("tree"))
         ){
            // 从请求参数中获取树搜索关键词
-            //获取tree里面的 "customName": {
-            //                        "id": "VALUE",
-            //                        "pid": "PARENT_ID",
-            //                        "name": "LABEL",
-            //                        "children": "CHILDREN",
-            //                        "isParent": "IS_PARENT"
-            //                    },
             Map<String, Object> customNameMap = (Map<String, Object>) ((Map<?, ?>) list.get("tree")) .get("customName");
             TreeConfig config=new TreeConfig();
             if(customNameMap != null){
@@ -540,7 +536,102 @@ public class ListController extends BaseController {
                    config);
             return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(rr.size()).data(rr));
         }else{
-           count= getDataCountByListId(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource"))
+            if(Utils.isTrue(list.get("pagesync"))){
+                count= getDataCountByListId(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource"))
+                        , list,  requestContext.getRequestParams(), requestContext.getSessionParams());
+            }
+        }
+        return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(count).data(dataList));
+    }
+
+    public EzResult countpage(RequestContext requestContext, String method, String id) throws Exception {
+
+        // 使用统一加载器（文件优先，数据库降级）
+        top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(id, "list");
+        if (dslConfig == null) {
+            return EzResult.instance().code("JSON").data(EzResult.instance().code("404") );
+        }
+        Map<String, Object> list = dslConfig.getConfig();
+        String select_express = Utils.expressToString( ((Map<String, Object>)list.get("express")).get("main"));
+        String orderBy = Utils.expressToString(((Map<String, Object>)list.get("express")).get("orderBy"));
+        String groupBy = Utils.expressToString(((Map<String, Object>)list.get("express")).get("groupBy"));
+        String count_express = Utils.expressToString(((Map<String, Object>)list.get("express")).get("count"));
+        //兼容老设计
+        list.put("orderby_express",orderBy);
+        list.put("count_express",count_express);
+        list.put("col", list.get("column"));
+        list.put("core",list.get("body"));
+
+
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
+        columnList.forEach(item->{
+            //兼容老设计
+            item.put("type",item.get("component"));
+        });
+
+        // 支持一维和二维数组格式
+        List<List<Map<String, Object>>> searchList = getFlattenedSearchList(list.get("search"));
+        fillinitRequestValue(searchList,requestContext.getRequestParams());
+
+        //  Page page = new Page(requestContext.getRequestParams());
+        int perPageInt = list.get("body") != null ? Utils.toInt(Utils.trimNull(((Map<String, Object>)list.get("body")).get("limit"))) : 10;
+        if( !requestContext.getRequestParams().containsKey("perPageInt")){
+            requestContext.getRequestParams().put("perPageInt", perPageInt);
+        }
+        if(list.get("tree")!=null
+                &&Utils.isNotEmpty((Map<String, Object>)list.get("tree"))
+        ){
+            //tree最多支持10000条数据
+            requestContext.getRequestParams().put("perPageInt", 10000);
+        }
+
+        Page page = loadingPage(list, requestContext.getRequestParams());
+
+        ListExpressExecutor listExpressExecutor = ListExpressExecutor.createInstance();
+        listExpressExecutor.datasource(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource")))
+                .express(select_express)
+                .page(page);
+        //兼容老设计
+        listExpressExecutor.getOperatorParam().setListDto(list);
+
+        //计算group by
+        String group = excuteGroup(groupBy, requestContext.getRequestParams(), requestContext.getSessionParams());
+
+        listExpressExecutor.addParam("_CHECKD_IDS", Utils.getStringByObject(requestContext.getRequestParams(), "_CHECKD_IDS"));
+        listExpressExecutor.addParam("EZ_SUM_FLAG", Utils.getStringByObject(requestContext.getRequestParams(), "EZ_SUM_FLAG"));
+        listExpressExecutor.addParam("GROUP_BY", group);
+        page.setGroupBy(group);
+        listExpressExecutor.addSessionParam(requestContext.getSessionParams());
+        listExpressExecutor.addRequestParam(requestContext.getRequestParams());
+        List<Map<String, Object>> dataList =new ArrayList<>();
+        //查询总数
+        long count =0;
+        if(list.get("tree")!=null
+                &&Utils.isNotEmpty((Map<String, Object>)list.get("tree"))
+        ){
+            // 从请求参数中获取树搜索关键词
+            Map<String, Object> customNameMap = (Map<String, Object>) ((Map<?, ?>) list.get("tree")) .get("customName");
+            TreeConfig config=new TreeConfig();
+            if(customNameMap != null){
+                config.setTreeId(Utils.trimNull(customNameMap.get("id")));
+                config.setTreePid(Utils.trimNull(customNameMap.get("pid")));
+                config.setTreeLabel(Utils.trimNull(customNameMap.get("name")));
+                config.setTreeChildren(Utils.trimNull(customNameMap.get("children")));
+                config.setTreeIsParent(Utils.trimNull(customNameMap.get("isParent")));
+            }
+            //取data配置里面的rootPid
+            Map<String, Object> dataMap = (Map<String, Object>) ((Map<?, ?>) list.get("tree")) .get("data");
+            String rootPid ="";
+            if(dataMap != null){
+                config.setRootPid(Utils.trimNull(dataMap.get("rootPid")));
+            }
+            String treeSearchKeyword = Utils.trimNull(requestContext.getParameter(config.getTreeLabel()));
+            List<Map<String, Object>> rr=Utils.flatLabelValueTree(dataList,"","",
+                    treeSearchKeyword,
+                    config);
+            return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(rr.size()).data(rr));
+        }else{
+            count= getDataCountByListId(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource"))
                     , list,  requestContext.getRequestParams(), requestContext.getSessionParams());
         }
         return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(count).data(dataList));
@@ -552,10 +643,10 @@ public class ListController extends BaseController {
         String ENCRYPT_LIST_ID =listUrlCode;
         String _BLANK_PARAM_COLUMN = Utils.trimNull(requestContext.getParameter("_BLANK_PARAM_COLUMN"));
         String EZ_PER_PAGE_SIZE = Utils.trimEmptyDefault(requestContext.getParameter("EZ_PER_PAGE_SIZE"), "1000");
-        String orderedColumn[] = null;
-        if (StringUtils.isNotBlank(_BLANK_PARAM_COLUMN)) {
-            orderedColumn = _BLANK_PARAM_COLUMN.split(",");
-        }
+//        String orderedColumn[] = null;
+//        if (StringUtils.isNotBlank(_BLANK_PARAM_COLUMN)) {
+//            orderedColumn = _BLANK_PARAM_COLUMN.split(",");
+//        }
         String key = ENCRYPT_LIST_ID + "_" + ENCRYPT_LIST_ID;
         try {
             String sessionUserId = Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY));
@@ -826,7 +917,7 @@ public class ListController extends BaseController {
             List<Map<String, Object>> searchListRow = searchList.get(j);
             for (int i = 0; i < searchListRow.size(); i++) {
                 Map<String, Object> search = searchListRow.get(i);
-                Map<String, Object> props = (Map<String, Object>) search.get("props");
+                Map<String, Object> props =search.get("props")==null?new HashMap<String, Object>(): (Map<String, Object>) search.get("props");
                 String currentItemname = Utils.trimNull(search.get(JsoupUtil.ITEM_NAME));
                 String component = Utils.trimEmptyDefault(search.get("component"), "input");
                 String orgValue = Utils.trimNull(requestParamMap.get(currentItemname));

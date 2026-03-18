@@ -23,6 +23,7 @@ public class ListDsl extends BaseDsl{
      * 初始化数据接口
      */
     private String initApi;
+    private String countApi;
     /**
      * 表格主体配置
      */
@@ -116,6 +117,14 @@ public class ListDsl extends BaseDsl{
 
     public void setInitApi(String initApi) {
         this.initApi = initApi;
+    }
+
+    public String getCountApi() {
+        return countApi;
+    }
+
+    public void setCountApi(String countApi) {
+        this.countApi = countApi;
     }
 
     /**
