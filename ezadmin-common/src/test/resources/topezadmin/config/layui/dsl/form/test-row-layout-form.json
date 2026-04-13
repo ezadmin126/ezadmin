@@ -1,0 +1,145 @@
+{
+  "id": "test-row-layout-form",
+  "title": "测试二维数组行布局表单",
+  "description": "测试新的二维数组fieldList格式，支持自定义行布局",
+  "dataSource": "dataSource",
+  "initExpress": "SELECT * FROM t_user WHERE id = #{ID}",
+  "submitExpress": [
+    "if(!isNotBlank('ID')) {",
+    "  param = new InsertParam();",
+    "  param.table('t_user');",
+    "  param.add('#{NAME}');",
+    "  param.add('#{AGE,jdbcType=NUMBER}');",
+    "  param.add('#{EMAIL}');",
+    "  param.add('#{PHONE}');",
+    "  param.add('#{ADDRESS}');",
+    "  param.add('#{STATUS,jdbcType=NUMBER}');",
+    "  param.add('#{REMARK}');",
+    "  return insertSimple(param);",
+    "} else {",
+    "  param = new UpdateParam();",
+    "  param.table('t_user');",
+    "  param.add('#{NAME}');",
+    "  param.add('#{AGE,jdbcType=NUMBER}');",
+    "  param.add('#{EMAIL}');",
+    "  param.add('#{PHONE}');",
+    "  param.add('#{ADDRESS}');",
+    "  param.add('#{STATUS,jdbcType=NUMBER}');",
+    "  param.add('#{REMARK}');",
+    "  param.where('id=#{ID}');",
+    "  return updateSimple(param);",
+    "}"
+  ],
+  "cardList": [
+    {
+      "type": "card",
+      "label": "基本信息",
+      "description": "用户的基本信息",
+      "fieldList": [
+        {
+          "row": [
+            {
+              "name": "ID",
+              "label": "用户ID",
+              "component": "hidden"
+            }
+          ]
+        },
+        {
+          "row": [
+            {
+              "name": "NAME",
+              "label": "姓名",
+              "component": "input",
+              "classAppend": "layui-col-md6",
+              "props": {
+                "placeholder": "请输入姓名",
+                "lay-verify": "required",
+                "description": "用户的真实姓名"
+              }
+            },
+            {
+              "name": "AGE",
+              "label": "年龄",
+              "component": "input",
+              "classAppend": "layui-col-md6",
+              "props": {
+                "type": "number",
+                "placeholder": "请输入年龄",
+                "min": "1",
+                "max": "150"
+              }
+            }
+          ]
+        },
+        {
+          "row": [
+            {
+              "name": "EMAIL",
+              "label": "邮箱",
+              "component": "input",
+              "classAppend": "layui-col-md12",
+              "props": {
+                "type": "email",
+                "placeholder": "请输入邮箱地址",
+                "lay-verify": "email"
+              }
+            }
+          ]
+        },
+        {
+          "row": [
+            {
+              "name": "PHONE",
+              "label": "手机号",
+              "component": "input",
+              "classAppend": "layui-col-sm12 layui-col-md4",
+              "props": {
+                "placeholder": "请输入手机号",
+                "lay-verify": "phone"
+              }
+            },
+            {
+              "name": "STATUS",
+              "label": "状态",
+              "component": "select",
+              "classAppend": "layui-col-sm6 layui-col-md4",
+              "initData": {
+                "dataJson": [
+                  {"label": "启用", "value": "1"},
+                  {"label": "禁用", "value": "0"}
+                ]
+              },
+              "props": {
+                "placeholder": "请选择状态"
+              }
+            },
+            {
+              "name": "ADDRESS",
+              "label": "地址",
+              "component": "input",
+              "classAppend": "layui-col-sm6 layui-col-md4",
+              "props": {
+                "placeholder": "请输入地址"
+              }
+            }
+          ]
+        },
+        {
+          "row": [
+            {
+              "name": "REMARK",
+              "label": "备注",
+              "component": "textarea",
+              "classAppend": "layui-col-md12",
+              "props": {
+                "placeholder": "请输入备注信息",
+                "rows": "4"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

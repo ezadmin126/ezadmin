@@ -1,0 +1,6 @@
+<script  >
+    Global.registry("columnRender").register("tdText",(name,d,component)=>{
+        const value=d[name];
+        return   `<span item_name=`+name+` component="tdText">`+layui.util.escape(value ||component.props.emptyShow ||'')+`</span>`  ;
+    });
+</script>

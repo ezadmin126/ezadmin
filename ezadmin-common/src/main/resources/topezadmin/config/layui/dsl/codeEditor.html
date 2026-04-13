@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSL代码编辑器 - ${dslId}</title>
+    <link th:href="${'/webjars/layuidist/css/layui.css?v1='+vi}" rel="stylesheet">
+    <script th:src="${'/webjars/layuidist/layui.js?v1='+vi}" type="text/javascript"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .file-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .file-item:hover {
+            background: #f5f5f5;
+            border-left-color: #667eea;
+        }
+
+        .file-item.active {
+            background: #f0f4ff;
+            border-left-color: #667eea;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .editor-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .editor-toolbar {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafafa;
+        }
+
+        .editor-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-saved {
+            background: #52c41a;
+        }
+
+        .status-modified {
+            background: #faad14;
+        }
+
+        .status-error {
+            background: #f5222d;
+        }
+
+        #editor {
+            flex: 1;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .ace_editor {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .error-info {
+            background: #fff1f0;
+            border: 1px solid #ffccc7;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin: 10px;
+            color: #cf1322;
+            font-size: 13px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <div class="header">
+        <div class="header-left">
+            <h1>🎨 DSL代码编辑器</h1>
+        </div>
+        <div class="header-info">
+            <span>类型：<strong>[[${dslType}]]</strong></span>
+            <span>ID：<strong>[[${dslId}]]</strong></span>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 侧边栏：文件列表 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                📁 配置文件列表
+            </div>
+            <div id="fileList">
+                <!-- 动态加载 -->
+            </div>
+        </div>
+
+        <!-- 编辑器面板 -->
+        <div class="editor-panel">
+            <!-- 工具栏 -->
+            <div class="editor-toolbar">
+                <div class="editor-info">
+                    <span id="statusIndicator">
+                        <span class="status-indicator status-saved"></span>
+                        <span id="statusText">已保存</span>
+                    </span>
+                    <span>行: <strong id="cursorLine">1</strong></span>
+                    <span>列: <strong id="cursorColumn">1</strong></span>
+                </div>
+                <div class="btn-group">
+                    <button class="layui-btn layui-btn-sm" id="btnFormat">
+                        <i class="layui-icon layui-icon-template-1"></i> 格式化
+                    </button>
+                    <button class="layui-btn layui-btn-sm layui-btn-warm" id="btnValidate">
+                        <i class="layui-icon layui-icon-vercode"></i> 验证JSON
+                    </button>
+                    <button class="layui-btn layui-btn-sm btn-primary" id="btnSave">
+                        <i class="layui-icon layui-icon-ok"></i> 保存 (Ctrl+S)
+                    </button>
+                    <button class="layui-btn layui-btn-sm btn-primary" id="aiSave">
+                        <i class="layui-icon layui-icon-ok"></i> AI编辑
+                    </button>
+                    <button class="layui-btn layui-btn-sm layui-btn-danger" id="btnClose">
+                        <i class="layui-icon layui-icon-close"></i> 关闭
+                    </button>
+                </div>
+            </div>
+
+            <!-- 错误提示 -->
+            <div class="error-info" id="errorInfo"></div>
+            <input type="hidden" id="dslContent" th:value="${dslContent}">
+            <input type="hidden" id="dslId" th:value="${dslId}">
+            <input type="hidden" id="dslType" th:value="${dslType}">
+            <!-- ACE编辑器 -->
+            <div id="editor" ></div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+
+    <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.35.5/src-min-noconflict/ace.js"></script>
+    <script>
+    layui.use(['layer', 'jquery'], function(){
+        const layer = layui.layer;
+        const $ = layui.jquery;
+
+        // 初始化ACE编辑器
+        const editor = ace.edit("editor");
+        editor.setTheme("ace/theme/tomorrow");
+        editor.session.setMode("ace/mode/json");
+        editor.setOptions({
+            fontSize: 14,
+            showPrintMargin: false,
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+            enableSnippets: true,
+            tabSize: 2,
+            useSoftTabs: true
+        });
+        editor.setValue(document.getElementById('dslContent').value,-1)
+
+        // 全局变量
+        let currentFile = {
+            id: '[[${dslId}]]',
+            type: '[[${dslType}]]',
+            content: '',
+            modified: false
+        };
+
+        // // 加载文件内容
+        // function loadFile(dslId, dslType) {
+        //     const url = '/topezadmin/dsl/' + dslType + '/get-' + dslId;
+        //
+        //     $.ajax({
+        //         url: url,
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function(response) {
+        //             if (response.success && response.data) {
+        //                 const data = response.data.data || response.data;
+        //                 currentFile.content = data.content;
+        //                 editor.setValue(data.content, -1);
+        //                 updateStatus('saved');
+        //                 formatCode();
+        //             } else {
+        //                 layer.msg('加载失败：' + (response.message || '未知错误'), {icon: 2});
+        //             }
+        //         },
+        //         error: function(xhr) {
+        //             layer.msg('加载失败：网络错误', {icon: 2});
+        //         }
+        //     });
+        // }
+
+        // 保存文件
+        function saveFile() {
+            const content = editor.getValue();
+
+            // 验证JSON
+            try {
+                JSON.parse(content);
+            } catch (e) {
+                showError('JSON格式错误：' + e.message);
+                return;
+            }
+
+            const url = '/topezadmin/dsl/' + currentFile.type + 'save-' + currentFile.id;
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { content: content },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        layer.msg('保存成功', {icon: 1});
+                        currentFile.content = content;
+                        currentFile.modified = false;
+                        updateStatus('saved');
+                        hideError();
+                    } else {
+                        layer.msg('保存失败：' + (response.message || '未知错误'), {icon: 2});
+                    }
+                },
+                error: function(xhr) {
+                    layer.msg('保存失败：网络错误', {icon: 2});
+                }
+            });
+        }
+
+        function aiSave(){
+            const url = '/topezadmin/edit/' + currentFile.type + '-' + currentFile.id;
+            window.open(url, '_blank');
+        }
+        // 格式化代码
+        function formatCode() {
+            try {
+                const content = editor.getValue();
+                const formatted = JSON.stringify(JSON.parse(content), null, 2);
+                editor.setValue(formatted, -1);
+                layer.msg('格式化成功', {icon: 1, time: 1000});
+            } catch (e) {
+                showError('格式化失败：' + e.message);
+            }
+        }
+
+        // 验证JSON
+        function validateJSON() {
+            try {
+                const content = editor.getValue();
+                JSON.parse(content);
+                layer.msg('✓ JSON格式正确', {icon: 1});
+                hideError();
+            } catch (e) {
+                showError('JSON格式错误：' + e.message);
+                layer.msg('JSON格式错误', {icon: 2});
+            }
+        }
+
+        // 更新状态
+        function updateStatus(status) {
+            const indicator = $('#statusIndicator .status-indicator');
+            const text = $('#statusText');
+
+            indicator.removeClass('status-saved status-modified status-error');
+
+            if (status === 'saved') {
+                indicator.addClass('status-saved');
+                text.text('已保存');
+            } else if (status === 'modified') {
+                indicator.addClass('status-modified');
+                text.text('已修改');
+            } else if (status === 'error') {
+                indicator.addClass('status-error');
+                text.text('错误');
+            }
+        }
+
+        // 显示错误
+        function showError(message) {
+            $('#errorInfo').text('⚠ ' + message).show();
+            updateStatus('error');
+        }
+
+        // 隐藏错误
+        function hideError() {
+            $('#errorInfo').hide();
+        }
+
+        // 监听编辑器变化
+        editor.on('change', function() {
+            if (editor.getValue() !== currentFile.content) {
+                currentFile.modified = true;
+                updateStatus('modified');
+            }
+        });
+
+        // 监听光标位置
+        editor.selection.on('changeCursor', function() {
+            const cursor = editor.getCursorPosition();
+            $('#cursorLine').text(cursor.row + 1);
+            $('#cursorColumn').text(cursor.column + 1);
+        });
+
+        // 按钮事件
+        $('#btnFormat').click(formatCode);
+        $('#btnValidate').click(validateJSON);
+        $('#btnSave').click(saveFile);
+        $('#aiSave').click(aiSave);
+        $('#btnClose').click(function() {
+            if (currentFile.modified) {
+                layer.confirm('有未保存的修改，确定要关闭吗？', {icon: 3}, function(index){
+                    window.close();
+                    layer.close(index);
+                });
+            } else {
+                window.close();
+            }
+        });
+
+        // 键盘快捷键
+        editor.commands.addCommand({
+            name: 'save',
+            bindKey: {win: 'Ctrl-S', mac: 'Command-S'},
+            exec: saveFile
+        });
+
+        // 初始化
+       // loadFile(currentFile.id, currentFile.type);
+    });
+    </script>
+</body>
+</html>

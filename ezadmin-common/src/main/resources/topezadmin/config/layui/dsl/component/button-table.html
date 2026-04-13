@@ -1,0 +1,13 @@
+<!- 直接使用dsl里面 toolbarList  的配置 -->
+<button   type="button"
+          class="  layui-btn   layui-btn-sm layui-btn-normal ez-button "
+          th:text="${label}"
+          th:name="${item_name}"
+          th:attrs="${props}"
+          data-click="ez-button"
+          th:data-propsJson="${propsJson}"
+          th:item_name="${'button_'+item_name}"
+          component="button-toolbar"
+>
+    操作
+</button>

@@ -1,0 +1,43 @@
+{
+  "id": "test-file-form",
+  "title": "测试表单(文件版)",
+  "description": "此表单配置存储在文件中",
+  "dataSource": "defaultDataSource",
+  "initExpress": "SELECT * FROM t_user WHERE id = #{ID}",
+  "submitExpress": "INSERT INTO t_user (name, age, email) VALUES (#{name}, #{age}, #{email}); return LAST_INSERT_ID();",
+  "deleteExpress": "UPDATE t_user SET DELETE_FLAG = 1 WHERE id = #{ID}",
+  "cardList": [
+    {
+      "title": "基本信息",
+      "fieldList": [
+        {
+          "field": "name",
+          "label": "姓名",
+          "component": "input",
+          "props": {
+            "placeholder": "请输入姓名",
+            "required": true
+          }
+        },
+        {
+          "field": "age",
+          "label": "年龄",
+          "component": "input",
+          "props": {
+            "type": "number",
+            "placeholder": "请输入年龄"
+          }
+        },
+        {
+          "field": "email",
+          "label": "邮箱",
+          "component": "input",
+          "props": {
+            "type": "email",
+            "placeholder": "请输入邮箱"
+          }
+        }
+      ]
+    }
+  ]
+}

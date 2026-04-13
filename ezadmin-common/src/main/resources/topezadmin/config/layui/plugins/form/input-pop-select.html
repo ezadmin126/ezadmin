@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>纯文字</title>
+</head>
+<body id="input-pop-select" type="form" icon="layui-icon-file-b">
+<div id="template">
+    <div class="layui-col-space10 selector layui-col-md12" ez-type="input-pop-select">
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">输-纯文字</label>
+            <div class="layui-input-block">
+                <span class="layui-text" name="default">展示静态文字</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class=" selector layui-col-space10" th:classappend="${'layui-col-md'+col}" ez-type="input-pop-select"
+         th:ez-label="${label}"
+         th:ez-item_name="${item_name}"
+         th:ez-placeholder="${placeholder}"
+         th:ez-alias="${alias}"
+         th:ez-col="${col}"
+
+         th:ez-item_desc="${item_desc}"
+         th:ez-top_desc="${top_desc}"
+         th:ez-jdbctype="${jdbctype}"
+         th:ez-lay_verify="${#strings.isEmpty(lay_verify)?'':lay_verify}"
+         th:ez-valid_rule="${valid_rule}"
+         th:ez-valid_msg="${valid_msg}"
+         th:ez-style="${style}"
+         th:ez-help="${help}"
+         th:ez-class="${class}"
+    >
+        <div class="layui-form-item ">
+            <label class="layui-form-label  ">
+                <span class="layui-font-red" th:if="${not #strings.isEmpty(redRequired)}">*</span>
+                <i th:if="${not #strings.isEmpty(help)}"
+                   th:id="${'ez-help-'+item_name}"
+                   class="ez-help layui-icon-help layui-icon"
+                   th:src="${help}"></i>
+                [[${#strings.isEmpty(label)?'':label+'：' }]]
+            </label>
+            <div th:class="${#strings.isEmpty(label)?'':'layui-input-block'}">
+                <small
+                        class="layui-form-mid layui-text-em top_desc"
+                        th:utext="${top_desc}" style="float:none"
+                        th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
+
+                <input type="hidden" th:item_name="${item_name}" th:name="${item_name}" th:value="${value}">
+                <button th:url="${url}"
+                        th:item_name="${item_name}"
+                        th:item_id="${'pop-select-btn-'+item_name}"
+                        th:data-value="${#strings.isEmpty(value)?'-':value}"
+                        class="pop-select-btn layui-btn    layui-btn-primary layui-btn-sm ">选择</button>
+
+                <div th:style="${style}" th:id="${'ITEM_ID_' + item_name}"
+                     th:data-value="${#strings.isEmpty(value)?'-':value}"
+                ><style>.gu-mirror{
+                    display:None;
+                }</style>
+                    <table class="layui-table">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+
+                </div>
+                <script>
+                    $(function(){
+
+                        var url=$("button[item_name=[[${item_name}]]]").attr("url");
+                        var currentvalue=$("input[name=[[${item_name}]]]").val();
+
+
+                        $('.pop-select-btn').click(function(e){
+                            e.preventDefault();
+                            e.stopPropagation();
+                             var url=$(this).attr("url");
+                             var item_name=$(this).attr("item_name");
+                             var value=$("[item_name="+item_name+"]").val();
+                            console.log(url+item_name+value);
+                            // url 添加两个参数 item_name value 需要判断url是否包含？  value需要encodeURIComponent
+                            if(url.indexOf('?') == -1){
+                                url += '?parent_item_name=' + item_name + '&parent_value=' + encodeURIComponent(value);
+                            }else{
+                                url += '&parent_item_name=' + item_name + '&parent_value=' + encodeURIComponent(value);
+                            }
+                            ezopen("MODEL", '请选择', url);
+                        })
+
+                //初始化table
+
+                    $.get(url.replace("list/list-","list/api-")+"?ID="+encodeURIComponent(currentvalue),function(data){
+                        if(data.success){
+                            var head=data.data.head;
+                            var body=data.data.body;
+                            //遍历head这个json
+                            var colName = [];
+                            var headerHtml='<tr>';
+                            for(var i = 0; i < head.length; i++){
+                                var column = head[i];
+                                // 跳过ID列
+                                if(column.item_name === 'ID'){
+                                    continue;
+                                }
+                                colName.push(column.item_name);
+                                headerHtml+='<th item_name="'+column.item_name+'">'+column.label+'</th>';
+                            }
+                            headerHtml+='<th>操作</th></tr> ';
+                            $("[[${'#ITEM_ID_' + item_name}]]").find("thead").html(headerHtml);
+                            var rowHtml='';
+                            if(currentvalue!=''){
+                                for(var i=0;i<body.length;i++){
+                                    var row=body[i];
+                                    rowHtml+="<tr>"
+                                    for(var j = 0; j < colName.length; j++){
+                                        var cname=colName[j];
+                                        rowHtml+='<td item_name="'+cname+'">'+row[cname]+'</td>';
+                                    }
+                                    rowHtml+='<td>' +
+                                        '<i class="layui-icon layui-icon-slider" style="cursor: move; margin-right: 10px; color: #999;" title="拖拽排序"></i>' +
+                                        '<i data-id="'+row.ID+'" class="layui-icon layui-icon-delete" style="cursor: pointer; color: #ff5722;" title="删除"></i>' +
+                                        '</td></tr>';
+                                }
+                                $("[[${'#ITEM_ID_' + item_name}]]").find("tbody").html(rowHtml);
+                            }
+                        }
+                    })
+
+
+                       $("[[${'#ITEM_ID_' + item_name}]]").on("click",".layui-icon-delete",function(){
+                           var currentValue=$("input[name=[[${item_name}]]]").val();
+                           var $row = $(this).closest("tr");
+
+                               var id=$(this).attr("data-id");
+                               $row.remove();
+                               var result=[];
+                               $("[[${'#ITEM_ID_' + item_name}]]").find(".layui-icon-delete").each(function(){
+                                   result.push($(this).attr("data-id"));
+                               })
+                               $("input[name=[[${item_name}]]]").val(result.join(","));
+
+                       })
+                       var container1=$("#[[${'ITEM_ID_' + item_name}]]").find("tbody")[0];
+
+// 初始化dragula
+                        const drake = dragula([
+                                        container1 
+                                    ], {
+                                        copy: function (el, source) {
+                                            // 只有从container5拖出时是复制，其他情况是移动
+                                            return false;
+                                        }, moves: function (el, source, handle, sibling) {
+                                console.log("itemdragInit moves")
+                                return true;
+                            },
+                                        accepts: function (el, target, source, sibling) {
+                                            return true;
+                                        },
+
+                                        revertOnSpill: true,  // 拖出容器外时还原
+                                        removeOnSpill: false, // 不删除拖出容器外的元素
+                                        direction: 'vertical' // 垂直方向排序
+                                    }).on('drop', function (el, target, source, sibling) {
+                                             var result=[];
+                                             $("[[${'#ITEM_ID_' + item_name}]]").find(".layui-icon-delete").each(function(){
+                                                 result.push($(this).attr("data-id"));
+                                             })
+                            $("input[name=[[${item_name}]]]").val(result.join(","));
+                                             return true;
+                                   })
+
+
+
+
+                    })
+                </script>
+                <small
+                        class="layui-form-mid layui-text-em item_desc"
+                        th:utext="${item_desc}"
+                        th:if="${not #strings.isEmpty(item_desc)}">辅助文字(下)</small>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

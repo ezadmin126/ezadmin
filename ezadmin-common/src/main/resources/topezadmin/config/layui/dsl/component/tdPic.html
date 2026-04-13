@@ -1,0 +1,19 @@
+<script >
+    Global.registry("columnRender").register("tdPic",(name,d,component)=>{
+        const value=d[name];
+        // const url=component.props.url;  //有layui模版语法
+        // var laytpl = layui.laytpl;
+        // var template =laytpl(url);
+        // var renderUrl=template.render(d);
+        var downloadUrl=$("#downloadUrl").val();
+        if(value){
+            var s=`<div class="td-pic-container" item_name="`+name+`" component="tdPic">
+                <img onerror="this.src='/webjars/topezadmin/error.svg'"
+                     data-click="viewer-image"
+                     src="`+downloadUrl+value+`"
+                     data-original="`+downloadUrl+value+`"/></div>`;
+            return s;
+        }
+        return value ||component.props.emptyShow ||'';
+    });
+</script>

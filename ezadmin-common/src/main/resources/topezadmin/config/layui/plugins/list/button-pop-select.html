@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>弹框多选按钮</title>
+</head>
+<body id="button-pop-select" type="listbutton">
+<button th:item_name="${item_name}" th:name="${'TABLE_BTN_'+item_name}" th:fname="${item_name}" type="button"
+        editor="button"
+         th:url="${url}" th:id="${'button-pop-select-btn-'+item_name}"
+        class="button-pop-select-btn layui-btn layui-btn-normal layui-btn-sm">
+    <label th:text="${label}" style="margin-bottom: 0px;"></label>
+</button>
+
+<script>
+    $(function () {
+        var url=$("[[${'#button-pop-select-btn-'+item_name}]]").attr("url");
+        var parentdata=url.split("|");
+        var parent_item_name=parentdata[0];
+        var parent_value=parentdata.length>1?parentdata[1]:'';
+        var parent_value_arr=parent_value.split(",");
+
+        $("#searchForm").append("<input type=hidden name=parent_value value='"+parent_value+"'>");
+        $("#searchForm").append("<input type=hidden name=parent_item_name value='"+parent_item_name+"' >")
+        $("input[name=list-body-checkbox]").each(function(){
+            var idValue = $(this).attr("_CHECK_ID_VALUE");
+            if(parent_value_arr.indexOf(idValue)!=-1){
+                $(this).prop("checked",true);
+                $(this).prop("disabled","disabled");
+            }          
+         })
+
+
+
+        $("[[${'#button-pop-select-btn-'+item_name}]]"). click(function () {
+            debugger
+            var url=$("[[${'#button-pop-select-btn-'+item_name}]]").attr("url");
+            var parentdata=url.split("|");
+            var parent_item_name=parentdata[0];
+            var parent_value=parentdata.length>1?parentdata[1]:'';
+            var parent_value_arr=parent_value.split(",");
+            //找这个iframe的父窗口 id=parent_item_name 的元素
+            var parentContainer=$( window.parent.document).find("#ITEM_ID_"+parent_item_name);
+            var parentSelectIdsDom=$( window.parent.document).find("input[item_name="+parent_item_name+"]");
+            var parentSelectIdsValue=parentSelectIdsDom.val();
+            //mytable参见 mytable.txt
+            //获取mytable表头
+            var col = $("#mytable").find("th");
+            var colName = [];
+             var headerHtml='<tr>';
+            col.each(function(){
+                if($(this).attr("item_name") == "ID"){
+                    return;
+                }
+                colName.push($(this).attr("item_name"));
+                headerHtml+='<th item_name="'+$(this).attr("item_name")+'">'+$(this).text()+'</th>';
+            });
+            headerHtml+='<th>操作</th></tr> ';
+
+           var rowHtml='';
+            $("input[name='list-body-checkbox']:not(:disabled):checked").each(function () {
+                var idValue = $(this).attr("_CHECK_ID_VALUE");
+                if (!idValue) {
+                    return;
+                }
+                parentSelectIdsValue+=","+idValue
+                  rowHtml +='<tr data-id="'+idValue+'">';
+                //找到父closet tr下面所有td,除了第一个td
+                $(this).closest("tr").find("td").slice(1).each(function(){
+                    var colitemname=$(this).attr("item_name");
+                    var text=$(this).text();
+                    rowHtml+='<td item_name="'+colitemname+'">'+text+'</td>';
+
+                });
+                rowHtml+='<td>' +
+                    '<i class="layui-icon layui-icon-slider" style="cursor: move; margin-right: 10px; color: #999;" title="拖拽排序"></i>' +
+                    '<i data-id="'+idValue+'" class="layui-icon layui-icon-delete" style="cursor: pointer; color: #ff5722;" title="删除"></i>' +
+                    '</td></tr>';
+            });
+            parentSelectIdsDom.val(parentSelectIdsValue);
+
+             if(parentContainer.length>0){
+                parentContainer.find("thead").html(headerHtml);
+                parentContainer.find("tbody").append(rowHtml);
+                 var calvalue=[];
+                 parentContainer.find(".layui-icon-delete").each(function(){
+                     calvalue.push($(this).attr("data-id"));
+                 })
+                 parentSelectIdsDom.val(calvalue.join(","));
+             }else{
+                 alert("无法找到父元素")
+             }
+            window.parent.layer.closeAll();
+     })
+
+    })
+
+</script>
+
+</body>
+</html>

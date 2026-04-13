@@ -1,0 +1,22 @@
+// 删除表达式：逻辑删除记录
+String id = getValue("id");
+
+if(StringUtils.isBlank(id)){
+    return fail("记录ID不能为空");
+}
+
+// 执行逻辑删除
+int count = update("""
+    UPDATE test_table
+    SET delete_flag = 1,
+        update_time = NOW(),
+        update_by = {currentUserId}
+    WHERE id = {id}
+    AND delete_flag = 0
+""");
+
+if(count > 0){
+    return success("删除成功");
+} else {
+    return fail("删除失败，记录可能已被删除");
+}

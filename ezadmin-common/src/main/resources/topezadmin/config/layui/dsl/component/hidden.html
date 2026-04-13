@@ -1,0 +1,14 @@
+<div th:class="${'component-col  form-item-hidden   col-'+item_name} "
+     th:classappend="${classAppend}" th:data-config-json="${componentJson}">
+
+<div   class="layui-form-item"  th:item_name="${item_name}" component="hidden">
+    <div class="layui-input-block">
+        <input type="hidden"
+               th:name="${item_name}"
+               class="layui-input"
+               th:attrs="${props}"
+                  th:data-propsJson="${propsJson}"
+        >
+    </div>
+</div>
+</div>

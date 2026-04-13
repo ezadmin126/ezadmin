@@ -1,0 +1,26 @@
+<script>
+    Global.registry("columnRender").register("tdCascader",(name,d,component)=>{
+        const value=d[name];
+        var paramsJSON = component.data ;
+
+        // 兼容字符串类型的paramsJSON
+        if(typeof paramsJSON === 'string' && paramsJSON){
+            try {
+                paramsJSON = JSON.parse(paramsJSON);
+            } catch(e) {
+                console.error('tdCascader: paramsJSON解析失败', e);
+                paramsJSON = [];
+            }
+        }
+
+        if(!paramsJSON){
+            paramsJSON=[];
+        }
+
+        if(value&&value!=''){
+            var labels = resolveTreeLabels(value, paramsJSON);
+            return `<span item_name=`+name+` component="tdCascader">`+labels.join(',')+`</span>`
+        }
+        return  '<span item_name="'+name+'"  component="tdCascader">'  + (value ||component.props.emptyShow ||'')+ '</span>';
+    });
+</script>

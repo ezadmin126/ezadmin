@@ -1,0 +1,7 @@
+SELECT COUNT(1)
+FROM test_table t
+WHERE t.delete_flag = 0
+{name?AND t.name LIKE '%{name}%'}
+{status?AND t.status = {status}}
+{create_time_start?AND t.create_time >= '{create_time_start}'}
+{create_time_end?AND t.create_time <= '{create_time_end}'}

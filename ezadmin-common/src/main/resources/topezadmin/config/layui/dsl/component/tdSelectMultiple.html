@@ -1,0 +1,33 @@
+<script    >
+    Global.registry("columnRender").register("tdSelectMultiple",(name,d,component)=>{
+        const value=d[name];
+        let paramsJSON = component.data ;
+
+        // 兼容字符串类型的paramsJSON
+        if(typeof paramsJSON === 'string' && paramsJSON){
+            try {
+                paramsJSON = JSON.parse(paramsJSON);
+            } catch(e) {
+                console.error('tdSelectMultiple: paramsJSON解析失败', e);
+                paramsJSON = [];
+            }
+        }
+
+        if(!paramsJSON){
+            paramsJSON=[];
+        }
+
+        if(value !== null && value !== undefined && value !== '') {
+            var values=  String(value).split(',');
+
+            const labels = values.map(function (v) {
+                const found = paramsJSON.find(function (opt) {
+                    return String(opt.value) === String(v);
+                });
+                return found ? found.label : v;
+            });
+            return `<span item_name=`+name+` component="tdSelectMultiple">`+labels.join(',')+`</span>`
+        }
+        return   `<span item_name=`+name+` component="tdSelectMultiple">`+(value ||component.props.emptyShow ||'')+`</span>`  ;
+    });
+</script>

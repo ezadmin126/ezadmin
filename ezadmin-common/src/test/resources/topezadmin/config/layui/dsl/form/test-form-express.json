@@ -1,0 +1,47 @@
+{
+  "id": "test-form-express",
+  "title": "测试表单表达式引用",
+  "description": "测试表单中表达式文件引用功能",
+  "datasource": "defaultDataSource",
+  "express": {
+    "init": "$$form_init_express.txt",
+    "submit": "$$form_submit_express.txt",
+    "delete": "$$form_delete_express.txt"
+  },
+  "items": [
+    {
+      "field": "name",
+      "title": "名称",
+      "type": "input",
+      "required": true,
+      "placeholder": "请输入名称"
+    },
+    {
+      "field": "status",
+      "title": "状态",
+      "type": "radio",
+      "options": [
+        {"value": "1", "text": "启用"},
+        {"value": "0", "text": "禁用"}
+      ],
+      "defaultValue": "1"
+    },
+    {
+      "field": "remark",
+      "title": "备注",
+      "type": "textarea",
+      "rows": 3,
+      "placeholder": "请输入备注信息"
+    }
+  ],
+  "button": {
+    "submit": {
+      "text": "保存",
+      "icon": "layui-icon-ok"
+    },
+    "reset": {
+      "text": "重置",
+      "icon": "layui-icon-refresh"
+    }
+  }
+}

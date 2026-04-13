@@ -1,0 +1,257 @@
+{
+  "id": "test",
+  "name": "用户表单",
+  "appendHead": "<script>\nfunction myBeforeSubmit() {\n    console.log('准备提交');\n    return true; // 返回 false 可以阻止提交\n}\n\nfunction mySuccessHandler(res) {\n    console.log('提交成功', res);\n    layer.msg('保存成功！');\n}\n\nfunction myErrorHandler(xhr, status, error) {\n    console.error('提交失败', error);\n    layer.msg('保存失败！');\n}</script>",
+  "dataSource": "dataSource",
+  "initExpress":
+  [
+    "StringBuilder sql=new StringBuilder(); ",
+    "sql.append(\"   select a.students_id ID ,a.ruxue_date RUXUE_DATE, a.useremail USER_EMAIL,a.username USER_NAME,a.usersex USER_SEX,a.area_id AREA_ID, a.add_time ADD_TIME,group_concat(c.hobbys_id) HOBBYS_IDS from students a left join  rel_students_hobbys rh on rh.students_id=a.students_id left join hobbys c on rh.hobbys_id=c.hobbys_id   where  a.delete_flag=0 and a.students_id=#{ID}\"); return selectOne(sql);"
+  ],
+  "submitExpress": [
+    "import top.ezadmin.plugins.express.jdbc.UpdateParam;",
+    "import top.ezadmin.plugins.express.jdbc.InsertParam;",
+    "if(isBlank(\"ID\")){",
+    "    param=new InsertParam();",
+    "    param.table(\"students\");",
+    "    param.add( \"#{students_id}\");",
+    "    param.add( \"#{username}\");",
+    "    param.add( \"#{useremail}\");",
+    "    param.add( \"#{usersex,jdbcType=NUMBER}\");",
+    "    param.add( \"#{area_id,jdbcType=NUMBER}\");",
+    "    param.add( \"#{ruxue_date,jdbcType=DATE}\");",
+    "    param.add( \"#{delete_flag,value=0,jdbcType=NUMBER}\");",
+    "    id=insertSimple(param);",
+
+    "    return id;",
+    "}else{",
+    "    param=new UpdateParam();",
+    "    param.table(\"students\");",
+    "    param.add( \"#{username}\");",
+    "    param.add(     \"#{useremail}\");",
+    "    param.add( \"#{usersex,jdbcType=NUMBER}\");",
+    "    param.add( \"#{area_id,jdbcType=NUMBER}\");",
+    "    param.add( \"#{ruxue_date,jdbcType=DATE}\");",
+    "    param.where(\" where students_id=#{ID} \");",
+    "    updateSimple(param);",
+    "    return $(\"ID\");",
+    "}"
+  ],
+  "deleteExpress": ["update(\"UPDATE students set delete_flag=1 where students_id=#{ID}\");"],
+  "statusExpress": ["update(\"UPDATE students set delete_flag=1 where students_id=#{ID}\");"],
+  "cardList": [
+    {
+      "type": "card",
+      "label": "用户信息",
+      "fieldList": [
+        {
+          "row": [
+            {
+              "name": "ID",
+              "label": "ID",
+              "component":  "hidden",
+              "props": {}
+            },
+            {
+              "name": "USER_SEX",
+              "label": "JSON下拉",
+              "initData": {
+                "dataJson": [
+                  {
+                    "label": "男",
+                    "value": "1"
+                  },
+                  {
+                    "label": "女",
+                    "value": "0"
+                  }
+                ]
+              },
+              "component":  "select" ,
+              "props": {
+                "jdbcType": "NUMBER",
+                "placeholder": "请选择性别"
+              }
+            },
+            {
+              "name": "USER_NAME",
+              "label": "单行文本",
+              "component":"input",
+              "props": {
+                "placeholder": "单行文本"
+              }
+            },
+            {
+              "name": "USER_EMAIL",
+              "label": "多行文本",
+              "component": "textarea",
+              "props": {
+                "placeholder": "多行文本"
+              }
+            },
+            {
+              "name": "ADD_TIME",
+              "label": "时间",
+              "component": "date"
+            },
+            {
+              "name": "RUXUE_DATE",
+              "label": "时间区间",
+              "component": "date",
+              "jdbcType": "DATETIME",
+              "props": {
+                "placeholder": " - ",
+                "range": true
+              }
+            },
+            {
+              "name": "HOBBYS_IDS",
+              "label": "checkbox",
+              "jdbcType": "NUMBER",
+              "component": "select-multiple",
+              "initData": {
+                "dataSource": "dataSource",
+                "dataSql": "select hobbys_id value,name label from hobbys"
+              },
+              "props": {
+                "placeholder": "请选择爱好吧",
+                "model": {
+                  "label": {
+                    "type": "block",
+                    "block": {
+                      "showCount": 2,
+                      "showIcon": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "HOBBYS_ID2S",
+              "label": "checkbox多选",
+              "jdbcType": "NUMBER",
+              "component": "checkbox",
+              "initData": {
+                "dataSource": "dataSource",
+                "dataSql": "select hobbys_id value,name label from hobbys"
+              },
+              "props": {
+                "placeholder": "请选择爱好吧"
+              }
+            },
+            {
+              "name": "STATUS",
+              "label": "单选",
+              "jdbcType": "NUMBER",
+              "component": "radio",
+              "initData":{
+                "dataJson": [
+                  {
+                    "label": "男",
+                    "value": "1"
+                  },
+                  {
+                    "label": "女",
+                    "value": "0"
+                  }
+                ]
+              },
+              "props": {
+                "placeholder": "请选择爱好吧"
+              }
+            },
+            {
+              "name": "AREA_ID",
+              "label": "多选级联",
+              "jdbcType": "NUMBER",
+              "component": "cascader",
+              "initData":{
+                "dataSource": "dataSource",
+                "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
+              },
+              "props": {
+                "placeholder": "请选择地区吧",
+                "collapseTags": true,
+                "props": {
+                  "multiple": true,
+                  "value": "id",
+                  "label": "name",
+                  "parent_id": "parent_id",
+                  "children": "children"
+                }
+              }
+            },
+            {
+              "name": "AREA_ID2",
+              "label": "单选级联",
+              "jdbcType": "NUMBER",
+              "component": "cascader",
+              "initData":{
+                "dataSource": "dataSource",
+                "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
+              },
+              "props": {
+                "placeholder": "请选择地区吧",
+                "collapseTags": true,
+                "props": {
+                  "multiple": false,
+                  "value": "id",
+                  "label": "name",
+                  "parent_id": "parent_id",
+                  "children": "children"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "buttonList": [
+
+      ]
+    },
+    {
+      "type": "iframe",
+      "label": "嵌入列表",
+      "iframe":  {
+        "url": "/list/list/user-list-form.json",
+        "height": "300px"
+      },
+      "buttonList": [
+        {
+          "name": "新增",
+          "label": "新增",
+          "component":  "button-normal",
+          "props": {
+            "opentype": "MODAL",
+            "windowname": "打开",
+            "area": "50,100",
+            "url": "/form/form/add-1764832568286?ID={{= d.ID }}"
+          }
+        }
+      ]
+    },
+    {
+      "type": "card",
+      "label": "富文本",
+      "fieldList": [
+        {
+          "row": [
+            {
+              "name": "Rich",
+              "label": "描述",
+              "component": "tinymce",
+              "props": {
+                "placeholder": "这是富文本"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "buttonList": [
+
+  ],
+  "appendFoot": "<style>.user-list { background-color: #f9f9f9; }</style>"
+
+}

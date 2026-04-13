@@ -1,0 +1,59 @@
+// 提交表达式：保存或更新记录
+String id = getValue("id");
+String name = getValue("name");
+String status = getValue("status");
+String remark = getValue("remark");
+
+// 验证必填字段
+if(StringUtils.isBlank(name)){
+    return fail("名称不能为空");
+}
+
+// 检查名称是否重复
+Map<String,Object> existRecord = selectOne("SELECT id FROM test_table WHERE name = {name} AND delete_flag = 0 AND id != {id}");
+if(existRecord != null){
+    return fail("名称已存在");
+}
+
+// 保存或更新
+if(StringUtils.isNotBlank(id)){
+    // 更新记录
+    int count = update("""
+        UPDATE test_table
+        SET name = {name},
+            status = {status},
+            remark = {remark},
+            update_time = NOW(),
+            update_by = {currentUserId}
+        WHERE id = {id}
+        AND delete_flag = 0
+    """);
+
+    if(count > 0){
+        return success("更新成功");
+    } else {
+        return fail("更新失败，记录可能已被删除");
+    }
+} else {
+    // 新增记录
+    String newId = UUID.randomUUID().toString();
+    int count = insert("""
+        INSERT INTO test_table (
+            id, name, status, remark,
+            create_time, create_by,
+            update_time, update_by,
+            delete_flag
+        ) VALUES (
+            {newId}, {name}, {status}, {remark},
+            NOW(), {currentUserId},
+            NOW(), {currentUserId},
+            0
+        )
+    """);
+
+    if(count > 0){
+        return success("保存成功");
+    } else {
+        return fail("保存失败");
+    }
+}
