@@ -1,21 +1,21 @@
 <div th:class="'component-col col-'+${item_name}"
      th:classappend="${classAppend}" th:data-config-json="${componentJson}"
 >
-    <div   class="layui-form-item"  th:item_name="${item_name}" component="uniondate"
-          >
-        <div class="layui-input-inline "   style="width:100px !important;padding:0px">
-            <select th:item_name="${item_name}" style="width: 100%;"  >
+    <div class="layui-form-item" th:item_name="${item_name}" component="uniondate"
+    >
+        <div class="layui-input-inline " style="width:100px !important;padding:0px">
+            <select th:item_name="${item_name}" style="width: 100%;">
                 <option value="">请选择</option>
                 <option th:each="item : ${options}" th:value="${item.value}" th:text="${item.label}"></option>
             </select>
         </div>
         <div class="layui-input-block">
-            <div class="layui-input-wrap"   >
+            <div class="layui-input-wrap">
                 <div class="layui-input-prefix">
                     <i class="layui-icon layui-icon-date"></i>
                 </div>
                 <input th:id="${'search-' +  item_name}"
-                       th:item_name="${item_name}"   autocomplete="off"
+                       th:item_name="${item_name}" autocomplete="off"
                        class="layui-input ez-date"
                        th:attrs="${props}"
                        th:data-propsJson="${propsJson}"
@@ -28,7 +28,8 @@
                        type="hidden"
                 >
             </div>
-            <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
+            <div th:if="${props != null and not #strings.isEmpty(props.description)}"
+                 class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
         </div>
     </div>
 </div>

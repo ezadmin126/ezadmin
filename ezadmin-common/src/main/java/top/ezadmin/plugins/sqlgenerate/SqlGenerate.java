@@ -18,6 +18,7 @@ public abstract class SqlGenerate {
     private Map<String, Object> list;
     private Map<String, Object> request;
 
+
     /**
      * 获取sql生成器
      *
@@ -58,14 +59,15 @@ public abstract class SqlGenerate {
         String customJson = Utils.trimNull(getRequest().get("customSearch"));
         Map<String, String> customSearch = customSearchJsonToSql(customJson, searchNameMap);
 
-        if (customSearch.containsKey("customWhere")&& StringUtils.isNotBlank(customSearch.get("customWhere"))) {
-            where.append(" and  "+customSearch.get("customWhere"));
+        if (customSearch.containsKey("customWhere") && StringUtils.isNotBlank(customSearch.get("customWhere"))) {
+            where.append(" and  " + customSearch.get("customWhere"));
         }
         return where.toString();
     }
 
     /**
      * 获取扁平化的搜索字段列表（支持新的对象数组格式）
+     *
      * @param searchObj search 对象
      * @return 扁平化的搜索字段列表
      */
@@ -85,7 +87,7 @@ public abstract class SqlGenerate {
                         }
                     }
                 }
-            }else{
+            } else {
                 result = (List<Map<String, Object>>) searchObj;
             }
         }
@@ -177,7 +179,7 @@ public abstract class SqlGenerate {
             return result.toString();
         }
         //多字段搜索
-        if ((plugin.equalsIgnoreCase("union")||plugin.equalsIgnoreCase("search-union")) && StringUtils.isNotBlank(itemSearchConcatValue)) {
+        if ((plugin.equalsIgnoreCase("union") || plugin.equalsIgnoreCase("search-union")) && StringUtils.isNotBlank(itemSearchConcatValue)) {
             String itemSearchKey = Utils.getStringByObject(search, ParamNameEnum.itemSearchKey.getName());
             //选择了type
             if (StringUtils.isNotBlank(itemSearchKey)) {
@@ -252,7 +254,7 @@ public abstract class SqlGenerate {
             case ALL_LIKE:
                 //todo
             default:
-                result = oper(union, alias, field, jdbcType, value, prepare,operatorEnum.getOperC());
+                result = oper(union, alias, field, jdbcType, value, prepare, operatorEnum.getOperC());
                 break;
         }
         return result.toString();
@@ -392,8 +394,8 @@ public abstract class SqlGenerate {
             for (int i = 0; i < s.size(); i++) {
                 String field = StringUtils.safeDb(s.get(i).getF());
                 String type = StringUtils.safeDb(" " + s.get(i).getT() + " ");
-                if(i==0){
-                   type="";
+                if (i == 0) {
+                    type = "";
                 }
                 Map<String, Object> search = searchNameMap == null ? new HashMap<>() : searchNameMap.get(field);
 
@@ -426,9 +428,9 @@ public abstract class SqlGenerate {
         if (Utils.isNotEmpty(g)) {
             sql.append(" (");
             for (int i = 0; i < g.size(); i++) {
-                String type= g.get(i).getT();
-                if(i==0){
-                    type="";
+                String type = g.get(i).getT();
+                if (i == 0) {
+                    type = "";
                 }
                 if (g != null && Utils.isNotEmpty(g.get(i).getC())) {
                     sql.append(" " + type + "   ");

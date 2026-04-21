@@ -197,7 +197,7 @@ public class MySqlGenerate extends SqlGenerate {
             sql.append(SqlUtils.alias(alias, field));
             sql.append(" between  " + finalStart);
             sql.append(" and  " + finalEnd);
-        }else{
+        } else {
             if (StringUtils.isNotBlank(valueStart)) {
                 sql.append(union);
                 sql.append(SqlUtils.alias(alias, field));
@@ -273,7 +273,7 @@ public class MySqlGenerate extends SqlGenerate {
                 sqlPice.append(Utils.trimNull(id));
                 sqlPice.append("'");
             }
-            sql.append(sqlPice.length()>1?sqlPice.substring(1):sqlPice);
+            sql.append(sqlPice.length() > 1 ? sqlPice.substring(1) : sqlPice);
             sql.append(" )");
         } else {
             sql.append("  (" + value + ")");
@@ -399,6 +399,7 @@ public class MySqlGenerate extends SqlGenerate {
         }
         return sb.toString();
     }
+
     @Override
     protected String oper(String union, String alias, String field, String jdbcType, String value, boolean prepare, String operC) {
         if (StringUtils.isBlank(value)) {

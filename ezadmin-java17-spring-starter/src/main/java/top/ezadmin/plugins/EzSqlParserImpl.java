@@ -1,21 +1,15 @@
 package top.ezadmin.plugins;
 
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.ExpressionVisitor;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.parser.SimpleNode;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 import top.ezadmin.common.utils.JsoupUtil;
 import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.Utils;
-import top.ezadmin.controller.FormEditController;
 import top.ezadmin.dao.FormDao;
 import top.ezadmin.dao.ListDao;
 import top.ezadmin.plugins.sqlog.format.FormatStyle;
@@ -28,15 +22,17 @@ import java.util.List;
 import java.util.Map;
 
 public class EzSqlParserImpl implements EzSqlParser {
-    public  String sqlToList(String sql, String listId,String datasource) throws Exception {
-        EzResult ezResult= sqlToList2( sql,  listId,  "",  datasource);
+    public String sqlToList(String sql, String listId, String datasource) throws Exception {
+        EzResult ezResult = sqlToList2(sql, listId, "", datasource);
         return (String) ezResult.getData();
     }
-    public  String sqlToForm(String sql, String formId,String datasource) throws Exception {
-        EzResult ezResult= sqlToList2( sql, "" ,  formId,  datasource);
+
+    public String sqlToForm(String sql, String formId, String datasource) throws Exception {
+        EzResult ezResult = sqlToList2(sql, "", formId, datasource);
         return (String) ezResult.getData();
     }
-    private   EzResult sqlToList2(String sql, String listId, String formcode, String datasource) throws Exception {
+
+    private EzResult sqlToList2(String sql, String listId, String formcode, String datasource) throws Exception {
         // String sql="select A.username as 用户名,password as 密码 ,from_unixtime(A.add_time/1000,'%y-%m')    from  T_USER A WHERE USER_ID=1 ";
         Statement statement = CCJSqlParserUtil.parse(sql);
         Select selectStatement = (Select) statement;
@@ -45,7 +41,7 @@ public class EzSqlParserImpl implements EzSqlParser {
 
 
         // 修复JSQLParser 4.9版本的类型不兼容问题
-        List<SelectItem<?>> selectItemList = plainSelect.getSelectItems(); 
+        List<SelectItem<?>> selectItemList = plainSelect.getSelectItems();
         // 修复AllColumns类型检查问题
         if (selectItemList.size() == 1 && selectItemList.get(0).toString().equals("*")) {
             return EzResult.instance().fail().message("请指定字段名及字段中文别名");
@@ -73,21 +69,21 @@ public class EzSqlParserImpl implements EzSqlParser {
             String label = "UNKNOWN";
 
 
-           // alias = colName;
+            // alias = colName;
             try {
 
-               if(selectItem.getExpression() instanceof Column){
-                   Column column=(Column)selectItem.getExpression();
-                   item_name=column.getColumnName();
-                   tablealias=column.getTable()==null?"":column.getTable().getName();
-               }else if(selectItem.getExpression() instanceof Function){
-                   Function column=(Function)selectItem.getExpression();
-                   item_name=column.toString();
-                   tablealias="";
-               }else{
-                   System.out.println("无法解析的情况"+selectItem.toString());
-               }
-                label=selectItem.getAlias()==null?item_name:selectItem.getAlias().getName();
+                if (selectItem.getExpression() instanceof Column) {
+                    Column column = (Column) selectItem.getExpression();
+                    item_name = column.getColumnName();
+                    tablealias = column.getTable() == null ? "" : column.getTable().getName();
+                } else if (selectItem.getExpression() instanceof Function) {
+                    Function column = (Function) selectItem.getExpression();
+                    item_name = column.toString();
+                    tablealias = "";
+                } else {
+                    System.out.println("无法解析的情况" + selectItem.toString());
+                }
+                label = selectItem.getAlias() == null ? item_name : selectItem.getAlias().getName();
 //                if (StringUtils.IsChinese(alias.charAt(0))) {
 //                    // 在jsqlparser 5.x中，不能直接设置别名，跳过此操作
 //                    // selectItem.setAlias(null);
@@ -119,8 +115,8 @@ public class EzSqlParserImpl implements EzSqlParser {
                 head.put(JsoupUtil.JDBCTYPE, "DATETIME");
             }
 
-            if(  !StringUtils.upperCase(item_name).equals("COMPANY_ID")
-            &&!StringUtils.upperCase(item_name).equals("DELETE_FLAG")){
+            if (!StringUtils.upperCase(item_name).equals("COMPANY_ID")
+                    && !StringUtils.upperCase(item_name).equals("DELETE_FLAG")) {
                 headList.add(head);
             }
 
@@ -139,15 +135,15 @@ public class EzSqlParserImpl implements EzSqlParser {
                 search.put(JsoupUtil.TYPE, "input-text");
             }
             search.put(JsoupUtil.ALIAS, tablealias);
-            if(!StringUtils.upperCase(item_name).equals("ID")
-                    &&   !StringUtils.upperCase(item_name).equals("COMPANY_ID")
-                    &&!StringUtils.upperCase(item_name).equals("DELETE_FLAG")){
+            if (!StringUtils.upperCase(item_name).equals("ID")
+                    && !StringUtils.upperCase(item_name).equals("COMPANY_ID")
+                    && !StringUtils.upperCase(item_name).equals("DELETE_FLAG")) {
                 searchList.add(search);
             }
             selectItem.setAlias(null);
         }
 
-  // 检查并设置ORDER BY子句
+        // 检查并设置ORDER BY子句
         if (plainSelect.getOrderByElements() != null) {
             StringBuilder orderByBuilder = new StringBuilder();
             orderByBuilder.append("ORDER BY ");
@@ -178,17 +174,16 @@ public class EzSqlParserImpl implements EzSqlParser {
         plainSelect.setLimit(null);
 
 
-        
         StringBuilder sqlExpress = new StringBuilder();
-        if(fieldNameList.contains("COMPANY_ID")){
+        if (fieldNameList.contains("COMPANY_ID")) {
             sqlExpress.append("\r\ncompanyId=$$(\"COMPANY_ID\");\r\n");
         }
-        sqlExpress.append(  " StringBuilder sql=new StringBuilder();");
+        sqlExpress.append(" StringBuilder sql=new StringBuilder();");
         String formattedSql = FormatStyle.BASIC.getFormatter().format(selectStatement.toString());
         sqlExpress.append("\r\nsql.append(\"").append(formattedSql.replace("\"", "\\\"")).append("\");");
-        if(plainSelect.getWhere()==null){
+        if (plainSelect.getWhere() == null) {
             sqlExpress.append("\r\nsql.append(\" where  1= 1  ");
-            if(fieldNameList.contains("COMPANY_ID")){
+            if (fieldNameList.contains("COMPANY_ID")) {
                 sqlExpress.append("and COMPANY_ID=\"+companyId");
             }
             sqlExpress.append(");");
@@ -196,13 +191,12 @@ public class EzSqlParserImpl implements EzSqlParser {
         sqlExpress.append("\r\nreturn search(sql);");
         core.put("select_express", "\n<![CDATA[ \n" + sqlExpress.toString() + "\n]]>\n");
 
-      
 
         tableBtnList.add(extracted2("/topezadmin/form/form-" + listId, "新增", "FORM", "button-table"));
         rowBtnList.add(extractedRow2("/topezadmin/form/form-" + listId + "?ID=${ID}", "编辑", "FORM", "layui-border-blue"));
         rowBtnList.add(extractedRow2("/topezadmin/form/doDelete-" + listId + "?ID=${ID}", "删除", "CONFIRM_AJAX", "layui-border-red"));
         if (StringUtils.isBlank(listId)) {
-             Map<String, Object> form = pureAddForm2(formcode, tableNameList.get(0), fieldNameList, fieldLabelList);
+            Map<String, Object> form = pureAddForm2(formcode, tableNameList.get(0), fieldNameList, fieldLabelList);
             String html = FormDao.getInstance().transEntityToHtmlConfig(form);
             if (StringUtils.isNotBlank(html)) {
                 return EzResult.instance().data(html);
@@ -217,7 +211,8 @@ public class EzSqlParserImpl implements EzSqlParser {
         String listhtml = ListDao.getInstance().transEntityToHtmlConfig(list);
         return EzResult.instance().data(listhtml);
     }
-    private   Map<String, Object> extractedRow2(String url, String name, String openType, String CC) throws Exception {
+
+    private Map<String, Object> extractedRow2(String url, String name, String openType, String CC) throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put(JsoupUtil.URL, url);
         map.put(JsoupUtil.OPENTYPE, openType);
@@ -229,7 +224,7 @@ public class EzSqlParserImpl implements EzSqlParser {
         return map;
     }
 
-    private   Map<String, Object> extracted2(String url, String name, String openType, String plugin) throws Exception {
+    private Map<String, Object> extracted2(String url, String name, String openType, String plugin) throws Exception {
 
         Map<String, Object> map = new HashMap<>();
         map.put(JsoupUtil.URL, url);
@@ -241,22 +236,22 @@ public class EzSqlParserImpl implements EzSqlParser {
         return map;
     }
 
-    public   Map<String, Object> pureAddForm2(String formId, String table, List<String> fieldNameList, List<String> fieldLabelList) throws Exception {
+    public Map<String, Object> pureAddForm2(String formId, String table, List<String> fieldNameList, List<String> fieldLabelList) throws Exception {
         Map<String, Object> result = new HashMap<>();
 
         Map<String, String> form = new HashMap<>();
         result.put("core", form);
         form.put(JsoupUtil.DATASOURCE, "dataSource");
         form.put("formcode", formId);
-        form.put(JsoupUtil.SUCCESS_URL,"reload");
+        form.put(JsoupUtil.SUCCESS_URL, "reload");
         form.put(JsoupUtil.FORM_NAME.toLowerCase(), formId);
         StringBuilder sql = new StringBuilder("select ");
         String idName = "ID";
         for (int i = 0; i < fieldNameList.size(); i++) {
             if (fieldNameList.get(i).equals("COMPANY_ID")
-            ||fieldNameList.get(i).equals("DELETE_FLAG")
-                    ||fieldNameList.get(i).equals("UPDATE_ID")
-                    ||fieldNameList.get(i).equals("ADD_ID")) {
+                    || fieldNameList.get(i).equals("DELETE_FLAG")
+                    || fieldNameList.get(i).equals("UPDATE_ID")
+                    || fieldNameList.get(i).equals("ADD_ID")) {
                 continue;
             }
             if (fieldLabelList.get(i).equals("ID")) {
@@ -270,13 +265,13 @@ public class EzSqlParserImpl implements EzSqlParser {
         }
         sql.append(" from " + table + " where  " + idName + "=${ID}  ");
         StringBuilder sqlExpress = new StringBuilder(" ");
-        if(fieldNameList.contains("COMPANY_ID")){
+        if (fieldNameList.contains("COMPANY_ID")) {
             sqlExpress.append("\r\ncompanyId=$$(\"COMPANY_ID\");\r\n");
         }
         sqlExpress.append("if(isBlank(\"ID\")){\n return new HashMap();\n}                 		\n");
         sqlExpress.append("StringBuilder sql=new StringBuilder();");
         sqlExpress.append("\nsql.append(\"" + sql.toString() + "\");");
-        if(fieldNameList.contains("COMPANY_ID")){
+        if (fieldNameList.contains("COMPANY_ID")) {
             sqlExpress.append("\nsql.append( and COMPANY_ID=\"+companyId);");
         }
 
@@ -324,7 +319,7 @@ public class EzSqlParserImpl implements EzSqlParser {
     }
 
 
-    private   boolean ignorField(String name) {
+    private boolean ignorField(String name) {
         return name.equalsIgnoreCase("ADD_TIME")
                 || name.equalsIgnoreCase("UPDATE_TIME")
                 || name.equalsIgnoreCase("COMPANY_ID")
@@ -333,7 +328,7 @@ public class EzSqlParserImpl implements EzSqlParser {
                 || name.equalsIgnoreCase("ADD_NAME");
     }
 
-    private   String generateFormExpress(String table, String idName, List<String> fieldNameList) {
+    private String generateFormExpress(String table, String idName, List<String> fieldNameList) {
         StringBuilder ex = new StringBuilder();
         ex.append("\nimport top.ezadmin.plugins.express.jdbc.UpdateParam;\n");
         ex.append("import top.ezadmin.plugins.express.jdbc.InsertParam;                  		\n");
@@ -460,7 +455,7 @@ public class EzSqlParserImpl implements EzSqlParser {
 
         ex.append("  StringBuilder updateSql=new StringBuilder();\n");
         ex.append("  updateSql.append(\" where " + idName + "=#{ID} \");\n");
-        if(fieldNameList.contains("COMPANY_ID")){
+        if (fieldNameList.contains("COMPANY_ID")) {
             ex.append("   updateSql.append(\" and COMPANY_ID= \"+companyId);\n");
         }
 

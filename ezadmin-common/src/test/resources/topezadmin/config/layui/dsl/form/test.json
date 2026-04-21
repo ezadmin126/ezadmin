@@ -3,8 +3,7 @@
   "name": "用户表单",
   "appendHead": "<script>\nfunction myBeforeSubmit() {\n    console.log('准备提交');\n    return true; // 返回 false 可以阻止提交\n}\n\nfunction mySuccessHandler(res) {\n    console.log('提交成功', res);\n    layer.msg('保存成功！');\n}\n\nfunction myErrorHandler(xhr, status, error) {\n    console.error('提交失败', error);\n    layer.msg('保存失败！');\n}</script>",
   "dataSource": "dataSource",
-  "initExpress":
-  [
+  "initExpress": [
     "StringBuilder sql=new StringBuilder(); ",
     "sql.append(\"   select a.students_id ID ,a.ruxue_date RUXUE_DATE, a.useremail USER_EMAIL,a.username USER_NAME,a.usersex USER_SEX,a.area_id AREA_ID, a.add_time ADD_TIME,group_concat(c.hobbys_id) HOBBYS_IDS from students a left join  rel_students_hobbys rh on rh.students_id=a.students_id left join hobbys c on rh.hobbys_id=c.hobbys_id   where  a.delete_flag=0 and a.students_id=#{ID}\"); return selectOne(sql);"
   ],
@@ -22,7 +21,6 @@
     "    param.add( \"#{ruxue_date,jdbcType=DATE}\");",
     "    param.add( \"#{delete_flag,value=0,jdbcType=NUMBER}\");",
     "    id=insertSimple(param);",
-
     "    return id;",
     "}else{",
     "    param=new UpdateParam();",
@@ -37,8 +35,12 @@
     "    return $(\"ID\");",
     "}"
   ],
-  "deleteExpress": ["update(\"UPDATE students set delete_flag=1 where students_id=#{ID}\");"],
-  "statusExpress": ["update(\"UPDATE students set delete_flag=1 where students_id=#{ID}\");"],
+  "deleteExpress": [
+    "update(\"UPDATE students set delete_flag=1 where students_id=#{ID}\");"
+  ],
+  "statusExpress": [
+    "update(\"UPDATE students set delete_flag=1 where students_id=#{ID}\");"
+  ],
   "cardList": [
     {
       "type": "card",
@@ -49,7 +51,7 @@
             {
               "name": "ID",
               "label": "ID",
-              "component":  "hidden",
+              "component": "hidden",
               "props": {}
             },
             {
@@ -67,7 +69,7 @@
                   }
                 ]
               },
-              "component":  "select" ,
+              "component": "select",
               "props": {
                 "jdbcType": "NUMBER",
                 "placeholder": "请选择性别"
@@ -76,7 +78,7 @@
             {
               "name": "USER_NAME",
               "label": "单行文本",
-              "component":"input",
+              "component": "input",
               "props": {
                 "placeholder": "单行文本"
               }
@@ -144,7 +146,7 @@
               "label": "单选",
               "jdbcType": "NUMBER",
               "component": "radio",
-              "initData":{
+              "initData": {
                 "dataJson": [
                   {
                     "label": "男",
@@ -165,7 +167,7 @@
               "label": "多选级联",
               "jdbcType": "NUMBER",
               "component": "cascader",
-              "initData":{
+              "initData": {
                 "dataSource": "dataSource",
                 "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
               },
@@ -186,7 +188,7 @@
               "label": "单选级联",
               "jdbcType": "NUMBER",
               "component": "cascader",
-              "initData":{
+              "initData": {
                 "dataSource": "dataSource",
                 "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
               },
@@ -206,13 +208,12 @@
         }
       ],
       "buttonList": [
-
       ]
     },
     {
       "type": "iframe",
       "label": "嵌入列表",
-      "iframe":  {
+      "iframe": {
         "url": "/list/list/user-list-form.json",
         "height": "300px"
       },
@@ -220,7 +221,7 @@
         {
           "name": "新增",
           "label": "新增",
-          "component":  "button-normal",
+          "component": "button-normal",
           "props": {
             "opentype": "MODAL",
             "windowname": "打开",
@@ -250,8 +251,6 @@
     }
   ],
   "buttonList": [
-
   ],
   "appendFoot": "<style>.user-list { background-color: #f9f9f9; }</style>"
-
 }

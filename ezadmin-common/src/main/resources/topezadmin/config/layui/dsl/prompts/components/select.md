@@ -32,20 +32,21 @@
 
 ### 基础属性
 
-| 属性 | 类型 | 必填 | 说明                              |
-|------|------|------|---------------------------------|
-| item_name | String | 是 | 字段名，对应数据库字段                     |
-| label | String | 是 | 显示标签                            |
-| component | String | 是 | 固定值：`select`                    |
-| classAppend | String | 否 | layui-col-md8 主要使用layui布局设置占用宽度                       |
-| operator | String | 否 | 查询操作符(搜索项使用)，如 `EQ`、`IN`        |
-| initData | Object | 是 | 数据源配置                           |
+| 属性          | 类型     | 必填     | 说明                              |
+|-------------|--------|--------|---------------------------------|
+| item_name   | String | 是      | 字段名，对应数据库字段                     |
+| label       | String | 是      | 显示标签                            |
+| component   | String | 是      | 固定值：`select`                    |
+| classAppend | String | 否      | layui-col-md8 主要使用layui布局设置占用宽度 |
+| operator    | String | 否      | 查询操作符(搜索项使用)，如 `EQ`、`IN`        |
+| initData    | Object | 是      | 数据源配置                           |
 | description | String | 字段说明文本 | `"可选择多个"`                       |
-| props | Object | 否 | 组件属性,支持所有layui select属性，html5属性 |
+| props       | Object | 否      | 组件属性,支持所有layui select属性，html5属性 |
 
 ### initData 配置
 
 **静态数据（dataJson）：**
+
 ```json
 {
   "initData": {
@@ -58,6 +59,7 @@
 ```
 
 **动态数据（dataSql）：**
+
 ```json
 {
   "initData": {
@@ -69,14 +71,14 @@
 
 ### props 属性
 
-| 属性 | 类型 | 说明 | 示例 |
-|------|------|------|------|
-| placeholder | String | 提示文本 | `"请选择状态"` |
-| lay-verify | String | Layui表单验证规则 | `"required"` |
-| disabled | Boolean | 是否禁用 | `true` |
-| required | Boolean | 是否必填(显示红色*) | `true` |
-| description | String | 字段说明文本 | `"选择后不可修改"` |
-| lay-search | String | 是否启用搜索（默认已启用） | `""` |
+| 属性          | 类型      | 说明            | 示例           |
+|-------------|---------|---------------|--------------|
+| placeholder | String  | 提示文本          | `"请选择状态"`    |
+| lay-verify  | String  | Layui表单验证规则   | `"required"` |
+| disabled    | Boolean | 是否禁用          | `true`       |
+| required    | Boolean | 是否必填(显示红色*)   | `true`       |
+| description | String  | 字段说明文本        | `"选择后不可修改"`  |
+| lay-search  | String  | 是否启用搜索（默认已启用） | `""`         |
 
 ## 完整示例
 
@@ -322,6 +324,7 @@ form.on('select(lay-filter-province_id)', function(data){
 ### 如何设置默认选中？
 
 通过 initExpress 设置字段的值：
+
 ```javascript
 {
   "initExpress": [
@@ -333,6 +336,7 @@ form.on('select(lay-filter-province_id)', function(data){
 ### 选项不显示？
 
 检查：
+
 1. SQL查询是否正确，是否有数据返回
 2. 是否使用了 `value` 和 `label` 别名
 3. dataSource 是否配置正确
@@ -340,6 +344,7 @@ form.on('select(lay-filter-province_id)', function(data){
 ### 如何实现联动？
 
 使用 Layui 的表单监听：
+
 ```javascript
 form.on('select(lay-filter-item_name)', function(data){
   // 处理联动逻辑

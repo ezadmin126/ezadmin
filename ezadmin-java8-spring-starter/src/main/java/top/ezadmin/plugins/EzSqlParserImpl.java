@@ -1,18 +1,13 @@
 package top.ezadmin.plugins;
 
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.ExpressionVisitor;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.parser.SimpleNode;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 import top.ezadmin.common.utils.JsoupUtil;
 import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.Utils;
-import top.ezadmin.controller.FormEditController;
 import top.ezadmin.dao.FormDao;
 import top.ezadmin.dao.ListDao;
 import top.ezadmin.plugins.sqlog.format.FormatStyle;
@@ -25,15 +20,17 @@ import java.util.List;
 import java.util.Map;
 
 public class EzSqlParserImpl implements EzSqlParser {
-    public  String sqlToList(String sql, String listId,String datasource) throws Exception {
-        EzResult ezResult= sqlToList2( sql,  listId,  "",  datasource);
+    public String sqlToList(String sql, String listId, String datasource) throws Exception {
+        EzResult ezResult = sqlToList2(sql, listId, "", datasource);
         return (String) ezResult.getData();
     }
-    public  String sqlToForm(String sql, String formId,String datasource) throws Exception {
-        EzResult ezResult= sqlToList2( sql, "" ,  formId,  datasource);
+
+    public String sqlToForm(String sql, String formId, String datasource) throws Exception {
+        EzResult ezResult = sqlToList2(sql, "", formId, datasource);
         return (String) ezResult.getData();
     }
-    private   EzResult sqlToList2(String sql, String listId, String formcode, String datasource) throws Exception {
+
+    private EzResult sqlToList2(String sql, String listId, String formcode, String datasource) throws Exception {
         // String sql="select A.username as 用户名,password as 密码 ,from_unixtime(A.add_time/1000,'%y-%m')    from  T_USER A WHERE USER_ID=1 ";
         Statement statement = CCJSqlParserUtil.parse(sql);
         Select selectStatement = (Select) statement;
@@ -149,7 +146,8 @@ public class EzSqlParserImpl implements EzSqlParser {
         String listhtml = ListDao.getInstance().transEntityToHtmlConfig(list);
         return EzResult.instance().data(listhtml);
     }
-    private   Map<String, Object> extractedRow2(String url, String name, String openType, String CC) throws Exception {
+
+    private Map<String, Object> extractedRow2(String url, String name, String openType, String CC) throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put(JsoupUtil.URL, url);
         map.put(JsoupUtil.OPENTYPE, openType);
@@ -161,7 +159,7 @@ public class EzSqlParserImpl implements EzSqlParser {
         return map;
     }
 
-    private   Map<String, Object> extracted2(String url, String name, String openType, String plugin) throws Exception {
+    private Map<String, Object> extracted2(String url, String name, String openType, String plugin) throws Exception {
 
         Map<String, Object> map = new HashMap<>();
         map.put(JsoupUtil.URL, url);
@@ -173,22 +171,22 @@ public class EzSqlParserImpl implements EzSqlParser {
         return map;
     }
 
-    public   Map<String, Object> pureAddForm2(String formId, String table, List<String> fieldNameList, List<String> fieldLabelList) throws Exception {
+    public Map<String, Object> pureAddForm2(String formId, String table, List<String> fieldNameList, List<String> fieldLabelList) throws Exception {
         Map<String, Object> result = new HashMap<>();
 
         Map<String, String> form = new HashMap<>();
         result.put("core", form);
         form.put(JsoupUtil.DATASOURCE, "dataSource");
         form.put("formcode", formId);
-        form.put(JsoupUtil.SUCCESS_URL,"reload");
+        form.put(JsoupUtil.SUCCESS_URL, "reload");
         form.put(JsoupUtil.FORM_NAME.toLowerCase(), formId);
         StringBuilder sql = new StringBuilder("select ");
         String idName = "ID";
         for (int i = 0; i < fieldNameList.size(); i++) {
             if (fieldNameList.get(i).equals("COMPANY_ID")
-            ||fieldNameList.get(i).equals("DELETE_FLAG")
-                    ||fieldNameList.get(i).equals("UPDATE_ID")
-                    ||fieldNameList.get(i).equals("ADD_ID")) {
+                    || fieldNameList.get(i).equals("DELETE_FLAG")
+                    || fieldNameList.get(i).equals("UPDATE_ID")
+                    || fieldNameList.get(i).equals("ADD_ID")) {
                 continue;
             }
             if (fieldLabelList.get(i).equals("ID")) {
@@ -202,13 +200,13 @@ public class EzSqlParserImpl implements EzSqlParser {
         }
         sql.append(" from " + table + " where  " + idName + "=${ID}  ");
         StringBuilder sqlExpress = new StringBuilder(" ");
-        if(fieldNameList.contains("COMPANY_ID")){
+        if (fieldNameList.contains("COMPANY_ID")) {
             sqlExpress.append("\r\ncompanyId=$$(\"COMPANY_ID\");\r\n");
         }
         sqlExpress.append("if(isBlank(\"ID\")){\n return new HashMap();\n}                 		\n");
         sqlExpress.append("StringBuilder sql=new StringBuilder();");
         sqlExpress.append("\nsql.append(\"" + sql.toString() + "\");");
-        if(fieldNameList.contains("COMPANY_ID")){
+        if (fieldNameList.contains("COMPANY_ID")) {
             sqlExpress.append("\nsql.append( and COMPANY_ID=\"+companyId);");
         }
 
@@ -256,7 +254,7 @@ public class EzSqlParserImpl implements EzSqlParser {
     }
 
 
-    private   boolean ignorField(String name) {
+    private boolean ignorField(String name) {
         return name.equalsIgnoreCase("ADD_TIME")
                 || name.equalsIgnoreCase("UPDATE_TIME")
                 || name.equalsIgnoreCase("COMPANY_ID")
@@ -265,7 +263,7 @@ public class EzSqlParserImpl implements EzSqlParser {
                 || name.equalsIgnoreCase("ADD_NAME");
     }
 
-    private   String generateFormExpress(String table, String idName, List<String> fieldNameList) {
+    private String generateFormExpress(String table, String idName, List<String> fieldNameList) {
         StringBuilder ex = new StringBuilder();
         ex.append("\nimport top.ezadmin.plugins.express.jdbc.UpdateParam;\n");
         ex.append("import top.ezadmin.plugins.express.jdbc.InsertParam;                  		\n");
@@ -392,7 +390,7 @@ public class EzSqlParserImpl implements EzSqlParser {
 
         ex.append("  StringBuilder updateSql=new StringBuilder();\n");
         ex.append("  updateSql.append(\" where " + idName + "=#{ID} \");\n");
-        if(fieldNameList.contains("COMPANY_ID")){
+        if (fieldNameList.contains("COMPANY_ID")) {
             ex.append("   updateSql.append(\" and COMPANY_ID= \"+companyId);\n");
         }
 

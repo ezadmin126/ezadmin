@@ -29,14 +29,15 @@ public class DslDbService {
 
     /**
      * 从数据库加载表单DSL配置
+     *
      * @param formId 表单ID
      * @return DSL配置对象，如果不存在则返回null
      */
     public DslConfig loadFormFromDatabase(String formId) {
         try {
             String sql = "SELECT FORM_ID, FORM_NAME, FORM_DSL, INIT_EXPRESS, SUBMIT_EXPRESS, " +
-                       "DELETE_EXPRESS, DATASOURCE FROM T_EZADMIN_FORM " +
-                       "WHERE FORM_ID = ? AND DELETE_FLAG = 0";
+                    "DELETE_EXPRESS, DATASOURCE FROM T_EZADMIN_FORM " +
+                    "WHERE FORM_ID = ? AND DELETE_FLAG = 0";
 
             DataSource ds = EzBootstrap.getInstance().getEzDataSource();
             Map<String, Object> row = Dao.getInstance().executeQueryOne(ds, sql, new Object[]{formId});
@@ -66,21 +67,22 @@ public class DslDbService {
             return config;
 
         } catch (Exception e) {
-         //   log.error("从数据库加载表单DSL失败: {}", formId, e);
+            //   log.error("从数据库加载表单DSL失败: {}", formId, e);
             return null;
         }
     }
 
     /**
      * 从数据库加载列表DSL配置
+     *
      * @param listId 列表ID
      * @return DSL配置对象，如果不存在则返回null
      */
     public DslConfig loadListFromDatabase(String listId) {
         try {
             String sql = "SELECT LIST_ID, LIST_NAME, LIST_DSL, SELECT_EXPRESS, COUNT_EXPRESS, DATASOURCE " +
-                       "FROM T_EZADMIN_LIST " +
-                       "WHERE LIST_ID = ? AND DELETE_FLAG = 0";
+                    "FROM T_EZADMIN_LIST " +
+                    "WHERE LIST_ID = ? AND DELETE_FLAG = 0";
 
             DataSource ds = EzBootstrap.getInstance().getEzDataSource();
             Map<String, Object> row = Dao.getInstance().executeQueryOne(ds, sql, new Object[]{listId});
@@ -113,14 +115,15 @@ public class DslDbService {
             return config;
 
         } catch (Exception e) {
-          //  log.error("从数据库加载列表DSL失败: {}", listId, e);
+            //  log.error("从数据库加载列表DSL失败: {}", listId, e);
             return null;
         }
     }
 
     /**
      * 保存表单DSL到数据库
-     * @param formId 表单ID
+     *
+     * @param formId    表单ID
      * @param dslConfig DSL配置Map
      * @return 保存是否成功
      */
@@ -151,20 +154,20 @@ public class DslDbService {
             if (existing != null && !existing.isEmpty()) {
                 // 更新
                 String updateSql = "UPDATE T_EZADMIN_FORM SET FORM_NAME = ?, FORM_DSL = ?, " +
-                                 "INIT_EXPRESS = ?, SUBMIT_EXPRESS = ?, DELETE_EXPRESS = ?, " +
-                                 "DATASOURCE = ?, UPDATE_TIME = NOW() " +
-                                 "WHERE FORM_ID = ? AND DELETE_FLAG = 0";
+                        "INIT_EXPRESS = ?, SUBMIT_EXPRESS = ?, DELETE_EXPRESS = ?, " +
+                        "DATASOURCE = ?, UPDATE_TIME = NOW() " +
+                        "WHERE FORM_ID = ? AND DELETE_FLAG = 0";
                 Dao.getInstance().executeUpdate(ds, updateSql,
-                    new Object[]{formName, dslJson, initExpress, submitExpress, deleteExpress, datasource, formId});
+                        new Object[]{formName, dslJson, initExpress, submitExpress, deleteExpress, datasource, formId});
                 log.info("成功更新表单DSL到数据库: {}", formId);
             } else {
                 // 插入
                 String insertSql = "INSERT INTO T_EZADMIN_FORM (FORM_ID, FORM_NAME, FORM_DSL, " +
-                                 "INIT_EXPRESS, SUBMIT_EXPRESS, DELETE_EXPRESS, DATASOURCE, " +
-                                 "ADD_TIME, DELETE_FLAG) " +
-                                 "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 0)";
+                        "INIT_EXPRESS, SUBMIT_EXPRESS, DELETE_EXPRESS, DATASOURCE, " +
+                        "ADD_TIME, DELETE_FLAG) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 0)";
                 Dao.getInstance().executeUpdate(ds, insertSql,
-                    new Object[]{formId, formName, dslJson, initExpress, submitExpress, deleteExpress, datasource});
+                        new Object[]{formId, formName, dslJson, initExpress, submitExpress, deleteExpress, datasource});
                 log.info("成功插入表单DSL到数据库: {}", formId);
             }
 
@@ -178,7 +181,8 @@ public class DslDbService {
 
     /**
      * 保存列表DSL到数据库
-     * @param listId 列表ID
+     *
+     * @param listId    列表ID
      * @param dslConfig DSL配置Map
      * @return 保存是否成功
      */
@@ -212,20 +216,20 @@ public class DslDbService {
             if (existing != null && !existing.isEmpty()) {
                 // 更新
                 String updateSql = "UPDATE T_EZADMIN_LIST SET LIST_NAME = ?, LIST_DSL = ?, " +
-                                 "SELECT_EXPRESS = ?, COUNT_EXPRESS = ?, DATASOURCE = ?, " +
-                                 "UPDATE_TIME = NOW() " +
-                                 "WHERE LIST_ID = ? AND DELETE_FLAG = 0";
+                        "SELECT_EXPRESS = ?, COUNT_EXPRESS = ?, DATASOURCE = ?, " +
+                        "UPDATE_TIME = NOW() " +
+                        "WHERE LIST_ID = ? AND DELETE_FLAG = 0";
                 Dao.getInstance().executeUpdate(ds, updateSql,
-                    new Object[]{listName, dslJson, selectExpress, countExpress, datasource, listId});
+                        new Object[]{listName, dslJson, selectExpress, countExpress, datasource, listId});
                 log.info("成功更新列表DSL到数据库: {}", listId);
             } else {
                 // 插入
                 String insertSql = "INSERT INTO T_EZADMIN_LIST (LIST_ID, LIST_NAME, LIST_DSL, " +
-                                 "SELECT_EXPRESS, COUNT_EXPRESS, DATASOURCE, " +
-                                 "ADD_TIME, DELETE_FLAG) " +
-                                 "VALUES (?, ?, ?, ?, ?, ?, NOW(), 0)";
+                        "SELECT_EXPRESS, COUNT_EXPRESS, DATASOURCE, " +
+                        "ADD_TIME, DELETE_FLAG) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, NOW(), 0)";
                 Dao.getInstance().executeUpdate(ds, insertSql,
-                    new Object[]{listId, listName, dslJson, selectExpress, countExpress, datasource});
+                        new Object[]{listId, listName, dslJson, selectExpress, countExpress, datasource});
                 log.info("成功插入列表DSL到数据库: {}", listId);
             }
 

@@ -45,7 +45,7 @@ public class FormEditController extends BaseController {
     public EzResult submitEdit(RequestContext requestContext, String method, String formUrlCode) throws Exception {
         //所有表单类型的插件
         // System.out.println(requestContext.getParameter("data"));
-        Map<String, Object> form = JSONUtils.parseObjectMap((String)requestContext.getParameter("data"));
+        Map<String, Object> form = JSONUtils.parseObjectMap((String) requestContext.getParameter("data"));
         String html = FormDao.getInstance().transEntityToHtmlConfig(form);
         if (org.apache.commons.lang.StringUtils.isNotBlank(html)) {
             Map<String, Object> coreMap = (Map<String, Object>) form.get("core");
@@ -60,7 +60,7 @@ public class FormEditController extends BaseController {
 
     public EzResult loadEdit(RequestContext requestContext, String method, String formUrlCode) throws Exception {
         String ENCRYPT_FORM_ID = formUrlCode;
-        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> templateParam = new HashMap<>();
 
         templateParam.put("vi", System.currentTimeMillis());
 
@@ -102,7 +102,7 @@ public class FormEditController extends BaseController {
 
     public EzResult sourceEdit(RequestContext requestContext, String method, String formUrlCode) throws Exception {
         String ENCRYPT_FORM_ID = formUrlCode;
-        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> templateParam = new HashMap<>();
 
         templateParam.put(JsoupUtil.FORM_EDIT_FLAG, "1");
         Map<String, Object>
@@ -155,7 +155,7 @@ public class FormEditController extends BaseController {
     }
 
     public EzResult importSql(RequestContext requestContext, String method, String formUrlCode) throws Exception {
-        return render("layui/edit/import",new HashMap<>());
+        return render("layui/edit/import", new HashMap<>());
     }
 
     public EzResult publish(RequestContext requestContext, String method, String formUrlCode) throws Exception {
@@ -255,7 +255,7 @@ public class FormEditController extends BaseController {
     public EzResult preview(RequestContext requestContext, String method, String formUrlCode) throws Exception {
         String formId = formUrlCode;
         String ENCRYPT_FORM_ID = formUrlCode;
-        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> templateParam = new HashMap<>();
 
         templateParam.put("formUrl", requestContext.getContextPath() + "/topezadmin/formEdit/form-" + ENCRYPT_FORM_ID);
         //自定义ID
@@ -291,7 +291,7 @@ public class FormEditController extends BaseController {
         templateParam.put("layout", layout);
         String template = Utils.trimNullDefault(core.get(JsoupUtil.TEMPLATE), "form");
         templateParam.put("prefixUrl", EzBootstrap.config().getPrefixUrl());
-        return render(core.get(JsoupUtil.ADMINSTYLE) + "/" + template,templateParam);
+        return render(core.get(JsoupUtil.ADMINSTYLE) + "/" + template, templateParam);
     }
 
     public EzResult doSubmit(RequestContext requestContext, String method, String formUrlCode) throws Exception {
@@ -446,7 +446,7 @@ public class FormEditController extends BaseController {
 
     public EzResult doStatus(RequestContext requestContext, String method, String formUrlCode) throws Exception {
 
-        String ENCRYPT_FORM_ID =formUrlCode;
+        String ENCRYPT_FORM_ID = formUrlCode;
 
         try {
             String ID = getIdInForm(requestContext);

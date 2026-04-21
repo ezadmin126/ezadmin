@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>单行文本</title>
 </head>
-<body id="attributes"   type="form" icon="layui-icon-file">
+<body id="attributes" type="form" icon="layui-icon-file">
 <div id="template">
     <div class="layui-col-space10 selector layui-col-md12" ez-type="attributes">
         <div class="layui-form-item ">
@@ -64,7 +64,7 @@
         </div>
     </div>
 
-    <script  >
+    <script>
         (function ($) {
             // 默认配置
             const DEFAULT_CONFIG = {
@@ -107,7 +107,7 @@
 
                 // 初始化数据
                 if (config.initdata && config.initdata.length > 0) {
-                    $.each(config.initdata, function(index, item) {
+                    $.each(config.initdata, function (index, item) {
                         addRow($attributeContainer, item.K, item.V, config);
                     });
                 } else {
@@ -192,7 +192,7 @@
                     const formData = [];
                     let hasEmptyFields = false;
 
-                    $attributeContainer.find('.attribute-row').each(function(index) {
+                    $attributeContainer.find('.attribute-row').each(function (index) {
                         const key = $(this).find('input[name^="key_"]').val();
                         const value = $(this).find('input[name^="value_"]').val();
 
@@ -218,7 +218,7 @@
                         return true;
                     }
                     let isValid = true;
-                    $attributeContainer.find('.attribute-row').each(function(index) {
+                    $attributeContainer.find('.attribute-row').each(function (index) {
                         const key = $(this).find('input[name^="key_"]').val();
                         const value = $(this).find('input[name^="value_"]').val();
                         // 简单验证
@@ -231,15 +231,14 @@
                 }
 
 
-
                 // 绑定事件
-                $addRowBtn.on('click', function() {
+                $addRowBtn.on('click', function () {
                     addRow($attributeContainer, '', '', config);
                 });
 
                 // 手动编辑按钮事件
                 const $manualEditBtn = $container.find('.manual-edit-btn');
-                $manualEditBtn.on('click', function() {
+                $manualEditBtn.on('click', function () {
                     // 获取当前数据
                     const currentData = getFormData();
                     const jsonData = JSON.stringify(currentData, null, 2);
@@ -273,7 +272,7 @@
                         area: ['540px', '470px'],
                         content: dialogContent,
                         btn: ['保存', '取消'],
-                        yes: function(index, layero) {
+                        yes: function (index, layero) {
                             const newJsonData = $('#jsonEditor').val();
                             try {
                                 // 验证JSON格式
@@ -299,31 +298,31 @@
                 });
 
                 // 监听删除按钮点击事件
-                $container.on('click', '.row-delete-btn', function() {
+                $container.on('click', '.row-delete-btn', function () {
                     removeRow($(this).closest('.attribute-row'));
                 });
 
                 // 监听输入框变化事件，实时更新隐藏字段
-                $container.on('input', 'input[name^="key_"], input[name^="value_"]', function() {
+                $container.on('input', 'input[name^="key_"], input[name^="value_"]', function () {
                     updateHiddenInput();
                 });
 
                 // 监听输入框失去焦点事件，用于验证
-                $container.on('blur', 'input[name^="key_"], input[name^="value_"]', function() {
+                $container.on('blur', 'input[name^="key_"], input[name^="value_"]', function () {
                     // 可以在这里添加验证逻辑
                 });
 
                 // 提供外部访问的方法
                 $element.data('attributeEditor', {
                     getData: getFormData,
-                    setData: function(data) {
+                    setData: function (data) {
                         // 清空现有内容
                         $attributeContainer.empty();
                         currentRows = 0;
 
                         // 添加新数据
                         if (data && data.length > 0) {
-                            $.each(data, function(index, item) {
+                            $.each(data, function (index, item) {
                                 addRow($attributeContainer, item.K, item.V, config);
                             });
                         } else {
@@ -338,13 +337,14 @@
 
             // 获取配置
             function getConfig($element) {
-                let config={};
-                let jsonConfig ={};
-                try{
-                    jsonConfig= JSON.parse($element.attr('ez-attrmap'));
-                }catch (e){}
+                let config = {};
+                let jsonConfig = {};
+                try {
+                    jsonConfig = JSON.parse($element.attr('ez-attrmap'));
+                } catch (e) {
+                }
                 if (jsonConfig) {
-                    config = $.extend(DEFAULT_CONFIG,jsonConfig  );
+                    config = $.extend(DEFAULT_CONFIG, jsonConfig);
                 }
                 // 获取name属性
                 const name = $element.attr('name');
@@ -360,13 +360,13 @@
                         console.error('Invalid JSON data:', jsonData);
                     }
                 }
-                console.log("attributes:config::"+ JSON.stringify(config));
+                console.log("attributes:config::" + JSON.stringify(config));
                 return config;
             }
 
             // jQuery 插件
-            $.fn.attributeEditor = function(options) {
-                return this.each(function() {
+            $.fn.attributeEditor = function (options) {
+                return this.each(function () {
                     if (!$.data(this, 'attributeEditor')) {
                         createAttributeEditor(this);
                     }
@@ -374,7 +374,7 @@
             };
 
             // 自动初始化带有 .input-attr 类的元素
-            $(document).ready(function() {
+            $(document).ready(function () {
                 // 确保layui已加载后再初始化
                 if (typeof layui !== 'undefined' && layui.form) {
                     $('.input-attr').attributeEditor();

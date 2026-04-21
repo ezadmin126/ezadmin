@@ -7,7 +7,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 import top.ezadmin.plugins.templates.EzDialect;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class ThymeleafAttrTest {
         resolver.setCacheable(false);
         engine.setTemplateResolver(resolver);
 
-         engine.addDialect(new EzDialect());
+        engine.addDialect(new EzDialect());
 
         String result = engine.process(template, ctx);
         System.out.println(result);
@@ -53,7 +52,7 @@ public class ThymeleafAttrTest {
         props.put("hidden", false);
 
         Context ctx = new Context();
-      //  ctx.setVariable("propsAttrs", props);
+        //  ctx.setVariable("propsAttrs", props);
 
         TemplateEngine engine = new TemplateEngine();
         StringTemplateResolver resolver = new StringTemplateResolver();

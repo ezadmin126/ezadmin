@@ -23,7 +23,7 @@
                 filterable: true,
                 clearable: true, collapseTags: true,
                 placeholder: '[[${#strings.isEmpty(placeholder)?'请选择':placeholder}]]',
-                value: [[${#strings.isEmpty(itemParamValue)?'[]':itemParamValue}]],
+                value: [[${#strings.isEmpty(itemParamValue) ? '[]' : itemParamValue}]],
                 options: data.data
             });
         })

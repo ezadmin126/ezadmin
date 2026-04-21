@@ -5,6 +5,7 @@ public class EzExportResult {
     private String contentType;
 
     private String fileName;
+
     public byte[] getFile() {
         return file;
     }

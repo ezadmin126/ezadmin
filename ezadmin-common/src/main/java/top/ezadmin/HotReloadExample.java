@@ -2,7 +2,7 @@ package top.ezadmin;
 
 /**
  * 热加载功能使用示例
- *
+ * <p>
  * 该示例展示如何在开发环境中启用配置文件和模板的热加载功能
  */
 public class HotReloadExample {
@@ -67,7 +67,7 @@ public class HotReloadExample {
 
     /**
      * 通过 JVM 参数启用热加载
-     *
+     * <p>
      * 启动时添加参数：
      * -Dezadmin.hotreload=true
      */
@@ -85,7 +85,7 @@ public class HotReloadExample {
 
     /**
      * 手动指定项目根路径
-     *
+     * <p>
      * 当系统无法自动检测项目路径时使用
      */
     public static void setProjectRoot(String projectPath) {

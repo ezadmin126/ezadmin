@@ -15,7 +15,8 @@ public class JSONUtils {
     public static String toJSONString(Object obj) {
         return EzBootstrap.config().getEzJson().toJSONString(obj);
     }
-    public static String    toPrettyJSONString (Object obj) {
+
+    public static String toPrettyJSONString(Object obj) {
         return EzBootstrap.config().getEzJson().toPrettyJSONString(obj);
     }
 
@@ -28,12 +29,13 @@ public class JSONUtils {
     }
 
     public static Map<String, String> parseMap(String json) {
-        return EzBootstrap.config().getEzJson().parseMap(json );
+        return EzBootstrap.config().getEzJson().parseMap(json);
     }
 
     public static Map<String, Object> parseObjectMap(String json) {
         return EzBootstrap.config().getEzJson().parseObjectMap(json);
     }
+
     public static Map<String, Object> deepParseObjectMap(String json) {
         return EzBootstrap.config().getEzJson().deepParseObjectMap(json);
     }
@@ -46,8 +48,6 @@ public class JSONUtils {
             throw e;
         }
     }
-
-
 
 
 }

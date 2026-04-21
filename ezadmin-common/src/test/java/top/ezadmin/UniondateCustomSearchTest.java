@@ -6,7 +6,6 @@ import top.ezadmin.dao.model.CustomSearchDTO;
 import top.ezadmin.dao.model.CustomSearchGroup;
 import top.ezadmin.dao.model.CustomSearchSingle;
 import top.ezadmin.plugins.sqlgenerate.MySqlGenerate;
-import top.ezadmin.plugins.sqlgenerate.SqlGenerate;
 
 import java.util.*;
 
@@ -410,7 +409,7 @@ public class UniondateCustomSearchTest {
 
         // 验证日期范围顺序
         assertTrue("起始日期应该在结束日期之前",
-                   customWhere.indexOf("2026-03-01") < customWhere.indexOf("2026-04-01"));
+                customWhere.indexOf("2026-03-01") < customWhere.indexOf("2026-04-01"));
 
         System.out.println("✅ SQL 生成验证通过");
         System.out.println("✅ 真实 uniondate JSON 测试通过\n");

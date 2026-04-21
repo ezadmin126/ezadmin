@@ -2,12 +2,12 @@ package top.ezadmin.dao.model;
 
 public class TreeConfig {
 
-    private String treeId ="VALUE";
-    private String treePid ="PARENT_ID";
-    private String treeLabel ="LABEL";
-    private String treeChildren ="CHILDREN";
-    private String treeIsParent ="IS_PARENT";
-    private String rootPid ="0";
+    private String treeId = "VALUE";
+    private String treePid = "PARENT_ID";
+    private String treeLabel = "LABEL";
+    private String treeChildren = "CHILDREN";
+    private String treeIsParent = "IS_PARENT";
+    private String rootPid = "0";
 
     public String getTreeId() {
         return treeId;

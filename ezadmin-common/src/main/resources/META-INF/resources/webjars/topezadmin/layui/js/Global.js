@@ -29,6 +29,9 @@ window.Global = window.Global || {
 const eventMap = Object.create(null);
 
 Global.onClick = function (name, handler) {
+    if (name == '') {
+        return;
+    }
     eventMap[name] = handler;
 };
 // 统一事件委托
@@ -43,17 +46,15 @@ document.addEventListener('click', function (e) {
         fn.call(el, e);
     }
 });
-//         item.alt = _this.attr("alt");
-//         item.pid = _this.attr("pid");
-//         item.src = _this.attr("orgsrc") || _this.attr("src");
-//         item.thumb = _this.attr("orgsrc");
+
+
 Global.onClick('viewer-image', function (e) {
     var dataset = this.dataset;
-    var _this=this;
+    var _this = this;
     if (this.__lock) return;
     this.__lock = true;
     setTimeout(() => this.__lock = false, 500);
-    var imgConfig={
+    var imgConfig = {
         shade: 0.5,
         photos: {
             "title": _this.getAttribute("title"),
@@ -62,7 +63,7 @@ Global.onClick('viewer-image', function (e) {
                 {
                     "alt": _this.getAttribute("title"),
                     "pid": 0,
-                    "src": _this.getAttribute("src")||dataset.original
+                    "src": _this.getAttribute("src") || dataset.original
                 }
             ]
         },
@@ -75,9 +76,9 @@ Global.onClick('viewer-image', function (e) {
             // }
         }
     };
-    if(dataset.parent==true){
+    if (dataset.parent == true) {
         parent.window.layer.photos(imgConfig);
-    }else{
+    } else {
         layer.photos(imgConfig);
     }
     e.preventDefault();
@@ -87,7 +88,7 @@ Global.onClick('viewer-image', function (e) {
 
 
 Global.onClick('ez-button', function (e) {
-    var _this=this;
+    var _this = this;
     if (this.__lock) return;
     this.__lock = true;
     setTimeout(() => this.__lock = false, 500);
@@ -98,9 +99,14 @@ Global.onClick('ez-button', function (e) {
     } catch (err) {
         cfg = {};
     }
-    ezopen(cfg.opentype|| _this.getAttribute("opentype"),
-        cfg.windowname|| _this.getAttribute("windowname"),
-        cfg.url|| _this.getAttribute("url"), cfg.area);
+    if (_this.getAttribute("opentype") == '' || 'script' == _this.getAttribute("opentype")) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+    }
+    ezopen(cfg.opentype || _this.getAttribute("opentype"),
+        cfg.windowname || _this.getAttribute("windowname"),
+        cfg.url || _this.getAttribute("url"), cfg.area);
 
     e.preventDefault();
     e.stopPropagation();
@@ -127,12 +133,12 @@ Global.toNumberArray = function (val) {
  * @param json2
  * @returns {*}
  */
-Global.deepUnion =function (json1, json2) {
+Global.deepUnion = function (json1, json2) {
     // 如果任意一个不是对象，直接取 json1（以第一个为准）
     if (json1 === null || typeof json1 !== 'object') return json1;
     if (json2 === null || typeof json2 !== 'object') return json1;
 
-    const result = { ...json2 }; // 先复制 json2 的所有字段
+    const result = {...json2}; // 先复制 json2 的所有字段
 
     for (const key in json1) {
         if (json1.hasOwnProperty(key)) {
@@ -160,13 +166,13 @@ Global.deepUnion =function (json1, json2) {
  * @param childrenKey 默认children
  * @returns {*[]}
  */
-Global.listToTree=function(list, idKey = 'id', parentKey = 'parentId', childrenKey = 'children') {
+Global.listToTree = function (list, idKey = 'id', parentKey = 'parentId', childrenKey = 'children') {
     const tree = [];
     const lookup = {};
 
     // 初始化所有节点
     list.forEach(item => {
-        lookup[item[idKey]] = { ...item, [childrenKey]: [] };
+        lookup[item[idKey]] = {...item, [childrenKey]: []};
     });
 
     // 建树
@@ -207,11 +213,6 @@ Global.getAllValues = function (tree) {
 }
 
 
-
-
-
-
-
 /**
  * 逻辑上都认为是true的情况
  * @param c
@@ -223,25 +224,96 @@ Global.logicTrue = function (c) {
 };
 
 
-// 安全解析JSON字符串或返回已解析的对象
-Global.safeParseJSON=function(data, defaultValue) {
-    if (!data) {
-        return defaultValue || null;
-    }
-    // 如果已经是对象，直接返回
-    if (typeof data === 'object') {
-        return data;
-    }
-    // 如果是字符串，尝试解析
-    if (typeof data === 'string') {
-        try {
-            return JSON.parse(data);
-        } catch (e) {
-            console.error('JSON解析失败:', e, '原始数据:', data);
-            return defaultValue || null;
+// 按逗号分割字符串，跳过嵌套 {} [] 内的逗号
+function _splitDslPairs(str) {
+    var parts = [], depth = 0, start = 0;
+    for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        if (c === 123 || c === 91) depth++;        // { [
+        else if (c === 125 || c === 93) depth--;   // } ]
+        else if (c === 44 && depth === 0) {         // ,
+            parts.push(str.slice(start, i).trim());
+            start = i + 1;
         }
     }
-    return defaultValue || null;
+    parts.push(str.slice(start).trim());
+    return parts;
+}
+
+// 解析单个 DSL 值（递归）
+function _parseDslValue(val) {
+    if (val === 'true') return true;
+    if (val === 'false') return false;
+    if (val === 'null') return null;
+    var c0 = val.charCodeAt(0);
+    if (c0 === 123) return _parseDslObject(val);  // {
+    if (c0 === 91) return _parseDslArray(val);   // [
+    if (!isNaN(val) && val !== '') return Number(val);
+    // 去掉首尾引号
+    if ((c0 === 34 || c0 === 39) && val.charCodeAt(val.length - 1) === c0) {
+        return val.slice(1, -1);
+    }
+    return val;
+}
+
+// 解析 DSL 对象格式：{key=value, key2=[A, B]}
+function _parseDslObject(str) {
+    var inner = str.slice(1, -1).trim();
+    if (!inner) return {};
+    var result = {}, pairs = _splitDslPairs(inner);
+    for (var i = 0; i < pairs.length; i++) {
+        var eqIdx = pairs[i].indexOf('=');
+        if (eqIdx === -1) continue;
+        var key = pairs[i].slice(0, eqIdx).trim();
+        var val = pairs[i].slice(eqIdx + 1).trim();
+        result[key] = _parseDslValue(val);
+    }
+    return result;
+}
+
+// 解析 DSL 数组格式：[A, B, C]
+function _parseDslArray(str) {
+    var inner = str.slice(1, -1).trim();
+    if (!inner) return [];
+    var items = _splitDslPairs(inner);
+    for (var i = 0; i < items.length; i++) {
+        items[i] = _parseDslValue(items[i]);
+    }
+    return items;
+}
+
+// 递归处理对象中的字符串值
+function _deepParseValues(obj) {
+    for (var k in obj) {
+        if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+        var v = obj[k];
+        if (typeof v !== 'string') continue;
+        var c0 = v.charCodeAt(0);
+        if (c0 === 123 || c0 === 91) {          // { or [
+            obj[k] = Global.safeParseJSON(v, v);
+        }
+    }
+    return obj;
+}
+
+// 安全解析JSON字符串或返回已解析的对象，支持嵌套字符串递归解析及 DSL 自定义格式
+Global.safeParseJSON = function (data, defaultValue) {
+    if (!data) return defaultValue !== undefined ? defaultValue : {};
+    if (typeof data === 'object') return data;
+    if (typeof data !== 'string') return defaultValue !== undefined ? defaultValue : {};
+
+    var c0 = data.charCodeAt(0);
+    // 标准 JSON（以 { 或 [ 开头）
+    if (c0 === 123 || c0 === 91) {
+        try {
+            return _deepParseValues(JSON.parse(data));
+        } catch (e) {
+            // 降级：DSL 格式
+            return c0 === 123 ? _parseDslObject(data) : _parseDslArray(data);
+        }
+    }
+    console.error('safeParseJSON: 无法解析:', data);
+    return defaultValue !== undefined ? defaultValue : {};
 }
 
 var holiday = [[], []];
@@ -472,13 +544,12 @@ function ezopen(openType, title, appendUrl, area) {
     var searchParams = params.join('&');
 
 
-
     switch (openType) {
         case 'APPEND_PARAM':
             if (appendUrl != null && appendUrl.indexOf('?') <= 0) {
-                appendUrl += '?' + searchParams  ;
+                appendUrl += '?' + searchParams;
             } else {
-                appendUrl += '&' + searchParams  ;
+                appendUrl += '&' + searchParams;
             }
             openModel(appendUrl, title, area);
             break;
@@ -512,9 +583,9 @@ function ezopen(openType, title, appendUrl, area) {
             break;
         case '_BLANK_PARAM':
             if (appendUrl.indexOf('?') <= 0) {
-                appendUrl += '?' + searchParams ;
+                appendUrl += '?' + searchParams;
             } else {
-                appendUrl += '&' + searchParams ;
+                appendUrl += '&' + searchParams;
             }
             openBlank(appendUrl);
             break;
@@ -552,14 +623,14 @@ function ezopen(openType, title, appendUrl, area) {
                 .then(response => response.json())
                 .then(function (result) {
                     if (result.success) {
-                        layer.msg("操作成功",{time:500}, function (index) {
+                        layer.msg("操作成功", {time: 500}, function (index) {
                             location.reload();
                         })
                     } else {
                         layer.msg("操作失败:" + result.message)
                     }
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     console.error('Error:', error);
                 });
             // openTab(title,appendUrl)
@@ -567,20 +638,20 @@ function ezopen(openType, title, appendUrl, area) {
         case 'CONFIRM_AJAX':
             var title = title;
             layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
-                var loadingIndex=layer.load(3, {shade: [1, '#FFF']});
+                var loadingIndex = layer.load(3, {shade: [1, '#FFF']});
                 fetch(appendUrl)
                     .then(response => response.json())
                     .then(function (result) {
                         layer.close(loadingIndex);
                         if (result.success) {
-                            layer.msg("操作成功",{time:500}, function (index) {
+                            layer.msg("操作成功", {time: 500}, function (index) {
                                 location.reload();
                             })
                         } else {
                             layer.alert("操作失败:" + result.message)
                         }
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.error('Error:', error);
                         layer.close(loadingIndex);
                     });
@@ -590,7 +661,7 @@ function ezopen(openType, title, appendUrl, area) {
         case 'CONFIRM_AJAX_LIST':
             var title = title;
             layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
-                var loadingIndex=layer.load(3, {shade: [1, '#FFF']});
+                var loadingIndex = layer.load(3, {shade: [1, '#FFF']});
                 fetch(appendUrl)
                     .then(response => response.json())
                     .then(function (result) {
@@ -602,7 +673,7 @@ function ezopen(openType, title, appendUrl, area) {
                             layer.alert("操作失败:" + result.message)
                         }
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.error('Error:', error);
                         layer.close(loadingIndex);
                     });
@@ -617,7 +688,7 @@ function ezopen(openType, title, appendUrl, area) {
 
 function openModel(url, name, area) {
     var json = ['90%', '90%'];
-    if (area !== undefined &&area !== "undefined" && area != '') {
+    if (area !== undefined && area !== "undefined" && area != '') {
         try {
             json = area.split(",");
         } catch (e) {
@@ -842,6 +913,87 @@ function refreshCard(card_item_name) {
             layer.message("参数配置错误，应为 reloadcard.xxx");
         }
     }
+}
+
+
+Global.formRender = function () {
+    document.querySelectorAll('.layui-form-checkbox, .layui-form-radio').forEach(function (element) {
+        element.remove();
+    });
+    layui.form.render();
+}
+
+
+Global.formatByPattern = function (value, pattern) {
+
+    let num = Number(value);
+    if (isNaN(num)) return value;
+    // 分离整数和小数部分
+    let parts = pattern.split('.');
+    let intPattern = parts[0];
+    let decPattern = parts[1] || '';
+
+    // 处理小数部分：统计 # 和 0 的个数
+    let minDecimals = (decPattern.match(/0/g) || []).length;      // 必须显示的小数位数（0的个数）
+    let maxDecimals = decPattern.length;                           // 最多小数位数（# 和 0 的总数）
+
+    // 格式化数字（按最大小数位数固定，然后截断）
+    let fixed = num.toFixed(maxDecimals);
+    let [intPart, decPart] = fixed.split('.');
+
+    // 处理小数部分：去除超过 minDecimals 的末尾零（如果允许省略）
+    if (decPart) {
+        let keepDecimals = maxDecimals;
+        if (decPattern.includes('#')) {
+            // 如果模式中有#，则允许去除末尾零，但至少保留 minDecimals 位
+            let trimmed = decPart.replace(/0+$/, '');
+            if (trimmed.length < minDecimals) {
+                // 补零到最小位数
+                decPart = decPart.substring(0, minDecimals);
+            } else {
+                decPart = trimmed;
+            }
+        } else {
+            // 全是0，必须保留固定位数
+            decPart = decPart.substring(0, maxDecimals);
+        }
+    }
+
+    // 处理整数部分：按模式补零（如果模式以0开头）
+    if (intPattern.startsWith('0') && intPart.length < intPattern.length) {
+        intPart = intPart.padStart(intPattern.length, '0');
+    }
+
+    return decPart ? `${intPart}.${decPart}` : intPart;
+}
+
+/**
+ * 将字节数转换为可读的文件大小格式（B/KB/MB/GB/TB）
+ * @param {number} bytes - 要转换的字节数
+ * @param {number} [decimals=2] - 保留的小数位数，默认2位
+ * @returns {string} 格式化后的文件大小字符串
+ */
+function formatFileSize(bytes, decimals = 2) {
+
+    if (bytes === undefined) {
+        return '0 B'
+    }
+    if (bytes === 0) return '0 B';
+
+    const k = 1000; // 使用 1024 作为进制（二进制前缀）
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    // 限制单位范围
+    const index = Math.min(i, sizes.length - 1);
+    const value = bytes / Math.pow(k, index);
+
+    // 小数位数处理
+    const formatted = value.toFixed(decimals);
+    // 移除末尾多余的 .00 或 .0（如果小数位数为0）
+    const finalValue = parseFloat(formatted).toString();
+
+    return `${finalValue} ${sizes[index]}`;
 }
 
 

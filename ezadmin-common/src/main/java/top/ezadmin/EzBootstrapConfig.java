@@ -19,34 +19,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
- 
+
 public class EzBootstrapConfig {
     /**
      * 导出类名，指定数据导出功能的实现类
      */
     private String exportClass = "top.ezadmin.plugins.export.CSVExport";
 
-    private EzExport ezExport=new CSVExport();
+    private EzExport ezExport = new CSVExport();
 
     /**
      * 缓存类名，指定缓存功能的实现类
      */
     private String cacheClass = "top.ezadmin.plugins.cache.CaffeineCache";
-    private EzCache ezCache=new CaffeineCache();
+    private EzCache ezCache = new CaffeineCache();
 
     /**
      * 刷新类名，指定数据刷新功能的实现类
      */
     private String refreshClass = "top.ezadmin.plugins.refresh.DefaultRefresh";
-    private EzRefresh ezRefresh=new DefaultRefresh();
+    private EzRefresh ezRefresh = new DefaultRefresh();
     /**
      * 前缀URL，系统所有接口的统一前缀路径
      */
     private String prefixUrl = "/topezadmin";
 
-    private Map<String,javax.sql.DataSource> datasourceMap = new HashMap<>();
+    private Map<String, javax.sql.DataSource> datasourceMap = new HashMap<>();
 
-    private EzTemplate ezTemplate=new ThymeleafEzTemplate();
+    private EzTemplate ezTemplate = new ThymeleafEzTemplate();
 
     private EzJson ezJson;
 
@@ -65,35 +65,35 @@ public class EzBootstrapConfig {
      * fluid 宽屏
      * container 窄屏
      */
-    private String layout="fluid";
+    private String layout = "fluid";
 
 
-    private String adminStyle="layui";
+    private String adminStyle = "layui";
 
-    private String adminIndexHtml="index";//默认index
+    private String adminIndexHtml = "index";//默认index
 
     /**
      * 列表配置资源列表，存储所有列表页面的配置信息
      */
-    private List<Config> listConfigResources=new ArrayList<>();
+    private List<Config> listConfigResources = new ArrayList<>();
 
     /**
      * 表单配置资源列表，存储所有表单页面的配置信息
      */
-    private List<Config> formConfigResources=new ArrayList<>();
+    private List<Config> formConfigResources = new ArrayList<>();
 
     /**
      * 插件表单配置资源列表，存储插件相关的表单配置
      */
-    private List<Config> pluginsFormConfigResources=new ArrayList<>();
+    private List<Config> pluginsFormConfigResources = new ArrayList<>();
 
     /**
      * 插件列表配置资源列表，存储插件相关的列表配置
      */
-    private List<Config> pluginsListConfigResources=new ArrayList<>();
+    private List<Config> pluginsListConfigResources = new ArrayList<>();
 
     /**
-     *  兼容首页start
+     * 兼容首页start
      */
     private String systemName = "System";
     /**
@@ -159,7 +159,7 @@ public class EzBootstrapConfig {
 
     private String model;
 
-    private Double temperature=0.7;
+    private Double temperature = 0.7;
 
 
     public String getApiUrl() {
@@ -194,7 +194,7 @@ public class EzBootstrapConfig {
         this.temperature = temperature;
     }
 
-    private Map<String,Object> config=new HashMap<>();
+    private Map<String, Object> config = new HashMap<>();
 
     public String getSystemName() {
         return systemName;
@@ -277,11 +277,8 @@ public class EzBootstrapConfig {
     }
 
     /**
-     *  兼容首页end
+     * 兼容首页end
      */
-
-
-
 
 
     public String getExportClass() {
@@ -470,7 +467,7 @@ public class EzBootstrapConfig {
     }
 
     public EzJson getEzJson() {
-        return ezJson==null?new EzJsonImpl():ezJson;
+        return ezJson == null ? new EzJsonImpl() : ezJson;
     }
 
     public void setEzJson(EzJson ezJson) {

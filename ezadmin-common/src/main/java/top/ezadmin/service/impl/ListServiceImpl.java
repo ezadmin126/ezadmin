@@ -33,6 +33,7 @@ public class ListServiceImpl implements ListService {
 
     Logger LOG = LoggerFactory.getLogger(ListServiceImpl.class);
     Dao dao = Dao.getInstance();
+
     @Override
     public List<Map<String, Object>> getDataListByListId(DataSource dataSource, Map<String, Object> list,
                                                          Map<String, Object> request, Map<String, String> session, Page page) throws Exception {
@@ -582,7 +583,7 @@ public class ListServiceImpl implements ListService {
 
             String datasourceCore = getString(coreMap, "datasource");
 
-            DataSource dataSourceVO = EzBootstrap.getInstance().getDataSourceByKey( datasourceCore);
+            DataSource dataSourceVO = EzBootstrap.getInstance().getDataSourceByKey(datasourceCore);
             //头部Nav
             filltab(requestParamMap, tabList);
             //搜索项
@@ -638,14 +639,14 @@ public class ListServiceImpl implements ListService {
                         context.put("count", pagination.getStartRecord() + i + 1);
 
                         //dataRow.entrySet() 转换成Map<String,String>格式 key value jdk17默认不支持entryset了
-                        List<Map<String,String>> dataRowList=new ArrayList<>();
+                        List<Map<String, String>> dataRowList = new ArrayList<>();
                         dataRow.forEach((k, v) -> {
-                            Map<String,String> dataRowMap = new HashMap<>();
+                            Map<String, String> dataRowMap = new HashMap<>();
                             dataRowMap.put("key", k);
                             dataRowMap.put("value", ObjectUtils.toString(v));
                             dataRowList.add(dataRowMap);
                         });
-                        context.put("dataRow",dataRowList);
+                        context.put("dataRow", dataRowList);
                         context.putAll(th);
                         context.put(JsoupUtil.URL, MapParser.parseDefaultEmpty(url, dataRow).getResult());
                         context.put(JsoupUtil.ORGSRC, MapParser.parseDefaultEmpty(ORGSRC, dataRow).getResult());
@@ -660,7 +661,7 @@ public class ListServiceImpl implements ListService {
                         }
                         if (StringUtils.isBlank(getString(th, JsoupUtil.DATA))) {
                             String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
-                            String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                            String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                             tds.add(html);
                             continue;
                         }
@@ -669,7 +670,7 @@ public class ListServiceImpl implements ListService {
                         if (StringUtils.isBlank(columnDs)) {
                             columnDs = datasourceCore;
                         }
-                        DataSource temp =  EzBootstrap.getInstance().getDataSourceByKey(columnDs);
+                        DataSource temp = EzBootstrap.getInstance().getDataSourceByKey(columnDs);
 
                         try {
                             Map nm = new HashMap();
@@ -699,7 +700,7 @@ public class ListServiceImpl implements ListService {
                         }
 
                         String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
-                        String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                        String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
 
                         if (StringUtils.isBlank(html)) {
                             tds.add("<td class='errorplugincode ezadmin-td ezadmin-td-'" + itemName + ">" + dataInDb + "</td>");
@@ -779,7 +780,7 @@ public class ListServiceImpl implements ListService {
                             context.put("rowButtons", tempRowItem);
                             context.put("rowbtnclass", coreMap.get("rowbtnclass"));
                             String template = Utils.trimNull(buttonPlugin.get("PLUGIN_BODY"));
-                            String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                            String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                             if (StringUtils.isNotBlank(html)) {
                                 coreMap.put("rowbtnhtml", html);
                                 tds.add(html);
@@ -817,7 +818,7 @@ public class ListServiceImpl implements ListService {
                 globalEmptyShow = getString(coreMap, "empty_show");
             }
             String datasourceCore = getString(coreMap, JsoupUtil.DATASOURCE);
-            DataSource dataSourceVO =EzBootstrap.getInstance().getDataSourceByKey(datasourceCore);
+            DataSource dataSourceVO = EzBootstrap.getInstance().getDataSourceByKey(datasourceCore);
             //搜索项
             fillsearch(requestParamMap, sessionParamMap, coreMap, searchList, datasourceCore);
             //表头
@@ -913,7 +914,7 @@ public class ListServiceImpl implements ListService {
                 context.putAll(th);
                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
 
-                String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                 th.put(ParamNameEnum.itemParamValue.getName(), Utils.getStringByObject(th, JsoupUtil.ITEM_NAME));
                 th.put(ParamNameEnum.itemParamValueStart.getName(), Utils.getStringByObject(th, JsoupUtil.ITEM_NAME + "_START"));
                 th.put(ParamNameEnum.itemParamValueEnd.getName(), Utils.getStringByObject(th, JsoupUtil.ITEM_NAME + "_END"));
@@ -945,7 +946,7 @@ public class ListServiceImpl implements ListService {
                 Map<String, Object> context = new HashMap<String, Object>();
                 context.putAll(table);
                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
-                String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                 table.put("html", html);
             }
         }
@@ -1079,7 +1080,7 @@ public class ListServiceImpl implements ListService {
                 }
 
 
-                String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                 search.put("html", html);
             } catch (Exception e) {
                 if (Utils.getLog() != null) {
@@ -1242,7 +1243,7 @@ public class ListServiceImpl implements ListService {
                 Map<String, Object> context = new HashMap<String, Object>();
                 context.putAll(th);
                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
-                String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                 th.put("html", html);
             }
         }
@@ -1314,7 +1315,7 @@ public class ListServiceImpl implements ListService {
                             }
 
                             String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
-                            String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                            String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                             //NAME样式有冲突，直接展示文字。
                             if (!"id".equalsIgnoreCase(itemName)
                                     && !JsoupUtil.NAME.equalsIgnoreCase(itemName)
@@ -1361,7 +1362,7 @@ public class ListServiceImpl implements ListService {
                                     context.put("rowButtonItemList", tempRowItem);
                                     context.put("rowButtons", tempRowItem);
                                     String template = Utils.trimNull(buttonPlugin.get("PLUGIN_BODY"));
-                                    String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                                    String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                                     if (StringUtils.isNotBlank(html)) {
                                         dataRow.put("oper", StringUtils.replace(html, "<td ", "<div ")
                                                 .replace("</td>", "</div>"));
@@ -1415,7 +1416,7 @@ public class ListServiceImpl implements ListService {
         String template = Utils.trimNull(
                 loadPlugin(Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE), "layui"), "list", "page")
                         .get("PLUGIN_BODY"));
-        String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+        String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
         Map<String, Object> pagemap = new HashMap<>();
         pagemap.put("currentPage", pagination.getCurrentPage());
         pagemap.put("perPageInt", pagination.getPerPageInt());
@@ -1470,63 +1471,62 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public void initComponentData(RequestContext context, Map<String, Object> component) {
-        if(Utils.isEmpty(component)){
+        if (Utils.isEmpty(component)) {
             return;
         }
         //data
+        String dataUrl = "";
         Map<String, Object> initData = (Map<String, Object>) component.get("initData");
-        if (initData != null) {
-            String dataUrl = (String) initData.get("dataUrl");
-            if(initData.containsKey("dataJson") && initData.get("dataJson") != null  ) {
+        if (Utils.isNotEmpty(initData)) {
+
+            if (initData.containsKey("dataJson") && initData.get("dataJson") != null) {
                 List<Map<String, Object>> result = (List<Map<String, Object>>) initData.get("dataJson");
                 component.put("data", result);
                 component.put("dataJson", JSONUtils.toJSONString(result));
-            }
-            else if(initData.containsKey("dataSql") && initData.get("dataSql") != null  ){
-                String dataSql =  (String) initData.get("dataSql") ;
+            } else if (initData.containsKey("dataSql") && initData.get("dataSql") != null) {
+                String dataSql = (String) initData.get("dataSql");
                 // context.put(JsoupUtil.ORGSRC, MapParser.parseDefaultEmpty(ORGSRC, dataRow).getResult());  替换参数
-                Map<String,Object> params=new HashMap<>();
+                Map<String, Object> params = new HashMap<>();
                 params.putAll(context.getRequestParams());
                 params.putAll(context.getSessionParams());
-                ResultModel model=CommentsSqlParser.parse(dataSql, params);
+                ResultModel model = CommentsSqlParser.parse(dataSql, params);
 
-                String dataSource = Utils.trimEmptyDefault(initData.get("dataSource"),"datasource");
+                String dataSource = Utils.trimEmptyDefault(initData.get("dataSource"), "datasource");
                 //
-                DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
-                if(dataSourceBean==null){
-                    dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
+                DataSource dataSourceBean = EzBootstrap.getInstance().getDataSourceByKey(dataSource);
+                if (dataSourceBean == null) {
+                    dataSourceBean = EzBootstrap.getInstance().getEzDataSource();
                 }
                 try {
                     List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
-                            model.getResult(), model.getParamsStatic(),false);
+                            model.getResult(), model.getParamsStatic(), false);
                     component.put("data", result);
                     component.put("dataJson", JSONUtils.toJSONString(result));
                 } catch (Exception e) {
-                    LOG.error("执行SQL错误",e);
+                    LOG.error("执行SQL错误", e);
                 }
-            }
-            else if(initData.containsKey("dataTreeSql") && initData.get("dataTreeSql") != null  ){
+            } else if (initData.containsKey("dataTreeSql") && initData.get("dataTreeSql") != null) {
                 //递归获取数据，根据parentId
-                String dataTreeSql =  (String) initData.get("dataTreeSql") ;
-                String dataTreeSqlRoot =Utils.trimEmptyDefault(initData.get("dataTreeSqlRoot"),dataTreeSql ) ;
+                String dataTreeSql = (String) initData.get("dataTreeSql");
+                String dataTreeSqlRoot = Utils.trimEmptyDefault(initData.get("dataTreeSqlRoot"), dataTreeSql);
 
-                Map<String,Object> params=new HashMap<>();
+                Map<String, Object> params = new HashMap<>();
                 params.putAll(context.getRequestParams());
                 params.putAll(context.getSessionParams());
 
-                String dataSource = Utils.trimEmptyDefault(initData.get("dataSource"),"datasource");
-                DataSource dataSourceBean=EzBootstrap.getInstance().getDataSourceByKey(dataSource);
-                if(dataSourceBean==null){
-                    dataSourceBean=EzBootstrap.getInstance().getEzDataSource();
+                String dataSource = Utils.trimEmptyDefault(initData.get("dataSource"), "datasource");
+                DataSource dataSourceBean = EzBootstrap.getInstance().getDataSourceByKey(dataSource);
+                if (dataSourceBean == null) {
+                    dataSourceBean = EzBootstrap.getInstance().getEzDataSource();
                 }
 
                 try {
                     // 查询第一层级数据
                     // 优先使用 dataTreeSqlRoot，如果没有配置则使用 dataTreeSql
                     String rootSql = StringUtils.isNotBlank(dataTreeSqlRoot) ? dataTreeSqlRoot : dataTreeSql;
-                    ResultModel model=CommentsSqlParser.parse(rootSql, params);
+                    ResultModel model = CommentsSqlParser.parse(rootSql, params);
                     List<Map<String, Object>> rootNodes = Dao.getInstance().executeQuery(dataSourceBean,
-                            model.getResult(), model.getParamsStatic(),false);
+                            model.getResult(), model.getParamsStatic(), false);
 
                     // 创建结果列表，先添加第一层数据
                     List<Map<String, Object>> allData = new ArrayList<>();
@@ -1542,15 +1542,16 @@ public class ListServiceImpl implements ListService {
                     // 将所有子层级数据收集到 allData 中
                     buildTreeRecursively(dataSourceBean, dataTreeSql, rootNodes, params, 1, maxDepth, allData);
 
+
                     // 返回扁平的列表，包含所有层级的数据
                     component.put("data", allData);
                     component.put("dataJson", JSONUtils.toJSONString(allData));
                 } catch (Exception e) {
-                    LOG.error("执行SQL错误",e);
+                    LOG.error("执行SQL错误", e);
                 }
-            }
-            else  if(StringUtils.equalsIgnoreCase(dataUrl,"api")){
-                //todo apiUrl
+            } else if (initData.containsKey("dataUrl")) {
+                //暂时先塞道属性里面去
+                dataUrl = (String) initData.get("dataUrl");
             }
         }
         //props
@@ -1559,12 +1560,25 @@ public class ListServiceImpl implements ListService {
             if (props == null) {
                 props = new HashMap<>();
             }
-            if(props != null && component.get("component") != null && component.get("component").equals("input")){
+            if (props != null && component.get("component") != null && component.get("component").equals("input")) {
                 props.putIfAbsent("lay-affix", "clear");
             }
+            //props里面每个值都做一个 mapparse转换
+            props.entrySet().forEach(entry -> {
+                if (entry.getValue() instanceof String) {
+                    entry.setValue(MapParser.parseDefaultEmpty(Utils.trimNull(entry.getValue()), context.getRequestParams()).getResult());
+                }
+            });
+//            props.forEach((key, value) -> {
+//                value = MapParser.parseDefaultEmpty(Utils.trimNull(value), context.getRequestParams() );
+//               // props.put(key, MapParser.parseDefaultEmpty(value, context.getRequestParams(), context.getSessionParams()));
+//            });
+            if (StringUtils.isNotBlank(dataUrl)) {
+                props.putIfAbsent("dataUrl", dataUrl);
+            }
             component.put("props", props);
-            component.put("propsJson", JSONUtils.toJSONString(component.get("props")));
-        }catch (Exception e){
+            component.put("propsJson", JSONUtils.toJSONString(props));
+        } catch (Exception e) {
 
         }
 
@@ -1573,13 +1587,14 @@ public class ListServiceImpl implements ListService {
 
     /**
      * 递归查询树形数据，根据parentId逐层查询，将所有数据收集到一个扁平列表中
-     * @param dataSource 数据源
-     * @param sqlTemplate SQL模板，需要包含 ${parentId} 占位符
-     * @param parentNodes 父节点列表
-     * @param baseParams 基础参数
+     *
+     * @param dataSource   数据源
+     * @param sqlTemplate  SQL模板，需要包含 ${parentId} 占位符
+     * @param parentNodes  父节点列表
+     * @param baseParams   基础参数
      * @param currentDepth 当前深度
-     * @param maxDepth 最大深度（默认5层）
-     * @param resultList 结果列表，用于收集所有查询到的数据
+     * @param maxDepth     最大深度（默认5层）
+     * @param resultList   结果列表，用于收集所有查询到的数据
      */
     private void buildTreeRecursively(DataSource dataSource, String sqlTemplate,
                                       List<Map<String, Object>> parentNodes,
@@ -1591,46 +1606,50 @@ public class ListServiceImpl implements ListService {
             return;
         }
 
-        // 收集当前层级的所有子节点
-        List<Map<String, Object>> allChildren = new ArrayList<>();
-
-        // 遍历每个父节点
+        // 收集当前层级所有父节点的 ID，批量查询一次（每层只执行一条 SQL）
+        List<String> parentIdList = new ArrayList<>();
         for (Map<String, Object> parentNode : parentNodes) {
-            try {
-                // 获取父节点的ID作为查询参数
-                String parentId = Utils.trimNull(parentNode.get("value"));
-                if (StringUtils.isBlank(parentId)) {
-                    continue;
-                }
+            String parentId = Utils.trimNull(parentNode.get("value"));
+            if (StringUtils.isNotBlank(parentId)) {
+                parentIdList.add(parentId);
+            }
+        }
+        if (parentIdList.isEmpty()) {
+            return;
+        }
 
-                // 构建查询参数
-                Map<String, Object> queryParams = new HashMap<>();
-                queryParams.putAll(baseParams);
-                queryParams.put("parentId", parentId);
-                queryParams.put("PARENT_ID", parentId);
+        try {
+            // 将 "= #{parentId}" / "= ${parentId}" 替换为 "IN (${__parentIds__})"
+            // 使 SQL 支持批量 IN 查询，避免逐条查询带来的 N×D 次数据库访问
+            String batchSql = sqlTemplate
+                    .replaceAll("(?i)=\\s*#\\{parentId[^}]*\\}", "IN (\\${__parentIds__})")
+                    .replaceAll("(?i)=\\s*\\$\\{parentId[^}]*\\}", "IN (\\${__parentIds__})");
 
-                // 解析SQL并执行查询
-                ResultModel model = CommentsSqlParser.parse(sqlTemplate, queryParams);
-                List<Map<String, Object>> children = Dao.getInstance().executeQuery(
+            // 构建单引号转义的 IN 列表，例如：'id1','id2','id3'
+            StringBuilder inList = new StringBuilder();
+            for (int i = 0; i < parentIdList.size(); i++) {
+                if (i > 0) inList.append(',');
+                inList.append('\'').append(parentIdList.get(i).replace("'", "''")).append('\'');
+            }
+
+            Map<String, Object> queryParams = new HashMap<>();
+            queryParams.putAll(baseParams);
+            queryParams.put("__parentIds__", inList.toString());
+
+            ResultModel model = CommentsSqlParser.parse(batchSql, queryParams);
+            List<Map<String, Object>> allChildren = Dao.getInstance().executeQuery(
                     dataSource,
                     model.getResult(),
                     model.getParamsStatic(),
                     false
-                );
+            );
 
-                // 如果有子节点，添加到结果列表和当前层级列表
-                if (Utils.isNotEmpty(children)) {
-                    resultList.addAll(children);
-                    allChildren.addAll(children);
-                }
-            } catch (Exception e) {
-                LOG.error("递归查询树形数据错误，parentNode=" + parentNode, e);
+            if (Utils.isNotEmpty(allChildren)) {
+                resultList.addAll(allChildren);
+                buildTreeRecursively(dataSource, sqlTemplate, allChildren, baseParams, currentDepth + 1, maxDepth, resultList);
             }
-        }
-
-        // 递归查询下一层级
-        if (Utils.isNotEmpty(allChildren)) {
-            buildTreeRecursively(dataSource, sqlTemplate, allChildren, baseParams, currentDepth + 1, maxDepth, resultList);
+        } catch (Exception e) {
+            LOG.error("批量递归查询树形数据错误，depth=" + currentDepth + ", parentIds=" + parentIdList, e);
         }
     }
 

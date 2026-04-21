@@ -1,144 +1,145 @@
 <div th:class="'component-col col-'+${item_name}"
      th:classappend="${classAppend}" th:data-config-json="${componentJson}"
 >
-<div   class="layui-form-item"  th:item_name="${item_name}" component="tinymce">
-<!--    <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">-->
-<!--        <span th:if="${props != null and props.required}" style="color: red;">*</span>-->
-<!--        <span th:text="${label}+'：'">字段名</span>-->
-<!--    </label>-->
-    <div class="layui-input-block" style="margin-left: 0px !important;"  >
-        <textarea  th:id="${'DESC_ITEM_ID_'+item_name}"
-                th:name="${item_name}"
-                class="  tinymcetextarea"
-                th:attrs="${props}"
-                th:data-propsJson="${propsJson}"
+    <div class="layui-form-item" th:item_name="${item_name}" component="tinymce">
+        <!--    <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">-->
+        <!--        <span th:if="${props != null and props.required}" style="color: red;">*</span>-->
+        <!--        <span th:text="${label}+'：'">字段名</span>-->
+        <!--    </label>-->
+        <div class="layui-input-block" style="margin-left: 0px !important;">
+        <textarea th:id="${'DESC_ITEM_ID_'+item_name}"
+                  th:name="${item_name}"
+                  class="  tinymcetextarea"
+                  th:attrs="${props}"
+                  th:data-propsJson="${propsJson}"
         > </textarea>
-        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
-    </div>
-    <script>
+            <div th:if="${props != null and not #strings.isEmpty(props.description)}"
+                 class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
+        </div>
+        <script>
 
-        $(function(){
-            try {
-                var uploadUrl = document.getElementById("uploadUrl").value+'?descFlag=1';
-                tinymce.init({
-                    selector: "textarea#[[${'DESC_ITEM_ID_'+item_name}]]"  ,
-                    language: 'zh_CN'  ,
-                    menubar: '',
-                    height: 600,
-                    branding: false  ,
-                    width: '100%'  ,
-                    plugins: 'link image media lists advlist table hr   fullscreen   insertdatetime searchreplace batchUploadImage '  ,
-                    toolbar: ['undo redo |styleselect bold italic  |bullist numlist |outdent indent alignleft aligncenter alignright |table hr link image batchUploadImage |fullscreen']
-                    ,
-                    form: {
-                        name: 'file'
-                    }
-                    ,
-                    toolbar_sticky: true,
-                    relative_urls: false,
-                    convert_urls: false
-                    ,
-                    autosave_ask_before_unload: false
-                    ,
-                    images_upload_url: uploadUrl
-                    ,
-                    file_picker_callback: function (callback, value, meta) {
-                        var filetype = '.bmp, .jpg, .jpeg, .png, .gif, .pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
-
-                        //为不同插件指定文件类型及后端地址
-                        switch (meta.filetype) {
-                            case 'image':
-                                filetype = '.bmp, .jpg, .jpeg, .png, .gif, .pdf';
-                                break;
-                            case 'media':
-                                filetype = '.mp3, .mp4';
-                                break;
-                            case 'file':
-                            default:
+            $(function () {
+                try {
+                    var uploadUrl = document.getElementById("uploadUrl").value + '?descFlag=1';
+                    tinymce.init({
+                        selector: "textarea#[[${'DESC_ITEM_ID_'+item_name}]]",
+                        language: 'zh_CN',
+                        menubar: '',
+                        height: 600,
+                        branding: false,
+                        width: '100%',
+                        plugins: 'link image media lists advlist table hr   fullscreen   insertdatetime searchreplace batchUploadImage ',
+                        toolbar: ['undo redo |styleselect bold italic  |bullist numlist |outdent indent alignleft aligncenter alignright |table hr link image batchUploadImage |fullscreen']
+                        ,
+                        form: {
+                            name: 'file'
                         }
-                        //模拟出一个input用于添加本地文件
-                        var input = document.createElement('input');
-                        input.setAttribute('type', 'file');
-                        input.setAttribute('accept', filetype);
-                        input.click();
-                        input.onchange = function () {
-                            var file = this.files[0];
+                        ,
+                        toolbar_sticky: true,
+                        relative_urls: false,
+                        convert_urls: false
+                        ,
+                        autosave_ask_before_unload: false
+                        ,
+                        images_upload_url: uploadUrl
+                        ,
+                        file_picker_callback: function (callback, value, meta) {
+                            var filetype = '.bmp, .jpg, .jpeg, .png, .gif, .pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
 
-                            var xhr, formData;
-                            xhr = new XMLHttpRequest();
-                            xhr.withCredentials = false;
-                            xhr.open('POST', uploadUrl);
-                            xhr.onload = function () {
-                                debugger;
-                                var json;
-                                if (xhr.status != 200) {
-                                    layer.msg('HTTP Error: ' + xhr.status);
-                                    return;
-                                }
-                                console.log('Invalid JSON: ' + xhr.responseText)
-                                json = JSON.parse(xhr.responseText);
-                                if (!json) {
-                                    layer.msg('Invalid JSON: ' + xhr.responseText);
-                                    return;
-                                }
-                                var uurl = json.data.src || json.data.url;
-                                if (!uurl.startsWith("http")) {
-                                    uurl =   uurl;
-                                }
-                                callback(uurl, {text: file.name, title: file.name, alt: file.name});
-                            };
-                            formData = new FormData();
-                            formData.append('file', file, file.name);
-                            xhr.send(formData);
-                        }
-                    }
-                    ,
-                    images_upload_handler: function (blobInfo, success, fail) {
-                        // 图片上传实现 http://tinymce.ax-z.cn/general/upload-images.php
-                        var formData = new FormData();
-                        debugger
-                        formData.append('file', blobInfo.blob());
-                        $.ajax({
-                            url: uploadUrl,
-                            type: 'POST',
-                            data: formData,
-                            dataType: 'json',
-                            processData: false,
-                            contentType: false,
-                            success: function (response) {
-                                try {
-                                    var uurl = response.data.src || response.data.url;
-                                    if (!uurl.startsWith("http")) {
-                                        uurl =  uurl;
+                            //为不同插件指定文件类型及后端地址
+                            switch (meta.filetype) {
+                                case 'image':
+                                    filetype = '.bmp, .jpg, .jpeg, .png, .gif, .pdf';
+                                    break;
+                                case 'media':
+                                    filetype = '.mp3, .mp4';
+                                    break;
+                                case 'file':
+                                default:
+                            }
+                            //模拟出一个input用于添加本地文件
+                            var input = document.createElement('input');
+                            input.setAttribute('type', 'file');
+                            input.setAttribute('accept', filetype);
+                            input.click();
+                            input.onchange = function () {
+                                var file = this.files[0];
+
+                                var xhr, formData;
+                                xhr = new XMLHttpRequest();
+                                xhr.withCredentials = false;
+                                xhr.open('POST', uploadUrl);
+                                xhr.onload = function () {
+                                    debugger;
+                                    var json;
+                                    if (xhr.status != 200) {
+                                        layer.msg('HTTP Error: ' + xhr.status);
+                                        return;
                                     }
-                                    success(uurl);
-                                } catch (e) {
-                                    console.log(e);
+                                    console.log('Invalid JSON: ' + xhr.responseText)
+                                    json = JSON.parse(xhr.responseText);
+                                    if (!json) {
+                                        layer.msg('Invalid JSON: ' + xhr.responseText);
+                                        return;
+                                    }
+                                    var uurl = json.data.src || json.data.url;
+                                    if (!uurl.startsWith("http")) {
+                                        uurl = uurl;
+                                    }
+                                    callback(uurl, {text: file.name, title: file.name, alt: file.name});
+                                };
+                                formData = new FormData();
+                                formData.append('file', file, file.name);
+                                xhr.send(formData);
+                            }
+                        }
+                        ,
+                        images_upload_handler: function (blobInfo, success, fail) {
+                            // 图片上传实现 http://tinymce.ax-z.cn/general/upload-images.php
+                            var formData = new FormData();
+                            debugger
+                            formData.append('file', blobInfo.blob());
+                            $.ajax({
+                                url: uploadUrl,
+                                type: 'POST',
+                                data: formData,
+                                dataType: 'json',
+                                processData: false,
+                                contentType: false,
+                                success: function (response) {
+                                    try {
+                                        var uurl = response.data.src || response.data.url;
+                                        if (!uurl.startsWith("http")) {
+                                            uurl = uurl;
+                                        }
+                                        success(uurl);
+                                    } catch (e) {
+                                        console.log(e);
+                                        fail('上传失败.');
+                                    }
+                                },
+                                error: function () {
                                     fail('上传失败.');
                                 }
-                            },
-                            error: function () {
-                                fail('上传失败.');
-                            }
-                        });
-                        // 上传成功调用 success(url);
-                        // 上传失败调用 fail();
-                    }
-                    ,
-                    setup: function (editor) {
-                        editor.on('change', function (e) {
-                            //  console.log('The Editor has initialized.');
-                            editor.save();
-                        });
-                    }
-                });
-            } catch (e) {
-                console.log(e);
-            }
-        })
+                            });
+                            // 上传成功调用 success(url);
+                            // 上传失败调用 fail();
+                        }
+                        ,
+                        setup: function (editor) {
+                            editor.on('change', function (e) {
+                                //  console.log('The Editor has initialized.');
+                                editor.save();
+                            });
+                        }
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            })
 
-    </script>
-</div>
+        </script>
+    </div>
 </div>
 
 

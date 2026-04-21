@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>创建 DSL - EzAdmin AI 助手</title>
-    <link rel="stylesheet" th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" href="https://unpkg.com/layui@2.9.20/dist/css/layui.css">
+    <link rel="stylesheet" th:href="${'/webjars/layuidist/css/layui.css?v='+vi}"
+          href="https://unpkg.com/layui@2.9.20/dist/css/layui.css">
     <style>
         * {
             margin: 0;
@@ -225,7 +226,7 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -291,7 +292,7 @@
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
 
         .main-textarea {
@@ -545,12 +546,21 @@
             animation: bounce 1.4s infinite ease-in-out;
         }
 
-        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
-        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        .loading-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
 
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
         }
 
         .chat-input-area {
@@ -662,6 +672,7 @@
             .sidebar {
                 width: 240px;
             }
+
             .ai-assistant {
                 width: 360px;
             }
@@ -669,148 +680,152 @@
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <!-- 左侧数据库表列表 -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h3>📊 数据库表</h3>
-                <p>支持多选表</p>
+<div class="main-container">
+    <!-- 左侧数据库表列表 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>📊 数据库表</h3>
+            <p>支持多选表</p>
+        </div>
+
+        <div class="sidebar-actions">
+            <button class="layui-btn layui-btn-sm layui-btn-primary" onclick="selectAllTables()">全选</button>
+            <button class="layui-btn layui-btn-sm layui-btn-primary" onclick="clearAllTables()">清空</button>
+            <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="useSelectedTables()">使用</button>
+        </div>
+
+        <div class="tables-search">
+            <input type="text" id="tableSearch" placeholder="搜索表名..."/>
+        </div>
+
+        <div class="tables-list" id="tablesList">
+            <!-- 动态生成表列表 -->
+        </div>
+    </div>
+
+    <!-- 中间内容区域 -->
+    <div class="content-area">
+        <div class="content-header">
+            <h1>🚀 创建新的 DSL 配置</h1>
+            <p>使用 AI 助手快速创建表单或列表配置，支持 SQL 导入和自然语言描述</p>
+        </div>
+
+        <div class="create-options">
+            <div class="option-card form" onclick="selectDslType('form')">
+                <div class="option-icon">📝</div>
+                <h3>创建表单</h3>
+                <p>生成数据录入表单，支持多种输入组件和验证规则</p>
             </div>
 
-            <div class="sidebar-actions">
-                <button class="layui-btn layui-btn-sm layui-btn-primary" onclick="selectAllTables()">全选</button>
-                <button class="layui-btn layui-btn-sm layui-btn-primary" onclick="clearAllTables()">清空</button>
-                <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="useSelectedTables()">使用</button>
-            </div>
-
-            <div class="tables-search">
-                <input type="text" id="tableSearch" placeholder="搜索表名..." />
-            </div>
-
-            <div class="tables-list" id="tablesList">
-                <!-- 动态生成表列表 -->
+            <div class="option-card list" onclick="selectDslType('list')">
+                <div class="option-icon">📋</div>
+                <h3>创建列表</h3>
+                <p>生成数据展示列表，支持搜索、排序和分页功能</p>
             </div>
         </div>
 
-        <!-- 中间内容区域 -->
-        <div class="content-area">
-            <div class="content-header">
-                <h1>🚀 创建新的 DSL 配置</h1>
-                <p>使用 AI 助手快速创建表单或列表配置，支持 SQL 导入和自然语言描述</p>
-            </div>
-
-            <div class="create-options">
-                <div class="option-card form" onclick="selectDslType('form')">
-                    <div class="option-icon">📝</div>
-                    <h3>创建表单</h3>
-                    <p>生成数据录入表单，支持多种输入组件和验证规则</p>
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <div class="welcome-header">
+                    <div class="welcome-icon">🤖</div>
+                    <h2>欢迎使用 EzAdmin AI 助手</h2>
+                    <p>
+                        只需简单描述您的需求或提供 SQL 语句，AI 将自动为您生成完整的配置文件。
+                        支持上传需求文档，让开发更简单高效。
+                    </p>
                 </div>
 
-                <div class="option-card list" onclick="selectDslType('list')">
-                    <div class="option-icon">📋</div>
-                    <h3>创建列表</h3>
-                    <p>生成数据展示列表，支持搜索、排序和分页功能</p>
-                </div>
-            </div>
-
-            <div class="welcome-section">
-                <div class="welcome-content">
-                    <div class="welcome-header">
-                        <div class="welcome-icon">🤖</div>
-                        <h2>欢迎使用 EzAdmin AI 助手</h2>
-                        <p>
-                            只需简单描述您的需求或提供 SQL 语句，AI 将自动为您生成完整的配置文件。
-                            支持上传需求文档，让开发更简单高效。
-                        </p>
-                    </div>
-
-                    <div class="main-input-area">
+                <div class="main-input-area">
                         <textarea
-                            id="mainTextarea"
-                            class="main-textarea"
-                            placeholder="请输入您的需求或 SQL 语句...&#10;&#10;例如：&#10;• 创建用户管理列表，需要支持按姓名搜索，按创建时间排序&#10;• SELECT USER_ID ID, USERNAME 用户名, EMAIL 邮箱 FROM user&#10;• 生成订单列表，包含订单号、客户名称、金额、状态等字段"
+                                id="mainTextarea"
+                                class="main-textarea"
+                                placeholder="请输入您的需求或 SQL 语句...&#10;&#10;例如：&#10;• 创建用户管理列表，需要支持按姓名搜索，按创建时间排序&#10;• SELECT USER_ID ID, USERNAME 用户名, EMAIL 邮箱 FROM user&#10;• 生成订单列表，包含订单号、客户名称、金额、状态等字段"
                         ></textarea>
 
-                        <!-- 文件上传区域 -->
-                        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-                            <input type="file" id="fileInput" style="display: none;" accept=".txt,.doc,.docx,.pdf,.md" multiple onchange="handleFileSelect(event)">
-                            <div class="upload-icon">📁</div>
-                            <div class="upload-text">点击或拖拽上传需求文档</div>
-                            <div class="upload-hint">支持 TXT、DOC、DOCX、PDF、MD 格式</div>
-                        </div>
-
-                        <!-- 已上传文件列表 -->
-                        <div class="file-list" id="fileList"></div>
-
-                        <button class="main-send-btn" id="mainSendBtn" onclick="sendMainMessage()">
-                            🚀 开始生成
-                        </button>
+                    <!-- 文件上传区域 -->
+                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" style="display: none;" accept=".txt,.doc,.docx,.pdf,.md"
+                               multiple onchange="handleFileSelect(event)">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text">点击或拖拽上传需求文档</div>
+                        <div class="upload-hint">支持 TXT、DOC、DOCX、PDF、MD 格式</div>
                     </div>
 
-                    <div class="quick-tips">
-                        <h4>💡 快速开始</h4>
-                        <ul>
-                            <li>已默认选择"创建列表"类型</li>
-                            <li>在上方输入框中描述需求或粘贴 SQL</li>
-                            <li>可选：上传需求文档辅助生成</li>
-                            <li>点击"开始生成"，AI 将创建配置并跳转到编辑页面</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <!-- 已上传文件列表 -->
+                    <div class="file-list" id="fileList"></div>
 
-        <!-- 右侧配置面板 -->
-        <div class="ai-assistant">
-            <!-- 1. 头部 -->
-            <div class="ai-header">
-                <h3>⚙️ 配置面板</h3>
-                <p>描述需求或输入 SQL</p>
-            </div>
-
-            <!-- 2. DSL 类型选择 -->
-            <div class="ai-type-selector">
-                <label>DSL 类型</label>
-                <select id="dslTypeSelect" class="layui-input">
-                    <option value="">请先选择类型</option>
-                    <option value="form">表单 (Form)</option>
-                    <option value="list">列表 (List)</option>
-                </select>
-            </div>
-
-            <!-- 3. AI 聊天区域 -->
-            <div class="chat-container" id="chatContainer">
-                <!-- 聊天消息动态生成 -->
-            </div>
-
-            <!-- 4. 示例提示词（底部） -->
-            <div class="example-prompts">
-                <h4>💬 示例提示词</h4>
-                <span class="prompt-tag" onclick="usePrompt('创建用户管理表单，包含用户名、邮箱、手机号、角色等字段')">用户管理表单</span>
-                <span class="prompt-tag" onclick="usePrompt('生成商品列表，需要能够根据名称排序且能够按照价格排序功能')">商品列表</span>
-                <span class="prompt-tag" onclick="usePrompt('SELECT USER_ID ID,USERNAME 用户名,EMAIL 邮箱,PHONE 手机号,ROLE 角色 FROM user')">从 SQL 生成</span>
-            </div>
-
-            <!-- 5. AI 输入区域 -->
-            <div class="chat-input-area">
-                <div class="input-wrapper">
-                    <textarea
-                        id="chatInput"
-                        class="chat-input"
-                        rows="3"
-                        placeholder="输入您的需求或 SQL 语句...&#10;&#10;提示：Ctrl+Enter 快速发送"
-                    ></textarea>
-                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                        发送
+                    <button class="main-send-btn" id="mainSendBtn" onclick="sendMainMessage()">
+                        🚀 开始生成
                     </button>
+                </div>
+
+                <div class="quick-tips">
+                    <h4>💡 快速开始</h4>
+                    <ul>
+                        <li>已默认选择"创建列表"类型</li>
+                        <li>在上方输入框中描述需求或粘贴 SQL</li>
+                        <li>可选：上传需求文档辅助生成</li>
+                        <li>点击"开始生成"，AI 将创建配置并跳转到编辑页面</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    <script th:src="${'/webjars/layuidist/layui.js?v='+vi}"  src="https://unpkg.com/layui@2.9.20/dist/layui.js"></script>
 
-    <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:inline="javascript">
+    <!-- 右侧配置面板 -->
+    <div class="ai-assistant">
+        <!-- 1. 头部 -->
+        <div class="ai-header">
+            <h3>⚙️ 配置面板</h3>
+            <p>描述需求或输入 SQL</p>
+        </div>
+
+        <!-- 2. DSL 类型选择 -->
+        <div class="ai-type-selector">
+            <label>DSL 类型</label>
+            <select id="dslTypeSelect" class="layui-input">
+                <option value="">请先选择类型</option>
+                <option value="form">表单 (Form)</option>
+                <option value="list">列表 (List)</option>
+            </select>
+        </div>
+
+        <!-- 3. AI 聊天区域 -->
+        <div class="chat-container" id="chatContainer">
+            <!-- 聊天消息动态生成 -->
+        </div>
+
+        <!-- 4. 示例提示词（底部） -->
+        <div class="example-prompts">
+            <h4>💬 示例提示词</h4>
+            <span class="prompt-tag"
+                  onclick="usePrompt('创建用户管理表单，包含用户名、邮箱、手机号、角色等字段')">用户管理表单</span>
+            <span class="prompt-tag"
+                  onclick="usePrompt('生成商品列表，需要能够根据名称排序且能够按照价格排序功能')">商品列表</span>
+            <span class="prompt-tag"
+                  onclick="usePrompt('SELECT USER_ID ID,USERNAME 用户名,EMAIL 邮箱,PHONE 手机号,ROLE 角色 FROM user')">从 SQL 生成</span>
+        </div>
+
+        <!-- 5. AI 输入区域 -->
+        <div class="chat-input-area">
+            <div class="input-wrapper">
+                    <textarea
+                            id="chatInput"
+                            class="chat-input"
+                            rows="3"
+                            placeholder="输入您的需求或 SQL 语句...&#10;&#10;提示：Ctrl+Enter 快速发送"
+                    ></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    发送
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="${'/webjars/layuidist/layui.js?v='+vi}" src="https://unpkg.com/layui@2.9.20/dist/layui.js"></script>
+
+<script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
     // ==================== 全局变量 ====================
     let selectedDslType = 'list'; // 默认选择列表
     let chatHistory = [];
@@ -823,7 +838,7 @@
     let uploadedFiles = [];
 
     // ==================== 初始化 ====================
-    layui.use(['layer', 'form'], function() {
+    layui.use(['layer', 'form'], function () {
         const layer = layui.layer;
         const form = layui.form;
 
@@ -847,9 +862,9 @@
         }
 
         // 表搜索
-        $('#tableSearch').on('input', function() {
+        $('#tableSearch').on('input', function () {
             const keyword = $(this).val().toLowerCase();
-            $('.table-item').each(function() {
+            $('.table-item').each(function () {
                 const tableName = $(this).find('.table-name').text().toLowerCase();
                 const tableComment = $(this).find('.table-comment').text().toLowerCase();
                 if (tableName.includes(keyword) || tableComment.includes(keyword)) {
@@ -861,14 +876,14 @@
         });
 
         // Enter 发送消息（右侧）
-        $('#chatInput').on('keydown', function(e) {
+        $('#chatInput').on('keydown', function (e) {
             if (e.ctrlKey && e.keyCode === 13) {
                 sendMessage();
             }
         });
 
         // Enter 发送消息（主输入框）
-        $('#mainTextarea').on('keydown', function(e) {
+        $('#mainTextarea').on('keydown', function (e) {
             if (e.ctrlKey && e.keyCode === 13) {
                 sendMainMessage();
             }
@@ -890,30 +905,30 @@
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success && result.data && result.data.length > 0) {
-                realTables = result.data;
-                renderTablesList();
-            } else {
-                console.warn('获取数据库表失败，使用默认表');
+            .then(response => response.json())
+            .then(result => {
+                if (result.success && result.data && result.data.length > 0) {
+                    realTables = result.data;
+                    renderTablesList();
+                } else {
+                    console.warn('获取数据库表失败，使用默认表');
+                    useDefaultTables();
+                }
+            })
+            .catch(error => {
+                console.error('加载数据库表失败:', error);
                 useDefaultTables();
-            }
-        })
-        .catch(error => {
-            console.error('加载数据库表失败:', error);
-            useDefaultTables();
-        });
+            });
     }
 
     // ==================== 使用默认表 ====================
     function useDefaultTables() {
         realTables = [
-            { TABLE_NAME: 'user', TABLE_COMMENT: '用户表' },
-            { TABLE_NAME: 'role', TABLE_COMMENT: '角色表' }
+            {TABLE_NAME: 'user', TABLE_COMMENT: '用户表'},
+            {TABLE_NAME: 'role', TABLE_COMMENT: '角色表'}
         ];
         renderTablesList();
-        layui.layer.msg('未连接到数据库，已加载默认表', { icon: 0, time: 2000 });
+        layui.layer.msg('未连接到数据库，已加载默认表', {icon: 0, time: 2000});
     }
 
     // ==================== 渲染表列表 ====================
@@ -962,24 +977,24 @@
 
     // ==================== 全选表 ====================
     function selectAllTables() {
-        $('.tables-list input[type="checkbox"]').prop('checked', true).each(function() {
+        $('.tables-list input[type="checkbox"]').prop('checked', true).each(function () {
             $(this).closest('.table-item').addClass('selected');
         });
-        layui.layer.msg('已全选', { icon: 1, time: 1000 });
+        layui.layer.msg('已全选', {icon: 1, time: 1000});
     }
 
     // ==================== 清空选择 ====================
     function clearAllTables() {
-        $('.tables-list input[type="checkbox"]').prop('checked', false).each(function() {
+        $('.tables-list input[type="checkbox"]').prop('checked', false).each(function () {
             $(this).closest('.table-item').removeClass('selected');
         });
-        layui.layer.msg('已清空', { icon: 1, time: 1000 });
+        layui.layer.msg('已清空', {icon: 1, time: 1000});
     }
 
     // ==================== 使用选中的表 ====================
     function useSelectedTables() {
         const selectedTables = [];
-        $('.tables-list input[type="checkbox"]:checked').each(function() {
+        $('.tables-list input[type="checkbox"]:checked').each(function () {
             const tableName = $(this).val();
             const tableItem = $(this).closest('.table-item');
             const tableComment = tableItem.find('.table-comment').text();
@@ -990,12 +1005,12 @@
         });
 
         if (selectedTables.length === 0) {
-            layui.layer.msg('请至少选择一张表', { icon: 2 });
+            layui.layer.msg('请至少选择一张表', {icon: 2});
             return;
         }
 
         if (!selectedDslType) {
-            layui.layer.msg('请先选择 DSL 类型（表单或列表）', { icon: 2 });
+            layui.layer.msg('请先选择 DSL 类型（表单或列表）', {icon: 2});
             return;
         }
 
@@ -1013,7 +1028,7 @@
         $('#chatInput').val(prompt);
         $('#mainTextarea').val(prompt);
 
-        layui.layer.msg(`已选择 ${selectedTables.length} 张表`, { icon: 1 });
+        layui.layer.msg(`已选择 ${selectedTables.length} 张表`, {icon: 1});
     }
 
     // ==================== 选择 DSL 类型 ====================
@@ -1030,7 +1045,7 @@
         const typeName = type === 'form' ? '表单' : '列表';
         addMessage('assistant', `已选择创建 <strong>${typeName}</strong>，请描述您的需求或提供 SQL 语句。`);
 
-        layui.layer.msg('已选择 ' + typeName + ' 类型', { icon: 1 });
+        layui.layer.msg('已选择 ' + typeName + ' 类型', {icon: 1});
     }
 
     // ==================== 使用示例提示词 ====================
@@ -1045,12 +1060,12 @@
         const message = input.val().trim();
 
         if (!message) {
-            layui.layer.msg('请输入内容', { icon: 2 });
+            layui.layer.msg('请输入内容', {icon: 2});
             return;
         }
 
         if (!selectedDslType) {
-            layui.layer.msg('请先选择 DSL 类型', { icon: 2 });
+            layui.layer.msg('请先选择 DSL 类型', {icon: 2});
             return;
         }
 
@@ -1082,7 +1097,7 @@
         scrollToBottom();
 
         // 保存到聊天记录
-        chatHistory.push({ role, content, timestamp: Date.now() });
+        chatHistory.push({role, content, timestamp: Date.now()});
         saveChatHistory();
     }
 
@@ -1133,45 +1148,45 @@
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(result => {
-            removeLoadingMessage(loadingId);
+            .then(response => response.json())
+            .then(result => {
+                removeLoadingMessage(loadingId);
 
-            if (result.success && result.data) {
-                const data = result.data;
-                const summary = data.summary || 'DSL 创建成功！';
+                if (result.success && result.data) {
+                    const data = result.data;
+                    const summary = data.summary || 'DSL 创建成功！';
 
-                addMessage('assistant', `✅ ${summary}<br><br>正在跳转到编辑页面...`);
+                    addMessage('assistant', `✅ ${summary}<br><br>正在跳转到编辑页面...`);
 
-                // 3秒后跳转
-                setTimeout(() => {
-                    if (data.redirectUrl) {
-                        window.location.href = data.redirectUrl;
-                    } else {
-                        const dslId = data.dslId || data.data?.dslId;
-                        const url = selectedDslType === 'form'
-                            ? `/topezadmin/edit/form-${dslId}`
-                            : `/topezadmin/edit/list-${dslId}`;
-                        window.location.href = url;
-                    }
-                }, 3000);
-            } else {
-                const errorMsg = result.message || result.data?.summary || '创建失败，请重试';
-                addMessage('assistant', `❌ ${errorMsg}`);
-                layui.layer.msg(errorMsg, { icon: 2 });
-            }
-        })
-        .catch(error => {
-            console.error('提交失败:', error);
-            removeLoadingMessage(loadingId);
-            addMessage('assistant', '❌ 网络错误，请检查连接后重试');
-            layui.layer.msg('提交失败: ' + error.message, { icon: 2 });
-        })
-        .finally(() => {
-            // 恢复发送按钮
-            $('#sendBtn').prop('disabled', false).text('发送');
-            $('#mainSendBtn').prop('disabled', false).text('🚀 开始生成');
-        });
+                    // 3秒后跳转
+                    setTimeout(() => {
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            const dslId = data.dslId || data.data?.dslId;
+                            const url = selectedDslType === 'form'
+                                ? `/topezadmin/edit/form-${dslId}`
+                                : `/topezadmin/edit/list-${dslId}`;
+                            window.location.href = url;
+                        }
+                    }, 3000);
+                } else {
+                    const errorMsg = result.message || result.data?.summary || '创建失败，请重试';
+                    addMessage('assistant', `❌ ${errorMsg}`);
+                    layui.layer.msg(errorMsg, {icon: 2});
+                }
+            })
+            .catch(error => {
+                console.error('提交失败:', error);
+                removeLoadingMessage(loadingId);
+                addMessage('assistant', '❌ 网络错误，请检查连接后重试');
+                layui.layer.msg('提交失败: ' + error.message, {icon: 2});
+            })
+            .finally(() => {
+                // 恢复发送按钮
+                $('#sendBtn').prop('disabled', false).text('发送');
+                $('#mainSendBtn').prop('disabled', false).text('🚀 开始生成');
+            });
     }
 
     // ==================== 保存聊天记录 ====================
@@ -1223,7 +1238,7 @@
         layui.layer.confirm('确定要清除所有聊天记录吗？', {
             icon: 3,
             title: '提示'
-        }, function(index) {
+        }, function (index) {
             chatHistory = [];
             localStorage.removeItem(CHAT_CACHE_KEY);
 
@@ -1231,7 +1246,7 @@
             addMessage('assistant', '👋 聊天记录已清除，让我们重新开始吧！');
 
             layui.layer.close(index);
-            layui.layer.msg('已清除', { icon: 1 });
+            layui.layer.msg('已清除', {icon: 1});
         });
     }
 
@@ -1270,13 +1285,13 @@
             const fileExt = '.' + file.name.split('.').pop().toLowerCase();
 
             if (!validTypes.includes(fileExt)) {
-                layui.layer.msg('不支持的文件格式: ' + file.name, { icon: 2 });
+                layui.layer.msg('不支持的文件格式: ' + file.name, {icon: 2});
                 continue;
             }
 
             // 检查文件大小（限制 10MB）
             if (file.size > 10 * 1024 * 1024) {
-                layui.layer.msg('文件过大（超过10MB）: ' + file.name, { icon: 2 });
+                layui.layer.msg('文件过大（超过10MB）: ' + file.name, {icon: 2});
                 continue;
             }
 
@@ -1309,7 +1324,7 @@
     function removeFile(index) {
         uploadedFiles.splice(index, 1);
         renderFileList();
-        layui.layer.msg('已移除', { icon: 1, time: 1000 });
+        layui.layer.msg('已移除', {icon: 1, time: 1000});
     }
 
     function formatFileSize(bytes) {
@@ -1323,12 +1338,12 @@
         const message = $('#mainTextarea').val().trim();
 
         if (!message && uploadedFiles.length === 0) {
-            layui.layer.msg('请输入内容或上传文件', { icon: 2 });
+            layui.layer.msg('请输入内容或上传文件', {icon: 2});
             return;
         }
 
         if (!selectedDslType) {
-            layui.layer.msg('请先选择 DSL 类型', { icon: 2 });
+            layui.layer.msg('请先选择 DSL 类型', {icon: 2});
             return;
         }
 

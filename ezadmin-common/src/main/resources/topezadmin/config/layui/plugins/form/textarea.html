@@ -53,9 +53,9 @@
                         class="layui-form-mid layui-text-em top_desc"
                         th:utext="${top_desc}" style="float:none"
                         th:if="${not #strings.isEmpty(top_desc)}">辅助文字(上)</small>
-                <div class="layui-input-wrap" th:if="${not #strings.isEmpty(serverDom)}"  >
+                <div class="layui-input-wrap" th:if="${not #strings.isEmpty(serverDom)}">
                     [(${serverDom})]
-                    <span   style="
+                    <span style="
     position: relative;
     float: right;
     top: -31px;
@@ -66,7 +66,8 @@
     border-radius: 15px 0 17px;
     margin-right: 1px;
 " class="layui-badge layui-badge-rim"><span class="layext-textool-length" style="display: inline-block;">
-                    <b class="layext-textool-count" title="当前字数" th:text="${#strings.length(value)}">0</b>/<span class="layext-textool-max" title="最大字数">[[${maxlength}]]</span></span></span></span>
+                    <b class="layext-textool-count" title="当前字数" th:text="${#strings.length(value)}">0</b>/<span
+                            class="layext-textool-max" title="最大字数">[[${maxlength}]]</span></span></span></span>
                 </div>
 
                 <small

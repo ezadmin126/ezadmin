@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * 演示 appendHead/appendFoot 数组自动拼接功能
- *
+ * <p>
  * 功能说明：
  * 1. 如果 appendHead 或 appendFoot 是数组，系统会自动将其拼接成多行字符串
  * 2. 支持在数组中使用 $ 表达式引用外部文件

@@ -1,14 +1,14 @@
 package top.ezadmin;
 
 import org.junit.Test;
-import top.ezadmin.plugins.templates.ThymeleafEzTemplate;
 import top.ezadmin.plugins.templates.TemplateUtils;
+import top.ezadmin.plugins.templates.ThymeleafEzTemplate;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 

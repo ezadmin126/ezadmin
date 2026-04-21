@@ -4,7 +4,10 @@ import org.junit.Test;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.dao.model.TreeConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TreeSearchTest {
 

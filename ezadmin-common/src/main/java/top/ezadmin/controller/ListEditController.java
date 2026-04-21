@@ -32,12 +32,12 @@ public class ListEditController extends BaseController {
 
     public EzResult preview(RequestContext requestContext, String method, String listUrlCode) throws Exception {
 
-        String encryptListId =listUrlCode;
+        String encryptListId = listUrlCode;
         if (StringUtils.isBlank(encryptListId)) {
             throw new NotExistException();
         }
         Map<String, Object> requestParamMap = requestContext.getRequestParams();
-        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> templateParam = new HashMap<>();
         templateParam.putIfAbsent("perPageInt", requestContext.getParameter("perPageInt"));
         templateParam.putIfAbsent("currentPage", requestContext.getParameter("page"));
         templateParam.put("vi", requestContext.getParameter("vi"));
@@ -45,8 +45,8 @@ public class ListEditController extends BaseController {
 
         Map<String, String> sessionParamMap = requestContext.getSessionParams();
         Map<String, Object> list = listService.selectConfigEditList(encryptListId);
-        if (StringUtils.isNotBlank((String)requestContext.getParameter("version"))) {
-            list = listService.selectConfigHistoryList(encryptListId, (String)requestContext.getParameter("version"));
+        if (StringUtils.isNotBlank((String) requestContext.getParameter("version"))) {
+            list = listService.selectConfigHistoryList(encryptListId, (String) requestContext.getParameter("version"));
         }
         if (!Utils.isNotEmpty(list)) {
             throw new NotExistException();
@@ -71,7 +71,7 @@ public class ListEditController extends BaseController {
         }
         String adminStyle = Utils.trimNullDefault(coreMap.get(JsoupUtil.ADMINSTYLE), EzBootstrap.config().getAdminStyle());
         String template = Utils.trimNullDefault(coreMap.get(JsoupUtil.TEMPLATE), "list");
-        return render(adminStyle + "/" + template,templateParam);
+        return render(adminStyle + "/" + template, templateParam);
     }
 
     public EzResult list(RequestContext requestContext, String method, String listUrlCode) throws Exception {
@@ -80,13 +80,13 @@ public class ListEditController extends BaseController {
 
     public EzResult loadList(RequestContext requestContext, String method, String listUrlCode) throws Exception {
 
-        String ENCRYPT_LIST_ID = Utils.trimNull((String)requestContext.getRequestParams().get("ENCRYPT_LIST_ID"));
+        String ENCRYPT_LIST_ID = Utils.trimNull((String) requestContext.getRequestParams().get("ENCRYPT_LIST_ID"));
         Map<String, Object> requestParamMap = requestToMap(requestContext);
         Map<String, String> sessionParamMap = sessionToMap(requestContext);
         requestParamMap.put("loadDataFlag", 0);
         Map<String, Object> list = listService.selectConfigEditList(ENCRYPT_LIST_ID);
-        if (StringUtils.isNotBlank((String)requestContext.getParameter("version"))) {
-            list = listService.selectConfigHistoryList(ENCRYPT_LIST_ID, (String)requestContext.getParameter("version"));
+        if (StringUtils.isNotBlank((String) requestContext.getParameter("version"))) {
+            list = listService.selectConfigHistoryList(ENCRYPT_LIST_ID, (String) requestContext.getParameter("version"));
         }
         if (Utils.isEmpty(list)) {
             list = new HashMap();
@@ -109,16 +109,16 @@ public class ListEditController extends BaseController {
             coreMap.putIfAbsent(JsoupUtil.APPEND_FOOT, "");
         }
         listService.fillListById(list, requestParamMap, sessionParamMap);
-        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> templateParam = new HashMap<>();
 
         templateParam.put("data", list);
         templateParam.put("vi", System.currentTimeMillis());
         templateParam.put("ENCRYPT_LIST_ID", requestContext.getParameter("ENCRYPT_LIST_ID"));
-        return render("layui/edit/listedit",templateParam);
+        return render("layui/edit/listedit", templateParam);
     }
 
     public EzResult submitEdit(RequestContext requestContext, String method, String listUrlCode) throws Exception {
-        Map<String, Object> list = JSONUtils.parseObjectMap((String)requestContext.getParameter("data"));
+        Map<String, Object> list = JSONUtils.parseObjectMap((String) requestContext.getParameter("data"));
         String html = ListDao.getInstance().transEntityToHtmlConfig(list);
         if (StringUtils.isNotBlank(html)) {
             Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
@@ -278,11 +278,11 @@ public class ListEditController extends BaseController {
 
     public EzResult sourceEdit(RequestContext requestContext, String method, String listUrlCode) throws Exception {
         String ENCRYPT_LIST_ID = listUrlCode;
-        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> templateParam = new HashMap<>();
 
         Map<String, Object> c = listService.selectConfigEditList(ENCRYPT_LIST_ID);
-        if (StringUtils.isNotBlank((String)requestContext.getParameter("version"))) {
-            c = listService.selectConfigHistoryList(ENCRYPT_LIST_ID, (String)requestContext.getParameter("version"));
+        if (StringUtils.isNotBlank((String) requestContext.getParameter("version"))) {
+            c = listService.selectConfigHistoryList(ENCRYPT_LIST_ID, (String) requestContext.getParameter("version"));
         }
         templateParam.put("EZ_CONFIG", c.get("EZ_CONFIG") + "");
         if (c != null && c.containsKey("core")) {
@@ -293,7 +293,7 @@ public class ListEditController extends BaseController {
 //        requestToMap(requestContext).forEach((k, v) -> {
 //            requestContext.getRequestParams().put(k, v);
 //        });
-        return render("layui/edit/export",templateParam);
+        return render("layui/edit/export", templateParam);
     }
 
     public void trace(RequestContext requestContext, String method, String listUrlCode) throws Exception {
@@ -352,7 +352,7 @@ public class ListEditController extends BaseController {
 
 
     public EzResult importSql(RequestContext requestContext, String method, String listUrlCode) throws Exception {
-        return render("layui/edit/import",new HashMap<>());
+        return render("layui/edit/import", new HashMap<>());
     }
 
     public EzResult importlist(RequestContext requestContext, String method, String listUrlCode) throws Exception {
@@ -361,10 +361,10 @@ public class ListEditController extends BaseController {
             String formcode = Utils.trimNull(requestContext.getParameter("formcode"));
             String fasttext = requestContext.getParameter("listexpress");
             String datasource = requestContext.getParameter("datasource");
-            String html = EzBootstrap.config().getEzSqlParser().sqlToList(fasttext, listcode,datasource );
-            saveOrUpdate(listcode,listcode,html,datasource);
-            if(StringUtils.isNotBlank(formcode)){
-                String htmlform = EzBootstrap.config().getEzSqlParser().sqlToForm(fasttext, formcode,datasource );
+            String html = EzBootstrap.config().getEzSqlParser().sqlToList(fasttext, listcode, datasource);
+            saveOrUpdate(listcode, listcode, html, datasource);
+            if (StringUtils.isNotBlank(formcode)) {
+                String htmlform = EzBootstrap.config().getEzSqlParser().sqlToForm(fasttext, formcode, datasource);
                 new FormEditController().saveOrUpdate(formcode, formcode, htmlform, datasource);
             }
             EzBootstrap.config().getEzCache().clear();

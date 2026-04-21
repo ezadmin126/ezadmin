@@ -190,7 +190,7 @@ public class DslDualSourceTest {
         assertEquals("ID应该匹配", "test-db-form", config.getConfig().get("id"));
         assertTrue("标题应该包含'数据库版'",
                 config.getConfig().get("name") != null &&
-                config.getConfig().get("name").toString().contains("数据库版"));
+                        config.getConfig().get("name").toString().contains("数据库版"));
         assertNotNull("应该有初始化表达式", config.getConfig().get("initExpress"));
         assertNotNull("应该有提交表达式", config.getConfig().get("submitExpress"));
 
@@ -238,7 +238,7 @@ public class DslDualSourceTest {
         assertNotNull("配置应该不为null", config);
         assertEquals("应该优先从文件加载", "file", config.getSource());
         assertTrue("应该加载文件版本的标题",
-                  config.getConfig().get("title").toString().contains("文件版"));
+                config.getConfig().get("title").toString().contains("文件版"));
 
         System.out.println("✅ 测试通过：文件优先策略正常工作");
         System.out.println("   - 加载来源: " + config.getSource());

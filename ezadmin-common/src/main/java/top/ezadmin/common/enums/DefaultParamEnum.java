@@ -12,8 +12,7 @@ public enum DefaultParamEnum {
     , EZ_MONTH_END//当月最后一天的23:59:59
     , EZ_YEAR_START //当年 元旦节
     , EZ_CURRENT_MONTH //当前月份  yyyy-MM
-    ,EZ_CURRENT_MONTH_RANGE
-    ;
+    , EZ_CURRENT_MONTH_RANGE;
 
     public static boolean isdefaultParam(String param) {
         if (StringUtils.isBlank(param) || !Character.isLetter(param.charAt(0))) {

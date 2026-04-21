@@ -215,7 +215,7 @@
 <input type="hidden" id='validateRules' name='validateRules' th:value="${data.validateRules}">
 <input type="hidden" id='validateMessages' name='validateMessages' th:value="${data.validateMessages}">
 
-<input type="hidden" id='contextName' name='contextName'  value="">
+<input type="hidden" id='contextName' name='contextName' value="">
 <input type="hidden" id='uploadUrl' name='uploadUrl' th:value="${uploadUrl}">
 <input type="hidden" id='downloadUrl' name='downloadUrl' th:value="${downloadUrl}">
 <input type="hidden" id='prefixUrl' name='prefixUrl' th:value="${prefixUrl}">
@@ -231,8 +231,7 @@
 
 <script th:src="${'/webjars/topezadmin/layui/js/ezlist.js?v1='+vi}" type="text/javascript"></script>
 
-<script th:if="${not cacheFlag}"  th:src="${'/webjars/edit/js/listedit.js?v1='+vi}" type="text/javascript"></script>
-
+<script th:if="${not cacheFlag}" th:src="${'/webjars/edit/js/listedit.js?v1='+vi}" type="text/javascript"></script>
 
 
 [(${data.core.append_foot})]
@@ -241,7 +240,7 @@
     // 原生页面在页面加载完成后执行  layui在其他地方执行
     if (typeof afterAllDataLoad == "function") {
         afterAllDataLoad();
-    }else{
+    } else {
         console.log('pure模式，可以自定义 afterAllDataLoad() 来执行初始化数据');
     }
 </script>

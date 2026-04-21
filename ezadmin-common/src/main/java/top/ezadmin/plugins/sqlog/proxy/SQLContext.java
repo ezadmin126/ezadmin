@@ -9,7 +9,6 @@ import top.ezadmin.common.utils.Utils;
 import top.ezadmin.plugins.sqlog.po.Monitor;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -19,7 +18,8 @@ import java.util.List;
  */
 public class SQLContext {
     private static Logger log = LoggerFactory.getLogger(SQLContext.class);
-    public static List<String> exclude=new ArrayList<>();
+    public static List<String> exclude = new ArrayList<>();
+
     protected static void monitor(Monitor monitor) {
         try {
             monitor.setEnd(System.currentTimeMillis());

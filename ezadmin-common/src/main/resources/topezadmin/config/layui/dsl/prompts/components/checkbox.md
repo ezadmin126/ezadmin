@@ -33,20 +33,21 @@
 
 ### 基础属性
 
-| 属性 | 类型 | 必填 | 说明                                  |
-|------|------|------|-------------------------------------|
-| item_name | String | 是 | 字段名，对应数据库字段                         |
-| label | String | 是 | 显示标签                                |
-| component | String | 是 | 固定值：`checkbox`                      |
-| operator | String | 否 | 查询操作符，建议使用 `in`                     |
-| initData | Object | 是 | 数据源配置                               |
+| 属性          | 类型     | 必填     | 说明                                  |
+|-------------|--------|--------|-------------------------------------|
+| item_name   | String | 是      | 字段名，对应数据库字段                         |
+| label       | String | 是      | 显示标签                                |
+| component   | String | 是      | 固定值：`checkbox`                      |
+| operator    | String | 否      | 查询操作符，建议使用 `in`                     |
+| initData    | Object | 是      | 数据源配置                               |
 | description | String | 字段说明文本 | `"可选择多个"`                           |
-| props | Object | 否 | 组件属性,支持所有layui  checkbox 属性，html5属性 |
-| classAppend | String | 否 | layui-col-md8 主要使用layui布局设置占用宽度                       |
+| props       | Object | 否      | 组件属性,支持所有layui  checkbox 属性，html5属性 |
+| classAppend | String | 否      | layui-col-md8 主要使用layui布局设置占用宽度     |
 
 ### initData 配置
 
 **静态数据（dataJson）：**
+
 ```json
 {
   "initData": {
@@ -59,6 +60,7 @@
 ```
 
 **动态数据（dataSql）：**
+
 ```json
 {
   "initData": {
@@ -70,12 +72,12 @@
 
 ### props 属性
 
-| 属性 | 类型 | 说明 | 示例 |
-|------|------|------|------|
-| lay-verify | String | Layui表单验证规则 | `"required"` |
-| disabled | Boolean | 是否禁用 | `true` |
-| required | Boolean | 是否必填(显示红色*) | `true` |
-| description | String | 字段说明文本 | `"可多选"` |
+| 属性          | 类型      | 说明          | 示例           |
+|-------------|---------|-------------|--------------|
+| lay-verify  | String  | Layui表单验证规则 | `"required"` |
+| disabled    | Boolean | 是否禁用        | `true`       |
+| required    | Boolean | 是否必填(显示红色*) | `true`       |
+| description | String  | 字段说明文本      | `"可多选"`      |
 
 ## 完整示例
 
@@ -258,6 +260,7 @@
 ### 存储格式
 
 选中的值以逗号分隔的字符串形式存储：
+
 ```
 "reading,sports,travel"
 ```
@@ -265,6 +268,7 @@
 ### 初始化格式
 
 编辑时需要返回逗号分隔的字符串：
+
 ```javascript
 {
   "initExpress": [
@@ -307,18 +311,19 @@ form.on('checkbox(lay-filter-hobbies)', function(data){
 
 ## 与其他组件的选择
 
-| 场景 | 推荐组件 | 原因 |
-|------|---------|------|
-| 3-8个选项 | checkbox | 所有选项一目了然 |
+| 场景     | 推荐组件            | 原因        |
+|--------|-----------------|-----------|
+| 3-8个选项 | checkbox        | 所有选项一目了然  |
 | 8个以上选项 | select-multiple | 节省空间，支持搜索 |
-| 权限勾选 | checkbox | 更直观 |
-| 标签选择 | select-multiple | 选项较多，支持搜索 |
+| 权限勾选   | checkbox        | 更直观       |
+| 标签选择   | select-multiple | 选项较多，支持搜索 |
 
 ## 常见问题
 
 ### 如何设置默认选中？
 
 在 initExpress 中设置逗号分隔的字符串：
+
 ```javascript
 {
   "initExpress": [
@@ -332,6 +337,7 @@ form.on('checkbox(lay-filter-hobbies)', function(data){
 ### 如何获取所有选中的值？
 
 使用 jQuery 获取：
+
 ```javascript
 var values = [];
 $('input[name="hobbies"]:checked').each(function(){
@@ -343,6 +349,7 @@ console.log(values.join(','));
 ### 选项不显示？
 
 检查：
+
 1. initData 配置是否正确
 2. 数据格式是否包含 label 和 value
 3. SQL查询是否有数据返回
@@ -350,6 +357,7 @@ console.log(values.join(','));
 ### 如何实现全选/取消全选？
 
 可以添加自定义按钮：
+
 ```javascript
 // 全选
 $('input[name="hobbies"]').prop('checked', true);
@@ -363,6 +371,7 @@ form.render('checkbox');
 ### 如何限制选择数量？
 
 通过监听实现：
+
 ```javascript
 form.on('checkbox(lay-filter-hobbies)', function(data){
   var checkedCount = $('input[name="hobbies"]:checked').length;

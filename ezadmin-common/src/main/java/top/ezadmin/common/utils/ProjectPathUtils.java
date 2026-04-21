@@ -18,6 +18,7 @@ public class ProjectPathUtils {
 
     /**
      * 获取项目根路径
+     *
      * @return 项目根路径，如果无法确定则返回 null
      */
     public static String getProjectRoot() {
@@ -145,6 +146,7 @@ public class ProjectPathUtils {
 
     /**
      * 判断目录是否为项目根目录
+     *
      * @param dir 要检查的目录
      * @return 是否为项目根目录
      */
@@ -163,6 +165,7 @@ public class ProjectPathUtils {
 
     /**
      * 获取项目文件的完整路径
+     *
      * @param relativePath 相对于项目根目录的路径
      * @return 完整的文件系统路径，如果无法确定则返回 null
      */
@@ -176,6 +179,7 @@ public class ProjectPathUtils {
 
     /**
      * 获取资源文件的完整路径
+     *
      * @param resourcePath classpath 资源路径，例如 "topezadmin/config/layui/dsl/form/test.json"
      * @return 完整的文件系统路径，如果无法确定则返回 null
      */
@@ -185,6 +189,7 @@ public class ProjectPathUtils {
 
     /**
      * 检查资源文件是否存在于项目路径中
+     *
      * @param resourcePath classpath 资源路径
      * @return 文件是否存在
      */

@@ -1,0 +1,14 @@
+<a class="layui-btn  ez-button"
+   th:classappend="${classAppend}"
+   th:text="${label}"
+   th:name="${item_name}"
+   th:attrs="${props}"
+   th:item_name="${'button_'+item_name}"
+   component="button-normal"
+   th:data-propsJson="${propsJson}"
+   th:data-click="${(props!=null and not #strings.equalsIgnoreCase(props.opentype, 'script'))?'ez-button':''}"
+   th:style="${(props!=null&&props.containsKey('display'))?
+   'display:'+props.get('display'):''}"
+>
+    操作
+</a>

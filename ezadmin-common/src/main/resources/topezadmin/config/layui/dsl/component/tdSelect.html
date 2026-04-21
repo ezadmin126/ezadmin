@@ -1,29 +1,43 @@
-<script    >
-    Global.registry("columnRender").register("tdSelect",(name,d,component)=>{
-        const value=d[name];
-        var finalResult='';
-        let paramsJSON = component.data ;
+<script>
+    Global.registry("columnRender").register("tdSelect", (name, d, component) => {
+        const value = d[name];
+        var finalResult = '';
+        let paramsJSON = component.data;
         // 兼容字符串类型的paramsJSON
-        if(typeof paramsJSON === 'string' && paramsJSON){
+        if (typeof paramsJSON === 'string' && paramsJSON) {
             try {
                 paramsJSON = JSON.parse(paramsJSON);
-            } catch(e) {
+            } catch (e) {
                 console.error('tdSelect: paramsJSON解析失败', e);
                 paramsJSON = [];
             }
         }
-        if(!paramsJSON){
-            paramsJSON=[];
+        if (!paramsJSON) {
+            paramsJSON = [];
         }
-        if(value !== null && value !== undefined && value !== ''){
-            var option = paramsJSON.find(function(item) {
-               return String(item.value) === String(value);
+        if (value !== null && value !== undefined && value !== '') {
+            var option = paramsJSON.find(function (item) {
+                return String(item.value) === String(value);
             });
             if (option) {
-                finalResult= option.label;
+                finalResult = option.label;
             }
         }
-        finalResult= finalResult ||value||component.props.emptyShow ||'';
-        return   `<span item_name="`+name+`" component="tdSelect">`+ finalResult + `</span>`;
+        finalResult = finalResult || value || component.props.emptyShow || '';
+        if (Global.logicTrue(component.props.editable)) {
+            var template = `<select item_name="` + name + `"
+      data-dataJson="` + component.dataJson + `"
+      component="tdSelect" lay-filter="tdSelect_` + name + `" lay-append-to="body">
+      <option value="">请选择</option>
+      ` + paramsJSON.map(function (item) {
+                return `<option value="` + item.value + `"` + (item.value == value ? 'selected' : '') + `>` + item.label + `</option>`;
+            }).join('') + `
+      </select>`;
+            return template;
+        } else {
+            return `<span item_name="` + name + `"
+      data-dataJson="` + component.dataJson + `"
+ component="tdSelect">` + finalResult + `</span>`;
+        }
     });
 </script>

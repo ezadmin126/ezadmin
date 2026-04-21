@@ -1,8 +1,5 @@
 package top.ezadmin.dao.model;
 
-import top.ezadmin.common.utils.JSONUtils;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomSearchDTO {

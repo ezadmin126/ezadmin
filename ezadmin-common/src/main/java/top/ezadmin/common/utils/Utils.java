@@ -419,7 +419,7 @@ public class Utils {
         } else {
             result.sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(fsort)))));
         }
-        TreeConfig config=new TreeConfig();
+        TreeConfig config = new TreeConfig();
         config.setTreeId("ID");
         sortChildren(result, fsort, fsorttype, config);
         return result;
@@ -435,14 +435,14 @@ public class Utils {
 //    }
 
     /**
-     * @param list 树节点列表
-     * @param sort 排序字段
-     * @param sorttype asc  desc ,默认asc
+     * @param list          树节点列表
+     * @param sort          排序字段
+     * @param sorttype      asc  desc ,默认asc
      * @param searchKeyword 搜索关键词，匹配节点的LABEL字段（忽略大小写）
      */
     public static List<Map<String, Object>> flatLabelValueTree(List<Map<String, Object>> list, String sort, String sorttype,
                                                                String searchKeyword
-    , TreeConfig config
+            , TreeConfig config
     ) {
 
 
@@ -485,7 +485,7 @@ public class Utils {
         } else {
             result.sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(fsort)))));
         }
-        sortChildren(result, fsort, fsorttype,config);
+        sortChildren(result, fsort, fsorttype, config);
         // 如果有搜索关键词，进行过滤
         if (StringUtils.isNotBlank(searchKeyword)) {
             result = filterTreeByKeyword(result, searchKeyword, config);
@@ -494,7 +494,7 @@ public class Utils {
         return result;
     }
 
-    private static void sortChildren(List<Map<String, Object>> nodes, String sort, String sorttype , TreeConfig config) {
+    private static void sortChildren(List<Map<String, Object>> nodes, String sort, String sorttype, TreeConfig config) {
         for (Map<String, Object> node : nodes) {
             if (isNotEmpty(((List) node.get(config.getTreeChildren())))) {
                 // Sort the current node's children by ID
@@ -504,7 +504,7 @@ public class Utils {
                     ((List) node.get(config.getTreeChildren())).sort(Comparator.comparing(a -> NumberUtils.toLong(Utils.trimNull(((Map) a).get(sort)))));
                 }
                 // Recursively sort the children
-                sortChildren(((List) node.get(config.getTreeChildren())), sort, sorttype,config);
+                sortChildren(((List) node.get(config.getTreeChildren())), sort, sorttype, config);
             }
         }
     }
@@ -512,7 +512,7 @@ public class Utils {
     /**
      * 递归过滤树节点，保留包含搜索关键词的节点及其所有子节点
      *
-     * @param nodes 树节点列表
+     * @param nodes   树节点列表
      * @param keyword 搜索关键词
      * @return 过滤后的节点列表
      */
@@ -603,13 +603,13 @@ public class Utils {
     }
 
 
-    public static String expressToString(Object select_expressObj){
+    public static String expressToString(Object select_expressObj) {
         String select_express = "";
-        if(select_expressObj instanceof List){
+        if (select_expressObj instanceof List) {
             List<String> select_expressList = (List<String>) select_expressObj;
             select_express = StringUtils.join(select_expressList, "\n");
-        }else{
-            select_express =  Utils.trimNull(select_expressObj);
+        } else {
+            select_express = Utils.trimNull(select_expressObj);
         }
         return select_express;
     }

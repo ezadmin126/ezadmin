@@ -99,7 +99,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .chat-title {
@@ -198,7 +198,7 @@
             background: #fff;
             padding: 12px 16px;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             word-wrap: break-word;
             line-height: 1.6;
             font-size: 14px;
@@ -368,18 +368,28 @@
     <!-- 左侧预览面板 -->
     <div class="preview-panel">
         <div class="preview-header">
-            <div class="preview-url" id="previewUrl" th:text="${'/topezadmin/'+method+'/page-'+id}">请输入页面地址...</div>
+            <div class="preview-url" id="previewUrl" th:text="${'/topezadmin/'+method+'/page-'+id}">请输入页面地址...
+            </div>
             <button class="preview-reload" onclick="reloadPreview()" id="reloadBtn">刷新</button>
-            <button class="preview-reload" id="toggleEditBtn" onclick="toggleEdit()" style="background: #52c41a; display: none;">开始编辑</button>
-            <button class="preview-reload" id="cancelEditBtn" onclick="cancelEdit()" style="background: #ff5722; display: none;">取消编辑</button>
-            <button class="preview-reload" onclick="previewInNewWindow()" style="background: #1890ff;" id="previewBtn">预览</button>
-            <button class="preview-reload" onclick="sourceEdit()" style="background: #1890ff;" id="sourceEdit">源码编辑</button>
+            <button class="preview-reload" id="toggleEditBtn" onclick="toggleEdit()"
+                    style="background: #52c41a; display: none;">开始编辑
+            </button>
+            <button class="preview-reload" id="cancelEditBtn" onclick="cancelEdit()"
+                    style="background: #ff5722; display: none;">取消编辑
+            </button>
+            <button class="preview-reload" onclick="previewInNewWindow()" style="background: #1890ff;" id="previewBtn">
+                预览
+            </button>
+            <button class="preview-reload" onclick="sourceEdit()" style="background: #1890ff;" id="sourceEdit">
+                源码编辑
+            </button>
         </div>
         <div class="preview-content">
             <iframe id="previewFrame" th:src="${'/topezadmin/'+method+'/page-'+id}" style="display: block;"></iframe>
 
             <!-- 新增模式的提示界面 -->
-            <div id="newModePanel" style="display: none; padding: 40px; text-align: center; background: #fff; height: 100%;">
+            <div id="newModePanel"
+                 style="display: none; padding: 40px; text-align: center; background: #fff; height: 100%;">
                 <div style="max-width: 600px; margin: 80px auto;">
                     <div style="font-size: 64px; color: #1890ff; margin-bottom: 20px;">🚀</div>
                     <h2 style="color: #333; margin-bottom: 16px;">创建新的 DSL 配置</h2>
@@ -390,14 +400,18 @@
 
                     <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px; max-width: 250px; padding: 30px 20px; border: 2px solid #e6e6e6; border-radius: 12px; cursor: pointer; transition: all 0.3s;"
-                             onclick="switchToNewList()" onmouseover="this.style.borderColor='#1890ff'; this.style.boxShadow='0 4px 12px rgba(24,144,255,0.15)'" onmouseout="this.style.borderColor='#e6e6e6'; this.style.boxShadow='none'">
+                             onclick="switchToNewList()"
+                             onmouseover="this.style.borderColor='#1890ff'; this.style.boxShadow='0 4px 12px rgba(24,144,255,0.15)'"
+                             onmouseout="this.style.borderColor='#e6e6e6'; this.style.boxShadow='none'">
                             <div style="font-size: 48px; margin-bottom: 12px;">📋</div>
                             <h3 style="color: #333; margin-bottom: 8px; font-size: 16px;">新建列表</h3>
                             <p style="color: #999; font-size: 13px; margin: 0;">创建数据列表页面</p>
                         </div>
 
                         <div style="flex: 1; min-width: 200px; max-width: 250px; padding: 30px 20px; border: 2px solid #e6e6e6; border-radius: 12px; cursor: pointer; transition: all 0.3s;"
-                             onclick="switchToNewForm()" onmouseover="this.style.borderColor='#52c41a'; this.style.boxShadow='0 4px 12px rgba(82,196,26,0.15)'" onmouseout="this.style.borderColor='#e6e6e6'; this.style.boxShadow='none'">
+                             onclick="switchToNewForm()"
+                             onmouseover="this.style.borderColor='#52c41a'; this.style.boxShadow='0 4px 12px rgba(82,196,26,0.15)'"
+                             onmouseout="this.style.borderColor='#e6e6e6'; this.style.boxShadow='none'">
                             <div style="font-size: 48px; margin-bottom: 12px;">📝</div>
                             <h3 style="color: #333; margin-bottom: 8px; font-size: 16px;">新建表单</h3>
                             <p style="color: #999; font-size: 13px; margin: 0;">创建数据表单页面</p>
@@ -430,9 +444,9 @@
         <div class="chat-footer">
             <div class="chat-input-wrapper">
                 <textarea
-                    id="chatInput"
-                    class="chat-input"
-                    placeholder="描述您想要的修改，例如：将这个字段改为必填项，增加邮箱格式验证..."
+                        id="chatInput"
+                        class="chat-input"
+                        placeholder="描述您想要的修改，例如：将这个字段改为必填项，增加邮箱格式验证..."
                 ></textarea>
                 <button class="chat-send" id="sendBtn" onclick="sendMessage()">发送</button>
             </div>
@@ -463,7 +477,7 @@
     };
 
     // 初始化
-    window.onload = function() {
+    window.onload = function () {
         if (isNewMode) {
             initNewMode();
         } else {
@@ -504,7 +518,7 @@
         const frame = document.getElementById('previewFrame');
         attemptInjectScript();
         // 监听iframe加载完成
-        frame.onload = function() {
+        frame.onload = function () {
             console.log('预览页面加载完成，准备注入脚本...');
             updateChatStatus('加载中...');
 
@@ -856,19 +870,17 @@
 
     // 监听来自iframe的消息
     function initMessageListener() {
-        window.addEventListener('message', function(event) {
+        window.addEventListener('message', function (event) {
             console.log('收到消息:', event.data);
 
             if (event.data.type === 'INSPECTOR_READY') {
                 // 标记注入成功
                 markInjectionReady();
-            }
-            else if (event.data.type === 'ELEMENT_SELECTED') {
+            } else if (event.data.type === 'ELEMENT_SELECTED') {
                 selectedElementInfo = event.data.data;
                 console.log('收到选中元素信息:', selectedElementInfo);
                 showSelectedInfo();
-            }
-            else if (event.data.type === 'ELEMENT_NO_COMPONENT') {
+            } else if (event.data.type === 'ELEMENT_NO_COMPONENT') {
                 console.log('⚠️ 选中的元素没有 component');
                 addSystemMessage('⚠️ 该元素没有 component 属性，无法修改。请选择表单字段或列表列。');
             }
@@ -963,32 +975,32 @@
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('收到新增响应:', data);
-            removeLoadingMessage();
+            .then(response => response.json())
+            .then(data => {
+                console.log('收到新增响应:', data);
+                removeLoadingMessage();
 
-            if (data.success) {
-                const newDslId = data.data.dslId || 'unknown';
-                const summary = data.data.summary || '创建成功';
+                if (data.success) {
+                    const newDslId = data.data.dslId || 'unknown';
+                    const summary = data.data.summary || '创建成功';
 
-                addBotMessage('✅ DSL创建成功！\n\n' + summary + '\n\nDSL ID: ' + newDslId);
+                    addBotMessage('✅ DSL创建成功！\n\n' + summary + '\n\nDSL ID: ' + newDslId);
 
-                // 询问是否跳转
-                setTimeout(() => {
-                    if (confirm('DSL已创建成功，是否立即打开编辑页面？')) {
-                        window.location.href = '/topezadmin/inspector/' + dslType + '-' + newDslId;
-                    }
-                }, 1000);
-            } else {
-                addBotMessage('❌ 创建失败: ' + (data.data.summary || data.message || '未知错误'));
-            }
-        })
-        .catch(error => {
-            console.error('请求失败:', error);
-            removeLoadingMessage();
-            addBotMessage('❌ 请求失败: ' + error.message);
-        });
+                    // 询问是否跳转
+                    setTimeout(() => {
+                        if (confirm('DSL已创建成功，是否立即打开编辑页面？')) {
+                            window.location.href = '/topezadmin/inspector/' + dslType + '-' + newDslId;
+                        }
+                    }, 1000);
+                } else {
+                    addBotMessage('❌ 创建失败: ' + (data.data.summary || data.message || '未知错误'));
+                }
+            })
+            .catch(error => {
+                console.error('请求失败:', error);
+                removeLoadingMessage();
+                addBotMessage('❌ 请求失败: ' + error.message);
+            });
     }
 
     // 处理修改DSL请求
@@ -1020,25 +1032,25 @@
             },
             body: JSON.stringify(requestData)
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('收到响应数据:', data)
-            removeLoadingMessage();
-            if (data.success) {
-                addBotMessage('✅ 修改成功！DSL配置已更新。'+data.data.summary);
-                // 刷新预览
-                setTimeout(() => {
-                    reloadPreview();
-                }, 1000);
-            } else {
-                addBotMessage('❌ 修改失败: ' + (data.data.summary || '未知错误'));
-            }
-        })
-        .catch(error => {
-            console.log('收到error数据:', error.message);
-            removeLoadingMessage();
-            addBotMessage('❌ 请求失败: ' + error.message);
-        });
+            .then(response => response.json())
+            .then(data => {
+                console.log('收到响应数据:', data)
+                removeLoadingMessage();
+                if (data.success) {
+                    addBotMessage('✅ 修改成功！DSL配置已更新。' + data.data.summary);
+                    // 刷新预览
+                    setTimeout(() => {
+                        reloadPreview();
+                    }, 1000);
+                } else {
+                    addBotMessage('❌ 修改失败: ' + (data.data.summary || '未知错误'));
+                }
+            })
+            .catch(error => {
+                console.log('收到error数据:', error.message);
+                removeLoadingMessage();
+                addBotMessage('❌ 请求失败: ' + error.message);
+            });
     }
 
     // 添加用户消息
@@ -1257,15 +1269,16 @@
         const url = frame.src;
         window.open(url, '_blank');
     }
+
     function sourceEdit() {
-        window.open('/topezadmin/dsl/'+dslType+'-'+dslId,'_blank');
+        window.open('/topezadmin/dsl/' + dslType + '-' + dslId, '_blank');
     }
 
     // 获取当前时间
     function getCurrentTime() {
         const now = new Date();
         return now.getHours().toString().padStart(2, '0') + ':' +
-               now.getMinutes().toString().padStart(2, '0');
+            now.getMinutes().toString().padStart(2, '0');
     }
 
     // HTML转义
@@ -1276,10 +1289,10 @@
     }
 
     // 回车发送
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const input = document.getElementById('chatInput');
         if (input) {
-            input.addEventListener('keydown', function(e) {
+            input.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();

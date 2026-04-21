@@ -508,12 +508,15 @@ xm-select > .xm-body .scroll-body {
 xm-select > .xm-body .xm-option {
     max-width: 357px;
 }
-.form-item-hidden{
+
+.form-item-hidden {
     display: none;
 }
-.layui-col-md0{
+
+.layui-col-md0 {
     display: none;
 }
+
 /*xm-select > .xm-body .xm-option-content {*/
 /*    overflow: scroll !important;*/
 

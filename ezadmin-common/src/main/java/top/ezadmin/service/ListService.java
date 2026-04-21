@@ -46,8 +46,9 @@ public interface ListService {
 
     /**
      * 初始化组件的initData与props
+     *
      * @param component
      */
-    void initComponentData(RequestContext context,Map<String, Object> component) ;
+    void initComponentData(RequestContext context, Map<String, Object> component);
 
 }

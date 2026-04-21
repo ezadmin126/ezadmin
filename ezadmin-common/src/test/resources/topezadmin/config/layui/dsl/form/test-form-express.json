@@ -21,8 +21,14 @@
       "title": "状态",
       "type": "radio",
       "options": [
-        {"value": "1", "text": "启用"},
-        {"value": "0", "text": "禁用"}
+        {
+          "value": "1",
+          "text": "启用"
+        },
+        {
+          "value": "0",
+          "text": "禁用"
+        }
       ],
       "defaultValue": "1"
     },

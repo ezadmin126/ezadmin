@@ -1,7 +1,5 @@
 package top.ezadmin.spring;
 
-import top.ezadmin.plugins.ImportOperator;
-import top.ezadmin.plugins.SpringBeanOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -14,6 +12,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.ezadmin.common.utils.StringUtils;
+import top.ezadmin.plugins.ImportOperator;
+import top.ezadmin.plugins.SpringBeanOperator;
 import top.ezadmin.plugins.express.executor.EzExpressExecutor;
 
 @Configuration
@@ -28,7 +28,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
     @Bean
     public FilterRegistrationBean ezClientFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        EzClientServletFilter ezClientServletFilter = new  EzClientServletFilter();
+        EzClientServletFilter ezClientServletFilter = new EzClientServletFilter();
         ezClientServletFilter.setEzClientProperties(ezClientProperties);
         registrationBean.setFilter(ezClientServletFilter);
         registrationBean.getUrlPatterns().add("/topezadmin/*");
@@ -50,7 +50,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
         SpringContextHolder.init(applicationContext);
-        EzExpressExecutor.addExtendFunction("spring",new SpringBeanOperator());
-        EzExpressExecutor.addExtendFunction("imports",new ImportOperator());
+        EzExpressExecutor.addExtendFunction("spring", new SpringBeanOperator());
+        EzExpressExecutor.addExtendFunction("imports", new ImportOperator());
     }
 }

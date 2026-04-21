@@ -16,9 +16,11 @@ import static org.junit.Assert.assertEquals;
 public class UpdateSimpleOperatorTest {
 
     private static String TABLE = "table";
-    static{
+
+    static {
         EzBootstrap.config().setEzJson(new EzFastJson2Impl());
     }
+
     @Test
     public void test1() {
         UpdateSimpleOperator operator = new UpdateSimpleOperator();

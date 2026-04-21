@@ -10,23 +10,28 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 表达式文件加载工具类
  * 支持在JSON配置中通过 $$filename 引用外部文件作为表达式内容
+ * 支持在 dataJson 字段中通过 @import(filename) 引用 data 目录下的 JSON 文件
  */
 public class ExpressFileLoader {
 
     private static final Logger logger = LoggerFactory.getLogger(ExpressFileLoader.class);
 
     /**
+     * dataJson 数据文件存放目录
+     */
+    private static final String DATA_DIR = "topezadmin/config/layui/dsl/data";
+
+    /**
      * 处理配置中的所有表达式引用
      * 将以 $$ 开头的值替换为对应文件的内容
      *
-     * @param config 配置对象
+     * @param config     配置对象
      * @param configPath 配置文件的路径，用于确定相对路径
      */
     public static void processExpressReferences(Map<String, Object> config, String configPath) {
@@ -62,15 +67,25 @@ public class ExpressFileLoader {
 
             // 处理字符串值
             if (value instanceof String) {
-                String strValue = (String) value;
-                if (strValue.startsWith("$$")) {
-                    String fileName = strValue.substring(2);
-                    String content = loadExpressFile(fileName, configPath);
-                    if (content != null) {
-                        config.put(key, content);
-                        logger.debug("Loaded express from file: {} for field: {}", fileName, key);
+                String strValue = Utils.trimNull(value);
+                String fileName = extractFileName(strValue);
+                if (fileName != null) {
+                    if ("dataJson".equals(key)) {
+                        // dataJson 从 data 目录加载并解析为 JSON 列表
+                        Object parsed = loadAndParseDataFile(fileName);
+                        if (parsed != null) {
+                            config.put(key, parsed);
+                            logger.debug("Loaded dataJson from data file: {}", fileName);
+                        }
+                    } else {
+                        String content = loadExpressFile(fileName, configPath);
+                        if (content != null) {
+                            config.put(key, content);
+                            logger.debug("Loaded express from file: {} for field: {}", fileName, key);
+                        }
                     }
                 }
+
             }
             // 处理嵌套的对象
             else if (value instanceof Map) {
@@ -108,6 +123,22 @@ public class ExpressFileLoader {
     }
 
     /**
+     * 从字符串值中提取文件名（支持 $$filename 和 @import(filename) 两种语法）
+     *
+     * @return 文件名，如果不是文件引用则返回 null
+     */
+    private static String extractFileName(String strValue) {
+        if (strValue == null) return null;
+        if (strValue.startsWith("$$")) {
+            return strValue.substring(2);
+        }
+        if (strValue.startsWith("@import(") && strValue.endsWith(")")) {
+            return strValue.substring(8, strValue.length() - 1);
+        }
+        return null;
+    }
+
+    /**
      * 处理单个表达式字段
      */
     private static void processExpressField(Map<String, Object> map, String fieldName, String configPath) {
@@ -117,10 +148,9 @@ public class ExpressFileLoader {
 
         Object value = map.get(fieldName);
         if (value instanceof String) {
-            String strValue = (String) value;
-            if (strValue.startsWith("$$")) {
-                // 去掉 $$ 前缀，获取文件名
-                String fileName = strValue.substring(2);
+            String strValue = Utils.trimNull(value);
+            String fileName = extractFileName(strValue);
+            if (fileName != null) {
                 String content = loadExpressFile(fileName, configPath);
                 if (content != null) {
                     map.put(fieldName, content);
@@ -134,7 +164,7 @@ public class ExpressFileLoader {
      * 处理数组中的表达式引用
      * 遍历数组，将以 $$ 开头的字符串元素替换为对应文件的内容
      *
-     * @param list 要处理的数组
+     * @param list       要处理的数组
      * @param configPath 配置文件路径，用于确定相对路径
      */
     private static void processExpressListReferences(List<Object> list, String configPath) {
@@ -145,16 +175,16 @@ public class ExpressFileLoader {
         for (int i = 0; i < list.size(); i++) {
             Object item = list.get(i);
             if (item instanceof String) {
-                String strValue = (String) item;
-                if (strValue.startsWith("$$")) {
-                    // 去掉 $$ 前缀，获取文件名
-                    String fileName = strValue.substring(2);
+                String strValue = Utils.trimNull(item);
+                String fileName = extractFileName(strValue);
+                if (fileName != null) {
                     String content = loadExpressFile(fileName, configPath);
                     if (content != null) {
                         list.set(i, content);
                         logger.debug("Loaded express from file: {} for list item at index: {}", fileName, i);
                     }
                 }
+
             } else if (item instanceof Map) {
                 // 递归处理嵌套的 Map
                 @SuppressWarnings("unchecked")
@@ -170,9 +200,45 @@ public class ExpressFileLoader {
     }
 
     /**
+     * 从 data 目录加载 JSON 文件并解析为列表
+     * 文件路径为 topezadmin/config/layui/dsl/data/{fileName}，支持子目录
+     *
+     * @param fileName 文件名（相对于 data 目录），支持子目录如 common/status.json
+     * @return 解析后的列表，失败返回 null
+     */
+    @SuppressWarnings("unchecked")
+    private static Object loadAndParseDataFile(String fileName) {
+        try {
+            String filePath = DATA_DIR + "/" + fileName;
+            String content = null;
+
+            if (!EzBootstrap.config().isSqlCache()) {
+                content = loadFromProjectPath(filePath);
+            }
+
+            if (content == null) {
+                try {
+                    content = Resources.getResourceAsString(filePath);
+                } catch (Exception e) {
+                    logger.warn("Failed to load data file from classpath: {}", filePath);
+                    return null;
+                }
+            }
+
+            if (content != null) {
+                content = content.trim();
+                return EzBootstrap.config().getEzJson().parseArray(content, Map.class);
+            }
+        } catch (Exception e) {
+            logger.error("Failed to load and parse data file: {}", fileName, e);
+        }
+        return null;
+    }
+
+    /**
      * 加载表达式文件内容
      *
-     * @param fileName 文件名
+     * @param fileName   文件名
      * @param configPath 配置文件路径，用于确定相对路径
      * @return 文件内容，如果读取失败返回 null
      */
@@ -331,7 +397,7 @@ public class ExpressFileLoader {
      * 处理 appendHead 和 appendFoot 字段
      * 如果这些字段是数组，则将数组元素拼接成换行的字符串
      *
-     * @param config 配置对象
+     * @param config     配置对象
      * @param configPath 配置文件路径，用于加载表达式文件引用
      */
     public static void processAppendFields(Map<String, Object> config, String configPath) {
@@ -350,8 +416,8 @@ public class ExpressFileLoader {
      * 处理单个 append 字段
      * 如果字段是数组，则先处理表达式文件引用，再将数组元素用换行符拼接成字符串
      *
-     * @param config 配置对象
-     * @param fieldName 字段名（appendHead 或 appendFoot）
+     * @param config     配置对象
+     * @param fieldName  字段名（appendHead 或 appendFoot）
      * @param configPath 配置文件路径，用于加载表达式文件引用
      */
     private static void processAppendField(Map<String, Object> config, String fieldName, String configPath) {
@@ -379,7 +445,7 @@ public class ExpressFileLoader {
                 // 替换原来的数组为拼接后的字符串
                 config.put(fieldName, sb.toString());
                 logger.debug("Converted {} array to string with {} lines", fieldName, list.size());
-            }else{
+            } else {
                 config.put(fieldName, "");
             }
         }

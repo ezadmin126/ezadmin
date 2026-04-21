@@ -120,21 +120,21 @@ DSL 配置文件位置：`topezadmin/config/layui/dsl/list/{id}.json`
 
 #### 基础配置
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| id | string | 列表唯一标识 |
-| title | string | 列表标题 |
-| dataSource | string | 数据源名称 |
+| 字段         | 类型     | 说明     |
+|------------|--------|--------|
+| id         | string | 列表唯一标识 |
+| title      | string | 列表标题   |
+| dataSource | string | 数据源名称  |
 
 #### body 配置
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| adminStyle | string | 管理风格，默认 `layui` |
-| emptyShow | string | 空值显示字符 |
-| showIndex | boolean | 是否显示序号列 |
-| selectable | boolean | 是否可选择 |
-| rowActionWidth | number | 行操作列宽度 |
+| 字段             | 类型      | 说明              |
+|----------------|---------|-----------------|
+| adminStyle     | string  | 管理风格，默认 `layui` |
+| emptyShow      | string  | 空值显示字符          |
+| showIndex      | boolean | 是否显示序号列         |
+| selectable     | boolean | 是否可选择           |
+| rowActionWidth | number  | 行操作列宽度          |
 
 ---
 
@@ -153,36 +153,36 @@ DSL 配置文件位置：`topezadmin/config/layui/dsl/list/{id}.json`
 }
 ```
 
-| 字段 | 说明 |
-|------|------|
-| item_name | 参数名 |
-| label | 显示标签 |
-| component | 组件类型 |
-| operator | 操作符 |
-| alias | SQL 字段别名 |
-| jdbcType | JDBC 类型 |
-| props | 组件属性 |
-| initData | 初始化数据 |
+| 字段        | 说明       |
+|-----------|----------|
+| item_name | 参数名      |
+| label     | 显示标签     |
+| component | 组件类型     |
+| operator  | 操作符      |
+| alias     | SQL 字段别名 |
+| jdbcType  | JDBC 类型  |
+| props     | 组件属性     |
+| initData  | 初始化数据    |
 
 #### 搜索组件类型 (component)
 
-| 类型 | 说明 |
-|------|------|
-| `input` | 文本输入框 |
-| `hidden` | 隐藏字段 |
-| `select` | 单选下拉 |
-| `select-multiple` | 多选下拉 |
-| `date` | 日期选择 |
-| `cascader` | 级联选择 |
+| 类型                | 说明    |
+|-------------------|-------|
+| `input`           | 文本输入框 |
+| `hidden`          | 隐藏字段  |
+| `select`          | 单选下拉  |
+| `select-multiple` | 多选下拉  |
+| `date`            | 日期选择  |
+| `cascader`        | 级联选择  |
 
 #### 操作符 (operator)
 
-| 操作符 | SQL | 说明 |
-|--------|-----|------|
-| `eq` | `= ?` | 等于 |
-| `like` | `LIKE ?` | 模糊匹配 |
-| `in` | `IN (?)` | 包含 |
-| `between` | `BETWEEN ? AND ?` | 范围 |
+| 操作符       | SQL               | 说明   |
+|-----------|-------------------|------|
+| `eq`      | `= ?`             | 等于   |
+| `like`    | `LIKE ?`          | 模糊匹配 |
+| `in`      | `IN (?)`          | 包含   |
+| `between` | `BETWEEN ? AND ?` | 范围   |
 
 #### initData 数据源
 
@@ -220,13 +220,13 @@ DSL 配置文件位置：`topezadmin/config/layui/dsl/list/{id}.json`
 
 #### 列组件类型 (component)
 
-| 类型 | 说明 |
-|------|------|
-| `tdText` | 文本显示 |
-| `tdLink` | 链接 |
-| `tdSelect` | 下拉显示 |
+| 类型                 | 说明   |
+|--------------------|------|
+| `tdText`           | 文本显示 |
+| `tdLink`           | 链接   |
+| `tdSelect`         | 下拉显示 |
 | `tdSelectMultiple` | 多选显示 |
-| `tdCascader` | 级联显示 |
+| `tdCascader`       | 级联显示 |
 
 ---
 
@@ -262,19 +262,19 @@ DSL 配置文件位置：`topezadmin/config/layui/dsl/list/{id}.json`
 
 #### 行按钮组件类型
 
-| 类型 | 说明 |
-|------|------|
-| `button-normal` | 普通按钮 |
-| `button-bread` | 面包屑按钮 |
+| 类型                | 说明     |
+|-------------------|--------|
+| `button-normal`   | 普通按钮   |
+| `button-bread`    | 面包屑按钮  |
 | `button-dropdown` | 下拉菜单按钮 |
 
 #### opentype 打开方式
 
-| 值 | 说明 |
-|------|------|
-| `MODAL` | 弹窗打开 |
+| 值        | 说明    |
+|----------|-------|
+| `MODAL`  | 弹窗打开  |
 | `_BLANK` | 新窗口打开 |
-| `_SELF` | 当前窗口 |
+| `_SELF`  | 当前窗口  |
 
 ---
 
@@ -289,39 +289,39 @@ DSL 配置文件位置：`topezadmin/config/layui/dsl/list/{id}.json`
 }
 ```
 
-| 字段 | 说明 |
-|------|------|
-| main | 主查询表达式 |
-| orderBy | 排序语句 |
-| groupBy | 分组语句 |
-| count | 计数表达式 (空则自动生成) |
+| 字段      | 说明             |
+|---------|----------------|
+| main    | 主查询表达式         |
+| orderBy | 排序语句           |
+| groupBy | 分组语句           |
+| count   | 计数表达式 (空则自动生成) |
 
 ---
 
 ## 测试用例说明
 
-| 测试方法 | 说明 |
-|---------|------|
-| `testDslListPage` | DSL 列表页面渲染 |
-| `testDslListData` | DSL 列表数据接口 |
-| `testDslListDataWithSearch` | 带搜索条件的列表数据 |
-| `testDirectControllerDsl` | 直接调用 ListController.dsl |
-| `testDirectControllerData` | 直接调用 ListController.data |
-| `testPagination` | 分页功能 |
-| `testOrderBy` | 排序功能 |
-| `testSelectInitData` | 下拉选择数据加载 |
-| `testSessionParams` | 会话参数传递 |
-| `testDateRangeSearch` | 日期范围搜索 |
-| `testMultiSelectSearch` | 多选搜索 (IN 查询) |
-| `testNotExistList` | 不存在的列表ID处理 |
+| 测试方法                        | 说明                       |
+|-----------------------------|--------------------------|
+| `testDslListPage`           | DSL 列表页面渲染               |
+| `testDslListData`           | DSL 列表数据接口               |
+| `testDslListDataWithSearch` | 带搜索条件的列表数据               |
+| `testDirectControllerDsl`   | 直接调用 ListController.dsl  |
+| `testDirectControllerData`  | 直接调用 ListController.data |
+| `testPagination`            | 分页功能                     |
+| `testOrderBy`               | 排序功能                     |
+| `testSelectInitData`        | 下拉选择数据加载                 |
+| `testSessionParams`         | 会话参数传递                   |
+| `testDateRangeSearch`       | 日期范围搜索                   |
+| `testMultiSelectSearch`     | 多选搜索 (IN 查询)             |
+| `testNotExistList`          | 不存在的列表ID处理               |
 
 ---
 
 ## URI 路由说明
 
-| URI 格式 | 说明 |
-|----------|------|
-| `/topezadmin/list/dsl-{id}` | DSL 列表页面 |
+| URI 格式                       | 说明         |
+|------------------------------|------------|
+| `/topezadmin/list/dsl-{id}`  | DSL 列表页面   |
 | `/topezadmin/list/data-{id}` | DSL 列表数据接口 |
 
 ---

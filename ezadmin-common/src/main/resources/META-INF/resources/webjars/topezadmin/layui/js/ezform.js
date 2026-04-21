@@ -189,7 +189,7 @@ $(function () {
     })
     //end
     // $('.layuimini-loader').fadeOut();
-  //  watermark.init({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + ' ' + getNow()});
+    //  watermark.init({"watermark_txt": $("#EZ_SESSION_USER_NAME_KEY").val() + ' ' + getNow()});
 
     //panel 扩大缩小
     $(".ez-form-panel  .layui-layer-min").click(function () {
@@ -203,9 +203,9 @@ $(function () {
         $(this).addClass("layui-hide");
         $(this).siblings().removeClass("layui-hide");
     })
-    $("textarea").each(function(){
-        if($(this).attr("maxlength")){
-            $(this).on("keyup",function(){
+    $("textarea").each(function () {
+        if ($(this).attr("maxlength")) {
+            $(this).on("keyup", function () {
                 var length = $(this).val().length;
                 $(this).parent().find(".layext-textool-count").text(length);
             })

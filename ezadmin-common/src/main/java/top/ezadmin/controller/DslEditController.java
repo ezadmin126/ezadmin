@@ -29,10 +29,12 @@ import java.util.Map;
 public class DslEditController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(DslEditController.class);
     private static final DslAiService dslAiService = DslAiService.getInstance();
-    FormController formController=new FormController();
+    FormController formController = new FormController();
+
     /**
-     *  URL: /topezadmin/edit/list-${id} ${id}为DSL id
-     *       /topezadmin/edit/form-${id} ${id}为DSL id
+     * URL: /topezadmin/edit/list-${id} ${id}为DSL id
+     * /topezadmin/edit/form-${id} ${id}为DSL id
+     *
      * @param requestContext
      * @param method
      * @param id
@@ -40,7 +42,7 @@ public class DslEditController extends BaseController {
      * @throws Exception
      */
     public EzResult page(RequestContext requestContext, String method, String id) throws Exception {
-        Map<String, Object> templateParam=new HashMap<>();
+        Map<String, Object> templateParam = new HashMap<>();
 
         templateParam.put("EZ_SESSION_USER_NAME_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
         templateParam.put("EZ_SESSION_USER_ID_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY)));
@@ -57,21 +59,21 @@ public class DslEditController extends BaseController {
                 return EzResult.instance().code("404");
             }
             Map<String, Object> form = dslConfig.getConfig();
-            if(StringUtils.isBlank((String)form.get("initUrl"))){
-                form.put("initUrl", "/topezadmin/form/data-"+formId);
+            if (StringUtils.isBlank((String) form.get("initUrl"))) {
+                form.put("initUrl", "/topezadmin/form/data-" + formId);
             }
-            formController.iniFormItem(requestContext,form);
+            formController.iniFormItem(requestContext, form);
             templateParam.put("form", form);
-            templateParam.put("requestContext",requestContext);
+            templateParam.put("requestContext", requestContext);
             templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
-            templateParam.put("ID",requestContext.getRequestParams().get("ID"));
-            templateParam.put("uploadUrl",EzBootstrap.config().getUploadUrl());
-            templateParam.put("downloadUrl",EzBootstrap.config().getDownloadUrl());
-            templateParam.put("formSubmitUrl", "/topezadmin/form/submit-"+formId);
-            templateParam.put("ENCRYPT_FORM_ID",  formId);
+            templateParam.put("ID", requestContext.getRequestParams().get("ID"));
+            templateParam.put("uploadUrl", EzBootstrap.config().getUploadUrl());
+            templateParam.put("downloadUrl", EzBootstrap.config().getDownloadUrl());
+            templateParam.put("formSubmitUrl", "/topezadmin/form/submit-" + formId);
+            templateParam.put("ENCRYPT_FORM_ID", formId);
             templateParam.putAll(EzBootstrap.config().getConfig());
             return render("layui/dsl/form-edit", templateParam);
-        }else{
+        } else {
             ListController listController = new ListController();
             // 使用统一加载器（文件优先，数据库降级）
             top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(id, "list");
@@ -79,30 +81,30 @@ public class DslEditController extends BaseController {
                 return EzResult.instance().code("404");
             }
             Map<String, Object> list = dslConfig.getConfig();
-            listController.initSearch(requestContext,list);
-            Collection<String> tdtemplates=listController.initTd(requestContext,list);
-            if(list.get("initApi") == null){
+            listController.initSearch(requestContext, list);
+            Collection<String> tdtemplates = listController.initTd(requestContext, list);
+            if (list.get("initApi") == null) {
                 list.put("initApi", "/topezadmin/list/data-" + id);
             }
             //默认你不隐藏头部
-            if(list.get("hideSearch") == null){
+            if (list.get("hideSearch") == null) {
                 list.put("hideSearch", false);
             }
 
-            listController.initRowBtn(list);
+            listController.initRowBtn(requestContext, list);
             templateParam.put("list", list);
-            templateParam.put("perPageInt", list.get("body") != null ? ((Map<String, Object>)list.get("body")).get("limit") : 10);
+            templateParam.put("perPageInt", list.get("body") != null ? ((Map<String, Object>) list.get("body")).get("limit") : 10);
             templateParam.put("ENCRYPT_LIST_ID", id);
-            templateParam.put("cacheFlag",EzBootstrap.config().isSqlCache());
+            templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
             templateParam.put("tdTemplates", tdtemplates);
-            templateParam.put("requestContext",requestContext);
-            templateParam.put("downloadUrl",EzBootstrap.config().getDownloadUrl());
+            templateParam.put("requestContext", requestContext);
+            templateParam.put("downloadUrl", EzBootstrap.config().getDownloadUrl());
             templateParam.putAll(EzBootstrap.config().getConfig());
 
             templateParam.put("EZ_SESSION_USER_NAME_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
             templateParam.put("EZ_SESSION_USER_ID_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY)));
             // 列表继续使用原有的编辑器
-            return render("layui/dsl/list-edit",templateParam);
+            return render("layui/dsl/list-edit", templateParam);
         }
     }
 
@@ -111,8 +113,8 @@ public class DslEditController extends BaseController {
      * URL: /topezadmin/edit/submit-xxx
      *
      * @param requestContext 请求上下文
-     * @param method 方法名
-     * @param id URL编码
+     * @param method         方法名
+     * @param id             URL编码
      * @return 修改结果
      */
     public EzResult submit(RequestContext requestContext, String method, String id) {
@@ -161,7 +163,7 @@ public class DslEditController extends BaseController {
                 return EzResult.instance().code("JSON").fail().data(EzResult.instance().fail("DSL 类型必须是 form 或 list"));
             }
             // 调用服务处理
-            return EzResult.instance().code("JSON"). data(dslAiService.modifyDsl(request));
+            return EzResult.instance().code("JSON").data(dslAiService.modifyDsl(request));
         } catch (Exception e) {
             log.error("处理 DSL 修改请求异常", e);
             return EzResult.instance().code("JSON").fail().data(EzResult.instance().fail("系统异常: " + e.getMessage()));
@@ -172,30 +174,30 @@ public class DslEditController extends BaseController {
     /**
      * 处理创建DSL请求
      */
-    private EzResult handleCreateDsl( DslModificationRequest request) {
+    private EzResult handleCreateDsl(DslModificationRequest request) {
 
         // 参数校验
         if (request.getDslType() == null || request.getDslType().isEmpty()) {
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("summary", "缺少DSL类型参数");
-            return EzResult.instance().fail().code("JSON"). data(EzResult.instance().fail().data(responseData));
+            return EzResult.instance().fail().code("JSON").data(EzResult.instance().fail().data(responseData));
         }
 
         if (!"form".equals(request.getDslType()) && !"list".equals(request.getDslType())) {
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("summary", "DSL类型必须是form或list");
-            return EzResult.instance().fail().code("JSON"). data(EzResult.instance().fail().data(responseData));
+            return EzResult.instance().fail().code("JSON").data(EzResult.instance().fail().data(responseData));
         }
 
         if (request.getUserRequirement() == null || request.getUserRequirement().isEmpty()) {
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("summary", "请描述您的需求或提供SQL语句");
-            return EzResult.instance().fail().code("JSON"). data(EzResult.instance().fail().data(responseData));
+            return EzResult.instance().fail().code("JSON").data(EzResult.instance().fail().data(responseData));
         }
 
         // 调用AI服务生成DSL
-        EzResult result = dslAiService.createNewDsl(Utils.trimNullDefault(request.getDataSource(), "datasource"),request.getDslType(), request.getUserRequirement());
-        return EzResult.instance().code("JSON"). data(result);
+        EzResult result = dslAiService.createNewDsl(Utils.trimNullDefault(request.getDataSource(), "datasource"), request.getDslType(), request.getUserRequirement());
+        return EzResult.instance().code("JSON").data(result);
     }
 
     /**
@@ -203,8 +205,8 @@ public class DslEditController extends BaseController {
      * URL: /topezadmin/edit/save-layout-{id}
      *
      * @param requestContext 请求上下文
-     * @param method 方法名
-     * @param id URL编码
+     * @param method         方法名
+     * @param id             URL编码
      * @return 保存结果
      */
     public EzResult saveLayout(RequestContext requestContext, String method, String id) {
@@ -250,8 +252,8 @@ public class DslEditController extends BaseController {
      * URL: /topezadmin/edit/create-
      *
      * @param requestContext 请求上下文
-     * @param method 方法名
-     * @param id URL编码（这里不需要）
+     * @param method         方法名
+     * @param id             URL编码（这里不需要）
      * @return 创建页面
      */
     public EzResult create(RequestContext requestContext, String method, String id) throws Exception {
@@ -266,8 +268,8 @@ public class DslEditController extends BaseController {
      * URL: /topezadmin/edit/getTables-{datasource}
      *
      * @param requestContext 请求上下文
-     * @param method 方法名
-     * @param datasource 数据源名称
+     * @param method         方法名
+     * @param datasource     数据源名称
      * @return 表列表
      */
     public EzResult getTables(RequestContext requestContext, String method, String datasource) {

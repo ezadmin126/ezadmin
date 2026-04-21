@@ -17,9 +17,8 @@ import java.util.Map;
 public class IndexController extends BaseController {
 
 
-
-    public EzResult index(RequestContext requestContext )  {
-        Map<String, Object> templateParam=new HashMap<>();
+    public EzResult index(RequestContext requestContext) {
+        Map<String, Object> templateParam = new HashMap<>();
         templateParam.put("logo", EzBootstrap.config().getLogoUrl());
         templateParam.put("systemName", EzBootstrap.config().getSystemName());
         templateParam.put("navUrl", EzBootstrap.config().getNavUrl());
@@ -37,21 +36,21 @@ public class IndexController extends BaseController {
         templateParam.put("EZ_SESSION_USER_NAME_KEY", username);
         Map<String, String> cookie = requestContext.getCookies();
         if (cookie != null) {
-            cookie.forEach((k,v)->{
-                if (k .equals("layui-theme-mode-prefer-dark")) {
-                    try {
-                        templateParam.put("darkTheme", v);
-                    } catch (Exception e) {
+            cookie.forEach((k, v) -> {
+                        if (k.equals("layui-theme-mode-prefer-dark")) {
+                            try {
+                                templateParam.put("darkTheme", v);
+                            } catch (Exception e) {
 
-                    }
-                }
+                            }
+                        }
                     }
             );
         }
         try {
-            return render(EzBootstrap.config().getAdminStyle() + "/"+EzBootstrap.config().getAdminIndexHtml(), templateParam);
-        }catch (Exception e){
-            throw new EzAdminRuntimeException(ExceptionCode.RENDER_ERROR,e);
+            return render(EzBootstrap.config().getAdminStyle() + "/" + EzBootstrap.config().getAdminIndexHtml(), templateParam);
+        } catch (Exception e) {
+            throw new EzAdminRuntimeException(ExceptionCode.RENDER_ERROR, e);
         }
     }
 
@@ -67,7 +66,6 @@ public class IndexController extends BaseController {
         EzBootstrap.config().getEzCache().clear();
         return EzResult.instance().msg("0", "清理缓存成功");
     }
- 
 
 
     // public void dark(HttpServletRequest request, HttpServletResponse response) throws IOException {
