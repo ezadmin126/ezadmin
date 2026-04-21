@@ -1,7 +1,6 @@
 package top.ezadmin.dao.dto;
 
 
-
 public class TreeDTO {
     private String id;
     private String text;

@@ -524,7 +524,7 @@ public class ListDao extends JsoupUtil {
     }
 
 
-    public String transEntityToHtmlConfig(Map<String, Object> list ) throws Exception {
+    public String transEntityToHtmlConfig(Map<String, Object> list) throws Exception {
 
         Map<String, Object> coreMap = (Map<String, Object>) list.get("core");
         List<Map<String, Object>> searchList = (List<Map<String, Object>>) list.get("search");

@@ -381,7 +381,6 @@ public class FormDao extends JsoupUtil {
     }
 
 
-
     Element newCard(Map<String, Object> card) {
         //String label,String col,String url,String frameheight
         String cardName = Utils.trimNull(card.get("cardname"));

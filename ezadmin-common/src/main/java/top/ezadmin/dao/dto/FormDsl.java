@@ -2,7 +2,6 @@ package top.ezadmin.dao.dto;
 
 import top.ezadmin.common.utils.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
  * 表单 DSL 配置类
  * 对应 layui dsl/form 配置文件
  */
-public class FormDsl extends BaseDsl{
+public class FormDsl extends BaseDsl {
 
     /**
      * 表单提交成功后的跳转URL

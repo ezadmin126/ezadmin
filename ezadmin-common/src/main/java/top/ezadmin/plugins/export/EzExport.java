@@ -12,6 +12,7 @@ public interface EzExport {
 
     /**
      * 导出数据
+     *
      * @param name 文件名
      * @param head 表头信息 head0 文案  head1  宽度  head2 jdbctype
      * @param data 数据

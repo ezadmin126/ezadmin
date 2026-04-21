@@ -1,15 +1,21 @@
 <div th:class="'component-col col-'+${item_name}"
      th:classappend="${classAppend}" th:data-config-json="${componentJson}"
 >
-<div   class="layui-form-item"  th:item_name="${item_name}" component="checkbox">
-    <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
-        <span th:if="${props != null and props.required}" style="color: red;">*</span>
-        <span th:text="${label}+'：'">字段名</span>
-    </label>
-    <div class="layui-input-block"  >
-        <input type="checkbox"  th:lay-filter="${'lay-filter-'+item_name}"  th:value="${option.value}"  th:each="option : ${data}" th:title="${option.label}"
-               th:name="${item_name}" th:attrs="${props}" th:data-propsJson="${propsJson}"/>
-        <div th:if="${props != null and not #strings.isEmpty(props.description)}" class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
+    <div class="layui-form-item" th:item_name="${item_name}" component="checkbox">
+        <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
+            <span th:if="${props != null and props.required}" style="color: red;">*</span>
+            <span th:text="${label}+'：'">字段名</span>
+        </label>
+        <div class="layui-input-block">
+            <input type="checkbox" th:lay-filter="${'lay-filter-'+item_name}"
+                   th:value="${option.value}"
+                   th:each="option : ${data}"
+                   th:title="${option.label}"
+                   th:name="${item_name}"
+                   th:attrs="${props}"
+                   th:data-propsJson="${propsJson}"/>
+            <div th:if="${props != null and not #strings.isEmpty(props.description)}"
+                 class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
+        </div>
     </div>
-</div>
 </div>

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
     <title th:text="${form.title}">表单页面</title>
 
     <link th:href="${'/webjars/topezadmin/layui/css/ezform.css?v='+vi}" rel="stylesheet">
@@ -33,12 +33,19 @@
 
     <script th:src="${'/webjars/topezadmin/layui/js/watermark.js?v1='+vi}" type="text/javascript"></script>
 
-    <script th:src="${'/webjars/topezadmin/layui/js/Global.js'}" type="text/javascript"></script>
-    <script th:src="${'/webjars/topezadmin/layui/js/ezdsl.js'}" type="text/javascript"></script>
+    <script th:src="${'/webjars/topezadmin/layui/js/Global.js?v1='+vi}" type="text/javascript"></script>
+
+    <script th:src="${'/webjars/topezadmin/layui/js/ezdsl.js?v1='+vi}" type="text/javascript"></script>
+    <script th:if="${not #strings.isEmpty(form.definitionKey)}"
+            th:src="${'/webjars/topezadmin/layui/js/camunda.js?v1='+vi}" type="text/javascript"></script>
 
 </head>
-<body>
-<div class="appendHead" item_name="appendHead" th:remove="tag" th:if="${not #strings.isEmpty(form.appendHead)}" th:utext="${form.appendHead}"></div>
+<body th:definitionKey="${form.definitionKey}">
+<div class="layuimini-loader">
+    <div class="layuimini-loader-inner"></div>
+</div>
+<div class="appendHead" item_name="appendHead" th:remove="tag" th:if="${not #strings.isEmpty(form.appendHead)}"
+     th:utext="${form.appendHead}"></div>
 <input type="hidden" ID="EZ_SESSION_USER_NAME_KEY" name="EZ_SESSION_USER_NAME_KEY"
        th:value="${EZ_SESSION_USER_NAME_KEY}">
 <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY"
@@ -49,8 +56,7 @@
        th:value="${ENCRYPT_FORM_ID}">
 
 
-
-<form ID="inputForm" method="post" style="padding-bottom: 60px;"  class="layui-form inputForm" lay-filter="inputForm">
+<form ID="inputForm" method="post" style="padding-bottom: 60px;" class="layui-form inputForm" lay-filter="inputForm">
     <div th:class="${'layui-'+ (#strings.isEmpty(form.layout)?'container':'fluid')}">
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <div class="layui-tab-content">
@@ -62,53 +68,71 @@
                         <th:block th:each="cardItem,cardStat : ${form.cardList}">
                             <!-- 普通表单卡片 -->
                             <div th:if="${cardItem.type == 'card'}" class="layui-card" th:id="${cardItem.label}"
-                                 th:item_name="${'card-'+cardItem.label}"  th:classappend="${ (cardItem.get('classAppend') != null ? cardItem.get('classAppend') : '')}"
+                                 th:item_name="${'card-'+cardItem.label}"
+                                 th:classappend="${ (cardItem.get('classAppend') != null ? cardItem.get('classAppend') : '')}"
                                  th:data-card-config="${cardItem.componentJson}"
                             >
-                                <div class="layui-card-header ez-form-panel" >
-                                    [(${cardItem.label})]   [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
-                                    <div class="layui-layer-setwin  "  style="top: 0px;line-height: 43px;position: absolute;">
-                                        <div class="layui-btn-group custom-card-btn " th:if="${not #lists.isEmpty(cardItem.buttonList) }">
+                                <div class="layui-card-header ez-form-panel">
+                                    [(${cardItem.label})] [(${cardItem.get('description') != null ?
+                                    cardItem.get('description') : ''})]
+                                    <div class="layui-layer-setwin  "
+                                         style="top: 0px;line-height: 43px;position: absolute;">
+                                        <div class="layui-btn-group custom-card-btn "
+                                             th:if="${not #lists.isEmpty(cardItem.buttonList) }">
                                             <th:block th:each="button : ${cardItem.buttonList}">
                                                 <div th:utext="${cr.render(button)}" th:remove="tag"></div>
                                             </th:block>
                                         </div>
-                                        <span class="layui-layer-min" style=" "></span>
+                                        <span class="layui-layer-min" style=" "
+                                              th:classappend="${#strings.isEmpty(cardItem.label)?'layui-hide':''}"></span>
                                         <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
                                     </div>
                                 </div>
                                 <div class="layui-card-body">
 
-                                    <th:block th:if="${cardItem.fieldList != null and not #lists.isEmpty(cardItem.fieldList)}">
-                                           <th:block th:each="rowObj : ${cardItem.fieldList}">
-                                                <div class="layui-row layui-col-space5">
-                                                    <th:block th:each="field : ${rowObj.row}">
-                                                        <div th:utext="${cr.render(field)}" th:remove="tag"></div>
-                                                    </th:block>
-                                                </div>
-                                            </th:block>
+                                    <th:block
+                                            th:if="${cardItem.fieldList != null and not #lists.isEmpty(cardItem.fieldList)}">
+                                        <th:block th:each="rowObj : ${cardItem.fieldList}">
+                                            <div class="layui-row layui-col-space5">
+                                                <th:block th:each="field : ${rowObj.row}">
+                                                    <div th:utext="${cr.render(field)}" th:remove="tag"></div>
+                                                </th:block>
+                                            </div>
+                                        </th:block>
 
                                     </th:block>
 
                                 </div>
                             </div>
                             <!-- iframe卡片 -->
-                            <div  th:item_name="${'card-'+cardItem.label}" th:if="${cardItem.type == 'iframe'}" class="layui-card"
-                                  th:classappend="${'layui-col-md'+(cardItem.get('classAppend') != null ? cardItem.get('classAppend') : '')}">
-                                <div class="layui-card-header ez-form-panel"  >
-                                    [(${cardItem.label})]    [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
-                                    <div class="layui-layer-setwin  "  style="top: 0px;line-height: 43px;position: absolute;">
-                                        <div class="layui-btn-group custom-card-btn" th:if="${not #lists.isEmpty(cardItem.buttonList)}">
+                            <div th:id="${cardItem.label}"
+                                 th:item_name="${'card-'+cardItem.label}"
+                                 th:card_item_name="${cardItem.item_name}"
+                                 th:if="${cardItem.type == 'iframe'}"
+                                 class="layui-card"
+                                 th:classappend="${cardItem.get('classAppend') != null ? cardItem.get('classAppend') : ''}"
+
+                            >
+                                <div class="layui-card-header ez-form-panel"
+                                     th:classappend="${#strings.isEmpty(cardItem.label)?'layui-hide':''}">
+                                    [(${cardItem.label})] [(${cardItem.get('description') != null ?
+                                    cardItem.get('description') : ''})]
+                                    <div class="layui-layer-setwin  "
+                                         style="top: 0px;line-height: 43px;position: absolute;">
+                                        <div class="layui-btn-group custom-card-btn"
+                                             th:if="${not #lists.isEmpty(cardItem.buttonList)}">
                                             <th:block th:each="button : ${cardItem.buttonList}">
                                                 <div th:utext="${cr.render(button)}" th:remove="tag"></div>
                                             </th:block>
                                         </div>
-                                        <span class="layui-layer-min" style=" "></span>
+                                        <span class="layui-layer-min"
+                                              th:classappend="${#strings.isEmpty(cardItem.label)?'layui-hide':''}"></span>
                                         <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
                                     </div>
                                 </div>
                                 <div class="layui-card-body" style="padding: 0;">
                                     <iframe th:src="${cardItem.iframe.url}"
+                                            th:item_name="${'card-'+cardItem.item_name}"
                                             th:style="'display:block;width: ' + ${cardItem.iframe.width != null ? cardItem.iframe.width : '100%'} + '; height: ' + ${cardItem.iframe.height != null ? cardItem.iframe.height : '400px'} + '; border: none;'"
                                             frameborder="0">
                                     </iframe>
@@ -124,47 +148,49 @@
             </div>
         </div>
     </div>
-        <!-- 提交按钮区域（在所有卡片之后） -->
-        <div  class="layui-card layui-hide">
-            <div class="layui-card-body">
-                <div class="layui-form-item" style="margin-top: 20px;">
-                    <div class="layui-input-block">
+    <!-- 提交按钮区域（在所有卡片之后） -->
+    <div class="layui-card layui-hide">
+        <div class="layui-card-body">
+            <div class="layui-form-item" style="margin-top: 20px;">
+                <div class="layui-input-block">
 
-                        <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue layui-hide " lay-submit
-                                lay-filter="submitbtn">提交
-                        </button>
+                    <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue layui-hide " lay-submit
+                            lay-filter="submitbtn">提交
+                    </button>
 
 
-                        <button type="button"
-                                class="layui-btn layui-btn-primary"
-                                onclick="javascript:history.back();">
-                            取消
-                        </button>
-                    </div>
+                    <button type="button"
+                            class="layui-btn layui-btn-primary"
+                            onclick="javascript:history.back();">
+                        取消
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 </form>
 
 <div class="layui-panel formtopfix formtopfixbuttons">
-    <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer"  item_name="submitButtonContainer">
-        <button id="submitbtnProxy" class="layui-btn layui-bg-blue " >提交
+    <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer"
+         item_name="submitButtonContainer">
+        <button id="submitbtnProxy" class=" submitbtnProxy layui-btn layui-bg-blue "
+                th:style="${ not #lists.isEmpty(form.buttonList)?'display:none;':''}">提交
         </button>
         <th:block th:each="button : ${form.buttonList}" th:if="${not #lists.isEmpty(form.buttonList)}">
             <div th:utext="${cr.render(button)}" th:remove="tag"></div>
         </th:block>
-<!--        <button type="button"-->
-<!--                class="layui-btn layui-btn-primary"-->
-<!--                onclick="javascript:history.back();">-->
-<!--            返回-->
-<!--        </button>-->
+        <!--        <button type="button"-->
+        <!--                class="layui-btn layui-btn-primary"-->
+        <!--                onclick="javascript:history.back();">-->
+        <!--            返回-->
+        <!--        </button>-->
     </div>
 </div>
 
 
-<input type="hidden" id='uploadUrl'   th:value="${uploadUrl}">
-<input type="hidden" id='downloadUrl'  th:value="${downloadUrl}">
-<input type="hidden" id='formSubmitUrl'  th:value="${formSubmitUrl}">
+<input type="hidden" id='uploadUrl' th:value="${uploadUrl}">
+<input type="hidden" id='downloadUrl' th:value="${downloadUrl}">
+<input type="hidden" id='formSubmitUrl' th:value="${formSubmitUrl}">
 <script>
     layui.layer.open({
         type: 1,
@@ -182,100 +208,8 @@
 </script>
 <!--目录部分-->
 <div>
-    <style>
-        /* 目录 */
-        .site-dir {
-            display: none;
-            width: 10px
-        }
 
-        .site-dir:hover {
-            display: block;
-            width: auto;
-        }
-
-        .site-dir li {
-            line-height: 26px;
-            margin-left: 20px;
-            overflow: visible;
-            list-style-type: disc;
-        }
-
-        .site-dir li a {
-            display: block;
-        }
-
-        .site-dir li a:active {
-            color: #01AAED;
-        }
-
-        .site-dir li a.layui-this {
-            color: #01AAED;
-        }
-
-        body .layui-layer-dir:hover {
-            opacity: 1;
-            right: 0;
-            left: auto !important;
-        }
-
-        body .layui-layer-dir .layui-layer-content {
-            padding: 10px;
-        }
-
-        .site-dir a em {
-            padding-left: 5px;
-            font-size: 12px;
-            color: #c2c2c2;
-            font-style: normal;
-        }
-
-        .layui-menu li, .layui-menu-body-title a {
-            padding: 0px;
-        }
-
-        .layui-layer-dir .layui-layer-max {
-            display: none;
-        }
-
-        .layui-layer-dir .layui-layer-maxmin {
-            display: block;
-        }
-
-        .site-narrow {
-            line-height: 46px;
-            top: 50%;
-            right: 0;
-            position: fixed;
-            font-size: 24px;
-            color: #31bdec;
-
-            transform: translateY(-50%);
-            width: 15px;
-            height: 46px;
-            background: #fff;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 101;
-            border: 1px solid #eee;
-            transition: right 0.3s;
-        }
-
-        .site-narrow {
-            display: block; /* 或者其他你需要的显示方式 */
-        }
-        .layui-layer-dir {
-            display: none; /* 确保宽屏内容不显示 */
-        }
-        .site-narrow:hover + .layui-layer-dir,
-        .layui-layer-dir:hover { /* 为了避免鼠标离开图标菜单就消失，可以增加菜单自身的悬停 */
-            display: block;
-        }
-    </style>
-    <div   id="site-narrow-content">
+    <div id="site-narrow-content">
         <div class="site-narrow" id="collapseMenuBtn">
             <i class="layui-icon layui-icon-shrink-right"></i>
         </div>
@@ -287,35 +221,14 @@
             </li>
         </ul>
     </div>
-    <script>
-        layui.use("layer", function () {
-            if ($("#dianti").length > 0 && $("#dianti").children().length > 1) {
-                layer.open({
-                    title: '目录'
-                    , skin: 'layui-layer-dir'
-                    , type: 1
-                    , offset: 'r'
-                    , shade: 0
-                    , moveOut: true
-                    , resize: false
-                    , fixed: true,
-                    area: ['125px']
-                    , minStack: false
-                    , maxmin: false
-                    , closeBtn: 0
-                    , content: $("#dianti")
-                });
-            }else{
-                $("#site-narrow-content").hide();
-            }
-        })
-    </script>
 </div>
 
 <script type="text/html" id="template-image">
-    <div  class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}" style="margin-top:5px;margin-right:5px;cursor: pointer;position: relative;border:1px solid #dae0e6">
+    <div class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}"
+         style="margin-top:5px;margin-right:5px;cursor: pointer;position: relative;border:1px solid #dae0e6">
         <div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
-            <img data-original="{{= d.downloadUrl }}{{= d.fileId }}" style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
+            <img data-original="{{= d.downloadUrl }}{{= d.fileId }}" style=" max-width: 100%; max-height: 100%;"
+                 class="viewer-image layui-upload-img"
                  data-click="viewer-image"
                  src="{{= d.downloadUrl }}{{= d.fileId }}"></img>
         </div>
@@ -324,36 +237,98 @@
     </div>
 </script>
 <script type="text/html" id="template-file">
-    <div  class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}" style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
+    <div class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}"
+         style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
         <div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
-            <i  onclick="javascript:openBlank('{{= d.downloadUrl }}{{= d.fileId }}')" style="font-size:100px; max-width: 100%; max-height: 100%;"
-            class=" layui-upload-img layui-icon-file-b layui-icon"></i>
+            <i onclick="javascript:openBlank('{{= d.downloadUrl }}{{= d.fileId }}')"
+               style="font-size:100px; max-width: 100%; max-height: 100%;"
+               class=" layui-upload-img layui-icon-file-b layui-icon"></i>
         </div>
         <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}" class="layui-badge deleteFiles   ">
 <i class="layui-icon layui-icon-close"></i></span>
     </div>
 </script>
 <script type="text/html" id="template-video">
-    <div  class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}" style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
+    <div class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}"
+         style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
         <div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
-            <video  style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
-                    src="{{= d.downloadUrl }}{{= d.fileId }}" controls="controls"></video>
+            <video style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
+                   src="{{= d.downloadUrl }}{{= d.fileId }}" controls="controls"></video>
         </div>
         <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}" class="layui-badge deleteFiles   ">
 <i class="layui-icon layui-icon-close"></i></span>
     </div>
 </script>
+<script id="UPLOAD_FILE_TEMPLATE" type="text/html">
+    <table class="layui-table" lay-filter="uploadFileShow">
+        <thead>
+        <tr>
+            <th lay-data="{field:'name' }">文件名称</th>
+            <th lay-data="{field:'size', width:120}">文件大小</th>
+            <th lay-data="{field:'oper', width:120}">操作</th>
+        </tr>
+        </thead>
+        <tbody id="fileInfo">
+        {{ d.data.forEach(function(item) { }}
+        <tr class="file_preview" file_id="{{= item.fileId }}">
+            <td>
+                {{ var imageExts = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg']; }}
+                {{
+                var isImage = item.fileSuffix && imageExts.indexOf(item.fileSuffix.toLowerCase()) > -1;
+                var isWord = item.fileSuffix && ['.doc', '.docx', '.wps' ].indexOf(item.fileSuffix.toLowerCase()) > -1;
+                var isExcel = item.fileSuffix && ['.xls', '.xlsx' ].indexOf(item.fileSuffix.toLowerCase()) > -1;
+                var isPdf = item.fileSuffix && ['.pdf' ].indexOf(item.fileSuffix.toLowerCase()) > -1;
+                var isPpt = item.fileSuffix && ['.ppt', '.pptx' ].indexOf(item.fileSuffix.toLowerCase()) > -1;
+                var isVideo = item.fileSuffix && ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.m4v', '.webm'
+                ].indexOf(item.fileSuffix.toLowerCase()) > -1;
+                }}
+                {{ if (isImage) { }}
+                <img src="{{= d.downloadUrl }}{{= item.fileId }}"
+                     data-click="viewer-image" style="width: 30px; height: 30px;">
+                {{ } else if (isWord) { }}
+                <img src="/webjars/topezadmin/word.svg" style="width: 30px; height: 30px;">
+                {{ } else if (isExcel) { }}
+                <img src="/webjars/topezadmin/excel.svg" style="width: 30px; height: 30px;">
+                {{ } else if (isPdf) { }}
+                <img src="/webjars/topezadmin/pdf.svg" style="width: 30px; height: 30px;">
+                {{ } else if (isVideo) { }}
+                <img src="/webjars/topezadmin/video.svg" style="width: 30px; height: 30px;">
+                {{ } else if (isPpt) { }}
+                <img src="/webjars/topezadmin/ppt.svg" style="width: 30px; height: 30px;">
+                {{ }else { }}
+                <img src="/webjars/topezadmin/file.svg" style="width: 30px; height: 30px;">
+                {{ } }}
+                {{= item.fileName }}
+            </td>
+            <td>
+                {{ var fileSize = formatFileSize(item.fileSize); }}
+                {{= fileSize }}
+            </td>
+            <td>
+                <a target="_blank" href="{{= d.downloadUrl }}{{= item.fileId }}" download="{{= item.fileName }}"
+                   style="color:#1e9fff;margi-right:10px">下载</a>
+                <a href="javascript:void(0)" fileId=" {{= item.fileId }}" file_item_name="{{= d.file_item_name}}"
+                   data-click="deleteFileRow" style="color:red">删除</a>
+            </td>
+        </tr>
+        {{ }); }}
+        {{ if (d.data.length === 0) { }}
+        <tr>
+            <td colspan=3>无数据</td>
+        </tr>
+        {{} }}
+        </tbody>
+    </table>
+</script>
 
 <!-- 引入上传组件初始化函数 -->
 <script th:inline="javascript">
     /*<![CDATA[*/
+    var template = $("#template-image").html();
+    var template_v = $("#template-video").html();
+    var template_file = $("#template-file").html();
 
-
-    var template =  $("#template-image").html();
-    var template_v =  $("#template-video").html();
-    var template_file =  $("#template-file").html();
-
-    layui.use(['form', 'layer', 'laytpl','upload'], function(){
+    layui.use(['form', 'layer', 'laytpl', 'upload'], function () {
         var form = layui.form;
         var layer = layui.layer;
         let laytpl = layui.laytpl;
@@ -367,36 +342,44 @@
         });
 
         // 如果有 initExpress，加载表单数据（编辑模式）
-        var index=layer.load(3, {shade: [1, '#FFF']});
-        initFormValue(urlParams);
-        layui.form.render();
+
+        // initFormValue(urlParams);
+        Global.formRender();
         $.ajax({
             url: /*[[${form.initUrl}]]*/ '',
             type: 'POST',
             data: JSON.stringify(urlParams),
             contentType: 'application/json;charset=UTF-8',
-            success: function(res){
-                if(res.code == '0' && res.data) {
+            success: function (res) {
+
+                if (res.success && res.initData) {
+                    for (var key in res.initData) {
+                        var span = document.querySelector(':is(span)[name="' + key + '"]');
+                        if (span) {
+                            //添加 data-datajson属性
+                            span.setAttribute('data-datajson', res.initData[key]);
+                        }
+                    }
+                }
+                if (res.success && res.data) {
                     if (Object.keys(res.data).length > 0) {
                         // 设置表单默认值（从 URL 参数）
                         initFormValue(res.data);
                         //自定义函数
-                        if(typeof initFunction === 'function'){
+                        if (typeof initFunction === 'function') {
                             initFunction(res.data);
                         }
                         // 刷新表单渲染（特别是 select）
-                        $(".layui-form-checkbox").remove();
-                        $(".layui-form-radio").remove();
-                        form.render();
+                        Global.formRender();
                     }
                 }
                 initWater();
-                layui.layer.close(index);
+                $(".layuimini-loader").hide();
             },
-            error: function(){
+            error: function () {
                 layer.msg('加载数据失败');
-                form.render();
-                layui.layer.close(index);
+                Global.formRender();
+                $(".layuimini-loader").hide();
             }
         });
 
@@ -404,6 +387,30 @@
     /*]]>*/
 
 </script>
-<div class="appendFoot" item_name="appendFoot"  th:remove="tag" th:if="${not #strings.isEmpty(form.appendFoot)}" th:utext="${form.appendFoot}"></div>
+<div class="appendFoot" item_name="appendFoot" th:remove="tag" th:if="${not #strings.isEmpty(form.appendFoot)}"
+     th:utext="${form.appendFoot}"></div>
+<script>
+    layui.use("layer", function () {
+        if ($("#dianti").length > 0 && $("#dianti").children().length > 1) {
+            layer.open({
+                title: '目录'
+                , skin: 'layui-layer-dir'
+                , type: 1
+                , offset: 'r'
+                , shade: 0
+                , moveOut: true
+                , resize: false
+                , fixed: true,
+                area: ['125px']
+                , minStack: false
+                , maxmin: false
+                , closeBtn: 0
+                , content: $("#dianti")
+            });
+        } else {
+            $("#site-narrow-content").hide();
+        }
+    })
+</script>
 </body>
 </html>

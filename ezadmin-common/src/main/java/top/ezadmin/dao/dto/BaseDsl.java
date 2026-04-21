@@ -1,11 +1,9 @@
 package top.ezadmin.dao.dto;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
+import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +36,13 @@ public class BaseDsl {
     /**
      * 将 DSL 对象转换为 Map
      * 主要用于传递给模板引擎或需要 Map 格式的场景
+     *
      * @return Map 格式的配置
      */
     @SuppressWarnings("unchecked")
     public Map<String, Object> toMap() {
-        String json = JSON.toJSONString(this);
-        return JSON.parseObject(json, Map.class);
+        String json = EzBootstrap.config().getEzJson().toJSONString(this);
+        return EzBootstrap.config().getEzJson().parseObject(json, Map.class);
     }
 
 
@@ -56,40 +55,7 @@ public class BaseDsl {
      */
     @SuppressWarnings("unchecked")
     protected static Object convertToHashMap(Object obj) {
-        if (obj == null) {
-            return null;
-        }
-        // 如果是 JSONObject，转换为 HashMap
-        if (obj instanceof JSONObject) {
-            JSONObject jsonObject = (JSONObject) obj;
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
-                map.put(entry.getKey(), convertToHashMap(entry.getValue()));
-            }
-            return map;
-        }
-        // 如果是 Map，递归转换其值
-        if (obj instanceof Map) {
-            Map<String, Object> sourceMap = (Map<String, Object>) obj;
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            for (Map.Entry<String, Object> entry : sourceMap.entrySet()) {
-                map.put(entry.getKey(), convertToHashMap(entry.getValue()));
-            }
-            return map;
-        }
-
-        // 如果是 List，递归转换其元素
-        if (obj instanceof List) {
-            List<?> sourceList = (List<?>) obj;
-            List<Object> list = new ArrayList<Object>();
-            for (Object item : sourceList) {
-                list.add(convertToHashMap(item));
-            }
-            return list;
-        }
-
-        // 其他类型直接返回
-        return obj;
+        return EzBootstrap.config().getEzJson().deepParseObjectMap(EzBootstrap.config().getEzJson().toJSONString(obj));
     }
 
     public String getId() {

@@ -5,8 +5,8 @@
   "body": {
     "adminStyle": "layui",
     "emptyShow": "-",
-    "showIndex":true,
-    "selectable":true,
+    "showIndex": true,
+    "selectable": true,
     "rowActionWidth": 175
   },
   "appendHead": "",
@@ -142,7 +142,7 @@
           "operator": "in",
           "jdbcType": "NUMBER",
           "component": "cascader",
-          "initData":{
+          "initData": {
             "dataSource": "dataSource",
             "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
           },
@@ -172,7 +172,7 @@
     {
       "item_name": "新增",
       "label": "编辑{{=d.USER_NAME}}",
-      "component":  "button-normal",
+      "component": "button-normal",
       "props": {
         "opentype": "MODAL",
         "windowname": "打开{{=d.USER_NAME}}",
@@ -180,7 +180,6 @@
         "url": "/form/form/add-1764832568286?ID={{= d.ID }}",
         "display": "{{ if( d.ID!=2   ){ }} block  {{ } else { }} none {{ } }}"
       }
-
     },
     {
       "item_name": "新增bread",
@@ -224,7 +223,6 @@
     }
   ],
   "column": [
-
     {
       "item_name": "ID",
       "label": "序号"
@@ -312,7 +310,7 @@
       "item_name": "AREA_ID",
       "label": "地区",
       "component": "tdCascader",
-      "initData":{
+      "initData": {
         "dataSource": "dataSource",
         "dataSql": " select a.region_id id,a.name  ,a.parent_id from regions a where region_id>1 order by a.region_id "
       },
@@ -330,7 +328,9 @@
     }
   ],
   "express": {
-    "main": [ "StringBuilder sql=new StringBuilder(); sql.append(\"   select a.students_id ID ,a.ruxue_date RUXUE_DATE, a.useremail USER_EMAIL,a.username USER_NAME,a.usersex USER_SEX,a.area_id AREA_ID, a.add_time ADD_TIME,group_concat(c.hobbys_id) HOBBYS_IDS from students a left join  rel_students_hobbys rh on rh.students_id=a.students_id left join hobbys c on rh.hobbys_id=c.hobbys_id   where  a.delete_flag=0\"); return search(sql);"],
+    "main": [
+      "StringBuilder sql=new StringBuilder(); sql.append(\"   select a.students_id ID ,a.ruxue_date RUXUE_DATE, a.useremail USER_EMAIL,a.username USER_NAME,a.usersex USER_SEX,a.area_id AREA_ID, a.add_time ADD_TIME,group_concat(c.hobbys_id) HOBBYS_IDS from students a left join  rel_students_hobbys rh on rh.students_id=a.students_id left join hobbys c on rh.hobbys_id=c.hobbys_id   where  a.delete_flag=0\"); return search(sql);"
+    ],
     "orderBy": " order by a.students_id   ",
     "groupBy": " group by a.students_id ",
     "count": ""

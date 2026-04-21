@@ -78,7 +78,7 @@ public class EzAttrsProcessor extends AbstractAttributeTagProcessor {
 
             //嵌套map 处理
             if (attrValue instanceof Map) {
-                structureHandler.setAttribute(attrName,  HtmlEscape.escapeHtml5(JSONUtils.toJSONString(attrValue)));
+                structureHandler.setAttribute(attrName, HtmlEscape.escapeHtml5(JSONUtils.toJSONString(attrValue)));
                 continue;
             }
 

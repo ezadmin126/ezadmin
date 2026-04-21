@@ -24,8 +24,9 @@ function bindEvent(element, eventName, eventHandler) {
 
 // Listen to message from child window
 bindEvent(window, 'message', function (e) {
-    var uni = e.data.id == undefined ? e.data.url : e.data.id;
-    var uniqueName = uni.replace('./', '').replace(/["&'./:=?[\]%]/gi, '-').replace(/(--)/gi, '');
+    if (!e.data || e.data.from !== 'ez') {
+        return;  // 忽略其他所有消息
+    }
     createSingleTab(e.data.name, e.data.url);
 });
 

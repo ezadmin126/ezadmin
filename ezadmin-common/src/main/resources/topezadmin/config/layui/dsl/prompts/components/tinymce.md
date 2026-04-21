@@ -26,20 +26,19 @@
 
 ### 基础属性
 
-| 属性 | 类型 | 必填 | 说明                   |
-|------|------|------|----------------------|
-| item_name | String | 是 | 字段名，对应数据库字段          |
-| label | String | 否 | 显示标签（tinymce通常不显示标签） |
-| component | String | 是 | 固定值：`tinymce`        |
-| classAppend | String | 否 | layui-col-md8 主要使用layui布局设置占用宽度                       |
-| description | String | 字段说明文本 | `"可选择多个"`            |
-| props | Object | 否 | 组件属性   主要可以配置 验证信息   |
-
+| 属性          | 类型     | 必填     | 说明                              |
+|-------------|--------|--------|---------------------------------|
+| item_name   | String | 是      | 字段名，对应数据库字段                     |
+| label       | String | 否      | 显示标签（tinymce通常不显示标签）            |
+| component   | String | 是      | 固定值：`tinymce`                   |
+| classAppend | String | 否      | layui-col-md8 主要使用layui布局设置占用宽度 |
+| description | String | 字段说明文本 | `"可选择多个"`                       |
+| props       | Object | 否      | 组件属性   主要可以配置 验证信息              |
 
 ### props 属性
 
-| 属性 | 类型 | 说明 | 示例 |
-|------|------|------|------|
+| 属性          | 类型     | 说明     | 示例            |
+|-------------|--------|--------|---------------|
 | description | String | 字段说明文本 | `"请输入文章正文内容"` |
 
 ## 内置功能
@@ -48,26 +47,27 @@
 
 TinyMCE 内置了丰富的编辑功能：
 
-| 功能 | 说明 |
-|------|------|
-| undo/redo | 撤销/重做 |
-| styleselect | 样式选择（标题、段落等） |
-| bold | 粗体 |
-| italic | 斜体 |
-| bullist | 无序列表 |
-| numlist | 有序列表 |
-| outdent/indent | 减少/增加缩进 |
-| alignleft/aligncenter/alignright | 左对齐/居中/右对齐 |
-| table | 表格插入 |
-| hr | 水平线 |
-| link | 超链接 |
-| image | 图片插入 |
-| batchUploadImage | 批量上传图片 |
-| fullscreen | 全屏编辑 |
+| 功能                               | 说明           |
+|----------------------------------|--------------|
+| undo/redo                        | 撤销/重做        |
+| styleselect                      | 样式选择（标题、段落等） |
+| bold                             | 粗体           |
+| italic                           | 斜体           |
+| bullist                          | 无序列表         |
+| numlist                          | 有序列表         |
+| outdent/indent                   | 减少/增加缩进      |
+| alignleft/aligncenter/alignright | 左对齐/居中/右对齐   |
+| table                            | 表格插入         |
+| hr                               | 水平线          |
+| link                             | 超链接          |
+| image                            | 图片插入         |
+| batchUploadImage                 | 批量上传图片       |
+| fullscreen                       | 全屏编辑         |
 
 ### 插件支持
 
 内置以下插件：
+
 - `link` - 超链接
 - `image` - 图片
 - `media` - 音视频
@@ -85,6 +85,7 @@ TinyMCE 内置了丰富的编辑功能：
 支持以下文件类型：
 
 **图片文件**：
+
 - `.bmp`
 - `.jpg`
 - `.jpeg`
@@ -93,10 +94,12 @@ TinyMCE 内置了丰富的编辑功能：
 - `.pdf`
 
 **音视频文件**：
+
 - `.mp3`
 - `.mp4`
 
 **其他文件**：
+
 - `.pdf`
 - `.txt`
 - `.zip`, `.rar`, `.7z`
@@ -270,6 +273,7 @@ TinyMCE 内置了丰富的编辑功能：
 ### 默认配置
 
 系统默认配置如下：
+
 - 语言：中文（zh_CN）
 - 高度：600px
 - 宽度：100%
@@ -282,6 +286,7 @@ TinyMCE 内置了丰富的编辑功能：
 ### 图片上传
 
 图片上传会自动调用系统配置的上传接口，上传成功后：
+
 1. 图片URL会自动插入到编辑器中
 2. 支持粘贴图片自动上传
 3. 支持拖拽图片上传
@@ -301,6 +306,7 @@ TinyMCE 内置了丰富的编辑功能：
 ### 图片上传失败？
 
 检查以下几点：
+
 1. 确认上传接口是否正确配置
 2. 检查上传文件大小限制
 3. 查看浏览器控制台错误信息

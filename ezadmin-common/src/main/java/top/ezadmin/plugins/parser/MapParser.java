@@ -48,7 +48,7 @@ public class MapParser {
 
     public static ResultModel parse(String string, Map<String, Object> variables) {
         ResultModel model = new ResultModel();
-        if (variables == null || variables.isEmpty() ) {
+        if (variables == null || variables.isEmpty()) {
             model.setResult(string);
 
             return model;
@@ -108,7 +108,7 @@ public class MapParser {
                 k = content.substring(0, s);
                 v = content.substring(s + 1);
             }
-            if (variables.containsKey(k)&&variables.get(k)!=null) {
+            if (variables.containsKey(k) && variables.get(k) != null) {
                 Params p = new Params();
                 p.setParamValue(variables.get(k));
                 model.addParam(p);

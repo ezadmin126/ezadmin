@@ -325,12 +325,16 @@
                 , content: $("#dianti")
             });
 
-        }else{
+        } else {
             $("#site-narrow-content").hide();
         }
     })
-    var validateRules = [(${#strings.isEmpty(form.core.validaterules)?"[]":form.core.validaterules})];
-    var validateMessages = [(${#strings.isEmpty(form.core.validatemessages)?"[]":form.core.validatemessages})];
+    var validateRules = [(${#strings.isEmpty(form.core.validaterules) ? "[]" : form.core.validaterules}
+    )]
+    ;
+    var validateMessages = [(${#strings.isEmpty(form.core.validatemessages) ? "[]" : form.core.validatemessages}
+    )]
+    ;
 
 </script>
 

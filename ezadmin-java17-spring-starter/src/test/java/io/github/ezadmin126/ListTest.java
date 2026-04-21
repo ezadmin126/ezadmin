@@ -1,11 +1,11 @@
 package io.github.ezadmin126;
 
 import com.alibaba.fastjson2.JSON;
-import top.ezadmin.plugins.EzFastJson2Impl;
-import top.ezadmin.spring.ConfigUtils;
 import org.junit.Test;
 import top.ezadmin.EzBootstrap;
 import top.ezadmin.EzBootstrapConfig;
+import top.ezadmin.plugins.EzFastJson2Impl;
+import top.ezadmin.spring.ConfigUtils;
 import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
 
@@ -28,7 +28,7 @@ public class ListTest {
         EzBootstrap.config().setEzJson(new EzFastJson2Impl());
         RequestContext requestContext = new RequestContext();
         requestContext.setRequestURI("/topezadmin/list/list-listall");
-        EzResult result=EzBootstrap.getInstance().generate(requestContext);
+        EzResult result = EzBootstrap.getInstance().generate(requestContext);
         System.out.println(JSON.toJSONString(result));
     }
 }

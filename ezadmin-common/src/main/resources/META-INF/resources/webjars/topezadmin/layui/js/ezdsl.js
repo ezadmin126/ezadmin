@@ -1,6 +1,4 @@
-
-
-layui.use(function(){
+layui.use(function () {
 
     try {
 
@@ -12,6 +10,10 @@ layui.use(function(){
             // close: '%>', // 自定义起始界定符
             tagStyle: 'modern' // 采用新版本的标签风格
         });
+        //如果有initCallBack函数则执行
+        if (typeof initGlobal === "function") {
+            initGlobal();
+        }
         initDate();
         initXmselect();
         initLaycascader();
@@ -28,18 +30,18 @@ layui.use(function(){
             $(this).addClass("layui-hide");
             $(this).siblings().removeClass("layui-hide");
         })
-        $("textarea").each(function(){
-            if($(this).attr("maxlength")){
-                $(this).on("keyup",function(){
+        $("textarea").each(function () {
+            if ($(this).attr("maxlength")) {
+                $(this).on("keyup", function () {
                     var length = $(this).val().length;
                     $(this).parent().find(".layext-textool-count").text(length);
                 })
             }
         })
+        //
+        console.log("after render~~~");
 
-
-
-        form.render();
+        Global.formRender();
     } catch (e) {
         console.error(e);
     }
@@ -72,9 +74,10 @@ layui.use(function(){
         errorPlacement: function (error, element) {
             error.addClass('invalid-feedback');
             if (element.hasClass('invalidate-tips')) {
-                try{
+                try {
                     layui.layer.msg(error.html(), {icon: 5});
-                }catch(e){}
+                } catch (e) {
+                }
             }
             if (element.parent().prop('tagName') == 'XM-SELECT') {
                 element.parent().parent().append(error);
@@ -87,8 +90,7 @@ layui.use(function(){
                 } else {
                     element.parent().append(error);
                 }
-            }
-            else {
+            } else {
                 element.parent().append(error);
             }
         },
@@ -99,10 +101,9 @@ layui.use(function(){
             $(element).removeClass('is-invalid');
             if ($(element).parent().prop('tagName') == 'XM-SELECT') {
                 $(element).parent().parent().find(".error").remove();
-            }else if($(element).hasClass("layui-upload-file")){
+            } else if ($(element).hasClass("layui-upload-file")) {
                 return;
-            }
-            else if ($(element).hasClass('ez-upload-input')) {
+            } else if ($(element).hasClass('ez-upload-input')) {
                 // 对于 upload 组件,从上传列表容器之后移除错误信息
                 var itemName = $(element).attr('name');
                 var uploadList = $('#layui-upload-list_' + itemName);
@@ -146,7 +147,7 @@ layui.use(function(){
                     success: function (data) {
 
                         layer.close(loadIndex)
-                        if (data.code == 0) {
+                        if (data.code == 0 || data.success) {
                             console.log("data::" + data.data);
                             if (typeof submitSuccess == "function") {
                                 try {
@@ -158,10 +159,17 @@ layui.use(function(){
                                 layer.close(loadIndex)
                                 return;
                             }
-                            layer.alert("保存成功", function (index) {
+
+                            layer.msg('操作成功', {
+                                icon: 1,
+                                time: 500
+                            }, function () {
                                 if ('reload' == data.data || data.data == null) {
                                     canEzFormSubmit = true;
                                     window.parent.location.reload();
+                                } else if ('reloadTableData' == data.data) {
+                                    canEzFormSubmit = true;
+                                    parent.Global.get("table").reloadData();
                                 } else if ('reloadlocal' == data.data) {
                                     canEzFormSubmit = true;
                                     window.location.reload();
@@ -173,8 +181,9 @@ layui.use(function(){
                                     canEzFormSubmit = true;
                                     location.href = data.data;
                                 }
-                                return false;
-                            })
+                            });
+
+                            return false;
                         } else if (data.code == '200') {
                             layer.alert(data.message);
                         } else {
@@ -274,7 +283,7 @@ layui.use(function(){
                 return fileCount >= param;
             }
             return true;
-        }, function(param, element) {
+        }, function (param, element) {
             return "至少需要上传 " + param + " 个文件";
         });
 
@@ -286,7 +295,7 @@ layui.use(function(){
                 return fileCount <= param;
             }
             return true;
-        }, function(param, element) {
+        }, function (param, element) {
             return "最多只能上传 " + param + " 个文件";
         });
 
@@ -295,6 +304,9 @@ layui.use(function(){
 
 
     $("body").on("click", "#submitbtnProxy", function () {
+        $("#submitbtn").click();
+    })
+    $("body").on("click", ".submitbtnProxy", function () {
         $("#submitbtn").click();
     })
 
@@ -307,30 +319,38 @@ layui.use(function(){
         }
     });
 
+    Global.onClick("deleteFileRow", function (e) {
+        layer.confirm('确认删除？', function (index) {
+            layer.close(index);
+            $(e.target).parents("tr").remove();
+            upload_reCalId($(e.target).attr("file_item_name"))
+        });
+    });
+
 });
 
-function initDate(){
+function initDate() {
     document.querySelectorAll(".ez-date").forEach(function (el) {
 
-        var name=el.getAttribute('name');
+        var name = el.getAttribute('name');
         var config = {
             elem: el,
             type: 'date',
             weekStart: 1,
-            done: function(value, date, endDate){
-                try{
-                     var v=value.split( " - ");
-                     if(v.length==2){ //这边逻辑不太合适
-                         //v[0]包含空格,则不处理
-                         if(v[0].indexOf(" ")>=0){
-                             document.getElementById("search-start-"+name).value=v[0] ;
-                             document.getElementById("search-end-"+name).value=v[1] ;
-                         }else{
-                             document.getElementById("search-start-"+name).value=v[0]+' 00:00:00';
-                             document.getElementById("search-end-"+name).value=v[1]+' 23:59:59';
-                         }
-                     }
-                }catch (e) {
+            done: function (value, date, endDate) {
+                try {
+                    var v = value.split(" - ");
+                    if (v.length == 2) { //这边逻辑不太合适
+                        //v[0]包含空格,则不处理
+                        if (v[0].indexOf(" ") >= 0) {
+                            document.getElementById("search-start-" + name).value = v[0];
+                            document.getElementById("search-end-" + name).value = v[1];
+                        } else {
+                            document.getElementById("search-start-" + name).value = v[0] + ' 00:00:00';
+                            document.getElementById("search-end-" + name).value = v[1] + ' 23:59:59';
+                        }
+                    }
+                } catch (e) {
                     console.log(e);
                 }
                 // console.log(value); // 日期字符，如： 2017-08-18
@@ -340,12 +360,12 @@ function initDate(){
         };
         //去除type属性
 
-        var resultConfig={};
-        if(el.getAttribute('data-propsJson') != null){
+        var resultConfig = {};
+        if (el.getAttribute('data-propsJson') != null) {
             var c = Global.safeParseJSON(el.getAttribute('data-propsJson'), {});
-            resultConfig= Global.deepUnion(c,config);
-        }else{
-            resultConfig=config;
+            resultConfig = Global.deepUnion(c, config);
+        } else {
+            resultConfig = config;
         }
         if (resultConfig.format && resultConfig.format == 'yyyy-MM-dd') {
             resultConfig.shortcuts = rangeShortCut
@@ -354,6 +374,7 @@ function initDate(){
         layui.laydate.render(resultConfig);
     })
 }
+
 function initXmselect() {
     document.querySelectorAll(".ez-xmselect").forEach(function (el) {
         renderXmselect(el);
@@ -369,60 +390,171 @@ function initLaycascader() {
 }
 
 function initUpload() {
-    $('button.ez-upload').each(function(){
-        var _this=$(this);
-        var item_name=_this.attr("upload_item_name");
-        var config={
+    $('button.ez-upload').each(function () {
+        var _this = $(this);
+        var item_name = _this.attr("upload_item_name");
+        var config = {
             elem: _this,
-            "accept":"image",
-            "url":  document.getElementById("uploadUrl").value
+            "accept": "image",
+            "url": document.getElementById("uploadUrl").value
         };
-        var resultConfig={};
-        if(_this.attr('data-propsJson') != null){
+        var resultConfig = {};
+        if (_this.attr('data-propsJson') != null) {
             var c = Global.safeParseJSON(_this.attr('data-propsJson'), {});
-            resultConfig= Global.deepUnion(c,config);
-        }else{
-            resultConfig=config;
+            resultConfig = Global.deepUnion(c, config);
+        } else {
+            resultConfig = config;
         }
-        resultConfig.done=function(res){
-            var respon = res;
-            try {
-                respon = JSON.parse(res);
-            } catch (E) {
-            }
-            //如果上传失败
-            if (!respon.success||respon.data==null) {
-                return layer.msg('上传失败，原因：' + respon.message);
-            }
-            //上传成功的一些操作
-            if(respon.data.length>0){
-                for (var i = 0; i < respon.data.length; i++) {
-                        upload_add(resultConfig, item_name, respon.data[i].fileId);
-                }
-            }else{
-                upload_add(resultConfig, item_name, respon.data.fileId);
+        if (Global.registry("Upload").get(item_name + ".done") == null) {
+            //如果是文件
+            if (resultConfig.accept == "file") {
+                Global.registry("Upload").register(item_name + ".done", function (res) {
+                    var respon = res;
+                    try {
+                        respon = JSON.parse(res);
+                    } catch (E) {
+                    }
+                    //如果上传失败
+                    if (!respon.success || respon.data == null) {
+                        return layer.msg('上传失败，原因：' + respon.message);
+                    }
+                    console.log(respon);
+                    var downloadUrl = document.getElementById("downloadUrl") == null ? '' : document.getElementById("downloadUrl").value;
+                    var param = {};
+                    let inputHiddenNode = $("#ITEM_ID_" + item_name);
+                    param.value = inputHiddenNode.val() + "," + respon.data.fileId;
+
+
+                    if (respon.data.length > 0) {
+                        for (var i = 0; i < respon.data.length; i++) {
+                            param.value = inputHiddenNode.val() + "," + respon.data[i].fileId;
+                            inputHiddenNode.val(param.value);
+                        }
+                    } else {
+                        param.value = inputHiddenNode.val() + "," + respon.data.fileId;
+                        inputHiddenNode.val(param.value);
+                    }
+
+                    if (param.value && param.value.length > 0) {
+                        var fileInfoUrl = document.getElementById("fileInfoUrl") == null ? '/system/fileinfo.html' : document.getElementById("fileInfoUrl").value;
+
+                        //异步/file/fileinfo.html获取所有文件
+                        $.ajax({
+                            type: "POST",
+                            url: fileInfoUrl,
+                            data: {
+                                "fileIds": param.value
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                var template = document.getElementById("UPLOAD_FILE_TEMPLATE").innerHTML;
+                                if (data.success && data.data) {
+                                    data.downloadUrl = downloadUrl;
+                                    var fileShow = layui.laytpl(template, {
+                                        tagStyle: 'modern'
+                                    }).render(data);
+                                    $("#layui-upload-list_" + item_name).html(fileShow);
+                                }
+                            },
+                            error: function (data) {
+                                //使用默认的渲染
+                                console.log(data);
+                            }
+                        });
+                    }
+                });
+            } else {
+                Global.registry("Upload").register(item_name + ".done", function (res) {
+                    var respon = res;
+                    try {
+                        respon = JSON.parse(res);
+                    } catch (E) {
+                    }
+                    //如果上传失败
+                    if (!respon.success || respon.data == null) {
+                        return layer.msg('上传失败，原因：' + respon.message);
+                    }
+                    //上传成功的一些操作
+                    if (respon.data.length > 0) {
+                        for (var i = 0; i < respon.data.length; i++) {
+                            upload_add(resultConfig, item_name, respon.data[i].fileId);
+                        }
+                    } else {
+                        upload_add(resultConfig, item_name, respon.data.fileId);
+                    }
+                });
             }
 
         }
-        resultConfig.before=function(obj){
-           var count= Object.keys(obj.getChooseFiles()).length
-            var number= resultConfig.number==null?1:resultConfig.number;
-           var exist= $("#layui-upload-list_"+item_name).children().size();
-            if(count>number){
+        resultConfig.done = Global.registry("Upload").get(item_name + ".done");
+        resultConfig.before = function (obj) {
+            var count = Object.keys(obj.getChooseFiles()).length
+            var number = resultConfig.number == null ? 1 : resultConfig.number;
+            var exist = $("#layui-upload-list_" + item_name).children().size();
+            if (count > number) {
                 return false;
             }
-            if(count>0&& (count +exist) <=number){
+            if (count > 0 && (count + exist) <= number) {
                 return true;
             }
-            layui.layer.msg('同时最多只能上传:' + number + '个文件当前已经选择了:' + (count+exist) + ' 个文件');
+            layui.layer.msg('同时最多只能上传:' + number + '个文件当前已经选择了:' + (count + exist) + ' 个文件');
             return false;
         }
 
-        var inst=layui.upload.render(resultConfig);
+        var inst = layui.upload.render(resultConfig);
 
-        Global.registry("Upload").register(item_name,inst);
+        Global.registry("Upload").register(item_name, inst);
+        if (Global.registry("Upload").get(item_name + ".initFormValue") == null) {
+            if (resultConfig.accept == "file") {
+                Global.registry("Upload").register(item_name + ".initFormValue", function (param) {
+                    //转为数组
+                    var downloadUrl = document.getElementById("downloadUrl") == null ? '' : document.getElementById("downloadUrl").value;
+                    var fileInfoUrl = document.getElementById("fileInfoUrl") == null ? '/system/fileinfo.html' : document.getElementById("fileInfoUrl").value;
 
-        dragula([document.getElementById("layui-upload-list_"+item_name)])
+                    if (param.value && param.value.length > 0) {
+                        //异步/file/fileinfo.html获取所有文件
+                        $.ajax({
+                            type: "POST",
+                            url: fileInfoUrl,
+                            data: {
+                                "fileIds": param.value
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                var template = document.getElementById("UPLOAD_FILE_TEMPLATE").innerHTML;
+                                if (data.success && data.data) {
+                                    data.downloadUrl = downloadUrl;
+                                    data.file_item_name = param.item_name;
+                                    var fileShow = layui.laytpl(template, {
+                                        tagStyle: 'modern'
+                                    }).render(data);
+                                    $("#layui-upload-list_" + param.item_name).html(fileShow);
+                                }
+                            },
+                            error: function (data) {
+                                //使用默认的渲染
+                                console.log(data);
+                            }
+                        });
+                    }
+                });
+            } else {
+                Global.registry("Upload").register(item_name + ".initFormValue", function (param) {
+                    //转为数组
+                    if (param.value && param.value.length > 0) {
+                        var arr = param.value.split(",");
+                        for (let i = 0; i < arr.length; i++) {
+                            if (arr[i] != '') {
+                                upload_add(param.resultConfig, param.item_name, arr[i]);
+                            }
+                        }
+                    }
+                });
+            }
+
+        }
+
+        dragula([document.getElementById("layui-upload-list_" + item_name)])
             .on('drop', function (el) {
                 upload_reCalId(item_name)
             });
@@ -431,7 +563,7 @@ function initUpload() {
 }
 
 function initWater() {
-    try{
+    try {
         var d = new Date();
         var year = d.getFullYear();
         var month = change(d.getMonth() + 1);
@@ -439,6 +571,7 @@ function initWater() {
         var hour = change(d.getHours());
         var minute = change(d.getMinutes());
         var second = change(d.getSeconds());
+
         function change(t) {
             if (t < 10) {
                 return "0" + t;
@@ -446,6 +579,7 @@ function initWater() {
                 return t;
             }
         }
+
         var time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + '';
 
         // 安全获取用户名
@@ -458,11 +592,11 @@ function initWater() {
                 watermark_txt: name + ' ' + time,
                 watermark_fontsize: '18px'
             });
-           // console.log('✅ 水印已初始化:', name + ' ' + time);
+            // console.log('✅ 水印已初始化:', name + ' ' + time);
         } else {
             console.warn('⚠️ watermark 对象未定义，水印初始化失败');
         }
-    } catch(e) {
+    } catch (e) {
         console.error('❌ 水印初始化失败:', e);
     }
 }
@@ -490,231 +624,289 @@ function getUrlParams() {
 // 最后一天日期也要补零
                 const lastDay = `${year}-${month}-${String(lastDayNum).padStart(2, '0')}`;
                 console.log(`${firstDay} - ${lastDay}`);
-                pair[1] =`${firstDay} - ${lastDay}`;
+                pair[1] = `${firstDay} - ${lastDay}`;
             }
             params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
         }
     }
     return params;
 }
+
 //初始化表单值
-function initFormValue(data){
-    if (!data||Object.keys(data).length == 0) {
+function initFormValue(data) {
+    console.log("initFormValue~~~", data);
+    if (!data || Object.keys(data).length == 0) {
         return;
     }
     var needFormRender = false;
     // 遍历 URL 参数，设置到表单
     for (var key in data) {
         var input = document.querySelector(':is(input, textarea, select)[name="' + key + '"]');
-        if(!input){
+        if (!input) {
             continue;
         }
-        var type = input.getAttribute("type");
-            if (input.classList.contains("ez-laycascader")) {
-                var val = data[key];
-                //转为数组
-                var c= Global.registry("Cascader").get(key);
-                if(c){
-                    c.setValue(Global.toNumberArray(val));
-                }
-            } else if (input.classList.contains("ez-xmselect")) {
-                var val = data[key];
-                //转为数组
-                xmSelect.get("#" + input.getAttribute("id")).setValue(Global.toNumberArray(val));
-            }else if (input.classList.contains("layui-textarea")) {
-                input.value = data[key];
-                var length =input.value.length;
-                var parentElement = input.parentElement;
-                var countElement = parentElement.querySelector(".layext-textool-count");
-                if (countElement) {
-                    countElement.textContent = length;
-                }
-            }else if (input.classList.contains("ez-upload-input")) {
-                var val = data[key];
-                input.value = val;
-                //转为数组
-
-                var config={};
-                if(input.getAttribute('data-propsJson') != null) {
-                    config= Global.safeParseJSON(input.getAttribute('data-propsJson'), {});
-                }
-                if (val && val.length > 0) {
-                    var arr=val.split(",");
-                    for (let i = 0; i < arr.length; i++) {
-                        if (arr[i] != '') {
-                            upload_add(config, input.getAttribute("name"), arr[i]);
-                        }
-                    }
-                }
+        var val = data[key];
+        //
+        try {
+            if (input.classList.contains("ez-date") && input.hasAttribute("format")) {
+                val = layui.util.toDateString(val, input.getAttribute("format"));
             }
-            else {
-                if (type == 'hidden') {
-                    var span = document.querySelector(':is(span)[name="' + key + '"]');
-                    if(span&&span.getAttribute("data-datajson")){
-                        var json=Global.safeParseJSON(span.getAttribute("data-datajson"), []);
+        } catch (e) {
+            console.log(e)
+        }
+        var type = input.getAttribute("type");
+        if (input.classList.contains("ez-laycascader")) {
+
+            var jdbctype = input.getAttribute("jdbctype");
+            //转为数组
+            var c = Global.registry("Cascader").get(key);
+            if (c) {
+                if (jdbctype == "NUMBER") {
+                    val = Number(val);
+                }
+                c.setValue(val);
+            }
+        } else if (input.classList.contains("xm-select-default")) {
+
+            var xmSelectIns = xmSelect.get("#ez-xmselect" + key, true);
+            //转为数组
+            //如果 开启了远程搜素
+            if (Global.logicTrue(xmSelectIns.options.remoteSearch)) {
+                let param = {id: val, pageIndex: 1};
+                $.post(xmSelectIns.options.dataUrl, param, function (response) {
+                    if (response.success && response.data && response.data != '') {
+                        xmSelectIns.update({
+                            data: response.data,
+                            autoRow: true,
+                        })
+                        xmSelectIns.setValue(Global.toNumberArray(val));
+                    } else {
+                        console.log(response.message);
+                    }
+                }, 'json').fail(function () {
+                    console.log("error");
+                });
+            } else {
+                xmSelectIns.setValue(Global.toNumberArray(val));
+            }
+        } else if (input.classList.contains("layui-textarea")) {
+            input.value = val;
+            var length = input.value.length;
+            var parentElement = input.parentElement;
+            var countElement = parentElement.querySelector(".layext-textool-count");
+            if (countElement) {
+                countElement.textContent = length;
+            }
+        } else if (input.classList.contains("ez-upload-input")) {
+            input.value = val;
+            var config = {};
+            if (input.getAttribute('data-propsJson') != null) {
+                config = Global.safeParseJSON(input.getAttribute('data-propsJson'), {});
+            }
+            const initFunction = Global.registry('Upload').get(key + ".initFormValue");
+            if (typeof initFunction === 'function') {
+                var param = {
+                    value: val,
+                    item_name: key,
+                    resultConfig: config
+                };
+                initFunction(param);
+            }
+        } else {
+            if (type == 'hidden') {
+                var span = document.querySelector(':is(span)[name="' + key + '"]');
+                var labelShow = val;
+                input.value = val;
+                if (span) {
+                    if (span.getAttribute("data-datajson")) {
+                        var json = Global.safeParseJSON(span.getAttribute("data-datajson"), []);
                         //获取json里面value= data[key]的label
                         for (var i = 0; i < json.length; i++) {
-                            if (json[i].value == data[key]) {
-                                span.innerHTML = json[i].label;
+                            if (json[i].value == val) {
+                                labelShow = json[i].label;
                                 break;
                             }
                         }
-                    }else if(span){
-                        span.innerHTML =  data[key];
                     }
-                    input.value = data[key];
-                } else if (type == 'radio') {
-                    // Radio: 找到对应 value 的 radio 按钮并设置 checked
-                    var radios = document.querySelectorAll('input[type="radio"][name="' + key + '"]');
-                    radios.forEach(function(radio) {
-                        if (radio.value == data[key]) {
-                            radio.checked = true;
-                            needFormRender = true;
-                        }
-                    });
-                } else if (type == 'checkbox') {
-                    // Checkbox: 可能是单个或多个
-                    var checkboxes = document.querySelectorAll('input[type="checkbox"][name="' + key + '"]');
-                    if (checkboxes.length > 1) {
-                        // 多个 checkbox: 值可能是逗号分隔的字符串或数组
-                        var values = Array.isArray(data[key]) ? data[key] : (data[key] ? data[key].toString().split(',') : []);
-                        checkboxes.forEach(function(checkbox) {
-                            if (values.includes(checkbox.value) || values.includes(checkbox.value.toString())) {
-                                checkbox.checked = true;
-                                needFormRender = true;
+                    try {
+                        if (span.getAttribute("data-propsJson") && "date-span" == span.getAttribute("component")) {
+                            var json = Global.safeParseJSON(span.getAttribute("data-propsJson"), []);
+                            if (json && json.format) {
+                                labelShow = layui.util.toDateString(labelShow, json.format);
                             }
-                        });
-                    } else if (checkboxes.length == 1) {
-                        // 单个 checkbox: 根据值设置 checked 状态
-                        var checkbox = checkboxes[0];
-                        var checkboxValue = data[key];
-                        // 处理布尔值、字符串 "true"/"false"、数字 1/0 等情况
-                        if (checkboxValue === true || checkboxValue === 'true' || checkboxValue === '1' || checkboxValue === 1 ||
-                            checkboxValue == checkbox.value) {
+                        } else if (span.getAttribute("data-propsJson") && "span" == span.getAttribute("component")) {
+                            var json = Global.safeParseJSON(span.getAttribute("data-propsJson"), []);
+                            if (json && json.format) {
+                                labelShow = Global.formatByPattern(labelShow, json.format);
+                            }
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                    span.innerHTML = labelShow || '-';
+                }
+            } else if (type == 'radio') {
+                // Radio: 找到对应 value 的 radio 按钮并设置 checked
+                var radios = document.querySelectorAll('input[type="radio"][name="' + key + '"]');
+                radios.forEach(function (radio) {
+                    if (radio.value == val) {
+                        radio.checked = true;
+                        needFormRender = true;
+                    }
+                });
+            } else if (type == 'checkbox') {
+                // Checkbox: 可能是单个或多个
+                var checkboxes = document.querySelectorAll('input[type="checkbox"][name="' + key + '"]');
+                if (checkboxes.length > 1) {
+                    // 多个 checkbox: 值可能是逗号分隔的字符串或数组
+                    var values = Array.isArray(val) ? val : (val ? val.toString().split(',') : []);
+                    checkboxes.forEach(function (checkbox) {
+                        if (values.includes(checkbox.value) || values.includes(checkbox.value.toString())) {
                             checkbox.checked = true;
                             needFormRender = true;
                         }
+                    });
+                } else if (checkboxes.length == 1) {
+                    // 单个 checkbox: 根据值设置 checked 状态
+                    var checkbox = checkboxes[0];
+                    var checkboxValue = val;
+                    // 处理布尔值、字符串 "true"/"false"、数字 1/0 等情况
+                    if (checkboxValue === true || checkboxValue === 'true' || checkboxValue === '1' || checkboxValue === 1 ||
+                        checkboxValue == checkbox.value) {
+                        checkbox.checked = true;
+                        needFormRender = true;
                     }
-                } else {
-                    input.value = data[key];
                 }
+            } else {
+                input.value = val;
             }
+        }
 
     }
     // 如果设置了 radio 或 checkbox，需要重新渲染表单
+
+
     if (needFormRender && layui && layui.form) {
-        layui.form.render();
+        Global.formRender();
     }
 }
+
 //渲染级联选择器
 function renderCascader(cas) {
 
     try {
-        var currentDom=cas;
-        var name=cas.getAttribute("name");
+        var currentDom = cas;
+        var name = cas.getAttribute("name");
         var config = {
-            "elem":currentDom,
-            "name":name,
+            "elem": currentDom,
+            "name": name,
             "filterable": true,
             "clearable": true,
             "collapseTags": true,
             "placeholder": currentDom.getAttribute('placeholder'),
         };
 
-        var resultConfig={};
-        if(currentDom.getAttribute('data-propsJson') != null){
+        var resultConfig = {};
+        if (currentDom.getAttribute('data-propsJson') != null) {
             var c = Global.safeParseJSON(currentDom.getAttribute('data-propsJson'), {});
-            resultConfig= Global.deepUnion(c,config);
-        }else{
-            resultConfig=config;
+            resultConfig = Global.deepUnion(c, config);
+        } else {
+            resultConfig = config;
         }
-        if(currentDom.getAttribute('data-dataJson') != null){
-            var dataArray=Global.safeParseJSON(currentDom.getAttribute('data-dataJson'), []);
-            var id=resultConfig.props&&resultConfig.props.value||'value';
-            var parent_id=resultConfig.props&&resultConfig.props.parent_id||'parent_id';
-            var label=resultConfig.props&&resultConfig.props.label||'label';
-            var children=resultConfig.props&&resultConfig.props.children||'children';
-            var tree=Global.listToTree(dataArray,id,parent_id,children);
-            resultConfig.options =tree;
+        if (currentDom.getAttribute('data-dataJson') != null) {
+            var dataArray = Global.safeParseJSON(currentDom.getAttribute('data-dataJson'), []);
+            var id = resultConfig.props && resultConfig.props.value || 'value';
+            var parent_id = resultConfig.props && resultConfig.props.parent_id || 'parent_id';
+            var label = resultConfig.props && resultConfig.props.label || 'label';
+            var children = resultConfig.props && resultConfig.props.children || 'children';
+            var tree = Global.listToTree(dataArray, id, parent_id, children);
+            resultConfig.options = tree;
         }
-        if(currentDom.getAttribute('data-dataApi') != null){
-            var url=currentDom.getAttribute('data-dataApi');
+        if (currentDom.getAttribute('data-dataApi') != null) {
+            var url = currentDom.getAttribute('data-dataApi');
             //ajax 获取数据
             $.ajax({
                 url: url,
                 method: 'GET',
                 dataType: 'json',
-                success: function(data) {
-                    if(data.success){
+                success: function (data) {
+                    if (data.success) {
 
-                        resultConfig.options =data.data;
+                        resultConfig.options = data.data;
 
-                        var value= currentDom.value;
+                        var value = currentDom.value;
                         if (value != undefined && value != '') {
                             resultConfig.value = value.split(",");
                         }
                         try {
                             var layCascader = layui.layCascader;
-                            var ins= layCascader(resultConfig);//这里获取不到实例
+                            var ins = layCascader(resultConfig);//这里获取不到实例
                             //  是否严格的遵守父子节点不互相关联 如果是关联的，则需要把父节点的ID也塞进去
-                            if(!resultConfig.props.checkStrictly){
-                                ins.changeEvent(function(value2, node) {
+                            if (!resultConfig.props.checkStrictly) {
+                                ins.changeEvent(function (value2, node) {
                                     console.log('关闭级联窗口', value2, node);
                                     var checkedNodes = ins.getCheckedNodes();
                                     var value = [];
-                                    checkedNodes.forEach(function(row) {
-                                        row.forEach(function(node) {
-                                            if (node._checked == 1) {
-                                                value.push(node.value);
-                                            }
+                                    if (Arrays.isArray(checkedNodes)) {
+                                        checkedNodes.forEach(function (row) {
+                                            row.forEach(function (node) {
+                                                if (node._checked == 1) {
+                                                    value.push(node.value);
+                                                }
+                                            });
                                         });
-                                    });
-                                    console.log('close 选中的值:', value);
-                                    $("[name="+name+"]").val(value);
+                                        console.log('close 选中的值:', value);
+                                        $("[name=" + name + "]").val(value);
+                                    } else {
+                                        $("[name=" + name + "]").val(value2);
+                                    }
                                     return value;
                                 });
 
                             }
-                            Global.registry("Cascader").register(resultConfig.name,ins);
+                            Global.registry("Cascader").register(resultConfig.name, ins);
                         } catch (e) {
                             console.log(e)
                         }
-                    }else{
-                        console.log("接口异常"+url);
+                    } else {
+                        console.log("接口异常" + url);
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.log(error);
                 }
             });
-        }
-        else{
-            var value= currentDom.value;
+        } else {
+            var value = currentDom.value;
             if (value != undefined && value != '') {
                 resultConfig.value = value.split(",");
             }
             try {
                 var layCascader = layui.layCascader;
-                var ins= layCascader(resultConfig);//这里获取不到实例
+                var ins = layCascader(resultConfig);//这里获取不到实例
                 //  是否严格的遵守父子节点不互相关联 如果是关联的，则需要把父节点的ID也塞进去
-                if(!resultConfig.props.checkStrictly){
-                    ins.changeEvent(function(value2, node) {
+                if (resultConfig.props == null || resultConfig.props == undefined || !resultConfig.props.checkStrictly) {
+                    ins.changeEvent(function (value2, node) {
                         console.log('关闭级联窗口', value2, node);
                         var checkedNodes = ins.getCheckedNodes();
                         var value = [];
-                        checkedNodes.forEach(function(row) {
-                            row.forEach(function(node) {
-                                if (node._checked == 1) {
-                                    value.push(node.value);
-                                }
+                        if (Array.isArray(checkedNodes)) {
+                            checkedNodes.forEach(function (row) {
+                                row.forEach(function (node) {
+                                    if (node._checked == 1) {
+                                        value.push(node.value);
+                                    }
+                                });
                             });
-                        });
-                        console.log('close 选中的值:', value);
-                        $("[name="+name+"]").val(value);
+                            console.log('close 选中的值:', value);
+                            $("[name=" + name + "]").val(value);
+                        } else {
+                            $("[name=" + name + "]").val(value2);
+                        }
                         return value;
                     });
                 }
-                Global.registry("Cascader").register(resultConfig.name,ins);
+                Global.registry("Cascader").register(resultConfig.name, ins);
             } catch (e) {
                 console.log(e)
             }
@@ -725,12 +917,13 @@ function renderCascader(cas) {
         console.log(e)
     }
 }
+
 //渲染多选选择器
 function renderXmselect(xm) {
     try {
-        var currentDom=xm;
+        var currentDom = xm;
         var config = {
-            el: "#"+currentDom.getAttribute("id"),
+            el: "#" + currentDom.getAttribute("id"),
             name: currentDom.getAttribute("name"),
             language: 'zn',
             filterable: true,
@@ -755,7 +948,7 @@ function renderXmselect(xm) {
                     }
                 }
             },
-            on:function(data){
+            on: function (data) {
                 // lay_cascader 关闭兼容
                 var elPopperElements = document.querySelectorAll('.el-popper');
                 for (var i = 0; i < elPopperElements.length; i++) {
@@ -766,21 +959,55 @@ function renderXmselect(xm) {
                 // });
             }
         };
-        if(currentDom.getAttribute('data-dataJson') != null){
+        if (currentDom.getAttribute('data-dataJson') != null) {
             config.data = Global.safeParseJSON(currentDom.getAttribute('data-dataJson'), []);
         }
-        var resultConfig={};
-        if(currentDom.getAttribute('data-propsJson') != null){
+        var resultConfig = {};
+        if (currentDom.getAttribute('data-propsJson') != null) {
             var c = Global.safeParseJSON(currentDom.getAttribute('data-propsJson'), {});
-            resultConfig= Global.deepUnion(c,config);
-        }else{
-            resultConfig=config;
+
+            resultConfig = Global.deepUnion(c, config);
+        } else {
+            resultConfig = config;
         }
-        var value= currentDom.value;
+        var value = currentDom.value;
         if (value != undefined && value != '') {
             resultConfig.initValue = value.split(",");
         }
-        xmSelect.render(resultConfig)
+        if (Global.registry("xmSelect").get(resultConfig.name + ".remoteMethod") != null) {
+            resultConfig.remoteMethod = Global.registry("xmSelect").get(resultConfig.name + ".remoteMethod");
+        } else {
+            if (Global.logicTrue(resultConfig.remoteSearch)) {
+                resultConfig.remoteMethod = function (val, cb, show, pageIndex) {
+                    if (val == '') {
+                        cb([], 0);
+                        return;
+                    }
+                    let param = {keyword: val, pageIndex: pageIndex};
+                    $.post(resultConfig.dataUrl, param, function (response) {
+                        if (response.success && response.data && response.data != '') {
+                            try {
+                                cb(response.data, response.count)
+                            } catch (e) {
+                                console.log(res);
+                                console.log(e);
+                            }
+                        } else {
+                            cb([], 0);
+                            console.log(response.message);
+                        }
+                    }, 'json').fail(function () {
+                        cb([], 0);
+                        console.log("error");
+                    });
+                }
+            }
+        }
+        if (Global.registry("xmSelect").get(resultConfig.name + ".on") != null) {
+            resultConfig.on = Global.registry("xmSelect").get(resultConfig.name + ".on");
+        }
+        var ins = xmSelect.render(resultConfig);
+        Global.registry("xmSelect").register(resultConfig.name, ins);
     } catch (e) {
         console.log(e)
     }
@@ -797,7 +1024,7 @@ Global.onClick('reset', function (e) {
 
     // 获取表单中所有包含name属性的元素
 
-    var elms = document.querySelectorAll('[name]')  ;
+    var elms = document.querySelectorAll('[name]');
     var obj = {};
 
     // 遍历元素并清空非隐藏域的值
@@ -857,11 +1084,13 @@ function upload_add(config, itemId, fileId) {
     })
 
 }
+
 function upload_remove(itemId, fileId) {
     var uniqueName = fileId.replace('./', '').replace(/["&'./:=?[\]%]/gi, '-').replace(/(--)/gi, '');
     $("#layui-upload-list_" + itemId).find(".file_preview_" + uniqueName).remove();
     upload_reCalId(itemId);
 }
+
 function upload_reCalId(itemId) {
     var fset = new Set();
     $("#layui-upload-list_" + itemId).find(".file_preview").each(function () {

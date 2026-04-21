@@ -112,7 +112,7 @@ small {
 }
 
 
-@media screen and (max-device-width: 450px) {
+@media screen and (max-device-width: 480px) {
     .layui-form-item .layui-form-label {
         text-align: left !important;
         width: 100% !important;
@@ -136,25 +136,11 @@ small {
         height: 38px !important;
     }
 
+    .layui-input {
+        font-size: 16px; /* 防止 iOS 自动缩放 */
+    }
+
 }
-
-
-/*.el-cascader .el-input.is-focus .el-input__inner {*/
-/*    border-color: #16b777!important;*/
-/*    box-shadow: 0 0 0 3px rgba(22,183,119,.08);*/
-/*}*/
-/*.el-cascader .el-input .el-input__inner:focus {*/
-/*    border-color: #16b777!important;*/
-/*    box-shadow: 0 0 0 3px rgba(22,183,119,.08);*/
-/*}*/
-/*.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path {*/
-/*    color: #16b777;*/
-/*    font-weight: 700*/
-/*}*/
-/*.el-cascader__suggestion-item.is-checked {*/
-/*    color: #16b777;*/
-/*    font-weight: 700*/
-/*}*/
 
 
 .el-cascader {
@@ -269,9 +255,104 @@ small {
 
 }
 
-.form-item-hidden{
+.form-item-hidden {
     display: none !important;
 }
-.layui-col-md0{
+
+.layui-col-md0 {
     display: none !important;
+}
+
+/* 目录 */
+.site-dir {
+    display: none;
+    width: 10px
+}
+
+.site-dir:hover {
+    display: block;
+    width: auto;
+}
+
+.site-dir li {
+    line-height: 26px;
+    margin-left: 20px;
+    overflow: visible;
+    list-style-type: disc;
+}
+
+.site-dir li a {
+    display: block;
+}
+
+.site-dir li a:active {
+    color: #01AAED;
+}
+
+.site-dir li a.layui-this {
+    color: #01AAED;
+}
+
+body .layui-layer-dir:hover {
+    opacity: 1;
+    right: 0;
+    left: auto !important;
+}
+
+body .layui-layer-dir .layui-layer-content {
+    padding: 10px;
+}
+
+.site-dir a em {
+    padding-left: 5px;
+    font-size: 12px;
+    color: #c2c2c2;
+    font-style: normal;
+}
+
+.layui-menu li, .layui-menu-body-title a {
+    padding: 0px;
+}
+
+.layui-layer-dir .layui-layer-max {
+    display: none;
+}
+
+.layui-layer-dir .layui-layer-maxmin {
+    display: block;
+}
+
+.site-narrow {
+    line-height: 46px;
+    top: 50%;
+    right: 0;
+    position: fixed;
+    font-size: 24px;
+    color: #31bdec;
+
+    transform: translateY(-50%);
+    width: 15px;
+    height: 46px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 101;
+    border: 1px solid #eee;
+    transition: right 0.3s;
+}
+
+.site-narrow {
+    display: block; /* 或者其他你需要的显示方式 */
+}
+
+.layui-layer-dir {
+    display: none; /* 确保宽屏内容不显示 */
+}
+
+.site-narrow:hover + .layui-layer-dir,
+.layui-layer-dir:hover { /* 为了避免鼠标离开图标菜单就消失，可以增加菜单自身的悬停 */
+    display: block;
 }

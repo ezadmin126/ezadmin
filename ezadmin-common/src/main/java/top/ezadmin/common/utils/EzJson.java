@@ -5,9 +5,9 @@ import java.util.Map;
 
 public interface EzJson {
 
-      String toJSONString(Object obj) ;
+    String toJSONString(Object obj);
 
-      String toPrettyJSONString(Object obj);
+    String toPrettyJSONString(Object obj);
 
     <T> List<T> parseArray(String values, Class<T> clazz);
 
@@ -16,6 +16,7 @@ public interface EzJson {
     Map<String, String> parseMap(String json);
 
     Map<String, Object> parseObjectMap(String json);
+
     Map<String, Object> deepParseObjectMap(String json);
 
     List<Map<String, Object>> parseListMapString(String json);

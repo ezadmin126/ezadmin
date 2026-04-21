@@ -4,21 +4,22 @@ import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.util.TablesNamesFinder;
-import top.ezadmin.common.utils.JsoupUtil;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.plugins.sqlog.format.FormatStyle;
 import top.ezadmin.plugins.sqlparser.EzSqlParser;
 import top.ezadmin.web.EzResult;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DslEzSqlParserImpl implements EzSqlParser {
-    
+
     @Override
     public String sqlToList(String sql, String listId, String datasource) throws Exception {
         EzResult ezResult = parseSqlToList(sql, listId, datasource);
@@ -38,7 +39,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
         PlainSelect plainSelect = (PlainSelect) selectStatement.getSelectBody();
 
         // 修复JSQLParser 4.9版本的类型不兼容问题
-        List<SelectItem<?>> selectItemList = plainSelect.getSelectItems(); 
+        List<SelectItem<?>> selectItemList = plainSelect.getSelectItems();
         // 修复AllColumns类型检查问题
         if (selectItemList.size() == 1 && selectItemList.get(0).toString().equals("*")) {
             return EzResult.instance().fail().message("请指定字段名及字段中文别名");
@@ -63,16 +64,16 @@ public class DslEzSqlParserImpl implements EzSqlParser {
 
         // 搜索项配置
         List<Map<String, Object>> searchList = new ArrayList<>();
-        
+
         // 列配置
         List<Map<String, Object>> columnList = new ArrayList<>();
-        
+
         // 表格按钮配置
         List<Map<String, Object>> tableButtonList = new ArrayList<>();
-        
+
         // 行按钮配置
         List<Map<String, Object>> rowButtonList = new ArrayList<>();
-        
+
         // 表达式配置
         Map<String, Object> express = new HashMap<>();
         StringBuilder sqlExpress = new StringBuilder();
@@ -92,18 +93,18 @@ public class DslEzSqlParserImpl implements EzSqlParser {
             String label = "UNKNOWN";
 
             try {
-                if(selectItem.getExpression() instanceof Column){
-                    Column column=(Column)selectItem.getExpression();
-                    item_name=column.getColumnName();
-                    tablealias=column.getTable()==null?"":column.getTable().getName();
-                }else if(selectItem.getExpression() instanceof Function){
-                    Function column=(Function)selectItem.getExpression();
-                    item_name=column.toString();
-                    tablealias="";
-                }else{
-                    System.out.println("无法解析的情况"+selectItem.toString());
+                if (selectItem.getExpression() instanceof Column) {
+                    Column column = (Column) selectItem.getExpression();
+                    item_name = column.getColumnName();
+                    tablealias = column.getTable() == null ? "" : column.getTable().getName();
+                } else if (selectItem.getExpression() instanceof Function) {
+                    Function column = (Function) selectItem.getExpression();
+                    item_name = column.toString();
+                    tablealias = "";
+                } else {
+                    System.out.println("无法解析的情况" + selectItem.toString());
                 }
-                label=selectItem.getAlias()==null?item_name:selectItem.getAlias().getName();
+                label = selectItem.getAlias() == null ? item_name : selectItem.getAlias().getName();
             } catch (Exception e) {
                 // 忽略异常
                 e.printStackTrace();
@@ -117,7 +118,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
             column.put("item_name", StringUtils.upperCase(item_name));
             column.put("label", label);
             column.put("component", "tdText");
-            
+
             // 根据字段名称设置不同的组件类型
             if ("ID".equalsIgnoreCase(label)) {
                 column.put("component", "tdText");
@@ -146,9 +147,9 @@ public class DslEzSqlParserImpl implements EzSqlParser {
                 column.put("props", props);
                 column.put("jdbcType", "DATETIME");
             }
-            
+
             if (!StringUtils.upperCase(item_name).equals("COMPANY_ID")
-                && !StringUtils.upperCase(item_name).equals("DELETE_FLAG")) {
+                    && !StringUtils.upperCase(item_name).equals("DELETE_FLAG")) {
                 columnList.add(column);
             }
 
@@ -158,7 +159,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
             search.put("label", label);
             search.put("component", "input");
             search.put("alias", tablealias + "." + item_name);
-            
+
             if (label.contains("时间")) {
                 search.put("component", "date");
                 search.put("operator", "between");
@@ -174,7 +175,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
                 props.put("placeholder", "请输入" + label);
                 search.put("props", props);
             }
-            
+
             if (!StringUtils.upperCase(item_name).equals("ID")
                     && !StringUtils.upperCase(item_name).equals("COMPANY_ID")
                     && !StringUtils.upperCase(item_name).equals("DELETE_FLAG")) {
@@ -189,7 +190,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
         addButton.put("component", "button-toolbar");
         Map<String, Object> addProps = new HashMap<>();
         addProps.put("opentype", "FORM");
-        addProps.put("url", "/topezadmin/form/form-" + listId);
+        addProps.put("url", "/topezadmin/form/page-" + listId);
         addButton.put("props", addProps);
         tableButtonList.add(addButton);
 
@@ -200,7 +201,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
         editButton.put("component", "button-normal");
         Map<String, Object> editProps = new HashMap<>();
         editProps.put("opentype", "FORM");
-        editProps.put("url", "/topezadmin/form/form-" + listId + "?ID={{= d.ID }}");
+        editProps.put("url", "/topezadmin/form/page-" + listId + "?ID={{= d.ID }}");
         editButton.put("props", editProps);
         rowButtonList.add(editButton);
 
@@ -210,7 +211,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
         deleteButton.put("component", "button-normal");
         Map<String, Object> delProps = new HashMap<>();
         delProps.put("opentype", "CONFIRM_AJAX");
-        delProps.put("url", "/topezadmin/form/doDelete-" + listId + "?ID={{= d.ID }}");
+        delProps.put("url", "/topezadmin/form/delete-" + listId + "?ID={{= d.ID }}");
         deleteButton.put("props", delProps);
         rowButtonList.add(deleteButton);
 
@@ -231,7 +232,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
         PlainSelect plainSelect = (PlainSelect) selectStatement.getSelectBody();
 
         // 修复JSQLParser 4.9版本的类型不兼容问题
-        List<SelectItem<?>> selectItemList = plainSelect.getSelectItems(); 
+        List<SelectItem<?>> selectItemList = plainSelect.getSelectItems();
         // 修复AllColumns类型检查问题
         if (selectItemList.size() == 1 && selectItemList.get(0).toString().equals("*")) {
             return EzResult.instance().fail().message("请指定字段名及字段中文别名");
@@ -282,7 +283,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
 
         // 字段列表
         List<Map<String, Object>> fieldList = new ArrayList<>();
-        
+
         // 按钮列表
         List<Map<String, Object>> buttonList = new ArrayList<>();
 
@@ -295,16 +296,16 @@ public class DslEzSqlParserImpl implements EzSqlParser {
             String label = "UNKNOWN";
 
             try {
-                if(selectItem.getExpression() instanceof Column){
-                    Column column=(Column)selectItem.getExpression();
-                    item_name=column.getColumnName();
-                }else if(selectItem.getExpression() instanceof Function){
-                    Function column=(Function)selectItem.getExpression();
-                    item_name=column.toString();
-                }else{
-                    System.out.println("无法解析的情况"+selectItem.toString());
+                if (selectItem.getExpression() instanceof Column) {
+                    Column column = (Column) selectItem.getExpression();
+                    item_name = column.getColumnName();
+                } else if (selectItem.getExpression() instanceof Function) {
+                    Function column = (Function) selectItem.getExpression();
+                    item_name = column.toString();
+                } else {
+                    System.out.println("无法解析的情况" + selectItem.toString());
                 }
-                label=selectItem.getAlias()==null?item_name:selectItem.getAlias().getName();
+                label = selectItem.getAlias() == null ? item_name : selectItem.getAlias().getName();
             } catch (Exception e) {
                 // 忽略异常
                 e.printStackTrace();
@@ -330,7 +331,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
                 Map<String, Object> props = new HashMap<>();
                 props.put("placeholder", "请选择" + label);
                 field.put("props", props);
-                
+
                 // 初始化数据
                 Map<String, Object> initData = new HashMap<>();
                 List<Map<String, String>> dataJson = new ArrayList<>();
@@ -357,14 +358,14 @@ public class DslEzSqlParserImpl implements EzSqlParser {
                 props.put("placeholder", "请输入" + label);
                 field.put("props", props);
             }
-            
+
             fieldList.add(field);
         }
 
         card.put("fieldList", fieldList);
         card.put("buttonList", buttonList);
         cardList.add(card);
-        
+
         config.put("cardList", cardList);
         config.put("buttonList", buttonList);
 
@@ -393,16 +394,16 @@ public class DslEzSqlParserImpl implements EzSqlParser {
             String label = "UNKNOWN";
 
             try {
-                if(selectItem.getExpression() instanceof Column){
-                    Column column=(Column)selectItem.getExpression();
-                    item_name=column.getColumnName();
-                }else if(selectItem.getExpression() instanceof Function){
-                    Function column=(Function)selectItem.getExpression();
-                    item_name=column.toString();
-                }else{
-                    System.out.println("无法解析的情况"+selectItem.toString());
+                if (selectItem.getExpression() instanceof Column) {
+                    Column column = (Column) selectItem.getExpression();
+                    item_name = column.getColumnName();
+                } else if (selectItem.getExpression() instanceof Function) {
+                    Function column = (Function) selectItem.getExpression();
+                    item_name = column.toString();
+                } else {
+                    System.out.println("无法解析的情况" + selectItem.toString());
                 }
-                label=selectItem.getAlias()==null?item_name:selectItem.getAlias().getName();
+                label = selectItem.getAlias() == null ? item_name : selectItem.getAlias().getName();
             } catch (Exception e) {
                 // 忽略异常
                 e.printStackTrace();
@@ -439,7 +440,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
                 ex.append("     param.add(\"#{COMPANY_ID,value=\"+companyId+\"}\");\n          		\n");
                 continue;
             }
-            
+
             StringBuilder pa = new StringBuilder();
             pa.append("#{");
             pa.append(item_name);
@@ -461,16 +462,16 @@ public class DslEzSqlParserImpl implements EzSqlParser {
             String label = "UNKNOWN";
 
             try {
-                if(selectItem.getExpression() instanceof Column){
-                    Column column=(Column)selectItem.getExpression();
-                    item_name=column.getColumnName();
-                }else if(selectItem.getExpression() instanceof Function){
-                    Function column=(Function)selectItem.getExpression();
-                    item_name=column.toString();
-                }else{
-                    System.out.println("无法解析的情况"+selectItem.toString());
+                if (selectItem.getExpression() instanceof Column) {
+                    Column column = (Column) selectItem.getExpression();
+                    item_name = column.getColumnName();
+                } else if (selectItem.getExpression() instanceof Function) {
+                    Function column = (Function) selectItem.getExpression();
+                    item_name = column.toString();
+                } else {
+                    System.out.println("无法解析的情况" + selectItem.toString());
                 }
-                label=selectItem.getAlias()==null?item_name:selectItem.getAlias().getName();
+                label = selectItem.getAlias() == null ? item_name : selectItem.getAlias().getName();
             } catch (Exception e) {
                 // 忽略异常
                 e.printStackTrace();
@@ -513,10 +514,10 @@ public class DslEzSqlParserImpl implements EzSqlParser {
         json.append("{\n");
         int size = map.size();
         int count = 0;
-        
+
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             json.append("  \"").append(entry.getKey()).append("\": ");
-            
+
             Object value = entry.getValue();
             if (value instanceof String) {
                 json.append("\"").append(value.toString().replace("\\", "\\\\").replace("\"", "\\\"")).append("\"");
@@ -529,7 +530,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
             } else {
                 json.append("\"").append(value != null ? value.toString() : "").append("\"");
             }
-            
+
             count++;
             if (count < size) {
                 json.append(",");
@@ -557,7 +558,7 @@ public class DslEzSqlParserImpl implements EzSqlParser {
             } else {
                 json.append("    \"").append(item != null ? item.toString() : "").append("\"");
             }
-            
+
             if (i < size - 1) {
                 json.append(",");
             }

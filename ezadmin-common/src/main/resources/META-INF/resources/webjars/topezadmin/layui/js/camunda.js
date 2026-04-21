@@ -9,14 +9,14 @@ function appendCheckButton(dekey, checkStatus, callback) {
             if (response.success) {
                 //存在这个审核流
                 if (checkStatus == 1) {
-                    $("#submitButtonContainer").append(`<button  type="button"   class="  layui-btn approve   layui-bg-blue ">  审核通过  </button>
-                         <button  type="button"   class="  layui-btn    layui-bg-blue reject ">  驳回  </button>
+                    $("#submitButtonContainer").append(`<button  type="button"   class="  layui-btn approve   layui-btn-primary  layui-btn layui-border-green ">  审核通过  </button>
+                         <button  type="button"   class="  layui-btn  layui-btn-primary  layui-border-red reject ">  驳回  </button>
                         `);
                     $("#submitbtnProxy").hide();
                 }
             } else {
                 if (checkStatus == 2 || checkStatus == 5 || checkStatus == 0) {
-                    $("#submitButtonContainer").append(`<button  type="button"   class="  layui-btn  start layui-bg-blue ">
+                    $("#submitButtonContainer").append(`<button  type="button"   class="    start  layui-btn-primary  layui-btn  layui-border-blue ">
                             申请审核
                             </button>`);
                 }
@@ -37,6 +37,9 @@ function appendCheckButton(dekey, checkStatus, callback) {
             }
             $(this).addClass("layui-btn-disabled");
             $(".reject").addClass("layui-btn-disabled");
+            var _thisbtn = $(this);
+            var param = {};
+            param.id = $("#ID").val();
             param.pass = true;
             var loadIndex = layer.msg('加载中', {
                 icon: 16,
@@ -46,7 +49,10 @@ function appendCheckButton(dekey, checkStatus, callback) {
             $.post("/mycamunda/check/complete/" + dekey, param, function (response) {
                 layui.layer.close(loadIndex)
                 if (response.success) {
-                    layui.layer.alert("操作成功", function () {
+                    layer.msg('操作成功', {
+                        icon: 1,
+                        time: 500
+                    }, function () {
                         location.reload()
                     });
                 } else {
@@ -57,17 +63,20 @@ function appendCheckButton(dekey, checkStatus, callback) {
 
             }, 'json').fail(function () {
                 console.log("error");
-                $(this).removeClass("layui-btn-disabled");
+                _thisbtn.removeClass("layui-btn-disabled");
                 $(".reject").removeClass("layui-btn-disabled");
                 layui.layer.close(loadIndex)
             });
 
         })
         $(document).on("click", ".reject", function () {
+            var param = {};
+            param.id = $("#ID").val();
             param.pass = false;
             if ($(this).hasClass("layui-btn-disabled")) {
                 return false;
             }
+            var _thisbtn = $(this);
             $(this).addClass("layui-btn-disabled");
             $(".approve").addClass("layui-btn-disabled");
             var loadIndex = layer.msg('加载中', {
@@ -80,7 +89,10 @@ function appendCheckButton(dekey, checkStatus, callback) {
                 param.comment = layui.util.escape(value);
                 $.post("/mycamunda/check/complete/" + dekey, param, function (response) {
                     if (response.success) {
-                        layui.layer.alert("操作成功", function () {
+                        layer.msg('操作成功', {
+                            icon: 1,
+                            time: 500
+                        }, function () {
                             location.reload()
                         });
                     } else {
@@ -89,21 +101,26 @@ function appendCheckButton(dekey, checkStatus, callback) {
                         });
                     }
 
-                }, 'json').fail(function () {
+                }, 'json').fail(function (e) {
                     console.log("error");
-                    $(this).removeClass("layui-btn-disabled");
+                    _thisbtn.removeClass("layui-btn-disabled");
                     $(".approve").removeClass("layui-btn-disabled");
                     layer.close(loadIndex);
+                    layer.alert("操作失败")
                 });
                 // 关闭 prompt
                 layer.close(index);
             });
         })
         $(document).on("click", ".history", function () {
+            var param = {};
+            param.id = $("#ID").val();
             param.pass = false;
             openModel("/mycamunda/check/history/" + dekey + "?id=" + param.id)
         })
         $(document).on("click", ".start", function () {
+            var param = {};
+            param.id = $("#ID").val();
             if ($(this).hasClass("layui-btn-disabled")) {
                 return false;
             }
@@ -116,7 +133,10 @@ function appendCheckButton(dekey, checkStatus, callback) {
             $.post("/mycamunda/check/start/" + dekey, param, function (response) {
                 layer.close(loadIndex)
                 if (response.success) {
-                    layui.layer.alert("申请审核成功", function () {
+                    layer.msg('操作成功', {
+                        icon: 1,
+                        time: 500
+                    }, function () {
                         location.reload()
                     });
                 } else {
@@ -134,3 +154,6 @@ function appendCheckButton(dekey, checkStatus, callback) {
 
     }
 }
+
+
+

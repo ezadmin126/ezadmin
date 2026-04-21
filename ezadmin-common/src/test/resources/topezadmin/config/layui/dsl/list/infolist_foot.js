@@ -1,5 +1,5 @@
 // InfoList Footer Script
-(function() {
+(function () {
     console.log('InfoList footer loaded');
 
     // 添加页面底部的统计信息
@@ -9,11 +9,11 @@
     };
 
     if (window.layui) {
-        layui.use(['layer', 'jquery'], function() {
+        layui.use(['layer', 'jquery'], function () {
             var $ = layui.jquery;
 
             // 添加页面加载完成提示
-            $(document).ready(function() {
+            $(document).ready(function () {
                 console.log('Page fully loaded at:', stats.loadTime);
             });
         });

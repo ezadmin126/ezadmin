@@ -50,10 +50,10 @@ public class EzClientProperties {
 
     private String model;
 
-    private Double temperature=0.7;
+    private Double temperature = 0.7;
 
     //首页模板 默认index.html
-    private String adminIndexHtml="index";
+    private String adminIndexHtml = "index";
 
     public String getApiUrl() {
         return apiUrl;

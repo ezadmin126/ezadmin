@@ -30,6 +30,7 @@ public class ChatGptService {
     public static ChatGptService getInstance() {
         return chatGptService;
     }
+
     /**
      * 调用 AI 进行单轮对话
      *
@@ -73,7 +74,7 @@ public class ChatGptService {
             response_format.put("type", "json_object");
             requestBody.put("response_format", response_format);
 
-            log.info("AI 请求: {}", JSONUtils.toJSONString(requestBody ));
+            log.info("AI 请求: {}", JSONUtils.toJSONString(requestBody));
 
             // 发送请求（使用 JDK 自带的 HttpURLConnection）
             String responseBody = sendPostRequest(
@@ -84,7 +85,7 @@ public class ChatGptService {
             log.info("AI 响应: {}", responseBody);
 
             // 解析响应
-            Map<String,Object> jsonResponse = JSONUtils.parseObjectMap(responseBody);
+            Map<String, Object> jsonResponse = JSONUtils.parseObjectMap(responseBody);
 
             // 检查是否有错误
             if (jsonResponse.containsKey("error")) {
@@ -166,9 +167,9 @@ public class ChatGptService {
      * 使用 JDK 自带的 HttpURLConnection 发送 POST 请求
      * 兼容 JDK8/JDK17
      *
-     * @param url     请求 URL
+     * @param url      请求 URL
      * @param jsonBody JSON 请求体
-     * @param apiKey  API 密钥
+     * @param apiKey   API 密钥
      * @return 响应内容
      */
     private String sendPostRequest(String url, String jsonBody, String apiKey) throws Exception {

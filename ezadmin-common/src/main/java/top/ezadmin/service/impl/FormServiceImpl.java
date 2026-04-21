@@ -144,7 +144,7 @@ public class FormServiceImpl implements FormService {
                         item.put("value", calulateData(Utils.trimNullDefault(initItemMap.get(item_name), defaultValue), "", "", jdbcType));
                         item.put("value_start", calulateData(Utils.trimNullDefault(initItemMap.get(item_name + "_START"), defaultValueS), "", "", jdbcType));
                         item.put("value_end", calulateData(Utils.trimNullDefault(initItemMap.get(item_name + "_END"), defaultValueE), "", "", jdbcType));
-                        Map<String,Object>  context = new HashMap<String,Object>();
+                        Map<String, Object> context = new HashMap<String, Object>();
                         context.put("uploadUrl", EzBootstrap.config().getUploadUrl());
                         context.put("downloadUrl", EzBootstrap.config().getDownloadUrl());
                         if (StringUtils.equals(Utils.trimNull(requestParamMap.get(JsoupUtil.PLUGIN_FOLD)), "detail")) {
@@ -182,7 +182,7 @@ public class FormServiceImpl implements FormService {
                                 listService.fillListById(list, requestParamMap, sessionParamMap);
                                 context.put("subdata", list);
                                 String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
-                                String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                                String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                                 item.put("html", html);
                             } catch (Exception e) {
                                 logger.error("" + item, e);
@@ -282,7 +282,7 @@ public class FormServiceImpl implements FormService {
                                 attrMap.put("type", "number");
                             }
                             if (Utils.trimNull(item.get("type")).equalsIgnoreCase("input-datetime")) {
-                                attrMap.put("class", Utils.trimNull(attrMap.get("class"))+" layui-datetime-narmal");
+                                attrMap.put("class", Utils.trimNull(attrMap.get("class")) + " layui-datetime-narmal");
                             }
                             attrMap.putIfAbsent("lay-verify", attrMap.get(JsoupUtil.LAYVERIFY));
                             attrMap.put("class", "layui-input " + (Utils.trimNull(attrMap.get("class")).replace("layui-input ", "")));
@@ -309,7 +309,7 @@ public class FormServiceImpl implements FormService {
                             context.put("serverDom", sb.toString());
                             context.put("attrMap", JSONUtils.toJSONString(attrMap));
                         } else if (Utils.trimNull(item.get("type")).equals("textarea")
-                                ||Utils.trimNull(item.get("type")).equals("input-textarea")
+                                || Utils.trimNull(item.get("type")).equals("input-textarea")
                         ) {
                             String value = StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + "");
                             Map<String, String> attrMap = (Map<String, String>) item.get("attrMap");
@@ -376,7 +376,7 @@ public class FormServiceImpl implements FormService {
 
                         try {
                             String template = Utils.trimNull(plugin.get("PLUGIN_BODY"));
-                            String html =  EzBootstrap.config().getEzTemplate().renderString(template, context);
+                            String html = EzBootstrap.config().getEzTemplate().renderString(template, context);
                             item.put("html", html);
                         } catch (Exception e) {
                             logger.error("" + item.get(JsoupUtil.TYPE), e);

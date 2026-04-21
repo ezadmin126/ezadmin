@@ -30,18 +30,18 @@ public class EzFastJson2Impl implements EzJson {
         return JSON.parseObject(json, clazz);
     }
 
-    public   Map<String, String> parseMap(String json) {
+    public Map<String, String> parseMap(String json) {
         //
         return JSON.parseObject(json, new com.alibaba.fastjson2.TypeReference<Map<String, String>>() {
         });
     }
 
-    public   Map<String, Object> parseObjectMap(String json) {
+    public Map<String, Object> parseObjectMap(String json) {
         return JSON.parseObject(json, new com.alibaba.fastjson2.TypeReference<Map<String, Object>>() {
         });
     }
 
-    public   List<Map<String, Object>> parseListMapString(String json) {
+    public List<Map<String, Object>> parseListMapString(String json) {
         try {
             return JSON.parseObject(json, new com.alibaba.fastjson2.TypeReference<List<Map<String, Object>>>() {
             });
@@ -55,7 +55,7 @@ public class EzFastJson2Impl implements EzJson {
      * 将 JSON 字符串深度转换为 Map<String, Object>，内层对象也转为 Map
      */
     @Override
-    public  Map<String, Object> deepParseObjectMap(String json) {
+    public Map<String, Object> deepParseObjectMap(String json) {
         JSONObject jsonObject = JSON.parseObject(json);
         return toDeepMap(jsonObject);
     }
@@ -64,7 +64,7 @@ public class EzFastJson2Impl implements EzJson {
      * 递归将 JSONObject 转为 Map<String, Object>
      */
     @SuppressWarnings("unchecked")
-    private  Map<String, Object> toDeepMap(JSONObject obj) {
+    private Map<String, Object> toDeepMap(JSONObject obj) {
         if (obj == null) return Collections.emptyMap();
         Map<String, Object> result = new LinkedHashMap<>();
         for (Map.Entry<String, Object> entry : obj.entrySet()) {
@@ -79,7 +79,7 @@ public class EzFastJson2Impl implements EzJson {
      * 递归处理值：JSONObject → Map, JSONArray → List, 其他保持原样
      */
     @SuppressWarnings("unchecked")
-    private   Object convertValue(Object value) {
+    private Object convertValue(Object value) {
         if (value instanceof JSONObject) {
             return toDeepMap((JSONObject) value);
         } else if (value instanceof JSONArray) {
@@ -89,7 +89,7 @@ public class EzFastJson2Impl implements EzJson {
         }
     }
 
-    private   List<Object> convertArray(JSONArray array) {
+    private List<Object> convertArray(JSONArray array) {
         List<Object> list = new ArrayList<>(array.size());
         for (Object item : array) {
             list.add(convertValue(item));

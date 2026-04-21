@@ -14,5 +14,5 @@ public class CustomSearchTest {
     public static void main(String[] args) {
         new CustomSearchTest().test1();
     }
-   
+
 }

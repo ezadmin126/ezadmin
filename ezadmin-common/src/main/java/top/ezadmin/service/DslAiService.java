@@ -1,17 +1,12 @@
 package top.ezadmin.service;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
-import top.ezadmin.common.utils.ConfigFileLoader;
-import top.ezadmin.common.utils.DslLoader;
-import top.ezadmin.common.utils.JSONUtils;
-import top.ezadmin.common.utils.ProjectPathUtils;
-import top.ezadmin.common.utils.Utils;
+import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.dao.dto.DslModificationRequest;
 import top.ezadmin.dao.dto.FormDsl;
@@ -19,10 +14,6 @@ import top.ezadmin.dao.dto.ListDsl;
 import top.ezadmin.web.EzResult;
 
 import javax.sql.DataSource;
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,22 +39,22 @@ public class DslAiService {
 
     /**
      * 创建新的DSL配置
-     * @param dslType DSL类型：form或list
+     *
+     * @param dslType         DSL类型：form或list
      * @param userRequirement 用户需求描述或SQL语句
      * @return 创建结果
      */
-    public EzResult createNewDsl(String dataSource,String dslType, String userRequirement) {
+    public EzResult createNewDsl(String dataSource, String dslType, String userRequirement) {
         try {
             log.info("开始创建新DSL: type={}, requirement={}", dslType, userRequirement);
-            StringBuilder resultInfoMessage=new StringBuilder();
+            StringBuilder resultInfoMessage = new StringBuilder();
             //1.先根据用户的需求，判断与哪些库表有关系
-            DataSource dataSource1= EzBootstrap.config().getDatasourceMap().get(dataSource);
+            DataSource dataSource1 = EzBootstrap.config().getDatasourceMap().get(dataSource);
             String tables = getTablesFromDataSource(dataSource1);
             String relatedTables = getRelatedTables(userRequirement, tables);
             resultInfoMessage.append("获取到的相关表为：").append(relatedTables).append("\n");
             //获取每个表的详细信息
-            String tableDetails=getTablesDetailFromDataSource(dataSource1, relatedTables);
-
+            String tableDetails = getTablesDetailFromDataSource(dataSource1, relatedTables);
 
 
             // 1. 加载创建DSL的提示词模板
@@ -82,7 +73,7 @@ public class DslAiService {
             String systemPrompt = promptTemplate + "\n\n" + componentDocs;
             //获取所有的数据库表名
 
-            systemPrompt += "\n\n 当前数据库中关联的表信息为为：" +tableDetails;
+            systemPrompt += "\n\n 当前数据库中关联的表信息为为：" + tableDetails;
 
             // 4. 构建用户提示词
             String userPrompt = buildCreateDslUserPrompt(dslType, userRequirement);
@@ -127,15 +118,15 @@ public class DslAiService {
             responseData.put("dslId", dslId);
             responseData.put("dslType", dslType);
             responseData.put("filePath", getDslFilePath(dslId, dslType));
-            if(dslType.equals("form")){
-                responseData.put("redirectUrl", "/topezadmin/edit/form-"+dslId);
-            }else{
-                responseData.put("redirectUrl", "/topezadmin/edit/list-"+dslId);
+            if (dslType.equals("form")) {
+                responseData.put("redirectUrl", "/topezadmin/edit/form-" + dslId);
+            } else {
+                responseData.put("redirectUrl", "/topezadmin/edit/list-" + dslId);
             }
             resultInfoMessage.append("DSL文件保存失败").append("\n");
             responseData.put("summary", resultInfoMessage);
 
-            log.info("DSL创建成功: id={}, type={}, summary={}", dslId, dslType,resultInfoMessage);
+            log.info("DSL创建成功: id={}, type={}, summary={}", dslId, dslType, resultInfoMessage);
             return EzResult.instance().data(responseData);
 
         } catch (Exception e) {
@@ -146,7 +137,7 @@ public class DslAiService {
         }
     }
 
-    private String getRelatedTables(String userRequirement,String tables) {
+    private String getRelatedTables(String userRequirement, String tables) {
         Map<String, Object> aiResponse = chatGptService.chatForJson("##返回要求：\n" +
                         "1. 只返回一个JSON对象\n" +
                         "2. 格式如下：\n" +
@@ -157,10 +148,10 @@ public class DslAiService {
                         "}\n" +
                         "```\n" +
                         "3. 不要添加解释\n"
-                      ,
+                ,
                 "请根据用户需求，判断与哪些库表有关系，并返回结果。用户需求：" + userRequirement + "\n\n，当前表清单：" + tables);
-        if(aiResponse.containsKey("related_tables")){
-                return Utils.trimNull(aiResponse.get("related_tables"));
+        if (aiResponse.containsKey("related_tables")) {
+            return Utils.trimNull(aiResponse.get("related_tables"));
         }
         return "";
     }
@@ -171,14 +162,16 @@ public class DslAiService {
                     null);
             return JSONUtils.toJSONString(tables);
         } catch (Exception e) {
-            log.warn("获取表信息失败",e);
+            log.warn("获取表信息失败", e);
         }
         return "";
     }
-    private String getTablesDetailFromDataSource(DataSource dataSource1,String tableNames) {
-        StringBuilder stringBuilder = new StringBuilder();;
+
+    private String getTablesDetailFromDataSource(DataSource dataSource1, String tableNames) {
+        StringBuilder stringBuilder = new StringBuilder();
+        ;
         try {
-            String sql="SELECT\n" +
+            String sql = "SELECT\n" +
                     "    COLUMN_NAME,\n" +
                     "    DATA_TYPE,\n" +
                     "    CHARACTER_MAXIMUM_LENGTH AS SIZE,\n" +
@@ -202,7 +195,7 @@ public class DslAiService {
             }
 
         } catch (Exception e) {
-            log.warn("获取表结构信息失败",e);
+            log.warn("获取表结构信息失败", e);
         }
         return stringBuilder.toString();
     }
@@ -210,7 +203,7 @@ public class DslAiService {
     /**
      * 处理 DSL 修改请求（使用 JSON Patch RFC6902）
      */
-    public EzResult modifyDsl(DslModificationRequest  request) {
+    public EzResult modifyDsl(DslModificationRequest request) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             log.info("开始处理 DSL 修改请求: {}", JSONUtils.toJSONString(request));
@@ -226,12 +219,12 @@ public class DslAiService {
 
 
             //1.先根据用户的需求，判断与哪些库表有关系
-            DataSource dataSource1= EzBootstrap.config().getDatasourceMap().get(Utils.trimNullDefault(dslContent.get("datasource"),"datasource" ));
+            DataSource dataSource1 = EzBootstrap.config().getDatasourceMap().get(Utils.trimNullDefault(dslContent.get("datasource"), "datasource"));
             String tables = getTablesFromDataSource(dataSource1);
             String relatedTables = getRelatedTables(request.getUserRequirement(), tables);
             resultInfoMessage.append("获取到的相关表为：").append(relatedTables).append("\n");
             //获取每个表的详细信息
-            String tableDetails=getTablesDetailFromDataSource(dataSource1, relatedTables);
+            String tableDetails = getTablesDetailFromDataSource(dataSource1, relatedTables);
 
             // 2. 加载提示词模板
             String promptTemplate = loadPromptTemplate(request.getDslType());
@@ -245,7 +238,7 @@ public class DslAiService {
             String componentDocs = loadComponentDocsIndex(request);
 
             // 4. 构建系统提示词：模板 + 组件文档
-            String systemPrompt = promptTemplate + "\n\n" + componentDocs+ "\n\n相关库表为：" + tableDetails;
+            String systemPrompt = promptTemplate + "\n\n" + componentDocs + "\n\n相关库表为：" + tableDetails;
 
 
             // 5. 构建用户提示词：DSL 内容 + 用户需求
@@ -279,7 +272,7 @@ public class DslAiService {
                 if (!saved) {
                     return EzResult.instance().fail("DSL 文件保存失败");
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 Map<String, Object> responseData = new HashMap<String, Object>();
                 responseData.put("summary", resultInfoMessage.toString() + "\nDSL 文件保存失败: " + summary);
                 return EzResult.instance().fail().data(responseData);
@@ -289,7 +282,7 @@ public class DslAiService {
             Map<String, Object> responseData = new HashMap<String, Object>();
             responseData.put("summary", resultInfoMessage.toString());
             responseData.put("patch", patchObj);
-          //  responseData.put("file_path", getDslFilePath(request.getDslFileName(), request.getDslType()));
+            //  responseData.put("file_path", getDslFilePath(request.getDslFileName(), request.getDslType()));
             log.info("DSL 修改完成，文件已保存: {}, 摘要: {}", responseData.get("file_path"), summary);
             return EzResult.instance().data(responseData);
         } catch (Exception e) {
@@ -329,8 +322,8 @@ public class DslAiService {
      * 保存布局（表单或列表）
      * 根据前端传来的布局数据重新排序 DSL
      *
-     * @param dslId DSL ID
-     * @param dslType DSL 类型：form 或 list
+     * @param dslId      DSL ID
+     * @param dslType    DSL 类型：form 或 list
      * @param layoutData 布局数据
      * @return 保存结果
      */
@@ -357,9 +350,9 @@ public class DslAiService {
                 // 更新 DSL 中的 cardList
                 dslContent.put("cardList", cardsLayout);
                 //使用FormDsl格式化，防止冗余节点
-                FormDsl DSL=JSONUtils.parseObject(JSONUtils.toJSONString(dslContent), FormDsl.class);
+                FormDsl DSL = JSONUtils.parseObject(JSONUtils.toJSONString(dslContent), FormDsl.class);
 
-                dslContent=JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(DSL));
+                dslContent = JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(DSL));
 
 
             } else if ("list".equals(dslType)) {
@@ -375,9 +368,9 @@ public class DslAiService {
                 dslContent.put("search", searchLayout);
 
                 //使用FormDsl格式化，防止冗余节点
-                ListDsl DSL=JSONUtils.parseObject(JSONUtils.toJSONString(dslContent), ListDsl.class);
+                ListDsl DSL = JSONUtils.parseObject(JSONUtils.toJSONString(dslContent), ListDsl.class);
 
-                dslContent=JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(DSL));
+                dslContent = JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(DSL));
 
             } else {
                 return EzResult.instance().fail("不支持的 DSL 类型: " + dslType);
@@ -555,10 +548,10 @@ public class DslAiService {
     private String loadPromptTemplate(String dslType) {
         try {
             String templateFile = "form".equals(dslType)
-                ? "topezadmin/config/layui/dsl/prompts/ez_ai_form_prompt.md"
-                : "topezadmin/config/layui/dsl/prompts/ez_ai_list_prompt.md";
+                    ? "topezadmin/config/layui/dsl/prompts/ez_ai_form_prompt.md"
+                    : "topezadmin/config/layui/dsl/prompts/ez_ai_list_prompt.md";
 
-            return   ConfigFileLoader.loadConfigFileContent(templateFile);
+            return ConfigFileLoader.loadConfigFileContent(templateFile);
         } catch (Exception e) {
             log.error("加载提示词模板失败", e);
             return null;
@@ -573,15 +566,15 @@ public class DslAiService {
 
             String content = ConfigFileLoader.loadConfigFileContent("topezadmin/config/layui/dsl/prompts/component.md");
             try {
-            if (request!=null&&request.getComponentCode() != null && !request.getComponentCode().isEmpty()) {
-                content = content + "\n\n## 选中组件 \n\n" + request.getComponentCode();
+                if (request != null && request.getComponentCode() != null && !request.getComponentCode().isEmpty()) {
+                    content = content + "\n\n## 选中组件 \n\n" + request.getComponentCode();
 
-                String selectedComponentContent = ConfigFileLoader.loadConfigFileContent("topezadmin/config/layui/dsl/prompts/components/" + request.getComponentCode() + ".md");
-                if (selectedComponentContent != null) {
-                    content = content + "\n\n## 选中组件文档 \n\n" + selectedComponentContent;
+                    String selectedComponentContent = ConfigFileLoader.loadConfigFileContent("topezadmin/config/layui/dsl/prompts/components/" + request.getComponentCode() + ".md");
+                    if (selectedComponentContent != null) {
+                        content = content + "\n\n## 选中组件文档 \n\n" + selectedComponentContent;
+                    }
                 }
-            }
-            }catch (Exception e2){
+            } catch (Exception e2) {
                 log.warn("加载选中组件文档失败", e2);
             }
             return "## 组件文档参考 \n\n" + content;
@@ -620,16 +613,16 @@ public class DslAiService {
         prompt.append("## 要求\n\n");
         prompt.append(
                 "1. 只返回一个JSON对象\n" +
-                "2. 格式如下：\n" +
-                "\n" +
-                "{\n" +
-                "  \"patch\": [ RFC6902数组 ],\n" +
-                "  \"summary\": \"修改内容的摘要或者如果无法又该，则给出的理由\"\n" +
-                "}\n" +
-                "\n" +
-                "3. 不要添加解释\n" +
-                "4. patch 必须符合 RFC6902 标准\n" +
-                "5. summary 不超过100字");
+                        "2. 格式如下：\n" +
+                        "\n" +
+                        "{\n" +
+                        "  \"patch\": [ RFC6902数组 ],\n" +
+                        "  \"summary\": \"修改内容的摘要或者如果无法又该，则给出的理由\"\n" +
+                        "}\n" +
+                        "\n" +
+                        "3. 不要添加解释\n" +
+                        "4. patch 必须符合 RFC6902 标准\n" +
+                        "5. summary 不超过100字");
 
         return prompt.toString();
     }
@@ -766,6 +759,7 @@ public class DslAiService {
 
     /**
      * 判断用户需求是否涉及表达式（SQL）修改
+     *
      * @param userRequirement 用户需求描述
      * @return true表示涉及表达式修改
      */
@@ -778,10 +772,10 @@ public class DslAiService {
 
         // 检查是否包含SQL相关关键词
         String[] sqlKeywords = {
-            "sql", "查询", "表", "字段", "列",
-            "where", "join", "select", "from",
-            "express", "表达式", "数据库",
-            "关联", "联表", "条件", "筛选"
+                "sql", "查询", "表", "字段", "列",
+                "where", "join", "select", "from",
+                "express", "表达式", "数据库",
+                "关联", "联表", "条件", "筛选"
         };
 
         for (String keyword : sqlKeywords) {
@@ -796,6 +790,7 @@ public class DslAiService {
 
     /**
      * 从DSL中提取SQL表达式
+     *
      * @param dslContent DSL内容
      * @return SQL表达式字符串
      */
@@ -810,7 +805,7 @@ public class DslAiService {
                     Map<String, Object> expressMap = (Map<String, Object>) expressObj;
                     for (Map.Entry<String, Object> entry : expressMap.entrySet()) {
                         expressBuilder.append(entry.getKey()).append(": ")
-                                    .append(entry.getValue()).append("\n");
+                                .append(entry.getValue()).append("\n");
                     }
                 } else {
                     expressBuilder.append(expressObj.toString()).append("\n");

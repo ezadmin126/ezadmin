@@ -4,17 +4,18 @@ import org.junit.Before;
 import org.junit.Test;
 import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.common.enums.OperatorEnum;
-import top.ezadmin.common.utils.JsoupUtil;
 import top.ezadmin.common.utils.JSONUtils;
+import top.ezadmin.common.utils.JsoupUtil;
 import top.ezadmin.dao.model.CustomSearchDTO;
 import top.ezadmin.dao.model.CustomSearchGroup;
 import top.ezadmin.dao.model.CustomSearchOrder;
 import top.ezadmin.dao.model.CustomSearchSingle;
-import top.ezadmin.plugins.express.OperatorParam;
 import top.ezadmin.plugins.sqlgenerate.MySqlGenerate;
-import top.ezadmin.plugins.sqlgenerate.SqlGenerate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -130,7 +131,7 @@ public class CustomSearchJsonToSqlTest {
 
     /**
      * 测试多个搜索条件（AND连接）
-     *
+     * <p>
      * 注意：当前实现中，GTE/LTE/NE 操作符在 customSearchJsonToSql 中都会被转换为 =
      * （参见 SqlGenerate.java:223-227，它们都调用 eq 方法）
      */
@@ -328,7 +329,6 @@ public class CustomSearchJsonToSqlTest {
         singleList.add(single2);
 
         child.setS(singleList);
-
 
 
         childList.add(child);

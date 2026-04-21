@@ -1,38 +1,34 @@
 package top.ezadmin.spring;
 
 
-import top.ezadmin.EzBootstrap;
-import top.ezadmin.EzBootstrapConfig;
-import top.ezadmin.common.EzAdminRuntimeException;
-import top.ezadmin.common.constants.SessionConstants;
-import top.ezadmin.common.enums.DefaultParamEnum;
-import top.ezadmin.common.utils.BeanTools;
-import top.ezadmin.common.utils.JSONUtils;
-import top.ezadmin.common.utils.StringUtils;
-import top.ezadmin.common.utils.Utils;
-import top.ezadmin.common.utils.EzJsonImpl;
-import top.ezadmin.plugins.EzSqlParserImpl;
-import top.ezadmin.plugins.cache.EzCache;
-import top.ezadmin.plugins.export.EzExport;
-import top.ezadmin.plugins.refresh.EzRefresh;
-import top.ezadmin.web.EzResult;
-import top.ezadmin.web.RequestContext;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.util.UrlPathHelper;
+import top.ezadmin.EzBootstrap;
+import top.ezadmin.EzBootstrapConfig;
+import top.ezadmin.common.EzAdminRuntimeException;
+import top.ezadmin.common.constants.SessionConstants;
+import top.ezadmin.common.enums.DefaultParamEnum;
+import top.ezadmin.common.utils.*;
+import top.ezadmin.plugins.EzSqlParserImpl;
+import top.ezadmin.plugins.cache.EzCache;
+import top.ezadmin.plugins.export.EzExport;
+import top.ezadmin.plugins.refresh.EzRefresh;
+import top.ezadmin.web.EzResult;
+import top.ezadmin.web.RequestContext;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.sql.DataSource;
 
 public class EzClientServletFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(EzClientServletFilter.class);
@@ -94,8 +90,6 @@ public class EzClientServletFilter implements Filter {
         ezBootstrapConfig.setEzSqlParser(new EzSqlParserImpl());
 
 
-
-
         String configJson = ezClientProperties.getConfigJson();
         Map<String, Object> configMap = JSONUtils.parseObjectMap(configJson);
         ezBootstrapConfig.setConfig(configMap);
@@ -103,7 +97,7 @@ public class EzClientServletFilter implements Filter {
         ezBootstrapConfig.setApiKey(ezClientProperties.getApiKey());
         ezBootstrapConfig.setApiUrl(ezClientProperties.getApiUrl());
         ezBootstrapConfig.setModel(ezClientProperties.getModel());
-        if(ezClientProperties.getTemperature()!=null){
+        if (ezClientProperties.getTemperature() != null) {
             ezBootstrapConfig.setTemperature(ezClientProperties.getTemperature());
         }
 
@@ -116,7 +110,7 @@ public class EzClientServletFilter implements Filter {
                 logger.error(" can not find datasource with bean name :" + beanNames[i]);
                 throw new IllegalArgumentException(" can not find datasource with bean name :" + beanNames[i]);
             }
-            if(i==0){
+            if (i == 0) {
                 ezBootstrapConfig.getDatasourceMap().put("defaultDataSource", dataSource);
             }
             ezBootstrapConfig.getDatasourceMap().put(beanNames[i].toLowerCase(), dataSource);
@@ -126,14 +120,16 @@ public class EzClientServletFilter implements Filter {
             ezBootstrapConfig.setFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getFormResourceLocation()));
             ezBootstrapConfig.setPluginsFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsFormResourceLocation()));
             ezBootstrapConfig.setPluginsListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsListResourceLocation()));
-        }catch (Exception e){
-            logger.error("加载配置文件异常 {} {} {} {}",ezClientProperties.getListResourceLocation(),ezClientProperties.getFormResourceLocation()
-                    ,ezClientProperties.getPluginsFormResourceLocation(),ezClientProperties.getPluginsListResourceLocation(),e);
+        } catch (Exception e) {
+            logger.error("加载配置文件异常 {} {} {} {}", ezClientProperties.getListResourceLocation(), ezClientProperties.getFormResourceLocation()
+                    , ezClientProperties.getPluginsFormResourceLocation(), ezClientProperties.getPluginsListResourceLocation(), e);
         }
         EzBootstrap.getInstance().init(ezBootstrapConfig);
     }
+
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final UrlPathHelper urlPathHelper = new UrlPathHelper();
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
@@ -143,43 +139,42 @@ public class EzClientServletFilter implements Filter {
             requestContext.setRequestParams(requestToMap(httpServletRequest));
             requestContext.setSessionParams(sessionToMap(httpServletRequest.getSession()));
 
-            String requestUrl=urlPathHelper.getRequestUri(httpServletRequest);
+            String requestUrl = urlPathHelper.getRequestUri(httpServletRequest);
             requestContext.setRequestURI(requestUrl);
 
-            if(httpServletRequest.getRequestURI().equals("/topezadmin/dev.html")){
-                httpServletResponse.sendRedirect(httpServletRequest.getContextPath()+"/topezadmin/list/listall");
+            if (httpServletRequest.getRequestURI().equals("/topezadmin/dev.html")) {
+                httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/topezadmin/list/listall");
                 return;
             }
             requestContext.setServerName(httpServletRequest.getServerName());
             requestContext.setServerPort(httpServletRequest.getServerPort());
             requestContext.setContextPath(httpServletRequest.getContextPath());
             requestContext.setMethod(httpServletRequest.getMethod());
-            EzResult result=EzBootstrap.getInstance().generate(requestContext);
-            if(result.isSuccess()&&StringUtils.equals(result.getCode(),"HTML")){
+            EzResult result = EzBootstrap.getInstance().generate(requestContext);
+            if (result.isSuccess() && StringUtils.equals(result.getCode(), "HTML")) {
                 httpServletResponse.setContentType("text/html;charset=UTF-8");
-                String html= ((HashMap)result.getData()).get("html").toString();
-                IOUtils.copy(IOUtils.toInputStream(html, "UTF-8"),httpServletResponse.getOutputStream());
+                String html = ((HashMap) result.getData()).get("html").toString();
+                IOUtils.copy(IOUtils.toInputStream(html, "UTF-8"), httpServletResponse.getOutputStream());
                 return;
-            }else if(result.isSuccess()&&StringUtils.equals(result.getCode(),"EXPORT")){
-                String fileName=((HashMap)result.getData()).get("fileName").toString();
-                String contentType=Utils.trimEmptyDefault(((HashMap)result.getData()).get("contentType"),"application/octet-stream");
-                byte[] data=(byte[]) ((HashMap)result.getData()).get("html");
+            } else if (result.isSuccess() && StringUtils.equals(result.getCode(), "EXPORT")) {
+                String fileName = ((HashMap) result.getData()).get("fileName").toString();
+                String contentType = Utils.trimEmptyDefault(((HashMap) result.getData()).get("contentType"), "application/octet-stream");
+                byte[] data = (byte[]) ((HashMap) result.getData()).get("html");
                 httpServletResponse.setContentType(contentType);
                 httpServletResponse.setHeader("Content-Disposition", "attachment;filename*=utf-8''" + new String(fileName.getBytes(), "ISO-8859-1"));
-                IOUtils.copy(new ByteArrayInputStream(data),httpServletResponse.getOutputStream());
+                IOUtils.copy(new ByteArrayInputStream(data), httpServletResponse.getOutputStream());
                 return;
-            }else  if(StringUtils.equals(result.getCode(),"JSON")){
+            } else if (StringUtils.equals(result.getCode(), "JSON")) {
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
-                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(result.getData()), "UTF-8"),httpServletResponse.getOutputStream());
-            }else if(result.getCode().equals("404")){
+                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(result.getData()), "UTF-8"), httpServletResponse.getOutputStream());
+            } else if (result.getCode().equals("404")) {
                 httpServletResponse.sendRedirect("/404");
-            }
-            else if(result.getCode().equals("500")){
+            } else if (result.getCode().equals("500")) {
                 logger.error(JSONUtils.toJSONString(result));
                 throw new EzAdminRuntimeException(result.getMessage());
-            }else{
+            } else {
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
-                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(EzResult.instance().message("没有找到渲染器")), "UTF-8"),httpServletResponse.getOutputStream());
+                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(EzResult.instance().message("没有找到渲染器")), "UTF-8"), httpServletResponse.getOutputStream());
             }
 
         } catch (Exception e) {
@@ -189,6 +184,7 @@ public class EzClientServletFilter implements Filter {
             Utils.clearLog();
         }
     }
+
     //同
     public static Map<String, Object> requestToMap(HttpServletRequest request) {
         Map<String, Object> searchParamsValues = new HashMap<>();
@@ -197,23 +193,23 @@ public class EzClientServletFilter implements Filter {
         if (contentType != null && contentType.contains("application/json")) {
             byte[] content = null;
             try {
-                content = StringUtils.parseToByte(request.getInputStream() );
+                content = StringUtils.parseToByte(request.getInputStream());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            if (content!=null&&content.length > 0) {
+            if (content != null && content.length > 0) {
                 try {
                     String jsonStr = new String(content, request.getCharacterEncoding());
                     Map<String, Object> jsonParams = JSONUtils.parseObjectMap(jsonStr);
                     if (jsonParams != null) {
-                        searchParamsValues.putAll(jsonParams);
+                        jsonParams.forEach((k, v) ->
+                                searchParamsValues.put(k, transValue(request, v)));
                     }
                 } catch (Exception e) {
                     logger.error("解析JSON请求体失败", e);
                 }
             }
         }
-
 
 
         for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
@@ -223,21 +219,8 @@ public class EzClientServletFilter implements Filter {
                 continue;
             }
             if (v.length == 1) {
-                searchParamsValues.put(k, v[0] == null ? null : v[0].trim());
-                if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_TODAY_DATE.name(), v[0])) {
-                    searchParamsValues.put(k, DefaultParamEnum.getValue(DefaultParamEnum.EZ_TODAY_DATE.name()));
-                }else
-                if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_TODAY_DATE_NORMAL.name(), v[0])) {
-                    searchParamsValues.put(k, DefaultParamEnum.getValue(DefaultParamEnum.EZ_TODAY_DATE_NORMAL.name()));
-                }else
-                if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_CURRENT_MONTH.name(), v[0])) {
-                    searchParamsValues.put(k, DefaultParamEnum.getValue(DefaultParamEnum.EZ_CURRENT_MONTH.name()));
-                }else
-                if (StringUtils.equalsIgnoreCase(SessionConstants.EZ_SESSION_USER_ID_KEY, v[0])) {
-                    searchParamsValues.put(k, Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_USER_ID_KEY)));
-                }else{
-                    searchParamsValues.put(k+ "_ARRAY", v);
-                }
+                searchParamsValues.put(k, transValue(request, v[0]));
+                searchParamsValues.put(k + "_ARRAY", v);
             } else if (v.length > 1) {
                 searchParamsValues.put(k + "_ARRAY", request.getParameterValues(k));
                 searchParamsValues.put(k, JSONUtils.toJSONString(request.getParameterValues(k)));
@@ -249,6 +232,26 @@ public class EzClientServletFilter implements Filter {
         searchParamsValues.put("EZ_REFERER", request.getHeader("referer"));
         searchParamsValues.put("COMPANY_ID", Utils.trimNull(request.getSession().getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
         return searchParamsValues;
+    }
+
+    private static String transValue(HttpServletRequest request, Object value) {
+        String tempValue = "";
+        if (value instanceof String[]) {
+            if (value != null && ((String[]) value).length == 1) {
+                tempValue = ((String[]) value)[0];
+            }
+        } else {
+            tempValue = value.toString();
+        }
+        if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_TODAY_DATE.name(), tempValue)) {
+            return DefaultParamEnum.getValue(DefaultParamEnum.EZ_TODAY_DATE.name());
+        } else if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_TODAY_DATE_NORMAL.name(), tempValue)) {
+            return DefaultParamEnum.getValue(DefaultParamEnum.EZ_TODAY_DATE_NORMAL.name());
+        } else if (StringUtils.equalsIgnoreCase(DefaultParamEnum.EZ_CURRENT_MONTH.name(), tempValue)) {
+            return DefaultParamEnum.getValue(DefaultParamEnum.EZ_CURRENT_MONTH.name());
+        } else {
+            return Utils.trimNull(tempValue);
+        }
     }
 
     private Map<String, String> sessionToMap(HttpSession session) {
@@ -267,7 +270,6 @@ public class EzClientServletFilter implements Filter {
         map.put("COMPANY_ID", Utils.trimNull(session.getAttribute(SessionConstants.EZ_SESSION_COMPANY_ID_KEY)));
         return map;
     }
-
 
 
     @Override

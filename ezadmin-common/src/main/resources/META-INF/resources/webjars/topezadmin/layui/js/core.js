@@ -422,7 +422,7 @@ function initForm() {
                 shortcuts: shortcut,
                 holidays: holiday
             };
-            if(element.getAttribute("format")){
+            if (element.getAttribute("format")) {
                 config.format = element.getAttribute("format");
             }
             laydate.render(config);
@@ -1301,7 +1301,7 @@ function ezopen(openType, title, appendUrl, area) {
         case 'AJAX':
             $.getJSON(appendUrl, function (result) {
                 if (result.success) {
-                    layer.msg("操作成功",{time:500}, function (index) {
+                    layer.msg("操作成功", {time: 500}, function (index) {
                         location.reload();
                     })
                 } else {
@@ -1317,7 +1317,7 @@ function ezopen(openType, title, appendUrl, area) {
                 $.getJSON(appendUrl, function (result) {
                     $(".layuimini-loader").hide();
                     if (result.success) {
-                        layer.alert("操作成功",  function (index) {
+                        layer.alert("操作成功", function (index) {
                             location.reload();
                         })
                     } else {

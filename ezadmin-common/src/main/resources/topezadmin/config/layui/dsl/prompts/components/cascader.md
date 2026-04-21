@@ -37,29 +37,27 @@
 
 ### 基础属性
 
-| 属性        | 类型 | 必填 | 说明                      |
-|-----------|------|----|-------------------------|
-| item_name | String | 是  | 字段名，对应数据库字段             |
-| label     | String | 是  | 显示标签                    |
-| component | String | 是  | 固定值：`cascader`          |
-| operator  | String | 否  | 查询操作符                   |
-| initData  | Object | 是  | 数据源配置                   |
-| props     | Object | 否  | 属性配置，支持lay-cascader所有属性 |
+| 属性          | 类型     | 必填     | 说明                              |
+|-------------|--------|--------|---------------------------------|
+| item_name   | String | 是      | 字段名，对应数据库字段                     |
+| label       | String | 是      | 显示标签                            |
+| component   | String | 是      | 固定值：`cascader`                  |
+| operator    | String | 否      | 查询操作符                           |
+| initData    | Object | 是      | 数据源配置                           |
+| props       | Object | 否      | 属性配置，支持lay-cascader所有属性         |
 | description | String | 字段说明文本 | `"可选择多个"`                       |
-| classAppend | String | 否 | layui-col-md8 主要使用layui布局设置占用宽度                       |
+| classAppend | String | 否      | layui-col-md8 主要使用layui布局设置占用宽度 |
 
 ### props详情
-| expandTrigger	| 次级菜单的展开方式	| String	| click / hover	| 默认值：'click'
-| multiple	| 是否多选	| Boolean	| true / false	| false
-| disabled	| 指定选项的禁用为选项对象的某个属性值	| String	| -	| 'disabled'
 
-
-
-
+| expandTrigger | 次级菜单的展开方式 | String | click / hover | 默认值：'click'
+| multiple | 是否多选 | Boolean | true / false | false
+| disabled | 指定选项的禁用为选项对象的某个属性值 | String | - | 'disabled'
 
 ### initData 配置
 
 **静态数据（dataJson）：**
+
 ```json
 {
   "initData": {
@@ -83,6 +81,7 @@
 ```
 
 **动态数据（dataSql）：**
+
 ```json
 {
   "initData": {
@@ -94,12 +93,18 @@
 
 ### props 属性
 
-| 属性 | 类型 | 说明 | 示例 |
-|------|------|------|------|
-| placeholder | String | 提示文本 | `"请选择地区"` |
-| lay-verify | String | Layui表单验证规则 | `"required"` |
-| required | Boolean | 是否必填(显示红色*) | `true` |
-| description | String | 字段说明文本 | `"请选择完整路径"` |
+| 属性          | 类型      | 说明          | 示例           |
+|-------------|---------|-------------|--------------|
+| placeholder | String  | 提示文本        | `"请选择地区"`    |
+| lay-verify  | String  | Layui表单验证规则 | `"required"` |
+| required    | Boolean | 是否必填(显示红色*) | `true`       |
+| description | String  | 字段说明文本      | `"请选择完整路径"`  |
+
+#### 如下几个属性 可以空多选的同时，父节点也纳入传递的参数里面
+
+"strictMode": true,
+"checkStrictly": false,
+"multiple": true,
 
 ## 完整示例
 
@@ -346,6 +351,7 @@
 ### 树形结构
 
 数据必须是树形结构，每个节点包含：
+
 - `label`: 显示文本
 - `value`: 节点值
 - `children`: 子节点数组（可选）
@@ -369,9 +375,11 @@
 ### 存储格式
 
 选中的路径以逗号分隔的字符串形式存储：
+
 ```
 "110000,110100,110101"
 ```
+
 表示：北京市 > 市辖区 > 东城区
 
 ### SQL数据转换
@@ -388,12 +396,10 @@ CREATE TABLE regions (
 ```
 
 查询SQL：
+
 ```sql
 SELECT id value, name label, parent_id FROM regions WHERE status=1 ORDER BY sort
 ```
-
-
-
 
 系统会自动将扁平数据转换为树形结构。
 
@@ -420,6 +426,7 @@ lay-cascader 默认只能选择叶子节点（最后一级）。
 ### 数据不显示树形结构？
 
 检查：
+
 1. 数据格式是否正确（必须包含 children 字段）
 2. SQL查询是否包含 parent_id 字段
 3. 数据中是否有循环引用
@@ -453,7 +460,9 @@ lay-cascader 默认只能选择叶子节点（最后一级）。
 ```
 
 ### 如果一条sql无法查出来所有数据怎么办
+
 服务端将 递归5层 获取子数据 ，最终前端 树形展示
+
 ```json
  
 {

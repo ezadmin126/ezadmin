@@ -1,9 +1,7 @@
 package top.ezadmin.dao.dto;
 
-import com.alibaba.fastjson.JSONObject;
 import top.ezadmin.common.utils.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +10,13 @@ import java.util.Map;
  * 列表 DSL 配置类
  * 对应 layui dsl/list 配置文件
  */
-public class ListDsl extends BaseDsl{
+public class ListDsl extends BaseDsl {
 
 
     /**
      * 是否隐藏搜索栏
      */
-    private Boolean hideSearch=false;
+    private Boolean hideSearch = false;
     /**
      * 初始化数据接口
      */
@@ -27,7 +25,7 @@ public class ListDsl extends BaseDsl{
     /**
      * 表格主体配置
      */
-    private Map<String,Object> body;
+    private Map<String, Object> body;
 
     /**
      * 搜索配置列表

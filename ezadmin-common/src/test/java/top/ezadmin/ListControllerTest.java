@@ -13,7 +13,6 @@ import top.ezadmin.web.RequestContext;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -326,6 +325,7 @@ public class ListControllerTest {
         System.out.println("=== testMultiSelectSearch ===");
         System.out.println("Multi-select search result: " + result.getData());
     }
+
     @Test
     public void testJDBCTYPE() throws Exception {
         ListController controller = new ListController();

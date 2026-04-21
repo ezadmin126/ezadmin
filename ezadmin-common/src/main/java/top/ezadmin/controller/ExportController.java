@@ -24,7 +24,7 @@ public class ExportController extends BaseController {
 
     public EzResult export(RequestContext requestContext, String method, String listUrlCode) throws Exception {
         String listId = listUrlCode;
-        String ENCRYPT_LIST_ID =listUrlCode;
+        String ENCRYPT_LIST_ID = listUrlCode;
         String _BLANK_PARAM_COLUMN = Utils.trimNull(requestContext.getParameter("_BLANK_PARAM_COLUMN"));
         String EZ_PER_PAGE_SIZE = Utils.trimEmptyDefault(requestContext.getParameter("EZ_PER_PAGE_SIZE"), "1000");
         String orderedColumn[] = null;
@@ -39,10 +39,10 @@ public class ExportController extends BaseController {
             if (existList.containsKey(key)) {
                 return EzResult.instance().fail().message(key + "导出失败：当前已有人员" + existList.get(key) + "正在导出此列表，请等待对方先导出完成。");
             } else {
-                existList.put(key, sessionUserId + username );
+                existList.put(key, sessionUserId + username);
             }
             log.info("start export html list_id=" + listId);
-            Map<String, Object> requestParamMap =requestContext.getRequestParams();
+            Map<String, Object> requestParamMap = requestContext.getRequestParams();
             Map<String, String> sessionParamMap = requestContext.getSessionParams();
 
             requestParamMap.put("currentPage", "1");
@@ -99,16 +99,16 @@ public class ExportController extends BaseController {
             //  log.info("ezadmin start export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
             String fileName = Utils.trimNull(requestParamMap.get("EXPORT_FILE_NAME"));
 
-            EzExportResult bb= EzBootstrap.config().getEzExport().export(Utils.trimEmptyDefault(fileName,Utils.getStringByObject(coreMap, "listname")), head, data);
+            EzExportResult bb = EzBootstrap.config().getEzExport().export(Utils.trimEmptyDefault(fileName, Utils.getStringByObject(coreMap, "listname")), head, data);
             if (StringUtils.isBlank(fileName)) {
                 fileName = bb.getFileName();
             }
             if (StringUtils.isBlank(fileName)) {
                 fileName = Utils.getStringByObject(coreMap, "listname");
             }
-            return EzResult.instance().success().dataMap("html",bb.getFile())
-                    .dataMap("contentType",bb.getContentType())
-                    .dataMap("fileName",fileName).code("EXPORT");
+            return EzResult.instance().success().dataMap("html", bb.getFile())
+                    .dataMap("contentType", bb.getContentType())
+                    .dataMap("fileName", fileName).code("EXPORT");
         } catch (Exception e) {
             log.error("", e);
             return EzResult.instance().fail().message("导出失败：" + e.getMessage());

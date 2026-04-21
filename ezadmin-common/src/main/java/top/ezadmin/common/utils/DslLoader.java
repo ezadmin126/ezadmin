@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * DSL 统一加载器
  * 实现"文件优先，数据库降级"的加载策略
- *
+ * <p>
  * 加载顺序：
  * 1. 优先尝试从文件加载（支持热加载）
  * 2. 如果文件不存在，尝试从数据库加载
@@ -24,7 +24,8 @@ public class DslLoader {
 
     /**
      * 加载DSL配置（统一入口）
-     * @param id DSL ID
+     *
+     * @param id   DSL ID
      * @param type DSL类型：form 或 list
      * @return DSL配置对象，如果不存在则返回null
      */
@@ -37,7 +38,7 @@ public class DslLoader {
             log.warn("不支持的DSL类型: {}", type);
             return null;
         }
-        return (DslConfig)EzBootstrap.config().getEzCache().get("TEMPLATE_DSL", type + "-" + id,
+        return (DslConfig) EzBootstrap.config().getEzCache().get("TEMPLATE_DSL", type + "-" + id,
                 new Callback() {
                     @Override
                     public Object call(String key) {
@@ -45,6 +46,7 @@ public class DslLoader {
                     }
                 });
     }
+
     private static DslConfig loadDslDirect(String id, String type) {
         if (id == null || id.isEmpty()) {
             log.warn("DSL ID不能为空");
@@ -76,7 +78,8 @@ public class DslLoader {
 
     /**
      * 从文件加载DSL配置
-     * @param id DSL ID（文件名）
+     *
+     * @param id   DSL ID（文件名）
      * @param type DSL类型
      * @return DSL配置对象，如果不存在则返回null
      */
@@ -113,7 +116,8 @@ public class DslLoader {
 
     /**
      * 从数据库加载DSL配置
-     * @param id DSL ID
+     *
+     * @param id   DSL ID
      * @param type DSL类型
      * @return DSL配置对象，如果不存在则返回null
      */
@@ -133,10 +137,11 @@ public class DslLoader {
 
     /**
      * 保存DSL配置
-     * @param id DSL ID
-     * @param type DSL类型
-     * @param dslConfig DSL配置内容
-     * @param saveToFile 是否保存到文件
+     *
+     * @param id             DSL ID
+     * @param type           DSL类型
+     * @param dslConfig      DSL配置内容
+     * @param saveToFile     是否保存到文件
      * @param saveToDatabase 是否保存到数据库
      * @return 保存是否成功
      */
@@ -151,7 +156,7 @@ public class DslLoader {
                 String projectRoot = ProjectPathUtils.getProjectRoot();
                 if (projectRoot != null) {
                     String filePath = projectRoot + "/src/main/resources/topezadmin/config/layui/dsl/"
-                                    + subPath + "/" + id + ".json";
+                            + subPath + "/" + id + ".json";
                     java.io.File file = new java.io.File(filePath);
 
                     // 确保父目录存在
@@ -162,7 +167,7 @@ public class DslLoader {
                     // 格式化 JSON 并写入文件
                     String formattedJson = JSONUtils.toPrettyJSONString(dslConfig);
                     java.nio.file.Files.write(java.nio.file.Paths.get(filePath),
-                                            formattedJson.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                            formattedJson.getBytes(java.nio.charset.StandardCharsets.UTF_8));
 
                     log.info("✓ DSL保存到文件成功: {}", filePath);
                 } else {
@@ -189,7 +194,7 @@ public class DslLoader {
                     log.info("✓ DSL保存到数据库成功: id={}, type={}", id, type);
                 } else {
                     log.error("✗ DSL保存到数据库失败: id={}, type={}", id, type);
-                  //  success = false;
+                    //  success = false;
                 }
             } catch (Exception e) {
                 log.error("保存DSL到数据库失败: id={}, type={}", id, type, e);

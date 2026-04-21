@@ -12,22 +12,22 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EzCacheAnnotation {
-    
+
     /**
      * 缓存键名
      */
     String value() default "";
-    
+
     /**
      * 缓存过期时间（秒）
      */
     int expire() default 3600;
-    
+
     /**
      * 是否启用缓存
      */
     boolean enabled() default true;
-    
+
     /**
      * 缓存条件表达式
      */

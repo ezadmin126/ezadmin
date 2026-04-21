@@ -1,5 +1,5 @@
 package top.ezadmin.web;
- 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,8 @@ public class EzResult {
     private String message;
     private long count;
     private Object data;
- 
+    private Object initData;
+
 
     private EzResult() {
     }
@@ -21,6 +22,11 @@ public class EzResult {
 
     public EzResult data(Object data) {
         this.data = data;
+        return this;
+    }
+
+    public EzResult initData(Object initData) {
+        this.initData = initData;
         return this;
     }
 
@@ -137,4 +143,11 @@ public class EzResult {
         return this;
     }
 
+    public Object getInitData() {
+        return initData;
+    }
+
+    public void setInitData(Object initData) {
+        this.initData = initData;
+    }
 }

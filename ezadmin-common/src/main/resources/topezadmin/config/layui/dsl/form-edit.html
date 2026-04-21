@@ -3,14 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>表单可视化AI编辑  </title>
+    <title>表单可视化AI编辑 </title>
 
     <link th:href="${'/webjars/topezadmin/layui/css/ezform.css?v='+vi}" rel="stylesheet">
-    <link rel="stylesheet" th:href="${'/webjars/layuidist/css/layui.css?v='+vi}" href="https://unpkg.com/layui@2.9.20/dist/css/layui.css">
+    <link rel="stylesheet" th:href="${'/webjars/layuidist/css/layui.css?v='+vi}"
+          href="https://unpkg.com/layui@2.9.20/dist/css/layui.css">
     <link th:href="${'/webjars/topezadmin/plugins/cascader/cascader.css'}" rel="stylesheet">
-    <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}"
+            src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script th:src="${'/webjars/layuidist/layui.js?v='+vi}"  src="https://unpkg.com/layui@2.9.20/dist/layui.js"></script>
+    <script th:src="${'/webjars/layuidist/layui.js?v='+vi}" src="https://unpkg.com/layui@2.9.20/dist/layui.js"></script>
 
     <script th:src="${'/webjars/topezadmin/layui/js/jquery.cookie.js'}"></script>
 
@@ -254,7 +256,7 @@
             background: #fff;
             padding: 12px 16px;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             word-wrap: break-word;
             line-height: 1.6;
             font-size: 14px;
@@ -846,9 +848,15 @@
         }
 
         @keyframes loadingDots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
+            0%, 20% {
+                content: '.';
+            }
+            40% {
+                content: '..';
+            }
+            60%, 100% {
+                content: '...';
+            }
         }
 
         .example-prompts {
@@ -981,18 +989,19 @@
                 <div class="form-preview-container" id="formContainer">
 
 
-                    <div class="appendHead" item_name="appendHead" th:remove="tag" th:if="${not #strings.isEmpty(form.appendHead)}" th:utext="${form.appendHead}"></div>
+                    <div class="appendHead" item_name="appendHead" th:remove="tag"
+                         th:if="${not #strings.isEmpty(form.appendHead)}" th:utext="${form.appendHead}"></div>
                     <input type="hidden" ID="EZ_SESSION_USER_NAME_KEY" name="EZ_SESSION_USER_NAME_KEY"
                            th:value="${EZ_SESSION_USER_NAME_KEY}">
                     <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY"
                            th:value="${EZ_SESSION_USER_ID_KEY}">
 
 
-                    <input type="hidden" ID="ENCRYPT_FORM_ID" name="ENCRYPT_FORM_ID"  th:value="${ENCRYPT_FORM_ID}">
+                    <input type="hidden" ID="ENCRYPT_FORM_ID" name="ENCRYPT_FORM_ID" th:value="${ENCRYPT_FORM_ID}">
 
 
-
-                    <form ID="inputForm" method="post" style="padding-bottom: 60px;"  class="layui-form inputForm" lay-filter="inputForm">
+                    <form ID="inputForm" method="post" style="padding-bottom: 60px;" class="layui-form inputForm"
+                          lay-filter="inputForm">
                         <div th:class="${'layui-'+ (#strings.isEmpty(form.layout)?'container':'fluid')}">
                             <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
                                 <div class="layui-tab-content">
@@ -1000,63 +1009,76 @@
                                         <input type="hidden" ID="ID" name="ID" th:VALUE="${ID}">
                                         <div class="layui-col-space10 layui-row ">
                                             <!-- 循环渲染所有卡片 -->
-                                            <div th:each="cardItem,cardStat : ${form.cardList}" th:classappend="${ (cardItem.get('classAppend') != null ? cardItem.get('classAppend') : '')}">
-                                                    <!-- 普通表单卡片 -->
-                                                    <div th:if="${cardItem.type == 'card'}" class="layui-card" th:id="${cardItem.label}"
-                                                         th:item_name="${'card-'+cardItem.label}"
+                                            <div th:each="cardItem,cardStat : ${form.cardList}"
+                                                 th:classappend="${ (cardItem.get('classAppend') != null ? cardItem.get('classAppend') : '')}">
+                                                <!-- 普通表单卡片 -->
+                                                <div th:if="${cardItem.type == 'card'}" class="layui-card"
+                                                     th:id="${cardItem.label}"
+                                                     th:item_name="${'card-'+cardItem.label}"
 
-                                                         th:data-card-config="${cardItem.componentJson}"
+                                                     th:data-card-config="${cardItem.componentJson}"
 
-                                                    >
-                                                        <div class="layui-card-header ez-form-panel" >
-                                                            [(${cardItem.label})]   [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
-                                                            <div class="layui-layer-setwin  "  style="top: 0px;line-height: 43px;position: absolute;">
-                                                                <div class="layui-btn-group custom-card-btn " th:if="${not #lists.isEmpty(cardItem.buttonList) }">
-                                                                    <th:block th:each="button : ${cardItem.buttonList}">
-                                                                        <div th:utext="${cr.render(button)}" th:remove="tag"></div>
+                                                >
+                                                    <div class="layui-card-header ez-form-panel">
+                                                        [(${cardItem.label})] [(${cardItem.get('description') != null ?
+                                                        cardItem.get('description') : ''})]
+                                                        <div class="layui-layer-setwin  "
+                                                             style="top: 0px;line-height: 43px;position: absolute;">
+                                                            <div class="layui-btn-group custom-card-btn "
+                                                                 th:if="${not #lists.isEmpty(cardItem.buttonList) }">
+                                                                <th:block th:each="button : ${cardItem.buttonList}">
+                                                                    <div th:utext="${cr.render(button)}"
+                                                                         th:remove="tag"></div>
+                                                                </th:block>
+                                                            </div>
+                                                            <span class="layui-layer-min" style=" "></span>
+                                                            <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-card-body">
+
+                                                        <th:block
+                                                                th:if="${cardItem.fieldList != null and not #lists.isEmpty(cardItem.fieldList)}">
+                                                            <th:block th:each="rowObj : ${cardItem.fieldList}">
+                                                                <div class="layui-row layui-col-space5">
+                                                                    <th:block th:each="field : ${rowObj.row}">
+                                                                        <div th:utext="${cr.render(field)}"
+                                                                             th:remove="tag"></div>
                                                                     </th:block>
                                                                 </div>
-                                                                <span class="layui-layer-min" style=" "></span>
-                                                                <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="layui-card-body">
-
-                                                            <th:block th:if="${cardItem.fieldList != null and not #lists.isEmpty(cardItem.fieldList)}">
-                                                                <th:block th:each="rowObj : ${cardItem.fieldList}">
-                                                                    <div class="layui-row layui-col-space5">
-                                                                        <th:block th:each="field : ${rowObj.row}">
-                                                                            <div th:utext="${cr.render(field)}" th:remove="tag"></div>
-                                                                        </th:block>
-                                                                    </div>
-                                                                </th:block>
-
                                                             </th:block>
 
-                                                        </div>
-                                                    </div>
-                                                    <!-- iframe卡片 -->
-                                                    <div  th:item_name="${'card-'+cardItem.label}" th:if="${cardItem.type == 'iframe'}" class="layui-card" >
-                                                        <div class="layui-card-header ez-form-panel"  >
-                                                            [(${cardItem.label})]    [(${cardItem.get('description') != null ? cardItem.get('description') : ''})]
-                                                            <div class="layui-layer-setwin  "  style="top: 0px;line-height: 43px;position: absolute;">
-                                                                <div class="layui-btn-group custom-card-btn" th:if="${not #lists.isEmpty(cardItem.buttonList)}">
-                                                                    <th:block th:each="button : ${cardItem.buttonList}">
-                                                                        <div th:utext="${cr.render(button)}" th:remove="tag"></div>
-                                                                    </th:block>
-                                                                </div>
-                                                                <span class="layui-layer-min" style=" "></span>
-                                                                <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="layui-card-body" style="padding: 0;">
-                                                            <iframe th:src="${cardItem.iframe.url}"
-                                                                    th:style="'display:block;width: ' + ${cardItem.iframe.width != null ? cardItem.iframe.width : '100%'} + '; height: ' + ${cardItem.iframe.height != null ? cardItem.iframe.height : '400px'} + '; border: none;'"
-                                                                    frameborder="0">
-                                                            </iframe>
-                                                        </div>
+                                                        </th:block>
 
                                                     </div>
+                                                </div>
+                                                <!-- iframe卡片 -->
+                                                <div th:item_name="${'card-'+cardItem.label}"
+                                                     th:if="${cardItem.type == 'iframe'}" class="layui-card">
+                                                    <div class="layui-card-header ez-form-panel">
+                                                        [(${cardItem.label})] [(${cardItem.get('description') != null ?
+                                                        cardItem.get('description') : ''})]
+                                                        <div class="layui-layer-setwin  "
+                                                             style="top: 0px;line-height: 43px;position: absolute;">
+                                                            <div class="layui-btn-group custom-card-btn"
+                                                                 th:if="${not #lists.isEmpty(cardItem.buttonList)}">
+                                                                <th:block th:each="button : ${cardItem.buttonList}">
+                                                                    <div th:utext="${cr.render(button)}"
+                                                                         th:remove="tag"></div>
+                                                                </th:block>
+                                                            </div>
+                                                            <span class="layui-layer-min" style=" "></span>
+                                                            <span class="layui-layer-max layui-layer-maxmin layui-hide"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-card-body" style="padding: 0;">
+                                                        <iframe th:src="${cardItem.iframe.url}"
+                                                                th:style="'display:block;width: ' + ${cardItem.iframe.width != null ? cardItem.iframe.width : '100%'} + '; height: ' + ${cardItem.iframe.height != null ? cardItem.iframe.height : '400px'} + '; border: none;'"
+                                                                frameborder="0">
+                                                        </iframe>
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1065,12 +1087,13 @@
                             </div>
                         </div>
                         <!-- 提交按钮区域（在所有卡片之后） -->
-                        <div  class="layui-card layui-hide">
+                        <div class="layui-card layui-hide">
                             <div class="layui-card-body">
                                 <div class="layui-form-item" style="margin-top: 20px;">
                                     <div class="layui-input-block">
 
-                                        <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue layui-hide " lay-submit
+                                        <button id="submitbtn" type="submit" class="layui-btn layui-bg-blue layui-hide "
+                                                lay-submit
                                                 lay-filter="submitbtn">提交
                                         </button>
 
@@ -1086,9 +1109,9 @@
                         </div>
                     </form>
 
-                    <input type="hidden" id='uploadUrl'   th:value="${uploadUrl}">
-                    <input type="hidden" id='downloadUrl'  th:value="${downloadUrl}">
-                    <input type="hidden" id='formSubmitUrl'  th:value="${formSubmitUrl}">
+                    <input type="hidden" id='uploadUrl' th:value="${uploadUrl}">
+                    <input type="hidden" id='downloadUrl' th:value="${downloadUrl}">
+                    <input type="hidden" id='formSubmitUrl' th:value="${formSubmitUrl}">
                     <script>
                         layui.layer.open({
                             type: 1,
@@ -1191,9 +1214,11 @@
                             .site-narrow {
                                 display: block; /* 或者其他你需要的显示方式 */
                             }
+
                             .layui-layer-dir {
                                 display: none; /* 确保宽屏内容不显示 */
                             }
+
                             .site-narrow:hover + .layui-layer-dir,
                             .layui-layer-dir:hover { /* 为了避免鼠标离开图标菜单就消失，可以增加菜单自身的悬停 */
                                 display: block;
@@ -1236,33 +1261,41 @@
                     </div>
 
                     <script type="text/html" id="template-image">
-                        <div  class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}" style="margin-top:5px;margin-right:5px;cursor: pointer;position: relative;border:1px solid #dae0e6">
+                        <div class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}"
+                             style="margin-top:5px;margin-right:5px;cursor: pointer;position: relative;border:1px solid #dae0e6">
                             <div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
-                                <img data-original="{{= d.downloadUrl }}{{= d.fileId }}" style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
+                                <img data-original="{{= d.downloadUrl }}{{= d.fileId }}"
+                                     style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
                                      data-click="viewer-image"
                                      src="{{= d.downloadUrl }}{{= d.fileId }}"></img>
                             </div>
-                            <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}" class="layui-badge deleteFiles   ">
+                            <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}"
+                                  class="layui-badge deleteFiles   ">
             <i class="layui-icon layui-icon-close"></i></span>
                         </div>
                     </script>
                     <script type="text/html" id="template-file">
-                        <div  class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}" style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
+                        <div class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}"
+                             style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
                             <div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
-                                <i  onclick="javascript:openBlank('{{= d.downloadUrl }}{{= d.fileId }}')" style="font-size:100px; max-width: 100%; max-height: 100%;"
-                                    class=" layui-upload-img layui-icon-file-b layui-icon"></i>
+                                <i onclick="javascript:openBlank('{{= d.downloadUrl }}{{= d.fileId }}')"
+                                   style="font-size:100px; max-width: 100%; max-height: 100%;"
+                                   class=" layui-upload-img layui-icon-file-b layui-icon"></i>
                             </div>
-                            <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}" class="layui-badge deleteFiles   ">
+                            <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}"
+                                  class="layui-badge deleteFiles   ">
 <i class="layui-icon layui-icon-close"></i></span>
                         </div>
                     </script>
                     <script type="text/html" id="template-video">
-                        <div  class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}" style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
+                        <div class="file_preview file_preview_{{= d.uniqueName }}" file_id="{{= d.fileId }}"
+                             style="margin-right:20px;cursor: pointer;position: relative;border:1px solid #dae0e6">
                             <div style="display: flex;width: 150px;height: 150px;justify-content: center;align-items:center">
-                                <video  style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
-                                        src="{{= d.downloadUrl }}{{= d.fileId }}" controls="controls"></video>
+                                <video style=" max-width: 100%; max-height: 100%;" class="viewer-image layui-upload-img"
+                                       src="{{= d.downloadUrl }}{{= d.fileId }}" controls="controls"></video>
                             </div>
-                            <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}" class="layui-badge deleteFiles   ">
+                            <span style="top: 0; right: 0;position: absolute; " item_id="{{=d.itemId}}"
+                                  class="layui-badge deleteFiles   ">
 <i class="layui-icon layui-icon-close"></i></span>
                         </div>
                     </script>
@@ -1272,11 +1305,11 @@
                         /*<![CDATA[*/
 
 
-                        var template =  $("#template-image").html();
-                        var template_v =  $("#template-video").html();
-                        var template_file =  $("#template-file").html();
+                        var template = $("#template-image").html();
+                        var template_v = $("#template-video").html();
+                        var template_file = $("#template-file").html();
 
-                        layui.use(['form', 'layer', 'laytpl','upload'], function(){
+                        layui.use(['form', 'layer', 'laytpl', 'upload'], function () {
                             var form = layui.form;
                             var layer = layui.layer;
                             let laytpl = layui.laytpl;
@@ -1290,7 +1323,7 @@
                             });
 
                             // 如果有 initExpress，加载表单数据（编辑模式）
-                            var index=layer.load(3, {shade: [1, '#FFF']});
+                            var index = layer.load(3, {shade: [1, '#FFF']});
                             initFormValue(urlParams);
                             layui.form.render();
                             $.ajax({
@@ -1298,13 +1331,13 @@
                                 type: 'POST',
                                 data: JSON.stringify(urlParams),
                                 contentType: 'application/json;charset=UTF-8',
-                                success: function(res){
-                                    if(res.code == '0' && res.data) {
+                                success: function (res) {
+                                    if (res.code == '0' && res.data) {
                                         if (Object.keys(res.data).length > 0) {
                                             // 设置表单默认值（从 URL 参数）
                                             initFormValue(res.data);
                                             //自定义函数
-                                            if(typeof initFunction === 'function'){
+                                            if (typeof initFunction === 'function') {
                                                 initFunction(res.data);
                                             }
                                             // 刷新表单渲染（特别是 select）
@@ -1314,7 +1347,7 @@
                                     }
                                     layui.layer.close(index);
                                 },
-                                error: function(){
+                                error: function () {
                                     layer.msg('加载数据失败');
                                     form.render();
                                     layui.layer.close(index);
@@ -1325,7 +1358,8 @@
                         /*]]>*/
 
                     </script>
-                    <div class="appendFoot" item_name="appendFoot"  th:remove="tag" th:if="${not #strings.isEmpty(form.appendFoot)}" th:utext="${form.appendFoot}"></div>
+                    <div class="appendFoot" item_name="appendFoot" th:remove="tag"
+                         th:if="${not #strings.isEmpty(form.appendFoot)}" th:utext="${form.appendFoot}"></div>
                 </div>
             </div>
         </form>
@@ -1340,7 +1374,8 @@
 
         <!-- 2. 中间 Tab 区域 -->
         <div class="chat-body" style="padding: 0;">
-            <div class="layui-tab layui-tab-brief" lay-filter="rightPanelTab" style="margin: 0;height: calc(100vh - 380px);">
+            <div class="layui-tab layui-tab-brief" lay-filter="rightPanelTab"
+                 style="margin: 0;height: calc(100vh - 380px);">
                 <ul class="layui-tab-title" style="margin: 0; background: #fff;">
                     <li>📝 属性配置</li>
                     <li class="layui-this">🤖 AI 助手</li>
@@ -1348,41 +1383,46 @@
                 <div class="layui-tab-content" style="padding: 0; height: calc(100vh - 420px);">
                     <!-- Tab 1: 属性配置 -->
                     <div class="layui-tab-item  ">
-                            <div id="propertyForm"  >
-                                <form class="layui-form" style="height: calc(100vh - 420px); overflow: scroll;"  lay-filter="propertyForm">
-                                    <div class="layui-form-item" style="margin-bottom: 0px;text-align: right;">
-                                        <button type="button" class="layui-btn layui-btn-normal action-btn" id="applyPropsBtn">
-                                            <i class="layui-icon layui-icon-ok"></i> 应用配置
-                                        </button>
-                                        <button type="button" class="layui-btn layui-btn-danger action-btn" id="deleteElementBtn">
-                                            <i class="layui-icon layui-icon-delete"></i> 删除元素
-                                        </button>
-                                    </div>  <!-- 基础属性 - 始终显示 -->
-                                    <div class="property-section">
-                                        <div class="property-section-title">基础属性</div>
+                        <div id="propertyForm">
+                            <form class="layui-form" style="height: calc(100vh - 420px); overflow: scroll;"
+                                  lay-filter="propertyForm">
+                                <div class="layui-form-item" style="margin-bottom: 0px;text-align: right;">
+                                    <button type="button" class="layui-btn layui-btn-normal action-btn"
+                                            id="applyPropsBtn">
+                                        <i class="layui-icon layui-icon-ok"></i> 应用配置
+                                    </button>
+                                    <button type="button" class="layui-btn layui-btn-danger action-btn"
+                                            id="deleteElementBtn">
+                                        <i class="layui-icon layui-icon-delete"></i> 删除元素
+                                    </button>
+                                </div>  <!-- 基础属性 - 始终显示 -->
+                                <div class="property-section">
+                                    <div class="property-section-title">基础属性</div>
 
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label">字段名</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" id="prop-item_name" class="layui-input" placeholder="字段名">
-                                            </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">字段名</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="prop-item_name" class="layui-input"
+                                                   placeholder="字段名">
                                         </div>
+                                    </div>
 
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label">显示标签</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" id="prop-label" class="layui-input" placeholder="显示标签">
-                                            </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">显示标签</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="prop-label" class="layui-input"
+                                                   placeholder="显示标签">
                                         </div>
+                                    </div>
 
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label">组件类型</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" id="prop-component" class="layui-input" readonly>
-                                            </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">组件类型</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="prop-component" class="layui-input" readonly>
                                         </div>
+                                    </div>
 
-                                        <div class="layui-form-item">
+                                    <div class="layui-form-item">
                                         <label class="layui-form-label">栅格宽度</label>
                                         <div class="layui-input-block">
                                             <select id="prop-classAppend" lay-filter="prop-classAppend">
@@ -1394,23 +1434,26 @@
                                             </select>
                                         </div>
                                     </div>
-                                    </div>
+                                </div>
 
-                                    <!-- 动态配置区域 - 根据组件类型渲染 -->
-                                    <div id="section-dynamic"></div>
-                                </form>
-                            </div>
+                                <!-- 动态配置区域 - 根据组件类型渲染 -->
+                                <div id="section-dynamic"></div>
+                            </form>
+                        </div>
                     </div>
 
                     <!-- Tab 2: AI 助手 -->
                     <div class="layui-tab-item layui-show" style="height: 100%; padding: 0;   flex-direction: column;">
                         <div class="ai-chat-box" id="aiChatBox" style="flex: 1; display: flex; flex-direction: column;">
                             <!-- AI 消息区域 -->
-                            <div class="ai-chat-messages" id="aiChatMessages" style="flex: 1; overflow-y: auto; padding: 15px; background: #f8f9fa;">
+                            <div class="ai-chat-messages" id="aiChatMessages"
+                                 style="flex: 1; overflow-y: auto; padding: 15px; background: #f8f9fa;">
                                 <div class="ai-chat-empty">
                                     <div class="ai-chat-empty-icon">💬</div>
                                     <div>让AI助手帮你编辑表单配置</div>
-                                    <div style="font-size: 12px; color: #ccc; margin-top: 8px;">输入您的需求，例如：添加必填验证、调整字段宽度等</div>
+                                    <div style="font-size: 12px; color: #ccc; margin-top: 8px;">
+                                        输入您的需求，例如：添加必填验证、调整字段宽度等
+                                    </div>
                                 </div>
                             </div>
 
@@ -1421,23 +1464,28 @@
             </div>
             <!-- AI 输入区域 -->
             <div class="ai-chat-input-area">
-                <div class="layui-form"  >
+                <div class="layui-form">
 
                     <!-- 4. 示例提示词（底部） -->
                     <div class="example-prompts">
                         <h4>💬 示例提示词</h4>
-                        <span class="prompt-tag" onclick="usePrompt('创建用户管理表单，包含用户名、邮箱、手机号、角色等字段')">用户管理表单</span>
-                        <span class="prompt-tag" onclick="usePrompt('生成商品列表，需要能够根据名称排序且能够按照价格排序功能')">商品列表</span>
-                        <span class="prompt-tag" onclick="usePrompt('SELECT USER_ID ID,USERNAME 用户名,EMAIL 邮箱,PHONE 手机号,ROLE 角色 FROM user')">从 SQL 生成</span>
+                        <span class="prompt-tag"
+                              onclick="usePrompt('创建用户管理表单，包含用户名、邮箱、手机号、角色等字段')">用户管理表单</span>
+                        <span class="prompt-tag"
+                              onclick="usePrompt('生成商品列表，需要能够根据名称排序且能够按照价格排序功能')">商品列表</span>
+                        <span class="prompt-tag"
+                              onclick="usePrompt('SELECT USER_ID ID,USERNAME 用户名,EMAIL 邮箱,PHONE 手机号,ROLE 角色 FROM user')">从 SQL 生成</span>
                     </div>
-                    <div class="layui-form-item  " >
+                    <div class="layui-form-item  ">
                         <div class="layui-input-block " style=" margin-left: 0px !important;">
-                            <textarea id="aiChatInput" class="layui-textarea" placeholder="输入您的需求，例如：把第一个输入框改为必填..." rows="1" style="padding: 15px; height: 134px;"></textarea>
+                            <textarea id="aiChatInput" class="layui-textarea"
+                                      placeholder="输入您的需求，例如：把第一个输入框改为必填..." rows="1"
+                                      style="padding: 15px; height: 134px;"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item" style="margin-bottom: 0px;text-align: right;">
                         <button class="layui-btn" id="aiSendBtn">发送</button>
-                        <button class="layui-btn" id="aiClearBtn" title="清空聊天记录">清空聊天记录 </button>
+                        <button class="layui-btn" id="aiClearBtn" title="清空聊天记录">清空聊天记录</button>
                     </div>
                 </div>
 
@@ -1467,7 +1515,7 @@
     let selectedElement = null;
 
     // 页面加载完成后初始化
-    $(document).ready(function() {
+    $(document).ready(function () {
         initFormEditor();
     });
 
@@ -1475,7 +1523,7 @@
         console.log('初始化表单编辑器...');
 
         // 初始化 layui tab
-        layui.use('element', function() {
+        layui.use('element', function () {
             const element = layui.element;
             element.render('tab');
         });
@@ -1500,7 +1548,7 @@
 
     // 删除行函数
     function deleteRow(row) {
-        layer.confirm('确定要删除此行及其中的所有字段吗？', {icon: 3, title: '提示'}, function(index) {
+        layer.confirm('确定要删除此行及其中的所有字段吗？', {icon: 3, title: '提示'}, function (index) {
             row.remove();
             layer.close(index);
             layer.msg('✅ 行已删除');
@@ -1772,7 +1820,7 @@
                 return canMove;
             }
         }).on('drop', function (el, target, source, sibling) {
-            console.log('✓ drop 事件:', { el: el.className, target: target.className, source: source.className });
+            console.log('✓ drop 事件:', {el: el.className, target: target.className, source: source.className});
             if (componentGroups.includes(source)) {
                 const componentType = el.getAttribute('data-component');
 
@@ -1784,8 +1832,8 @@
                     createFormComponent(el, target, sibling);
                 }
             }
-        }).on('drag', function(el, source) {
-            console.log('✓ 开始拖拽:', { el: el.getAttribute('data-label'), source: source.className });
+        }).on('drag', function (el, source) {
+            console.log('✓ 开始拖拽:', {el: el.getAttribute('data-label'), source: source.className});
         });
 
         dragulaInstances.push(drake);
@@ -2057,29 +2105,29 @@
             event.preventDefault();
             const layoutData = collectLayoutData();
             console.log('收集到的布局数据（DSL格式）:', layoutData);
-            layoutData.dslType= 'form',
-            // TODO: 发送到服务端保存
-            // 这里可以添加实际的保存逻辑
-            fetch('/topezadmin/edit/saveLayout-'+$("#ENCRYPT_FORM_ID").val(), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(layoutData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success || data.code === '0') {
-                        layer.msg('✅ 布局保存成功');
-                        console.log('服务端响应:', data);
-                    } else {
-                        layer.msg('❌ 保存失败: ' + (data.message || '未知错误'));
-                    }
+            layoutData.dslType = 'form',
+                // TODO: 发送到服务端保存
+                // 这里可以添加实际的保存逻辑
+                fetch('/topezadmin/edit/saveLayout-' + $("#ENCRYPT_FORM_ID").val(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(layoutData)
                 })
-                .catch(error => {
-                    console.error('保存失败:', error);
-                    layer.msg('❌ 保存失败: ' + error.message + '\n\n💡 布局数据已输出到控制台（按F12查看）');
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success || data.code === '0') {
+                            layer.msg('✅ 布局保存成功');
+                            console.log('服务端响应:', data);
+                        } else {
+                            layer.msg('❌ 保存失败: ' + (data.message || '未知错误'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('保存失败:', error);
+                        layer.msg('❌ 保存失败: ' + error.message + '\n\n💡 布局数据已输出到控制台（按F12查看）');
+                    });
         });
 
         document.getElementById('toggleEditBtn').addEventListener('click', toggleEditMode);
@@ -2192,13 +2240,13 @@
     }
 
     function showPropertyForm(element) {
-      //  const emptyState = document.getElementById('emptyState');
+        //  const emptyState = document.getElementById('emptyState');
         const propertyForm = document.getElementById('propertyForm');
-      //  const propertyActionBar = document.getElementById('propertyActionBar');
+        //  const propertyActionBar = document.getElementById('propertyActionBar');
 
-      //  emptyState.style.display = 'none';
+        //  emptyState.style.display = 'none';
         propertyForm.style.display = 'block';
-     //   propertyActionBar.style.display = 'flex';
+        //   propertyActionBar.style.display = 'flex';
 
         // 读取元素基础属性
         const component = element.getAttribute('component');
@@ -2216,7 +2264,7 @@
                 try {
                     existingConfig = JSON.parse(json);
                     console.log('✓ 从 component-col 读取配置:', existingConfig);
-                } catch(e) {
+                } catch (e) {
                     console.error('解析 data-config-json 失败:', e);
                 }
             }
@@ -2246,7 +2294,7 @@
         renderDynamicSection(component, existingConfig, element);
 
         // 重新渲染 layui select
-        layui.use('form', function() {
+        layui.use('form', function () {
             layui.form.render('select');
         });
 
@@ -2292,7 +2340,7 @@
         // 绑定 initData 数据源切换事件
         const tabs = container.querySelectorAll('.data-source-tab');
         tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
+            tab.addEventListener('click', function () {
                 const group = this.closest('.data-source-tabs').parentElement;
                 group.querySelectorAll('.data-source-tab').forEach(t => t.classList.remove('active'));
                 group.querySelectorAll('.data-source-panel').forEach(p => p.classList.remove('active'));
@@ -2306,13 +2354,13 @@
 
     // 显示 card 属性配置表单
     function showCardPropertyForm(cardElement) {
-      //  const emptyState = document.getElementById('emptyState');
+        //  const emptyState = document.getElementById('emptyState');
         const propertyForm = document.getElementById('propertyForm');
-     //   const propertyActionBar = document.getElementById('propertyActionBar');
+        //   const propertyActionBar = document.getElementById('propertyActionBar');
 
-     //   emptyState.style.display = 'none';
+        //   emptyState.style.display = 'none';
         propertyForm.style.display = 'block';
-      //  propertyActionBar.style.display = 'flex';
+        //  propertyActionBar.style.display = 'flex';
 
         // 读取 card 配置
         const itemName = cardElement.getAttribute('item_name');
@@ -2386,11 +2434,11 @@
         container.innerHTML = html;
 
         // 监听卡片类型切换
-        layui.use('form', function() {
+        layui.use('form', function () {
             const form = layui.form;
             form.render('select');
 
-            form.on('select(prop-card-type)', function(data) {
+            form.on('select(prop-card-type)', function (data) {
                 const iframeSection = document.getElementById('iframe-config-section');
                 if (data.value === 'iframe') {
                     iframeSection.style.display = 'block';
@@ -2455,20 +2503,20 @@
     }
 
     function escHtml(str) {
-        return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     function buildInputSection(props, validate) {
         return `<div class="property-section">
         <div class="property-section-title">Props 属性</div>
-        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请输入...">`)}
-        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required|email">`)}
-        ${fieldItem('最大长度', `<input type="number" id="prop-maxlength" class="layui-input" value="${escHtml(props.maxlength||'')}" placeholder="最大字符数">`)}
-        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder || '')}" placeholder="请输入...">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify'] || '')}" placeholder="如: required|email">`)}
+        ${fieldItem('最大长度', `<input type="number" id="prop-maxlength" class="layui-input" value="${escHtml(props.maxlength || '')}" placeholder="最大字符数">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description || '')}" placeholder="字段说明">`)}
         ${checkboxItem([
-            {id:'prop-required', title:'必填项', checked: props.required},
-            {id:'prop-disabled', title:'禁用', checked: props.disabled},
-            {id:'prop-readonly', title:'只读', checked: props.readonly}
+            {id: 'prop-required', title: '必填项', checked: props.required},
+            {id: 'prop-disabled', title: '禁用', checked: props.disabled},
+            {id: 'prop-readonly', title: '只读', checked: props.readonly}
         ])}
         ${validateSection(validate)}
     </div>${buildCustomPropsSection(props)}`;
@@ -2477,15 +2525,15 @@
     function buildTextareaSection(props, validate) {
         return `<div class="property-section">
         <div class="property-section-title">Props 属性</div>
-        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请输入...">`)}
-        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
-        ${fieldItem('最大长度', `<input type="number" id="prop-maxlength" class="layui-input" value="${escHtml(props.maxlength||'')}" placeholder="最大字符数">`)}
-        ${fieldItem('显示行数', `<input type="number" id="prop-rows" class="layui-input" value="${escHtml(props.rows||'')}" placeholder="文本域行数">`)}
-        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder || '')}" placeholder="请输入...">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify'] || '')}" placeholder="如: required">`)}
+        ${fieldItem('最大长度', `<input type="number" id="prop-maxlength" class="layui-input" value="${escHtml(props.maxlength || '')}" placeholder="最大字符数">`)}
+        ${fieldItem('显示行数', `<input type="number" id="prop-rows" class="layui-input" value="${escHtml(props.rows || '')}" placeholder="文本域行数">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description || '')}" placeholder="字段说明">`)}
         ${checkboxItem([
-            {id:'prop-required', title:'必填项', checked: props.required},
-            {id:'prop-disabled', title:'禁用', checked: props.disabled},
-            {id:'prop-readonly', title:'只读', checked: props.readonly}
+            {id: 'prop-required', title: '必填项', checked: props.required},
+            {id: 'prop-disabled', title: '禁用', checked: props.disabled},
+            {id: 'prop-readonly', title: '只读', checked: props.readonly}
         ])}
         ${validateSection(validate)}
     </div>${buildCustomPropsSection(props)}`;
@@ -2494,12 +2542,12 @@
     function buildSelectSection(props, initData, validate) {
         return initDataSection(initData, 'select') + `<div class="property-section">
         <div class="property-section-title">Props 属性</div>
-        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
-        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify'] || '')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description || '')}" placeholder="字段说明">`)}
         ${checkboxItem([
-            {id:'prop-required', title:'必填项', checked: props.required},
-            {id:'prop-disabled', title:'禁用', checked: props.disabled},
-            {id:'prop-lay-search', title:'可搜索', checked: props['lay-search']}
+            {id: 'prop-required', title: '必填项', checked: props.required},
+            {id: 'prop-disabled', title: '禁用', checked: props.disabled},
+            {id: 'prop-lay-search', title: '可搜索', checked: props['lay-search']}
         ])}
         ${validateSection(validate)}
     </div>${buildCustomPropsSection(props)}`;
@@ -2508,11 +2556,11 @@
     function buildRadioSection(props, initData, validate) {
         return initDataSection(initData, 'radio') + `<div class="property-section">
         <div class="property-section-title">Props 属性</div>
-        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
-        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify'] || '')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description || '')}" placeholder="字段说明">`)}
         ${checkboxItem([
-            {id:'prop-required', title:'必填项', checked: props.required},
-            {id:'prop-disabled', title:'禁用', checked: props.disabled}
+            {id: 'prop-required', title: '必填项', checked: props.required},
+            {id: 'prop-disabled', title: '禁用', checked: props.disabled}
         ])}
         ${validateSection(validate)}
     </div>${buildCustomPropsSection(props)}`;
@@ -2521,59 +2569,59 @@
     function buildCheckboxSection(props, initData, validate) {
         return initDataSection(initData, 'checkbox') + `<div class="property-section">
         <div class="property-section-title">Props 属性</div>
-        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
-        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify'] || '')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description || '')}" placeholder="字段说明">`)}
         ${checkboxItem([
-            {id:'prop-required', title:'必填项', checked: props.required},
-            {id:'prop-disabled', title:'禁用', checked: props.disabled}
+            {id: 'prop-required', title: '必填项', checked: props.required},
+            {id: 'prop-disabled', title: '禁用', checked: props.disabled}
         ])}
         ${validateSection(validate)}
     </div>${buildCustomPropsSection(props)}`;
     }
 
     function buildDateSection(props, validate) {
-        const typeOpts = ['date','datetime','year','month','time'].map(t =>
+        const typeOpts = ['date', 'datetime', 'year', 'month', 'time'].map(t =>
             `<option value="${t}" ${props.type === t ? 'selected' : ''}>${t}</option>`
         ).join('');
         return `<div class="property-section">
         <div class="property-section-title">Props 属性</div>
         ${fieldItem('日期类型', `<select id="prop-date-type">${typeOpts}</select>`)}
-        ${fieldItem('日期格式', `<input type="text" id="prop-date-format" class="layui-input" value="${escHtml(props.format||'')}" placeholder="如: yyyy-MM-dd">`)}
-        ${fieldItem('最小日期', `<input type="text" id="prop-date-min" class="layui-input" value="${escHtml(props.min||'')}" placeholder="如: 2020-01-01">`)}
-        ${fieldItem('最大日期', `<input type="text" id="prop-date-max" class="layui-input" value="${escHtml(props.max||'')}" placeholder="如: 2030-12-31">`)}
-        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder||'')}" placeholder="请选择日期">`)}
-        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
-        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${fieldItem('日期格式', `<input type="text" id="prop-date-format" class="layui-input" value="${escHtml(props.format || '')}" placeholder="如: yyyy-MM-dd">`)}
+        ${fieldItem('最小日期', `<input type="text" id="prop-date-min" class="layui-input" value="${escHtml(props.min || '')}" placeholder="如: 2020-01-01">`)}
+        ${fieldItem('最大日期', `<input type="text" id="prop-date-max" class="layui-input" value="${escHtml(props.max || '')}" placeholder="如: 2030-12-31">`)}
+        ${fieldItem('占位提示', `<input type="text" id="prop-placeholder" class="layui-input" value="${escHtml(props.placeholder || '')}" placeholder="请选择日期">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify'] || '')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description || '')}" placeholder="字段说明">`)}
         ${checkboxItem([
-            {id:'prop-required', title:'必填项', checked: props.required},
-            {id:'prop-disabled', title:'禁用', checked: props.disabled},
-            {id:'prop-date-range', title:'范围选择', checked: props.range}
+            {id: 'prop-required', title: '必填项', checked: props.required},
+            {id: 'prop-disabled', title: '禁用', checked: props.disabled},
+            {id: 'prop-date-range', title: '范围选择', checked: props.range}
         ])}
         ${validateSection(validate)}
     </div>${buildCustomPropsSection(props)}`;
     }
 
     function buildUploadSection(props, validate) {
-        const acceptOpts = ['images','file','video','audio'].map(t =>
+        const acceptOpts = ['images', 'file', 'video', 'audio'].map(t =>
             `<option value="${t}" ${props.accept === t ? 'selected' : ''}>${t}</option>`
         ).join('');
         const uploadValidate = validate || {};
         return `<div class="property-section">
         <div class="property-section-title">Props 属性</div>
         ${fieldItem('文件类型', `<select id="prop-upload-accept"><option value="">不限</option>${acceptOpts}</select>`)}
-        ${fieldItem('MIME类型', `<input type="text" id="prop-upload-acceptMime" class="layui-input" value="${escHtml(props.acceptMime||'')}" placeholder="如: image/png,image/jpeg">`)}
-        ${fieldItem('文件数量', `<input type="number" id="prop-upload-number" class="layui-input" value="${escHtml(props.number||'')}" placeholder="最多文件数">`)}
-        ${fieldItem('文件大小(KB)', `<input type="number" id="prop-upload-size" class="layui-input" value="${escHtml(props.size||'')}" placeholder="最大文件大小(KB)">`)}
-        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify']||'')}" placeholder="如: required">`)}
-        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description||'')}" placeholder="字段说明">`)}
+        ${fieldItem('MIME类型', `<input type="text" id="prop-upload-acceptMime" class="layui-input" value="${escHtml(props.acceptMime || '')}" placeholder="如: image/png,image/jpeg">`)}
+        ${fieldItem('文件数量', `<input type="number" id="prop-upload-number" class="layui-input" value="${escHtml(props.number || '')}" placeholder="最多文件数">`)}
+        ${fieldItem('文件大小(KB)', `<input type="number" id="prop-upload-size" class="layui-input" value="${escHtml(props.size || '')}" placeholder="最大文件大小(KB)">`)}
+        ${fieldItem('验证规则', `<input type="text" id="prop-lay-verify" class="layui-input" value="${escHtml(props['lay-verify'] || '')}" placeholder="如: required">`)}
+        ${fieldItem('字段说明', `<input type="text" id="prop-description" class="layui-input" value="${escHtml(props.description || '')}" placeholder="字段说明">`)}
         ${checkboxItem([
-            {id:'prop-required', title:'必填项', checked: props.required},
-            {id:'prop-upload-multiple', title:'多文件上传', checked: props.multiple}
+            {id: 'prop-required', title: '必填项', checked: props.required},
+            {id: 'prop-upload-multiple', title: '多文件上传', checked: props.multiple}
         ])}
         <div class="validate-section">
             <div class="validate-section-title">上传限制</div>
-            ${fieldItem('最多文件数', `<input type="number" id="prop-validate-uploadMax" class="layui-input" value="${escHtml(uploadValidate.uploadMax||'')}" placeholder="上传数量上限">`)}
-            ${fieldItem('最少文件数', `<input type="number" id="prop-validate-uploadMin" class="layui-input" value="${escHtml(uploadValidate.uploadMin||'')}" placeholder="上传数量下限">`)}
+            ${fieldItem('最多文件数', `<input type="number" id="prop-validate-uploadMax" class="layui-input" value="${escHtml(uploadValidate.uploadMax || '')}" placeholder="上传数量上限">`)}
+            ${fieldItem('最少文件数', `<input type="number" id="prop-validate-uploadMin" class="layui-input" value="${escHtml(uploadValidate.uploadMin || '')}" placeholder="上传数量下限">`)}
         </div>
     </div>${buildCustomPropsSection(props)}`;
     }
@@ -2582,8 +2630,8 @@
     function buildCustomPropsSection(props) {
         // 提取自定义属性（排除已知的标准属性）
         const knownProps = ['placeholder', 'lay-verify', 'maxlength', 'rows', 'description', 'required',
-                           'disabled', 'readonly', 'validate', 'type', 'format', 'min', 'max', 'range',
-                           'accept', 'acceptMime', 'number', 'size', 'multiple', 'lay-search'];
+            'disabled', 'readonly', 'validate', 'type', 'format', 'min', 'max', 'range',
+            'accept', 'acceptMime', 'number', 'size', 'multiple', 'lay-search'];
 
         const customProps = {};
         for (const key in props) {
@@ -2710,10 +2758,18 @@
         if (validateRuleStr || validateMsgStr) {
             props.validate = {};
             if (validateRuleStr) {
-                try { props.validate.rule = JSON.parse(validateRuleStr); } catch(e) { props.validate.rule = validateRuleStr; }
+                try {
+                    props.validate.rule = JSON.parse(validateRuleStr);
+                } catch (e) {
+                    props.validate.rule = validateRuleStr;
+                }
             }
             if (validateMsgStr) {
-                try { props.validate.message = JSON.parse(validateMsgStr); } catch(e) { props.validate.message = validateMsgStr; }
+                try {
+                    props.validate.message = JSON.parse(validateMsgStr);
+                } catch (e) {
+                    props.validate.message = validateMsgStr;
+                }
             }
         }
 
@@ -2754,7 +2810,7 @@
                 if (uploadMax) props.validate.uploadMax = parseInt(uploadMax);
                 if (uploadMin) props.validate.uploadMin = parseInt(uploadMin);
             }
-        } else if (['select','select-multiple','cascader','radio','checkbox'].includes(component)) {
+        } else if (['select', 'select-multiple', 'cascader', 'radio', 'checkbox'].includes(component)) {
             // initData - 按照DSL格式，initData应该在顶层
             const prefix = component === 'select-multiple' ? 'select' : (component === 'cascader' ? 'select' : component);
             const staticPanel = document.getElementById(`${prefix}-static-panel`);
@@ -2765,7 +2821,11 @@
                 if (isStatic) {
                     const jsonStr = getVal(`${prefix}-dataJson`);
                     if (jsonStr) {
-                        try { config.initData.dataJson = JSON.parse(jsonStr); } catch(e) { config.initData.dataJson = jsonStr; }
+                        try {
+                            config.initData.dataJson = JSON.parse(jsonStr);
+                        } catch (e) {
+                            config.initData.dataJson = jsonStr;
+                        }
                     }
                 } else {
                     const dataSource = getVal(`${prefix}-dataSource`);
@@ -2973,13 +3033,13 @@
 
         // 判断选中的是行还是字段
         const isRow = selectedElement.classList.contains('layui-row') &&
-                      !selectedElement.classList.contains('layui-col-space10');
+            !selectedElement.classList.contains('layui-col-space10');
 
         const confirmMsg = isRow
             ? '确定要删除此行及其中的所有字段吗？'
             : '确定要删除这个元素吗？';
 
-        layer.confirm(confirmMsg, {icon: 3, title: '提示'}, function(index) {
+        layer.confirm(confirmMsg, {icon: 3, title: '提示'}, function (index) {
             if (isRow) {
                 // 删除整个行
                 selectedElement.remove();
@@ -3004,11 +3064,13 @@
             layer.close(index);
         });
     }
+
     // ==================== 使用示例提示词 ====================
     function usePrompt(prompt) {
         $('#aiChatInput').val(prompt);
         $('#aiChatInput').focus();
     }
+
     function collectLayoutData() {
         const formContainer = document.getElementById('formContainer');
         const cardsContainer = formContainer.querySelector('.layui-row.layui-col-space10');
@@ -3232,7 +3294,10 @@
         if (colDiv) {
             const json = colDiv.getAttribute('data-config-json');
             if (json) {
-                try { existingConfig = JSON.parse(json); } catch(e) {}
+                try {
+                    existingConfig = JSON.parse(json);
+                } catch (e) {
+                }
             }
         }
 
@@ -3363,7 +3428,7 @@
         history.forEach(msg => {
             const isUser = msg.type === 'user';
             const timestamp = new Date(msg.timestamp);
-            const time = timestamp.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            const time = timestamp.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
 
             const messageHtml = `
                 <div class="ai-message ${isUser ? 'user' : ''}">
@@ -3403,7 +3468,7 @@
                 icon: 3,
                 title: '确认清空',
                 btn: ['确定', '取消']
-            }, function(index) {
+            }, function (index) {
                 clearChatHistory();
                 layer.close(index);
             });
@@ -3455,7 +3520,7 @@
             dslType: 'form',
             userRequirement: message,
             isNew: false,
-            dslFileName:document.getElementById("ENCRYPT_FORM_ID").value
+            dslFileName: document.getElementById("ENCRYPT_FORM_ID").value
         };
 
 
@@ -3463,8 +3528,8 @@
         if (selectedElement) {
             const component = selectedElement.getAttribute('component');
             const itemName = selectedElement.getAttribute('item_name');
-            requestData.item_name=itemName;
-            requestData.component=component;
+            requestData.item_name = itemName;
+            requestData.component = component;
         }
         // 获取当前表单布局
         requestData.formLayout = collectLayoutData();
@@ -3552,7 +3617,7 @@
         // 刷新属性面板显示
         showPropertyForm(selectedElement);
 
-        layer.msg('✅ 配置已更新', { icon: 1 });
+        layer.msg('✅ 配置已更新', {icon: 1});
     }
 
     // 添加聊天消息
@@ -3567,7 +3632,7 @@
 
         const isUser = type === 'user';
         const timestamp = new Date();
-        const time = timestamp.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+        const time = timestamp.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
 
         const messageHtml = `
         <div class="ai-message ${isUser ? 'user' : ''}">
@@ -3624,7 +3689,7 @@
     }
 
     // 在页面加载时初始化 AI 对话框
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         initAIChatBox();
     });
 </script>

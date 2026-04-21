@@ -1,0 +1,30 @@
+{
+  "id": "test-datajson-import",
+  "name": "dataJson导入测试",
+  "express": {
+    "main": "SELECT * FROM test_table"
+  },
+  "search": [
+    {
+      "field": "status",
+      "label": "状态",
+      "type": "select",
+      "initData": {
+        "dataJson": "@import(test_status.json)"
+      }
+    },
+    {
+      "field": "gender",
+      "label": "性别",
+      "type": "select",
+      "initData": {
+        "dataJson": "@import(common/test_gender.json)"
+      }
+    },
+    {
+      "field": "keyword",
+      "label": "关键词",
+      "type": "input"
+    }
+  ]
+}

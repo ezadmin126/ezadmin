@@ -40,27 +40,27 @@
 
 ### 基础属性
 
-| 属性 | 类型 | 必填 | 说明                              |
-|------|------|------|---------------------------------|
-| item_name | String | 是 | 字段名，对应数据库字段                     |
-| label | String | 是 | 显示标签                            |
-| component | String | 是 | 固定值：`input`                     |
-| operator | String | 否 | 查询操作符(搜索项使用)，如 `EQ`、`LIKE`      |
+| 属性          | 类型     | 必填     | 说明                              |
+|-------------|--------|--------|---------------------------------|
+| item_name   | String | 是      | 字段名，对应数据库字段                     |
+| label       | String | 是      | 显示标签                            |
+| component   | String | 是      | 固定值：`input`                     |
+| operator    | String | 否      | 查询操作符(搜索项使用)，如 `EQ`、`LIKE`      |
 | description | String | 字段说明文本 | `"可选择多个"`                       |
-| props | Object | 否 | 组件属性,支持所有layui input 属性，html5属性 |
-| classAppend | String | 否 | layui-col-md8 主要使用layui布局设置占用宽度                       |
+| props       | Object | 否      | 组件属性,支持所有layui input 属性，html5属性 |
+| classAppend | String | 否      | layui-col-md8 主要使用layui布局设置占用宽度 |
 
 ### props 属性
 
-| 属性 | 类型 | 说明 | 示例 |
-|------|------|------|------|
-| placeholder | String | 输入提示文本 | `"请输入姓名"` |
-| lay-verify | String | Layui表单验证规则 | `"required"`, `"phone"`, `"email"` |
-| maxlength | Number | 最大输入长度 | `50` |
-| disabled | Boolean | 是否禁用 | `true` |
-| readonly | Boolean | 是否只读 | `true` |
-| required | Boolean | 是否必填(显示红色*) | `true` |
-| description | String | 字段说明文本 | `"请输入真实姓名"` |
+| 属性          | 类型      | 说明          | 示例                                 |
+|-------------|---------|-------------|------------------------------------|
+| placeholder | String  | 输入提示文本      | `"请输入姓名"`                          |
+| lay-verify  | String  | Layui表单验证规则 | `"required"`, `"phone"`, `"email"` |
+| maxlength   | Number  | 最大输入长度      | `50`                               |
+| disabled    | Boolean | 是否禁用        | `true`                             |
+| readonly    | Boolean | 是否只读        | `true`                             |
+| required    | Boolean | 是否必填(显示红色*) | `true`                             |
+| description | String  | 字段说明文本      | `"请输入真实姓名"`                        |
 
 ## 完整示例
 
@@ -161,17 +161,18 @@
 
 Layui 内置验证规则：
 
-| 规则 | 说明 |
-|------|------|
-| required | 必填项 |
-| phone | 手机号 |
-| email | 邮箱 |
-| url | URL地址 |
-| number | 数字 |
-| date | 日期 |
-| identity | 身份证号 |
+| 规则       | 说明    |
+|----------|-------|
+| required | 必填项   |
+| phone    | 手机号   |
+| email    | 邮箱    |
+| url      | URL地址 |
+| number   | 数字    |
+| date     | 日期    |
+| identity | 身份证号  |
 
 自定义验证规则可组合使用，用 `|` 分隔：
+
 ```json
 {
   "lay-verify": "required|number"

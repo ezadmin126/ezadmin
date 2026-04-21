@@ -47,7 +47,7 @@ public class EzClientProperties {
 
     private String model;
 
-    private Double temperature=0.7;
+    private Double temperature = 0.7;
 
 
     public String getApiUrl() {

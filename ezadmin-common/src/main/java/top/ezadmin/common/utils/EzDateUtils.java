@@ -86,7 +86,7 @@ public class EzDateUtils {
         SimpleDateFormat simple2 = new SimpleDateFormat(DATETIME);
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
         try {
-            Date d = simple.parse(date.replace("T"," "));
+            Date d = simple.parse(date.replace("T", " "));
             return simple2.format(d);
         } catch (ParseException e) {
         }
@@ -98,7 +98,7 @@ public class EzDateUtils {
         SimpleDateFormat simple2 = new SimpleDateFormat(DATETIME);
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
         try {
-            Date d = simple.parse(date.replace("T"," "));
+            Date d = simple.parse(date.replace("T", " "));
             Date d3 = DateUtils.addSeconds(d, 86400 - 1);
             return simple2.format(d3);
         } catch (ParseException e) {
@@ -109,7 +109,7 @@ public class EzDateUtils {
     public static String toDateFormat(String date) {
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
         try {
-            Date d = simple.parse(date.replace("T"," "));
+            Date d = simple.parse(date.replace("T", " "));
             return simple.format(d);
         } catch (ParseException e) {
         }
@@ -119,7 +119,7 @@ public class EzDateUtils {
     public static String toDateTimeFormat(String date) {
         SimpleDateFormat simple = new SimpleDateFormat(DATETIME);
         try {
-            Date d = simple.parse(date.replace("T"," "));
+            Date d = simple.parse(date.replace("T", " "));
             return simple.format(d);
         } catch (ParseException e) {
         }
@@ -158,7 +158,7 @@ public class EzDateUtils {
     public static void main(String[] args) throws ParseException {
         SimpleDateFormat simple = new SimpleDateFormat(DATETIME);
         System.out.println(yearStart());
-        System.out.println(currentMonthRange() );
+        System.out.println(currentMonthRange());
     }
 
     public static String todayDate() {
@@ -190,13 +190,13 @@ public class EzDateUtils {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        Date start=calendar.getTime();
+        Date start = calendar.getTime();
         calendar.add(Calendar.MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.add(Calendar.SECOND, -1);
-        Date end=calendar.getTime();
+        Date end = calendar.getTime();
         return simple.format(start) + " - " + simple.format(end);
     }
 

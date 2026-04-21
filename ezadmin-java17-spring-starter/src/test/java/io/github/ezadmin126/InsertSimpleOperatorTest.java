@@ -15,7 +15,8 @@ import static org.junit.Assert.assertEquals;
 public class InsertSimpleOperatorTest {
 
     private static String TABLE = "table";
-    static{
+
+    static {
         EzBootstrap.config().setEzJson(new EzFastJson2Impl());
     }
 
@@ -30,9 +31,9 @@ public class InsertSimpleOperatorTest {
         OperatorParam param1 = new OperatorParam();
         param1.getParams().put("a", "b");
         Utils.addParam(param1);
-        assertEquals( "没有传参，且没有默认值","insert into table(userId,userName)values(?,?)", operator.generateSql(param).getResult());
-        assertEquals("没有传参，且没有默认值","[null,null]",
-                JSONUtils.toJSONString(operator.generateSql(param).getParamsStatic())  );
+        assertEquals("没有传参，且没有默认值", "insert into table(userId,userName)values(?,?)", operator.generateSql(param).getResult());
+        assertEquals("没有传参，且没有默认值", "[null,null]",
+                JSONUtils.toJSONString(operator.generateSql(param).getParamsStatic()));
     }
 
     @Test
@@ -49,10 +50,10 @@ public class InsertSimpleOperatorTest {
 
         Utils.addParam(param1);
         ResultModel model = operator.generateSql(param);
-        assertEquals("没有传参，但有默认值","insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
+        assertEquals("没有传参，但有默认值", "insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
                 model.getResult());
-        assertEquals("没有传参，但有默认值  剥离参数","[null,\"abc\",null,\"0\"]",
-                JSONUtils.toJSONString(model.getParamsStatic()) );
+        assertEquals("没有传参，但有默认值  剥离参数", "[null,\"abc\",null,\"0\"]",
+                JSONUtils.toJSONString(model.getParamsStatic()));
 
     }
 
@@ -72,8 +73,8 @@ public class InsertSimpleOperatorTest {
         Utils.addParam(param1);
         ResultModel model = operator.generateSql(param);
 
-        assertEquals("有传参empty，有number类型的默认值 ","[null,\"abc\",null,\"0\"]",
-                JSONUtils.toJSONString(model.getParamsStatic()) );
+        assertEquals("有传参empty，有number类型的默认值 ", "[null,\"abc\",null,\"0\"]",
+                JSONUtils.toJSONString(model.getParamsStatic()));
     }
 
     @Test
@@ -92,10 +93,10 @@ public class InsertSimpleOperatorTest {
         param1.getParams().put("userSex2", "2");
         Utils.addParam(param1);
         ResultModel model = operator.generateSql(param);
-        assertEquals("有传参，有默认值","insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
+        assertEquals("有传参，有默认值", "insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
                 model.getResult());
-        assertEquals("有传参，有默认值  剥离参数","[\"userId\",\"userName\",3,2]",
-                JSONUtils.toJSONString(model.getParamsStatic()) );
+        assertEquals("有传参，有默认值  剥离参数", "[\"userId\",\"userName\",3,2]",
+                JSONUtils.toJSONString(model.getParamsStatic()));
     }
 
     @Test
@@ -118,9 +119,9 @@ public class InsertSimpleOperatorTest {
         param1.getParams().put("userSex2", "2");
         Utils.addParam(param1);
         ResultModel model = operator.generateSql(param);
-        assertEquals("有传参，没有默认值","insert into table(userId,userName,userName2,userName3,userSex,userSex2)values(?,?,?,?,?,?)",
+        assertEquals("有传参，没有默认值", "insert into table(userId,userName,userName2,userName3,userSex,userSex2)values(?,?,?,?,?,?)",
                 model.getResult());
-        assertEquals("有传参，没有默认值  剥离参数","[\"userId\",null,null,null,3,2]",
+        assertEquals("有传参，没有默认值  剥离参数", "[\"userId\",null,null,null,3,2]",
                 JSONUtils.toJSONString(model.getParamsStatic()));
     }
 
@@ -139,9 +140,9 @@ public class InsertSimpleOperatorTest {
         OperatorParam param1 = new OperatorParam();
         Utils.addParam(param1);
         ResultModel model = operator.generateSql(param);
-        assertEquals("老版本默认值兼容","insert into table(userId,userName,userSex,userSex2,userSex3,userSex4,userSex5)values(?,?,?,?,?,NOW(),NOW())",
-                model.getResult()  );
-        assertEquals("老版本默认值兼容","[null,\"abc\",\"ab'c\",\"ab'c\",\"ab=c\"]",
+        assertEquals("老版本默认值兼容", "insert into table(userId,userName,userSex,userSex2,userSex3,userSex4,userSex5)values(?,?,?,?,?,NOW(),NOW())",
+                model.getResult());
+        assertEquals("老版本默认值兼容", "[null,\"abc\",\"ab'c\",\"ab'c\",\"ab=c\"]",
                 JSONUtils.toJSONString(model.getParamsStatic()));
     }
 
@@ -158,9 +159,9 @@ public class InsertSimpleOperatorTest {
         param1.getParams().put("userSex2", null);
         Utils.addParam(param1);
         ResultModel model = operator.generateSql(param);
-        assertEquals("没有传参，但有默认值","insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
-                model.getResult()  );
-        assertEquals("没有传参，但有默认值  剥离参数","[null,\"abc\",null,\"0\"]",
+        assertEquals("没有传参，但有默认值", "insert into table(userId,userName,userSex,userSex2)values(?,?,?,?)",
+                model.getResult());
+        assertEquals("没有传参，但有默认值  剥离参数", "[null,\"abc\",null,\"0\"]",
                 JSONUtils.toJSONString(model.getParamsStatic()));
     }
 

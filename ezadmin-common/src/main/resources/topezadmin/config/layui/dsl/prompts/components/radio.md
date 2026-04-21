@@ -32,20 +32,21 @@
 
 ### 基础属性
 
-| 属性 | 类型 | 必填 | 说明                             |
-|------|------|------|--------------------------------|
-| item_name | String | 是 | 字段名，对应数据库字段                    |
-| label | String | 是 | 显示标签                           |
-| component | String | 是 | 固定值：`radio`                    |
-| classAppend | String | 否 | layui-col-md8 主要使用layui布局设置占用宽度                       |
-| operator | String | 否 | 查询操作符，通常使用 `eq`                |
-| initData | Object | 是 | 数据源配置                          |
-| description | String | 字段说明文本 | `"可选择多个"`                      |
-| props | Object | 否 | 组件属性,支持所有layui radio属性，html5属性 |
+| 属性          | 类型     | 必填     | 说明                              |
+|-------------|--------|--------|---------------------------------|
+| item_name   | String | 是      | 字段名，对应数据库字段                     |
+| label       | String | 是      | 显示标签                            |
+| component   | String | 是      | 固定值：`radio`                     |
+| classAppend | String | 否      | layui-col-md8 主要使用layui布局设置占用宽度 |
+| operator    | String | 否      | 查询操作符，通常使用 `eq`                 |
+| initData    | Object | 是      | 数据源配置                           |
+| description | String | 字段说明文本 | `"可选择多个"`                       |
+| props       | Object | 否      | 组件属性,支持所有layui radio属性，html5属性  |
 
 ### initData 配置
 
 **静态数据（dataJson）：**
+
 ```json
 {
   "initData": {
@@ -58,6 +59,7 @@
 ```
 
 **动态数据（dataSql）：**
+
 ```json
 {
   "initData": {
@@ -69,12 +71,12 @@
 
 ### props 属性
 
-| 属性 | 类型 | 说明 | 示例 |
-|------|------|------|------|
-| lay-verify | String | Layui表单验证规则 | `"required"` |
-| disabled | Boolean | 是否禁用 | `true` |
-| required | Boolean | 是否必填(显示红色*) | `true` |
-| description | String | 字段说明文本 | `"请选择性别"` |
+| 属性          | 类型      | 说明          | 示例           |
+|-------------|---------|-------------|--------------|
+| lay-verify  | String  | Layui表单验证规则 | `"required"` |
+| disabled    | Boolean | 是否禁用        | `true`       |
+| required    | Boolean | 是否必填(显示红色*) | `true`       |
+| description | String  | 字段说明文本      | `"请选择性别"`    |
 
 ## 完整示例
 
@@ -306,19 +308,20 @@ form.on('radio(lay-filter-gender)', function(data){
 
 ## 与 select 组件的选择
 
-| 场景 | 推荐组件 | 原因 |
-|------|---------|------|
-| 2-5个选项 | radio | 所有选项一目了然，不需要点击展开 |
-| 5个以上选项 | select | 节省页面空间，支持搜索 |
-| 是/否选择 | radio | 更直观 |
-| 性别选择 | radio | 更符合用户习惯 |
-| 状态选择 | 都可以 | 根据选项数量决定 |
+| 场景     | 推荐组件   | 原因               |
+|--------|--------|------------------|
+| 2-5个选项 | radio  | 所有选项一目了然，不需要点击展开 |
+| 5个以上选项 | select | 节省页面空间，支持搜索      |
+| 是/否选择  | radio  | 更直观              |
+| 性别选择   | radio  | 更符合用户习惯          |
+| 状态选择   | 都可以    | 根据选项数量决定         |
 
 ## 常见问题
 
 ### 如何设置默认选中？
 
 在 initExpress 中设置字段值：
+
 ```javascript
 {
   "initExpress": [
@@ -332,6 +335,7 @@ form.on('radio(lay-filter-gender)', function(data){
 ### 选项不显示？
 
 检查：
+
 1. initData 配置是否正确
 2. 数据格式是否包含 label 和 value
 3. SQL查询是否有数据返回
@@ -339,6 +343,7 @@ form.on('radio(lay-filter-gender)', function(data){
 ### 如何实现联动？
 
 使用 Layui 的 form.on 监听：
+
 ```javascript
 form.on('radio(lay-filter-item_name)', function(data){
   // 处理联动逻辑
@@ -348,6 +353,7 @@ form.on('radio(lay-filter-item_name)', function(data){
 ### 单选框无法选中？
 
 检查：
+
 1. 是否有多个单选框使用了相同的 item_name
 2. Layui 表单是否正确渲染：`form.render('radio')`
 

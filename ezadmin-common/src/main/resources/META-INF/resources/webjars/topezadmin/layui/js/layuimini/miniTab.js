@@ -359,7 +359,7 @@ layui.define(["element", "layer", "jquery"], function (exports) {
                                 miniTab.delete(tabId);
                             } else if (closeType === 'other' && currentTabId !== tabId) {
                                 miniTab.delete(tabId);
-                            }else if (closeType === 'blank') {
+                            } else if (closeType === 'blank') {
                                 window.open(currentTabId, "_blank");
                             }
                         }

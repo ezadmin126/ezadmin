@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-common</artifactId>
-    <version>3.0.9</version>
+    <version>3.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ezadmin-common</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
@@ -28,14 +28,16 @@
         </developer>
     </developers>
     <distributionManagement>
+
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>central</id>
+            <url>https://central.sonatype.com</url>
         </repository>
+
     </distributionManagement>
     <licenses>
         <license>
@@ -64,7 +66,7 @@
     </repositories>
     <dependencies>
 
-         <!--导出-->
+        <!--导出-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
@@ -88,12 +90,7 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.36</version>
         </dependency>
-        <!-- Apache Commons Lang -->
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
+
         <!--配置解析-->
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -129,7 +126,7 @@
             <artifactId>json-patch</artifactId>
             <version>1.13</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -224,7 +221,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
-                    <deploymentName>${project.version}</deploymentName>
+                    <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
             <plugin>

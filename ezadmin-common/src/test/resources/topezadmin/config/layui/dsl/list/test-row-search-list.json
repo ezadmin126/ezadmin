@@ -38,9 +38,18 @@
           "operator": "eq",
           "initData": {
             "dataJson": [
-              {"label": "全部", "value": ""},
-              {"label": "启用", "value": "1"},
-              {"label": "禁用", "value": "0"}
+              {
+                "label": "全部",
+                "value": ""
+              },
+              {
+                "label": "启用",
+                "value": "1"
+              },
+              {
+                "label": "禁用",
+                "value": "0"
+              }
             ]
           },
           "props": {
@@ -77,9 +86,18 @@
           "operator": "eq",
           "initData": {
             "dataJson": [
-              {"label": "技术部", "value": "1"},
-              {"label": "市场部", "value": "2"},
-              {"label": "运营部", "value": "3"}
+              {
+                "label": "技术部",
+                "value": "1"
+              },
+              {
+                "label": "市场部",
+                "value": "2"
+              },
+              {
+                "label": "运营部",
+                "value": "3"
+              }
             ]
           },
           "props": {
@@ -146,8 +164,14 @@
       "component": "tdSelect",
       "initData": {
         "dataJson": [
-          {"label": "启用", "value": "1"},
-          {"label": "禁用", "value": "0"}
+          {
+            "label": "启用",
+            "value": "1"
+          },
+          {
+            "label": "禁用",
+            "value": "0"
+          }
         ]
       },
       "props": {
@@ -160,9 +184,18 @@
       "component": "tdSelect",
       "initData": {
         "dataJson": [
-          {"label": "技术部", "value": "1"},
-          {"label": "市场部", "value": "2"},
-          {"label": "运营部", "value": "3"}
+          {
+            "label": "技术部",
+            "value": "1"
+          },
+          {
+            "label": "市场部",
+            "value": "2"
+          },
+          {
+            "label": "运营部",
+            "value": "3"
+          }
         ]
       },
       "props": {

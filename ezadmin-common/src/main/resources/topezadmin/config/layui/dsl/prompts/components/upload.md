@@ -31,35 +31,36 @@
 
 ### 基础属性
 
-| 属性 | 类型 | 必填 | 说明                        |
-|------|------|------|---------------------------|
-| item_name | String | 是 | 字段名，对应数据库字段               |
-| label | String | 是 | 显示标签                      |
-| component | String | 是 | 固定值：`upload`              |
-| classAppend | String | 否 | layui-col-md8 主要使用layui布局设置占用宽度                       |
-| description | String | 字段说明文本 | `"可选择多个"`                 |
-| props | Object | 否 | 组件属性  支持layui upload组件的属性 |
+| 属性          | 类型     | 必填     | 说明                              |
+|-------------|--------|--------|---------------------------------|
+| item_name   | String | 是      | 字段名，对应数据库字段                     |
+| label       | String | 是      | 显示标签                            |
+| component   | String | 是      | 固定值：`upload`                    |
+| classAppend | String | 否      | layui-col-md8 主要使用layui布局设置占用宽度 |
+| description | String | 字段说明文本 | `"可选择多个"`                       |
+| props       | Object | 否      | 组件属性  支持layui upload组件的属性       |
+
 ### props 属性
 
-| 属性 | 类型 | 说明           | 示例 | 默认值 |
-|------|------|--------------|------|-------|
-| accept | String | 允许上传的文件类型    | `images`、`file`、`video`、`audio` | `file` |
-| acceptMime | String | 自定义允许的MIME类型 | `image/jpg,image/png` | - |
-| multiple | Boolean | 是否允许多文件上传    | `true`、`false` | `false` |
-| number | Number | 同时允许上传数量     | `5` | 无限制 |
-| size | Number | 单个文件大小限制(KB) | `10240` (10MB) | - |
-| lay-verify | String | 表单验证规则       | `"required"` | - |
-| required | Boolean | 是否必填(显示红色*)  | `true` | `false` |
-| description | String | 字段说明文本       | `"支持jpg、png格式"` | - |
+| 属性          | 类型      | 说明           | 示例                              | 默认值     |
+|-------------|---------|--------------|---------------------------------|---------|
+| accept      | String  | 允许上传的文件类型    | `images`、`file`、`video`、`audio` | `file`  |
+| acceptMime  | String  | 自定义允许的MIME类型 | `image/jpg,image/png`           | -       |
+| multiple    | Boolean | 是否允许多文件上传    | `true`、`false`                  | `false` |
+| number      | Number  | 同时允许上传数量     | `5`                             | 无限制     |
+| size        | Number  | 单个文件大小限制(KB) | `10240` (10MB)                  | -       |
+| lay-verify  | String  | 表单验证规则       | `"required"`                    | -       |
+| required    | Boolean | 是否必填(显示红色*)  | `true`                          | `false` |
+| description | String  | 字段说明文本       | `"支持jpg、png格式"`                 | -       |
 
 ### accept 类型说明
 
-| 类型 | 说明 | 文件格式 |
-|------|------|---------|
-| images | 图片 | jpg、png、gif、bmp等 |
-| file | 普通文件 | 所有文件 |
-| video | 视频 | mp4、avi、mov等 |
-| audio | 音频 | mp3、wav等 |
+| 类型     | 说明   | 文件格式             |
+|--------|------|------------------|
+| images | 图片   | jpg、png、gif、bmp等 |
+| file   | 普通文件 | 所有文件             |
+| video  | 视频   | mp4、avi、mov等     |
+| audio  | 音频   | mp3、wav等         |
 
 ## 完整示例
 
@@ -116,7 +117,6 @@
   }
 }
 ```
- 
 
 ### 自定义文件类型
 
@@ -138,8 +138,9 @@
 ### 最大上传数量与最小上传数量
 
 通过内置的 jquery validate扩展方法实现 ，
-| uploadMax | Number | 最大上传数量限制     | `10` | 无限制 |
-| uploadMin | Number | 最小上传数量限制     | `1` | 无限制 |
+| uploadMax | Number | 最大上传数量限制 | `10` | 无限制 |
+| uploadMin | Number | 最小上传数量限制 | `1` | 无限制 |
+
 ```json
 {
    "item_name": "upload_test",

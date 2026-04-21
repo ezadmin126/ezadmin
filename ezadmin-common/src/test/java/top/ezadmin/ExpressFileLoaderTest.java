@@ -7,7 +7,6 @@ import top.ezadmin.common.utils.ExpressFileLoader;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -335,6 +334,238 @@ public class ExpressFileLoaderTest {
         assertTrue("应该包含嵌套对象的文件内容", nestedContent.contains("nested object file"));
 
         System.out.println("\n✅ 数组中的表达式文件引用测试通过");
+    }
+
+    /**
+     * 测试 dataJson @import 从 data 目录加载（classpath 模式）
+     */
+    @Test
+    public void testDataJsonImportFromDataDirectory() throws Exception {
+        System.out.println("===== 测试 dataJson @import 从 data 目录加载 =====");
+
+        EzBootstrap.config().setSqlCache(true); // classpath 模式
+
+        String configPath = "topezadmin/config/layui/dsl/list/test-datajson-import.json";
+        Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
+        assertNotNull("配置文件应该成功加载", config);
+
+        // 处理前：dataJson 是字符串 @import(...)
+        @SuppressWarnings("unchecked")
+        List<Object> search = (List<Object>) config.get("search");
+        @SuppressWarnings("unchecked")
+        Map<String, Object> statusItem = (Map<String, Object>) search.get(0);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> initData = (Map<String, Object>) statusItem.get("initData");
+
+        String dataJsonBefore = (String) initData.get("dataJson");
+        System.out.println("处理前 dataJson: " + dataJsonBefore);
+        assertEquals("处理前应该是 @import 语法", "@import(test_status.json)", dataJsonBefore);
+
+        // 处理
+        ExpressFileLoader.processExpressReferences(config, configPath);
+
+        // 处理后：dataJson 应该是 List<Map>
+        Object dataJsonAfter = initData.get("dataJson");
+        System.out.println("处理后 dataJson 类型: " + dataJsonAfter.getClass().getSimpleName());
+        System.out.println("处理后 dataJson 内容: " + dataJsonAfter);
+
+        assertTrue("dataJson 应该是 List", dataJsonAfter instanceof List);
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>) dataJsonAfter;
+        assertEquals("应该有2个选项", 2, dataList.size());
+        assertEquals("第1个 label 应该是 启用", "启用", dataList.get(0).get("label"));
+        assertEquals("第1个 value 应该是 1", "1", String.valueOf(dataList.get(0).get("value")));
+        assertEquals("第2个 label 应该是 禁用", "禁用", dataList.get(1).get("label"));
+        assertEquals("第2个 value 应该是 0", "0", String.valueOf(dataList.get(1).get("value")));
+
+        System.out.println("✅ dataJson @import 从 data 目录加载测试通过");
+    }
+
+    /**
+     * 测试 dataJson @import 支持子目录
+     */
+    @Test
+    public void testDataJsonImportSubdirectory() throws Exception {
+        System.out.println("===== 测试 dataJson @import 支持子目录 =====");
+
+        EzBootstrap.config().setSqlCache(true);
+
+        String configPath = "topezadmin/config/layui/dsl/list/test-datajson-import.json";
+        Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
+        assertNotNull("配置文件应该成功加载", config);
+
+        ExpressFileLoader.processExpressReferences(config, configPath);
+
+        // 第2个 search 项引用了子目录 common/test_gender.json
+        @SuppressWarnings("unchecked")
+        List<Object> search = (List<Object>) config.get("search");
+        @SuppressWarnings("unchecked")
+        Map<String, Object> genderItem = (Map<String, Object>) search.get(1);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> initData = (Map<String, Object>) genderItem.get("initData");
+
+        Object dataJsonAfter = initData.get("dataJson");
+        System.out.println("子目录导入结果: " + dataJsonAfter);
+
+        assertTrue("子目录导入的 dataJson 应该是 List", dataJsonAfter instanceof List);
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>) dataJsonAfter;
+        assertEquals("应该有3个性别选项", 3, dataList.size());
+        assertEquals("第1个 label 应该是 男", "男", dataList.get(0).get("label"));
+        assertEquals("第3个 label 应该是 未知", "未知", dataList.get(2).get("label"));
+
+        System.out.println("✅ dataJson @import 子目录测试通过");
+    }
+
+    /**
+     * 测试 dataJson @import 热加载（开发模式）
+     */
+    @Test
+    public void testDataJsonImportHotReload() throws Exception {
+        System.out.println("===== 测试 dataJson @import 热加载 =====");
+
+        EzBootstrap.config().setSqlCache(false); // 开发模式
+
+        String currentDir = System.getProperty("user.dir");
+        String dataDir = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/data";
+        String dataFilePath = dataDir + "/test_hotreload_status.json";
+        String configFilePath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/list/test_datajson_hotreload.json";
+
+        try {
+            // 确保 data 目录存在
+            new File(dataDir).mkdirs();
+
+            // 写入初始数据文件
+            String initialContent = "[{\"label\":\"初始选项A\",\"value\":\"A\"},{\"label\":\"初始选项B\",\"value\":\"B\"}]";
+            Files.write(Paths.get(dataFilePath), initialContent.getBytes(StandardCharsets.UTF_8));
+
+            // 写入引用该文件的 DSL 配置
+            String dslContent = "{\"id\":\"hotreload-test\",\"search\":[{\"field\":\"s\",\"initData\":{\"dataJson\":\"@import(test_hotreload_status.json)\"}}]}";
+            Files.write(Paths.get(configFilePath), dslContent.getBytes(StandardCharsets.UTF_8));
+
+            // 第一次加载
+            String configPath = "topezadmin/config/layui/dsl/list/test_datajson_hotreload.json";
+            Map<String, Object> config1 = ConfigFileLoader.loadConfigFile(configPath);
+            ExpressFileLoader.processExpressReferences(config1, configPath);
+
+            @SuppressWarnings("unchecked")
+            List<Object> search1 = (List<Object>) config1.get("search");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> item1 = (Map<String, Object>) search1.get(0);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> initData1 = (Map<String, Object>) item1.get("initData");
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> list1 = (List<Map<String, Object>>) initData1.get("dataJson");
+
+            System.out.println("第一次加载: " + list1);
+            assertEquals("初始应该有2个选项", 2, list1.size());
+            assertEquals("初始第1项 label", "初始选项A", list1.get(0).get("label"));
+
+            // 修改数据文件
+            String modifiedContent = "[{\"label\":\"修改选项X\",\"value\":\"X\"},{\"label\":\"修改选项Y\",\"value\":\"Y\"},{\"label\":\"修改选项Z\",\"value\":\"Z\"}]";
+            Files.write(Paths.get(dataFilePath), modifiedContent.getBytes(StandardCharsets.UTF_8));
+
+            // 第二次加载（热加载应读取新内容）
+            Map<String, Object> config2 = ConfigFileLoader.loadConfigFile(configPath);
+            ExpressFileLoader.processExpressReferences(config2, configPath);
+
+            @SuppressWarnings("unchecked")
+            List<Object> search2 = (List<Object>) config2.get("search");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> item2 = (Map<String, Object>) search2.get(0);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> initData2 = (Map<String, Object>) item2.get("initData");
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> list2 = (List<Map<String, Object>>) initData2.get("dataJson");
+
+            System.out.println("第二次加载: " + list2);
+            assertEquals("修改后应该有3个选项", 3, list2.size());
+            assertEquals("修改后第1项 label", "修改选项X", list2.get(0).get("label"));
+
+            System.out.println("✅ dataJson @import 热加载测试通过");
+
+        } finally {
+            try {
+                Files.deleteIfExists(Paths.get(dataFilePath));
+                Files.deleteIfExists(Paths.get(configFilePath));
+                System.out.println("热加载测试文件已清理");
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    /**
+     * 测试无 @import 的普通 dataJson 不受影响
+     */
+    @Test
+    public void testNormalDataJsonUnaffected() throws Exception {
+        System.out.println("===== 测试普通 dataJson 数组不受影响 =====");
+
+        EzBootstrap.config().setSqlCache(true);
+
+        // 直接构造包含普通 dataJson 数组的配置
+        String configJson = "{\"search\":[{\"field\":\"s\",\"initData\":{\"dataJson\":[{\"label\":\"选项1\",\"value\":\"1\"},{\"label\":\"选项2\",\"value\":\"2\"}]}}]}";
+        Map<String, Object> config = EzBootstrap.config().getEzJson().parseObjectMap(configJson);
+
+        @SuppressWarnings("unchecked")
+        List<Object> search = (List<Object>) config.get("search");
+        @SuppressWarnings("unchecked")
+        Map<String, Object> item = (Map<String, Object>) search.get(0);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> initData = (Map<String, Object>) item.get("initData");
+
+        Object dataJsonBefore = initData.get("dataJson");
+        assertTrue("普通 dataJson 应该是 List", dataJsonBefore instanceof List);
+
+        ExpressFileLoader.processExpressReferences(config, "topezadmin/config/layui/dsl/list/dummy.json");
+
+        Object dataJsonAfter = initData.get("dataJson");
+        assertTrue("处理后普通 dataJson 仍应该是 List", dataJsonAfter instanceof List);
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> list = (List<Map<String, Object>>) dataJsonAfter;
+        assertEquals("选项数量不变", 2, list.size());
+
+        System.out.println("✅ 普通 dataJson 不受影响测试通过");
+    }
+
+    /**
+     * 测 dataJson @import 与 express @import 在同一 DSL 中共存
+     */
+    @Test
+    public void testDataJsonAndExpressImportCoexist() throws Exception {
+        System.out.println("===== 测试 dataJson @import 与 express @import 共存 =====");
+
+        EzBootstrap.config().setSqlCache(true);
+
+        String configPath = "topezadmin/config/layui/dsl/list/test-datajson-import.json";
+        Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
+        assertNotNull(config);
+
+        // express.main 是普通字符串（不是 @import），search[0].initData.dataJson 是 @import
+        @SuppressWarnings("unchecked")
+        Map<String, Object> express = (Map<String, Object>) config.get("express");
+        String mainBefore = (String) express.get("main");
+
+        ExpressFileLoader.processExpressReferences(config, configPath);
+
+        // express.main 不变（不是 @import）
+        assertEquals("express.main 不是文件引用，应保持不变", mainBefore, express.get("main"));
+
+        // search[0].dataJson 已被替换为 List
+        @SuppressWarnings("unchecked")
+        List<Object> search = (List<Object>) config.get("search");
+        @SuppressWarnings("unchecked")
+        Map<String, Object> statusItem = (Map<String, Object>) search.get(0);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> initData = (Map<String, Object>) statusItem.get("initData");
+        assertTrue("dataJson 应该已被替换为 List", initData.get("dataJson") instanceof List);
+
+        // search[2] 没有 initData.dataJson，不受影响
+        @SuppressWarnings("unchecked")
+        Map<String, Object> keywordItem = (Map<String, Object>) search.get(2);
+        assertNull("keyword 没有 initData，应为 null", keywordItem.get("initData"));
+
+        System.out.println("✅ dataJson @import 与 express @import 共存测试通过");
     }
 
     /**

@@ -45,8 +45,8 @@ public class DslSourceEditorController extends BaseController {
             }
             //获取dsl源码
             top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(dslId, method);
-            String dslContent="";
-            if(dslConfig != null){
+            String dslContent = "";
+            if (dslConfig != null) {
                 dslContent = JSONUtils.toPrettyJSONString(dslConfig.getConfig());
             }
             Map<String, Object> templateParam = new HashMap<>();
@@ -111,6 +111,7 @@ public class DslSourceEditorController extends BaseController {
             return EzResult.instance().setSuccess(false).code("500").setMessage("保存表单配置失败: " + e.getMessage());
         }
     }
+
     /**
      * 保存表单配置
      * URL: /topezadmin/dsl/form/save-{formId}

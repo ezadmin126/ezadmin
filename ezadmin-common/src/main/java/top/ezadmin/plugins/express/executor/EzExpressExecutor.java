@@ -90,22 +90,23 @@ public class EzExpressExecutor {
 
     /**
      * 自定义函数
+     *
      * @param operator
      */
-     public static void addExtendFunction(String key,Operator operator) {
-        if(runner.getOperatorFactory()!=null
-                && runner.getOperatorFactory().getOperator(key)==null){
+    public static void addExtendFunction(String key, Operator operator) {
+        if (runner.getOperatorFactory() != null
+                && runner.getOperatorFactory().getOperator(key) == null) {
             try {
                 runner.addFunction(key, operator);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }else{
-            throw new RuntimeException("function "+key+" already exists");
+        } else {
+            throw new RuntimeException("function " + key + " already exists");
         }
-     }
+    }
 
-     public static void initEnv(String k, Object v) {
+    public static void initEnv(String k, Object v) {
         envParams.put(k, v);
     }
 
@@ -130,7 +131,7 @@ public class EzExpressExecutor {
         runner.addFunction("updateSimple", new UpdateSimpleOperator());
         runner.addFunction("prepareUpdate", new PrepareUpdateOperator());
         runner.addFunction("split", new SplitOperator());
-       // runner.addFunction("env", new EnvOperator());
+        // runner.addFunction("env", new EnvOperator());
     }
 
     public Object run(String express) throws Exception {
@@ -147,7 +148,7 @@ public class EzExpressExecutor {
             }
         }
 
-        Object r = runner.execute(express, context, null, EzBootstrap.config().isSqlCache(),  !EzBootstrap.config().isSqlCache());
+        Object r = runner.execute(express, context, null, EzBootstrap.config().isSqlCache(), !EzBootstrap.config().isSqlCache());
         result = r;
         return r;
 
