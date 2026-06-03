@@ -1,0 +1,32 @@
+<div th:class="'component-col col-'+${item_name}"
+     th:classappend="${classAppend}" th:data-config-json="${componentJson}"
+>
+    <div class="layui-form-item" th:item_name="${item_name}" component="inputrange">
+        <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
+            <span th:if="${props != null and props.required}" style="color: red;">*</span>
+            <span th:utext="${label}+'：'">字段名</span>
+        </label>
+        <div class="layui-input-block">
+            <!-- 隐藏域：存储合并后的 "start - end" 值，参与表单提交 -->
+            <input type="hidden" th:name="${item_name}" th:id="${'inputrange-hidden-' + item_name}"
+                   class="ez-inputrange-hidden" th:data-propsJson="${propsJson}">
+            <div class="layui-input-inline ez-range">
+                <input autocomplete="off" type="text" class="layui-input ez-inputrange-start"
+                       th:id="${'inputrange-start-' + item_name}"
+                       th:data-range-target="${item_name}"
+                       th:attrs="${props}"
+                       placeholder="起始值">
+            </div>
+            <div class="layui-form-mid-range">-</div>
+            <div class="layui-input-inline ez-range">
+                <input autocomplete="off" type="text" class="layui-input ez-inputrange-end"
+                       th:id="${'inputrange-end-' + item_name}"
+                       th:data-range-target="${item_name}"
+                       th:attrs="${props}"
+                       placeholder="结束值">
+            </div>
+            <div th:if="${props != null and not #strings.isEmpty(props.description)}"
+                 class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
+        </div>
+    </div>
+</div>

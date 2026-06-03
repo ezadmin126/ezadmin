@@ -54,7 +54,7 @@ public class ListEditController extends BaseController {
 
         templateParam.put(RequestParamConstants._SEARCH_ITEM_DISPLAY, requestContext.getParameter("_SEARCH_ITEM_DISPLAY"));
 
-        templateParam.put("listUrl", requestContext.getContextPath() + "/topezadmin/listEdit/list-" + listUrlCode);
+        templateParam.put("listUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"listEdit/list-" + listUrlCode);
         templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
         templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
 
@@ -344,7 +344,7 @@ public class ListEditController extends BaseController {
         requestContext.getRequestParams().put("data", list);
         requestContext.getRequestParams().put("_SEARCH_ITEM_DISPLAY", requestContext.getParameter("_SEARCH_ITEM_DISPLAY"));
 
-        requestContext.getRequestParams().put("listUrl", requestContext.getContextPath() + "/topezadmin/listEdit/list-" + ENCRYPT_LIST_ID);
+        requestContext.getRequestParams().put("listUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"listEdit/list-" + ENCRYPT_LIST_ID);
         if (Utils.getLog() != null) {
             Utils.addLog("end list_id=" + listId + ",总共耗时：" + (System.currentTimeMillis() - start) + "ms");
         }

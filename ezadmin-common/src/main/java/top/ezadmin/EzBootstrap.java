@@ -28,12 +28,12 @@ public class EzBootstrap {
     private EzBootstrap() {
     }
 
-    private static String includeShow = "/topezadmin/(list|form|listEdit|formEdit|detail|edit|dsl)/([A-Za-z]+)-(.*)";
+    private static String includeShow = "(list|form|listEdit|formEdit|detail|edit|dsl)/([A-Za-z]+)-(.*)";
     private Pattern pInclude = null;
 
 
     public void init(EzBootstrapConfig config) {
-        pInclude = Pattern.compile(includeShow);
+        pInclude = Pattern.compile(config.getPrefixUrl()+includeShow);
         //初始化配置
         this.ezBootstrapConfig = config;
         //初始化模版
@@ -72,30 +72,24 @@ public class EzBootstrap {
             originatingUrl = originatingUrl.substring(0, js);
         }
         if (originatingUrl.startsWith("/ezadmin/")) {
-            originatingUrl = originatingUrl.replaceFirst("/ezadmin/", "/topezadmin/");
-        } else if (StringUtils.isNotBlank(ezBootstrapConfig.getPrefixUrl())
-                && originatingUrl.startsWith(ezBootstrapConfig.getPrefixUrl())) {
-            originatingUrl = originatingUrl.replaceFirst(ezBootstrapConfig.getPrefixUrl(), "/topezadmin");
+            originatingUrl = originatingUrl.replaceFirst("/ezadmin/", ezBootstrapConfig.getPrefixUrl());
         }
-        if (originatingUrl.equals("/topezadmin/index.html")) {
+        if (originatingUrl.equals(ezBootstrapConfig.getPrefixUrl()+"index.html")) {
             IndexController controller2 = new IndexController();
             return controller2.index(requestContext);
         }
         //防止配置的前缀 有/
         originatingUrl = StringUtils.repaceAll(originatingUrl, "//", "/");
-        if (originatingUrl.equals("/topezadmin/listEdit/importlist.html")) {
-            originatingUrl = "/topezadmin/listEdit/importlist-";
+        if (originatingUrl.equals(ezBootstrapConfig.getPrefixUrl()+"listEdit/importlist.html")) {
+            originatingUrl = ezBootstrapConfig.getPrefixUrl()+"listEdit/importlist-";
         }
         // DSL编辑器特殊URL处理
-        if (originatingUrl.startsWith("/topezadmin/dsl/")) {
-            // /topezadmin/dsl/editor → /topezadmin/dsl/editor-
-            if (originatingUrl.equals("/topezadmin/dsl/editor")) {
-                originatingUrl = "/topezadmin/dsl/editor-";
+        if (originatingUrl.startsWith(ezBootstrapConfig.getPrefixUrl()+"dsl/")) {
+            if (originatingUrl.equals(ezBootstrapConfig.getPrefixUrl()+"dsl/editor")) {
+                originatingUrl = ezBootstrapConfig.getPrefixUrl()+"dsl/editor-";
             }
-            // /topezadmin/dsl/form/xxx 转换为 /topezadmin/dsl/form-xxx
-            // 但保持已有的"-"不变，例如 /topezadmin/dsl/form/get-abc 保持不变
             else {
-                originatingUrl = originatingUrl.replaceFirst("/topezadmin/dsl/form/", "/topezadmin/dsl/form-");
+                originatingUrl = originatingUrl.replaceFirst(ezBootstrapConfig.getPrefixUrl()+"dsl/form/", ezBootstrapConfig.getPrefixUrl()+"dsl/form-");
             }
         }
         Matcher m = pInclude.matcher(originatingUrl);
@@ -205,6 +199,8 @@ public class EzBootstrap {
                 return controller.selectCols(requestContext, method, id);
             case "customSearch":
                 return controller.customSearch(requestContext, method, id);
+            case "pageCustomSearch":
+                return controller.pageCustomSearch(requestContext, method, id);
         }
         return EzResult.instance().fail("没有找到方法");
     }
@@ -323,7 +319,6 @@ public class EzBootstrap {
 
     private EzResult handleInspectorController(RequestContext requestContext, String method, String id) throws Exception {
         // 实现API控制器逻辑
-        // Inspector API: /topezadmin/api/submit-inspector
         if ("list".equals(method) || "form".equals(method)) {
             DslEditController controller = new DslEditController();
             return controller.page(requestContext, method, id);

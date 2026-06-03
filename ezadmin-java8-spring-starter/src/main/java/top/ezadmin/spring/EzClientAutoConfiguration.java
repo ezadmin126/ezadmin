@@ -36,7 +36,7 @@ public class EzClientAutoConfiguration implements ApplicationContextAware {
             //自定义URL前缀
             if (StringUtils.isNotBlank(ezClientProperties.getPrefixUrl())) {
                 registrationBean.getUrlPatterns().add("/ezadmin/*");
-                registrationBean.getUrlPatterns().add(ezClientProperties.getPrefixUrl() + "/*");
+                registrationBean.getUrlPatterns().add(ezClientProperties.getPrefixUrl() + "*");
             }
         } catch (Exception e) {
             logger.error("初始化ezClientServletFilter异常", e);

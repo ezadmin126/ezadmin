@@ -42,7 +42,7 @@ public class EzBootstrapConfig {
     /**
      * 前缀URL，系统所有接口的统一前缀路径
      */
-    private String prefixUrl = "/topezadmin";
+    private String prefixUrl = "/topezadmin/";
 
     private Map<String, javax.sql.DataSource> datasourceMap = new HashMap<>();
 

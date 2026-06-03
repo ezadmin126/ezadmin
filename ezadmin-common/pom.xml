@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-common</artifactId>
-    <version>3.1.1-SNAPSHOT</version>
+    <version>3.1.2</version>
     <packaging>jar</packaging>
     <name>ezadmin-common</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
@@ -19,7 +19,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-        <!-- Spring Boot版本已移除 -->
     </properties>
     <developers>
         <developer>

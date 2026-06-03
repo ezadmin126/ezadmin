@@ -48,7 +48,7 @@ public class FormController extends BaseController {
             throw new NotExistException();
         }
         Map<String, Object> templateParam = new HashMap<>();
-        templateParam.put("formUrl", requestContext.getContextPath() + "/topezadmin/form/form-" + ENCRYPT_FORM_ID);
+        templateParam.put("formUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"form/form-" + ENCRYPT_FORM_ID);
 
         Map<String, Object> searchParamsValues = requestContext.getRequestParams();
         Map<String, String> sessionMap = requestContext.getSessionParams();
@@ -70,7 +70,7 @@ public class FormController extends BaseController {
         if (core != null && StringUtils.isNotBlank(Utils.trimNull(core.get("formSubmitUrl")))) {
             templateParam.put("formSubmitUrl", core.get("formSubmitUrl"));
         } else {
-            templateParam.put("formSubmitUrl", requestContext.getContextPath() + "/topezadmin/form/doSubmit-" + ENCRYPT_FORM_ID);
+            templateParam.put("formSubmitUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"form/doSubmit-" + ENCRYPT_FORM_ID);
         }
         String layout = "" + core.getOrDefault("layout", EzBootstrap.config().getLayout());
         templateParam.put("layout", layout);
@@ -149,7 +149,7 @@ public class FormController extends BaseController {
             }
 
             //data.data
-            String defaultTo = requestContext.getContextPath() + "/topezadmin/form/form-" + ENCRYPT_FORM_ID + "?ID=" + Utils.trimNullDefault(rowId, ID);
+            String defaultTo = requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"form/form-" + ENCRYPT_FORM_ID + "?ID=" + Utils.trimNullDefault(rowId, ID);
             if (StringUtils.isNotBlank(successurl)) {
                 if (StringUtils.contains(successurl, "/")) {
                     successurl = requestContext.getContextPath() + successurl;
@@ -348,7 +348,7 @@ public class FormController extends BaseController {
         }
         Map<String, Object> form = dslConfig.getConfig();
         if (form != null && StringUtils.isBlank((String) form.get("initUrl"))) {
-            form.put("initUrl", "/topezadmin/form/data-" + formUrlCode);
+            form.put("initUrl", EzBootstrap.config().getPrefixUrl()+"form/data-" + formUrlCode);
         }
         iniFormItem(requestContext, form);
 
@@ -367,9 +367,13 @@ public class FormController extends BaseController {
         templateParam.put("ID", requestContext.getRequestParams().get("ID"));
         templateParam.put("uploadUrl", EzBootstrap.config().getUploadUrl());
         templateParam.put("downloadUrl", EzBootstrap.config().getDownloadUrl());
-        templateParam.put("formSubmitUrl", "/topezadmin/form/submit-" + formUrlCode);
+        templateParam.put("formSubmitUrl", EzBootstrap.config().getPrefixUrl()+"form/submit-" + formUrlCode);
         templateParam.put("ENCRYPT_FORM_ID", formUrlCode);
         templateParam.putAll(EzBootstrap.config().getConfig());
+
+        templateParam.put("prefixUrl", EzBootstrap.config().getPrefixUrl());
+        templateParam.put("configJson", EzBootstrap.config().getConfigJson());
+
         templateParam.put("EZ_SESSION_USER_NAME_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
         templateParam.put("EZ_SESSION_USER_ID_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY)));
         return render("layui/dsl/formTemplate", templateParam);
@@ -391,7 +395,7 @@ public class FormController extends BaseController {
                 Map<String, Object> iframe = (Map<String, Object>) card.get("iframe");
                 String url = Utils.trimNull(iframe.get("url"));
                 if (StringUtils.isNotBlank(url)) {
-                    iframe.put("url", MapParser.parse(url, requestContext.getRequestParams()).getResult());
+                    iframe.put("url", Utils.fixedUrl( MapParser.parse(url, requestContext.getRequestParams()).getResult()));
                 }
             }
             componentJson.put("iframe", card.get("iframe"));
@@ -694,7 +698,7 @@ public class FormController extends BaseController {
             }
 
             //data.data
-            String defaultTo = requestContext.getContextPath() + "/topezadmin/form/page-" + ENCRYPT_FORM_ID + "?ID=" + Utils.trimNullDefault(rowId, ID);
+            String defaultTo = requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"form/page-" + ENCRYPT_FORM_ID + "?ID=" + Utils.trimNullDefault(rowId, ID);
             if (StringUtils.isNotBlank(successurl)) {
                 if (StringUtils.contains(successurl, "/")) {
                     successurl = requestContext.getContextPath() + successurl;

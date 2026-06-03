@@ -115,7 +115,7 @@ public class ListControllerTest {
     @Test
     public void testDslListPage() throws Exception {
         RequestContext ctx = createRequestContext();
-        ctx.setRequestURI("/topezadmin/list/page-test");
+        ctx.setRequestURI(EzBootstrap.config().getPrefixUrl()+"list/page-test");
 
         EzResult result = EzBootstrap.getInstance().generate(ctx);
 
@@ -132,7 +132,7 @@ public class ListControllerTest {
     @Test
     public void testDslListData() throws Exception {
         RequestContext ctx = createRequestContext();
-        ctx.setRequestURI("/topezadmin/list/data-test");
+        ctx.setRequestURI(EzBootstrap.config().getPrefixUrl()+"list/data-test");
 
         Map<String, Object> params = ctx.getRequestParams();
         params.put("page", 1);
@@ -152,7 +152,7 @@ public class ListControllerTest {
     @Test
     public void testDslListDataWithSearch() throws Exception {
         RequestContext ctx = createRequestContext();
-        ctx.setRequestURI("/topezadmin/list/data-test");
+        ctx.setRequestURI(EzBootstrap.config().getPrefixUrl()+"list/data-test");
 
         Map<String, Object> params = ctx.getRequestParams();
         params.put("page", 1);
@@ -251,7 +251,7 @@ public class ListControllerTest {
     @Test
     public void testSelectInitData() throws Exception {
         RequestContext ctx = createRequestContext();
-        ctx.setRequestURI("/topezadmin/list/page-test");
+        ctx.setRequestURI(EzBootstrap.config().getPrefixUrl()+"list/page-test");
 
         EzResult result = EzBootstrap.getInstance().generate(ctx);
 
@@ -349,7 +349,7 @@ public class ListControllerTest {
     @Test
     public void testNotExistList() {
         RequestContext ctx = createRequestContext();
-        ctx.setRequestURI("/topezadmin/list/page-notexist");
+        ctx.setRequestURI(EzBootstrap.config().getPrefixUrl()+"list/page-notexist");
 
         EzResult result = EzBootstrap.getInstance().generate(ctx);
 

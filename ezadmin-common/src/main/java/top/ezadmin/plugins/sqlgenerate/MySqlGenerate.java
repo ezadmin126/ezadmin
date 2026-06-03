@@ -312,7 +312,7 @@ public class MySqlGenerate extends SqlGenerate {
                 }
                 sql.append(",");
                 sql.append(SqlUtils.alias(alias, field));
-                sql.append(" )");
+                sql.append(" )>0 ");
             }
         }
         sql.append(" )");

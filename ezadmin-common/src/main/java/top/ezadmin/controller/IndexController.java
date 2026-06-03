@@ -67,26 +67,4 @@ public class IndexController extends BaseController {
         return EzResult.instance().msg("0", "清理缓存成功");
     }
 
-
-    // public void dark(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    //     if (StringUtils.equals("add", request.getParameter("type"))) {
-    //         Cookie cookie = new Cookie("layui-theme-mode-prefer-dark", "dark");
-    //         cookie.setDomain(request.getServerName());
-    //         cookie.setPath("/");
-    //         cookie.setMaxAge(31536000);
-    //         response.addCookie(cookie);
-    //     } else {
-    //         Cookie cookie = new Cookie("layui-theme-mode-prefer-dark", "1");
-    //         cookie.setDomain(request.getServerName());
-    //         cookie.setPath("/");
-    //         cookie.setMaxAge(0);
-    //         response.addCookie(cookie);
-    //     }
-    //     EzResult.instance().msg("0", "ok").data("vo").printJSONUtils(response);
-    // }
-
-
-    // public String dev(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    //     return "redirect:/topezadmin/list/list-listall";
-    // }
 }

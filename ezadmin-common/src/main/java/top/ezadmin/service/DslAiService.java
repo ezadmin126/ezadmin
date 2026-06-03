@@ -119,9 +119,9 @@ public class DslAiService {
             responseData.put("dslType", dslType);
             responseData.put("filePath", getDslFilePath(dslId, dslType));
             if (dslType.equals("form")) {
-                responseData.put("redirectUrl", "/topezadmin/edit/form-" + dslId);
+                responseData.put("redirectUrl", EzBootstrap.config().getPrefixUrl()+"edit/form-" + dslId);
             } else {
-                responseData.put("redirectUrl", "/topezadmin/edit/list-" + dslId);
+                responseData.put("redirectUrl", EzBootstrap.config().getPrefixUrl()+"edit/list-" + dslId);
             }
             resultInfoMessage.append("DSL文件保存失败").append("\n");
             responseData.put("summary", resultInfoMessage);

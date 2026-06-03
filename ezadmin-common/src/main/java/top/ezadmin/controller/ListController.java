@@ -66,7 +66,7 @@ public class ListController extends BaseController {
         }
         templateParam.put(RequestParamConstants._SEARCH_ITEM_DISPLAY, requestParamMap.get("_SEARCH_ITEM_DISPLAY"));
 
-        templateParam.put("listUrl", requestContext.getContextPath() + "/topezadmin/list/list-" + listUrlCode);
+        templateParam.put("listUrl", requestContext.getContextPath() +EzBootstrap.config().getPrefixUrl()+ "list/list-" + listUrlCode);
         templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
         templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
         templateParam.put("ENCRYPT_LIST_ID", listUrlCode);
@@ -177,7 +177,7 @@ public class ListController extends BaseController {
         templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
         templateParam.put("layout", layout);
         templateParam.put(RequestParamConstants._SEARCH_ITEM_DISPLAY, requestContext.getParameter("_SEARCH_ITEM_DISPLAY"));
-        templateParam.put("listUrl", requestContext.getContextPath() + "/topezadmin/list/tree-" + ENCRYPT_LIST_ID);
+        templateParam.put("listUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"list/tree-" + ENCRYPT_LIST_ID);
         templateParam.putAll(sessionParamMap);
         templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
         templateParam.put("prefixUrl", EzBootstrap.config().getPrefixUrl());
@@ -404,6 +404,70 @@ public class ListController extends BaseController {
         return render(EzBootstrap.config().getAdminStyle() + "/custom_search", templateParam);
     }
 
+    public EzResult pageCustomSearch(RequestContext requestContext, String method, String listUrlCode) throws Exception {
+        Map<String, Object> templateParam = new HashMap<>();
+        top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(listUrlCode, "list");
+        if (dslConfig == null) {
+            return render(EzBootstrap.config().getAdminStyle() + "/404", templateParam);
+        }
+        Map<String, Object> list = dslConfig.getConfig();
+
+        // 填充 select/xmselect 等组件的选项数据
+        initSearch(requestContext, list);
+
+        // 从 search[].row[] 提取可参与自定义查询的字段
+        List<List<Map<String, Object>>> searchRows = getFlattenedSearchList(list.get("search"));
+        List<Map<String, Object>> searchableFields = new ArrayList<>();
+        Set<String> SUPPORTED_SEARCH = new HashSet<>(Arrays.asList(
+                "input", "input-text", "select", "select-search", "xmselect", "date", "inputrange"
+        ));
+        if (searchRows != null) {
+            for (List<Map<String, Object>> row : searchRows) {
+                for (Map<String, Object> item : row) {
+                    String component = Utils.trimNull(item.get("component"));
+                    if (SUPPORTED_SEARCH.contains(component)) {
+                        // 确保 dataJson 已序列化，供模板中 JS 使用
+                        if (item.get("data") != null && item.get("dataJson") == null) {
+                            item.put("dataJson", JSONUtils.toJSONString(item.get("data")));
+                        }
+                        searchableFields.add(item);
+                    }
+                }
+            }
+        }
+
+        // 从 column[] 提取可排序列（sortable 不为 false 的列）
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
+        List<Map<String, Object>> sortableColumns = new ArrayList<>();
+        if (columnList != null) {
+            for (Map<String, Object> col : columnList) {
+                Object sortable = col.get("sortable");
+                if (!(Boolean.FALSE.equals(sortable) || "false".equalsIgnoreCase(Utils.trimNull(sortable)))) {
+                    sortableColumns.add(col);
+                }
+            }
+        }
+
+        // 构建 JS 用的精简 Meta JSON（只含 item_name/label/component/data）
+        List<Map<String, Object>> searchFieldMeta = new ArrayList<>();
+        for (Map<String, Object> item : searchableFields) {
+            Map<String, Object> meta = new LinkedHashMap<>();
+            meta.put("item_name", Utils.trimNull(item.get("item_name")));
+            meta.put("label", Utils.trimNull(item.get("label")));
+            meta.put("component", Utils.trimNull(item.get("component")));
+            Object dataObj = item.get("data");
+            meta.put("data", dataObj != null ? dataObj : new ArrayList<>());
+            searchFieldMeta.add(meta);
+        }
+
+        templateParam.put("fromSearchField", searchableFields);
+        templateParam.put("fromColField", sortableColumns);
+        templateParam.put("searchFieldMetaJson", JSONUtils.toJSONString(searchFieldMeta));
+        templateParam.put("ENCRYPT_LIST_ID", listUrlCode);
+        templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
+        return render("layui/dsl/pageCustomSearch", templateParam);
+    }
+
 
     public EzResult page(RequestContext requestContext, String method, String id) throws Exception {
         Map<String, Object> templateParam = new HashMap<>();
@@ -424,7 +488,7 @@ public class ListController extends BaseController {
                 //url
                 if (props.containsKey("url") && props.get("url") != null) {
                     String urlNew = MapParser.parseDefaultEmpty((String) props.get("url"), requestContext.getRequestParams()).getResult();
-                    props.put("url", urlNew);
+                    props.put("url", Utils.fixedUrl(urlNew));
                 }
                 if (props.containsKey("windowname") && props.get("windowname") != null) {
                     String urlNew = MapParser.parseDefaultEmpty((String) props.get("windowname"), requestContext.getRequestParams()).getResult();
@@ -433,21 +497,23 @@ public class ListController extends BaseController {
             });
         }
 
-
         initSearch(requestContext, list);
         initMenu(requestContext, list);
         initTree(requestContext, list);
         Collection<String> tdtemplates = initTd(requestContext, list);
         if (list.get("initApi") == null) {
-            list.put("initApi", EzBootstrap.config().getPrefixUrl() + "/list/data-" + id);
+            list.put("initApi", EzBootstrap.config().getPrefixUrl() + "list/data-" + id);
         }
         if (list.get("countApi") == null) {
-            list.put("countApi", EzBootstrap.config().getPrefixUrl() + "/list/countpage-" + id);
+            list.put("countApi", EzBootstrap.config().getPrefixUrl() + "list/countpage-" + id);
         }
         //默认你不隐藏头部
         if (list.get("hideSearch") == null) {
             list.put("hideSearch", false);
         }
+
+        list.put("prefixUrl", EzBootstrap.config().getPrefixUrl());
+        list.put("configJson", EzBootstrap.config().getConfigJson());
 
         initRowBtn(requestContext, list);
         templateParam.put("list", list);
@@ -675,12 +741,8 @@ public class ListController extends BaseController {
 
     public EzResult exportpage(RequestContext requestContext, String method, String listUrlCode) throws Exception {
         String ENCRYPT_LIST_ID = listUrlCode;
-        String _BLANK_PARAM_COLUMN = Utils.trimNull(requestContext.getParameter("_BLANK_PARAM_COLUMN"));
         String EZ_PER_PAGE_SIZE = Utils.trimEmptyDefault(requestContext.getParameter("EZ_PER_PAGE_SIZE"), "1000");
-//        String orderedColumn[] = null;
-//        if (StringUtils.isNotBlank(_BLANK_PARAM_COLUMN)) {
-//            orderedColumn = _BLANK_PARAM_COLUMN.split(",");
-//        }
+
         String key = ENCRYPT_LIST_ID + "_" + ENCRYPT_LIST_ID;
         try {
             String sessionUserId = Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY));
@@ -820,7 +882,7 @@ public class ListController extends BaseController {
                 //url
                 if (props.containsKey("url") && props.get("url") != null) {
                     String urlNew = MapParser.parseDefaultEmpty((String) props.get("url"), requestContext.getRequestParams()).getResult();
-                    props.put("url", urlNew);
+                    props.put("url", Utils.fixedUrl(urlNew));
                 }
                 if (props.containsKey("windowname") && props.get("windowname") != null) {
                     String urlNew = MapParser.parseDefaultEmpty((String) props.get("windowname"), requestContext.getRequestParams()).getResult();
@@ -993,6 +1055,18 @@ public class ListController extends BaseController {
                         search.put(ParamNameEnum.itemParamValueStart.getName(), valueSplit[0]);
                         search.put(ParamNameEnum.itemParamValueEnd.getName(), valueSplit[1]);
 
+                    }
+                }
+                // inputrange: "start - end" 隐藏域，按 " - " 分割填入 _START/_END
+                if (component.equalsIgnoreCase("inputrange") && StringUtils.isNotBlank(orgValue)) {
+                    String[] valueSplit = orgValue.split(" - ", 2);
+                    if (valueSplit.length == 2) {
+                        String startVal = valueSplit[0].trim();
+                        String endVal = valueSplit[1].trim();
+                        search.put(ParamNameEnum.itemParamValueStart.getName(), startVal);
+                        search.put(ParamNameEnum.itemParamValueEnd.getName(), endVal);
+                        requestParamMap.put(currentItemname + "_START", startVal);
+                        requestParamMap.put(currentItemname + "_END", endVal);
                     }
                 }
 

@@ -257,7 +257,7 @@ public class FormEditController extends BaseController {
         String ENCRYPT_FORM_ID = formUrlCode;
         Map<String, Object> templateParam = new HashMap<>();
 
-        templateParam.put("formUrl", requestContext.getContextPath() + "/topezadmin/formEdit/form-" + ENCRYPT_FORM_ID);
+        templateParam.put("formUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"formEdit/form-" + ENCRYPT_FORM_ID);
         //自定义ID
         String ID = getIdInForm(requestContext);
         if (StringUtils.isBlank(formId) && StringUtils.isBlank(ENCRYPT_FORM_ID)) {
@@ -283,7 +283,7 @@ public class FormEditController extends BaseController {
         if (StringUtils.isNotBlank(Utils.trimNull(core.get("formSubmitUrl")))) {
             templateParam.put("formSubmitUrl", core.get("formSubmitUrl"));
         } else {
-            templateParam.put("formSubmitUrl", requestContext.getContextPath() + "/topezadmin/formEdit/doSubmit-" + ENCRYPT_FORM_ID);
+            templateParam.put("formSubmitUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"formEdit/doSubmit-" + ENCRYPT_FORM_ID);
         }
 
         String layout = "" + core.getOrDefault("layout", EzBootstrap.config().getLayout());
@@ -356,7 +356,7 @@ public class FormEditController extends BaseController {
             }
 
             //data.data
-            String defaultTo = requestContext.getContextPath() + "/topezadmin/formEdit/form-" + ENCRYPT_FORM_ID + "?ID=" + toFormId(rowId, requestContext);
+            String defaultTo = requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"formEdit/form-" + ENCRYPT_FORM_ID + "?ID=" + toFormId(rowId, requestContext);
             if (StringUtils.isNotBlank(successurl)) {
                 if (StringUtils.contains(successurl, "/")) {
                     successurl = requestContext.getContextPath() + successurl;

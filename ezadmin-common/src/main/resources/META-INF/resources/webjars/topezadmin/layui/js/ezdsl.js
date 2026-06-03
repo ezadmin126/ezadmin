@@ -18,6 +18,7 @@ layui.use(function () {
         initXmselect();
         initLaycascader();
         initUpload();
+        initInputRange();
 
         $(".ez-form-panel  .layui-layer-min").click(function () {
             $(this).closest(".layui-card").find(".layui-card-body").hide();
@@ -170,10 +171,11 @@ layui.use(function () {
                                 } else if ('reloadTableData' == data.data) {
                                     canEzFormSubmit = true;
                                     parent.Global.get("table").reloadData();
+                                    parent.layer.closeAll();
                                 } else if ('reloadlocal' == data.data) {
                                     canEzFormSubmit = true;
                                     window.location.reload();
-                                } else if (data.data.toLowerCase().indexOf('refreshcard') >= 0) {
+                                } else if (String(data.data).toLowerCase().indexOf('refreshcard') >= 0) {
                                     canEzFormSubmit = true;
                                     refreshCard(data.data);
                                     return;
@@ -373,6 +375,27 @@ function initDate() {
         el.removeAttribute("type");
         layui.laydate.render(resultConfig);
     })
+}
+
+function initInputRange() {
+    function syncInputRange(targetName) {
+        var startEl = document.getElementById('inputrange-start-' + targetName);
+        var endEl = document.getElementById('inputrange-end-' + targetName);
+        var hiddenEl = document.getElementById('inputrange-hidden-' + targetName);
+        if (!hiddenEl) return;
+        var startVal = startEl ? startEl.value.trim() : '';
+        var endVal = endEl ? endEl.value.trim() : '';
+        hiddenEl.value = (startVal || endVal) ? (startVal + ' - ' + endVal) : '';
+    }
+
+    document.querySelectorAll('.ez-inputrange-start, .ez-inputrange-end').forEach(function (el) {
+        el.addEventListener('input', function () {
+            syncInputRange(this.getAttribute('data-range-target'));
+        });
+        el.addEventListener('change', function () {
+            syncInputRange(this.getAttribute('data-range-target'));
+        });
+    });
 }
 
 function initXmselect() {
@@ -646,6 +669,9 @@ function initFormValue(data) {
             continue;
         }
         var val = data[key];
+        if(val==undefined){
+            continue;
+        }
         //
         try {
             if (input.classList.contains("ez-date") && input.hasAttribute("format")) {
@@ -660,9 +686,29 @@ function initFormValue(data) {
             var jdbctype = input.getAttribute("jdbctype");
             //转为数组
             var c = Global.registry("Cascader").get(key);
-            if (c) {
-                if (jdbctype == "NUMBER") {
-                    val = Number(val);
+            if (c && val) {
+                //如果是多选
+                if(c.getConfig().props.multiple){
+                    //如果是json数组
+                    if(val.trim().startsWith("[")){
+                        try{
+                        val=JSON.parse(val);
+                        }catch (e){
+                            console.log(e);
+                        }
+                    }else{
+                        if (jdbctype == "NUMBER") {
+                            val =Global.toNumberArray(val);
+                        }else{
+                            val =val.split(",");
+                        }
+                    }
+                }else{
+                    if (jdbctype == "NUMBER") {
+                        val =Number(val);
+                    }else{
+                        //原值
+                    }
                 }
                 c.setValue(val);
             }
@@ -671,15 +717,17 @@ function initFormValue(data) {
             var xmSelectIns = xmSelect.get("#ez-xmselect" + key, true);
             //转为数组
             //如果 开启了远程搜素
+            const  currentValue=val;
             if (Global.logicTrue(xmSelectIns.options.remoteSearch)) {
                 let param = {id: val, pageIndex: 1};
+
                 $.post(xmSelectIns.options.dataUrl, param, function (response) {
                     if (response.success && response.data && response.data != '') {
                         xmSelectIns.update({
                             data: response.data,
                             autoRow: true,
                         })
-                        xmSelectIns.setValue(Global.toNumberArray(val));
+                        xmSelectIns.setValue(Global.toNumberArray(currentValue));
                     } else {
                         console.log(response.message);
                     }
@@ -687,7 +735,7 @@ function initFormValue(data) {
                     console.log("error");
                 });
             } else {
-                xmSelectIns.setValue(Global.toNumberArray(val));
+                xmSelectIns.setValue(Global.toNumberArray(currentValue));
             }
         } else if (input.classList.contains("layui-textarea")) {
             input.value = val;
@@ -849,11 +897,15 @@ function renderCascader(cas) {
                                     var value = [];
                                     if (Arrays.isArray(checkedNodes)) {
                                         checkedNodes.forEach(function (row) {
-                                            row.forEach(function (node) {
-                                                if (node._checked == 1) {
-                                                    value.push(node.value);
-                                                }
-                                            });
+                                            if (Array.isArray(row)) {
+                                                row.forEach(function (node) {
+                                                    if (node._checked == 1) {
+                                                        value.push(node.value);
+                                                    }
+                                                });
+                                            } else if (row._checked == 1) {
+                                                value.push(row.value);
+                                            }
                                         });
                                         console.log('close 选中的值:', value);
                                         $("[name=" + name + "]").val(value);
@@ -892,11 +944,15 @@ function renderCascader(cas) {
                         var value = [];
                         if (Array.isArray(checkedNodes)) {
                             checkedNodes.forEach(function (row) {
-                                row.forEach(function (node) {
-                                    if (node._checked == 1) {
-                                        value.push(node.value);
-                                    }
-                                });
+                                if (Array.isArray(row)) {
+                                    row.forEach(function (node) {
+                                        if (node._checked == 1) {
+                                            value.push(node.value);
+                                        }
+                                    });
+                                } else if (row._checked == 1) {
+                                    value.push(row.value);
+                                }
                             });
                             console.log('close 选中的值:', value);
                             $("[name=" + name + "]").val(value);
@@ -979,10 +1035,10 @@ function renderXmselect(xm) {
         } else {
             if (Global.logicTrue(resultConfig.remoteSearch)) {
                 resultConfig.remoteMethod = function (val, cb, show, pageIndex) {
-                    if (val == '') {
-                        cb([], 0);
-                        return;
-                    }
+                    // if (val == '') {
+                    //     cb([], 0);
+                    //     return;
+                    // }
                     let param = {keyword: val, pageIndex: pageIndex};
                     $.post(resultConfig.dataUrl, param, function (response) {
                         if (response.success && response.data && response.data != '') {
@@ -1033,6 +1089,9 @@ Global.onClick('reset', function (e) {
         if (type !== 'hidden') {
             item.value = "";
         }
+        if (item.classList.contains("ez-inputrange-hidden")) {
+            item.value = "";
+        }
     });
 
     // 如果存在.el-tag元素，触发点击事件
@@ -1078,8 +1137,12 @@ function upload_add(config, itemId, fileId) {
             downloadUrl: uurl,
             itemId: itemId,
         });
+
         $("#layui-upload-list_" + itemId).append(imgShow);
 
+        if($("#layui-upload-list_" + itemId).hasClass("upload-span")){
+            $("#layui-upload-list_" + itemId).find(".deleteFiles").remove();
+        }
         upload_reCalId(itemId);
     })
 

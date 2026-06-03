@@ -32,8 +32,8 @@ public class DslEditController extends BaseController {
     FormController formController = new FormController();
 
     /**
-     * URL: /topezadmin/edit/list-${id} ${id}为DSL id
-     * /topezadmin/edit/form-${id} ${id}为DSL id
+     * URL: EzBootstrap.config().getPrefixUrl()+edit/list-${id} ${id}为DSL id
+     * EzBootstrap.config().getPrefixUrl()+edit/form-${id} ${id}为DSL id
      *
      * @param requestContext
      * @param method
@@ -60,7 +60,7 @@ public class DslEditController extends BaseController {
             }
             Map<String, Object> form = dslConfig.getConfig();
             if (StringUtils.isBlank((String) form.get("initUrl"))) {
-                form.put("initUrl", "/topezadmin/form/data-" + formId);
+                form.put("initUrl", EzBootstrap.config().getPrefixUrl()+"form/data-" + formId);
             }
             formController.iniFormItem(requestContext, form);
             templateParam.put("form", form);
@@ -69,7 +69,7 @@ public class DslEditController extends BaseController {
             templateParam.put("ID", requestContext.getRequestParams().get("ID"));
             templateParam.put("uploadUrl", EzBootstrap.config().getUploadUrl());
             templateParam.put("downloadUrl", EzBootstrap.config().getDownloadUrl());
-            templateParam.put("formSubmitUrl", "/topezadmin/form/submit-" + formId);
+            templateParam.put("formSubmitUrl", EzBootstrap.config().getPrefixUrl()+"form/submit-" + formId);
             templateParam.put("ENCRYPT_FORM_ID", formId);
             templateParam.putAll(EzBootstrap.config().getConfig());
             return render("layui/dsl/form-edit", templateParam);
@@ -84,7 +84,7 @@ public class DslEditController extends BaseController {
             listController.initSearch(requestContext, list);
             Collection<String> tdtemplates = listController.initTd(requestContext, list);
             if (list.get("initApi") == null) {
-                list.put("initApi", "/topezadmin/list/data-" + id);
+                list.put("initApi", EzBootstrap.config().getPrefixUrl()+"list/data-" + id);
             }
             //默认你不隐藏头部
             if (list.get("hideSearch") == null) {
@@ -110,7 +110,7 @@ public class DslEditController extends BaseController {
 
     /**
      * 提交 DSL 修改请求
-     * URL: /topezadmin/edit/submit-xxx
+     * URL: EzBootstrap.config().getPrefixUrl()+edit/submit-xxx
      *
      * @param requestContext 请求上下文
      * @param method         方法名
@@ -202,7 +202,7 @@ public class DslEditController extends BaseController {
 
     /**
      * 保存布局（表单或列表）
-     * URL: /topezadmin/edit/save-layout-{id}
+     * URL: EzBootstrap.config().getPrefixUrl()+edit/save-layout-{id}
      *
      * @param requestContext 请求上下文
      * @param method         方法名
@@ -249,7 +249,7 @@ public class DslEditController extends BaseController {
 
     /**
      * 创建 DSL 页面
-     * URL: /topezadmin/edit/create-
+     * URL: EzBootstrap.config().getPrefixUrl()+edit/create-
      *
      * @param requestContext 请求上下文
      * @param method         方法名
@@ -265,7 +265,7 @@ public class DslEditController extends BaseController {
 
     /**
      * 获取数据库表列表
-     * URL: /topezadmin/edit/getTables-{datasource}
+     * URL: EzBootstrap.config().getPrefixUrl()+edit/getTables-{datasource}
      *
      * @param requestContext 请求上下文
      * @param method         方法名

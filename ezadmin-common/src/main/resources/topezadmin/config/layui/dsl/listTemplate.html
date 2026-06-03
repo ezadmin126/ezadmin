@@ -50,7 +50,14 @@
         .dropdown_button_item {
             display: none;
         }
+
     </style>
+    <th:block th:if="${not list.hideSearch}">
+        <style>
+        .layui-table-main{min-height:390px}
+        </style>
+    </th:block>
+
 
 </head>
 <body>
@@ -61,12 +68,17 @@
 <input type="hidden" id="countApi" th:value="${list.countApi}">
 <input type="hidden" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
 <input type="hidden" id="downloadUrl" th:value="${downloadUrl}">
+<input type="hidden" id="prefixUrl" th:value="${prefixUrl}">
+<input type="hidden" id="configJson" th:value="${configJson}">
 <input type="hidden" ID="EZ_SESSION_USER_NAME_KEY" name="EZ_SESSION_USER_NAME_KEY"
        th:value="${EZ_SESSION_USER_NAME_KEY}">
 <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
+
+<input type="hidden" ID="customSearch_count" name="customSearch_count"  >
+
+
 <div th:utext="${col}" th:remove="tag" th:each="col : ${tdTemplates}"></div>
 
-<div th:utext="${list.appendHead}" item_name="appendHead" th:if="${not #strings.isEmpty(list.appendHead )}"></div>
 
 <div class=" layui-layout layui-layout-admin">
     <div class="layui-side " style="top:10px" th:if="${list.menu!=null}">
@@ -94,6 +106,7 @@
     </div>
     <div class="layui-body" style="top:0"
          th:classappend="${ (#lists.isEmpty(list.search)||list.hideSearch?'':'layui-fluid')}">
+        <div th:utext="${list.appendHead}" item_name="appendHead" th:if="${not #strings.isEmpty(list.appendHead )}"></div>
         <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap"
              th:style="${(#lists.isEmpty(list.search)||list.hideSearch?'display:none':'')}"
         >
@@ -125,7 +138,13 @@
                                     <!-- 查询按钮 -->
                                     <div class="layui-inline">
                                         <button type="button" class="layui-btn layui-btn-normal layui-btn-sm"
+                                                id="searchBtnProxy">查询
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-hide"
                                                 id="searchBtn">查询
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-primary layui-btn-sm"
+                                             th:if="${list.customBtn}"   id="customBtn">自定义查询
                                         </button>
                                         <button type="button" data-click="reset"
                                                 class="layui-btn layui-btn-primary layui-btn-sm">重置
@@ -154,6 +173,8 @@
                                     <input id="orderByName" name="orderByName">
                                     <input id="orderByType" name="orderByType">
                                     <input id="customSearch" name="customSearch">
+                                    <!-- pageCustomSearch 高级查询写入此字段，与 uniondate/unioninput 分开存储再合并 -->
+                                    <input type="hidden" id="customSearch_count" name="customSearch_count">
                                 </div>
                             </form>
                         </div>
@@ -225,6 +246,15 @@
 </script>
 <script th:inline="javascript">
     /*<![CDATA[*/
+    $("#customBtn").click(function (e) {
+        e.preventDefault();
+        openModel($("#prefixUrl").val() + "/list/pageCustomSearch-" + $("#ENCRYPT_LIST_ID").val(), "高级查询")
+    })
+    $("#searchBtnProxy").click(function (e) {
+        e.preventDefault();
+        $("#customSearch_count").val('');
+        $("#searchBtn").click();
+    })
 
     layui.use(function () {
         var table = layui.table;
@@ -341,7 +371,7 @@
             var columnConfig = {
                 field: '[(${column.item_name})]',
                 title: '<span component="[(${column.component})]" item_name="[(${column.item_name})]">[(${column.label})]</span>',
-                fieldTitle: '[[${column.label}]]'
+                fieldTitle: [[${column.label}]]
             };
 
             // 添加渲染器（RenderConfig）
@@ -432,7 +462,30 @@
                 cellMinWidth: 100,
                 loading: false,
                 toolbar: '#toolbarDemo',
-                defaultToolbar: ['filter'],
+                defaultToolbar: [{ // 右上角工具图标
+                    title: '上一页',
+                    layEvent: 'LAYTABLE_PRE',
+                    icon: 'layui-icon-prev',
+                    onClick: function(obj) {
+                        if($('[lay-event="LAYTABLE_PRE"]').hasClass("layui-btn-disabled")){
+                            return;
+                        }
+                        $('[lay-event="LAYTABLE_PRE"]').addClass("LAYTABLE_PAGE layui-btn-disabled")
+                        document.getElementById('currentPage').value = Math.max(1, Number(document.getElementById('currentPage').value)-1);
+                        Global.get("table").reload({where: mergeWhereParams()});
+                    }
+                },{ // 右上角工具图标
+                    title: '下一页',
+                    layEvent: 'LAYTABLE_NEXT',
+                    icon: 'layui-icon-next',
+                    onClick: function(obj) {
+                        if($('[lay-event="LAYTABLE_NEXT"]').hasClass("layui-btn-disabled")){
+                            return;
+                        }
+                        document.getElementById('currentPage').value = Math.min(Number(document.getElementById('currentPage').value)+1, Number(document.getElementById('totalPage').value));
+                        Global.get("table").reload({where: mergeWhereParams()});
+                    }
+                },'filter'],
                 cellExpandedMode: 'tips',
                 url: document.getElementById("initApi").value,
                 method: 'post',
@@ -442,7 +495,14 @@
                 done: function (res, curr, count, origin) {
                     $("#searchBtn").removeClass("layui-btn-disabled");
                     $("#resetBtn").removeClass("layui-btn-disabled");
+
+
+
                     layui.element.render('breadcrumb');
+
+
+
+
                     doRowButton();
 
                     doPage();
@@ -458,11 +518,15 @@
                         })
                     });
                     initWater();
+
+
+
+
                     if (typeof initFunction === 'function') {
                         initFunction(res, curr, count, origin);
                     }
                     $(".layuimini-loader").hide();
-
+                    layer.closeAll();
                 },
                 error: function (e, msg) {
                     console.log(e, msg)
@@ -682,6 +746,7 @@
                 if (!data.success || data.code == 500) {
                     return;
                 }
+                document.getElementById('totalPage').value = Math.ceil(data.count / Number(document.getElementById('perPageInt').value));
                 var pageConfig = {
                     elem: 'PAGE_LAYUI'
                     , count: data.count
@@ -690,14 +755,27 @@
                     , limits: [10, 20, 30, 40, 50, 100]
                     , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
                     , jump: function (obj, first) {
+                        document.getElementById('perPageInt').value = obj.limit;
+                        document.getElementById('currentPage').value = obj.curr;
+                        //计算页数
+                        document.getElementById('totalPage').value = Math.ceil(data.count / obj.limit);
                         if (!first) {
-                            document.getElementById('perPageInt').value = obj.limit;
-                            document.getElementById('currentPage').value = obj.curr;
                             Global.get("table").reload({where: mergeWhereParams()});
                         }
                     }
                 };
                 layui.laypage.render(pageConfig);
+                if(Number(document.getElementById('totalPage').value) <=1||
+                    Number(document.getElementById('totalPage').value) == document.getElementById('currentPage').value){
+                    $('[lay-event="LAYTABLE_NEXT"]').addClass("layui-btn-disabled");
+                }else{
+                    $('[lay-event="LAYTABLE_NEXT"]').removeClass("layui-btn-disabled");
+                }
+                if(Number(document.getElementById('currentPage').value) <= 1){
+                    $('[lay-event="LAYTABLE_PRE"]').addClass("layui-btn-disabled");
+                }else{
+                    $('[lay-event="LAYTABLE_PRE"]').removeClass("layui-btn-disabled");
+                }
             }, 'json').fail(function () {
             console.log("error");
         });
@@ -898,6 +976,27 @@
                 customSearch.g.push(customSearchGroup);
             }
         })
+
+        // 合并 pageCustomSearch 高级查询参数（customSearch_count）
+        if ($("#customSearch_count").val() != '') {
+            try {
+                var dialogCs = JSON.parse($("#customSearch_count").val());
+                // g：分组条件追加
+                if (dialogCs.g && dialogCs.g.length > 0) {
+                    customSearch.g = customSearch.g.concat(dialogCs.g);
+                }
+                // s：顶层单条件追加
+                if (dialogCs.s && dialogCs.s.length > 0) {
+                    customSearch.s = (customSearch.s || []).concat(dialogCs.s);
+                }
+                // o：排序取高级查询的（覆盖默认排序）
+                if (dialogCs.o && dialogCs.o.length > 0) {
+                    customSearch.o = dialogCs.o;
+                }
+            } catch (e) {
+                console.warn('customSearch_count merge error', e);
+            }
+        }
         where.customSearch = JSON.stringify(customSearch);
         return where;
     }

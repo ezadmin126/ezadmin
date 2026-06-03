@@ -1566,13 +1566,13 @@ public class ListServiceImpl implements ListService {
             //props里面每个值都做一个 mapparse转换
             props.entrySet().forEach(entry -> {
                 if (entry.getValue() instanceof String) {
-                    entry.setValue(MapParser.parseDefaultEmpty(Utils.trimNull(entry.getValue()), context.getRequestParams()).getResult());
+                    String url=MapParser.parseDefaultEmpty(Utils.trimNull(entry.getValue()), context.getRequestParams()).getResult();
+                    if(entry.getKey().equalsIgnoreCase("url")){
+                        url= Utils.fixedUrl(url);
+                    }
+                    entry.setValue(url);
                 }
             });
-//            props.forEach((key, value) -> {
-//                value = MapParser.parseDefaultEmpty(Utils.trimNull(value), context.getRequestParams() );
-//               // props.put(key, MapParser.parseDefaultEmpty(value, context.getRequestParams(), context.getSessionParams()));
-//            });
             if (StringUtils.isNotBlank(dataUrl)) {
                 props.putIfAbsent("dataUrl", dataUrl);
             }

@@ -21,7 +21,7 @@ public class EzClientProperties {
     private String appendJs;
     private String searchUrl;
     private String indexUrl;
-    private String prefixUrl = "/topezadmin";
+    private String prefixUrl = "/topezadmin/";
     private String signoutUrl = "/signout";
     private String messageUrl;
     private String chatUrl;

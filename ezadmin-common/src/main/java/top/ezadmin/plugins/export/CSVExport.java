@@ -22,7 +22,7 @@ public class CSVExport implements EzExport {
     public EzExportResult export(String name, List<List<String>> head, List<List<Object>> data) throws Exception {
         CSVPrinter printer = null;
         try {
-            String fileName = name + "-" + EzDateUtils.todayDatetime();
+            String fileName = name + "-" + EzDateUtils.todayDatetime()+".csv";
             // 文件名乱码处理
             String finalfileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "-");
 
@@ -48,6 +48,7 @@ public class CSVExport implements EzExport {
             byte[] b = outputStream.toByteArray();
             EzExportResult r = new EzExportResult();
             r.setFile(b);
+            r.setFileName(finalfileName);
             r.setContentType("text/csv; charset=utf-8");
             return r;
         } finally {

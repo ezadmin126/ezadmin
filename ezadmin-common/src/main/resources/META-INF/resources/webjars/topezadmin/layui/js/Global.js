@@ -635,6 +635,25 @@ function ezopen(openType, title, appendUrl, area) {
                 });
             // openTab(title,appendUrl)
             break;
+        case 'AJAX_LIST':
+            var loadingIndex = layer.load(3, {shade: [1, '#FFF']});
+            fetch(appendUrl)
+                .then(response => response.json())
+                .then(function (result) {
+                    layer.close(loadingIndex);
+                    if (result.success) {
+                        Global.get("table").reloadData();
+                        layer.msg("操作成功")
+                    } else {
+                        layer.alert("操作失败:" + result.message)
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                    layer.close(loadingIndex);
+                });
+            layer.close(index);
+            break;
         case 'CONFIRM_AJAX':
             var title = title;
             layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
@@ -667,7 +686,7 @@ function ezopen(openType, title, appendUrl, area) {
                     .then(function (result) {
                         layer.close(loadingIndex);
                         if (result.success) {
-                            Global.get("table").reload({where: layui.form.val('searchForm')});
+                            Global.get("table").reloadData();
                             layer.msg("操作成功")
                         } else {
                             layer.alert("操作失败:" + result.message)

@@ -5,6 +5,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.enums.ColTypeEnum;
 import top.ezadmin.common.enums.DefaultParamEnum;
 import top.ezadmin.common.enums.JdbcTypeEnum;
@@ -612,5 +613,15 @@ public class Utils {
             select_express = Utils.trimNull(select_expressObj);
         }
         return select_express;
+    }
+    public static String fixedUrl(String url){
+        //如果是url 补充前缀
+        if(StringUtils.isBlank(url)){
+            return url;
+        }
+        if (!url.startsWith("/")&& !url.startsWith("http")&& !url.trim().startsWith("{{")) {
+            return EzBootstrap.config().getPrefixUrl()  + url;
+        }
+        return url;
     }
 }
