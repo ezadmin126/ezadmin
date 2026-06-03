@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>高级查询</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="${'/webjars/layuidist/css/layui.css?v=null'}" rel="stylesheet"/>
+    <script th:src="${'/webjars/layuidist/layui.js?v=null'}"></script>
+    <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}"></script>
+    <script th:src="${'/webjars/topezadmin/plugins/dragula/dragula.min.js'}"></script>
+    <style>
+        ul {
+            padding-left: 30px;
+            border-left: 2px dotted #c0c4cc;
+            position: relative;
+        }
+        li {
+            min-width: 450px;
+            padding: 10px;
+        }
+        ul li > div {
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: top;
+            cursor: pointer;
+        }
+        .layui-form-switch { width: 35px; margin-top: 0; height: 22px; }
+        .layui-form-switch > i { top: 2px; }
+        .layui-firebrick, .delete-item { line-height: 38px; }
+        .searchItem { width: 100px; }
+        .line {
+            position: absolute;
+            width: 20px;
+            height: 18px;
+            border-bottom: 2px dotted #c0c4cc;
+            left: 0;
+        }
+        .gu-mirror { position: fixed !important; margin: 0 !important; z-index: 9999 !important; opacity: 0.8; }
+        .gu-hide { display: none !important; }
+        .gu-unselectable { -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important; user-select: none !important; }
+        .gu-transit { opacity: 0.2; }
+        .itemValue { border: 1px solid #eee; }
+        select { height: 30px; border-width: 1px; border-style: solid; background-color: #fff; color: rgba(0,0,0,.85); border-radius: 2px; border-color: #eee; width: 100%; }
+        body { background: #fbfbfb; }
+        button { min-width: 95px; }
+        .labeldel { float: right; }
+    </style>
+</head>
+<body>
+<input type="hidden" name="ENCRYPT_LIST_ID" id="ENCRYPT_LIST_ID" th:value="${ENCRYPT_LIST_ID}">
+
+<div class="layui-container">
+    <div class="layui-card" style="margin-top: 15px">
+        <div class="layui-card-header">自定义查询</div>
+        <div class="layui-card-body" id="searchLabels"></div>
+    </div>
+
+    <form class="layui-form">
+        <div class="layui-card">
+            <div class="layui-card-header">高级查询</div>
+            <div class="layui-card-body">
+                <div>
+                    <button class="layui-btn layui-btn-primary layui-border layui-border-orange" data-type="addOne">添加条件
+                        <i class="layui-icon layui-icon-add-1"></i></button>
+                    <button class="layui-btn layui-btn-primary layui-border layui-border-orange" data-type="addGroup">添加分组
+                        <i class="layui-icon layui-icon-add-circle"></i></button>
+                </div>
+                <hr>
+                <ul id="rootul"></ul>
+            </div>
+        </div>
+
+        <div class="layui-card" th:if="${not #lists.isEmpty(fromColField)}">
+            <div class="layui-card-header">综合排序</div>
+            <div class="layui-card-body">
+                <!-- 隐藏的行模板，Thymeleaf 渲染一次选项，JS 克隆使用 -->
+                <table style="display:none">
+                    <tbody>
+                    <tr id="orderRowTpl">
+                        <td>
+                            <select name="f" lay-search>
+                                <option value="">请选择排序字段</option>
+                                <option th:each="c : ${fromColField}"
+                                        th:value="${c.item_name}"
+                                        th:text="${c.label}">字段
+                                </option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="o" lay-search>
+                                <option value="">不排序</option>
+                                <option value=" desc ">降序（Z-A）</option>
+                                <option value=" asc ">升序（A-Z）</option>
+                            </select>
+                        </td>
+                        <td style="width:60px;text-align:right">
+                            <i style="cursor:move;margin-right:6px" class="rowmove layui-icon layui-icon-transfer"></i>
+                            <i style="cursor:pointer" class="layui-icon layui-icon-reduce-circle layui-font-red"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table id="orderTable" style="width:100%" class="layui-table dragula-container">
+                    <tbody id="orderTableBody" class="dragula-container">
+                    <!-- 由 JS 动态插入默认 3 行 -->
+                    </tbody>
+                </table>
+                <div style="margin-top:8px">
+                    <button type="button" id="addOrderRow"
+                            class="layui-btn layui-btn-primary layui-border layui-btn-sm">
+                        <i class="layui-icon layui-icon-add-1"></i>添加排序条件
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin-left:0">
+                <button id="save" class="layui-btn layui-btn-primary layui-border layui-btn-sm">查询
+                    <i class="layui-icon-search layui-icon"></i></button>
+                <button id="saveAs" class="layui-btn layui-btn-primary layui-border layui-btn-sm">保存
+                    <i class="layui-icon-star layui-icon"></i></button>
+                <button id="reset" class="layui-btn layui-btn-primary layui-border layui-btn-sm">重置
+                    <i class="layui-icon-fonts-clear layui-icon"></i></button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 单条件模板 -->
+<div id="single" style="display:none">
+    <li class="searchSingle">
+        <div class="line"></div>
+        <div class="searchItem">
+            <select class="itemType" lay-search>
+                <option value="and">且</option>
+                <option value="or">或</option>
+            </select>
+        </div>
+        <div class="searchItem">
+            <select class="itemField" lay-search lay-filter="itemField">
+                <option value="">请选择</option>
+                <option th:each="item : ${fromSearchField}"
+                        th:value="${item.item_name}"
+                        th:text="${item.label}"></option>
+            </select>
+        </div>
+        <div class="searchItem">
+            <select class="itemOperator" lay-search>
+                <option value="">请选择</option>
+                <option value="eq">等于</option>
+                <option value="ne">≠ 不等于</option>
+                <option value="gte">≥ 大于等于</option>
+                <option value="lte">≤ 小于等于</option>
+                <option value="like">包含</option>
+                <option value="notlike">不包含</option>
+            </select>
+        </div>
+        <div class="searchItemValue">
+            <input class="itemValue layui-input">
+        </div>
+        <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
+    </li>
+</div>
+
+<!-- 分组模板 -->
+<div id="group" style="display:none">
+    <li class="searchGroup">
+        <div class="line"></div>
+        <div class="searchItem">
+            <select class="itemType" lay-search>
+                <option value="and">且</option>
+                <option value="or">或</option>
+            </select>
+        </div>
+        <div class="layui-firebrick">分组</div>
+        <div>
+            <button class="layui-btn layui-btn-primary layui-border layui-border-orange" data-type="addOne">添加条件
+                <i class="layui-icon layui-icon-add-1"></i></button>
+            <button class="layui-btn layui-btn-primary layui-border layui-border-orange" data-type="addGroup">添加分组
+                <i class="layui-icon layui-icon-add-circle"></i></button>
+        </div>
+        <div class="layui-font-red delete-item"><i class="layui-icon layui-icon-reduce-circle"></i></div>
+        <ul></ul>
+    </li>
+</div>
+
+<script th:inline="javascript">
+    var _searchFieldMetaJson = /*[[${searchFieldMetaJson}]]*/ '[]';
+    var _searchFieldMeta = {};
+    try {
+        JSON.parse(_searchFieldMetaJson).forEach(function(item) {
+            _searchFieldMeta[item.item_name] = item;
+        });
+    } catch(e) { console.warn('pageCustomSearch meta parse error', e); }
+</script>
+
+<script>
+    function render() {
+        layui.laydate.render({elem: '.daterangeinput'});
+        layui.form.render();
+    }
+
+    // 根据字段名和组件类型动态创建值输入框
+    function transSearchItem(fieldName, value) {
+        var meta = _searchFieldMeta[fieldName];
+        if (!meta) {
+            return $('<input class="itemValue layui-input" lay-affix="clear">').val(value || '');
+        }
+        var component = meta.component;
+        if (component === 'select' || component === 'select-search') {
+            var $sel = $('<select class="itemValue" lay-search></select>');
+            $sel.append('<option value="">请选择</option>');
+            var items = [];
+            try { items = typeof meta.data === 'string' ? JSON.parse(meta.data) : meta.data; } catch(e){}
+            if (Array.isArray(items)) {
+                items.forEach(function(item) {
+                    var v = item.value != null ? item.value : item.K;
+                    var l = item.label != null ? item.label : item.V;
+                    $sel.append('<option value="' + v + '">' + l + '</option>');
+                });
+            }
+            $sel.val(value || '');
+            return $sel;
+        }
+        if (component === 'date') {
+            return $('<input class="itemValue layui-input daterangeinput" lay-affix="clear">').val(value || '');
+        }
+        // input / input-text / inputrange / 其他：普通文本框
+        return $('<input class="itemValue layui-input" lay-affix="clear">').val(value || '');
+    }
+
+    layui.use(function () {
+        dragula({
+            isContainer: function(el) { return el.classList.contains('dragula-container'); },
+            revertOnSpill: true,
+            moves: function(el, container, handle) { return handle.classList.contains('rowmove'); },
+            accepts: function(el, target) { return target.classList.contains('dragula-container'); }
+        });
+
+        $("body").on("click", ".layui-icon-reduce-circle", function(e) {
+            e.preventDefault();
+            var row = $(this)[0].closest('tr');
+            if (row) row.parentNode.removeChild(row);
+        });
+
+        $("body").on("click", "[data-type='addOne']", function(e) {
+            e.preventDefault();
+            var firstUl = findFirstUl(this);
+            firstUl.insertAdjacentHTML('beforeend', $("#single").html());
+            render();
+        });
+
+        $("body").on("click", "[data-type='addGroup']", function(e) {
+            e.preventDefault();
+            var firstUl = findFirstUl(this);
+            firstUl.insertAdjacentHTML('beforeend', $("#group").html());
+            render();
+        });
+
+        $("body").on("click", ".delete-item", function(e) {
+            e.preventDefault();
+            var row = $(this)[0].closest('li');
+            if (row) row.parentNode.removeChild(row);
+        });
+
+        function findFirstUl(btn) {
+            var parent = btn.parentElement;
+            var siblings = parent.parentElement.children;
+            return Array.from(siblings).find(function(s) { return s.tagName.toLowerCase() === 'ul'; });
+        }
+
+        // 添加一行排序条件
+        function addOrderRow() {
+            var tpl = document.getElementById('orderRowTpl');
+            if (!tpl) return;
+            var newRow = tpl.cloneNode(true);
+            newRow.removeAttribute('id');
+            newRow.style.display = '';
+            document.getElementById('orderTableBody').appendChild(newRow);
+            layui.form.render('select');
+        }
+
+        // 默认插入 3 行排序
+        addOrderRow(); addOrderRow(); addOrderRow();
+
+        // 添加排序条件按钮
+        $("#addOrderRow").on("click", function(e) {
+            e.preventDefault();
+            addOrderRow();
+        });
+
+        $("#save").click(function(e) {
+            e.preventDefault();
+            var parentBtn = parent.document.getElementById('submitBtn') || parent.document.getElementById('searchBtn');
+            var key = "EZ_CUSTOM_SEARCH_" + document.getElementById("ENCRYPT_LIST_ID").value;
+            localStorage.setItem(key, getJson());
+            var jsonVal = localStorage.getItem(key);
+            // customSearch：兼容旧逻辑
+            var parentCustomSearch = parent.document.getElementById('customSearch');
+            if (parentCustomSearch) parentCustomSearch.value = jsonVal;
+            // customSearch_count：DSL 列表专用，mergeWhereParams 读取后与 uniondate 合并
+            var parentCustomSearchCount = parent.document.getElementById('customSearch_count');
+            if (parentCustomSearchCount) parentCustomSearchCount.value = jsonVal;
+            if (parentBtn) parentBtn.click();
+            // 关闭弹框
+            try { parent.layer.close(parent.layer.getFrameIndex(window.name)); } catch(e) {}
+            return false;
+        });
+
+        $("#saveAs").click(function(e) {
+            e.preventDefault();
+            var key = "EZ_CUSTOM_SEARCH_ALL_" + document.getElementById("ENCRYPT_LIST_ID").value;
+            var labelList = localStorage.getItem(key);
+            if (!labelList || labelList === '[object Object]') labelList = "{}";
+            layer.prompt({title: '请输入搜索名称'}, function(value, index, elem) {
+                if (value === '') return elem.focus();
+                var currentLabelJson = JSON.parse(labelList);
+                currentLabelJson[layui.util.escape(value)] = JSON.parse(getJson());
+                localStorage.setItem(key, JSON.stringify(currentLabelJson));
+                layer.close(index);
+                $("#searchLabels").append(
+                    "<button class='layui-btn layui-btn-primary layui-border layui-btn-sm saveSearchLabels'>" +
+                    layui.util.escape(value) +
+                    "<i class=\"layui-icon layui-icon-delete labeldel\"></i></button>"
+                );
+            });
+            return false;
+        });
+
+        $("#reset").click(function(e) {
+            e.preventDefault();
+            var key = "EZ_CUSTOM_SEARCH_" + document.getElementById("ENCRYPT_LIST_ID").value;
+            localStorage.removeItem(key);
+            $("ul").eq(0).html('');
+            $("[name=f]").val('');
+            $("[name=o]").val('');
+            var parentCustomSearch = parent.document.getElementById('customSearch');
+            if (parentCustomSearch) parentCustomSearch.value = '';
+            var parentCustomSearchCount = parent.document.getElementById('customSearch_count');
+            if (parentCustomSearchCount) parentCustomSearchCount.value = '';
+            var parentBtn = parent.document.getElementById('submitBtn') || parent.document.getElementById('searchBtn');
+            if (parentBtn) parentBtn.click();
+            return false;
+        });
+
+        // 字段选择联动：切换值输入框
+        $("body").on("change", ".itemField", function() {
+            var row = $(this).closest("li");
+            var input = transSearchItem($(this).val(), '');
+            row.find(".searchItemValue").html('').append(input);
+            render();
+        });
+
+        layui.form.on('select(itemField)', function(data) {
+            var row = $(data.elem).closest("li");
+            row.find(".searchItemValue").html('').append(transSearchItem(data.value, ''));
+            render();
+        });
+
+        // 加载已保存的标签
+        $(document).on("click", ".saveSearchLabels", function(e) {
+            e.preventDefault();
+            var labelKey = $(this).text();
+            var labels = "EZ_CUSTOM_SEARCH_ALL_" + document.getElementById("ENCRYPT_LIST_ID").value;
+            var json = JSON.parse(localStorage.getItem(labels) || '{}');
+            if (json[labelKey]) {
+                $("#rootul").html('');
+                init(JSON.stringify(json[labelKey]));
+            }
+        });
+
+        $(document).on("click", ".labeldel", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var labelKey = $(this).parent().text();
+            var keyLabel = "EZ_CUSTOM_SEARCH_ALL_" + document.getElementById("ENCRYPT_LIST_ID").value;
+            var jsonLabel = localStorage.getItem(keyLabel);
+            if (jsonLabel) {
+                var label = JSON.parse(jsonLabel);
+                delete label[labelKey];
+                localStorage.setItem(keyLabel, JSON.stringify(label));
+            }
+            $(this).parent().remove();
+        });
+
+        // 初始化已保存的搜索条件
+        var key = "EZ_CUSTOM_SEARCH_" + document.getElementById("ENCRYPT_LIST_ID").value;
+        init(localStorage.getItem(key));
+    });
+
+    function doGroup(ul, json) {
+        if (!json) return;
+        for (var i = 0; i < json.length; i++) {
+            var row = $($("#group").html());
+            row.find(".itemType").val(json[i].t);
+            $(ul).append(row);
+            if (json[i].c) {
+                doGroup(row.children('ul').first()[0], json[i].c.g);
+                doItem(row.children('ul').first()[0], json[i].c.s);
+            }
+        }
+    }
+
+    function doItem(ul, json) {
+        if (!json) return;
+        for (var i = 0; i < json.length; i++) {
+            var row = $($("#single").html());
+            row.find(".itemType").val(json[i].t);
+            row.find(".itemField").val(json[i].f);
+            row.find(".itemOperator").val(json[i].o);
+            var input = transSearchItem(json[i].f, json[i].v);
+            row.find(".searchItemValue").html('').append(input);
+            $(ul).append(row);
+            render();
+        }
+    }
+
+    function init(json) {
+        if (json) {
+            try {
+                var parsed = JSON.parse(json);
+                // 恢复排序：按需补行，再填值
+                if (parsed.o) {
+                    var tbody = document.getElementById('orderTableBody');
+                    while (tbody && tbody.querySelectorAll('tr').length < parsed.o.length) {
+                        addOrderRow();
+                    }
+                    var tr = tbody ? tbody.querySelectorAll('tr') : [];
+                    for (var i = 0; i < parsed.o.length; i++) {
+                        try {
+                            tr[i].querySelector("[name=f]").value = parsed.o[i].f || '';
+                            tr[i].querySelector("[name=o]").value = parsed.o[i].o || '';
+                        } catch(e) {}
+                    }
+                    layui.form.render('select');
+                }
+                var firstUl = document.querySelector('ul');
+                doGroup(firstUl, parsed.g);
+                doItem(firstUl, parsed.s);
+            } catch(e) { console.log(e); }
+        }
+
+        // 恢复已保存的标签列表
+        var keyLabel = "EZ_CUSTOM_SEARCH_ALL_" + document.getElementById("ENCRYPT_LIST_ID").value;
+        var jsonLabel = localStorage.getItem(keyLabel);
+        if (jsonLabel) {
+            try {
+                var labels = JSON.parse(jsonLabel);
+                $("#searchLabels").html('');
+                Object.keys(labels).forEach(function(k) {
+                    $("#searchLabels").append(
+                        "<button class='layui-btn layui-btn-primary layui-border layui-btn-sm saveSearchLabels'>" +
+                        k + "<i class=\"layui-icon layui-icon-delete labeldel\"></i></button>"
+                    );
+                });
+            } catch(e) {}
+        }
+        render();
+    }
+
+    function getJson() {
+        var firstUl = document.querySelector('ul');
+        var json = ulToJson(firstUl);
+        var rows = document.querySelectorAll('#orderTableBody tr');
+        var result = [];
+        if (rows) {
+            Array.from(rows).forEach(function(row) {
+                var selects = row.querySelectorAll('select');
+                var data = {};
+                selects.forEach(function(select) { data[select.name] = select.value; });
+                result.push(data);
+            });
+        }
+        json.o = result;
+        return JSON.stringify(json);
+    }
+
+    function ulToJson(ul) {
+        if (!ul) return {};
+        var liElements = Array.from(ul.children).filter(function(li) { return li.tagName === 'LI'; });
+        var groupArray = [], singleArray = [];
+        liElements.forEach(function(li) {
+            if (li.classList.contains('searchGroup')) {
+                var childUl = li.querySelector("ul");
+                groupArray.push({c: ulToJson(childUl), t: li.querySelector('select.itemType').value});
+            } else if (li.classList.contains('searchSingle')) {
+                singleArray.push({
+                    t: li.querySelector('select.itemType').value,
+                    f: li.querySelector('select.itemField').value,
+                    o: li.querySelector('select.itemOperator').value,
+                    v: li.querySelector('.itemValue') ? li.querySelector('.itemValue').value : ''
+                });
+            }
+        });
+        return {g: groupArray, s: singleArray};
+    }
+</script>
+</body>
+</html>
