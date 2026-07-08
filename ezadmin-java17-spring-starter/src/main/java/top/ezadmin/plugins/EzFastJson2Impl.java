@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.JSONWriter.Feature;
 import top.ezadmin.common.utils.EzJson;
 
 import java.util.*;
@@ -14,6 +15,12 @@ public class EzFastJson2Impl implements EzJson {
     public String toJSONString(Object obj) {
         return JSON.toJSONString(obj);
     }
+
+    @Override
+    public String toJSONStringWithNull(Object obj) {
+        return JSON.toJSONString(obj,  JSONWriter.Feature.WriteMapNullValue);
+    }
+
 
     @Override
     public String toPrettyJSONString(Object obj) {

@@ -600,7 +600,7 @@ public class Utils {
      */
     public static boolean isTrue(Object obj) {
         String s = trimNull(obj);
-        return "1".equals(s) || BooleanUtils.toBoolean(s);
+        return "1".equals(s) ||  toBoolean(s);
     }
 
 
@@ -619,9 +619,150 @@ public class Utils {
         if(StringUtils.isBlank(url)){
             return url;
         }
+        if(url.indexOf("/")==-1){
+            return url;
+        }
         if (!url.startsWith("/")&& !url.startsWith("http")&& !url.trim().startsWith("{{")) {
             return EzBootstrap.config().getPrefixUrl()  + url;
         }
         return url;
+    }
+    // 常用HTML实体映射表
+    private static final Map<Character, String> ESCAPE_MAP = new HashMap<>();
+    static {
+        ESCAPE_MAP.put('&', "&amp;");
+        ESCAPE_MAP.put('<', "&lt;");
+        ESCAPE_MAP.put('>', "&gt;");
+        ESCAPE_MAP.put('"', "&quot;");
+        ESCAPE_MAP.put('\'', "&#39;");  // 或 &apos;，但 &#39; 兼容性更好
+        // 可根据需要继续补充，例如 '/', '=', '`' 等
+    }
+
+    /**
+     * 将输入字符串中的HTML特殊字符转义为HTML实体。
+     * @param input 原始字符串，可为null
+     * @return 转义后的字符串，若输入为null则返回null
+     */
+    public static String escapeHtml(String input) {
+        if (input == null) {
+            return null;
+        }
+        // 快速检查是否包含特殊字符，避免不必要的开销
+        if (!containsSpecialChars(input)) {
+            return input;
+        }
+
+        StringBuilder sb = new StringBuilder(input.length() + 16); // 预增加一些容量
+        for (char c : input.toCharArray()) {
+            String replacement = ESCAPE_MAP.get(c);
+            if (replacement != null) {
+                sb.append(replacement);
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    // 辅助方法：检测字符串是否包含需要转义的字符
+    private static boolean containsSpecialChars(String s) {
+        for (char c : s.toCharArray()) {
+            if (ESCAPE_MAP.containsKey(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean toBoolean(final String str) {
+        return toBooleanObject(str) == Boolean.TRUE;
+    }
+    public static Boolean toBooleanObject(final String str) {
+        // Previously used equalsIgnoreCase, which was fast for interned 'true'.
+        // Non interned 'true' matched 15 times slower.
+        //
+        // Optimisation provides same performance as before for interned 'true'.
+        // Similar performance for null, 'false', and other strings not length 2/3/4.
+        // 'true'/'TRUE' match 4 times slower, 'tRUE'/'True' 7 times slower.
+        if (str == "true") {
+            return Boolean.TRUE;
+        }
+        if (str == null) {
+            return null;
+        }
+        switch (str.length()) {
+            case 1: {
+                final char ch0 = str.charAt(0);
+                if (ch0 == 'y' || ch0 == 'Y' ||
+                        ch0 == 't' || ch0 == 'T') {
+                    return Boolean.TRUE;
+                }
+                if (ch0 == 'n' || ch0 == 'N' ||
+                        ch0 == 'f' || ch0 == 'F') {
+                    return Boolean.FALSE;
+                }
+                break;
+            }
+            case 2: {
+                final char ch0 = str.charAt(0);
+                final char ch1 = str.charAt(1);
+                if ((ch0 == 'o' || ch0 == 'O') &&
+                        (ch1 == 'n' || ch1 == 'N') ) {
+                    return Boolean.TRUE;
+                }
+                if ((ch0 == 'n' || ch0 == 'N') &&
+                        (ch1 == 'o' || ch1 == 'O') ) {
+                    return Boolean.FALSE;
+                }
+                break;
+            }
+            case 3: {
+                final char ch0 = str.charAt(0);
+                final char ch1 = str.charAt(1);
+                final char ch2 = str.charAt(2);
+                if ((ch0 == 'y' || ch0 == 'Y') &&
+                        (ch1 == 'e' || ch1 == 'E') &&
+                        (ch2 == 's' || ch2 == 'S') ) {
+                    return Boolean.TRUE;
+                }
+                if ((ch0 == 'o' || ch0 == 'O') &&
+                        (ch1 == 'f' || ch1 == 'F') &&
+                        (ch2 == 'f' || ch2 == 'F') ) {
+                    return Boolean.FALSE;
+                }
+                break;
+            }
+            case 4: {
+                final char ch0 = str.charAt(0);
+                final char ch1 = str.charAt(1);
+                final char ch2 = str.charAt(2);
+                final char ch3 = str.charAt(3);
+                if ((ch0 == 't' || ch0 == 'T') &&
+                        (ch1 == 'r' || ch1 == 'R') &&
+                        (ch2 == 'u' || ch2 == 'U') &&
+                        (ch3 == 'e' || ch3 == 'E') ) {
+                    return Boolean.TRUE;
+                }
+                break;
+            }
+            case 5: {
+                final char ch0 = str.charAt(0);
+                final char ch1 = str.charAt(1);
+                final char ch2 = str.charAt(2);
+                final char ch3 = str.charAt(3);
+                final char ch4 = str.charAt(4);
+                if ((ch0 == 'f' || ch0 == 'F') &&
+                        (ch1 == 'a' || ch1 == 'A') &&
+                        (ch2 == 'l' || ch2 == 'L') &&
+                        (ch3 == 's' || ch3 == 'S') &&
+                        (ch4 == 'e' || ch4 == 'E') ) {
+                    return Boolean.FALSE;
+                }
+                break;
+            }
+            default:
+                break;
+        }
+
+        return null;
     }
 }

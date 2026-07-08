@@ -680,6 +680,7 @@ function ezopen(openType, title, appendUrl, area) {
         case 'CONFIRM_AJAX_LIST':
             var title = title;
             layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
+                layer.close(index);
                 var loadingIndex = layer.load(3, {shade: [1, '#FFF']});
                 fetch(appendUrl)
                     .then(response => response.json())
@@ -696,7 +697,6 @@ function ezopen(openType, title, appendUrl, area) {
                         console.error('Error:', error);
                         layer.close(loadingIndex);
                     });
-                layer.close(index);
             });
             break;
         default:

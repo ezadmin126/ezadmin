@@ -1,6 +1,5 @@
 package top.ezadmin.controller;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
@@ -123,7 +122,7 @@ public class ListController extends BaseController {
             return EzResult.instance().code("JSON").data(EzResult.instance().data(list2).count(count));
         } catch (Exception e) {
             logger.error("count：{}", listUrlCode, e);
-            return EzResult.instance().code("500").setMessage(ExceptionUtils.getFullStackTrace(e));
+            return EzResult.instance().code("500").setMessage(e.getMessage());
         }
     }
 
@@ -478,24 +477,10 @@ public class ListController extends BaseController {
         }
         Map<String, Object> list = dslConfig.getConfig();
 
-        List<Map<String, Object>> tableButtons = (List<Map<String, Object>>) list.get("tableButton");
-        if (Utils.isNotEmpty(tableButtons)) {
-            tableButtons.forEach(item -> {
-                Map<String, Object> props = (Map<String, Object>) item.get("props");
-                if (props == null) {
-                    return;
-                }
-                //url
-                if (props.containsKey("url") && props.get("url") != null) {
-                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("url"), requestContext.getRequestParams()).getResult();
-                    props.put("url", Utils.fixedUrl(urlNew));
-                }
-                if (props.containsKey("windowname") && props.get("windowname") != null) {
-                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("windowname"), requestContext.getRequestParams()).getResult();
-                    props.put("windowname", urlNew);
-                }
-            });
-        }
+        initTabList(requestContext, list);
+        initTableBtn(requestContext, list);
+
+
 
         initSearch(requestContext, list);
         initMenu(requestContext, list);
@@ -531,9 +516,61 @@ public class ListController extends BaseController {
         return render("layui/dsl/listTemplate", templateParam);
     }
 
+    private void initTableBtn(RequestContext requestContext, Map<String, Object> list) {
+        List<Map<String, Object>> tableButtons = (List<Map<String, Object>>) list.get("tableButton");
+        if (Utils.isNotEmpty(tableButtons)) {
+            tableButtons.forEach(item -> {
+                Map<String, Object> props = (Map<String, Object>) item.get("props");
+                if (props == null) {
+                    return;
+                }
+                //url
+                if (props.containsKey("url") && props.get("url") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("url"), requestContext.getRequestParams()).getResult();
+                    props.put("url", Utils.fixedUrl(urlNew));
+                }
+                if (props.containsKey("windowname") && props.get("windowname") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("windowname"), requestContext.getRequestParams()).getResult();
+                    props.put("windowname", urlNew);
+                }
+            });
+        }
+    }
+
+    private void initTabList(RequestContext requestContext, Map<String, Object> list) {
+        List<Map<String, Object>> tabList = (List<Map<String, Object>>) list.get("tabList");
+        if (Utils.isNotEmpty(tabList)) {
+            tabList.forEach(item -> {
+                Map<String, Object> props = (Map<String, Object>) item.get("props");
+                if (props == null) {
+                    return;
+                }
+                //url
+                if (props.containsKey("url") && props.get("url") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("url"), requestContext.getRequestParams()).getResult();
+                    props.put("url", Utils.fixedUrl(urlNew));
+                }
+                if (props.containsKey("windowname") && props.get("windowname") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("windowname"), requestContext.getRequestParams()).getResult();
+                    props.put("windowname", urlNew);
+                }
+            });
+        }
+    }
+
     private void initMenu(RequestContext requestContext, Map<String, Object> list) {
-        if (list.get("menu") != null) {
-            listService.initComponentData(requestContext, (Map<String, Object>) list.get("menu"));
+        Map<String, Object> menu= (Map<String, Object>) list.get("menu");
+
+        if (menu != null) {
+            listService.initComponentData(requestContext, menu);
+            if( menu.get("buttonList") != null){
+                List<Map<String,Object>> btnList=(List<Map<String,Object>>) menu.get("buttonList");
+                if(Utils.isNotEmpty(btnList)){
+                    btnList.forEach(item->{
+                        listService.initComponentData(requestContext, item);
+                    });
+                }
+            }
         }
     }
 
@@ -626,9 +663,6 @@ public class ListController extends BaseController {
                 config.setRootPid(Utils.trimNull(dataMap.get("rootPid")));
             }
             String treeSearchKeyword = Utils.trimNull(requestContext.getParameter(config.getTreeLabel()));
-//           List<Map<String, Object>> rr=Utils.flatLabelValueTree(dataList,"","",
-//                   treeSearchKeyword,
-//                   config);
 
             List<Map<String, Object>> rr = TreeUtil.build(dataList, config, treeSearchKeyword);
 
@@ -640,7 +674,17 @@ public class ListController extends BaseController {
                         , list, requestContext.getRequestParams(), requestContext.getSessionParams());
             }
         }
-        return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(count).data(dataList));
+        //取里面的column里面的 item_name与label组成新的list
+        List<Map<String, Object>> columnListNew = columnList.stream()
+                .map(item -> {
+                    Map<String, Object> newItem = new HashMap<>();
+                    newItem.put("item_name", item.get("item_name"));
+                    newItem.put("label", item.get("label"));
+                    return newItem;   // 返回新 Map
+                })
+                .collect(Collectors.toList());
+
+        return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(count).data(dataList).fields(columnListNew));
     }
 
     public EzResult countpage(RequestContext requestContext, String method, String id) throws Exception {

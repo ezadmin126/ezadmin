@@ -23,10 +23,13 @@ import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
 
 import javax.sql.DataSource;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FormController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(FormController.class);
@@ -393,10 +396,7 @@ public class FormController extends BaseController {
             //处理iframe的url
             if (card.get("iframe") != null) {
                 Map<String, Object> iframe = (Map<String, Object>) card.get("iframe");
-                String url = Utils.trimNull(iframe.get("url"));
-                if (StringUtils.isNotBlank(url)) {
-                    iframe.put("url", Utils.fixedUrl( MapParser.parse(url, requestContext.getRequestParams()).getResult()));
-                }
+                prepareIframe(requestContext, iframe);
             }
             componentJson.put("iframe", card.get("iframe"));
             componentJson.put("description", card.get("description"));
@@ -416,6 +416,66 @@ public class FormController extends BaseController {
             // Don't replace the original fieldList - keep object array format for template
             // card.put("fieldList", fieldList);
         });
+    }
+
+    private void prepareIframe(RequestContext requestContext, Map<String, Object> iframe) {
+        String url = Utils.trimNull(iframe.get("url"));
+        if (StringUtils.isBlank(url)) {
+            iframe.put("loadable", false);
+            iframe.put("emptyText", Utils.trimEmptyDefault(iframe.get("emptyText"), "请先保存后再查看关联数据"));
+            return;
+        }
+
+        Map<String, Object> params = iframe.get("params") instanceof Map ? (Map<String, Object>) iframe.get("params") : null;
+        if (Utils.isEmpty(params)) {
+            iframe.put("url", Utils.fixedUrl(MapParser.parse(url, requestContext.getRequestParams()).getResult()));
+            if (!iframe.containsKey("loadable")) {
+                iframe.put("loadable", true);
+            }
+            return;
+        }
+
+        Map<String, Object> requestParams = requestContext.getRequestParams();
+        Map<String, Object> parseContext = new HashMap<>();
+        if (requestParams != null) {
+            parseContext.putAll(requestParams);
+        }
+        parseContext.put("__EZ_IFRAME_PARAM_PARSE__", "");
+        Map<String, String> resolvedParams = new HashMap<>();
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = Utils.trimNull(entry.getKey());
+            String value = MapParser.parseDefaultEmpty(Utils.trimNull(entry.getValue()), parseContext).getResult();
+            if (StringUtils.isBlank(key) || StringUtils.isBlank(value)) {
+                iframe.put("url", "");
+                iframe.put("loadable", false);
+                iframe.put("emptyText", Utils.trimEmptyDefault(iframe.get("emptyText"), "请先保存后再查看关联数据"));
+                return;
+            }
+            resolvedParams.put(key, value);
+        }
+
+        String parsedUrl = MapParser.parse(url, requestParams).getResult();
+        iframe.put("url", Utils.fixedUrl(appendIframeParams(parsedUrl, resolvedParams)));
+        iframe.put("loadable", true);
+    }
+
+    private String appendIframeParams(String url, Map<String, String> params) {
+        StringBuilder result = new StringBuilder(url);
+        boolean hasQuery = url.indexOf('?') >= 0;
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            result.append(hasQuery ? '&' : '?');
+            result.append(urlEncode(entry.getKey())).append('=').append(urlEncode(entry.getValue()));
+            hasQuery = true;
+        }
+        return result.toString();
+    }
+
+    private String urlEncode(String value) {
+        try {
+            return URLEncoder.encode(Utils.trimNull(value), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return Utils.trimNull(value);
+        }
     }
 
     /**
@@ -573,15 +633,56 @@ public class FormController extends BaseController {
         //根据jdbctype设置数据类型
         requestContext.getRequestParams().putAll(resultMapFinal);
         iniFormItem(requestContext, form);
-
         Map<String, Object> initDataMap = new HashMap<>();
-
         fillInitDataFiled(initDataMap, form);
-
-
-        return EzResult.instance().code("JSON").data(EzResult.instance().data(resultMapFinal).initData(initDataMap))
-                ;
+        List<Map<String, Object>> allFields=fields(requestContext, form);
+        return EzResult.instance().code("JSON").data(EzResult.instance().data(resultMapFinal).initData(initDataMap).fields(allFields));
     }
+
+    public  List<Map<String, Object>> fields(RequestContext requestContext, Map<String, Object> list) {
+        List<Map<String, Object>> cardList = (List<Map<String, Object>>) list.get("cardList");
+        List<Map<String, Object>> result=new ArrayList<>();
+        if (Utils.isEmpty(cardList)) {
+            return result;
+        }
+        cardList.forEach(card -> {
+            Map<String, Object> componentJson = new HashMap<>();
+
+            componentJson.put("type", card.get("type"));
+            componentJson.put("label", card.get("label"));
+
+            //处理iframe的url
+            if (card.get("iframe") != null) {
+                Map<String, Object> iframe = (Map<String, Object>) card.get("iframe");
+                prepareIframe(requestContext, iframe);
+            }
+            componentJson.put("iframe", card.get("iframe"));
+            componentJson.put("description", card.get("description"));
+            componentJson.put("buttonList", card.get("buttonList"));
+            if (!EzBootstrap.config().isSqlCache()) {
+                card.put("componentJson", JSONUtils.toJSONString(componentJson));
+            }
+            Object fieldListObj = card.get("fieldList");
+            List<List<Map<String, Object>>> fieldList = getFlattenedFieldList(fieldListObj);
+            if (Utils.isNotEmpty(fieldList)) {
+                fieldList.forEach(row -> {
+                    if (Utils.isNotEmpty(row)) {
+                        List<Map<String, Object>> columnListNew = row.stream()
+                                .map(item -> {
+                                    Map<String, Object> newItem = new HashMap<>();
+                                    newItem.put("item_name", item.get("item_name"));
+                                    newItem.put("label", item.get("label"));
+                                    return newItem;   // 返回新 Map
+                                })
+                                .collect(Collectors.toList());
+                        result.addAll(columnListNew);
+                    }
+                });
+            }
+        });
+        return result;
+    }
+
 
     private void fillInitDataFiled(Map<String, Object> initDataMap, Map<String, Object> form) {
         List<Map<String, Object>> cardList = (List<Map<String, Object>>) form.get("cardList");
@@ -704,7 +805,7 @@ public class FormController extends BaseController {
                     successurl = requestContext.getContextPath() + successurl;
                 }
                 paras.put("ID", Utils.trimNullDefault(rowId, ID));
-                defaultTo = MapParser.parseDefaultEmpty(successurl, paras).getResult();
+                defaultTo = Utils.fixedUrl(MapParser.parseDefaultEmpty(successurl, paras).getResult());
             }
             return EzResult.instance().data(defaultTo);
         } catch (QLCompileException ex) {

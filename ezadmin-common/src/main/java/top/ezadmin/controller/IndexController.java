@@ -20,6 +20,7 @@ public class IndexController extends BaseController {
     public EzResult index(RequestContext requestContext) {
         Map<String, Object> templateParam = new HashMap<>();
         templateParam.put("logo", EzBootstrap.config().getLogoUrl());
+        templateParam.put("indexConfigJson", EzBootstrap.config().getConfigJson());
         templateParam.put("systemName", EzBootstrap.config().getSystemName());
         templateParam.put("navUrl", EzBootstrap.config().getNavUrl());
         templateParam.put("appendJs", EzBootstrap.config().getAppendJs());

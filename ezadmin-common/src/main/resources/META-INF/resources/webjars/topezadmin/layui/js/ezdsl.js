@@ -1,3 +1,5 @@
+
+
 layui.use(function () {
 
     try {
@@ -19,6 +21,7 @@ layui.use(function () {
         initLaycascader();
         initUpload();
         initInputRange();
+        initPopSelect();
 
         $(".ez-form-panel  .layui-layer-min").click(function () {
             $(this).closest(".layui-card").find(".layui-card-body").hide();
@@ -181,7 +184,22 @@ layui.use(function () {
                                     return;
                                 } else {
                                     canEzFormSubmit = true;
-                                    location.href = data.data;
+                                    if(Object.prototype.toString.call(data.data) === '[object Object]'){
+                                        if(data.data.href){
+                                            location.href = data.data.href;
+                                        }else
+                                        if(data.data.ID){
+                                            //如果当前url 没有参数，则拼接这个id
+                                            if(window.location.href.indexOf('?') == -1){
+                                                location.href = window.location.href+'?ID='+data.data.ID;
+                                            }else{
+                                                location.href = window.location.href+'&ID='+data.data.ID;
+                                            }
+                                        }else
+                                        window.location.reload();
+                                    }else{
+                                        location.href = data.data;
+                                    }
                                 }
                             });
 
@@ -410,6 +428,11 @@ function initLaycascader() {
         renderCascader(el);
     })
 
+}
+function initPopSelect() {
+    if (window.EZ_INPUT_POP_SELECT && typeof window.EZ_INPUT_POP_SELECT.init === 'function') {
+        window.EZ_INPUT_POP_SELECT.init();
+    }
 }
 
 function initUpload() {
@@ -659,8 +682,14 @@ function getUrlParams() {
 function initFormValue(data) {
     console.log("initFormValue~~~", data);
     if (!data || Object.keys(data).length == 0) {
-        return;
+        data={};
     }
+    $("[defaultvalue]").each(function () {
+        var name=$(this).attr("name")
+        if(data[name]==undefined){
+            data[name] = $(this).attr("defaultvalue");
+        }
+    })
     var needFormRender = false;
     // 遍历 URL 参数，设置到表单
     for (var key in data) {
@@ -669,6 +698,10 @@ function initFormValue(data) {
             continue;
         }
         var val = data[key];
+        //看看是否有默认值
+        if(val==undefined){
+            val=input.getAttribute("defaultValue");
+        }
         if(val==undefined){
             continue;
         }
@@ -737,6 +770,19 @@ function initFormValue(data) {
             } else {
                 xmSelectIns.setValue(Global.toNumberArray(currentValue));
             }
+        } else if (input.classList.contains("tinymcetextarea")) {
+            if (window.EzTinyMce && typeof window.EzTinyMce.setValue === 'function') {
+                window.EzTinyMce.setValue(input, val);
+            } else {
+                input.value = val;
+                if (window.tinymce) {
+                    var editor = tinymce.get(input.id);
+                    if (editor) {
+                        editor.setContent(val == null ? '' : val);
+                        editor.save();
+                    }
+                }
+            }
         } else if (input.classList.contains("layui-textarea")) {
             input.value = val;
             var length = input.value.length;
@@ -745,7 +791,13 @@ function initFormValue(data) {
             if (countElement) {
                 countElement.textContent = length;
             }
-        } else if (input.classList.contains("ez-upload-input")) {
+        }else if(input.classList.contains("ez-input-pop-select-value")){
+            input.value = val;
+            if (window.EZ_INPUT_POP_SELECT && typeof window.EZ_INPUT_POP_SELECT.initFromInputValue === 'function') {
+                window.EZ_INPUT_POP_SELECT.initFromInputValue(key);
+            }
+        }
+        else if (input.classList.contains("ez-upload-input")) {
             input.value = val;
             var config = {};
             if (input.getAttribute('data-propsJson') != null) {
@@ -760,7 +812,17 @@ function initFormValue(data) {
                 };
                 initFunction(param);
             }
-        } else {
+        }else if(input.classList.contains("tinymcetextarea")){
+            input.value = val;
+            if (window.tinymce) {
+                var editor = tinymce.get(input.id);
+                if (editor) {
+                    editor.setContent(val == null ? '' : val);
+                    editor.save();
+                }
+            }
+        }
+        else {
             if (type == 'hidden') {
                 var span = document.querySelector(':is(span)[name="' + key + '"]');
                 var labelShow = val;
@@ -1166,4 +1228,3 @@ function upload_reCalId(itemId) {
         inputHiddenNode.valid();
     }
 }
-

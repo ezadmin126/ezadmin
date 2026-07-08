@@ -166,7 +166,7 @@ public class EzClientServletFilter implements Filter {
                 return;
             } else if (StringUtils.equals(result.getCode(), "JSON")) {
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
-                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(result.getData()), "UTF-8"), httpServletResponse.getOutputStream());
+                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONStringWithNull(result.getData()), "UTF-8"), httpServletResponse.getOutputStream());
             } else if (result.getCode().equals("404")) {
                 httpServletResponse.sendRedirect("/404");
             } else if (result.getCode().equals("500")) {

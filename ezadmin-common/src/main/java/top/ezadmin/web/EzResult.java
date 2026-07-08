@@ -11,6 +11,7 @@ public class EzResult {
     private long count;
     private Object data;
     private Object initData;
+    private Object fields;
 
 
     private EzResult() {
@@ -149,5 +150,14 @@ public class EzResult {
 
     public void setInitData(Object initData) {
         this.initData = initData;
+    }
+
+    public Object getFields() {
+        return fields;
+    }
+
+    public EzResult fields(Object fields) {
+        this.fields = fields;
+        return this;
     }
 }

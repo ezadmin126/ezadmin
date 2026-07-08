@@ -16,6 +16,10 @@ public class JSONUtils {
         return EzBootstrap.config().getEzJson().toJSONString(obj);
     }
 
+    public static String toJSONStringWithNull(Object obj) {
+        return EzBootstrap.config().getEzJson().toJSONStringWithNull(obj);
+    }
+
     public static String toPrettyJSONString(Object obj) {
         return EzBootstrap.config().getEzJson().toPrettyJSONString(obj);
     }

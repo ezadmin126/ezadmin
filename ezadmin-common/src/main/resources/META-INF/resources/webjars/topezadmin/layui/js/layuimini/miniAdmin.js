@@ -101,6 +101,7 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
          */
         renderHome: function (data) {
             try {
+                data = data || {};
                 if (data.href) {
                     sessionStorage.setItem('layuiminiHomeHref', data.href);
                     $('#layuiminiHomeTabId').html('<span class="layuimini-tab-active layui-icon-refresh layui-icon"></span><span class="disable-close">' + data.title + '</span><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>');

@@ -17,12 +17,31 @@
                  class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
         </div>
         <script>
+            window.EzTinyMce = window.EzTinyMce || {};
+            window.EzTinyMce.setValue = function (textarea, value) {
+                if (!textarea) {
+                    return;
+                }
+                var content = value == null ? '' : value;
+                textarea.value = content;
+                if (window.tinymce) {
+                    var editor = tinymce.get(textarea.id);
+                    if (editor) {
+                        editor.setContent(content);
+                        editor.save();
+                        return;
+                    }
+                }
+                textarea.setAttribute('data-ez-tinymce-pending-value', '1');
+            };
 
             $(function () {
                 try {
+                    var textareaId = "[[${'DESC_ITEM_ID_'+item_name}]]";
+                    var textarea = document.getElementById(textareaId);
                     var uploadUrl = document.getElementById("uploadUrl").value + '?descFlag=1';
                     tinymce.init({
-                        selector: "textarea#[[${'DESC_ITEM_ID_'+item_name}]]",
+                        selector: "textarea#" + textareaId,
                         language: 'zh_CN',
                         menubar: '',
                         height: 600,
@@ -127,12 +146,20 @@
                         }
                         ,
                         setup: function (editor) {
+                            editor.on('init', function () {
+                                if (textarea) {
+                                    editor.setContent(textarea.value || '');
+                                    editor.save();
+                                    textarea.removeAttribute('data-ez-tinymce-pending-value');
+                                }
+                            });
                             editor.on('change', function (e) {
                                 //  console.log('The Editor has initialized.');
                                 editor.save();
                             });
                         }
                     });
+
                 } catch (e) {
                     console.log(e);
                 }
@@ -141,7 +168,6 @@
         </script>
     </div>
 </div>
-
 
 
 

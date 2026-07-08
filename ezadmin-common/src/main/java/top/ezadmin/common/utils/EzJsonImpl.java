@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.util.*;
 
@@ -11,6 +12,11 @@ public class EzJsonImpl implements EzJson {
     @Override
     public String toJSONString(Object obj) {
         return JSON.toJSONString(obj);
+    }
+
+    @Override
+    public String toJSONStringWithNull(Object obj) {
+        return JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue);
     }
 
     @Override

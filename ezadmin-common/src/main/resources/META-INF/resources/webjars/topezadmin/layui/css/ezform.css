@@ -176,7 +176,7 @@ small {
     height: 58px;
     position: fixed !important;
     bottom: 0;
-    Z-INDEX: 1000;
+    Z-INDEX: 7;
     width: 100%;
     text-align: center;
 }

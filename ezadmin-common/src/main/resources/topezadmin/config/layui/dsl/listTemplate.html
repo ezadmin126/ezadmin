@@ -114,7 +114,7 @@
                 <li th:lay-id="${item.item_name}" th:item_id="${item.item_name}"
                     th:classappend="${item.select?'layui-this  ':' '}"
                     th:each="item:${list.tabList}">
-                    <a th:item_name="${item.item_name}" th:href="${item.url}" th:text="${item.label}"></a>
+                    <a th:item_name="${item.item_name}" th:href="${item.props!=null?item.props.url:'#'}" th:text="${item.label}"></a>
                 </li>
             </ul>
             <div class="layui-tab-content">
@@ -174,7 +174,7 @@
                                     <input id="orderByType" name="orderByType">
                                     <input id="customSearch" name="customSearch">
                                     <!-- pageCustomSearch 高级查询写入此字段，与 uniondate/unioninput 分开存储再合并 -->
-                                    <input type="hidden" id="customSearch_count" name="customSearch_count">
+<!--                                    <input type="hidden" id="customSearch_count" name="customSearch_count">-->
                                 </div>
                             </form>
                         </div>
@@ -254,6 +254,14 @@
         e.preventDefault();
         $("#customSearch_count").val('');
         $("#searchBtn").click();
+    })
+    //回车搜索
+    $("#searchForm").find('input').each(function () {
+        $(this).keyup(function (event) {
+            if (event.keyCode == 13) {
+                $("#searchBtn").click();
+            }
+        });
     })
 
     layui.use(function () {
@@ -358,7 +366,11 @@
 
             // 序号列
             /*[# th:if="${list.body.showIndex}"]*/
-            cols.push({type: 'numbers', title: '序号', width: 60, fixed: 'left'});
+            cols.push({title: '序号', width: 60, fixed: 'left', templet: function(d) {
+                var curr = Number(document.getElementById('currentPage').value) || 1;
+                var limit = Number(document.getElementById('perPageInt').value) || 10;
+                return (curr - 1) * limit + d.LAY_INDEX +1;
+            }});
             /*[/]*/
 
             // 选择列
@@ -552,8 +564,16 @@
             tableConfig[key] = [[${entry.value}]];
             /*[/]*/
             /*[/]*/
+            // if( Global.get( "table.before")){
+            //     tableConfig.before = Global.get( "table.before");
+            // }
+            // if( Global.get( "table.complete")){
+            //     tableConfig.complete = Global.get( "table.complete");
+            // }
+
 
             /*[# th:if="${not #maps.isEmpty(list.tree)}"]*/
+
             tableConfig.tree = {
                 "customName": {
                     "id": "VALUE",
@@ -574,6 +594,13 @@
                     "isSimpleData": true
                 }
             };
+            // if( Global.get( "table.tree.async")){
+            //     tableConfig.tree.async = Global.get( "table.tree.async");
+            // }
+            // if( Global.get( "table.tree.async")){
+            //     tableConfig.tree.callback = Global.get( "table.tree.callback");
+            // }
+
             /*[# th:each="entry : ${list.tree.entrySet()}"]*/
             var key = [[${entry.key}]];
             tableConfig.tree[key] = [[${entry.value}]];
@@ -752,7 +779,7 @@
                     , count: data.count
                     , curr: document.getElementById('currentPage').value
                     , limit: document.getElementById('perPageInt').value
-                    , limits: [10, 20, 30, 40, 50, 100]
+                    , limits: [10, 20, 30, 40, 50, 100,500,1000]
                     , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
                     , jump: function (obj, first) {
                         document.getElementById('perPageInt').value = obj.limit;

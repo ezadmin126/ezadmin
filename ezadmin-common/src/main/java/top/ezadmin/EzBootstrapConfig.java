@@ -150,7 +150,7 @@ public class EzBootstrapConfig {
     /**
      * 自定义配置
      */
-    private String configJson = "{\"favicon\":\"/static/favicon.ico\",\"logo\":\"/static/logo.png\"}";
+    private String configJson = "{\"favicon\":\"/static/favicon2.ico\",\"logo\":\"/static/logo.png\"}";
 
 
     private String apiUrl;

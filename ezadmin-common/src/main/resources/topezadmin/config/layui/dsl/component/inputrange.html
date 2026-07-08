@@ -2,7 +2,7 @@
      th:classappend="${classAppend}" th:data-config-json="${componentJson}"
 >
     <div class="layui-form-item" th:item_name="${item_name}" component="inputrange">
-        <label class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
+        <label th:title="${label}" class="layui-form-label" th:if="${not #strings.isEmpty(label)}">
             <span th:if="${props != null and props.required}" style="color: red;">*</span>
             <span th:utext="${label}+'：'">字段名</span>
         </label>

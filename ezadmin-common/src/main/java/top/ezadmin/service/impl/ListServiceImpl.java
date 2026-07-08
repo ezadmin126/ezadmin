@@ -1,8 +1,6 @@
 package top.ezadmin.service.impl;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
@@ -621,7 +619,7 @@ public class ListServiceImpl implements ListService {
                     String ORGSRC = Utils.trimEmptyDefault(Utils.getStringByObject(th, JsoupUtil.ORGSRC), Utils.getStringByObject(th, JsoupUtil.URL));
                     String url = Utils.trimEmptyDefault(Utils.getStringByObject(th, JsoupUtil.URL), Utils.getStringByObject(th, JsoupUtil.ORGSRC));
                     String windowname = Utils.getStringByObject(th, JsoupUtil.WINDOW_NAME);
-                    String dataInDb = ObjectUtils.toString(dataRow.get(itemName));
+                    String dataInDb = Utils.trimNull(dataRow.get(itemName));
                     String columnEmptyShow = Utils.getStringByObject(th, JsoupUtil.EMPTY_SHOW);
 
                     dataInDb = calulateData(dataInDb, globalEmptyShow, columnEmptyShow, jdbcType);
@@ -643,7 +641,7 @@ public class ListServiceImpl implements ListService {
                         dataRow.forEach((k, v) -> {
                             Map<String, String> dataRowMap = new HashMap<>();
                             dataRowMap.put("key", k);
-                            dataRowMap.put("value", ObjectUtils.toString(v));
+                            dataRowMap.put("value", Utils.trimNull(v));
                             dataRowList.add(dataRowMap);
                         });
                         context.put("dataRow", dataRowList);
@@ -849,7 +847,7 @@ public class ListServiceImpl implements ListService {
                     String bodyPlugin = Utils.getStringByObject(th, JsoupUtil.BODY_PLUGIN_CODE);
 
                     String jdbcType = Utils.getStringByObject(th, JsoupUtil.JDBCTYPE);
-                    String dataInDb = ObjectUtils.toString(dataRow.get(itemName));
+                    String dataInDb = Utils.trimNull(dataRow.get(itemName));
                     String columnEmptyShow = Utils.getStringByObject(th, JsoupUtil.EMPTY_SHOW);
 
                     dataInDb = calulateData(dataInDb, globalEmptyShow, columnEmptyShow, jdbcType);
@@ -1004,7 +1002,7 @@ public class ListServiceImpl implements ListService {
                 if (pluginCode.equalsIgnoreCase("input-text")
                 ) {
                     Map<String, String> attrMap = (Map<String, String>) search.get("attrMap");
-                    attrMap.put("value", StringEscapeUtils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName()) + ""));
+                    attrMap.put("value", Utils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName()) + ""));
                     attrMap.put("name", search.get(JsoupUtil.ITEM_NAME) + "");
                     attrMap.putIfAbsent("id", "itemId-" + search.get(JsoupUtil.ITEM_NAME) + "");
                     attrMap.putIfAbsent("lay-affix", "clear");
@@ -1027,7 +1025,7 @@ public class ListServiceImpl implements ListService {
                 if (pluginCode.contains("xmselect")
                 ) {
                     Map<String, String> attrMap = (Map<String, String>) search.get("attrMap");
-                    attrMap.put("value", StringEscapeUtils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName()) + ""));
+                    attrMap.put("value", Utils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName()) + ""));
                     attrMap.put("name", search.get(JsoupUtil.ITEM_NAME) + "");
                     attrMap.putIfAbsent("id", "itemId-" + search.get(JsoupUtil.ITEM_NAME) + "");
 //                        attrMap.putIfAbsent("lay-affix","clear" );
@@ -1048,7 +1046,7 @@ public class ListServiceImpl implements ListService {
                 } else if (pluginCode.equals("search-cascader")
                         || pluginCode.equals("search-cascadersql")) {
                     Map<String, String> attrMap = (Map<String, String>) search.get("attrMap");
-                    attrMap.put("value", StringEscapeUtils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName()) + ""));
+                    attrMap.put("value", Utils.escapeHtml(search.get(ParamNameEnum.itemParamValue.getName()) + ""));
                     attrMap.put("name", search.get(JsoupUtil.ITEM_NAME) + "");
                     //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                     attrMap.putIfAbsent("id", "ITEM_ID_" + search.get(JsoupUtil.ITEM_NAME));
@@ -1188,7 +1186,7 @@ public class ListServiceImpl implements ListService {
             String itemUrl = getString(item, JsoupUtil.URL);
             String url = MapParser.parseDefaultEmpty(itemUrl, requestParamMap).getResult();
             item.put(JsoupUtil.URL, url);
-            item.put(JsoupUtil.SELECT, BooleanUtils.toBoolean(Utils.trimNull(item.get(JsoupUtil.SELECT))));
+            item.put(JsoupUtil.SELECT, Utils.toBoolean(Utils.trimNull(item.get(JsoupUtil.SELECT))));
 
         }
     }
@@ -1260,7 +1258,7 @@ public class ListServiceImpl implements ListService {
                     String jdbcType = Utils.getStringByObject(th, JsoupUtil.JDBCTYPE);
                     String url = Utils.getStringByObject(th, JsoupUtil.URL);
                     String windowname = Utils.getStringByObject(th, JsoupUtil.WINDOW_NAME);
-                    String dataInDb = ObjectUtils.toString(dataRow.get(itemName));
+                    String dataInDb = Utils.trimNull(dataRow.get(itemName));
 
                     String columnEmptyShow = Utils.getStringByObject(th, JsoupUtil.EMPTY_SHOW);
 
@@ -1343,7 +1341,7 @@ public class ListServiceImpl implements ListService {
                                     m.put(JsoupUtil.DISPLAY, MapParser.parseDefaultEmpty(Utils.trimEmptyDefault(item.get(JsoupUtil.DISPLAY), "true"), dataRow).getResult());
                                     m.put("rowdataid", dataRow.get("ID"));
                                     m.put("data-id", dataRow.get("ID"));
-                                    if (BooleanUtils.toBoolean(Utils.getStringByObject(m, JsoupUtil.DISPLAY))) {
+                                    if (Utils.toBoolean(Utils.getStringByObject(m, JsoupUtil.DISPLAY))) {
                                         tempRowItem.add(m);
                                     }
                                 }

@@ -38,7 +38,7 @@ public class MapParser {
     public static void main(String[] args) {
         Map<String, Object> map = new java.util.HashMap<>();
         map.put("123", null);
-        System.out.println(MapParser.parse("123${123}", map));
+        System.out.println(MapParser.parseDefaultEmpty("123${123}", map));
     }
 
     private static String PARAM_PREFIX = "${";

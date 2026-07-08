@@ -14,7 +14,9 @@ import top.ezadmin.web.RequestContext;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -159,6 +161,64 @@ public class FormControllerTest {
 
         System.out.println("Page result code: " + result.getCode());
         System.out.println("Page rendered successfully");
+    }
+
+    @Test
+    public void iframeParamsShouldDisableLoadingWhenResolvedRequiredParamIsBlank() {
+        Map<String, Object> params = new HashMap<>();
+        RequestContext context = createRequestContext(params);
+
+        Map<String, Object> iframe = new HashMap<>();
+        iframe.put("url", "list/page-product/base-brand-manufacturer-list");
+        iframe.put("params", new HashMap<String, Object>() {{
+            put("BRAND_ID", "${ID}");
+        }});
+
+        Map<String, Object> card = new HashMap<>();
+        card.put("type", "iframe");
+        card.put("iframe", iframe);
+
+        List<Map<String, Object>> cardList = new ArrayList<>();
+        cardList.add(card);
+
+        Map<String, Object> form = new HashMap<>();
+        form.put("cardList", cardList);
+
+        formController.iniFormItem(context, form);
+
+        Map<String, Object> parsedIframe = (Map<String, Object>) card.get("iframe");
+        assertEquals("Blank resolved iframe params should disable loading", Boolean.FALSE, parsedIframe.get("loadable"));
+        assertEquals("Blank required iframe params should not render a URL", "", parsedIframe.get("url"));
+        assertEquals("请先保存后再查看关联数据", parsedIframe.get("emptyText"));
+    }
+
+    @Test
+    public void iframeParamsShouldBuildUrlWhenResolvedRequiredParamHasValue() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("ID", "123");
+        RequestContext context = createRequestContext(params);
+
+        Map<String, Object> iframe = new HashMap<>();
+        iframe.put("url", "list/page-product/base-brand-manufacturer-list");
+        iframe.put("params", new HashMap<String, Object>() {{
+            put("BRAND_ID", "${ID}");
+        }});
+
+        Map<String, Object> card = new HashMap<>();
+        card.put("type", "iframe");
+        card.put("iframe", iframe);
+
+        List<Map<String, Object>> cardList = new ArrayList<>();
+        cardList.add(card);
+
+        Map<String, Object> form = new HashMap<>();
+        form.put("cardList", cardList);
+
+        formController.iniFormItem(context, form);
+
+        Map<String, Object> parsedIframe = (Map<String, Object>) card.get("iframe");
+        assertEquals("Resolved iframe params should enable loading", Boolean.TRUE, parsedIframe.get("loadable"));
+        assertEquals("/topezadmin/list/page-product/base-brand-manufacturer-list?BRAND_ID=123", parsedIframe.get("url"));
     }
 
     /**

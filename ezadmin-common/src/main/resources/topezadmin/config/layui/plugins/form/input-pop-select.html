@@ -32,6 +32,7 @@
          th:ez-style="${style}"
          th:ez-help="${help}"
          th:ez-class="${class}"
+         th:ez-display_fields="${display_fields}"
     >
         <div class="layui-form-item ">
             <label class="layui-form-label  ">
@@ -97,17 +98,35 @@
                             if (data.success) {
                                 var head = data.data.head;
                                 var body = data.data.body;
+                                var displayFields = ("[[${display_fields}]]" || '').split(',').map(function (field) {
+                                    return field.trim();
+                                }).filter(function (field) {
+                                    return field !== '';
+                                });
                                 //遍历head这个json
                                 var colName = [];
-                                var headerHtml = '<tr>';
+                                var labelMap = {};
                                 for (var i = 0; i < head.length; i++) {
                                     var column = head[i];
-                                    // 跳过ID列
-                                    if (column.item_name === 'ID') {
-                                        continue;
+                                    labelMap[column.item_name] = column.label;
+                                }
+                                var headerHtml = '<tr>';
+                                if (displayFields.length > 0) {
+                                    for (var i = 0; i < displayFields.length; i++) {
+                                        var displayField = displayFields[i];
+                                        colName.push(displayField);
+                                        headerHtml += '<th item_name="' + displayField + '">' + (labelMap[displayField] || displayField) + '</th>';
                                     }
-                                    colName.push(column.item_name);
-                                    headerHtml += '<th item_name="' + column.item_name + '">' + column.label + '</th>';
+                                } else {
+                                    for (var i = 0; i < head.length; i++) {
+                                        var column = head[i];
+                                        // 跳过ID列
+                                        if (column.item_name === 'ID') {
+                                            continue;
+                                        }
+                                        colName.push(column.item_name);
+                                        headerHtml += '<th item_name="' + column.item_name + '">' + column.label + '</th>';
+                                    }
                                 }
                                 headerHtml += '<th>操作</th></tr> ';
                                 $("[[${'#ITEM_ID_' + item_name}]]").find("thead").html(headerHtml);
