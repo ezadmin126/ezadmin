@@ -1,8 +1,6 @@
 package top.ezadmin.common.utils;
 
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
@@ -14,7 +12,9 @@ import top.ezadmin.dao.model.TreeConfig;
 import top.ezadmin.web.JsonArrayResult;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.*;
@@ -76,9 +76,20 @@ public class Utils {
 
     public static void addLog(String s, Exception e) {
         if (getLog() != null) {
-            add(EzDateUtils.todayDatetime() + "\t\n" + s + ExceptionUtils.getFullStackTrace(e));
+            add(EzDateUtils.todayDatetime() + "\t\n" + s + getFullStackTrace(e));
         }
         logger.error(s, e);
+    }
+
+    public static String getFullStackTrace(Throwable throwable) {
+        if (throwable == null) {
+            return "";
+        }
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        throwable.printStackTrace(printWriter);
+        printWriter.flush();
+        return stringWriter.toString();
     }
 
 

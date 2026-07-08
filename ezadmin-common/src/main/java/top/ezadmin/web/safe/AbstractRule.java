@@ -1,8 +1,8 @@
 package top.ezadmin.web.safe;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.common.utils.StringUtils;
 
 import java.util.*;
 import java.util.regex.Matcher;

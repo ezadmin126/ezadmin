@@ -1,9 +1,11 @@
 package top.ezadmin.plugins.express.executor;
 
-import com.ql.util.express.DefaultContext;
-import com.ql.util.express.ExpressRunner;
-import com.ql.util.express.IExpressContext;
-import com.ql.util.express.Operator;
+import com.alibaba.qlexpress4.Express4Runner;
+import com.alibaba.qlexpress4.InitOptions;
+import com.alibaba.qlexpress4.QLResult;
+import com.alibaba.qlexpress4.QLOptions;
+import com.alibaba.qlexpress4.runtime.function.CustomFunction;
+import com.alibaba.qlexpress4.security.QLSecurityStrategy;
 import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.utils.Page;
 import top.ezadmin.common.utils.StringUtils;
@@ -85,7 +87,11 @@ public class EzExpressExecutor {
         return this;
     }
 
-    private static ExpressRunner runner = new ExpressRunner();
+    private static Express4Runner runner = new Express4Runner(
+            InitOptions.builder()
+                    .securityStrategy(QLSecurityStrategy.open())
+                    .build()
+    );
 
 
     /**
@@ -93,14 +99,9 @@ public class EzExpressExecutor {
      *
      * @param operator
      */
-    public static void addExtendFunction(String key, Operator operator) {
-        if (runner.getOperatorFactory() != null
-                && runner.getOperatorFactory().getOperator(key) == null) {
-            try {
-                runner.addFunction(key, operator);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+    public static void addExtendFunction(String key, CustomFunction operator) {
+        if (runner.getFunction(key) == null) {
+            runner.addFunction(key, operator);
         } else {
             throw new RuntimeException("function " + key + " already exists");
         }
@@ -141,14 +142,19 @@ public class EzExpressExecutor {
 
         operatorParam.setEnv(envParams);
         Utils.addParam(operatorParam);
-        IExpressContext<String, Object> context = new DefaultContext<String, Object>();
+        Map<String, Object> context = new HashMap<>();
         if (operatorParam.getParams() != null) {
             for (Map.Entry<String, Object> e : operatorParam.getParams().entrySet()) {
                 context.put(e.getKey(), e.getValue());
             }
         }
 
-        Object r = runner.execute(express, context, null, EzBootstrap.config().isSqlCache(), !EzBootstrap.config().isSqlCache());
+        QLOptions options = QLOptions.builder()
+                .cache(EzBootstrap.config().isSqlCache())
+                .avoidNullPointer(!EzBootstrap.config().isSqlCache())
+                .build();
+        QLResult qlResult = runner.execute(express, context, options);
+        Object r = qlResult.getResult();
         result = r;
         return r;
 

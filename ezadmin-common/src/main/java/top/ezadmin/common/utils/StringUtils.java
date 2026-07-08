@@ -1,6 +1,5 @@
 package top.ezadmin.common.utils;
 
-import org.apache.commons.lang.BooleanUtils;
 import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.dao.ClobParam;
 import top.ezadmin.plugins.parser.MapParser;
@@ -12,6 +11,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,6 +65,10 @@ public class StringUtils {
         }
 
         return false;
+    }
+
+    public static boolean isEmpty(String str) {
+        return str == null || str.length() == 0;
     }
 
 
@@ -324,71 +328,174 @@ public class StringUtils {
     }
 
     public static String replace(String searchFieldValue, String s, String s1) {
-        return org.apache.commons.lang.StringUtils.replace(searchFieldValue, s, s1);
+        if (searchFieldValue == null || s == null || s.length() == 0 || s1 == null) {
+            return searchFieldValue;
+        }
+        return searchFieldValue.replace(s, s1);
     }
 
     public static boolean equals(String code, String success) {
-        return org.apache.commons.lang.StringUtils.equals(code, success);
+        return code == null ? success == null : code.equals(success);
     }
 
     public static boolean equalsIgnoreCase(String key, String name) {
-        return org.apache.commons.lang.StringUtils.equalsIgnoreCase(key, name);
+        return key == null ? name == null : key.equalsIgnoreCase(name);
     }
 
     public static String upperCase(String field_name) {
-        return org.apache.commons.lang.StringUtils.upperCase(field_name);
+        return field_name == null ? null : field_name.toUpperCase();
     }
 
     public static String join(Object[] value) {
-        return org.apache.commons.lang.StringUtils.join(value);
+        return joinArray(value, "");
     }
 
     public static String join(Collection value, String s) {
-        return org.apache.commons.lang.StringUtils.join(value, s);
+        if (value == null) {
+            return null;
+        }
+        return joinArray(value.toArray(), s);
     }
 
     public static Object join(Object[] value, String s) {
-        return org.apache.commons.lang.StringUtils.join(value, s);
+        return joinArray(value, s);
     }
 
     public static boolean contains(String field_name, String time) {
-        return org.apache.commons.lang.StringUtils.contains(field_name, time);
+        return field_name != null && time != null && field_name.contains(time);
+    }
+
+    public static boolean containsIgnoreCase(String str, String searchStr) {
+        if (str == null || searchStr == null) {
+            return false;
+        }
+        int max = str.length() - searchStr.length();
+        for (int i = 0; i <= max; i++) {
+            if (str.regionMatches(true, i, searchStr, 0, searchStr.length())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static int contains(String field_name) {
-        return org.apache.commons.lang.StringUtils.length(field_name);
+        return field_name == null ? 0 : field_name.length();
     }
 
 
     public static String[] split(String str, String separatorChars) {
-        return org.apache.commons.lang.StringUtils.split(str, separatorChars);
+        return split(str, separatorChars, -1);
     }
 
     public static String[] split(String str, String separatorChars, int max) {
-        return org.apache.commons.lang.StringUtils.split(str, separatorChars, max);
+        if (str == null) {
+            return null;
+        }
+        if (str.length() == 0) {
+            return new String[0];
+        }
+        StringTokenizer tokenizer = separatorChars == null
+                ? new StringTokenizer(str)
+                : new StringTokenizer(str, separatorChars);
+        java.util.ArrayList<String> result = new java.util.ArrayList<>();
+        while (tokenizer.hasMoreTokens()) {
+            if (max > 0 && result.size() == max - 1) {
+                StringBuilder remaining = new StringBuilder(tokenizer.nextToken());
+                while (tokenizer.hasMoreTokens()) {
+                    remaining.append(separatorChars == null ? " " : separatorChars.charAt(0));
+                    remaining.append(tokenizer.nextToken());
+                }
+                result.add(remaining.toString());
+                break;
+            }
+            result.add(tokenizer.nextToken());
+        }
+        return result.toArray(new String[0]);
     }
 
     public static String[] splitByWholeSeparator(String selectSql, String startFixStr) {
-        return org.apache.commons.lang.StringUtils.splitByWholeSeparator(selectSql, startFixStr);
+        if (selectSql == null) {
+            return null;
+        }
+        if (selectSql.length() == 0) {
+            return new String[0];
+        }
+        if (startFixStr == null || startFixStr.length() == 0) {
+            return split(selectSql, null);
+        }
+        java.util.ArrayList<String> result = new java.util.ArrayList<>();
+        int start = 0;
+        int idx;
+        while ((idx = selectSql.indexOf(startFixStr, start)) >= 0) {
+            if (idx > start) {
+                result.add(selectSql.substring(start, idx));
+            }
+            start = idx + startFixStr.length();
+        }
+        if (start < selectSql.length()) {
+            result.add(selectSql.substring(start));
+        }
+        return result.toArray(new String[0]);
     }
 
     public static boolean endsWithIgnoreCase(String field, String time) {
-        return org.apache.commons.lang.StringUtils.endsWithIgnoreCase(field, time);
+        if (field == null || time == null) {
+            return field == null && time == null;
+        }
+        return field.toLowerCase().endsWith(time.toLowerCase());
+    }
+
+    public static String substring(String str, int start, int end) {
+        if (str == null) {
+            return null;
+        }
+        int length = str.length();
+        if (end < 0) {
+            end = length + end;
+        }
+        if (start < 0) {
+            start = length + start;
+        }
+        if (end > length) {
+            end = length;
+        }
+        if (start > end) {
+            return "";
+        }
+        if (start < 0) {
+            start = 0;
+        }
+        if (end < 0) {
+            end = 0;
+        }
+        return str.substring(start, end);
     }
 
     public static String trimEmpty(String s) {
 
-        return org.apache.commons.lang.StringUtils.trimToEmpty(s);
+        return s == null ? "" : s.trim();
     }
 
     public static String strip(String s) {
 
-        return org.apache.commons.lang.StringUtils.strip(s);
+        return s == null ? null : s.trim();
     }
 
     public static String leftPad(Object s, int size, String c) {
 
-        return org.apache.commons.lang.StringUtils.leftPad(Utils.trimNull(s), size, c);
+        String value = Utils.trimNull(s);
+        String pad = c == null || c.length() == 0 ? " " : c;
+        if (value.length() >= size) {
+            return value;
+        }
+        StringBuilder sb = new StringBuilder(size);
+        while (sb.length() < size - value.length()) {
+            sb.append(pad);
+        }
+        if (sb.length() > size - value.length()) {
+            sb.setLength(size - value.length());
+        }
+        return sb.append(value).toString();
     }
 
 
@@ -397,19 +504,43 @@ public class StringUtils {
 //    }
 
     public static boolean startWithTrimAndLower(String defaultGroup, String group_) {
-        return org.apache.commons.lang.StringUtils.lowerCase(trimEmpty(defaultGroup)).startsWith(group_);
+        return lowerCase(trimEmpty(defaultGroup)).startsWith(group_);
     }
 
     public static String lowerCase(String key) {
-        return org.apache.commons.lang.StringUtils.lowerCase(key);
+        return key == null ? null : key.toLowerCase();
     }
 
     public static boolean toBoolean(String s) {
-        return BooleanUtils.toBoolean(s);
+        if (s == null) {
+            return false;
+        }
+        String value = s.trim();
+        return "true".equalsIgnoreCase(value)
+                || "on".equalsIgnoreCase(value)
+                || "yes".equalsIgnoreCase(value)
+                || "y".equalsIgnoreCase(value);
     }
 
     public static boolean startsWith(String view, String s) {
-        return org.apache.commons.lang.StringUtils.startsWith(view, s);
+        return view != null && s != null && view.startsWith(s);
+    }
+
+    private static String joinArray(Object[] value, String separator) {
+        if (value == null) {
+            return null;
+        }
+        String sep = separator == null ? "" : separator;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < value.length; i++) {
+            if (i > 0) {
+                sb.append(sep);
+            }
+            if (value[i] != null) {
+                sb.append(value[i]);
+            }
+        }
+        return sb.toString();
     }
 
     public static String filterLetterOrDigit(String ori) {

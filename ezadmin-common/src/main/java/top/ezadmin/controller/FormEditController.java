@@ -1,7 +1,6 @@
 package top.ezadmin.controller;
 
-import com.ql.util.express.exception.QLCompileException;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import com.alibaba.qlexpress4.exception.QLSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
@@ -47,7 +46,7 @@ public class FormEditController extends BaseController {
         // System.out.println(requestContext.getParameter("data"));
         Map<String, Object> form = JSONUtils.parseObjectMap((String) requestContext.getParameter("data"));
         String html = FormDao.getInstance().transEntityToHtmlConfig(form);
-        if (org.apache.commons.lang.StringUtils.isNotBlank(html)) {
+        if (StringUtils.isNotBlank(html)) {
             Map<String, Object> coreMap = (Map<String, Object>) form.get("core");
             String formCode = Utils.trimNull(coreMap.get("formcode"));
             String formName = Utils.trimNull(coreMap.get(JsoupUtil.FORM_NAME.toLowerCase()));
@@ -365,7 +364,7 @@ public class FormEditController extends BaseController {
                 defaultTo = MapParser.parseDefaultEmpty(successurl, paras).getResult();
             }
             return EzResult.instance().data(defaultTo);
-        } catch (QLCompileException ex) {
+        } catch (QLSyntaxException ex) {
             logger.error("", ex);
             return EzResult.instance().setSuccess(false).code("500").setMessage("表达式配置错误");
         } catch (EzAdminRuntimeException e2) {
@@ -376,7 +375,7 @@ public class FormEditController extends BaseController {
             return EzResult.instance().setSuccess(false).code("500").setMessage("表达式配置错误");
         } catch (Exception e) {
             logger.error("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID, ID, e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(e));
+            return EzResult.instance().setSuccess(false).code("500").setMessage(Utils.getFullStackTrace(e));
         }
     }
 
@@ -440,7 +439,7 @@ public class FormEditController extends BaseController {
             return EzResult.instance().data(toFormId(rowId, requestContext));
         } catch (Exception e) {
             logger.info("保存表单失败{}", ENCRYPT_FORM_ID, e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常" + ExceptionUtils.getFullStackTrace(e));
+            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常" + Utils.getFullStackTrace(e));
         }
     }
 

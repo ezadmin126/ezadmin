@@ -2,9 +2,9 @@ package top.ezadmin.web.safe;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.common.utils.StringUtils;
 
 import java.net.URLDecoder;
 import java.util.concurrent.TimeUnit;

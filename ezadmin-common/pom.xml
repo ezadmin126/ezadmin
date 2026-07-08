@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-common</artifactId>
-    <version>3.1.2</version>
+    <version>4.0.0</version>
     <packaging>jar</packaging>
     <name>ezadmin-common</name>
     <url>https://github.com/ezadmin126/ezadmin</url>
@@ -122,8 +122,8 @@
         <!--模版语言-->
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>qlexpress</artifactId>
-            <version>3.3.4</version>
+            <artifactId>qlexpress4</artifactId>
+            <version>4.1.2</version>
         </dependency>
         <!-- JSON Patch RFC6902 -->
         <dependency>

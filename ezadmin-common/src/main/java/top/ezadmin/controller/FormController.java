@@ -1,9 +1,8 @@
 package top.ezadmin.controller;
 
 
-import com.ql.util.express.exception.QLBizException;
-import com.ql.util.express.exception.QLCompileException;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import com.alibaba.qlexpress4.exception.QLException;
+import com.alibaba.qlexpress4.exception.QLSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
@@ -161,7 +160,7 @@ public class FormController extends BaseController {
                 defaultTo = MapParser.parseDefaultEmpty(successurl, paras).getResult();
             }
             return EzResult.instance().data(defaultTo);
-        } catch (QLCompileException ex) {
+        } catch (QLSyntaxException ex) {
             logger.error("", ex);
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
         } catch (EzAdminRuntimeException e2) {
@@ -170,9 +169,10 @@ public class FormController extends BaseController {
                 return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
             }
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
-        } catch (QLBizException BE) {
-            if (BE.getCause().getCause() instanceof EzAdminRuntimeException) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
+        } catch (QLException BE) {
+            EzAdminRuntimeException bizException = findEzAdminRuntimeException(BE);
+            if (bizException != null) {
+                return EzResult.instance().setSuccess(false).code("200").setMessage(bizException.getMessage());
             } else {
                 logger.warn("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID, ID, BE);
                 return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
@@ -251,12 +251,13 @@ public class FormController extends BaseController {
                 return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
             }
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
-        } catch (QLBizException BE) {
+        } catch (QLException BE) {
             logger.error("保存表单失败{}", ENCRYPT_FORM_ID, BE);
-            if (BE.getCause().getCause() instanceof EzAdminRuntimeException) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
+            EzAdminRuntimeException bizException = findEzAdminRuntimeException(BE);
+            if (bizException != null) {
+                return EzResult.instance().setSuccess(false).code("200").setMessage(bizException.getMessage());
             } else {
-                return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(BE));
+                return EzResult.instance().setSuccess(false).code("500").setMessage(Utils.getFullStackTrace(BE));
             }
         } catch (Exception e) {
             logger.error("保存表单失败{}", ENCRYPT_FORM_ID, e);
@@ -808,7 +809,7 @@ public class FormController extends BaseController {
                 defaultTo = Utils.fixedUrl(MapParser.parseDefaultEmpty(successurl, paras).getResult());
             }
             return EzResult.instance().data(defaultTo);
-        } catch (QLCompileException ex) {
+        } catch (QLSyntaxException ex) {
             logger.error("", ex);
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
         } catch (EzAdminRuntimeException e2) {
@@ -817,9 +818,10 @@ public class FormController extends BaseController {
                 return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
             }
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
-        } catch (QLBizException BE) {
-            if (BE.getCause().getCause() instanceof EzAdminRuntimeException) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
+        } catch (QLException BE) {
+            EzAdminRuntimeException bizException = findEzAdminRuntimeException(BE);
+            if (bizException != null) {
+                return EzResult.instance().setSuccess(false).code("200").setMessage(bizException.getMessage());
             } else {
                 logger.warn("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID, ID, BE);
                 return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
@@ -906,7 +908,7 @@ public class FormController extends BaseController {
                     .addSessionParam(sessionParamMap)
                     .execute();
             return EzResult.instance().data("ID", result.toString());
-        } catch (QLCompileException ex) {
+        } catch (QLSyntaxException ex) {
             logger.error("", ex);
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
         } catch (EzAdminRuntimeException e2) {
@@ -915,9 +917,10 @@ public class FormController extends BaseController {
                 return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
             }
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
-        } catch (QLBizException BE) {
-            if (BE.getCause().getCause() instanceof EzAdminRuntimeException) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
+        } catch (QLException BE) {
+            EzAdminRuntimeException bizException = findEzAdminRuntimeException(BE);
+            if (bizException != null) {
+                return EzResult.instance().setSuccess(false).code("200").setMessage(bizException.getMessage());
             } else {
                 logger.warn("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID, ID, BE);
                 return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
@@ -1003,12 +1006,13 @@ public class FormController extends BaseController {
                 return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
             }
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
-        } catch (QLBizException BE) {
+        } catch (QLException BE) {
             logger.error("保存表单失败{}", ENCRYPT_FORM_ID, BE);
-            if (BE.getCause().getCause() instanceof EzAdminRuntimeException) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage(BE.getCause().getCause().getMessage());
+            EzAdminRuntimeException bizException = findEzAdminRuntimeException(BE);
+            if (bizException != null) {
+                return EzResult.instance().setSuccess(false).code("200").setMessage(bizException.getMessage());
             } else {
-                return EzResult.instance().setSuccess(false).code("500").setMessage(ExceptionUtils.getFullStackTrace(BE));
+                return EzResult.instance().setSuccess(false).code("500").setMessage(Utils.getFullStackTrace(BE));
             }
         } catch (Exception e) {
             logger.error("保存表单失败{}", ENCRYPT_FORM_ID, e);
@@ -1088,5 +1092,15 @@ public class FormController extends BaseController {
         }
     }
 
+    private EzAdminRuntimeException findEzAdminRuntimeException(Throwable throwable) {
+        Throwable current = throwable;
+        while (current != null) {
+            if (current instanceof EzAdminRuntimeException) {
+                return (EzAdminRuntimeException) current;
+            }
+            current = current.getCause();
+        }
+        return null;
+    }
 
 }

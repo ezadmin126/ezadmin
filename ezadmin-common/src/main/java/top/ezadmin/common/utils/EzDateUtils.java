@@ -1,7 +1,5 @@
 package top.ezadmin.common.utils;
 
-import org.apache.commons.lang.time.DateUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -99,7 +97,10 @@ public class EzDateUtils {
         SimpleDateFormat simple = new SimpleDateFormat(DATE);
         try {
             Date d = simple.parse(date.replace("T", " "));
-            Date d3 = DateUtils.addSeconds(d, 86400 - 1);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(d);
+            calendar.add(Calendar.SECOND, 86400 - 1);
+            Date d3 = calendar.getTime();
             return simple2.format(d3);
         } catch (ParseException e) {
         }

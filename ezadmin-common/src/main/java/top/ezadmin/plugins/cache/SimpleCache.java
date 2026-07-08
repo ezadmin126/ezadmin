@@ -1,9 +1,8 @@
 package top.ezadmin.plugins.cache;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
 
 import java.util.Map;
@@ -52,7 +51,7 @@ public class SimpleCache implements EzCache {
                     }
                 } catch (Exception e) {
                     if (Utils.getLog() != null) {
-                        Utils.getLog().add(ExceptionUtils.getFullStackTrace(e));
+                        Utils.getLog().add(Utils.getFullStackTrace(e));
                     }
                 }
             }
@@ -93,7 +92,7 @@ public class SimpleCache implements EzCache {
                 } catch (Exception e) {
                     // log.error("",e);
                     if (Utils.getLog() != null) {
-                        Utils.getLog().add(ExceptionUtils.getFullStackTrace(e));
+                        Utils.getLog().add(Utils.getFullStackTrace(e));
                     }
                 }
             }
@@ -125,7 +124,7 @@ public class SimpleCache implements EzCache {
                     }
                 } catch (Exception e) {
                     if (Utils.getLog() != null) {
-                        Utils.getLog().add(ExceptionUtils.getFullStackTrace(e));
+                        Utils.getLog().add(Utils.getFullStackTrace(e));
                     }
                 }
             }

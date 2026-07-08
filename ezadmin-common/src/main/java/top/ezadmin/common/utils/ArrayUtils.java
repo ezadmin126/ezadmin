@@ -6,7 +6,7 @@ import java.util.List;
 public class ArrayUtils {
 
     public static boolean isEmpty(Object[] cookies) {
-        return org.apache.commons.lang.ArrayUtils.isEmpty(cookies);
+        return cookies == null || cookies.length == 0;
     }
 
     public static Object[] toArray(List<Object> paramsStatic) {
@@ -17,6 +17,14 @@ public class ArrayUtils {
     }
 
     public static boolean contains(String[] vs, Object k) {
-        return org.apache.commons.lang.ArrayUtils.contains(vs, k);
+        if (vs == null) {
+            return false;
+        }
+        for (String v : vs) {
+            if (v == null ? k == null : v.equals(k)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -103,7 +103,7 @@ public class EzClientServletFilter implements Filter {
         }
 
 
-        String beanNames[] = org.apache.commons.lang.StringUtils.split(ezClientProperties.getDatasourceBeanNames(), ",");
+        String beanNames[] =  StringUtils.split(ezClientProperties.getDatasourceBeanNames(), ",");
         //注入数据源
         for (int i = 0; i < beanNames.length; i++) {
             DataSource dataSource = (DataSource) SpringContextHolder.getBean(beanNames[i]);

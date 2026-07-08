@@ -1,6 +1,5 @@
 package top.ezadmin.service.impl;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
@@ -230,7 +229,7 @@ public class FormServiceImpl implements FormService {
                         if (Utils.trimNull(item.get("type")).contains("xmselect")
                         ) {
                             Map<String, String> attrMap = (Map<String, String>) item.get("attrMap");
-                            attrMap.put("value", StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + ""));
+                            attrMap.put("value",  Utils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + ""));
                             attrMap.put("name", item.get(JsoupUtil.ITEM_NAME) + "");
                             //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                             attrMap.putIfAbsent("id", "ITEM_ID_" + item.get(JsoupUtil.ITEM_NAME) + "");
@@ -268,7 +267,7 @@ public class FormServiceImpl implements FormService {
                                 Utils.trimNull(item.get("type")).equalsIgnoreCase("password")
                         ) {
                             Map<String, String> attrMap = (Map<String, String>) item.get("attrMap");
-                            attrMap.put("value", StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + ""));
+                            attrMap.put("value",  Utils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + ""));
                             attrMap.put("name", item.get(JsoupUtil.ITEM_NAME) + "");
                             //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                             attrMap.putIfAbsent("id", "ITEM_ID_" + item.get(JsoupUtil.ITEM_NAME));
@@ -311,9 +310,9 @@ public class FormServiceImpl implements FormService {
                         } else if (Utils.trimNull(item.get("type")).equals("textarea")
                                 || Utils.trimNull(item.get("type")).equals("input-textarea")
                         ) {
-                            String value = StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + "");
+                            String value =  Utils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + "");
                             Map<String, String> attrMap = (Map<String, String>) item.get("attrMap");
-                            attrMap.put("value", StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + ""));
+                            attrMap.put("value",  Utils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + ""));
                             attrMap.put("text", value);
                             attrMap.put("name", item.get(JsoupUtil.ITEM_NAME) + "");
                             //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
@@ -344,7 +343,7 @@ public class FormServiceImpl implements FormService {
                         } else if (Utils.trimNull(item.get("type")).equals("cascader")
                                 || Utils.trimNull(item.get("type")).equals("cascadersql")) {
                             Map<String, String> attrMap = (Map<String, String>) item.get("attrMap");
-                            attrMap.put("value", StringEscapeUtils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + ""));
+                            attrMap.put("value",  Utils.escapeHtml(item.get(ParamNameEnum.itemParamValue.getName()) + ""));
                             attrMap.put("name", item.get(JsoupUtil.ITEM_NAME) + "");
                             //  attrMap.put("itemsJson",Utils.trimNull(context.getVariable("itemsJson")));
                             attrMap.putIfAbsent("id", "ITEM_ID_" + item.get(JsoupUtil.ITEM_NAME));
