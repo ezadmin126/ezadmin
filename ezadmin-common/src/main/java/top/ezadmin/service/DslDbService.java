@@ -174,7 +174,7 @@ public class DslDbService {
             return true;
 
         } catch (Exception e) {
-            log.error("保存表单DSL到数据库失败: {}", formId, e);
+            log.info("保存表单DSL到数据库失败: {}", formId);
             return false;
         }
     }
@@ -236,7 +236,7 @@ public class DslDbService {
             return true;
 
         } catch (Exception e) {
-            log.error("保存列表DSL到数据库失败: {}", listId, e);
+            log.info("保存列表DSL到数据库失败: {}", listId );
             return false;
         }
     }

@@ -183,11 +183,11 @@
 <div class="layui-panel formtopfix formtopfixbuttons">
     <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer"
          item_name="submitButtonContainer">
-        <button  th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="openWindow"  type='button' style="float: left">
-            <i class="layui-icon layui-icon-fonts-code "></i> </button>
         <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="tabEdit"  type='button' style="float: left">
             <i class="layui-icon layui-icon-tabs"></i> </button>
-        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary'  id="codeEdit" type='button' style="float: left">
+        <button  th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="codeEdit"  type='button' style="float: left">
+            <i class="layui-icon layui-icon-fonts-code "></i> </button>
+        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary'  id="openWindow" type='button' style="float: left">
             <i class="layui-icon layui-icon-link"></i> </button>
 
 

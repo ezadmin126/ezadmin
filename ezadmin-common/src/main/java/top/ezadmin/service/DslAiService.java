@@ -339,9 +339,8 @@ public class DslAiService {
 
             // 2. 根据类型处理不同的布局数据
             if ("form".equals(dslType)) {
-                // 处理表单布局
-                @SuppressWarnings("unchecked")
-                List<Map<String, Object>> cardsLayout = (List<Map<String, Object>>) layoutData.get("cardList");
+                // 处理表单布局，兼容 application/json 被上游转成字符串的情况
+                List<Map<String, Object>> cardsLayout = normalizeLayoutItems(layoutData.get("cardList"), "cardList");
 
                 if (cardsLayout == null || cardsLayout.isEmpty()) {
                     return EzResult.instance().fail("表单布局数据为空");
@@ -357,8 +356,7 @@ public class DslAiService {
 
             } else if ("list".equals(dslType)) {
                 // 处理列表布局
-                @SuppressWarnings("unchecked")
-                List<Map<String, Object>> searchLayout = (List<Map<String, Object>>) layoutData.get("search");
+                List<Map<String, Object>> searchLayout = normalizeLayoutItems(layoutData.get("search"), "search");
 
                 if (searchLayout == null || searchLayout.isEmpty()) {
                     return EzResult.instance().fail("列表搜索布局数据为空");
@@ -393,6 +391,29 @@ public class DslAiService {
             log.error("保存布局失败: dslId=" + dslId + ", type=" + dslType, e);
             return EzResult.instance().fail("保存失败: " + e.getMessage());
         }
+    }
+
+    static List<Map<String, Object>> normalizeLayoutItems(Object rawValue, String fieldName) {
+        if (rawValue == null) {
+            return null;
+        }
+        if (rawValue instanceof List) {
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> layoutItems = (List<Map<String, Object>>) rawValue;
+            return layoutItems;
+        }
+        if (rawValue instanceof String) {
+            String json = ((String) rawValue).trim();
+            if (json.isEmpty()) {
+                return null;
+            }
+            try {
+                return JSONUtils.parseListMapString(json);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("布局字段 " + fieldName + " 不是合法的 JSON 数组", e);
+            }
+        }
+        throw new IllegalArgumentException("布局字段 " + fieldName + " 类型错误: " + rawValue.getClass().getName());
     }
 
     /**
