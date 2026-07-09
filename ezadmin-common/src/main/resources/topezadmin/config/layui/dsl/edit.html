@@ -368,7 +368,7 @@
     <!-- 左侧预览面板 -->
     <div class="preview-panel">
         <div class="preview-header">
-            <div class="preview-url" id="previewUrl" th:text="${'/topezadmin/'+method+'/page-'+id}">请输入页面地址...
+            <div class="preview-url" id="previewUrl" th:text="${prefixUrl + method + '/page-' + id}">请输入页面地址...
             </div>
             <button class="preview-reload" onclick="reloadPreview()" id="reloadBtn">刷新</button>
             <button class="preview-reload" id="toggleEditBtn" onclick="toggleEdit()"
@@ -385,7 +385,7 @@
             </button>
         </div>
         <div class="preview-content">
-            <iframe id="previewFrame" th:src="${'/topezadmin/'+method+'/page-'+id}" style="display: block;"></iframe>
+            <iframe id="previewFrame" th:src="${prefixUrl + method + '/page-' + id}" style="display: block;"></iframe>
 
             <!-- 新增模式的提示界面 -->
             <div id="newModePanel"
@@ -457,6 +457,7 @@
 <input type="hidden" id="id" th:value="${id}">
 
 <script th:inline="javascript">
+    const prefixUrl = [[${prefixUrl}]];
     // 获取URL参数
 
     const dslType = document.getElementById("method").value; // form 或 list
@@ -505,12 +506,12 @@
 
     // 切换到新建列表
     function switchToNewList() {
-        window.location.href = '/topezadmin/inspector/list-new';
+        window.location.href = prefixUrl + 'inspector/list-new';
     }
 
     // 切换到新建表单
     function switchToNewForm() {
-        window.location.href = '/topezadmin/inspector/form-new';
+        window.location.href = prefixUrl + 'inspector/form-new';
     }
 
     // 初始化iframe
@@ -968,7 +969,7 @@
         console.log('发送新增DSL请求:', requestData);
 
         // 发送到后端
-        fetch('/topezadmin/edit/submit-', {
+        fetch(prefixUrl + 'edit/submit-', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -989,7 +990,7 @@
                     // 询问是否跳转
                     setTimeout(() => {
                         if (confirm('DSL已创建成功，是否立即打开编辑页面？')) {
-                            window.location.href = '/topezadmin/inspector/' + dslType + '-' + newDslId;
+                            window.location.href = prefixUrl + 'inspector/' + dslType + '-' + newDslId;
                         }
                     }, 1000);
                 } else {
@@ -1025,7 +1026,7 @@
         console.log('发送修改请求数据:', requestData);
 
         // 发送到后端
-        fetch('/topezadmin/edit/submit-' + dslId, {
+        fetch(prefixUrl + 'edit/submit-' + dslId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

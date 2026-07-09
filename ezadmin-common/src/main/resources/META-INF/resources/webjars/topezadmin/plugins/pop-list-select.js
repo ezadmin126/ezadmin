@@ -1,11 +1,11 @@
 (function (window, document, $) {
     'use strict';
 
-    if (window.EZ_INPUT_POP_SELECT && window.EZ_INPUT_POP_SELECT.__loaded) {
+    if (window.EZ_POP_LIST_SELECT && window.EZ_POP_LIST_SELECT.__loaded) {
         return;
     }
 
-    var api = window.EZ_INPUT_POP_SELECT || {};
+    var api = window.EZ_POP_LIST_SELECT || {};
     api.instances = api.instances || {};
     api.__loaded = true;
 
@@ -87,17 +87,17 @@
     }
 
     function createInstance(itemName) {
-        var formItem = $('.layui-form-item[component="input-pop-select"][item_name="' + itemName + '"]');
+        var formItem = $('.layui-form-item[component="pop-list-select"][item_name="' + itemName + '"]');
         if (formItem.length === 0) {
             return null;
         }
-        var valueInput = document.getElementById('input-pop-select-value-' + itemName);
+        var valueInput = document.getElementById('pop-list-select-value-' + itemName);
         if (!valueInput) {
             return null;
         }
 
         var props = parseJson($(valueInput).attr('data-propsJson'));
-        var label = $('.ez-input-pop-select-btn[data-target="' + itemName + '"]').attr('data-label') || '';
+        var label = $('.ez-pop-list-select-btn[data-target="' + itemName + '"]').attr('data-label') || '';
         var idField = props.idField || 'ID';
         var multiple = props.multiple !== false && props.multiple !== 'false';
         var title = props.title || ('请选择' + (label || ''));
@@ -105,9 +105,10 @@
         var pageUrl = props.url || props.pageUrl || '';
         var selectedRows = {};
         var lastValue = null;
+        var cachedHead = Array.isArray(props.head) ? props.head : [];
 
         function getValueInput() {
-            return document.getElementById('input-pop-select-value-' + itemName);
+            return document.getElementById('pop-list-select-value-' + itemName);
         }
 
         function getSelectedIds() {
@@ -194,9 +195,9 @@
         }
 
         function renderSelectedTable(head, body) {
-            var wrap = document.getElementById('input-pop-select-wrap-' + itemName);
-            var table = document.getElementById('input-pop-select-table-' + itemName);
-            var clearButton = $('.ez-input-pop-select-clear[data-target="' + itemName + '"]');
+            var wrap = document.getElementById('pop-list-select-wrap-' + itemName);
+            var table = document.getElementById('pop-list-select-table-' + itemName);
+            var clearButton = $('.ez-pop-list-select-clear[data-target="' + itemName + '"]');
             if (!wrap || !table) {
                 return;
             }
@@ -207,7 +208,7 @@
                 clearButton.hide();
                 if (window.layui && layui.table && layui.table.reload) {
                     try {
-                        layui.table.reload('input-pop-select-table-' + itemName, {data: []});
+                        layui.table.reload('pop-list-select-table-' + itemName, {data: []});
                     } catch (e) {
                         table.innerHTML = '';
                     }
@@ -231,12 +232,12 @@
                 fixed: 'right',
                 templet: function (row) {
                     var rowId = row[idField];
-                    return '<i class="layui-icon layui-icon-delete ez-input-pop-select-delete" data-id="' + escapeHtml(rowId) + '" style="cursor: pointer; color: #ff5722;" title="删除"></i>';
+                    return '<i class="layui-icon layui-icon-delete ez-pop-list-select-delete" data-id="' + escapeHtml(rowId) + '" style="cursor: pointer; color: #ff5722;" title="删除"></i>';
                 }
             });
             layui.table.render({
-                elem: '#input-pop-select-table-' + itemName,
-                id: 'input-pop-select-table-' + itemName,
+                elem: '#pop-list-select-table-' + itemName,
+                id: 'pop-list-select-table-' + itemName,
                 data: rows,
                 cols: [tableCols],
                 page: false,
@@ -255,7 +256,10 @@
                     rows.push(selectedRows[id]);
                 }
             }
-            renderSelectedTable(head || props.head || [], rows);
+            if (head && head.length > 0) {
+                cachedHead = head;
+            }
+            renderSelectedTable(head || cachedHead, rows);
         }
 
         function buildInitDataUrl() {
@@ -295,6 +299,7 @@
                         selectedRows[String(rowId)] = row;
                     }
                 });
+                cachedHead = normalized.head || cachedHead;
                 refreshSelectedTable(normalized.head);
                 if (typeof callback === 'function') {
                     callback();
@@ -333,7 +338,7 @@
         }
 
         function createCacheKey() {
-            return 'input_pop_select:' + window.location.pathname + ':' + itemName + ':' + new Date().getTime();
+            return 'pop_list_select:' + window.location.pathname + ':' + itemName + ':' + new Date().getTime();
         }
 
         function saveStorage(cacheKey, rows) {
@@ -395,7 +400,7 @@
         }
 
         function bindEvents() {
-            var buttonSelector = '.ez-input-pop-select-btn[data-target="' + itemName + '"]';
+            var buttonSelector = '.ez-pop-list-select-btn[data-target="' + itemName + '"]';
             $(document).off('click.inputPopSelect.' + itemName, buttonSelector)
                 .on('click.inputPopSelect.' + itemName, buttonSelector, function (e) {
                     e.preventDefault();
@@ -404,7 +409,7 @@
                     ensureSelectedRowsLoaded(openSelectLayer);
                 });
 
-            var clearSelector = '.ez-input-pop-select-clear[data-target="' + itemName + '"]';
+            var clearSelector = '.ez-pop-list-select-clear[data-target="' + itemName + '"]';
             $(document).off('click.inputPopSelectClear.' + itemName, clearSelector)
                 .on('click.inputPopSelectClear.' + itemName, clearSelector, function (e) {
                     e.preventDefault();
@@ -412,15 +417,15 @@
                     clearSelection();
                 });
 
-            $('#input-pop-select-wrap-' + itemName).off('click.inputPopSelectDelete')
-                .on('click.inputPopSelectDelete', '.ez-input-pop-select-delete', function () {
+            $('#pop-list-select-wrap-' + itemName).off('click.inputPopSelectDelete')
+                .on('click.inputPopSelectDelete', '.ez-pop-list-select-delete', function () {
                     var id = String($(this).attr('data-id'));
                     delete selectedRows[id];
                     syncInputValue();
                     refreshSelectedTable();
                 });
 
-            $('#input-pop-select-value-' + itemName)
+            $('#pop-list-select-value-' + itemName)
                 .off('change.inputPopSelectValue.' + itemName)
                 .on('change.inputPopSelectValue.' + itemName, function () {
                     initFromInputValue();
@@ -457,7 +462,7 @@
         if (name) {
             names.push(name);
         } else {
-            $('.layui-form-item[component="input-pop-select"]').each(function () {
+            $('.layui-form-item[component="pop-list-select"]').each(function () {
                 var itemName = $(this).attr('item_name');
                 if (itemName) {
                     names.push(itemName);
@@ -511,5 +516,5 @@
         }
     };
 
-    window.EZ_INPUT_POP_SELECT = api;
+    window.EZ_POP_LIST_SELECT = api;
 })(window, document, window.jQuery);

@@ -224,6 +224,7 @@
         <input type="hidden" id="dslContent" th:value="${dslContent}">
         <input type="hidden" id="dslId" th:value="${dslId}">
         <input type="hidden" id="dslType" th:value="${dslType}">
+        <input type="hidden" id="prefixUrl" th:value="${prefixUrl}">
         <!-- ACE编辑器 -->
         <div id="editor"></div>
     </div>
@@ -259,10 +260,11 @@
             content: '',
             modified: false
         };
+        const prefixUrl = document.getElementById('prefixUrl').value;
 
         // // 加载文件内容
         // function loadFile(dslId, dslType) {
-        //     const url = '/topezadmin/dsl/' + dslType + '/get-' + dslId;
+        //     const url = prefixUrl + 'dsl/' + dslType + '/get-' + dslId;
         //
         //     $.ajax({
         //         url: url,
@@ -297,7 +299,7 @@
                 return;
             }
 
-            const url = '/topezadmin/dsl/' + currentFile.type + 'save-' + currentFile.id;
+            const url = prefixUrl + 'dsl/' + currentFile.type + 'save-' + currentFile.id;
 
             $.ajax({
                 url: url,
@@ -322,7 +324,7 @@
         }
 
         function aiSave() {
-            const url = '/topezadmin/edit/' + currentFile.type + '-' + currentFile.id;
+            const url = prefixUrl + 'edit/' + currentFile.type + '-' + currentFile.id;
             window.open(url, '_blank');
         }
 

@@ -9,7 +9,7 @@ import java.util.Map;
 public class BaseController {
 
     public EzResult render(String path, Map<String, Object> templateParam) throws Exception {
-        templateParam.put("vi", "VL2.13.8");
+        templateParam.put("vi", "VL4.0.0");
         templateParam.putIfAbsent("downloadUrl", EzBootstrap.config().getDownloadUrl());
         templateParam.putIfAbsent("uploadUrl", EzBootstrap.config().getUploadUrl());
         templateParam.putAll(EzBootstrap.config().getConfig());

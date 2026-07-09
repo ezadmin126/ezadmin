@@ -826,6 +826,7 @@
 
 <script th:src="${'/webjars/jquery/1.12.4/jquery.min.js'}" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:inline="javascript">
+    const prefixUrl = [[${prefixUrl}]];
     // ==================== 全局变量 ====================
     let selectedDslType = 'list'; // 默认选择列表
     let chatHistory = [];
@@ -899,7 +900,7 @@
     // ==================== 加载真实数据库表 ====================
     function loadRealTables() {
         // 从服务端获取数据库表列表
-        fetch('/topezadmin/edit/getTables-datasource', {
+        fetch(prefixUrl + 'edit/getTables-datasource', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -1141,7 +1142,7 @@
             dataSource: 'datasource'
         };
 
-        fetch('/topezadmin/edit/submit-', {
+        fetch(prefixUrl + 'edit/submit-', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1165,8 +1166,8 @@
                         } else {
                             const dslId = data.dslId || data.data?.dslId;
                             const url = selectedDslType === 'form'
-                                ? `/topezadmin/edit/form-${dslId}`
-                                : `/topezadmin/edit/list-${dslId}`;
+                                ? `${prefixUrl}edit/form-${dslId}`
+                                : `${prefixUrl}edit/list-${dslId}`;
                             window.location.href = url;
                         }
                     }, 3000);

@@ -1,35 +1,35 @@
 <div th:class="'component-col col-'+${item_name}"
      th:classappend="${classAppend}" th:data-config-json="${componentJson}"
 >
-    <div class="layui-form-item" th:item_name="${item_name}" component="input-pop-select">
+    <div class="layui-form-item" th:item_name="${item_name}" component="pop-list-select">
         <label class="layui-form-label" th:title="${label}" th:if="${not #strings.isEmpty(label)}">
             <span th:if="${props != null and props.required}" style="color: red;">*</span>
             <span th:utext="${label}+'：'">字段名</span>
         </label>
         <div class="layui-input-block">
             <input type="hidden"
-                   th:id="${'input-pop-select-value-' + item_name}"
+                   th:id="${'pop-list-select-value-' + item_name}"
                    th:name="${item_name}"
-                   class="ez-input-pop-select-value"
+                   class="ez-pop-list-select-value"
                    th:attrs="${props}"
                    th:data-propsJson="${propsJson}"
                    th:lay-filter="${'lay-filter-'+item_name}">
             <button type="button"
-                    class="layui-btn layui-btn-primary ez-input-pop-select-btn"
+                    class="layui-btn layui-btn-primary ez-pop-list-select-btn"
                     th:data-target="${item_name}"
                     th:data-label="${label}">
                 选择
             </button>
             <button type="button"
-                    class="layui-btn layui-btn-primary ez-input-pop-select-clear"
+                    class="layui-btn layui-btn-primary ez-pop-list-select-clear"
                     th:data-target="${item_name}"
                     style="display: none;">
                 清空已选
             </button>
-            <div class="ez-input-pop-select-table-wrap" th:id="${'input-pop-select-wrap-' + item_name}"
+            <div class="ez-pop-list-select-table-wrap" th:id="${'pop-list-select-wrap-' + item_name}"
                  style="margin-top: 8px; display: none; max-width: 100%; overflow: hidden;">
-                <table th:id="${'input-pop-select-table-' + item_name}"
-                       th:lay-filter="${'input-pop-select-table-' + item_name}"></table>
+                <table th:id="${'pop-list-select-table-' + item_name}"
+                       th:lay-filter="${'pop-list-select-table-' + item_name}"></table>
             </div>
             <div th:if="${props != null and not #strings.isEmpty(props.description)}"
                  class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
@@ -37,8 +37,8 @@
         <script th:inline="javascript">
             (function () {
                 var itemName = /*[[${item_name}]]*/ '';
-                if (window.EZ_INPUT_POP_SELECT && typeof window.EZ_INPUT_POP_SELECT.init === 'function') {
-                    window.EZ_INPUT_POP_SELECT.init(itemName);
+                if (window.EZ_POP_LIST_SELECT && typeof window.EZ_POP_LIST_SELECT.init === 'function') {
+                    window.EZ_POP_LIST_SELECT.init(itemName);
                 }
             })();
         </script>

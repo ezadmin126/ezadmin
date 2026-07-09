@@ -894,6 +894,7 @@
     </style>
 </head>
 <body>
+<input type="hidden" id="prefixUrl" th:value="${prefixUrl}">
 <div class="form-edit-container">
     <!-- 左侧组件面板 -->
     <div class="components-panel">
@@ -2108,7 +2109,7 @@
             layoutData.dslType = 'form',
                 // TODO: 发送到服务端保存
                 // 这里可以添加实际的保存逻辑
-                fetch('/topezadmin/edit/saveLayout-' + $("#ENCRYPT_FORM_ID").val(), {
+                fetch($("#prefixUrl").val() + 'edit/saveLayout-' + $("#ENCRYPT_FORM_ID").val(), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -3534,7 +3535,7 @@
         // 获取当前表单布局
         requestData.formLayout = collectLayoutData();
         // 发送到服务端
-        fetch('/topezadmin/edit/submit-', {
+        fetch($("#prefixUrl").val() + 'edit/submit-', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -589,29 +589,6 @@ function ezopen(openType, title, appendUrl, area) {
             }
             openBlank(appendUrl);
             break;
-        // case '_BLANK_PARAM_COLUMN':
-        //     if (appendUrl.indexOf('?') <= 0) {
-        //         appendUrl += '?' + searchParams ;
-        //     } else {
-        //         appendUrl += '&' + searchParams ;
-        //     }
-        //     var encryptListIdElement = document.getElementById('ENCRYPT_LIST_ID');
-        //     var key = 'EZ_CONFIG_' + (encryptListIdElement ? encryptListIdElement.value : '');
-        //     var jsonconfig = localStorage.getItem(key);
-        //     if (jsonconfig != undefined) {
-        //         var json = JSON.parse(jsonconfig);
-        //         var search = json.search;
-        //         var column = json.column;
-        //         if (jsonconfig != column && column.length > 0) {
-        //             var columnurl = "";
-        //             for (let index = 0; index < column.length; index++) {
-        //                 columnurl += column[index] + ","
-        //             }
-        //             appendUrl += "_BLANK_PARAM_COLUMN=" + columnurl;
-        //         }
-        //     }
-        //     openBlank(appendUrl);
-        //     break;
         case 'LOCATION':
             location.href = appendUrl;
             break;
@@ -729,16 +706,20 @@ function openModel(url, name, area) {
         moveOut: true,
         success: function (layero, indexyyy, that) {
 
-            var body = layer.getChildFrame('body', indexyyy);
-            if ($(body).find('#submitButtonContainer').length > 0) {
-                $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
-                $(body).on("click", "#closeParent", function (e) {
-                    layui.layer.close(indexyyy);
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                })
-            }
+            // var body = layer.getChildFrame('body', indexyyy);
+            // if ($(body).find('#submitButtonContainer').length > 0) {
+            //     $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='refreshForm' type='button'>刷新</button><button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+            //     $(body).on("click", "#closeParent", function (e) {
+            //         layui.layer.close(indexyyy);
+            //         e.preventDefault();
+            //         e.stopPropagation();
+            //         return false;
+            //     })
+            //     $(body).on("click", "#refreshForm", function (e) {
+            //         layer.iframeSrc(index, url)
+            //         return false;
+            //     })
+            // }
         }
     });
     return index;
@@ -770,16 +751,20 @@ function openForm(url, name, area) {
         moveOut: true,
         success: function (layero, indexyyy, that) {
             var body = layer.getChildFrame('body', indexyyy);
-            try {
-                $(body).find('#submitbtnProxy').after("<button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
-                $(body).on("click", "#closeParent", function (e) {
-                    layui.layer.close(indexyyy);
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                })
-            } catch (e) {
-            }
+            // try {
+            //     $(body).find('#submitbtnProxy').after("<button class='layui-btn  layui-btn-primary' id='refreshForm' type='button'>刷新</button><button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+            //     $(body).on("click", "#closeParent", function (e) {
+            //         layui.layer.close(indexyyy);
+            //         e.preventDefault();
+            //         e.stopPropagation();
+            //         return false;
+            //     })
+            //     $(body).on("click", "#refreshForm", function (e) {
+            //         layer.iframeSrc(index, url)
+            //         return false;
+            //     })
+            // } catch (e) {
+            // }
         }
     });
     return index;
@@ -1014,5 +999,4 @@ function formatFileSize(bytes, decimals = 2) {
 
     return `${finalValue} ${sizes[index]}`;
 }
-
 

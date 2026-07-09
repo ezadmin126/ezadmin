@@ -189,12 +189,9 @@ layui.use(function () {
                                             location.href = data.data.href;
                                         }else
                                         if(data.data.ID){
-                                            //如果当前url 没有参数，则拼接这个id
-                                            if(window.location.href.indexOf('?') == -1){
-                                                location.href = window.location.href+'?ID='+data.data.ID;
-                                            }else{
-                                                location.href = window.location.href+'&ID='+data.data.ID;
-                                            }
+                                            var nextUrl = new URL(window.location.href);
+                                            nextUrl.searchParams.set('ID', data.data.ID);
+                                            location.href = nextUrl.toString();
                                         }else
                                         window.location.reload();
                                     }else{
@@ -430,8 +427,8 @@ function initLaycascader() {
 
 }
 function initPopSelect() {
-    if (window.EZ_INPUT_POP_SELECT && typeof window.EZ_INPUT_POP_SELECT.init === 'function') {
-        window.EZ_INPUT_POP_SELECT.init();
+    if (window.EZ_POP_LIST_SELECT && typeof window.EZ_POP_LIST_SELECT.init === 'function') {
+        window.EZ_POP_LIST_SELECT.init();
     }
 }
 
@@ -791,10 +788,10 @@ function initFormValue(data) {
             if (countElement) {
                 countElement.textContent = length;
             }
-        }else if(input.classList.contains("ez-input-pop-select-value")){
+        }else if(input.classList.contains("ez-pop-list-select-value")){
             input.value = val;
-            if (window.EZ_INPUT_POP_SELECT && typeof window.EZ_INPUT_POP_SELECT.initFromInputValue === 'function') {
-                window.EZ_INPUT_POP_SELECT.initFromInputValue(key);
+            if (window.EZ_POP_LIST_SELECT && typeof window.EZ_POP_LIST_SELECT.initFromInputValue === 'function') {
+                window.EZ_POP_LIST_SELECT.initFromInputValue(key);
             }
         }
         else if (input.classList.contains("ez-upload-input")) {

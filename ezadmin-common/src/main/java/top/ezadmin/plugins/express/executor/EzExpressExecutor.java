@@ -132,6 +132,7 @@ public class EzExpressExecutor {
         runner.addFunction("updateSimple", new UpdateSimpleOperator());
         runner.addFunction("prepareUpdate", new PrepareUpdateOperator());
         runner.addFunction("split", new SplitOperator());
+        runner.addFunction("mergeRel", new MergeRelOperator());
         // runner.addFunction("env", new EnvOperator());
     }
 
