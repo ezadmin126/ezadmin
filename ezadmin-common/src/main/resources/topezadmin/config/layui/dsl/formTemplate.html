@@ -183,6 +183,14 @@
 <div class="layui-panel formtopfix formtopfixbuttons">
     <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer"
          item_name="submitButtonContainer">
+        <button  th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="openWindow"  type='button' style="float: left">
+            <i class="layui-icon layui-icon-fonts-code "></i> </button>
+        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="tabEdit"  type='button' style="float: left">
+            <i class="layui-icon layui-icon-tabs"></i> </button>
+        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary'  id="codeEdit" type='button' style="float: left">
+            <i class="layui-icon layui-icon-link"></i> </button>
+
+
         <button id="submitbtnProxy" class=" submitbtnProxy layui-btn layui-bg-blue "
                 th:style="${ not #lists.isEmpty(form.buttonList)?'display:none;':''}">
             <i class="layui-icon layui-icon-ok"></i>提交
@@ -202,7 +210,7 @@
     </div>
 </div>
 
-
+<input type="hidden" id="cacheFlag" th:value="${cacheFlag}">
 <input type="hidden" id='uploadUrl' th:value="${uploadUrl}">
 <input type="hidden" id='downloadUrl' th:value="${downloadUrl}">
 <input type="hidden" id='formSubmitUrl' th:value="${formSubmitUrl}">
@@ -276,6 +284,32 @@
             location.reload();
             return false;
         })
+
+    // /*[# th:if="${not cacheFlag}"]*/
+    $(document).on("click", "#openWindow", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open(location.href);
+        return false;
+    })
+    $(document).on("click", "#tabEdit", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let prefix=$("#prefixUrl").val();
+        let code=$("#ENCRYPT_FORM_ID").val();
+        window.open(prefix+"edit/form-"+code);
+
+        return false;
+    })
+    $(document).on("click", "#codeEdit", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let prefix=$("#prefixUrl").val();
+        let code=$("#ENCRYPT_FORM_ID").val();
+        window.open(prefix+"dsl/form-"+code);
+        return false;
+    })
+    // /*[/]*/
 
 
 </script>
