@@ -274,6 +274,14 @@
             return path + query;
         }
 
+        function getInitLimit(ids) {
+            var configuredLimit = parseInt(props.initLimit || props.echoLimit || props.limit || 100, 10);
+            if (!configuredLimit || configuredLimit < 1) {
+                configuredLimit = 100;
+            }
+            return Math.min(Math.max(ids.length, configuredLimit), 1000);
+        }
+
         function loadRowsByIds(ids, callback) {
             var initUrl = buildInitDataUrl();
             if (!initUrl || !ids || ids.length === 0) {
@@ -286,6 +294,8 @@
             }
             var params = {};
             params[idField] = ids.join(',');
+            params.currentPage = 1;
+            params.perPageInt = getInitLimit(ids);
             $.get(getContextUrl(joinUrl(initUrl, params)), function (res) {
                 var normalized = normalizeResponse(res);
                 if (!normalized.success) {
