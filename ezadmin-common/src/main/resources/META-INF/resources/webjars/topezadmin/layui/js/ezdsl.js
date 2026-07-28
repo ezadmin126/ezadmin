@@ -149,7 +149,6 @@ layui.use(function () {
                     url: $("#formSubmitUrl").val(),
                     dataType: 'json',
                     success: function (data) {
-
                         layer.close(loadIndex)
                         if (data.code == 0 || data.success) {
                             console.log("data::" + data.data);
@@ -163,43 +162,38 @@ layui.use(function () {
                                 layer.close(loadIndex)
                                 return;
                             }
-
+                            if(!data.data || data.data == null){
+                                layer.msg('操作成功');
+                                return;
+                            }
+                            let successUrl=data.data.successUrl||'';
+                            let id=data.data.id
                             layer.msg('操作成功', {
-                                icon: 1,
-                                time: 500
-                            }, function () {
-                                if ('reload' == data.data || data.data == null) {
-                                    canEzFormSubmit = true;
-                                    window.parent.location.reload();
-                                } else if ('reloadTableData' == data.data) {
-                                    canEzFormSubmit = true;
-                                    parent.Global.get("table").reloadData();
-                                    parent.layer.closeAll();
-                                } else if ('reloadlocal' == data.data) {
-                                    canEzFormSubmit = true;
-                                    window.location.reload();
-                                } else if (String(data.data).toLowerCase().indexOf('refreshcard') >= 0) {
-                                    canEzFormSubmit = true;
-                                    refreshCard(data.data);
-                                    return;
-                                } else {
-                                    canEzFormSubmit = true;
-                                    if(Object.prototype.toString.call(data.data) === '[object Object]'){
-                                        if(data.data.href){
-                                            location.href = data.data.href;
-                                        }else
-                                        if(data.data.ID){
-                                            var nextUrl = new URL(window.location.href);
-                                            nextUrl.searchParams.set('ID', data.data.ID);
-                                            location.href = nextUrl.toString();
-                                        }else
-                                        window.location.reload();
-                                    }else{
-                                        location.href = data.data;
-                                    }
-                                }
+                                icon: 1
                             });
-
+                            canEzFormSubmit = true;
+                            if (successUrl == 'reload') {
+                                window.parent.location.reload();
+                                return;
+                            } else if (successUrl == 'reloadTableData') {
+                                parent.Global.get("table").reloadData();
+                                parent.layer.closeAll();
+                                return;
+                            } else if (String(successUrl).toLowerCase().indexOf('refreshcard') >= 0) {
+                                refreshCard(successUrl);
+                                return;
+                            }else if(successUrl==''||successUrl=='reloadlocal'){
+                                if(id){
+                                    var nextUrl = new URL(window.location.href);
+                                    nextUrl.searchParams.set('ID', id);
+                                    location.href = nextUrl.toString();
+                                }else{
+                                    window.location.reload();
+                                }
+                                return;
+                            }else{
+                                location.href =successUrl;
+                            }
                             return false;
                         } else if (data.code == '200') {
                             layer.alert(data.message);
@@ -675,8 +669,18 @@ function getUrlParams() {
     return params;
 }
 
+function waitForNextRenderFrame() {
+    return new Promise(function (resolve) {
+        if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+            window.requestAnimationFrame(resolve);
+        } else {
+            setTimeout(resolve, 0);
+        }
+    });
+}
+
 //初始化表单值
-function initFormValue(data) {
+async function initFormValue(data) {
     console.log("initFormValue~~~", data);
     if (!data || Object.keys(data).length == 0) {
         data={};
@@ -688,6 +692,8 @@ function initFormValue(data) {
         }
     })
     var needFormRender = false;
+    var xmselectInitTasks = [];
+    var hasXmselect = false;
     // 遍历 URL 参数，设置到表单
     for (var key in data) {
         var input = document.querySelector(':is(input, textarea, select)[name="' + key + '"]');
@@ -745,27 +751,50 @@ function initFormValue(data) {
         } else if (input.classList.contains("xm-select-default")) {
 
             var xmSelectIns = xmSelect.get("#ez-xmselect" + key, true);
+            if (!xmSelectIns) {
+                console.warn("xmselect instance not found: " + key);
+                continue;
+            }
+            hasXmselect = true;
+            var jdbctype = input.getAttribute("jdbctype")||"VARCHAR";
             //转为数组
             //如果 开启了远程搜素
             const  currentValue=val;
             if (Global.logicTrue(xmSelectIns.options.remoteSearch)) {
                 let param = {id: val, pageIndex: 1};
 
-                $.post(xmSelectIns.options.dataUrl, param, function (response) {
-                    if (response.success && response.data && response.data != '') {
-                        xmSelectIns.update({
-                            data: response.data,
-                            autoRow: true,
-                        })
-                        xmSelectIns.setValue(Global.toNumberArray(currentValue));
-                    } else {
-                        console.log(response.message);
-                    }
-                }, 'json').fail(function () {
-                    console.log("error");
-                });
+                xmselectInitTasks.push(new Promise(function (resolve) {
+                    $.post(xmSelectIns.options.dataUrl, param, function (response) {
+                        try {
+                            if (response.success && response.data && response.data != '') {
+                                xmSelectIns.update({
+                                    data: response.data,
+                                    autoRow: true,
+                                })
+                                if (jdbctype == "NUMBER") {
+                                    xmSelectIns.setValue(Global.toNumberArray(currentValue));
+                                }else{
+                                    xmSelectIns.setValue(Global.toArray(currentValue));
+                                }
+                            } else {
+                                console.log(response.message);
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        } finally {
+                            resolve();
+                        }
+                    }, 'json').fail(function () {
+                        console.log("error");
+                        resolve();
+                    });
+                }));
             } else {
-                xmSelectIns.setValue(Global.toNumberArray(currentValue));
+                if (jdbctype == "NUMBER") {
+                    xmSelectIns.setValue(Global.toNumberArray(currentValue));
+                }else{
+                    xmSelectIns.setValue(Global.toArray(currentValue));
+                }
             }
         } else if (input.classList.contains("tinymcetextarea")) {
             if (window.EzTinyMce && typeof window.EzTinyMce.setValue === 'function') {
@@ -890,11 +919,16 @@ function initFormValue(data) {
         }
 
     }
+    if (xmselectInitTasks.length > 0) {
+        await Promise.all(xmselectInitTasks);
+    }
+
     // 如果设置了 radio 或 checkbox，需要重新渲染表单
-
-
     if (needFormRender && layui && layui.form) {
         Global.formRender();
+    }
+    if (hasXmselect) {
+        await waitForNextRenderFrame();
     }
 }
 
@@ -1069,9 +1103,6 @@ function renderXmselect(xm) {
                 for (var i = 0; i < elPopperElements.length; i++) {
                     elPopperElements[i].style.display = 'none';
                 }
-                // document.querySelectorAll('.layui-cascader-panel').forEach(panel => {
-                //     panel.style.display = 'none';
-                // });
             }
         };
         if (currentDom.getAttribute('data-dataJson') != null) {

@@ -126,6 +126,13 @@ Global.toNumberArray = function (val) {
         .map(v => Number(v.trim()))
         .filter(Number.isFinite);
 };
+Global.toArray = function (val) {
+    if (Array.isArray(val)) return val.map(Number);
+    if (typeof val !== 'string') return [];
+    return val
+        .split(',')
+        ;
+};
 
 /**
  * 合并两个json 以第一个为准
@@ -907,6 +914,10 @@ function refreshCard(card_item_name) {
         const parts = card_item_name.split('.');
         if (parts.length === 2 && parts[0] === "refreshcard") {
             const cardItemName = parts[1]; // 获取第二个值，如 "prod"
+            if( $("[card_item_name=" + cardItemName + "]").length == 0 ) {
+                console.log("未找到对应的 card_item_name=" + cardItemName);
+                return false;
+            }
             // 找到对应的 iframe 并刷新
             $("[card_item_name=" + cardItemName + "]").find("iframe").attr("src", function () {
                 const currentSrc = $(this).attr("src");
@@ -914,7 +925,7 @@ function refreshCard(card_item_name) {
             });
             console.log("已刷新 card_item_name=" + cardItemName + " 的 iframe");
         } else {
-            layer.message("参数配置错误，应为 reloadcard.xxx");
+            console.log("参数配置错误，应为 reloadcard.xxx");
         }
     }
 }
@@ -998,5 +1009,99 @@ function formatFileSize(bytes, decimals = 2) {
     const finalValue = parseFloat(formatted).toString();
 
     return `${finalValue} ${sizes[index]}`;
+}
+
+
+/**
+ * AJAX 下载文件 (使用 Fetch API)
+ * @param {string} url 下载地址
+ * @param {string} method 请求方法 (GET/POST)
+ * @param {object} params 请求参数 (GET请求拼接在url上, POST请求作为body)
+ * @param {object} headers 自定义请求头 (如 Authorization)
+ * @param {string} fileName 可选，指定下载后的文件名，若不传则从响应头中获取
+ */
+async function ajaxDownloadFile({
+                                    url,
+                                    method = 'GET',
+                                    params = null,
+                                    headers = {},
+                                    fileName = ''
+                                }) {
+    try {
+        // 1. 构造请求选项<span  class="layui-icon-refresh layui-icon modal-title"></span>
+        const options = { method, headers };
+
+        // 处理 GET 请求的 Query String
+        if (method.toUpperCase() === 'GET' && params) {
+            const query = new URLSearchParams(params).toString();
+            url += (url.includes('?') ? '&' : '?') + query;
+        }
+
+        // 处理 POST 请求的 Body (假定为 JSON 格式，可修改)
+        if (method.toUpperCase() === 'POST' && params) {
+            options.body = JSON.stringify(params);
+            if (!headers['Content-Type']) {
+                headers['Content-Type'] = 'application/json';
+            }
+        }
+
+        // 2. 发起请求
+        const response = await fetch(url, options);
+
+        // 检查 HTTP 状态
+        if (!response.ok) {
+            throw new Error(`下载失败: ${response.status} ${response.statusText}`);
+        }
+
+        // 3. 提取二进制数据 (Blob)
+        const blob = await response.blob();
+
+        // 4. 提取文件名 (优先级: 传入 > 响应头 > 默认)
+        if (!fileName) {
+            const disposition = response.headers.get('content-disposition');
+            if (disposition) {
+                // 匹配 filename*=UTF-8''xxxx 或 filename="xxxx"
+                const match = disposition.match(/filename\*?=(?:UTF-8''|")?([^";]+)/);
+                if (match) {
+                    // 对 URL 编码格式解码
+                    fileName = decodeURIComponent(match[1]);
+                }
+            }
+        }
+        if (!fileName) {
+            // 从 URL 提取后缀名，或使用默认名
+            const urlPath = new URL(url, window.location.origin).pathname;
+            const baseName = urlPath.substring(urlPath.lastIndexOf('/') + 1) || 'download';
+            fileName = baseName || 'file_download';
+        }
+
+        // 5. 触发浏览器下载
+        triggerDownload(blob, fileName);
+
+    } catch (error) {
+        console.error('AJAX 下载异常:', error);
+        // 可在此处调用 UI 提示错误
+        // alert('文件下载失败，请稍后重试');
+        throw error;
+    }
+}
+
+/**
+ * 辅助方法：通过创建隐藏的 <a> 标签触发下载
+ */
+function triggerDownload(blob, fileName) {
+    // 创建 Blob URL
+    const linkUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = linkUrl;
+    link.download = fileName;
+    document.body.appendChild(link); // 必须加入 DOM 才生效
+    link.click();
+
+    // 清理工作：移除元素并释放内存
+    setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(linkUrl);
+    }, 100);
 }
 

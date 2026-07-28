@@ -9,7 +9,6 @@ import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.dao.dto.DslModificationRequest;
-import top.ezadmin.dao.dto.FormDsl;
 import top.ezadmin.dao.dto.ListDsl;
 import top.ezadmin.web.EzResult;
 
@@ -340,7 +339,8 @@ public class DslAiService {
             // 2. 根据类型处理不同的布局数据
             if ("form".equals(dslType)) {
                 // 处理表单布局，兼容 application/json 被上游转成字符串的情况
-                List<Map<String, Object>> cardsLayout = normalizeLayoutItems(layoutData.get("cardList"), "cardList");
+                List<Map<String, Object>> cardsLayout = sanitizeFormCardListForSave(
+                        normalizeLayoutItems(layoutData.get("cardList"), "cardList"));
 
                 if (cardsLayout == null || cardsLayout.isEmpty()) {
                     return EzResult.instance().fail("表单布局数据为空");
@@ -348,12 +348,6 @@ public class DslAiService {
 
                 // 更新 DSL 中的 cardList
                 dslContent.put("cardList", cardsLayout);
-                //使用FormDsl格式化，防止冗余节点
-                FormDsl DSL = JSONUtils.parseObject(JSONUtils.toJSONString(dslContent), FormDsl.class);
-
-                dslContent = JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(DSL));
-
-
             } else if ("list".equals(dslType)) {
                 // 处理列表布局
                 List<Map<String, Object>> searchLayout = normalizeLayoutItems(layoutData.get("search"), "search");
@@ -414,6 +408,55 @@ public class DslAiService {
             }
         }
         throw new IllegalArgumentException("布局字段 " + fieldName + " 类型错误: " + rawValue.getClass().getName());
+    }
+
+    static List<Map<String, Object>> sanitizeFormCardListForSave(List<Map<String, Object>> cardsLayout) {
+        if (cardsLayout == null) {
+            return null;
+        }
+        List<Map<String, Object>> sanitizedCards = JSONUtils.parseListMapString(JSONUtils.toJSONString(cardsLayout));
+        for (Map<String, Object> card : sanitizedCards) {
+            card.remove("componentJson");
+            sanitizeIframeConfig(card);
+            sanitizeFieldList(card.get("fieldList"));
+        }
+        return sanitizedCards;
+    }
+
+    private static void sanitizeIframeConfig(Map<String, Object> card) {
+        Object iframeObj = card.get("iframe");
+        if (!(iframeObj instanceof Map)) {
+            return;
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> iframe = (Map<String, Object>) iframeObj;
+        iframe.remove("loadable");
+    }
+
+    private static void sanitizeFieldList(Object fieldListObj) {
+        if (!(fieldListObj instanceof List)) {
+            return;
+        }
+        for (Object rowObj : (List<?>) fieldListObj) {
+            if (!(rowObj instanceof Map)) {
+                continue;
+            }
+            Object rowItems = ((Map<?, ?>) rowObj).get("row");
+            if (!(rowItems instanceof List)) {
+                continue;
+            }
+            for (Object fieldObj : (List<?>) rowItems) {
+                if (!(fieldObj instanceof Map)) {
+                    continue;
+                }
+                @SuppressWarnings("unchecked")
+                Map<String, Object> field = (Map<String, Object>) fieldObj;
+                field.remove("data");
+                field.remove("dataJson");
+                field.remove("propsJson");
+                field.remove("componentJson");
+            }
+        }
     }
 
     /**

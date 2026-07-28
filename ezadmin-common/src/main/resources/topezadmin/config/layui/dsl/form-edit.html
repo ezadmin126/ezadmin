@@ -1015,7 +1015,7 @@
                                                 <!-- 普通表单卡片 -->
                                                 <div th:if="${cardItem.type == 'card'}" class="layui-card"
                                                      th:id="${cardItem.label}"
-                                                     th:item_name="${'card-'+cardItem.label}"
+                                                     th:item_name="${cardItem.item_name != null ? cardItem.item_name : 'card-'+cardItem.label}"
 
                                                      th:data-card-config="${cardItem.componentJson}"
 
@@ -1054,7 +1054,8 @@
                                                     </div>
                                                 </div>
                                                 <!-- iframe卡片 -->
-                                                <div th:item_name="${'card-'+cardItem.label}"
+                                                <div th:item_name="${cardItem.item_name != null ? cardItem.item_name : 'card-'+cardItem.label}"
+                                                     th:data-card-config="${cardItem.componentJson}"
                                                      th:if="${cardItem.type == 'iframe'}" class="layui-card">
                                                     <div class="layui-card-header ez-form-panel">
                                                         [(${cardItem.label})] [(${cardItem.get('description') != null ?
@@ -2945,22 +2946,32 @@
             return;
         }
 
-        // 读取表单中的 card 配置
-        const cardConfig = {
+        const existingConfigJson = selectedElement.getAttribute('data-card-config');
+        let cardConfig = {};
+        if (existingConfigJson) {
+            try {
+                cardConfig = JSON.parse(existingConfigJson);
+            } catch (e) {
+                console.error('解析已有 card 配置失败:', e);
+            }
+        }
+        cardConfig = Object.assign({}, cardConfig, {
             type: getVal('prop-card-type') || 'card',
             label: getVal('prop-card-label'),
             description: getVal('prop-card-description'),
             item_name: getVal('prop-card-item-name'),
             classAppend: getVal('prop-card-classAppend')
-        };
+        });
 
         // 如果是 iframe 类型，读取 iframe 配置
         if (cardConfig.type === 'iframe') {
-            cardConfig.iframe = {
+            cardConfig.iframe = Object.assign({}, cardConfig.iframe || {}, {
                 url: getVal('prop-iframe-url'),
                 width: getVal('prop-iframe-width') || '100%',
                 height: getVal('prop-iframe-height') || '400px'
-            };
+            });
+        } else {
+            delete cardConfig.iframe;
         }
 
         // 更新 card 的 DOM

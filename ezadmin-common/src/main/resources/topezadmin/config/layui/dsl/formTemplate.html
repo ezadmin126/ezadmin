@@ -71,7 +71,7 @@
                         <th:block th:each="cardItem,cardStat : ${form.cardList}">
                             <!-- 普通表单卡片 -->
                             <div th:if="${cardItem.type == 'card'}" class="layui-card" th:id="${cardItem.label}"
-                                 th:item_name="${'card-'+cardItem.label}"
+                                 th:item_name="${cardItem.item_name != null ? cardItem.item_name : 'card-'+cardItem.label}"
                                  th:classappend="${ (cardItem.get('classAppend') != null ? cardItem.get('classAppend') : '')}"
                                  th:data-card-config="${cardItem.componentJson}"
                             >
@@ -109,11 +109,12 @@
                             </div>
                             <!-- iframe卡片 -->
                             <div th:id="${cardItem.label}"
-                                 th:item_name="${'card-'+cardItem.label}"
+                                 th:item_name="${cardItem.item_name != null ? cardItem.item_name : 'card-'+cardItem.label}"
                                  th:card_item_name="${cardItem.item_name}"
                                  th:if="${cardItem.type == 'iframe'}"
                                  class="layui-card"
                                  th:classappend="${cardItem.get('classAppend') != null ? cardItem.get('classAppend') : ''}"
+                                 th:data-card-config="${cardItem.componentJson}"
 
                             >
                                 <div class="layui-card-header ez-form-panel"
@@ -195,9 +196,9 @@
                 th:style="${ not #lists.isEmpty(form.buttonList)?'display:none;':''}">
             <i class="layui-icon layui-icon-ok"></i>提交
         </button>
-        <button class='layui-btn  layui-btn-primary' id='closeParent' type='button' style="float: right">
-            <i class="layui-icon layui-icon-return"></i>关闭</button>
-        <button class='layui-btn  layui-btn-primary' id='refreshForm' type='button' style="float: right">
+        <button class='layui-btn  layui-btn-primary layui-border-red' id='closeParent' type='button' style="float: right">
+            <i class="layui-icon layui-icon-return "></i>返回</button>
+        <button class='layui-btn  layui-btn-primary layui-border-orange' id='refreshForm' type='button' style="float: right">
             <i class="layui-icon layui-icon-refresh-1"></i>刷新</button>
         <th:block th:each="button : ${form.buttonList}" th:if="${not #lists.isEmpty(form.buttonList)}">
             <div th:utext="${cr.render(button)}" th:remove="tag"></div>

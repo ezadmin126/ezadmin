@@ -389,19 +389,13 @@ public class FormController extends BaseController {
             return;
         }
         cardList.forEach(card -> {
-            Map<String, Object> componentJson = new HashMap<>();
-
-            componentJson.put("type", card.get("type"));
-            componentJson.put("label", card.get("label"));
+            Map<String, Object> componentJson = buildCardEditorConfig(card);
 
             //处理iframe的url
             if (card.get("iframe") != null) {
                 Map<String, Object> iframe = (Map<String, Object>) card.get("iframe");
                 prepareIframe(requestContext, iframe);
             }
-            componentJson.put("iframe", card.get("iframe"));
-            componentJson.put("description", card.get("description"));
-            componentJson.put("buttonList", card.get("buttonList"));
             if (!EzBootstrap.config().isSqlCache()) {
                 card.put("componentJson", JSONUtils.toJSONString(componentJson));
             }
@@ -604,7 +598,9 @@ public class FormController extends BaseController {
         Map<String, Object> initItemMap = new HashMap<>();
         Map<String, Object> resultMapFinal = new HashMap<>();
         initItemMap.putAll(requestContext.getRequestParams());
-        if (StringUtils.isNotBlank(ID)) {
+
+        resultMapFinal.putAll(initItemMap);
+       // if (StringUtils.isNotBlank(ID)) {
             try {
                 DefaultExpressExecutor expressExecutor = DefaultExpressExecutor.createInstance();
                 expressExecutor.datasource(EzBootstrap.getInstance().getDataSourceByKey(form.get("dataSource")));
@@ -624,9 +620,9 @@ public class FormController extends BaseController {
             } catch (Exception e) {
                 Utils.addLog(JSONUtils.toJSONString(form.get("core")), e);
             }
-        } else {
-            resultMapFinal.putAll(initItemMap);
-        }
+//        } else {
+//            resultMapFinal.putAll(initItemMap);
+//        }
         if (initItemMap.containsKey(ID) && StringUtils.isBlank(Utils.trimNull(initItemMap.get(ID)))) {
             initItemMap.put("ID", initItemMap.get("ID"));
             resultMapFinal.put("ID", initItemMap.get("ID"));
@@ -647,19 +643,13 @@ public class FormController extends BaseController {
             return result;
         }
         cardList.forEach(card -> {
-            Map<String, Object> componentJson = new HashMap<>();
-
-            componentJson.put("type", card.get("type"));
-            componentJson.put("label", card.get("label"));
+            Map<String, Object> componentJson = buildCardEditorConfig(card);
 
             //处理iframe的url
             if (card.get("iframe") != null) {
                 Map<String, Object> iframe = (Map<String, Object>) card.get("iframe");
                 prepareIframe(requestContext, iframe);
             }
-            componentJson.put("iframe", card.get("iframe"));
-            componentJson.put("description", card.get("description"));
-            componentJson.put("buttonList", card.get("buttonList"));
             if (!EzBootstrap.config().isSqlCache()) {
                 card.put("componentJson", JSONUtils.toJSONString(componentJson));
             }
@@ -682,6 +672,20 @@ public class FormController extends BaseController {
             }
         });
         return result;
+    }
+
+    private Map<String, Object> buildCardEditorConfig(Map<String, Object> card) {
+        Map<String, Object> componentJson = new HashMap<>();
+        componentJson.put("type", card.get("type"));
+        componentJson.put("label", card.get("label"));
+        componentJson.put("item_name", card.get("item_name"));
+        componentJson.put("classAppend", card.get("classAppend"));
+        componentJson.put("description", card.get("description"));
+        componentJson.put("buttonList", card.get("buttonList"));
+        if (card.get("iframe") != null) {
+            componentJson.put("iframe", JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(card.get("iframe"))));
+        }
+        return componentJson;
     }
 
 
@@ -798,17 +802,15 @@ public class FormController extends BaseController {
                 }
                 return r;
             }
-
-            //data.data
-            String defaultTo = requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"form/page-" + ENCRYPT_FORM_ID + "?ID=" + Utils.trimNullDefault(rowId, ID);
+            Map<String,String> resultData = new HashMap<>();
+            resultData.put("id", Utils.trimNullDefault(rowId, ID));
+            resultData.put("ID", Utils.trimNullDefault(rowId, ID));
             if (StringUtils.isNotBlank(successurl)) {
-                if (StringUtils.contains(successurl, "/")) {
-                    successurl = requestContext.getContextPath() + successurl;
-                }
                 paras.put("ID", Utils.trimNullDefault(rowId, ID));
-                defaultTo = Utils.fixedUrl(MapParser.parseDefaultEmpty(successurl, paras).getResult());
+               String defaultTo = Utils.fixedUrl(MapParser.parseDefaultEmpty(successurl, paras).getResult());
+                resultData.put("successUrl", defaultTo);
             }
-            return EzResult.instance().data(defaultTo);
+            return EzResult.instance().data( resultData);
         } catch (QLSyntaxException ex) {
             logger.error("", ex);
             return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
@@ -831,7 +833,6 @@ public class FormController extends BaseController {
             return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
         }
     }
-
     public EzResult add(RequestContext requestContext, String method, String formUrlCode) throws Exception {
 
         String ENCRYPT_FORM_ID = formUrlCode;

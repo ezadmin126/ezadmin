@@ -836,6 +836,7 @@ public class ListController extends BaseController {
             head0.add("序号");
             head0.add("");
             head0.add("");
+            head0.add("");
             head.add(head0);
             for (int i = 0; i < colList.size(); i++) {
                 Map<String, Object> col = (Map<String, Object>) colList.get(i);
@@ -850,6 +851,8 @@ public class ListController extends BaseController {
                 head1.add(Utils.getStringByObject(col, JsoupUtil.WIDTH));
                 //字段类型
                 head1.add(Utils.getStringByObject(col, JsoupUtil.JDBCTYPE));
+                //component
+                head1.add(Utils.getStringByObject(col,"component"));
                 head.add(head1);
             }
             //  log.info("ezadmin start export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
@@ -891,7 +894,7 @@ public class ListController extends BaseController {
 
                 List<Map<String, Object>> configData = (List<Map<String, Object>>) col.get("data");//value,label 格式
 
-                if (StringUtils.equalsIgnoreCase(component, "tdSelect")
+                if (configData!=null&&StringUtils.equalsIgnoreCase(component, "tdSelect")
                         || StringUtils.equalsIgnoreCase(component, "tdSelectMultiple")
                 ) {
                     List<String> values = Arrays.asList(rowValue.split(","));

@@ -297,14 +297,15 @@ public class FormControllerTest {
         assertNotNull("Result should not be null", result);
         assertTrue("Submit should be successful", result.isSuccess());
 
-        Object newId = result.getData();
+        Map<String, Object> submitData = (Map<String, Object>) result.getData();
+        Object newId = submitData.get("ID");
         assertNotNull("New ID should not be null", newId);
 
         System.out.println("New student created with ID: " + newId);
 
         // 验证数据是否插入成功
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("ID", String.valueOf(newId).split("=")[1]);
+        queryParams.put("ID", newId);
         RequestContext queryContext = createRequestContext(queryParams);
 
         EzResult dataResult = formController.data(queryContext, "data", "test");

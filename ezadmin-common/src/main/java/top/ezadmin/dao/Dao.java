@@ -195,12 +195,13 @@ public class Dao {
                 for (int i = 0; i < bindArgs.length; i++) {
                     if (bindArgs[i] instanceof Date) {
                         preparedStatement.setTimestamp(i + 1, new Timestamp(((Date) bindArgs[i]).getTime()));
-                    }
-                    if (bindArgs[i] instanceof ClobParam) {
+                    } else if (bindArgs[i] instanceof ClobParam) {
                         String text = ((ClobParam) bindArgs[i]).getClob();
                         Clob clob = connection.createClob();
                         clob.setString(1, text);
                         preparedStatement.setClob(i + 1, clob);
+                    } else if (bindArgs[i] instanceof InputStream) {
+                        preparedStatement.setBinaryStream(i + 1, (InputStream) bindArgs[i]);
                     } else {
                         preparedStatement.setObject(i + 1, bindArgs[i]);
                     }

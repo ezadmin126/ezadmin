@@ -149,6 +149,17 @@ public class EzExpressExecutor {
                 context.put(e.getKey(), e.getValue());
             }
         }
+        if (operatorParam.getRequestParams() != null) {
+            for (Map.Entry<String, Object> e : operatorParam.getRequestParams().entrySet()) {
+                context.put(e.getKey(), e.getValue());
+            }
+        }
+        if (operatorParam.getSessionParams() != null) {
+            for (Map.Entry<String, Object> e : operatorParam.getSessionParams().entrySet()) {
+                context.put(e.getKey(), e.getValue());
+            }
+        }
+        context.putAll(envParams);
 
         QLOptions options = QLOptions.builder()
                 .cache(EzBootstrap.config().isSqlCache())

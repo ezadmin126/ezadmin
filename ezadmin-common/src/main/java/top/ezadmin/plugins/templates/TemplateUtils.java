@@ -20,12 +20,21 @@ public class TemplateUtils {
 
         param.put("propsJson", JSONUtils.toJSONString(param.get("props")));
         if (!EzBootstrap.config().isSqlCache()) {
-            param.put("componentJson", JSONUtils.toJSONString(param));
+            param.put("componentJson", JSONUtils.toJSONString(buildEditorComponentConfig(param)));
         }
         String result = EzBootstrap.config().getEzTemplate().renderFile("layui/dsl/component/" + type, param);
         if (logger.isDebugEnabled()) {
             logger.debug("渲染结果{}", result);
         }
         return result;
+    }
+
+    static Map<String, Object> buildEditorComponentConfig(Map<String, Object> param) {
+        Map<String, Object> editorConfig = JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(param));
+        editorConfig.remove("data");
+        editorConfig.remove("dataJson");
+        editorConfig.remove("propsJson");
+        editorConfig.remove("componentJson");
+        return editorConfig;
     }
 }

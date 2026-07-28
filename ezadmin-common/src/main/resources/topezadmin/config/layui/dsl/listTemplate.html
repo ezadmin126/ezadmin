@@ -247,6 +247,36 @@
 </script>
 <script th:inline="javascript">
     /*<![CDATA[*/
+    var searchFormSubmitUrl = null;
+
+    function setSearchFormSubmitUrl(url) {
+        if (typeof url !== 'string' || $.trim(url) === '') {
+            return false;
+        }
+        searchFormSubmitUrl = url;
+        var searchForm = document.getElementById('searchForm');
+        if (searchForm) {
+            searchForm.setAttribute('action', url);
+        }
+        var table = typeof Global !== 'undefined' ? Global.get('table') : null;
+        if (table && table.config) {
+            table.config.url = url;
+        }
+        return true;
+    }
+
+    function submitSearchForm(url) {
+        if (url !== undefined && !setSearchFormSubmitUrl(url)) {
+            return false;
+        }
+        var searchButton = document.getElementById('searchBtnProxy') || document.getElementById('searchBtn');
+        if (!searchButton) {
+            return false;
+        }
+        searchButton.click();
+        return true;
+    }
+
     $("#customBtn").click(function (e) {
         e.preventDefault();
         openModel($("#prefixUrl").val() + "/list/pageCustomSearch-" + $("#ENCRYPT_LIST_ID").val(), "高级查询")
@@ -265,7 +295,7 @@
         });
     })
 
-    layui.use(function () {
+    layui.use(async function () {
         var table = layui.table;
         var treeTable = layui.treeTable;
         var form = layui.form;
@@ -358,7 +388,7 @@
             //  var urlParams = getUrlParams();
 
             // 设置表单默认值（从 URL 参数）
-            initFormValue(getUrlParams());
+            await initFormValue(getUrlParams());
 
             calculateSearchItemDisplay();
 
@@ -610,6 +640,10 @@
             //     tableConfig.complete = Global.get( "table.complete");
             // }
 
+            if (searchFormSubmitUrl) {
+                tableConfig.url = searchFormSubmitUrl;
+            }
+            setSearchFormSubmitUrl(tableConfig.url);
 
             /*[# th:if="${not #maps.isEmpty(list.tree)}"]*/
 
@@ -688,7 +722,18 @@
                     document.getElementById('orderByName').value = '';
                     document.getElementById('orderByType').value = '';
                     var currentWhereParam = mergeWhereParams();
-                    tableIns.reload({height: 'full-' + tableHeight(), where: currentWhereParam});
+                    var reloadOptions = {
+                        height: 'full-' + tableHeight(),
+                        where: currentWhereParam
+                    };
+                    var formAction = $("#searchForm").attr("action");
+                    if (formAction) {
+                        reloadOptions.url = formAction;
+                        if (tableIns.config) {
+                            tableIns.config.url = formAction;
+                        }
+                    }
+                    tableIns.reload(reloadOptions);
                 }
             });
             // 展开按钮：显示所有搜索条件
@@ -819,7 +864,7 @@
                     , curr: document.getElementById('currentPage').value
                     , limit: document.getElementById('perPageInt').value
                     , limits: [10, 20, 30, 40, 50, 100,500,1000]
-                    , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                    , layout: ['count', 'prev', 'page', 'next', 'limit','refresh', 'skip']
                     , jump: function (obj, first) {
                         document.getElementById('perPageInt').value = obj.limit;
                         document.getElementById('currentPage').value = obj.curr;

@@ -254,7 +254,7 @@ public class ExpressFileLoader {
             if (!EzBootstrap.config().isSqlCache()) {
                 String content = loadFromProjectPath(expressFilePath);
                 if (content != null) {
-                    logger.debug("Loaded express file from project path (hot reload): {}", expressFilePath);
+                    logger.info("Loaded express file from project path (hot reload): {}", expressFilePath);
                     return content;
                 }
             }
@@ -262,7 +262,7 @@ public class ExpressFileLoader {
             // 从 classpath 加载
             try {
                 String content = Resources.getResourceAsString(expressFilePath);
-                logger.debug("Loaded express file from classpath: {}", expressFilePath);
+                logger.info("Loaded express file from classpath: {}", expressFilePath);
                 return content;
             } catch (Exception e) {
                 logger.warn("Failed to load express file from classpath: {}", expressFilePath);

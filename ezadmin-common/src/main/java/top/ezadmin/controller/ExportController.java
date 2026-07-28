@@ -94,6 +94,7 @@ public class ExportController extends BaseController {
                 head1.add(Utils.getStringByObject(col, JsoupUtil.WIDTH));
                 //字段类型
                 head1.add(Utils.getStringByObject(col, JsoupUtil.JDBCTYPE));
+                head1.add(Utils.getStringByObject(col, "component"));
                 head.add(head1);
             }
             //  log.info("ezadmin start export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));

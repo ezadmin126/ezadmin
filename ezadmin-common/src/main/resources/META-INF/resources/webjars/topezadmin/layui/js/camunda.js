@@ -8,12 +8,12 @@ function appendCheckButton(dekey, checkStatus, callback) {
 
             if (response.success) {
                 //存在这个审核流
-                if (checkStatus == 1) {
+                //if (checkStatus == 1) {
                     $("#submitButtonContainer").append(`<button  type="button"   class="  layui-btn approve   layui-btn-primary  layui-btn layui-border-green ">  审核通过  </button>
                          <button  type="button"   class="  layui-btn  layui-btn-primary  layui-border-red reject ">  驳回  </button>
                         `);
                     $("#submitbtnProxy").hide();
-                }
+                // }
             } else {
                 if (checkStatus == 2 || checkStatus == 5 || checkStatus == 0) {
                     $("#submitButtonContainer").append(`<button  type="button"   class="    start  layui-btn-primary  layui-btn  layui-border-blue ">
@@ -79,15 +79,17 @@ function appendCheckButton(dekey, checkStatus, callback) {
             var _thisbtn = $(this);
             $(this).addClass("layui-btn-disabled");
             $(".approve").addClass("layui-btn-disabled");
-            var loadIndex = layer.msg('加载中', {
-                icon: 16,
-                shade: 0.01,
-                time: 0 // 不自动关闭
-            });
+
             layer.prompt({title: '请输入审核意见', formType: 2}, function (value, index, elem) {
                 if (value === '') return elem.focus();
                 param.comment = layui.util.escape(value);
+                var loadIndex = layer.msg('加载中', {
+                    icon: 16,
+                    shade: 0.01,
+                    time: 0 // 不自动关闭
+                });
                 $.post("/mycamunda/check/complete/" + dekey, param, function (response) {
+                    layer.close(loadIndex);
                     if (response.success) {
                         layer.msg('操作成功', {
                             icon: 1,

@@ -10,7 +10,7 @@
             <input type="radio" th:lay-filter="${'lay-filter-'+item_name}" th:value="${option.value}"
                    th:each="option : ${data}" th:title="${option.label}"
                    th:name="${item_name}" th:attrs="${props}" th:data-propsJson="${propsJson}"/>
-            <div th:if="${props != null and not #strings.isEmpty(props.description)}"
+            <div style="float:none" th:if="${props != null and not #strings.isEmpty(props.description)}"
                  class="layui-form-mid layui-word-aux" th:utext="${props.description}"></div>
         </div>
     </div>
