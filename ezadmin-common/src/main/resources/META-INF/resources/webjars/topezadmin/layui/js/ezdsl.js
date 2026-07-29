@@ -678,8 +678,18 @@ function getUrlParams() {
     return params;
 }
 
+function waitForNextRenderFrame() {
+    return new Promise(function (resolve) {
+        if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+            window.requestAnimationFrame(resolve);
+        } else {
+            setTimeout(resolve, 0);
+        }
+    });
+}
+
 //初始化表单值
-function initFormValue(data) {
+async function initFormValue(data) {
     console.log("initFormValue~~~", data);
     if (!data || Object.keys(data).length == 0) {
         data={};
@@ -691,6 +701,8 @@ function initFormValue(data) {
         }
     })
     var needFormRender = false;
+    var xmselectInitTasks = [];
+    var hasXmselect = false;
     // 遍历 URL 参数，设置到表单
     for (var key in data) {
         var input = document.querySelector(':is(input, textarea, select)[name="' + key + '"]');
@@ -748,25 +760,39 @@ function initFormValue(data) {
         } else if (input.classList.contains("xm-select-default")) {
 
             var xmSelectIns = xmSelect.get("#ez-xmselect" + key, true);
+            if (!xmSelectIns) {
+                console.warn("xmselect instance not found: " + key);
+                continue;
+            }
+            hasXmselect = true;
             //转为数组
             //如果 开启了远程搜素
             const  currentValue=val;
             if (Global.logicTrue(xmSelectIns.options.remoteSearch)) {
                 let param = {id: val, pageIndex: 1};
 
-                $.post(xmSelectIns.options.dataUrl, param, function (response) {
-                    if (response.success && response.data && response.data != '') {
-                        xmSelectIns.update({
-                            data: response.data,
-                            autoRow: true,
-                        })
-                        xmSelectIns.setValue(Global.toNumberArray(currentValue));
-                    } else {
-                        console.log(response.message);
-                    }
-                }, 'json').fail(function () {
-                    console.log("error");
-                });
+                xmselectInitTasks.push(new Promise(function (resolve) {
+                    $.post(xmSelectIns.options.dataUrl, param, function (response) {
+                        try {
+                            if (response.success && response.data && response.data != '') {
+                                xmSelectIns.update({
+                                    data: response.data,
+                                    autoRow: true,
+                                })
+                                xmSelectIns.setValue(Global.toNumberArray(currentValue));
+                            } else {
+                                console.log(response.message);
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        } finally {
+                            resolve();
+                        }
+                    }, 'json').fail(function () {
+                        console.log("error");
+                        resolve();
+                    });
+                }));
             } else {
                 xmSelectIns.setValue(Global.toNumberArray(currentValue));
             }
@@ -893,11 +919,16 @@ function initFormValue(data) {
         }
 
     }
+    if (xmselectInitTasks.length > 0) {
+        await Promise.all(xmselectInitTasks);
+    }
+
     // 如果设置了 radio 或 checkbox，需要重新渲染表单
-
-
     if (needFormRender && layui && layui.form) {
         Global.formRender();
+    }
+    if (hasXmselect) {
+        await waitForNextRenderFrame();
     }
 }
 

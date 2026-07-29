@@ -264,7 +264,7 @@
         });
     })
 
-    layui.use(function () {
+    layui.use(async function () {
         var table = layui.table;
         var treeTable = layui.treeTable;
         var form = layui.form;
@@ -357,7 +357,7 @@
             //  var urlParams = getUrlParams();
 
             // 设置表单默认值（从 URL 参数）
-            initFormValue(getUrlParams());
+            await initFormValue(getUrlParams());
 
             calculateSearchItemDisplay();
 
