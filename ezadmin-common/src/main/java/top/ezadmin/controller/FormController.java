@@ -803,7 +803,7 @@ public class FormController extends BaseController {
                 return r;
             }
             Map<String,String> resultData = new HashMap<>();
-            resultData.put("id", Utils.trimNullDefault(rowId, ID));
+//            resultData.put("id", Utils.trimNullDefault(rowId, ID));
             resultData.put("ID", Utils.trimNullDefault(rowId, ID));
             if (StringUtils.isNotBlank(successurl)) {
                 paras.put("ID", Utils.trimNullDefault(rowId, ID));

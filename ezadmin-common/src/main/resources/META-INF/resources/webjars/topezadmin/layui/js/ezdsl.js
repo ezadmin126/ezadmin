@@ -1,28 +1,50 @@
-
-
+//说明文档
 layui.use(function () {
-
-    try {
-
         var form = layui.form;
         var laytpl = layui.laytpl;
 
         laytpl.config({
-            // open: '<%', // 自定义起始界定符
-            // close: '%>', // 自定义起始界定符
             tagStyle: 'modern' // 采用新版本的标签风格
         });
         //如果有initCallBack函数则执行
         if (typeof initGlobal === "function") {
-            initGlobal();
+            try{
+                initGlobal();
+            }catch(e){
+                console.error("initGlobal error:"+e);
+            }
         }
-        initDate();
-        initXmselect();
-        initLaycascader();
-        initUpload();
-        initInputRange();
-        initPopSelect();
-
+        try {
+            initDate();
+        } catch (e) {
+            console.error(e);
+        }
+        try {
+            initXmselect();
+        } catch (e) {
+            console.error(e);
+        }
+        try {
+            initLaycascader();
+        } catch (e) {
+            console.error(e);
+        }
+        try {
+            initUpload();
+        } catch (e) {
+            console.error(e);
+        }
+        try {
+            initInputRange();
+        } catch (e) {
+            console.error(e);
+        }
+        try {
+            initPopSelect();
+        } catch (e) {
+            console.error(e);
+        }
+    try {
         $(".ez-form-panel  .layui-layer-min").click(function () {
             $(this).closest(".layui-card").find(".layui-card-body").hide();
             $(this).siblings().removeClass("layui-hide");
@@ -163,37 +185,18 @@ layui.use(function () {
                                 return;
                             }
                             if(!data.data || data.data == null){
+                                canEzFormSubmit = true;
                                 layer.msg('操作成功');
                                 return;
                             }
-                            let successUrl=data.data.successUrl||'';
-                            let id=data.data.id
-                            layer.msg('操作成功', {
-                                icon: 1
-                            });
-                            canEzFormSubmit = true;
-                            if (successUrl == 'reload') {
-                                window.parent.location.reload();
-                                return;
-                            } else if (successUrl == 'reloadTableData') {
-                                parent.Global.get("table").reloadData();
-                                parent.layer.closeAll();
-                                return;
-                            } else if (String(successUrl).toLowerCase().indexOf('refreshcard') >= 0) {
-                                refreshCard(successUrl);
-                                return;
-                            }else if(successUrl==''||successUrl=='reloadlocal'){
-                                if(id){
-                                    var nextUrl = new URL(window.location.href);
-                                    nextUrl.searchParams.set('ID', id);
-                                    location.href = nextUrl.toString();
-                                }else{
-                                    window.location.reload();
+                            layer.msg('操作成功',{
+                                time: 500 ,
+                                icon: 1,
+                                end:function(){
+                                    defaultSubmitHandle(data);
+                                    canEzFormSubmit = true;
                                 }
-                                return;
-                            }else{
-                                location.href =successUrl;
-                            }
+                            });
                             return false;
                         } else if (data.code == '200') {
                             layer.alert(data.message);
@@ -339,6 +342,38 @@ layui.use(function () {
     });
 
 });
+
+function defaultSubmitHandle(data){
+    let successUrl=data.data.successUrl||'';
+    let id=data.data.ID||data.data.id;
+    if(id){
+        $("#ID").val(id);
+    }
+    if (successUrl == 'reload') {
+        window.parent.location.reload();
+        return;
+    } else if (successUrl == 'reloadTableData') {
+        parent.Global.get("table").reloadData();
+        parent.layer.closeAll();
+        return;
+    } else if (String(successUrl).toLowerCase().indexOf('refreshcard') >= 0) {
+        refreshCard(successUrl);
+        return;
+    }else if(successUrl=='reloadlocal'){
+        if(id){
+            var nextUrl = new URL(window.location.href);
+            nextUrl.searchParams.set('ID', id);
+            location.href = nextUrl.toString();
+        }else{
+            window.location.reload();
+        }
+        return;
+    }else if(successUrl==''){
+        //nothing
+    }else {
+        location.href =successUrl;
+    }
+}
 
 function initDate() {
     document.querySelectorAll(".ez-date").forEach(function (el) {
@@ -641,31 +676,21 @@ function initWater() {
 // 获取 URL 参数
 function getUrlParams() {
     var params = {};
-    var queryString = window.location.search.substring(1);
-    if (queryString) {
-        var pairs = queryString.split('&');
-        for (var i = 0; i < pairs.length; i++) {
-            var pair = pairs[i].split('=');
-            //pair[1]==EZ_CURRENT_MONTH_RANGE 则生成  2026-03-01 - 2026-03-31 这种格式的数据当做value
-            if (pair[1] == 'EZ_CURRENT_MONTH_RANGE') {
-                // 获取当前日期
-                const d = new Date();
-                const year = d.getFullYear();
-// 月份补零：getMonth() 返回 0-11，+1 后可能是一位数，用 padStart 补成两位
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-// 当月第一天（固定为 01）
-                const firstDay = `${year}-${month}-01`;
-
-// 当月最后一天的日期数字（如 31、30、28等）
-                const lastDayNum = new Date(year, month, 0).getDate();  // month 此时已是补零后的字符串，但在 new Date 中会自动转为数字
-// 最后一天日期也要补零
-                const lastDay = `${year}-${month}-${String(lastDayNum).padStart(2, '0')}`;
-                console.log(`${firstDay} - ${lastDay}`);
-                pair[1] = `${firstDay} - ${lastDay}`;
-            }
-            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    var searchParams = new URLSearchParams(window.location.search);
+    searchParams.forEach(function (value, key) {
+        // EZ_CURRENT_MONTH_RANGE 生成当月日期范围，供日期范围搜索使用。
+        if (value == 'EZ_CURRENT_MONTH_RANGE') {
+            var d = new Date();
+            var year = d.getFullYear();
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            var firstDay = `${year}-${month}-01`;
+            var lastDayNum = new Date(year, Number(month), 0).getDate();
+            var lastDay = `${year}-${month}-${String(lastDayNum).padStart(2, '0')}`;
+            value = `${firstDay} - ${lastDay}`;
         }
-    }
+        // 保持原有行为：同名参数以后出现的值覆盖先出现的值。
+        params[key] = value;
+    });
     return params;
 }
 
@@ -726,7 +751,9 @@ async function initFormValue(data) {
                 //如果是多选
                 if(c.getConfig().props.multiple){
                     //如果是json数组
-                    if(val.trim().startsWith("[")){
+                    if(Array.isArray(val)){
+
+                    }else if(val.trim().startsWith("[")){
                         try{
                         val=JSON.parse(val);
                         }catch (e){
@@ -963,11 +990,11 @@ function renderCascader(cas) {
             var tree = Global.listToTree(dataArray, id, parent_id, children);
             resultConfig.options = tree;
         }
-        if (currentDom.getAttribute('data-dataApi') != null) {
-            var url = currentDom.getAttribute('data-dataApi');
+        var dataApi = currentDom.getAttribute('data-dataApi');
+        if (dataApi) {
             //ajax 获取数据
             $.ajax({
-                url: url,
+                url: dataApi,
                 method: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -988,7 +1015,7 @@ function renderCascader(cas) {
                                     console.log('关闭级联窗口', value2, node);
                                     var checkedNodes = ins.getCheckedNodes();
                                     var value = [];
-                                    if (Arrays.isArray(checkedNodes)) {
+                                    if (Array.isArray(checkedNodes)) {
                                         checkedNodes.forEach(function (row) {
                                             if (Array.isArray(row)) {
                                                 row.forEach(function (node) {

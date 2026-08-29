@@ -184,11 +184,11 @@
 <div class="layui-panel formtopfix formtopfixbuttons">
     <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer"
          item_name="submitButtonContainer">
-        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="tabEdit"  type='button' style="float: left">
-            <i class="layui-icon layui-icon-tabs"></i> </button>
-        <button  th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="codeEdit"  type='button' style="float: left">
-            <i class="layui-icon layui-icon-fonts-code "></i> </button>
-        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary'  id="openWindow" type='button' style="float: left">
+<!--        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="tabEdit"  type='button'  >-->
+<!--            <i class="layui-icon layui-icon-tabs"></i> </button>-->
+<!--        <button  th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="codeEdit"  type='button' >-->
+<!--            <i class="layui-icon layui-icon-fonts-code "></i> </button>-->
+        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary'  id="openWindow" type='button'  >
             <i class="layui-icon layui-icon-link"></i> </button>
 
 
@@ -196,10 +196,10 @@
                 th:style="${ not #lists.isEmpty(form.buttonList)?'display:none;':''}">
             <i class="layui-icon layui-icon-ok"></i>提交
         </button>
-        <button class='layui-btn  layui-btn-primary layui-border-red' id='closeParent' type='button' style="float: right">
+        <button class='layui-btn  layui-btn-primary  ' id='refreshForm' type='button'  >
+            <i class="layui-icon layui-icon-refresh"></i>刷新</button>
+        <button class='layui-btn  layui-btn-primary  ' id='closeParent' type='button'  >
             <i class="layui-icon layui-icon-return "></i>返回</button>
-        <button class='layui-btn  layui-btn-primary layui-border-orange' id='refreshForm' type='button' style="float: right">
-            <i class="layui-icon layui-icon-refresh-1"></i>刷新</button>
         <th:block th:each="button : ${form.buttonList}" th:if="${not #lists.isEmpty(form.buttonList)}">
             <div th:utext="${cr.render(button)}" th:remove="tag"></div>
         </th:block>

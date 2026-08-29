@@ -26,7 +26,7 @@ public class DESUtils {
         }
     }
 
-    public static String encrypt(String plaintext) throws Exception {
+    private static String encrypt(String plaintext) throws Exception {
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -34,7 +34,7 @@ public class DESUtils {
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public static String decrypt(String ciphertext) throws Exception {
+    private static String decrypt(String ciphertext) throws Exception {
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
@@ -45,13 +45,13 @@ public class DESUtils {
     /**
      * DES加密
      */
-    public static String encryptDES(Object object) throws Exception {
-        return encryptDES(Utils.trimNull(object));
-    }
-
-    public static String encryptDES(String data) throws Exception {
-        return encrypt(data);
-    }
+//    private static String encryptDES(Object object) throws Exception {
+//        return encryptDES(Utils.trimNull(object));
+//    }
+//
+//    private static String encryptDES(String data) throws Exception {
+//        return encrypt(data);
+//    }
 
 
     /**
@@ -59,17 +59,20 @@ public class DESUtils {
      *
      * @throws Exception
      */
-    public static String decryptDES(String data) throws Exception {
-        return decrypt(data);
-    }
-
+//    public static String decryptDES(String data) throws Exception {
+//        return decrypt(data);
+//    }
     public static String encodeSafeUrl(String key) throws Exception {
         // 加密
-        String ciphertext = encrypt(key);
+        String ciphertext = encrypt(Utils.trimNull(key));
         String x = Base64.getUrlEncoder().encodeToString(ciphertext.getBytes(StandardCharsets.UTF_8));
-
         return x;
-
+    }
+    public static String encodeSafeUrl(Object key) throws Exception {
+        // 加密
+        String ciphertext = encrypt(Utils.trimNull(key));
+        String x = Base64.getUrlEncoder().encodeToString(ciphertext.getBytes(StandardCharsets.UTF_8));
+        return x;
     }
 
     public static String decodeSafeFromUrl(String key) throws Exception {

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.utils.JSONUtils;
+import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.dao.Dao;
 import top.ezadmin.plugins.express.jdbc.MergeRelParam;
@@ -25,12 +26,14 @@ public class MergeRelOperator extends AbstractOperator {
     public Object executeInner(Object[] objects) throws Exception {
         OperatorParam operatorParam = (OperatorParam) Utils.getParam();
         MergeRelParam param = (MergeRelParam) objects[0];
+        operatorParam.getParams().putIfAbsent("ID",param.getId());
         ResultModel resultModelExist = CommentsSqlParser.parse(param.getExsitSql(), operatorParam.getParams());
         List<Long> existList = Dao.getInstance().executeListOneQuery(operatorParam.getDs(), resultModelExist.getResult(), resultModelExist.getParamsStatic());
-
-        List<Long> newList = Arrays.stream(param.getNewIds().split(","))
-                .map(Long::valueOf).collect(Collectors.toList());
-
+        List<Long> newList=new ArrayList<>();
+        if(StringUtils.isNotBlank(param.getNewIds())){
+            newList = Arrays.stream(param.getNewIds().split(","))
+                    .map(Long::valueOf).collect(Collectors.toList());
+        }
         // 1. 创建副本，避免修改原始列表
         List<Long>       deleteIds = new ArrayList(existList);
         List<Long>        addIds = new ArrayList(newList);

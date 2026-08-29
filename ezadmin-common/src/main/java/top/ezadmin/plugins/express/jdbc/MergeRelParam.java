@@ -5,6 +5,7 @@ public class MergeRelParam {
     private String deleteSql;
     private String insertSql;
     private String newIds;
+    private Object id;
 
     public String getDeleteSql() {
         return deleteSql;
@@ -36,5 +37,13 @@ public class MergeRelParam {
 
     public void setExsitSql(String exsitSql) {
         this.exsitSql = exsitSql;
+    }
+
+    public Object getId() {
+        return id;
+    }
+
+    public void setId(Object id) {
+        this.id = id;
     }
 }
