@@ -1,0 +1,14 @@
+/* Shared page sizing for legacy and DSL pages inside an application layout. */
+.ez-admin-page { min-width: 0; box-sizing: border-box; }
+.ez-admin-page #table-wrap { min-width: 0; max-width: 100%; }
+.ez-admin-page .layui-table-view { max-width: 100%; }
+.ez-layout__content .ez-admin-page.layui-container,
+.ez-layout__content .ez-admin-page .layui-container { width: 100%; max-width: 100%; box-sizing: border-box; }
+.ez-layout__content .ez-admin-page > .layui-tab,
+.ez-layout__content .ez-admin-page > .layui-container > .layui-tab,
+.ez-layout__content .ez-admin-page > .layui-fluid > .layui-tab { margin-top: 0; }
+.ez-layout__content .ez-admin-page .layui-card-header { scroll-margin-top: calc(var(--ez-header-height, 0px) + 10px); }
+@media print {
+    .ez-admin-page.ez-list-layout { display: block; height: auto; overflow: visible; }
+    .ez-admin-page .ez-list-layout__main { overflow: visible; }
+}
