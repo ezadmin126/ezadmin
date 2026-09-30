@@ -365,6 +365,12 @@ public class FormController extends BaseController {
         }
 
 
+        boolean hasIframeCard = false;
+        List<Map<String, Object>> cardList = (List<Map<String, Object>>) form.get("cardList");
+        if (cardList != null) {
+            hasIframeCard = cardList.stream().anyMatch(card -> "iframe".equals(card.get("type")));
+        }
+        templateParam.put("hasIframeCard", hasIframeCard);
         templateParam.put("form", form);
         templateParam.put("requestContext", requestContext);
         templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());

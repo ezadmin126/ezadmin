@@ -24,6 +24,7 @@
           th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?123'+vi:''}">
 
     [(${data.core.append_head})]
+    <link th:href="${'/webjars/topezadmin/layui/css/ezpage.css?v='+vi}" rel="stylesheet">
 </head>
 <body th:utext="${data.core.bodyTag}" th:remove="tag"></body>
 
@@ -33,7 +34,7 @@
 <input type="hidden" ID="EZ_SESSION_USER_ID_KEY" name="EZ_SESSION_USER_ID_KEY" th:value="${EZ_SESSION_USER_ID_KEY}">
 <input type="hidden" ID="_EZ_SERVER_NAME" name="_EZ_SERVER_NAME" th:value="${_EZ_SERVER_NAME}">
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${data.core.emptyname}">
-<div th:class="${'layui-'+layout}">
+<div th:class="${'layui-'+layout}" class="ez-admin-page" th:classappend="'ez-admin-page'">
     <div class="layui-tab layui-tab-brief searchWrap">
         <ul class="layui-tab-title" id="list-tab" th:if="${not #lists.isEmpty(data.nav)}">
             <li th:item_id="${item.item_name}" th:item_name="${item.item_name}"
@@ -169,7 +170,7 @@
     </div>
 </div>
 
-</div><!--container-->
+<!--container-->
 
 
 <input type="hidden" id="fixNumber" name="fixNumber" th:v="${data.core.fixnumber}" th:value="${data.core.fixnumber}">

@@ -25,6 +25,7 @@
           th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?123'+vi:''}">
 
     [(${data.core.append_head})]
+    <link th:href="${'/webjars/topezadmin/layui/css/ezpage.css?v='+vi}" rel="stylesheet">
 </head>
 
 <body th:utext="${data.core.bodyTag}" th:remove="tag"></body>
@@ -40,7 +41,7 @@
 <input type="hidden" ID="_EZ_LIST_EMPTY_NAME" name="_EZ_LIST_EMPTY_NAME" th:value="${data.core.emptyname}">
 <input type="hidden" ID="removewatermark" name="removewatermark" value="1">
 
-<div th:class="${'layui-'+layout}" style="padding: 0px 2px;">
+<div th:class="${'layui-'+layout}" class="ez-admin-page" th:classappend="'ez-admin-page'" style="padding: 0px 2px;">
     <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap" style="display: none">
         <ul class="layui-tab-title" id="tab" th:if="${not #lists.isEmpty(data.tab)}">
             <li th:lay-id="${item.item_name}" th:item_id="${item.item_name}" th:item_name="${item.item_name}"

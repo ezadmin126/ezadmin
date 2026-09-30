@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
-    <title th:text="${list.title}">列表页面</title>
+    <title th:text="${list.name}">列表页面</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" th:href="${'/webjars/dragula/3.7.3/dist/dragula.min.css'}"/>
     <link th:href="${'/webjars/topezadmin/plugins/cascader/cascader.css?1'}" rel="stylesheet">
@@ -24,27 +24,65 @@
     <script th:src="${'/webjars/topezadmin/layui/js/ezdsl.js?v1='+vi}" type="text/javascript"></script>
     <style>
 
-        .layui-side-scroll {
+        /*
+         * 列表页可能被嵌入到其它布局中，不能使用 layui-layout-admin：
+         * 其 .layui-side 为 fixed、.layui-body 为 absolute，会脱离父容器。
+         */
+        .ez-list-layout {
+            --ez-list-sidebar-width: 200px;
+            display: grid;
+            grid-template-columns: var(--ez-list-sidebar-width) minmax(0, 1fr);
+            height: 100vh;
+            height: 100dvh;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .ez-layout__content .ez-list-layout {
+            height: calc(100vh - var(--ez-header-height) - var(--ez-list-footer-height, 0px) - 2 * var(--ez-content-padding));
+            height: calc(100dvh - var(--ez-header-height) - var(--ez-list-footer-height, 0px) - 2 * var(--ez-content-padding));
+        }
+
+        .ez-list-layout--without-menu {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .ez-list-layout__sidebar {
+            min-width: 0;
+            min-height: 0;
+            padding-top: 5px;
+            overflow: hidden;
+            padding-bottom:5px;
+            padding-right: 5px;
+        }
+
+        .ez-list-layout__sidebar-scroll {
             display: flex;
             flex-direction: column;
             height: 100%;
             width: auto;
         }
 
-        .layui-side-scroll .layui-card {
+        .ez-list-layout__sidebar-scroll .layui-card {
             flex: 1;
             display: flex;
             flex-direction: column;
             margin: 0;
         }
 
-        .layui-side-scroll .layui-card-body {
+        .ez-list-layout__sidebar-scroll .layui-card-body {
             flex: 1;
+            min-height: 0;
             overflow: auto;
         }
 
-        .layui-layout-admin:not(:has(.layui-side)) .layui-body {
-            left: 0;
+        .ez-list-layout__main {
+            min-width: 0;
+            min-height: 0;
+            overflow: auto;
+            box-sizing: border-box;
+            position: relative;
+
         }
 
         .dropdown_button_item {
@@ -52,13 +90,9 @@
         }
 
     </style>
-    <th:block th:if="${not list.hideSearch}">
-        <style>
-        .layui-table-main{min-height:390px}
-        </style>
-    </th:block>
 
 
+    <link th:href="${'/webjars/topezadmin/layui/css/ezpage.css?v='+vi}" rel="stylesheet">
 </head>
 <body>
 <div class="layuimini-loader">
@@ -81,9 +115,10 @@
 <div th:utext="${col}" th:remove="tag" th:each="col : ${tdTemplates}"></div>
 
 
-<div class=" layui-layout layui-layout-admin">
-    <div class="layui-side " style="top:10px" th:if="${list.menu!=null}">
-        <div class="layui-side-scroll">
+<div class="ez-admin-page"
+     th:classappend="${(list.menu != null or (not #lists.isEmpty(list.search) and not list.hideSearch) ? ' ez-list-layout' : '') + (list.menu == null ? ' ez-list-layout--without-menu' : '')}">
+    <aside class="ez-list-layout__sidebar" th:if="${list.menu!=null}">
+        <div class="ez-list-layout__sidebar-scroll">
             <div class="layui-card">
                 <div class="layui-card-header">[[${list.menu.label}]]
                     <div class="layui-layer-setwin  " style="top: 0px;line-height: 43px;position: absolute;">
@@ -104,9 +139,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="layui-body" style="top:0"
-         th:classappend="${ (#lists.isEmpty(list.search)||list.hideSearch?'':'layui-fluid')}">
+    </aside>
+    <main class="ez-list-layout__main" >
         <div th:utext="${list.appendHead}" item_name="appendHead" th:if="${not #strings.isEmpty(list.appendHead )}"></div>
         <div class="layui-tab layui-tab-brief searchWrap" lay-filter="searchWrap"
              th:style="${(#lists.isEmpty(list.search)||list.hideSearch?'display:none':'')}"
@@ -210,7 +244,7 @@
             </div>
 
         </div>
-    </div>
+    </main>
 </div>
 
 <script type="text/html" id="toolbarDemo">
@@ -562,7 +596,7 @@
             var tableConfig = {
                 id: 'dataTable',
                 elem: '#dataTable',
-                height: 'full-' + tableHeight()  //设置高度
+                height: tableHeight()  // 使用列表容器的实际可用高度
                 , escape: false
                 , autoSort: false,
                 cellMinWidth: 100,
@@ -688,6 +722,27 @@
             Global.set("table", tableIns);
             /*[/]*/
 
+            var tableHeightTimer;
+            function scheduleTableResize() {
+                clearTimeout(tableHeightTimer);
+                tableHeightTimer = setTimeout(function () {
+                    var height = tableHeight();
+                    if (!tableIns || !tableIns.config || tableIns.config.height === height) {
+                        return;
+                    }
+                    tableIns.config.height = height;
+                    layui.table.resize('dataTable');
+                }, 0);
+            }
+
+            if (window.ResizeObserver) {
+                var tableHeightObserver = new ResizeObserver(scheduleTableResize);
+                $('.ez-list-layout__main, .searchWrap, #PAGE_LAYUI').each(function () {
+                    tableHeightObserver.observe(this);
+                });
+            }
+            $(window).on('resize.ez-list-table-height', scheduleTableResize);
+
 
             table.on('sort(dataTable)', function (obj) {
                 // $("#orderBy").attr("name", obj.field + "_ORDER");
@@ -725,7 +780,7 @@
                     document.getElementById('orderByType').value = '';
                     var currentWhereParam = mergeWhereParams();
                     var reloadOptions = {
-                        height: 'full-' + tableHeight(),
+                        height: tableHeight(),
                         where: currentWhereParam
                     };
                     var formAction = $("#searchForm").attr("action");
@@ -791,10 +846,11 @@
                 if (!(cfg.display && cfg.display.trim() == "none")) {
                     items.push({
                         title: a.innerText.trim(),
-                        id: a.getAttribute('name'),
+                        id: a.getAttribute('data-id'),
                         opentype: cfg.opentype,
                         url: cfg.url,
-                        windowname: cfg.windowname
+                        windowname: cfg.windowname,
+                        item_name:a.getAttribute("item_name")
                     });
                 }
             });
@@ -805,11 +861,18 @@
                 dropdown.render({
                     elem: btn,
                     data: items,
+                    className: 'ez-dropdown_container',
+                    templet: '<span data-id="{{= d.id }} "   data-url="{{= d.url }} "  class="ez-dropdown_item{{= d.item_name }} ">{{= d.title }} </span>',
                     click: function (cfg) {
                         // if (cfg.area == undefined) {
                         //     ezopen(cfg.opentype, cfg.windowname, cfg.url);
                         // } else {
-                        ezopen(cfg.opentype, cfg.windowname, cfg.url, cfg.area);
+                        if(cfg.opentype=='script'){
+                            //自定义
+                            return false;
+                        }else{
+                            ezopen(cfg.opentype, cfg.windowname, cfg.url, cfg.area);
+                        }
                         //    }
                     }
                 });
@@ -979,25 +1042,44 @@
         localStorage.setItem(key, value);
     }
 
-    //计算表格高度
+    // 表格高度由列表主区域的真实剩余空间决定，不能使用窗口高度减固定像素。
     function tableHeight() {
-        var hh = 43 + 5; //分页+padding
+        var main = document.querySelector('.ez-list-layout__main');
+        var layout = document.querySelector('.ez-list-layout');
+        var tableWrap = document.getElementById('table-wrap');
+        if (!tableWrap) {
+            return 300;
+        }
 
-        if ($(".ez-table-tool:visible").length > 0) { //表头
-            hh = hh + 51;
-        }
-        if ($(".ez-table-tool-height:visible").length > 0) { //表头
-            hh = hh + 42;
-        }
-        if ($(".searchWrap:visible").length > 0) { //搜索
-            hh = hh + $(".searchWrap").height() + 5;
+        var tableRect = tableWrap.getBoundingClientRect();
+        var availableHeight;
+        var topOffset;
+        if (layout && main) {
+            var mainRect = main.getBoundingClientRect();
+            availableHeight = main.clientHeight;
+            topOffset = tableRect.top - mainRect.top + main.scrollTop;
         } else {
-            hh = hh - 5;
+            var container = document.querySelector('.ez-layout__content') || document.documentElement;
+            var containerRect = container.getBoundingClientRect();
+            availableHeight = container === document.documentElement ? window.innerHeight : container.clientHeight;
+            topOffset = tableRect.top - containerRect.top + container.scrollTop;
         }
-        if ($(".appendhead").length > 0) { //搜索
-            hh = hh + $(".appendhead").height();
-        }
-        return hh;
+        // Layui also renders a hidden pager inside .layui-table-view when page:false.
+        // Measure our external pager, not the first matching descendant.
+        var pager = document.getElementById('PAGE_LAYUI');
+        var page = pager ? pager.closest('.layui-table-page') : null;
+        var pageView = pager ? pager.closest('.layui-table-pageview') : null;
+        var pageHeight = Math.max(
+            page ? $(page).outerHeight(true) : 0,
+            pageView ? $(pageView).outerHeight(true) : 0
+        );
+        var card = tableWrap.closest('.layui-card');
+        var bottomMargin = card ? parseFloat(window.getComputedStyle(card).marginBottom) || 0 : 0;
+
+        // Layui's pager has a 1px border and can be clipped when the table
+        // exactly reaches the scroll container's bottom edge.
+        var bottomSafety = 10;
+        return Math.max(160, Math.floor(availableHeight - topOffset - pageHeight - bottomMargin - bottomSafety));
     }
 
     //合并参数：URL参数 -> 表单参数 -> menu参数（后者覆盖前者）

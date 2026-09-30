@@ -30,10 +30,11 @@
     <link id="layui_theme_css" rel="stylesheet"
           th:href="${darkTheme eq 'dark'?'/webjars/topezadmin/layui/css/layui-theme-dark.css?123'+vi:''}">
 
+    <link th:href="${'/webjars/topezadmin/layui/css/ezpage.css?v='+vi}" rel="stylesheet">
 </head>
 <body>
 
-<div class="layui-container">
+<div class="layui-container ez-admin-page">
     [(${form.core.append_head})]
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 

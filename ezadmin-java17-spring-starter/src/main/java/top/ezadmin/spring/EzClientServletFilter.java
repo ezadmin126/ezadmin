@@ -159,15 +159,21 @@ public class EzClientServletFilter implements Filter {
                 httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), "ISO-8859-1"));
                 IOUtils.copy(new ByteArrayInputStream(data), httpServletResponse.getOutputStream());
                 return;
-            } else if (StringUtils.equals(result.getCode(), "JSON")) {
-                httpServletResponse.setContentType("application/json;charset=UTF-8");
-                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONStringWithNull(result.getData()), "UTF-8"), httpServletResponse.getOutputStream());
-            } else if (result.getCode().equals("404")) {
+            }else if (result.getCode().equals("404")) {
                 httpServletResponse.sendRedirect("/404");
             } else if (result.getCode().equals("500")) {
                 logger.error(JSON.toJSONString(result));
                 throw new EzAdminRuntimeException(result.getMessage());
-            } else {
+            } else if (StringUtils.equals(result.getCode(), "JSON")) {
+                httpServletResponse.setContentType("application/json;charset=UTF-8");
+                if(result.getData()!=null&&result.getData() instanceof EzResult){
+                    EzResult bizResult = (EzResult) result.getData();
+                    if(StringUtils.equals(bizResult.getCode(), "500")){
+                        throw new EzAdminRuntimeException(bizResult.getMessage());
+                    }
+                }
+                IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONStringWithNull(result.getData()), "UTF-8"), httpServletResponse.getOutputStream());
+            }  else {
                 httpServletResponse.setContentType("application/json;charset=UTF-8");
                 IOUtils.copy(IOUtils.toInputStream(JSONUtils.toJSONString(EzResult.instance().message("没有找到渲染器")), "UTF-8"), httpServletResponse.getOutputStream());
             }
