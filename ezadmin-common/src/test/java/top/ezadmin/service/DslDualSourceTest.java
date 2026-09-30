@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 /**
  * DSL 双数据源功能测试
- * 测试文件优先、数据库降级、双写保存等功能
+ * 测试文件优先、数据库降级等功能
  */
 public class DslDualSourceTest {
 
@@ -49,10 +49,6 @@ public class DslDualSourceTest {
         config.setDatasourceMap(datasourceMap);
 
         // 设置空的插件配置列表，避免 NPE
-        config.setPluginsFormConfigResources(new java.util.ArrayList<>());
-        config.setPluginsListConfigResources(new java.util.ArrayList<>());
-        config.setListConfigResources(new java.util.ArrayList<>());
-        config.setFormConfigResources(new java.util.ArrayList<>());
 
         EzBootstrap.getInstance().init(config);
     }
@@ -260,70 +256,4 @@ public class DslDualSourceTest {
         System.out.println("✅ 测试通过：不存在的DSL正确返回null");
     }
 
-    /**
-     * 测试7：保存DSL到文件和数据库（双写）
-     */
-    @Test
-    public void testSaveDslBoth() {
-        System.out.println("\n========== 测试7：双写保存DSL ==========");
-
-        Map<String, Object> testDsl = new HashMap<>();
-        testDsl.put("id", "test-save-form");
-        testDsl.put("title", "测试保存表单");
-        testDsl.put("dataSource", "defaultDataSource");
-        testDsl.put("initExpress", "SELECT * FROM test WHERE id = #{ID}");
-        testDsl.put("submitExpress", "INSERT INTO test VALUES (#{id})");
-        testDsl.put("deleteExpress", "DELETE FROM test WHERE id = #{ID}");
-
-        try {
-            boolean success = DslLoader.saveDsl("test-save-form", "form", testDsl, true, true);
-
-            if (success) {
-                System.out.println("✅ 测试通过：DSL保存成功");
-                System.out.println("   - 文件保存：成功");
-                System.out.println("   - 数据库保存：成功");
-
-                // 验证加载
-                DslConfig config = DslLoader.loadDsl("test-save-form", "form");
-                assertNotNull("保存后应该能够加载", config);
-                assertEquals("标题应该匹配", "测试保存表单", config.getConfig().get("title"));
-
-            } else {
-                System.out.println("⚠️  警告：DSL保存失败（可能是权限或数据库问题）");
-            }
-
-        } catch (Exception e) {
-            System.out.println("❌ 测试异常：" + e.getMessage());
-        }
-    }
-
-    /**
-     * 执行所有测试的主方法
-     */
-    public static void main(String[] args) {
-        System.out.println("╔══════════════════════════════════════════════════════════╗");
-        System.out.println("║         DSL 双数据源功能测试套件                         ║");
-        System.out.println("║  测试文件优先、数据库降级、双写保存等核心功能             ║");
-        System.out.println("╚══════════════════════════════════════════════════════════╝");
-
-        DslDualSourceTest test = new DslDualSourceTest();
-
-        try {
-            test.testLoadFormFromFile();
-            test.testLoadListFromFile();
-            test.testFilePriorityStrategy();
-            test.testNonExistentDsl();
-            test.testLoadFormFromDatabase();
-            test.testLoadListFromDatabase();
-            test.testSaveDslBoth();
-
-            System.out.println("\n╔══════════════════════════════════════════════════════════╗");
-            System.out.println("║                   测试完成！                             ║");
-            System.out.println("╚══════════════════════════════════════════════════════════╝");
-
-        } catch (Exception e) {
-            System.err.println("\n测试执行失败：" + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 }

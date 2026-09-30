@@ -1,5 +1,7 @@
-# EzAdmin 低代码配置使用说明
-EzAdmin 是一个支持人工或AI，根据数据库表信息，快速生成列表、表单的工具。
+# EzAdmin 5.0.0 低代码配置使用说明
+
+5.0.0 仅支持 Java 17+、Spring Boot 3 和 JSON DSL 配置，不兼容旧版本 HTML 配置。在线配置编辑、源码编辑、AI 配置修改及旧版配置发布/历史功能已移除。DSL 仍支持文件优先、数据库降级读取；`cacheFlag: false` 支持本地文件热加载。业务表单的数据新增、修改、删除和富文本组件继续保留。
+EzAdmin 使用 JSON DSL 定义列表和表单，支持通过代码将 SQL 转换为 DSL。
 ## 一、快速开始
 
 ### Maven 依赖
@@ -8,15 +10,9 @@ EzAdmin 是一个支持人工或AI，根据数据库表信息，快速生成列�
 <dependency>
     <groupId>io.github.ezadmin126</groupId>
     <artifactId>ezadmin-java17-spring-starter</artifactId>
-    <version>xxx</version>
+    <version>5.0.0</version>
 </dependency>
 
-<!-- Java 8 -->
-<dependency>
-    <groupId>io.github.ezadmin126</groupId>
-    <artifactId>ezadmin-java8-spring-starter</artifactId>
-    <version>xxx</version>
-</dependency>
 ```
 ### 配置项
 ```yaml
@@ -35,14 +31,6 @@ topezadmin:
   adminStyle: layui
   # 默认主题
   layout: fluid
-  # 大模型API地址
-  apiUrl: https://api.deepseek.com/v1/chat/completions
-  # 大模型API密钥
-  apiKey: 
-  # 大模型API模型 deepseek就足够了，可以使用本地ollama模型
-  model: deepseek-chat
-  # 大模型API温度
-  temperature: 0.7
 ```
 
 ### 启用配置
@@ -293,7 +281,7 @@ if(!isNotBlank("ID")) {
     "component": "button-normal",
     "props": {
       "opentype": "MODAL",
-      "url": "/topezadmin/form/dsl-user-edit?id={{=d.id}}"
+      "url": "/topezadmin/form/page-user-edit?id={{=d.id}}"
     }
   }],
 
@@ -367,9 +355,6 @@ if(!isNotBlank("ID")) {
 | `/topezadmin/form/status-{id}` | 表单更新状态数据 |
 
 
-| `/topezadmin/edit/list-new` | 新增列表或者表单 |
-| `/topezadmin/edit/submit-` | 新增列表或者表单提交 |
-| `/topezadmin/edit/submit-{id}` | 修改列表或者表单提交 |
 
 ## 七、注意事项
 

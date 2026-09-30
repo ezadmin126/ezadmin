@@ -1,15 +1,18 @@
 package io.github.ezadmin126;
 
+import com.alibaba.fastjson2.JSON;
+
 import org.junit.Test;
+import static org.junit.Assert.*;
 import top.ezadmin.EzBootstrap;
 import top.ezadmin.plugins.EzFastJson2Impl;
-import top.ezadmin.plugins.EzSqlParserImpl;
+import top.ezadmin.plugins.DslEzSqlParserImpl;
 
 public class SqlParserTest {
 
     static {
         EzBootstrap.config().setEzJson(new EzFastJson2Impl());
-        EzBootstrap.config().setEzSqlParser(new EzSqlParserImpl());
+        EzBootstrap.config().setEzSqlParser(new DslEzSqlParserImpl());
     }
 
     @Test
@@ -19,8 +22,12 @@ public class SqlParserTest {
                     添加时间,ADD_ID,update_time ,update_id from T_SYS_I18N A 
                                  GROUP by ID order by add_time desc  limit 1,10
                 """;
-        //  System.out.println(EzBootstrap.config().getEzSqlParser().sqlToList(sql,"test","ds"));
+        String list = EzBootstrap.config().getEzSqlParser().sqlToList(sql, "test", "ds");
+        assertEquals("test", JSON.parseObject(list).getString("id"));
+        assertTrue(JSON.parseObject(list).containsKey("column"));
 
-        System.out.println(EzBootstrap.config().getEzSqlParser().sqlToForm(sql, "test", "ds"));
+        String form = EzBootstrap.config().getEzSqlParser().sqlToForm(sql, "test", "ds");
+        assertEquals("test", JSON.parseObject(form).getString("id"));
+        assertTrue(JSON.parseObject(form).containsKey("cardList"));
     }
 }

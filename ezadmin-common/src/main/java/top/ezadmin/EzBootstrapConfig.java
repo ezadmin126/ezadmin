@@ -6,17 +6,12 @@ import top.ezadmin.plugins.cache.CaffeineCache;
 import top.ezadmin.plugins.cache.EzCache;
 import top.ezadmin.plugins.export.CSVExport;
 import top.ezadmin.plugins.export.EzExport;
-import top.ezadmin.plugins.refresh.DefaultRefresh;
-import top.ezadmin.plugins.refresh.EzRefresh;
 import top.ezadmin.plugins.sqlparser.EzSqlParser;
 import top.ezadmin.plugins.templates.EzTemplate;
 import top.ezadmin.plugins.templates.ThymeleafEzTemplate;
-import top.ezadmin.web.Config;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -34,11 +29,6 @@ public class EzBootstrapConfig {
     private String cacheClass = "top.ezadmin.plugins.cache.CaffeineCache";
     private EzCache ezCache = new CaffeineCache();
 
-    /**
-     * 刷新类名，指定数据刷新功能的实现类
-     */
-    private String refreshClass = "top.ezadmin.plugins.refresh.DefaultRefresh";
-    private EzRefresh ezRefresh = new DefaultRefresh();
     /**
      * 前缀URL，系统所有接口的统一前缀路径
      */
@@ -71,26 +61,6 @@ public class EzBootstrapConfig {
     private String adminStyle = "layui";
 
     private String adminIndexHtml = "index";//默认index
-
-    /**
-     * 列表配置资源列表，存储所有列表页面的配置信息
-     */
-    private List<Config> listConfigResources = new ArrayList<>();
-
-    /**
-     * 表单配置资源列表，存储所有表单页面的配置信息
-     */
-    private List<Config> formConfigResources = new ArrayList<>();
-
-    /**
-     * 插件表单配置资源列表，存储插件相关的表单配置
-     */
-    private List<Config> pluginsFormConfigResources = new ArrayList<>();
-
-    /**
-     * 插件列表配置资源列表，存储插件相关的列表配置
-     */
-    private List<Config> pluginsListConfigResources = new ArrayList<>();
 
     /**
      * 兼容首页start
@@ -151,48 +121,6 @@ public class EzBootstrapConfig {
      * 自定义配置
      */
     private String configJson = "{\"favicon\":\"/static/favicon2.ico\",\"logo\":\"/static/logo.png\"}";
-
-
-    private String apiUrl;
-
-    private String apiKey;
-
-    private String model;
-
-    private Double temperature = 0.7;
-
-
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
-    public void setApiUrl(String apiUrl) {
-        this.apiUrl = apiUrl;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public Double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
-    }
 
     private Map<String, Object> config = new HashMap<>();
 
@@ -297,14 +225,6 @@ public class EzBootstrapConfig {
         this.cacheClass = cacheClass;
     }
 
-    public String getRefreshClass() {
-        return refreshClass;
-    }
-
-    public void setRefreshClass(String refreshClass) {
-        this.refreshClass = refreshClass;
-    }
-
     public String getPrefixUrl() {
         return prefixUrl;
     }
@@ -370,52 +290,12 @@ public class EzBootstrapConfig {
         this.ezCache = ezCache;
     }
 
-    public EzRefresh getEzRefresh() {
-        return ezRefresh;
-    }
-
-    public void setEzRefresh(EzRefresh ezRefresh) {
-        this.ezRefresh = ezRefresh;
-    }
-
     public String getAdminStyle() {
         return adminStyle;
     }
 
     public void setAdminStyle(String adminStyle) {
         this.adminStyle = adminStyle;
-    }
-
-    public List<Config> getListConfigResources() {
-        return listConfigResources;
-    }
-
-    public void setListConfigResources(List<Config> listConfigResources) {
-        this.listConfigResources = listConfigResources;
-    }
-
-    public List<Config> getFormConfigResources() {
-        return formConfigResources;
-    }
-
-    public void setFormConfigResources(List<Config> formConfigResources) {
-        this.formConfigResources = formConfigResources;
-    }
-
-    public List<Config> getPluginsFormConfigResources() {
-        return pluginsFormConfigResources;
-    }
-
-    public void setPluginsFormConfigResources(List<Config> pluginsFormConfigResources) {
-        this.pluginsFormConfigResources = pluginsFormConfigResources;
-    }
-
-    public List<Config> getPluginsListConfigResources() {
-        return pluginsListConfigResources;
-    }
-
-    public void setPluginsListConfigResources(List<Config> pluginsListConfigResources) {
-        this.pluginsListConfigResources = pluginsListConfigResources;
     }
 
     public String getAppName() {

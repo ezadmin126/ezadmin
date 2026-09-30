@@ -5,7 +5,7 @@ import org.junit.Test;
 import top.ezadmin.common.enums.JdbcTypeEnum;
 import top.ezadmin.common.enums.OperatorEnum;
 import top.ezadmin.common.utils.JSONUtils;
-import top.ezadmin.common.utils.JsoupUtil;
+import top.ezadmin.common.utils.ConfigConstants;
 import top.ezadmin.dao.model.CustomSearchDTO;
 import top.ezadmin.dao.model.CustomSearchGroup;
 import top.ezadmin.dao.model.CustomSearchOrder;
@@ -36,30 +36,30 @@ public class CustomSearchJsonToSqlTest {
 
         // 模拟一个用户名字段配置 (VARCHAR类型)
         Map<String, Object> usernameSearch = new HashMap<>();
-        usernameSearch.put(JsoupUtil.ITEM_NAME, "username");
-        usernameSearch.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.VARCHAR.getName());
-        usernameSearch.put(JsoupUtil.ALIAS, "u");
+        usernameSearch.put(ConfigConstants.ITEM_NAME, "username");
+        usernameSearch.put(ConfigConstants.JDBCTYPE, JdbcTypeEnum.VARCHAR.getName());
+        usernameSearch.put(ConfigConstants.ALIAS, "u");
         searchNameMap.put("username", usernameSearch);
 
         // 模拟一个年龄字段配置 (NUMBER类型)
         Map<String, Object> ageSearch = new HashMap<>();
-        ageSearch.put(JsoupUtil.ITEM_NAME, "age");
-        ageSearch.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.NUMBER.getName());
-        ageSearch.put(JsoupUtil.ALIAS, "u");
+        ageSearch.put(ConfigConstants.ITEM_NAME, "age");
+        ageSearch.put(ConfigConstants.JDBCTYPE, JdbcTypeEnum.NUMBER.getName());
+        ageSearch.put(ConfigConstants.ALIAS, "u");
         searchNameMap.put("age", ageSearch);
 
         // 模拟一个状态字段配置 (NUMBER类型，无别名)
         Map<String, Object> statusSearch = new HashMap<>();
-        statusSearch.put(JsoupUtil.ITEM_NAME, "status");
-        statusSearch.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.NUMBER.getName());
-        statusSearch.put(JsoupUtil.ALIAS, "");
+        statusSearch.put(ConfigConstants.ITEM_NAME, "status");
+        statusSearch.put(ConfigConstants.JDBCTYPE, JdbcTypeEnum.NUMBER.getName());
+        statusSearch.put(ConfigConstants.ALIAS, "");
         searchNameMap.put("status", statusSearch);
 
         // 模拟一个创建时间字段配置 (DATETIME类型)
         Map<String, Object> createTimeSearch = new HashMap<>();
-        createTimeSearch.put(JsoupUtil.ITEM_NAME, "create_time");
-        createTimeSearch.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
-        createTimeSearch.put(JsoupUtil.ALIAS, "");
+        createTimeSearch.put(ConfigConstants.ITEM_NAME, "create_time");
+        createTimeSearch.put(ConfigConstants.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
+        createTimeSearch.put(ConfigConstants.ALIAS, "");
         searchNameMap.put("create_time", createTimeSearch);
     }
 

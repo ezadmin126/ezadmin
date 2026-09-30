@@ -6,8 +6,6 @@ import top.ezadmin.common.EzAdminRuntimeException;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.enums.ExceptionCode;
 import top.ezadmin.common.utils.Utils;
-import top.ezadmin.dao.FormDao;
-import top.ezadmin.dao.ListDao;
 import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
 
@@ -56,8 +54,6 @@ public class IndexController extends BaseController {
     }
 
     public EzResult clear(RequestContext requestContext, String method, String clearUrlCode) throws Exception {
-        ListDao.getInstance().clear();
-        FormDao.getInstance().clear();
         EzBootstrap.config().getEzCache().clear();
         EzBootstrap.config().getEzTemplate().clearCache();
         return EzResult.instance().msg("0", "清理缓存成功");

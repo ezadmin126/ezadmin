@@ -29,63 +29,16 @@ public class EzClientProperties {
     private String adminStyle = "layui";
     private String uploadPath = "/data/upload/ezadmin";
 
-    private String editLocation;
-    private String listResourceLocation = "classpath*:/topezadmin/config/layui/list/**/*.html";
-    private String formResourceLocation = "classpath*:/topezadmin/config/layui/form/**/*.html";
-    private String pluginsFormResourceLocation = "classpath*:/topezadmin/config/layui/plugins/form/**/*.html";
-    private String pluginsListResourceLocation = "classpath*:/topezadmin/config/layui/plugins/list/**/*.html";
-    private String pluginsDetailResourceLocation = "classpath*:/topezadmin/config/layui/plugins/detail/**/*.html";
     private String configJson = "{\"favicon\":\"/static/favicon.ico\",\"logo\":\"/static/logo.png\"}";
 
 
     private String exportClass;
-    private String refreshClass;
     private String cacheClass;
 
     private String layout = "container";//container fluid
 
-    private String apiUrl;
-
-    private String apiKey;
-
-    private String model;
-
-    private Double temperature = 0.7;
-
     //首页模板 默认index.html
     private String adminIndexHtml = "index";
-
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
-    public void setApiUrl(String apiUrl) {
-        this.apiUrl = apiUrl;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public Double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
-    }
 
     public String getAdminIndexHtml() {
         return adminIndexHtml;
@@ -247,46 +200,6 @@ public class EzClientProperties {
         this.uploadPath = uploadPath;
     }
 
-    public String getListResourceLocation() {
-        return listResourceLocation;
-    }
-
-    public void setListResourceLocation(String listResourceLocation) {
-        this.listResourceLocation = listResourceLocation;
-    }
-
-    public String getFormResourceLocation() {
-        return formResourceLocation;
-    }
-
-    public void setFormResourceLocation(String formResourceLocation) {
-        this.formResourceLocation = formResourceLocation;
-    }
-
-    public String getPluginsFormResourceLocation() {
-        return pluginsFormResourceLocation;
-    }
-
-    public void setPluginsFormResourceLocation(String pluginsFormResourceLocation) {
-        this.pluginsFormResourceLocation = pluginsFormResourceLocation;
-    }
-
-    public String getPluginsListResourceLocation() {
-        return pluginsListResourceLocation;
-    }
-
-    public void setPluginsListResourceLocation(String pluginsListResourceLocation) {
-        this.pluginsListResourceLocation = pluginsListResourceLocation;
-    }
-
-    public String getPluginsDetailResourceLocation() {
-        return pluginsDetailResourceLocation;
-    }
-
-    public void setPluginsDetailResourceLocation(String pluginsDetailResourceLocation) {
-        this.pluginsDetailResourceLocation = pluginsDetailResourceLocation;
-    }
-
     public String getConfigJson() {
         return configJson;
     }
@@ -303,28 +216,12 @@ public class EzClientProperties {
         this.downloadUrl = downloadUrl;
     }
 
-    public String getEditLocation() {
-        return editLocation;
-    }
-
-    public void setEditLocation(String editLocation) {
-        this.editLocation = editLocation;
-    }
-
     public String getExportClass() {
         return exportClass;
     }
 
     public void setExportClass(String exportClass) {
         this.exportClass = exportClass;
-    }
-
-    public String getRefreshClass() {
-        return refreshClass;
-    }
-
-    public void setRefreshClass(String refreshClass) {
-        this.refreshClass = refreshClass;
     }
 
     public String getLayout() {

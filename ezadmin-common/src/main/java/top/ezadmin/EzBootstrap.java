@@ -5,9 +5,6 @@ import org.slf4j.LoggerFactory;
 import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.controller.*;
-import top.ezadmin.dao.FormDao;
-import top.ezadmin.dao.ListDao;
-import top.ezadmin.dao.PluginsDao;
 import top.ezadmin.plugins.templates.ThymeleafEzTemplate;
 import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
@@ -28,7 +25,7 @@ public class EzBootstrap {
     private EzBootstrap() {
     }
 
-    private static String includeShow = "(list|form|listEdit|formEdit|detail|edit|dsl)/([A-Za-z]+)-(.*)";
+    private static String includeShow = "(list|form)/([A-Za-z]+)-(.*)";
     private Pattern pInclude = null;
 
 
@@ -38,18 +35,11 @@ public class EzBootstrap {
         this.ezBootstrapConfig = config;
         //初始化模版
         ThymeleafEzTemplate.getIntance().init(config);
-        //初始化插件
-        PluginsDao.getInstance().init();
-        //初始化静态列表
-        ListDao.getInstance().init();
-        //初始化静态表单
-        FormDao.getInstance().init();
+
     }
 
     public static boolean clear() {
         config().getEzCache().clear();
-        ListDao.getInstance().clear();
-        FormDao.getInstance().clear();
         ThymeleafEzTemplate.getIntance().clearCache();
         return true;
     }
@@ -80,18 +70,6 @@ public class EzBootstrap {
         }
         //防止配置的前缀 有/
         originatingUrl = StringUtils.repaceAll(originatingUrl, "//", "/");
-        if (originatingUrl.equals(ezBootstrapConfig.getPrefixUrl()+"listEdit/importlist.html")) {
-            originatingUrl = ezBootstrapConfig.getPrefixUrl()+"listEdit/importlist-";
-        }
-        // DSL编辑器特殊URL处理
-        if (originatingUrl.startsWith(ezBootstrapConfig.getPrefixUrl()+"dsl/")) {
-            if (originatingUrl.equals(ezBootstrapConfig.getPrefixUrl()+"dsl/editor")) {
-                originatingUrl = ezBootstrapConfig.getPrefixUrl()+"dsl/editor-";
-            }
-            else {
-                originatingUrl = originatingUrl.replaceFirst(ezBootstrapConfig.getPrefixUrl()+"dsl/form/", ezBootstrapConfig.getPrefixUrl()+"dsl/form-");
-            }
-        }
         Matcher m = pInclude.matcher(originatingUrl);
         if (m.find() && m.groupCount() == 3) {
             String contro = m.group(1);
@@ -106,20 +84,6 @@ public class EzBootstrap {
                         return handleListController(requestContext, method, id);
                     case "form":
                         return handleFormController(requestContext, method, id);
-                    case "listEdit":
-                        return handleListEditController(requestContext, method, id);
-                    case "formEdit":
-                        return handleFormEditController(requestContext, method, id);
-                    case "edit":
-                        if (!EzBootstrap.config().isSqlCache()) {
-                            return handleEditController(requestContext, method, id);
-                        }
-                    case "inspector":
-                        if (!EzBootstrap.config().isSqlCache()) {
-                            return handleInspectorController(requestContext, method, id);
-                        }
-                    case "dsl":
-                        return handleDslController(requestContext, method, id);
                     default:
                         break;
                 }
@@ -130,24 +94,9 @@ public class EzBootstrap {
                 return EzResult.instance().fail(e.getMessage());
             }
         }
-        return EzResult.instance().fail("没有找到控制器");
+        return EzResult.instance().fail("没有找到控制器").code("404");
     }
 
-    private EzResult handleEditController(RequestContext requestContext, String method, String id) throws Exception {
-        DslEditController controller = new DslEditController();
-        if (method.equals("list") || method.equals("form")) {
-            return controller.page(requestContext, method, id);
-        } else if (method.equals("submit")) {
-            return controller.submit(requestContext, method, id);
-        } else if (method.equals("saveLayout")) {
-            return controller.saveLayout(requestContext, method, id);
-        } else if (method.equals("create")) {
-            return controller.create(requestContext, method, id);
-        } else if (method.equals("getTables")) {
-            return controller.getTables(requestContext, method, id);
-        }
-        return controller.page(requestContext, method, id);
-    }
 
 
     public EzResult refresh(String... key) {
@@ -162,15 +111,6 @@ public class EzBootstrap {
     }
 
     private EzResult handleListController(RequestContext requestContext, String method, String id) throws Exception {
-        if (method.equals("export")) {
-            ExportController controller = new ExportController();
-            return controller.export(requestContext, method, id);
-        }
-        if (method.equals("edit")) {
-            DslEditController controller = new DslEditController();
-            return controller.page(requestContext, method, id);
-        }
-
         ListController controller = new ListController();
 
         // 实现列表控制器逻辑
@@ -183,26 +123,10 @@ public class EzBootstrap {
                 return controller.data(requestContext, method, id);
             case "countpage":
                 return controller.countpage(requestContext, method, id);
-            case "list":
-                return controller.list(requestContext, method, id);
-            case "count":
-                return controller.count(requestContext, method, id);
-            case "tree":
-                return controller.tree(requestContext, method, id);
-            case "treedata":
-                return controller.treedata(requestContext, method, id);
-            case "trace":
-                return controller.trace(requestContext, method, id);
-            case "api":
-                return controller.api(requestContext, method, id);
-            case "selectCols":
-                return controller.selectCols(requestContext, method, id);
-            case "customSearch":
-                return controller.customSearch(requestContext, method, id);
             case "pageCustomSearch":
                 return controller.pageCustomSearch(requestContext, method, id);
         }
-        return EzResult.instance().fail("没有找到方法");
+        return EzResult.instance().fail("没有找到方法").code("404");
     }
 
     private EzResult handleFormController(RequestContext requestContext, String method, String id) throws Exception {
@@ -210,31 +134,11 @@ public class EzBootstrap {
         FormController controller = new FormController();
         // 实现列表控制器逻辑
         EzResult result = EzResult.instance();
-        if (method.equals("edit")) {
-            DslEditController controller1 = new DslEditController();
-            return controller1.page(requestContext, method, id);
-        }
         switch (method) {
             case "page":
                 return controller.page(requestContext, method, id);
             case "data":
                 return controller.data(requestContext, method, id);
-            case "form":
-                return controller.form(requestContext, method, id);
-            case "trace":
-                return controller.trace(requestContext, method, id);
-            case "doSubmit":
-                EzResult responsedoSubmit = controller.doSubmit(requestContext, method, id);
-                result.code("JSON").data(responsedoSubmit);
-                return result;
-            case "doDelete":
-                EzResult responsedoDelete = controller.doDelete(requestContext, method, id);
-                result.code("JSON").data(responsedoDelete);
-                return result;
-            case "doStatus":
-                EzResult responsedoStatus = controller.doStatus(requestContext, method, id);
-                result.code("JSON").data(responsedoStatus);
-                return result;
             case "submit":
                 EzResult submit = controller.submit(requestContext, method, id);
                 result.code("JSON").data(submit);
@@ -252,99 +156,13 @@ public class EzBootstrap {
                 result.code("JSON").data(status);
                 return result;
         }
-        return EzResult.instance().fail("没有找到方法");
-    }
-
-    private EzResult handleListEditController(RequestContext requestContext, String method, String id) throws Exception {
-        // 实现列表编辑控制器逻辑
-        ListEditController controller = new ListEditController();
-        switch (method) {
-            case "list":
-                return controller.list(requestContext, method, id);
-            case "preview":
-                return controller.preview(requestContext, method, id);
-            case "loadList":
-                return controller.loadList(requestContext, method, id);
-            case "submitEdit":
-                return EzResult.instance().code("JSON").data(controller.submitEdit(requestContext, method, id));
-            case "publish":
-                return EzResult.instance().code("JSON").data(controller.publish(requestContext, method, id));
-            case "sourceEdit":
-                return controller.sourceEdit(requestContext, method, id);
-            case "submitSourceEdit":
-                return EzResult.instance().code("JSON").data(controller.submitSourceEdit(requestContext, method, id));
-            case "trace":
-                controller.trace(requestContext, method, id);
-                return EzResult.instance();
-            case "importSql":
-                return controller.importSql(requestContext, method, id);
-            case "importlist":
-                return EzResult.instance().code("JSON").data(controller.importlist(requestContext, method, id));
-        }
-        return EzResult.instance();
-    }
-
-    private EzResult handleFormEditController(RequestContext requestContext, String method, String id) throws Exception {
-        // 实现表单编辑控制器逻辑
-        FormEditController controller = new FormEditController();
-        switch (method) {
-            case "trace":
-                return controller.trace(requestContext, method, id);
-            case "submitEdit":
-                return EzResult.instance().code("JSON").data(controller.submitEdit(requestContext, method, id));
-            case "loadEdit":
-                return controller.loadEdit(requestContext, method, id);
-            case "submitSourceEdit":
-                return EzResult.instance().code("JSON").data(controller.submitSourceEdit(requestContext, method, id));
-            case "sourceEdit":
-                return controller.sourceEdit(requestContext, method, id);
-            case "importSql":
-                return controller.importSql(requestContext, method, id);
-            case "publish":
-                return EzResult.instance().code("JSON").data(controller.publish(requestContext, method, id));
-            case "form":
-                return controller.form(requestContext, method, id);
-            case "preview":
-                return controller.preview(requestContext, method, id);
-            case "doSubmit":
-                return EzResult.instance().code("JSON").data(controller.doSubmit(requestContext, method, id));
-            case "doDelete":
-                return EzResult.instance().code("JSON").data(controller.doDelete(requestContext, method, id));
-            case "doStatus":
-                return EzResult.instance().code("JSON").data(controller.doStatus(requestContext, method, id));
-        }
-        return EzResult.instance();
+        return EzResult.instance().fail("没有找到方法").code("404");
     }
 
 
-    private EzResult handleInspectorController(RequestContext requestContext, String method, String id) throws Exception {
-        // 实现API控制器逻辑
-        if ("list".equals(method) || "form".equals(method)) {
-            DslEditController controller = new DslEditController();
-            return controller.page(requestContext, method, id);
-        }
-        if ("submit".equals(method)) {
-            DslEditController controller = new DslEditController();
-            return controller.submit(requestContext, method, id);
-        }
-        return EzResult.instance();
-    }
 
-    //dsl/list-xx  dsl/form-xx  dsl/listsave-xx
-    private EzResult handleDslController(RequestContext requestContext, String method, String id) throws Exception {
-        // 实现DSL编辑器控制器逻辑
-        DslSourceEditorController controller = new DslSourceEditorController();
-        if ("list".equals(method) || "form".equals(method)) {
-            return controller.codeEditor(requestContext, method, id);
-        }
-        if ("listsave".equals(method)) {
-            return controller.listSave(requestContext, method, id);
-        }
-        if ("formsave".equals(method)) {
-            return controller.formSave(requestContext, method, id);
-        }
-        return EzResult.instance().fail("没有找到方法");
-    }
+
+
 
 
     public javax.sql.DataSource getEzDataSource() {

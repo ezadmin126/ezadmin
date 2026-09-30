@@ -27,8 +27,7 @@
     <script th:src="${'/webjars/jquery-validation/1.19.5/additional-methods.min.js'}"></script>
 
     <script th:src="${'/webjars/jquery-validation/1.19.5/localization/messages_zh.min.js'}"></script>
-    <script type='text/javascript'
-            th:src="${'/webjars/topezadmin/plugins/dragula/dragula.min.js'}"></script>
+    <script src="/webjars/topezadmin/plugins/dragula/dragula.min.js"></script>
     <script type='text/javascript'      th:src="${'/webjars/topezadmin/plugins/pop-list-select.js'}"></script>
     <script th:src="${'/webjars/tinymce/5.10.7/tinymce.min.js'}" type="text/javascript"></script>
 
@@ -82,7 +81,6 @@
                             <div th:if="${cardItem.type == 'card'}" class="layui-card" th:id="${cardItem.label}"
                                  th:item_name="${cardItem.item_name != null ? cardItem.item_name : 'card-'+cardItem.label}"
                                  th:classappend="${ (cardItem.get('classAppend') != null ? cardItem.get('classAppend') : '')}"
-                                 th:data-card-config="${cardItem.componentJson}"
                             >
                                 <div class="layui-card-header ez-form-panel">
                                     [(${cardItem.label})] [(${cardItem.get('description') != null ?
@@ -123,7 +121,6 @@
                                  th:if="${cardItem.type == 'iframe'}"
                                  class="layui-card"
                                  th:classappend="${cardItem.get('classAppend') != null ? cardItem.get('classAppend') : ''}"
-                                 th:data-card-config="${cardItem.componentJson}"
 
                             >
                                 <div class="layui-card-header ez-form-panel"
@@ -193,10 +190,8 @@
 <div class="layui-panel formtopfix formtopfixbuttons">
     <div style="margin: 10px 0px 0px 10px;" class="layui-btn-container" id="submitButtonContainer"
          item_name="submitButtonContainer">
-<!--        <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="tabEdit"  type='button'  >-->
-<!--            <i class="layui-icon layui-icon-tabs"></i> </button>-->
-<!--        <button  th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary' id="codeEdit"  type='button' >-->
-<!--            <i class="layui-icon layui-icon-fonts-code "></i> </button>-->
+
+
         <button th:if="${not cacheFlag}" class='layui-btn  layui-btn-primary'  id="openWindow" type='button'  >
             <i class="layui-icon layui-icon-link"></i> </button>
 
@@ -302,23 +297,8 @@
         window.open(location.href);
         return false;
     })
-    $(document).on("click", "#tabEdit", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        let prefix=$("#prefixUrl").val();
-        let code=$("#ENCRYPT_FORM_ID").val();
-        window.open(prefix+"edit/form-"+code);
 
-        return false;
-    })
-    $(document).on("click", "#codeEdit", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        let prefix=$("#prefixUrl").val();
-        let code=$("#ENCRYPT_FORM_ID").val();
-        window.open(prefix+"dsl/form-"+code);
-        return false;
-    })
+
     // /*[/]*/
 
 

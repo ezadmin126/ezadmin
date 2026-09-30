@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.EzAdminRuntimeException;
-import top.ezadmin.common.NotExistException;
 import top.ezadmin.common.constants.SessionConstants;
 import top.ezadmin.common.enums.DefaultParamEnum;
 import top.ezadmin.common.enums.ExceptionCode;
@@ -16,7 +15,6 @@ import top.ezadmin.common.enums.ParamNameEnum;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.plugins.express.executor.DefaultExpressExecutor;
 import top.ezadmin.plugins.parser.MapParser;
-import top.ezadmin.service.FormService;
 import top.ezadmin.service.ListService;
 import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
@@ -33,305 +31,9 @@ import java.util.stream.Collectors;
 public class FormController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(FormController.class);
 
-    FormService formService = EzProxy.singleInstance(FormService.class);
     private ListService listService = EzProxy.singleInstance(ListService.class);
 
     //
-    public EzResult trace(RequestContext requestContext, String method, String formUrlCode) throws Exception {
-        return form(requestContext, method, formUrlCode);
-    }
-
-    public EzResult form(RequestContext requestContext, String method, String formUrlCode) throws Exception {
-        String formId = formUrlCode;
-        String ENCRYPT_FORM_ID = formUrlCode;
-        //自定义ID
-        String ID = getIdInForm(requestContext);
-        if (StringUtils.isBlank(formId) && StringUtils.isBlank(ENCRYPT_FORM_ID)) {
-            throw new NotExistException();
-        }
-        Map<String, Object> templateParam = new HashMap<>();
-        templateParam.put("formUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"form/form-" + ENCRYPT_FORM_ID);
-
-        Map<String, Object> searchParamsValues = requestContext.getRequestParams();
-        Map<String, String> sessionMap = requestContext.getSessionParams();
-        searchParamsValues.put("ContextPath", requestContext.getContextPath());
-        searchParamsValues.put("FORM_ID", formId);
-        searchParamsValues.put("ENCRYPT_FORM_ID", ENCRYPT_FORM_ID);
-
-        searchParamsValues.put("vi", requestContext.getParameter("vi"));
-
-        Map<String, Object> form = JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID));
-
-        if (Utils.isEmpty(form)) {
-            return EzResult.instance().code("404");
-        }
-        formService.fillFormById(form, searchParamsValues, sessionMap);
-        templateParam.put("ID", Utils.trimEmptyDefault(ID, Utils.trimNull(searchParamsValues.get("ID"))));
-        templateParam.put("form", form);
-        Map<String, Object> core = (Map<String, Object>) form.get("core");
-        if (core != null && StringUtils.isNotBlank(Utils.trimNull(core.get("formSubmitUrl")))) {
-            templateParam.put("formSubmitUrl", core.get("formSubmitUrl"));
-        } else {
-            templateParam.put("formSubmitUrl", requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"form/doSubmit-" + ENCRYPT_FORM_ID);
-        }
-        String layout = "" + core.getOrDefault("layout", EzBootstrap.config().getLayout());
-        templateParam.put("layout", layout);
-        templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
-        String username = Utils.trimNull(sessionMap.get(SessionConstants.EZ_SESSION_USER_NAME_KEY));
-        templateParam.put("EZ_SESSION_USER_NAME_KEY", username);
-        templateParam.putAll(sessionMap);
-        String adminStyle = Utils.trimNullDefault(core.get(JsoupUtil.ADMINSTYLE), EzBootstrap.config().getAdminStyle());
-        String template = Utils.trimNullDefault(core.get(JsoupUtil.TEMPLATE), "form");
-        templateParam.put("prefixUrl", EzBootstrap.config().getPrefixUrl());
-        return render(adminStyle + "/" + template, templateParam);
-    }
-
-
-    public EzResult doSubmit(RequestContext requestContext, String method, String formUrlCode) throws Exception {
-
-        String ENCRYPT_FORM_ID = formUrlCode;
-        String ID = getIdInForm(requestContext);
-        try {
-            //  logger.info("ezform doSubmit start {} {} ID={}", ENCRYPT_FORM_ID,ID);
-            if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
-                return EzResult.instance().code("404");
-            }
-            Map<String, Object> form = JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID));
-
-            if (form == null || form.isEmpty()) {
-                return EzResult.instance().code("404");
-            }
-
-            DataSource formDs = null;
-            Map<String, Object> core = (Map<String, Object>) form.get("core");
-            if (core != null) {
-                formDs = EzBootstrap.getInstance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
-            } else {
-                form.put("core", new HashMap<>());
-            }
-            String successurl = Utils.trimNull(core.get(JsoupUtil.SUCCESS_URL));
-            String express = Utils.trimNull(core.get(JsoupUtil.SUBMIT_EXPRESS));
-            Map<String, Object> paras = new HashMap<>();
-            paras.put("ID", ID);
-            List<Map<String, Object>> cardList = (List<Map<String, Object>>) form.get("cards");
-            if (Utils.isNotEmpty(cardList)) {
-                for (int i = 0; i < cardList.size(); i++) {
-                    List<Map<String, Object>> items = (List<Map<String, Object>>) cardList.get(i).get("items");
-                    if (Utils.isNotEmpty(items)) {
-                        for (int j = 0; j < items.size(); j++) {
-                            Map<String, Object> item = items.get(j);
-                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
-                            paras.put(item_name, requestContext.getParameter(item_name));
-                        }
-                    }
-                }
-            }
-
-            Map<String, Object> searchParamsValues = requestContext.getRequestParams();
-            Map<String, String> sessionParamMap = requestContext.getSessionParams();
-
-            paras.putAll(searchParamsValues);
-            //计算初始化表单的参数值
-            Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
-                    .express(express)
-                    .addParam(paras)
-                    .addRequestParam(searchParamsValues)
-                    .addSessionParam(sessionParamMap)
-                    .execute();
-            Object rowId = result;
-            if (rowId instanceof EzResult) {
-
-                EzResult r = (EzResult) result;
-                rowId = r.getData();
-                if (!r.isSuccess()) {
-                    r.code("200");
-                    //  return r;
-                }
-                return r;
-            }
-
-            //data.data
-            String defaultTo = requestContext.getContextPath() + EzBootstrap.config().getPrefixUrl()+"form/form-" + ENCRYPT_FORM_ID + "?ID=" + Utils.trimNullDefault(rowId, ID);
-            if (StringUtils.isNotBlank(successurl)) {
-                if (StringUtils.contains(successurl, "/")) {
-                    successurl = requestContext.getContextPath() + successurl;
-                }
-                paras.put("ID", Utils.trimNullDefault(rowId, ID));
-                defaultTo = MapParser.parseDefaultEmpty(successurl, paras).getResult();
-            }
-            return EzResult.instance().data(defaultTo);
-        } catch (QLSyntaxException ex) {
-            logger.error("", ex);
-            return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
-        } catch (EzAdminRuntimeException e2) {
-            logger.error("", e2);
-            if (ExceptionCode.QLBIZ.name().equalsIgnoreCase(e2.code())) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
-            }
-            return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
-        } catch (QLException BE) {
-            EzAdminRuntimeException bizException = findEzAdminRuntimeException(BE);
-            if (bizException != null) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage(bizException.getMessage());
-            } else {
-                logger.warn("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID, ID, BE);
-                return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
-            }
-        } catch (Exception e) {
-            logger.error("ezform doSubmit error {}   ID={}", ENCRYPT_FORM_ID, ID, e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
-        }
-    }
-
-    public EzResult doDelete(RequestContext requestContext, String method, String formUrlCode) throws Exception {
-        String ENCRYPT_FORM_ID = formUrlCode;
-
-        try {
-            String ID = getIdInForm(requestContext);
-            if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
-                return EzResult.instance().code("404");
-            }
-            Map<String, Object> form = JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID));
-
-            if (form == null) {
-                return EzResult.instance().code("404");
-            }
-            DataSource formDs = null;
-            Map<String, Object> core = (Map<String, Object>) form.get("core");
-            if (core != null) {
-                formDs = EzBootstrap.getInstance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
-            } else {
-                core = new HashMap<>();
-                form.put("core", core);
-            }
-            String express = Utils.trimNull(core.get(JsoupUtil.DELETE_EXPRESS));
-            Map<String, Object> paras = new HashMap<>();
-            paras.put("ID", ID);
-            List<Map<String, Object>> cardList = (List<Map<String, Object>>) form.get("cards");
-            if (Utils.isNotEmpty(cardList)) {
-                for (int i = 0; i < cardList.size(); i++) {
-                    List<Map<String, Object>> items = (List<Map<String, Object>>) cardList.get(i).get("items");
-                    if (Utils.isNotEmpty(items)) {
-                        for (int j = 0; j < items.size(); j++) {
-                            Map<String, Object> item = items.get(j);
-                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
-                            paras.put(item_name, requestContext.getParameter(item_name));
-                        }
-                    }
-                }
-            }
-
-            Map<String, Object> searchParamsValues = requestToMap(requestContext);
-            paras.putAll(searchParamsValues);
-            Map<String, String> sessionParamMap = sessionToMap(requestContext);
-
-            //   logger.info("保存表单 {}{}{}",  ENCRYPT_FORM_ID,
-            //        ENCRYPT_FORM_ID,JSONUtils.toJSONString(searchParamsValues));
-            //计算初始化表单的参数值
-            Object result = DefaultExpressExecutor.createInstance().datasource(formDs)
-                    .express(express)
-                    .addParam(paras)
-                    .addRequestParam(searchParamsValues)
-                    .addSessionParam(sessionParamMap)
-                    .execute();
-
-            Object rowId = result;
-            if (rowId instanceof EzResult) {
-                EzResult r = (EzResult) result;
-                rowId = r.getData();
-                if (!r.isSuccess()) {
-                    r.code("200");
-                    return r;
-                }
-            }
-            return EzResult.instance().data(toFormId(rowId, requestContext));
-        } catch (EzAdminRuntimeException e2) {
-            logger.error("", e2);
-            if (ExceptionCode.QLBIZ.name().equalsIgnoreCase(e2.code())) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage("表达式执行错误");
-            }
-            return EzResult.instance().setSuccess(false).code("200").setMessage("表达式配置错误");
-        } catch (QLException BE) {
-            logger.error("保存表单失败{}", ENCRYPT_FORM_ID, BE);
-            EzAdminRuntimeException bizException = findEzAdminRuntimeException(BE);
-            if (bizException != null) {
-                return EzResult.instance().setSuccess(false).code("200").setMessage(bizException.getMessage());
-            } else {
-                return EzResult.instance().setSuccess(false).code("500").setMessage(Utils.getFullStackTrace(BE));
-            }
-        } catch (Exception e) {
-            logger.error("保存表单失败{}", ENCRYPT_FORM_ID, e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
-        }
-    }
-
-    public EzResult doStatus(RequestContext requestContext, String method, String formUrlCode) throws Exception {
-
-        String ENCRYPT_FORM_ID = formUrlCode;
-
-        try {
-            String ID = getIdInForm(requestContext);
-            if (StringUtils.isBlank(ENCRYPT_FORM_ID)) {
-                return EzResult.instance().code("404");
-            }
-            Map<String, Object> form = JSONUtils.parseObjectMap(formService.selectPublishFormById(ENCRYPT_FORM_ID));
-
-            if (form == null) {
-                return EzResult.instance().code("404");
-            }
-            DataSource formDs = null;
-            Map<String, Object> core = (Map<String, Object>) form.get("core");
-            if (core != null) {
-                formDs = EzBootstrap.getInstance().getDataSourceByKey(core.get(JsoupUtil.DATASOURCE));
-            } else {
-                core = new HashMap<>();
-                form.put("core", core);
-            }
-            String express = Utils.trimNull(core.get(JsoupUtil.STATUS_EXPRESS));
-            Map<String, Object> paras = new HashMap<>();
-            paras.put("ID", ID);
-            List<Map<String, Object>> cardList = (List<Map<String, Object>>) form.get("cards");
-            if (Utils.isNotEmpty(cardList)) {
-                for (int i = 0; i < cardList.size(); i++) {
-                    List<Map<String, Object>> items = (List<Map<String, Object>>) cardList.get(i).get("items");
-                    if (Utils.isNotEmpty(items)) {
-                        for (int j = 0; j < items.size(); j++) {
-                            Map<String, Object> item = items.get(j);
-                            String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
-                            paras.put(item_name, requestContext.getParameter(item_name));
-                        }
-                    }
-                }
-            }
-
-            Map<String, Object> searchParamsValues = requestToMap(requestContext);
-            paras.putAll(searchParamsValues);
-            Map<String, String> sessionParamMap = sessionToMap(requestContext);
-
-            logger.info("保存表单 {} {}",
-                    ENCRYPT_FORM_ID);
-            //计算初始化表单的参数值
-            Object rowId = DefaultExpressExecutor.createInstance().datasource(formDs)
-                    .express(express)
-                    .addParam(paras)
-                    .addRequestParam(searchParamsValues)
-                    .addSessionParam(sessionParamMap)
-                    .execute();
-            if (rowId instanceof EzResult) {
-                EzResult r = (EzResult) rowId;
-                rowId = r.getData();
-                if (!r.isSuccess()) {
-                    r.code("200");
-                    return r;
-                }
-            }
-
-            return EzResult.instance().data(toFormId(rowId, requestContext));
-        } catch (Exception e) {
-            logger.info("保存表单失败{}  ", ENCRYPT_FORM_ID, e);
-            return EzResult.instance().setSuccess(false).code("500").setMessage("服务器异常");
-        }
-    }
 
     /**
      * 表单初始化UI
@@ -395,16 +97,13 @@ public class FormController extends BaseController {
             return;
         }
         cardList.forEach(card -> {
-            Map<String, Object> componentJson = buildCardEditorConfig(card);
 
             //处理iframe的url
             if (card.get("iframe") != null) {
                 Map<String, Object> iframe = (Map<String, Object>) card.get("iframe");
                 prepareIframe(requestContext, iframe);
             }
-            if (!EzBootstrap.config().isSqlCache()) {
-                card.put("componentJson", JSONUtils.toJSONString(componentJson));
-            }
+
             Object fieldListObj = card.get("fieldList");
             List<List<Map<String, Object>>> fieldList = getFlattenedFieldList(fieldListObj);
             if (Utils.isNotEmpty(fieldList)) {
@@ -649,16 +348,13 @@ public class FormController extends BaseController {
             return result;
         }
         cardList.forEach(card -> {
-            Map<String, Object> componentJson = buildCardEditorConfig(card);
 
             //处理iframe的url
             if (card.get("iframe") != null) {
                 Map<String, Object> iframe = (Map<String, Object>) card.get("iframe");
                 prepareIframe(requestContext, iframe);
             }
-            if (!EzBootstrap.config().isSqlCache()) {
-                card.put("componentJson", JSONUtils.toJSONString(componentJson));
-            }
+
             Object fieldListObj = card.get("fieldList");
             List<List<Map<String, Object>>> fieldList = getFlattenedFieldList(fieldListObj);
             if (Utils.isNotEmpty(fieldList)) {
@@ -679,21 +375,6 @@ public class FormController extends BaseController {
         });
         return result;
     }
-
-    private Map<String, Object> buildCardEditorConfig(Map<String, Object> card) {
-        Map<String, Object> componentJson = new HashMap<>();
-        componentJson.put("type", card.get("type"));
-        componentJson.put("label", card.get("label"));
-        componentJson.put("item_name", card.get("item_name"));
-        componentJson.put("classAppend", card.get("classAppend"));
-        componentJson.put("description", card.get("description"));
-        componentJson.put("buttonList", card.get("buttonList"));
-        if (card.get("iframe") != null) {
-            componentJson.put("iframe", JSONUtils.deepParseObjectMap(JSONUtils.toJSONString(card.get("iframe"))));
-        }
-        return componentJson;
-    }
-
 
     private void fillInitDataFiled(Map<String, Object> initDataMap, Map<String, Object> form) {
         List<Map<String, Object>> cardList = (List<Map<String, Object>>) form.get("cardList");
@@ -756,7 +437,7 @@ public class FormController extends BaseController {
                             List<Map<String, Object>> row = items.get(k);
                             for (int j = 0; j < row.size(); j++) {
                                 Map<String, Object> item = row.get(j);
-                                String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
+                                String item_name = Utils.trimNull(item.get(ConfigConstants.ITEM_NAME));
                                 String component = Utils.trimEmptyDefault(item.get("component"), "input");
                                 String orgValue = Utils.trimNull(requestContext.getRequestParams().get(item_name));
                                 Map<String, Object> props = new HashMap<>();
@@ -771,7 +452,7 @@ public class FormController extends BaseController {
                                         && Utils.isTrue(props.get("range"))
                                         && StringUtils.isNotBlank(orgValue)) {
                                     //默认datetime
-                                    item.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
+                                    item.put(ConfigConstants.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
                                     orgValue = DefaultParamEnum.getValue(orgValue);
                                     String[] valueSplit = orgValue.split(" - ");
                                     item.put(ParamNameEnum.itemParamValue.getName(), orgValue);
@@ -873,7 +554,7 @@ public class FormController extends BaseController {
                             List<Map<String, Object>> row = items.get(k);
                             for (int j = 0; j < row.size(); j++) {
                                 Map<String, Object> item = row.get(j);
-                                String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
+                                String item_name = Utils.trimNull(item.get(ConfigConstants.ITEM_NAME));
                                 String component = Utils.trimEmptyDefault(item.get("component"), "input");
                                 String orgValue = Utils.trimNull(requestContext.getRequestParams().get(item_name));
                                 Map<String, Object> props = new HashMap<>();
@@ -888,7 +569,7 @@ public class FormController extends BaseController {
                                         && Utils.isTrue(props.get("range"))
                                         && StringUtils.isNotBlank(orgValue)) {
                                     //默认datetime
-                                    item.put(JsoupUtil.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
+                                    item.put(ConfigConstants.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
                                     orgValue = DefaultParamEnum.getValue(orgValue);
                                     String[] valueSplit = orgValue.split(" - ");
                                     item.put(ParamNameEnum.itemParamValue.getName(), orgValue);
@@ -975,7 +656,7 @@ public class FormController extends BaseController {
                             List<Map<String, Object>> row = items.get(k);
                             for (int j = 0; j < row.size(); j++) {
                                 Map<String, Object> item = row.get(j);
-                                String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
+                                String item_name = Utils.trimNull(item.get(ConfigConstants.ITEM_NAME));
                                 paras.put(item_name, requestContext.getParameter(item_name));
                             }
                         }
@@ -1063,7 +744,7 @@ public class FormController extends BaseController {
                             List<Map<String, Object>> row = items.get(k);
                             for (int j = 0; j < row.size(); j++) {
                                 Map<String, Object> item = row.get(j);
-                                String item_name = Utils.trimNull(item.get(JsoupUtil.ITEM_NAME));
+                                String item_name = Utils.trimNull(item.get(ConfigConstants.ITEM_NAME));
                                 paras.put(item_name, requestContext.getParameter(item_name));
                             }
                         }

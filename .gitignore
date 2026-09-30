@@ -1,3 +1,7 @@
 /.idea/
 /target/
 /.vscode/
+/.claude/
+/ezadmin-common/docs/
+/ezadmin-common/.idea/
+/ezadmin-common/.claude/

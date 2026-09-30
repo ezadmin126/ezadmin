@@ -50,7 +50,7 @@ public abstract class SqlGenerate {
         if (Utils.isNotEmpty(searchList)) {
             for (int i = 0; i < searchList.size(); i++) {
                 Map<String, Object> search = searchList.get(i);
-                String name = Utils.getStringByObject(search, JsoupUtil.ITEM_NAME);
+                String name = Utils.getStringByObject(search, ConfigConstants.ITEM_NAME);
                 searchNameMap.put(name, search);
                 where.append(searchToSql(" and ", search));
             }
@@ -97,11 +97,11 @@ public abstract class SqlGenerate {
     public String searchToSql(String union, Map<String, Object> search) {
 
         StringBuilder result = new StringBuilder();
-        String plugin = Utils.getStringByObject(search, JsoupUtil.TYPE);
-        String jdbctype = Utils.getStringByObject(search, JsoupUtil.JDBCTYPE);
-        String oper = Utils.trimEmptyDefault(Utils.getStringByObject(search, JsoupUtil.OPER), OperatorEnum.EQ.getOperC());
-        String name = Utils.getStringByObject(search, JsoupUtil.ITEM_NAME);
-        String alias = Utils.getStringByObject(search, JsoupUtil.ALIAS);
+        String plugin = Utils.getStringByObject(search, ConfigConstants.TYPE);
+        String jdbctype = Utils.getStringByObject(search, ConfigConstants.JDBCTYPE);
+        String oper = Utils.trimEmptyDefault(Utils.getStringByObject(search, ConfigConstants.OPER), OperatorEnum.EQ.getOperC());
+        String name = Utils.getStringByObject(search, ConfigConstants.ITEM_NAME);
+        String alias = Utils.getStringByObject(search, ConfigConstants.ALIAS);
         //插件单独处理，纯隐藏域，不处理
         if (plugin.equalsIgnoreCase("hidden-nowhere") || jdbctype.equalsIgnoreCase("BODY")) {
             return result.toString();
@@ -399,8 +399,8 @@ public abstract class SqlGenerate {
                 }
                 Map<String, Object> search = searchNameMap == null ? new HashMap<>() : searchNameMap.get(field);
 
-                String jdbctype = Utils.getStringByObject(search, JsoupUtil.JDBCTYPE);
-                String alias = Utils.getStringByObject(search, JsoupUtil.ALIAS);
+                String jdbctype = Utils.getStringByObject(search, ConfigConstants.JDBCTYPE);
+                String alias = Utils.getStringByObject(search, ConfigConstants.ALIAS);
 
                 String value = StringUtils.safeDb(s.get(i).getV());
                 String valueS = "";

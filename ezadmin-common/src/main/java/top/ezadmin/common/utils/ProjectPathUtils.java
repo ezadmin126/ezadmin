@@ -57,7 +57,7 @@ public class ProjectPathUtils {
             return projectRoot;
         }
 
-        // 方法2：基于类路径反推项目根路径（参考 JsoupUtil.editPath 实现）
+        // 方法2：基于类路径反推项目根路径（参考 ConfigConstants.editPath 实现）
         try {
             String classPath = Resources.getResourceURL("/").getPath();
 

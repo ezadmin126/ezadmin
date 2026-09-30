@@ -19,10 +19,9 @@ import top.ezadmin.common.utils.JSONUtils;
 import top.ezadmin.common.utils.StringUtils;
 import top.ezadmin.common.utils.Utils;
 import top.ezadmin.plugins.EzFastJson2Impl;
-import top.ezadmin.plugins.EzSqlParserImpl;
+import top.ezadmin.plugins.DslEzSqlParserImpl;
 import top.ezadmin.plugins.cache.EzCache;
 import top.ezadmin.plugins.export.EzExport;
-import top.ezadmin.plugins.refresh.EzRefresh;
 import top.ezadmin.web.EzResult;
 import top.ezadmin.web.RequestContext;
 
@@ -60,15 +59,6 @@ public class EzClientServletFilter implements Filter {
         } catch (Exception e) {
             logger.error("实例化自定义缓存插件异常", e);
         }
-        try {
-            if (StringUtils.isNotBlank(ezClientProperties.getRefreshClass())) {
-                ezBootstrapConfig.setRefreshClass(ezClientProperties.getRefreshClass());
-                ezBootstrapConfig.setEzRefresh((EzRefresh) BeanTools.applicationInstance(ezBootstrapConfig.getRefreshClass()));
-
-            }
-        } catch (Exception e) {
-            logger.error("实例化自定义刷新插件异常", e);
-        }
         ezBootstrapConfig.setPrefixUrl(ezClientProperties.getPrefixUrl());
         ezBootstrapConfig.setSqlCache(ezClientProperties.isCacheFlag());
         ezBootstrapConfig.setLayout(ezClientProperties.getLayout());
@@ -89,19 +79,11 @@ public class EzClientServletFilter implements Filter {
         ezBootstrapConfig.setDownloadUrl(ezClientProperties.getDownloadUrl());
         ezBootstrapConfig.setUploadPath(ezClientProperties.getUploadPath());
         ezBootstrapConfig.setEzJson(new EzFastJson2Impl());
-        ezBootstrapConfig.setEzSqlParser(new EzSqlParserImpl());
+        ezBootstrapConfig.setEzSqlParser(new DslEzSqlParserImpl());
 
         String configJson = ezClientProperties.getConfigJson();
         Map<String, Object> configMap = ezBootstrapConfig.getEzJson().parseObjectMap(configJson);
         ezBootstrapConfig.setConfig(configMap);
-
-        ezBootstrapConfig.setApiKey(ezClientProperties.getApiKey());
-        ezBootstrapConfig.setApiUrl(ezClientProperties.getApiUrl());
-        ezBootstrapConfig.setModel(ezClientProperties.getModel());
-        if (ezClientProperties.getTemperature() != null) {
-            ezBootstrapConfig.setTemperature(ezClientProperties.getTemperature());
-        }
-
 
         String beanNames[] =  StringUtils.split(ezClientProperties.getDatasourceBeanNames(), ",");
         //注入数据源
@@ -116,15 +98,6 @@ public class EzClientServletFilter implements Filter {
             }
             ezBootstrapConfig.getDatasourceMap().put(beanNames[i].toLowerCase(), dataSource);
         }
-        try {
-            ezBootstrapConfig.setListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getListResourceLocation()));
-            ezBootstrapConfig.setFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getFormResourceLocation()));
-            ezBootstrapConfig.setPluginsFormConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsFormResourceLocation()));
-            ezBootstrapConfig.setPluginsListConfigResources(ConfigUtils.loadFiles(ezClientProperties.getPluginsListResourceLocation()));
-        } catch (Exception e) {
-            logger.error("加载配置文件异常 {} {} {} {}", ezClientProperties.getListResourceLocation(), ezClientProperties.getFormResourceLocation()
-                    , ezClientProperties.getPluginsFormResourceLocation(), ezClientProperties.getPluginsListResourceLocation(), e);
-        }
         EzBootstrap.getInstance().init(ezBootstrapConfig);
     }
 
@@ -137,10 +110,6 @@ public class EzClientServletFilter implements Filter {
             requestContext.setRequestParams(requestToMap(httpServletRequest));
             requestContext.setSessionParams(sessionToMap(httpServletRequest.getSession()));
             requestContext.setRequestURI(httpServletRequest.getRequestURI());
-            if (httpServletRequest.getRequestURI().equals("/topezadmin/dev.html")) {
-                httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/topezadmin/list/listall");
-                return;
-            }
             requestContext.setServerName(httpServletRequest.getServerName());
             requestContext.setServerPort(httpServletRequest.getServerPort());
             requestContext.setContextPath(httpServletRequest.getContextPath());

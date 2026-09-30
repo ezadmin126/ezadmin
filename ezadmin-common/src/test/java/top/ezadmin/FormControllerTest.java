@@ -53,10 +53,6 @@ public class FormControllerTest {
         config.setDatasourceMap(datasourceMap);
 
         // 设置空的插件配置列表，避免 NPE
-        config.setPluginsFormConfigResources(new java.util.ArrayList<>());
-        config.setPluginsListConfigResources(new java.util.ArrayList<>());
-        config.setListConfigResources(new java.util.ArrayList<>());
-        config.setFormConfigResources(new java.util.ArrayList<>());
 
         EzBootstrap.getInstance().init(config);
 
