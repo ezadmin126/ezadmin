@@ -93,6 +93,8 @@
 
 
     <link th:href="${'/webjars/topezadmin/layui/css/ezpage.css?v='+vi}" rel="stylesheet">
+    <link href="/static/css/tailwind-dialog.css" rel="stylesheet">
+    <script defer src="/static/js/tailwind-dialog.js"></script>
 </head>
 <body>
 <div class="layuimini-loader">
@@ -1034,6 +1036,17 @@
             var mainRect = main.getBoundingClientRect();
             availableHeight = main.clientHeight;
             topOffset = tableRect.top - mainRect.top + main.scrollTop;
+        } else if (document.querySelector('.ez-layout__content')) {
+            // Searchless DSL lists do not render .ez-list-layout__main. Their
+            // content height follows the table, so measuring clientHeight here
+            // creates a feedback loop where each table resize makes the next
+            // available height larger.
+            availableHeight = window.innerHeight;
+            topOffset = tableRect.top;
+            var shellFooter = document.querySelector('.ez-layout__footer');
+            if (shellFooter && !shellFooter.hidden) {
+                availableHeight -= shellFooter.getBoundingClientRect().height;
+            }
         } else {
             var container = document.querySelector('.ez-layout__content') || document.documentElement;
             var containerRect = container.getBoundingClientRect();

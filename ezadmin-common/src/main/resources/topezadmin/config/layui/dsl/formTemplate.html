@@ -40,6 +40,8 @@
             th:src="${'/webjars/topezadmin/layui/js/camunda.js?v1='+vi}" type="text/javascript"></script>
 
     <link th:href="${'/webjars/topezadmin/layui/css/ezpage.css?v='+vi}" rel="stylesheet">
+    <link href="/static/css/tailwind-dialog.css" rel="stylesheet">
+    <script defer src="/static/js/tailwind-dialog.js"></script>
     <style>
         /* iframe 卡片的 100% 宽度需要一个不受 layui-container 固定宽度限制的父容器。 */
         /*#inputForm.ez-form-has-iframe > .layui-container {*/
@@ -68,7 +70,7 @@
 
 
 <form th:classappend="${hasIframeCard ? 'ez-form-has-iframe' : ''}" ID="inputForm" method="post" style="padding-bottom: 60px;" class="layui-form inputForm ez-admin-page" lay-filter="inputForm">
-    <div th:class="${'layui-'+ (#strings.isEmpty(form.layout)?'container':'fluid')}">
+    <div th:class="${'layui-'+ (#strings.isEmpty(form.layout)?'fluid':form.layout)}">
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">

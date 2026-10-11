@@ -684,8 +684,7 @@ function ezopen(openType, title, appendUrl, area) {
             });
             break;
         default:
-            openModel(appendUrl, title, area);
-            console.log('无opentype默认model')
+            location.href = appendUrl;
     }
 }
 
@@ -889,13 +888,14 @@ function openTab(title, link) {
 }
 
 function openBlank(appendUrl) {
-    var a = document.createElement("a");
-    a.setAttribute("href", appendUrl);
-    a.setAttribute("target", "_blank");
-    a.setAttribute("id", "camnpr");
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    // var a = document.createElement("a");
+    // a.setAttribute("href", appendUrl);
+    // a.setAttribute("target", "_blank");
+    // a.setAttribute("id", "camnpr");
+    // document.body.appendChild(a);
+    // a.click();
+    // a.remove();
+    window.open(appendUrl);
 }
 
 /**

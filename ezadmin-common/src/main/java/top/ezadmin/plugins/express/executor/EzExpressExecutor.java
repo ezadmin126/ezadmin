@@ -103,7 +103,8 @@ public class EzExpressExecutor {
         if (runner.getFunction(key) == null) {
             runner.addFunction(key, operator);
         } else {
-            throw new RuntimeException("function " + key + " already exists");
+            //ignor
+           // throw new RuntimeException("function " + key + " already exists");
         }
     }
 
