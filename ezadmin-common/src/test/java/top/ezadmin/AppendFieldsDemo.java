@@ -23,7 +23,7 @@ public class AppendFieldsDemo {
         EzBootstrap.config().setSqlCache(false);
 
         // 加载配置文件
-        String configPath = "topezadmin/config/layui/dsl/list/test-array-express.json";
+        String configPath = "dsl/list/test-array-express.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
 
         System.out.println("1. 原始配置（数组形式）:");

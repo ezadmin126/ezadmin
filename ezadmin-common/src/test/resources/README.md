@@ -87,7 +87,7 @@ EzResult result = controller.data(ctx, "data", "list/test");
 
 ## JSON DSL 配置格式
 
-DSL 配置文件位置：`topezadmin/config/layui/dsl/list/{id}.json`
+DSL 配置文件位置：`dsl/list/{id}.json`
 
 ### 完整示例
 

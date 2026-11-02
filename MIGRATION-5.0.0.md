@@ -8,8 +8,8 @@
 
 | 类型 | 资源路径 | 数据库配置 |
 | --- | --- | --- |
-| 列表 | `topezadmin/config/layui/dsl/list/{id}.json` | `T_EZADMIN_LIST.LIST_DSL` 及表达式字段 |
-| 表单 | `topezadmin/config/layui/dsl/form/{id}.json` | `T_EZADMIN_FORM.FORM_DSL` 及表达式字段 |
+| 列表 | `dsl/list/{id}.json` | `T_EZADMIN_LIST.LIST_DSL` 及表达式字段 |
+| 表单 | `dsl/form/{id}.json` | `T_EZADMIN_FORM.FORM_DSL` 及表达式字段 |
 
 配置由源码文件或部署流程维护。`cacheFlag: false` 继续支持本地 DSL、表达式文件和渲染模板热加载。生产缓存可通过 `EzBootstrap.clear()` 清理。
 

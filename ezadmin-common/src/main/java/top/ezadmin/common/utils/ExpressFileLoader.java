@@ -25,7 +25,7 @@ public class ExpressFileLoader {
     /**
      * dataJson 数据文件存放目录
      */
-    private static final String DATA_DIR = "topezadmin/config/layui/dsl/data";
+    private static final String DATA_DIR = "dsl/data";
 
     /**
      * 处理配置中的所有表达式引用
@@ -201,7 +201,7 @@ public class ExpressFileLoader {
 
     /**
      * 从 data 目录加载 JSON 文件并解析为列表
-     * 文件路径为 topezadmin/config/layui/dsl/data/{fileName}，支持子目录
+     * 文件路径为 dsl/data/{fileName}，支持子目录
      *
      * @param fileName 文件名（相对于 data 目录），支持子目录如 common/status.json
      * @return 解析后的列表，失败返回 null
@@ -365,7 +365,7 @@ public class ExpressFileLoader {
 
     /**
      * 获取配置文件所在目录
-     * 例如：topezadmin/config/layui/dsl/list/test.json -> topezadmin/config/layui/dsl/list
+     * 例如：dsl/list/test.json -> dsl/list
      */
     private static String getConfigDirectory(String configPath) {
         int lastSlash = configPath.lastIndexOf('/');

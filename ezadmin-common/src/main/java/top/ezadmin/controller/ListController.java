@@ -91,7 +91,7 @@ public class ListController extends BaseController {
         templateParam.put("searchFieldMetaJson", JSONUtils.toJSONString(searchFieldMeta));
         templateParam.put("ENCRYPT_LIST_ID", listUrlCode);
         templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
-        return render("layui/dsl/pageCustomSearch", templateParam);
+        return render("dsl/pageCustomSearch", templateParam);
     }
 
 
@@ -138,7 +138,7 @@ public class ListController extends BaseController {
         templateParam.put("EZ_SESSION_USER_NAME_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
         templateParam.put("EZ_SESSION_USER_ID_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY)));
 
-        return render("layui/dsl/listTemplate", templateParam);
+        return render("dsl/listTemplate", templateParam);
     }
 
     private void initTableBtn(RequestContext requestContext, Map<String, Object> list) {
@@ -603,11 +603,11 @@ public class ListController extends BaseController {
                 // component 不为空
                 item.put("component", comp);
                 if (!tdTemplates.containsKey(comp)) {
-                    String temp = Resources.getResourceAsString("topezadmin/config/layui/dsl/component/" + comp + ".html");
+                    String temp = Resources.getResourceAsString("dsl/component/" + comp + ".html");
                     tdTemplates.put(comp, temp);
                 }
             } catch (IOException e) {
-                logger.warn("加载组件失败 {} {}", item.get("component"), "topezadmin/config/layui/dsl/component/" + item.get("component") + ".html");
+                logger.warn("加载组件失败 {} {}", item.get("component"), "dsl/component/" + item.get("component") + ".html");
             }
         });
         return tdTemplates.values();

@@ -66,13 +66,7 @@ public class EzClientServletFilter implements Filter {
 
         ezBootstrapConfig.setSystemName(ezClientProperties.getSystemName());
         ezBootstrapConfig.setLogoUrl(ezClientProperties.getLogoUrl());
-        ezBootstrapConfig.setNavUrl(ezClientProperties.getNavUrl());
-        ezBootstrapConfig.setAppendJs(ezClientProperties.getAppendJs());
-        ezBootstrapConfig.setIndexUrl(ezClientProperties.getIndexUrl());
         ezBootstrapConfig.setSignoutUrl(ezClientProperties.getSignoutUrl());
-        ezBootstrapConfig.setMessageUrl(ezClientProperties.getMessageUrl());
-        ezBootstrapConfig.setChatUrl(ezClientProperties.getChatUrl());
-        ezBootstrapConfig.setClearUrl(ezClientProperties.getClearUrl());
         ezBootstrapConfig.setAppName(ezClientProperties.getAppName());
 
         ezBootstrapConfig.setUploadUrl(ezClientProperties.getUploadUrl());

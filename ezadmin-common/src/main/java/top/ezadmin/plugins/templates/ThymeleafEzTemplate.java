@@ -71,14 +71,14 @@ public class ThymeleafEzTemplate implements EzTemplate {
                 fileEngine = new TemplateEngine();
                 fileEngine.addDialect(new EzDialect());
                 FileTemplateResolver fileResolver = new FileTemplateResolver();
-                fileResolver.setPrefix(projectRoot + "/src/main/resources/topezadmin/config/");
+                fileResolver.setPrefix(projectRoot + "/src/main/resources/");
                 fileResolver.setSuffix(".html");
                 fileResolver.setTemplateMode(TemplateMode.HTML);
                 fileResolver.setCacheable(false); // 关闭缓存实现热加载
                 fileResolver.setCharacterEncoding("UTF-8");
                 fileEngine.setTemplateResolver(fileResolver);
                 logger.info("Template hot reload enabled, loading from: {}",
-                        projectRoot + "/src/main/resources/topezadmin/config/");
+                        projectRoot + "/src/main/resources/");
             }
         }
     }
@@ -88,7 +88,7 @@ public class ThymeleafEzTemplate implements EzTemplate {
      */
     private ClassLoaderTemplateResolver createClassLoaderResolver(boolean cacheable) {
         ClassLoaderTemplateResolver templateResolverClass = new ClassLoaderTemplateResolver();
-        templateResolverClass.setPrefix("topezadmin/config/");
+        templateResolverClass.setPrefix("");
         templateResolverClass.setSuffix(".html");
         templateResolverClass.setTemplateMode(TemplateMode.HTML);
         templateResolverClass.setCacheable(cacheable);
@@ -136,7 +136,7 @@ public class ThymeleafEzTemplate implements EzTemplate {
             TemplateSpec spec = new TemplateSpec(path, null, ContentTypeEnum.HTML.value, null);
             if (!EzBootstrap.config().isSqlCache()) {
 
-                File file = new File(ProjectPathUtils.getProjectRoot() + "/src/main/resources/topezadmin/config/" + path + ".html");
+                File file = new File(ProjectPathUtils.getProjectRoot() + "/src/main/resources/" + path + ".html");
                 if (Files.exists(file.toPath())) {
                     try {
                         return fileEngine.process(spec, ctx);

@@ -71,7 +71,7 @@ public class TestProjectRootDetection {
 
         // 测试加载配置文件
         try {
-            String testResource = "topezadmin/config/layui/dsl/list/test-list.json";
+            String testResource = "dsl/list/test-list.json";
             File projectFile = new File(workingDir + "/src/main/resources/" + testResource);
             if (projectFile.exists()) {
                 System.out.println("✅ 找到项目源文件: " + projectFile.getAbsolutePath());

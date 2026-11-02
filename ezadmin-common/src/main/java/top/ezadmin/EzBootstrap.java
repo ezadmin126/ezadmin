@@ -64,10 +64,6 @@ public class EzBootstrap {
         if (originatingUrl.startsWith("/ezadmin/")) {
             originatingUrl = originatingUrl.replaceFirst("/ezadmin/", ezBootstrapConfig.getPrefixUrl());
         }
-        if (originatingUrl.equals(ezBootstrapConfig.getPrefixUrl()+"index.html")) {
-            IndexController controller2 = new IndexController();
-            return controller2.index(requestContext);
-        }
         //防止配置的前缀 有/
         originatingUrl = StringUtils.repaceAll(originatingUrl, "//", "/");
         Matcher m = pInclude.matcher(originatingUrl);

@@ -86,7 +86,7 @@ public class DslLoader {
     private static DslConfig loadFromFile(String id, String type) {
         try {
             String subPath = "form".equals(type) ? "form" : "list";
-            String configPath = "topezadmin/config/layui/dsl/" + subPath + "/" + id + ".json";
+            String configPath = "dsl/" + subPath + "/" + id + ".json";
 
             // 尝试加载文件
             Map<String, Object> dslConfig = ConfigFileLoader.loadConfigFile(configPath);

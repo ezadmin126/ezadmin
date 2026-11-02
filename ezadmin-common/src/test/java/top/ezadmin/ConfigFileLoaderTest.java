@@ -36,7 +36,7 @@ public class ConfigFileLoaderTest {
         try {
             // 假设有一个测试用的列表配置文件
             String testListId = "test-list";
-            String resourcePath = "topezadmin/config/layui/dsl/list/" + testListId + ".json";
+            String resourcePath = "dsl/list/" + testListId + ".json";
 
             System.out.println("\n===== 测试列表配置加载 =====");
             System.out.println("资源路径: " + resourcePath);
@@ -81,7 +81,7 @@ public class ConfigFileLoaderTest {
         try {
             // 假设有一个测试用的表单配置文件
             String testFormId = "test-form";
-            String resourcePath = "topezadmin/config/layui/dsl/form/" + testFormId + ".json";
+            String resourcePath = "dsl/form/" + testFormId + ".json";
 
             System.out.println("\n===== 测试表单配置加载 =====");
             System.out.println("资源路径: " + resourcePath);
@@ -135,7 +135,7 @@ public class ConfigFileLoaderTest {
 
         // 获取项目根路径
         String currentDir = System.getProperty("user.dir");
-        String targetPath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/list/test-list.json";
+        String targetPath = currentDir + "/src/main/resources/dsl/list/test-list.json";
 
         File targetFile = new File(targetPath);
         File parentDir = targetFile.getParentFile();
@@ -163,7 +163,7 @@ public class ConfigFileLoaderTest {
                 "  ]\n" +
                 "}";
 
-        String formTargetPath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/form/test-form.json";
+        String formTargetPath = currentDir + "/src/main/resources/dsl/form/test-form.json";
         File formTargetFile = new File(formTargetPath);
         File formParentDir = formTargetFile.getParentFile();
 

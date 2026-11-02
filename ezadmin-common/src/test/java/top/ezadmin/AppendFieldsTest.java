@@ -43,7 +43,7 @@ public class AppendFieldsTest {
         config.put("appendHead", "<style>.header { color: red; }</style>");
 
         // appendHead 本身就是字符串，不需要处理
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         Object result = config.get("appendHead");
         assertTrue("appendHead should be a String", result instanceof String);
@@ -62,7 +62,7 @@ public class AppendFieldsTest {
         Map<String, Object> config = new HashMap<>();
         config.put("appendFoot", "<script>console.log('footer');</script>");
 
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         Object result = config.get("appendFoot");
         assertTrue("appendFoot should be a String", result instanceof String);
@@ -89,7 +89,7 @@ public class AppendFieldsTest {
         // 处理前是数组
         assertTrue("appendHead should be a List before processing", config.get("appendHead") instanceof List);
 
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         // 处理后是字符串
         Object result = config.get("appendHead");
@@ -120,7 +120,7 @@ public class AppendFieldsTest {
         appendFoot.add("</script>");
         config.put("appendFoot", appendFoot);
 
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         Object result = config.get("appendFoot");
         assertTrue("appendFoot should be a String after processing", result instanceof String);
@@ -146,7 +146,7 @@ public class AppendFieldsTest {
         config.put("appendHead", new ArrayList<>());
         config.put("appendFoot", new ArrayList<>());
 
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         assertEquals("Empty appendHead should become empty string", "", config.get("appendHead"));
         assertEquals("Empty appendFoot should become empty string", "", config.get("appendFoot"));
@@ -161,7 +161,7 @@ public class AppendFieldsTest {
     public void testLoadArrayExpressFromConfigFile() throws Exception {
         System.out.println("=== testLoadArrayExpressFromConfigFile ===");
 
-        String configPath = "topezadmin/config/layui/dsl/list/test-array-express.json";
+        String configPath = "dsl/list/test-array-express.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
 
         assertNotNull("Config should not be null", config);
@@ -265,7 +265,7 @@ public class AppendFieldsTest {
         appendHead.add("</style>");
         config.put("appendHead", appendHead);
 
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         String result = (String) config.get("appendHead");
         assertTrue("Result should be a String", result instanceof String);
@@ -295,7 +295,7 @@ public class AppendFieldsTest {
         appendFoot.add("</script>");
         config.put("appendFoot", appendFoot);
 
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         String result = (String) config.get("appendFoot");
 
@@ -319,7 +319,7 @@ public class AppendFieldsTest {
         config.put("name", "Test Config");
         // 没有 appendHead 和 appendFoot
 
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         assertFalse("appendHead should not be added", config.containsKey("appendHead"));
         assertFalse("appendFoot should not be added", config.containsKey("appendFoot"));
@@ -353,7 +353,7 @@ public class AppendFieldsTest {
         appendFoot.add("</script>");
         config.put("appendFoot", appendFoot);
 
-        ExpressFileLoader.processAppendFields(config, "topezadmin/config/layui/dsl/list/test.json");
+        ExpressFileLoader.processAppendFields(config, "dsl/list/test.json");
 
         String headResult = (String) config.get("appendHead");
         String footResult = (String) config.get("appendFoot");

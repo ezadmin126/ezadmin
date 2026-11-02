@@ -54,7 +54,7 @@ public class TemplateHotReloadTest {
 
         try {
             // 尝试渲染一个简单的模板
-            String result = template.renderFile("layui/dsl/component/input", data);
+            String result = template.renderFile("dsl/component/input", data);
             System.out.println("模板渲染结果长度: " + (result != null ? result.length() : 0));
 
             if (sqlCache) {
@@ -92,7 +92,7 @@ public class TemplateHotReloadTest {
 
         // 获取项目根路径
         String currentDir = System.getProperty("user.dir");
-        String targetPath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/component/test-component.html";
+        String targetPath = currentDir + "/src/main/resources/dsl/component/test-component.html";
 
         File targetFile = new File(targetPath);
         File parentDir = targetFile.getParentFile();
@@ -169,7 +169,7 @@ public class TemplateHotReloadTest {
         template.init(EzBootstrap.config());
 
         String currentDir = System.getProperty("user.dir");
-        String testTemplatePath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/component/test-hot-reload.html";
+        String testTemplatePath = currentDir + "/src/main/resources/dsl/component/test-hot-reload.html";
 
         // 创建初始模板
         String initialTemplate = "<div>初始版本: [[${message}]]</div>";
@@ -183,7 +183,7 @@ public class TemplateHotReloadTest {
         data.put("message", "Hello World");
 
         try {
-            String result1 = template.renderFile("layui/dsl/component/test-hot-reload", data);
+            String result1 = template.renderFile("dsl/component/test-hot-reload", data);
             System.out.println("初始渲染结果: " + result1);
 
             // 修改模板
@@ -195,7 +195,7 @@ public class TemplateHotReloadTest {
             template.clearCache();
 
             // 再次渲染
-            String result2 = template.renderFile("layui/dsl/component/test-hot-reload", data);
+            String result2 = template.renderFile("dsl/component/test-hot-reload", data);
             System.out.println("修改后渲染结果: " + result2);
 
             // 验证是否加载了新模板

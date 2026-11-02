@@ -23,7 +23,7 @@ public class ConfigFileLoader {
     /**
      * 加载配置文件内容并解析为 Map
      *
-     * @param resourcePath classpath 资源路径，例如 "topezadmin/config/layui/dsl/list/xxx.json"
+     * @param resourcePath classpath 资源路径，例如 "dsl/list/xxx.json"
      * @return 解析后的 Map 对象
      * @throws Exception 读取或解析失败时抛出异常
      */

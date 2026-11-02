@@ -17,15 +17,8 @@ public class EzClientProperties {
     private String datasourceBeanNames = "dataSource";
     private String systemName = "System";
     private String logoUrl = "/static/logo.png";
-    private String navUrl = "/topezadmin/navs.html";
-    private String appendJs;
-    private String searchUrl;
-    private String indexUrl;
     private String prefixUrl = "/topezadmin/";
     private String signoutUrl = "/signout";
-    private String messageUrl;
-    private String chatUrl;
-    private String clearUrl;
     private String adminStyle = "layui";
     private String uploadPath = "/data/upload/ezadmin";
 
@@ -36,17 +29,6 @@ public class EzClientProperties {
     private String cacheClass;
 
     private String layout = "container";//container fluid
-
-    //首页模板 默认index.html
-    private String adminIndexHtml = "index";
-
-    public String getAdminIndexHtml() {
-        return adminIndexHtml;
-    }
-
-    public void setAdminIndexHtml(String adminIndexHtml) {
-        this.adminIndexHtml = adminIndexHtml;
-    }
 
     public String getAppName() {
         return appName;
@@ -128,60 +110,12 @@ public class EzClientProperties {
         this.logoUrl = logoUrl;
     }
 
-    public String getNavUrl() {
-        return navUrl;
-    }
-
-    public void setNavUrl(String navUrl) {
-        this.navUrl = navUrl;
-    }
-
-    public String getAppendJs() {
-        return appendJs;
-    }
-
-    public void setAppendJs(String appendJs) {
-        this.appendJs = appendJs;
-    }
-
-    public String getSearchUrl() {
-        return searchUrl;
-    }
-
-    public void setSearchUrl(String searchUrl) {
-        this.searchUrl = searchUrl;
-    }
-
-    public String getIndexUrl() {
-        return indexUrl;
-    }
-
-    public void setIndexUrl(String indexUrl) {
-        this.indexUrl = indexUrl;
-    }
-
     public String getSignoutUrl() {
         return signoutUrl;
     }
 
     public void setSignoutUrl(String signoutUrl) {
         this.signoutUrl = signoutUrl;
-    }
-
-    public String getMessageUrl() {
-        return messageUrl;
-    }
-
-    public void setMessageUrl(String messageUrl) {
-        this.messageUrl = messageUrl;
-    }
-
-    public String getChatUrl() {
-        return chatUrl;
-    }
-
-    public void setChatUrl(String chatUrl) {
-        this.chatUrl = chatUrl;
     }
 
     public String getAdminStyle() {
@@ -230,14 +164,6 @@ public class EzClientProperties {
 
     public void setLayout(String layout) {
         this.layout = layout;
-    }
-
-    public String getClearUrl() {
-        return clearUrl;
-    }
-
-    public void setClearUrl(String clearUrl) {
-        this.clearUrl = clearUrl;
     }
 
     public String getPrefixUrl() {

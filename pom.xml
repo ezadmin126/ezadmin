@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>top.ezadmin</groupId>
     <artifactId>ezadmin</artifactId>
-    <version>5.0.1</version>
+    <version>5.1.1</version>
     <packaging>pom</packaging>
     <name>ezadmin</name>
     <url>https://github.com/ezadmin126/ezadmin</url>

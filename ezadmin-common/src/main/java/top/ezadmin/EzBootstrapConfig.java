@@ -60,51 +60,16 @@ public class EzBootstrapConfig {
 
     private String adminStyle = "layui";
 
-    private String adminIndexHtml = "index";//默认index
-
-    /**
-     * 兼容首页start
-     */
     private String systemName = "System";
     /**
      * logo
      */
     private String logoUrl = "/static/logo.png";
     /**
-     * 菜单url
-     */
-    private String navUrl = "/topezadmin/navs.html";
-    /**
-     * 首页加入的js
-     */
-    private String appendJs;
-    /**
-     * 页头搜索url
-     */
-    private String searchUrl;
-    /**
-     * 页头首页url
-     */
-    private String indexUrl;
-    /**
-     * 页头登出url
+     * 退出登录 URL
      */
     private String signoutUrl = "/signout";
-    /**
-     * 页头消息url
-     */
-    private String messageUrl;
-    /**
-     * 页头聊天url
-     */
-    private String chatUrl;
-    /**
-     * 页头清理缓存url
-     */
-    private String clearUrl;
-
     private String appName;
-    private boolean menuChildOpen;
     /**
      * 上传url
      */
@@ -140,38 +105,6 @@ public class EzBootstrapConfig {
         this.logoUrl = logoUrl;
     }
 
-    public String getNavUrl() {
-        return navUrl;
-    }
-
-    public void setNavUrl(String navUrl) {
-        this.navUrl = navUrl;
-    }
-
-    public String getAppendJs() {
-        return appendJs;
-    }
-
-    public void setAppendJs(String appendJs) {
-        this.appendJs = appendJs;
-    }
-
-    public String getSearchUrl() {
-        return searchUrl;
-    }
-
-    public void setSearchUrl(String searchUrl) {
-        this.searchUrl = searchUrl;
-    }
-
-    public String getIndexUrl() {
-        return indexUrl;
-    }
-
-    public void setIndexUrl(String indexUrl) {
-        this.indexUrl = indexUrl;
-    }
-
     public String getSignoutUrl() {
         return signoutUrl;
     }
@@ -179,35 +112,6 @@ public class EzBootstrapConfig {
     public void setSignoutUrl(String signoutUrl) {
         this.signoutUrl = signoutUrl;
     }
-
-    public String getMessageUrl() {
-        return messageUrl;
-    }
-
-    public void setMessageUrl(String messageUrl) {
-        this.messageUrl = messageUrl;
-    }
-
-    public String getChatUrl() {
-        return chatUrl;
-    }
-
-    public void setChatUrl(String chatUrl) {
-        this.chatUrl = chatUrl;
-    }
-
-    public String getClearUrl() {
-        return clearUrl;
-    }
-
-    public void setClearUrl(String clearUrl) {
-        this.clearUrl = clearUrl;
-    }
-
-    /**
-     * 兼容首页end
-     */
-
 
     public String getExportClass() {
         return exportClass;
@@ -362,19 +266,4 @@ public class EzBootstrapConfig {
         this.ezSqlParser = ezSqlParser;
     }
 
-    public boolean isMenuChildOpen() {
-        return menuChildOpen;
-    }
-
-    public void setMenuChildOpen(boolean menuChildOpen) {
-        this.menuChildOpen = menuChildOpen;
-    }
-
-    public String getAdminIndexHtml() {
-        return adminIndexHtml;
-    }
-
-    public void setAdminIndexHtml(String adminIndexHtml) {
-        this.adminIndexHtml = adminIndexHtml;
-    }
 }

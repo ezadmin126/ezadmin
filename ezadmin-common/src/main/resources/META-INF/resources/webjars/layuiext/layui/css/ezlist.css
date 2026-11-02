@@ -327,7 +327,7 @@ th a {
 
 
 /**初始化加载层*/
-.layuimini-loader {
+.page-loader {
     position: fixed;
     top: 0;
     left: 0;
@@ -337,7 +337,7 @@ th a {
     z-index: 999999;
 }
 
-.layuimini-loader .layuimini-loader-inner {
+.page-loader .page-loader-inner {
     display: block;
     position: relative;
     left: 50%;
@@ -351,7 +351,7 @@ th a {
     animation: spin 2s linear infinite;
 }
 
-.layuimini-loader .layuimini-loader-inner:before {
+.page-loader .page-loader-inner:before {
     content: "";
     position: absolute;
     top: 5px;
@@ -364,7 +364,7 @@ th a {
     animation: spin 3s linear infinite;
 }
 
-.layuimini-loader .layuimini-loader-inner:after {
+.page-loader .page-loader-inner:after {
     content: "";
     position: absolute;
     top: 15px;

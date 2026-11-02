@@ -82,7 +82,7 @@ public class DESUtils {
             String ciphertext = decrypt(base64);
             return ciphertext;
         } catch (Exception e) {
-            Utils.logger.error(" aes {}  ", key);
+            Utils.logger.warn("Unable to decode protected value ({})", e.getClass().getSimpleName());
             return null;
         }
     }

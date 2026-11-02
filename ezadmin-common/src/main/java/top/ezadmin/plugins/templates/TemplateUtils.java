@@ -22,7 +22,7 @@ public class TemplateUtils {
         if (!EzBootstrap.config().isSqlCache()) {
             param.put("componentJson", JSONUtils.toJSONString(buildEditorComponentConfig(param)));
         }
-        String result = EzBootstrap.config().getEzTemplate().renderFile("layui/dsl/component/" + type, param);
+        String result = EzBootstrap.config().getEzTemplate().renderFile("dsl/component/" + type, param);
         if (logger.isDebugEnabled()) {
             logger.debug("渲染结果{}", result);
         }

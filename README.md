@@ -47,8 +47,8 @@ public class Application {
 ## 二、配置格式
 
 JSON配置文件存放路径：
-- 列表：`topezadmin/config/layui/dsl/list/`
-- 表单：`topezadmin/config/layui/dsl/form/`
+- 列表：`dsl/list/`
+- 表单：`dsl/form/`
 
 ### 列表配置结构
 ```json

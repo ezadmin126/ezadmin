@@ -16,7 +16,7 @@ public class ArrayExpressDemo {
         EzBootstrap.config().setSqlCache(false);
 
         // 加载配置文件
-        String configPath = "topezadmin/config/layui/dsl/list/test-array-express.json";
+        String configPath = "dsl/list/test-array-express.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
 
         System.out.println("===== 配置文件加载完成 =====");

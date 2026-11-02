@@ -180,7 +180,7 @@ public class ProjectPathUtils {
     /**
      * 获取资源文件的完整路径
      *
-     * @param resourcePath classpath 资源路径，例如 "topezadmin/config/layui/dsl/form/test.json"
+     * @param resourcePath classpath 资源路径，例如 "dsl/form/test.json"
      * @return 完整的文件系统路径，如果无法确定则返回 null
      */
     public static String getResourceFilePath(String resourcePath) {

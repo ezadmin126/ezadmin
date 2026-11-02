@@ -29,7 +29,7 @@ public class ExpressFileLoaderTest {
         EzBootstrap.config().setSqlCache(false);
 
         // 加载配置文件
-        String configPath = "topezadmin/config/layui/dsl/list/test-express-ref.json";
+        String configPath = "dsl/list/test-express-ref.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
 
         assertNotNull("配置文件应该成功加载", config);
@@ -92,7 +92,7 @@ public class ExpressFileLoaderTest {
         EzBootstrap.config().setSqlCache(false);
 
         // 加载配置文件
-        String configPath = "topezadmin/config/layui/dsl/form/test-form-express.json";
+        String configPath = "dsl/form/test-form-express.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
 
         assertNotNull("配置文件应该成功加载", config);
@@ -153,7 +153,7 @@ public class ExpressFileLoaderTest {
         EzBootstrap.config().setSqlCache(true);
 
         // 加载配置文件
-        String configPath = "topezadmin/config/layui/dsl/list/test-express-ref.json";
+        String configPath = "dsl/list/test-express-ref.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
 
         assertNotNull("配置文件应该成功加载", config);
@@ -185,7 +185,7 @@ public class ExpressFileLoaderTest {
         EzBootstrap.config().setSqlCache(false);
 
         String currentDir = System.getProperty("user.dir");
-        String expressFilePath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/list/test_hot_reload.txt";
+        String expressFilePath = currentDir + "/src/main/resources/dsl/list/test_hot_reload.txt";
 
         try {
             // 创建初始表达式文件
@@ -194,13 +194,13 @@ public class ExpressFileLoaderTest {
             System.out.println("创建初始表达式文件: " + expressFilePath);
 
             // 创建引用该文件的配置
-            String configPath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/list/test_hot_config.json";
+            String configPath = currentDir + "/src/main/resources/dsl/list/test_hot_config.json";
             String configContent = "{\"express\": {\"main\": \"$$test_hot_reload.txt\"}}";
             Files.write(Paths.get(configPath), configContent.getBytes(StandardCharsets.UTF_8));
 
             // 第一次加载
-            Map<String, Object> config1 = ConfigFileLoader.loadConfigFile("topezadmin/config/layui/dsl/list/test_hot_config.json");
-            ExpressFileLoader.processExpressReferences(config1, "topezadmin/config/layui/dsl/list/test_hot_config.json");
+            Map<String, Object> config1 = ConfigFileLoader.loadConfigFile("dsl/list/test_hot_config.json");
+            ExpressFileLoader.processExpressReferences(config1, "dsl/list/test_hot_config.json");
 
             @SuppressWarnings("unchecked")
             Map<String, Object> express1 = (Map<String, Object>) config1.get("express");
@@ -214,8 +214,8 @@ public class ExpressFileLoaderTest {
             System.out.println("修改表达式文件内容");
 
             // 第二次加载（应该读取到新内容）
-            Map<String, Object> config2 = ConfigFileLoader.loadConfigFile("topezadmin/config/layui/dsl/list/test_hot_config.json");
-            ExpressFileLoader.processExpressReferences(config2, "topezadmin/config/layui/dsl/list/test_hot_config.json");
+            Map<String, Object> config2 = ConfigFileLoader.loadConfigFile("dsl/list/test_hot_config.json");
+            ExpressFileLoader.processExpressReferences(config2, "dsl/list/test_hot_config.json");
 
             @SuppressWarnings("unchecked")
             Map<String, Object> express2 = (Map<String, Object>) config2.get("express");
@@ -229,7 +229,7 @@ public class ExpressFileLoaderTest {
             // 清理测试文件
             try {
                 Files.deleteIfExists(Paths.get(expressFilePath));
-                Files.deleteIfExists(Paths.get(currentDir + "/src/main/resources/topezadmin/config/layui/dsl/list/test_hot_config.json"));
+                Files.deleteIfExists(Paths.get(currentDir + "/src/main/resources/dsl/list/test_hot_config.json"));
                 System.out.println("测试文件已清理");
             } catch (Exception e) {
                 // 忽略清理错误
@@ -248,7 +248,7 @@ public class ExpressFileLoaderTest {
         EzBootstrap.config().setSqlCache(false);
 
         // 加载配置文件
-        String configPath = "topezadmin/config/layui/dsl/list/test-array-express.json";
+        String configPath = "dsl/list/test-array-express.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
 
         assertNotNull("配置文件应该成功加载", config);
@@ -345,7 +345,7 @@ public class ExpressFileLoaderTest {
 
         EzBootstrap.config().setSqlCache(true); // classpath 模式
 
-        String configPath = "topezadmin/config/layui/dsl/list/test-datajson-import.json";
+        String configPath = "dsl/list/test-datajson-import.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
         assertNotNull("配置文件应该成功加载", config);
 
@@ -390,7 +390,7 @@ public class ExpressFileLoaderTest {
 
         EzBootstrap.config().setSqlCache(true);
 
-        String configPath = "topezadmin/config/layui/dsl/list/test-datajson-import.json";
+        String configPath = "dsl/list/test-datajson-import.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
         assertNotNull("配置文件应该成功加载", config);
 
@@ -427,9 +427,9 @@ public class ExpressFileLoaderTest {
         EzBootstrap.config().setSqlCache(false); // 开发模式
 
         String currentDir = System.getProperty("user.dir");
-        String dataDir = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/data";
+        String dataDir = currentDir + "/src/main/resources/dsl/data";
         String dataFilePath = dataDir + "/test_hotreload_status.json";
-        String configFilePath = currentDir + "/src/main/resources/topezadmin/config/layui/dsl/list/test_datajson_hotreload.json";
+        String configFilePath = currentDir + "/src/main/resources/dsl/list/test_datajson_hotreload.json";
 
         try {
             // 确保 data 目录存在
@@ -444,7 +444,7 @@ public class ExpressFileLoaderTest {
             Files.write(Paths.get(configFilePath), dslContent.getBytes(StandardCharsets.UTF_8));
 
             // 第一次加载
-            String configPath = "topezadmin/config/layui/dsl/list/test_datajson_hotreload.json";
+            String configPath = "dsl/list/test_datajson_hotreload.json";
             Map<String, Object> config1 = ConfigFileLoader.loadConfigFile(configPath);
             ExpressFileLoader.processExpressReferences(config1, configPath);
 
@@ -517,7 +517,7 @@ public class ExpressFileLoaderTest {
         Object dataJsonBefore = initData.get("dataJson");
         assertTrue("普通 dataJson 应该是 List", dataJsonBefore instanceof List);
 
-        ExpressFileLoader.processExpressReferences(config, "topezadmin/config/layui/dsl/list/dummy.json");
+        ExpressFileLoader.processExpressReferences(config, "dsl/list/dummy.json");
 
         Object dataJsonAfter = initData.get("dataJson");
         assertTrue("处理后普通 dataJson 仍应该是 List", dataJsonAfter instanceof List);
@@ -537,7 +537,7 @@ public class ExpressFileLoaderTest {
 
         EzBootstrap.config().setSqlCache(true);
 
-        String configPath = "topezadmin/config/layui/dsl/list/test-datajson-import.json";
+        String configPath = "dsl/list/test-datajson-import.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
         assertNotNull(config);
 
@@ -579,7 +579,7 @@ public class ExpressFileLoaderTest {
         EzBootstrap.config().setSqlCache(false);
 
         // 加载配置文件
-        String configPath = "topezadmin/config/layui/dsl/list/test-array-express.json";
+        String configPath = "dsl/list/test-array-express.json";
         Map<String, Object> config = ConfigFileLoader.loadConfigFile(configPath);
 
         assertNotNull("配置文件应该成功加载", config);

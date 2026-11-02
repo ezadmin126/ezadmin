@@ -88,7 +88,7 @@ public class FormController extends BaseController {
 
         templateParam.put("EZ_SESSION_USER_NAME_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
         templateParam.put("EZ_SESSION_USER_ID_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY)));
-        return render("layui/dsl/formTemplate", templateParam);
+        return render("dsl/formTemplate", templateParam);
     }
 
     public void iniFormItem(RequestContext requestContext, Map<String, Object> list) {
