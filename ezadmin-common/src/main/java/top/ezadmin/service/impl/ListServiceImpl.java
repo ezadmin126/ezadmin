@@ -7,6 +7,9 @@ import top.ezadmin.EzBootstrap;
 import top.ezadmin.common.enums.*;
 import top.ezadmin.common.utils.*;
 import top.ezadmin.dao.Dao;
+import top.ezadmin.plugins.cache.CacheNameSpace;
+import top.ezadmin.plugins.cache.Callback;
+import top.ezadmin.plugins.cache.EzCache;
 import top.ezadmin.plugins.parser.CommentsSqlParser;
 import top.ezadmin.plugins.parser.MapParser;
 import top.ezadmin.plugins.parser.parse.ResultModel;
@@ -47,8 +50,22 @@ public class ListServiceImpl implements ListService {
                     dataSourceBean = EzBootstrap.getInstance().getEzDataSource();
                 }
                 try {
-                    List<Map<String, Object>> result = Dao.getInstance().executeQuery(dataSourceBean,
-                            model.getResult(), model.getParamsStatic(), false);
+                    final DataSource queryDataSource = dataSourceBean;
+                    Callback query = k -> {
+                        try {
+                            return Dao.getInstance().executeQuery(queryDataSource,
+                                    model.getResult(), model.getParamsStatic(), false);
+                        } catch (Exception e) {
+                            LOG.error("执行SQL错误", e);
+                            return null;
+                        }
+                    };
+                    String cacheKey = dataSource + "|" + model.getResult() + "|" + Arrays.toString(model.getParamsStatic());
+                    List<Map<String, Object>> result = (List<Map<String, Object>>) queryWithCache(
+                            Utils.trimNull(initData.get("cache")), cacheKey, query);
+                    if (result == null) {
+                        result = new ArrayList<>();
+                    }
                     component.put("data", result);
                     component.put("dataJson", JSONUtils.toJSONString(result));
                 } catch (Exception e) {
@@ -132,6 +149,29 @@ public class ListServiceImpl implements ListService {
         }
 
 
+    }
+
+    /**
+     * initData.cache: 空/false=不缓存; 5或5m=5分钟; 60或1h=1小时; true/forever=永久(clear时刷新)
+     * 缓存key包含解析后的SQL和参数，不同参数/会话互不影响；返回浅拷贝，避免调用方修改污染缓存
+     */
+    private Object queryWithCache(String cache, String cacheKey, Callback query) {
+        cache = cache == null ? "" : cache.trim().toLowerCase();
+        EzCache ezCache = EzBootstrap.config().getEzCache();
+        Object result;
+        if (ezCache == null || cache.isEmpty() || "false".equals(cache) || "0".equals(cache)) {
+            result = query.call(cacheKey);
+        } else if ("5".equals(cache) || "5m".equals(cache)) {
+            result = ezCache.get5(CacheNameSpace.SELECTITEMS.name(), cacheKey, query);
+        } else if ("60".equals(cache) || "1h".equals(cache)) {
+            result = ezCache.get60(CacheNameSpace.SELECTITEMS.name(), cacheKey, query);
+        } else if ("true".equals(cache) || "forever".equals(cache)) {
+            result = ezCache.get(CacheNameSpace.SELECTITEMS.name(), cacheKey, query);
+        } else {
+            LOG.warn("initData.cache 配置无效: {}，可选 5/60/forever，已忽略缓存", cache);
+            result = query.call(cacheKey);
+        }
+        return result instanceof List ? new ArrayList<>((List<?>) result) : result;
     }
 
     private void buildTreeRecursively(DataSource dataSource, String sqlTemplate,

@@ -33,6 +33,10 @@ public class EzBootstrap {
         pInclude = Pattern.compile(config.getPrefixUrl()+includeShow);
         //初始化配置
         this.ezBootstrapConfig = config;
+        //缓存开关跟随sqlCache，开发模式(sqlCache=false)不缓存
+        if (config.getEzCache() != null) {
+            config.getEzCache().cacheFlag(config.isSqlCache());
+        }
         //初始化模版
         ThymeleafEzTemplate.getIntance().init(config);
 

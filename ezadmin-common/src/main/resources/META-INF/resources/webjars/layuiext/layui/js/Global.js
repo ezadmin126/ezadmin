@@ -93,12 +93,12 @@ Global.onClick('ez-button', function (e) {
     this.__lock = true;
     setTimeout(() => this.__lock = false, 500);
     const jsonStr = _this.getAttribute('data-propsjson');
-    let cfg;
+    let cfg={};
     try {
         cfg = JSON.parse(jsonStr);
     } catch (err) {
-        cfg = {};
     }
+    cfg=cfg||{};
     if (_this.getAttribute("opentype") == '' || 'script' == _this.getAttribute("opentype")) {
         e.preventDefault();
         e.stopPropagation();
