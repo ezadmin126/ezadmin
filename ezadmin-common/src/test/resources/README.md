@@ -198,9 +198,21 @@ DSL 配置文件位置：`dsl/list/{id}.json`
 // SQL 查询
 "initData": {
   "dataSource": "dataSource",
-  "dataSql": "SELECT id value, name label FROM options"
+  "dataSql": "SELECT id value, name label FROM options",
+  "cache": "60"
 }
 ```
+
+`cache`（可选，仅对 `dataSql` 生效）：缓存查询结果，key 为「数据源 + 解析后的 SQL + 参数」。
+
+| 值 | 说明 |
+|---|---|
+| 不配置 / `false` | 不缓存（默认） |
+| `5` / `5m` | 缓存 5 分钟 |
+| `60` / `1h` | 缓存 1 小时 |
+| `true` / `forever` | 永久缓存，`EzBootstrap.clear()` 时刷新 |
+
+`sqlCache=false`（开发模式）时缓存整体关闭。
 
 ---
 
