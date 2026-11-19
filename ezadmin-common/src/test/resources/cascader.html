@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui/css/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="./cascader/cascader.css"/>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <title>LayCascader级联From演示</title>
+    <script src="./cascader/cascader.js" type="text/javascript"></script>
+
+</head>
+<body>
+
+
+<div class="layui-form-item" style="width: 900px;">
+    <label class="layui-form-label">所在地区</label>
+    <div class="layui-input-block">
+        <input id="area" name="area" required lay-verify="required"/>
+    </div>
+</div>
+
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" id="test">保存</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+</div>
+
+<script> var layCascader1 = null;
+layui.use(['form', 'layCascader', 'jquery'], function () {
+    var form = layui.form;
+    var $ = layui.jquery;
+
+    var layCascader = layui.layCascader;
+    var options = [{
+        id: 'gd',
+        title: '广东',
+        children: [{
+            id: 'gz',
+            title: '广州',
+            children: [{
+                id: 'gz2',
+                title: '广州2'
+            }, {
+                id: 'gz3',
+                title: '广州3'
+            }]
+        }, {
+            id: 'fs',
+            title: '佛山'
+        }, {
+            id: 'sz',
+            title: '深圳'
+        }]
+    }, {
+        id: 'gx',
+        title: '广西',
+        children: [{
+            id: 'gl',
+            title: '桂林'
+        }, {
+            id: 'nn',
+            title: '南宁'
+        }]
+    }];
+    layCascader1 = layCascader({
+        props: {
+            strictMode: true,
+            multiple: true,
+            label: 'title',
+            value: 'id',
+            city_id: 'city_id'
+        },
+        elem: '#area',
+        showAllLevels: true,
+        filterable: true,
+        placeholder: '请选择设备归属机构',
+        clearable: true,
+        options: options,
+        extendClass: true
+    });
+
+    $('#test').on('click', function () {
+        debugger
+        console.log('cascader实例:', layCascader1);
+
+        // 使用 getCheckedNodes() 获取所有选中的节点
+        var checkedNodes = layCascader1.getCheckedNodes();
+        var value = [];
+        checkedNodes.forEach(function (row) {
+            row.forEach(function (node) {
+                if (node._checked == 1) {
+                    value.push(node.value);
+                }
+            });
+        });
+        console.log('选中的值:', value)
+        // 返回所有选中的父节点（包含去重）
+        return checkedNodes;
+    })
+
+
+    layCascader1.openEvent(function () {
+        console.log('打开级联窗口')//checkStrictly
+    });
+
+    layCascader1.changeEvent(function (value2, node) {
+        console.log('关闭级联窗口', value2, node);
+        console.log(this)
+        var checkedNodes = layCascader1.getCheckedNodes();
+        var value = [];
+        checkedNodes.forEach(function (row) {
+            row.forEach(function (node) {
+                if (node._checked == 1) {
+                    value.push(node.value);
+                }
+            });
+        });
+        console.log('close 选中的值:', value);
+        $("[name=area]").val(value);
+        return value;
+    });
+});
+</script>
+</body>
+</html>

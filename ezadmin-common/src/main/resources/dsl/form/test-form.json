@@ -1,0 +1,10 @@
+{
+  "id": "test-form",
+  "title": "测试表单",
+  "description": "用于测试热加载功能的示例表单配置",
+  "items": [
+    {"field": "name", "title": "名称", "type": "text", "required": true},
+    {"field": "description", "title": "描述", "type": "textarea"},
+    {"field": "status", "title": "状态", "type": "select", "options": [{"value": "1", "text": "启用"}, {"value": "0", "text": "禁用"}]}
+  ]
+}

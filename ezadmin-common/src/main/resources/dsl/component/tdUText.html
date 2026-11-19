@@ -1,0 +1,6 @@
+<script>
+    Global.registry("columnRender").register("tdUText", (name, d, component) => {
+        const value = d[name];
+        return `<span item_name=` + name + ` component="tdUText">` + (value || component.props.emptyShow || '') + `</span>`;
+    });
+</script>

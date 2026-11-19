@@ -1,0 +1,184 @@
+package top.ezadmin.spring;
+
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(prefix = "topezadmin")
+public class EzClientProperties {
+
+    private String appName = "ez";
+    private boolean cacheFlag = true;
+    private String uploadUrl;
+    private String downloadUrl;
+    private String logType = "0000-10000";
+    private String regionUrl;
+    private String categoryUrl;
+    private String orgUrl;
+    private String datasourceBeanNames = "dataSource";
+    private String systemName = "System";
+    private String logoUrl = "/static/logo.png";
+    private String prefixUrl = "/topezadmin/";
+    private String signoutUrl = "/signout";
+    private String adminStyle = "layui";
+    private String uploadPath = "/data/upload/ezadmin";
+
+    private String configJson = "{\"favicon\":\"/static/favicon.ico\",\"logo\":\"/static/logo.png\"}";
+
+
+    private String exportClass;
+    private String cacheClass;
+
+    private String layout = "container";//container fluid
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public boolean isCacheFlag() {
+        return cacheFlag;
+    }
+
+    public void setCacheFlag(boolean cacheFlag) {
+        this.cacheFlag = cacheFlag;
+    }
+
+    public String getUploadUrl() {
+        return uploadUrl;
+    }
+
+    public void setUploadUrl(String uploadUrl) {
+        this.uploadUrl = uploadUrl;
+    }
+
+    public String getLogType() {
+        return logType;
+    }
+
+    public void setLogType(String logType) {
+        this.logType = logType;
+    }
+
+    public String getRegionUrl() {
+        return regionUrl;
+    }
+
+    public void setRegionUrl(String regionUrl) {
+        this.regionUrl = regionUrl;
+    }
+
+    public String getCategoryUrl() {
+        return categoryUrl;
+    }
+
+    public void setCategoryUrl(String categoryUrl) {
+        this.categoryUrl = categoryUrl;
+    }
+
+    public String getOrgUrl() {
+        return orgUrl;
+    }
+
+    public void setOrgUrl(String orgUrl) {
+        this.orgUrl = orgUrl;
+    }
+
+    public String getDatasourceBeanNames() {
+        return datasourceBeanNames;
+    }
+
+    public void setDatasourceBeanNames(String datasourceBeanNames) {
+        this.datasourceBeanNames = datasourceBeanNames;
+    }
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getSignoutUrl() {
+        return signoutUrl;
+    }
+
+    public void setSignoutUrl(String signoutUrl) {
+        this.signoutUrl = signoutUrl;
+    }
+
+    public String getAdminStyle() {
+        return adminStyle;
+    }
+
+    public void setAdminStyle(String adminStyle) {
+        this.adminStyle = adminStyle;
+    }
+
+    public String getUploadPath() {
+        return uploadPath;
+    }
+
+    public void setUploadPath(String uploadPath) {
+        this.uploadPath = uploadPath;
+    }
+
+    public String getConfigJson() {
+        return configJson;
+    }
+
+    public void setConfigJson(String configJson) {
+        this.configJson = configJson;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    public String getExportClass() {
+        return exportClass;
+    }
+
+    public void setExportClass(String exportClass) {
+        this.exportClass = exportClass;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
+    }
+
+    public String getPrefixUrl() {
+        return prefixUrl;
+    }
+
+    public void setPrefixUrl(String prefixUrl) {
+        this.prefixUrl = prefixUrl;
+    }
+
+    public String getCacheClass() {
+        return cacheClass;
+    }
+
+    public void setCacheClass(String cacheClass) {
+        this.cacheClass = cacheClass;
+    }
+}

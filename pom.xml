@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>top.ezadmin</groupId>
+    <artifactId>ezadmin</artifactId>
+    <version>5.1.1</version>
+    <packaging>pom</packaging>
+    <name>ezadmin</name>
+    <url>https://github.com/ezadmin126/ezadmin</url>
+    <description>ezadmin</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+    </properties>
+    <developers>
+        <developer>
+            <name>ezadmin</name>
+            <email>ezadmin@126.com</email>
+        </developer>
+    </developers>
+    <modules>
+        <module>ezadmin-common</module>
+        <module>ezadmin-java17-spring-starter</module>
+        <module>ezadmin-scaffold</module>
+    </modules>
+
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>copy</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/ezadmin126/ezadmin.git</url>
+        <connection>scm:git:https://github.com/ezadmin126/ezadmin.git</connection>
+        <developerConnection>scm:git:https://github.com/ezadmin126/ezadmin.git</developerConnection>
+    </scm>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <excludes>
+                    <exclude>**.db</exclude>
+                    <exclude>**/*.db</exclude>
+                </excludes>
+
+            </resource>
+        </resources>
+        <finalName>ezadmin</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>17</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.8.1</version>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

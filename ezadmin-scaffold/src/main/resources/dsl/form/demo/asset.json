@@ -1,0 +1,25 @@
+{
+  "id": "demo/asset",
+  "name": "资产信息",
+  "dataSource": "dataSource",
+  "successUrl": "reloadTableData",
+  "cardList": [
+    {"type": "card", "label": "基本信息", "col": 12,
+      "fieldList": [
+        {"row": [
+          {"item_name": "ID", "component": "hidden", "classAppend": "layui-col-md0"},
+          {"item_name": "ASSET_NAME", "label": "资产名称", "component": "input",
+            "props": {"lay-verify": "required", "maxlength": 100}}
+        ]},
+        {"row": [
+          {"item_name": "NOTES", "label": "备注", "component": "textarea", "props": {"maxlength": 300}}
+        ]}
+      ],
+      "buttonList": []
+    }
+  ],
+  "buttonList": [],
+  "initExpress": "@import(asset_initExpress.ql)",
+  "submitExpress": "@import(asset_submitExpress.ql)",
+  "deleteExpress": "@import(asset_deleteExpress.ql)"
+}

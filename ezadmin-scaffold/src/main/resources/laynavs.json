@@ -1,0 +1,31 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "/p/list/page-demo/asset"
+  },
+  "logoInfo": {
+    "title": "EzAdmin",
+    "href": "/",
+    "image": ""
+  },
+  "menuInfo": [
+    {
+      "id": "demo",
+      "pid": "0",
+      "title": "示例管理",
+      "href": "",
+      "target": "_self",
+      "icon": "layui-icon layui-icon-app",
+      "child": [
+        {
+          "id": "demo-asset",
+          "pid": "demo",
+          "title": "资产管理",
+          "href": "/p/list/page-demo/asset",
+          "target": "_self",
+          "icon": "layui-icon layui-icon-list"
+        }
+      ]
+    }
+  ]
+}

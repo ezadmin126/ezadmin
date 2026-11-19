@@ -1,0 +1,5 @@
+if (isBlank("ID")) {
+    return insert("INSERT INTO DEMO_ASSET (ASSET_NAME, NOTES) VALUES (#{ASSET_NAME}, #{NOTES})");
+}
+update("UPDATE DEMO_ASSET SET ASSET_NAME = #{ASSET_NAME}, NOTES = #{NOTES} WHERE ID = #{ID} AND DELETED = FALSE");
+return $("ID");

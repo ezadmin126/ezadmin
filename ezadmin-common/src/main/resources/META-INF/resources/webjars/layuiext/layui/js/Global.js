@@ -1,0 +1,1107 @@
+/**
+ * 注册中心定义
+ * @type {*|{registry(*): *, get: {}}}
+ */
+window.Global = window.Global || {
+    registries: {},
+    // 创建或获取一个注册表
+    registry(name) {
+        if (!this.registries[name]) {
+            this.registries[name] = {
+                items: {},
+                register(key, fn) {
+                    this.items[key] = fn;
+                },
+                get(key) {
+                    return this.items[key] || null;
+                }
+            };
+        }
+        return this.registries[name];
+    },
+    get(name) {
+        return this.registry('global').get(name);
+    },
+    set(name, value) {
+        this.registry('global').register(name, value);
+    },
+};
+const eventMap = Object.create(null);
+
+Global.onClick = function (name, handler) {
+    if (name == '') {
+        return;
+    }
+    eventMap[name] = handler;
+};
+// 统一事件委托
+document.addEventListener('click', function (e) {
+    const el = e.target.closest('[data-click]');
+    if (!el) return;
+
+    const action = el.dataset.click;
+    const fn = eventMap[action];
+
+    if (typeof fn === 'function') {
+        fn.call(el, e);
+    }
+});
+
+
+Global.onClick('viewer-image', function (e) {
+    var dataset = this.dataset;
+    var _this = this;
+    if (this.__lock) return;
+    this.__lock = true;
+    setTimeout(() => this.__lock = false, 500);
+    var imgConfig = {
+        shade: 0.5,
+        photos: {
+            "title": _this.getAttribute("title"),
+            "start": 0,
+            "data": [
+                {
+                    "alt": _this.getAttribute("title"),
+                    "pid": 0,
+                    "src": _this.getAttribute("src") || dataset.original
+                }
+            ]
+        },
+        footer: false // 是否隐藏底部栏 --- 2.8+
+        , success: function () {
+            // if ($(".layui-layer-photos .layer-layer-photos-main img").eq(0).height() > 500) {
+            //     $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("height", "500px");
+            //     $(".layui-layer-photos .layer-layer-photos-main img").eq(0).css("width", "auto");
+            //     $(".layui-layer-photos").eq(0).css("top", $(window).height() / 2 - 250)
+            // }
+        }
+    };
+    if (dataset.parent == true) {
+        parent.window.layer.photos(imgConfig);
+    } else {
+        layer.photos(imgConfig);
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+});
+
+
+Global.onClick('ez-button', function (e) {
+    var _this = this;
+    if (this.__lock) return;
+    this.__lock = true;
+    setTimeout(() => this.__lock = false, 500);
+    const jsonStr = _this.getAttribute('data-propsjson');
+    let cfg={};
+    try {
+        cfg = JSON.parse(jsonStr);
+    } catch (err) {
+    }
+    cfg=cfg||{};
+    if (_this.getAttribute("opentype") == '' || 'script' == _this.getAttribute("opentype")) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+    }
+    ezopen(cfg.opentype || _this.getAttribute("opentype"),
+        cfg.windowname || _this.getAttribute("windowname"),
+        cfg.url || _this.getAttribute("url"), cfg.area);
+
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+});
+
+/**
+ * 转成数字数组
+ * @param val
+ * @returns {number[]|*|*[]}
+ */
+Global.toNumberArray = function (val) {
+    if (Array.isArray(val)) return val.map(Number);
+    if (typeof val !== 'string') return [];
+    return val
+        .split(',')
+        .map(v => Number(v.trim()))
+        .filter(Number.isFinite);
+};
+Global.toArray = function (val) {
+    if (Array.isArray(val)) return val.map(Number);
+    if (typeof val !== 'string') return [];
+    return val
+        .split(',')
+        ;
+};
+
+/**
+ * 合并两个json 以第一个为准
+ * @param json1
+ * @param json2
+ * @returns {*}
+ */
+Global.deepUnion = function (json1, json2) {
+    // 如果任意一个不是对象，直接取 json1（以第一个为准）
+    if (json1 === null || typeof json1 !== 'object') return json1;
+    if (json2 === null || typeof json2 !== 'object') return json1;
+
+    const result = {...json2}; // 先复制 json2 的所有字段
+
+    for (const key in json1) {
+        if (json1.hasOwnProperty(key)) {
+            if (
+                typeof json1[key] === 'object' && json1[key] !== null &&
+                typeof json2[key] === 'object' && json2[key] !== null &&
+                !Array.isArray(json1[key]) && !Array.isArray(json2[key])
+            ) {
+                // 嵌套对象 → 递归合并
+                result[key] = Global.deepUnion(json1[key], json2[key]);
+            } else {
+                // 非对象 或 数组 → 以第一个为准
+                result[key] = json1[key];
+            }
+        }
+    }
+
+    return result;
+}
+/**
+ * list转树结构
+ * @param list
+ * @param idKey 默认id
+ * @param parentKey 默认parentId
+ * @param childrenKey 默认children
+ * @returns {*[]}
+ */
+Global.listToTree = function (list, idKey = 'id', parentKey = 'parentId', childrenKey = 'children') {
+    const tree = [];
+    const lookup = {};
+
+    // 初始化所有节点
+    list.forEach(item => {
+        lookup[item[idKey]] = {...item, [childrenKey]: []};
+    });
+
+    // 建树
+    list.forEach(item => {
+        const id = item[idKey];
+        const parentId = item[parentKey];
+
+        if (parentId == null || parentId === 0 || !lookup[parentId]) {
+            // 根节点
+            tree.push(lookup[id]);
+        } else {
+            // 子节点
+            lookup[parentId][childrenKey].push(lookup[id]);
+        }
+    });
+
+    return tree;
+}
+
+Global.getAllValues = function (tree) {
+    const values = [];
+
+    function traverse(nodes) {
+        if (!nodes || !Array.isArray(nodes)) return;
+
+        nodes.forEach(node => {
+            if (node.value !== undefined) {
+                values.push(node.value);
+            }
+            if (node.children && node.children.length > 0) {
+                traverse(node.children);
+            }
+        });
+    }
+
+    traverse(tree);
+    return values;
+}
+
+
+/**
+ * 逻辑上都认为是true的情况
+ * @param c
+ * @returns {boolean}
+ */
+Global.logicTrue = function (c) {
+    return ['true', '1', 'yes', 'on']
+        .includes(String(c).toLowerCase());
+};
+
+
+// 按逗号分割字符串，跳过嵌套 {} [] 内的逗号
+function _splitDslPairs(str) {
+    var parts = [], depth = 0, start = 0;
+    for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        if (c === 123 || c === 91) depth++;        // { [
+        else if (c === 125 || c === 93) depth--;   // } ]
+        else if (c === 44 && depth === 0) {         // ,
+            parts.push(str.slice(start, i).trim());
+            start = i + 1;
+        }
+    }
+    parts.push(str.slice(start).trim());
+    return parts;
+}
+
+// 解析单个 DSL 值（递归）
+function _parseDslValue(val) {
+    if (val === 'true') return true;
+    if (val === 'false') return false;
+    if (val === 'null') return null;
+    var c0 = val.charCodeAt(0);
+    if (c0 === 123) return _parseDslObject(val);  // {
+    if (c0 === 91) return _parseDslArray(val);   // [
+    if (!isNaN(val) && val !== '') return Number(val);
+    // 去掉首尾引号
+    if ((c0 === 34 || c0 === 39) && val.charCodeAt(val.length - 1) === c0) {
+        return val.slice(1, -1);
+    }
+    return val;
+}
+
+// 解析 DSL 对象格式：{key=value, key2=[A, B]}
+function _parseDslObject(str) {
+    var inner = str.slice(1, -1).trim();
+    if (!inner) return {};
+    var result = {}, pairs = _splitDslPairs(inner);
+    for (var i = 0; i < pairs.length; i++) {
+        var eqIdx = pairs[i].indexOf('=');
+        if (eqIdx === -1) continue;
+        var key = pairs[i].slice(0, eqIdx).trim();
+        var val = pairs[i].slice(eqIdx + 1).trim();
+        result[key] = _parseDslValue(val);
+    }
+    return result;
+}
+
+// 解析 DSL 数组格式：[A, B, C]
+function _parseDslArray(str) {
+    var inner = str.slice(1, -1).trim();
+    if (!inner) return [];
+    var items = _splitDslPairs(inner);
+    for (var i = 0; i < items.length; i++) {
+        items[i] = _parseDslValue(items[i]);
+    }
+    return items;
+}
+
+// 递归处理对象中的字符串值
+function _deepParseValues(obj) {
+    for (var k in obj) {
+        if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+        var v = obj[k];
+        if (typeof v !== 'string') continue;
+        var c0 = v.charCodeAt(0);
+        if (c0 === 123 || c0 === 91) {          // { or [
+            obj[k] = Global.safeParseJSON(v, v);
+        }
+    }
+    return obj;
+}
+
+// 安全解析JSON字符串或返回已解析的对象，支持嵌套字符串递归解析及 DSL 自定义格式
+Global.safeParseJSON = function (data, defaultValue) {
+    if (!data) return defaultValue !== undefined ? defaultValue : {};
+    if (typeof data === 'object') return data;
+    if (typeof data !== 'string') return defaultValue !== undefined ? defaultValue : {};
+
+    var c0 = data.charCodeAt(0);
+    // 标准 JSON（以 { 或 [ 开头）
+    if (c0 === 123 || c0 === 91) {
+        try {
+            return _deepParseValues(JSON.parse(data));
+        } catch (e) {
+            // 降级：DSL 格式
+            return c0 === 123 ? _parseDslObject(data) : _parseDslArray(data);
+        }
+    }
+    console.error('safeParseJSON: 无法解析:', data);
+    return defaultValue !== undefined ? defaultValue : {};
+}
+
+var holiday = [[], []];
+var shortcut = [
+    {
+        text: "昨天",
+        value: function () {
+            var now = new Date();
+            now.setDate(now.getDate() - 1);
+            return now;
+        }()
+    },
+    {
+        text: "今天", value: function () {
+            const now = new Date();
+            return now;
+        }()
+    },
+    {
+        text: "本月月初",
+        value: function () {
+            // 获取当前日期
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+            // 创建一个新的 Date 对象，设置为本月1号
+            const firstDayOfMonth = new Date(year, month, 1);
+            return firstDayOfMonth;
+        }()
+    },
+    {
+        text: "上月月初",
+        value: function () {
+            // 获取当前日期
+            const today = new Date();
+// 获取上个月的年份和月份
+            const year = today.getFullYear();
+            const month = today.getMonth() - 1;
+// 创建一个新的 Date 对象，设置为上个月1号
+            const firstDayOfLastMonth = new Date(year, month, 1);
+// 获取上个月的最后一天
+            const lastDayOfLastMonth = new Date(year, month + 1, 0);
+            return [firstDayOfLastMonth];
+        }()
+    },
+    {
+        text: "上月月末",
+        value: function () {
+            // 获取当前日期
+            const today = new Date();
+// 获取上个月的年份和月份
+            const year = today.getFullYear();
+            const month = today.getMonth() - 1;
+// 创建一个新的 Date 对象，设置为上个月1号
+            const firstDayOfLastMonth = new Date(year, month, 1);
+// 获取上个月的最后一天
+            const lastDayOfLastMonth = new Date(year, month + 1, 0);
+            return [lastDayOfLastMonth];
+        }()
+    }, {
+        text: "前30天",
+        value: function () {
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            return thirtyDaysAgo;
+        }()
+    },
+    {
+        text: "今年年初",
+        value: function () {
+            const now = new Date();
+            const year = now.getFullYear();
+            const januaryFirst = new Date(year, 0, 1);
+            return januaryFirst;
+        }()
+    },
+    {
+        text: "去年年初",
+        value: function () {
+            const now = new Date();
+            const year = now.getFullYear();
+            const januaryFirst = new Date(year - 1, 0, 1);
+            return januaryFirst;
+        }()
+    },
+    {
+        text: "去年年末",
+        value: function () {
+            const now = new Date();
+            const year = now.getFullYear();
+            const januaryFirst = new Date(year - 1, 11, 31);
+            return januaryFirst;
+        }()
+    }
+];
+var rangeShortCut = [{
+    text: "昨天",
+    value: function () {
+        var today = new Date();
+        const preday = new Date(today.getTime() - (24 * 60 * 60 * 1000));
+        return [
+            preday,
+            preday
+        ];
+    }
+},
+    {
+        text: "上周",
+        value: function () {
+            // 创建一个新的 Date 对象
+            var today = new Date();
+
+// 设置为本周第一天（星期日）
+            today.setDate(today.getDate() - (today.getDay() + 6) % 7); // 将今天的日期调整为本周第一天
+
+// 设置为上周最后一天（星期六）
+            var lastWeekEnd = new Date(today.getTime());
+            lastWeekEnd.setDate(today.getDate() - 1);
+            const lastWeekStart = new Date(lastWeekEnd.getTime() - (6 * 24 * 60 * 60 * 1000));
+
+            return [
+                lastWeekStart,
+                lastWeekEnd
+            ];
+        }
+    },
+    {
+        text: "本周",
+        value: function () {
+            // 创建一个新的 Date 对象
+            var today = new Date();
+            // 设置为本周第一天（星期日）
+            today.setDate(today.getDate() - (today.getDay() + 6) % 7); // 将今天的日期调整为本周第一天
+            return [
+                today,
+                new Date()
+            ];
+        }
+    },
+    {
+        text: "最近7天",
+        value: function () {
+            var today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
+            return [
+                thirtyDaysAgo,
+                new Date()
+            ];
+        }
+    },
+    {
+        text: "最近30天",
+        value: function () {
+            var today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            return [
+                thirtyDaysAgo,
+                new Date()
+            ];
+        }
+    },
+    {
+        text: "上个月",
+        value: function () {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            return [
+                new Date(year, month - 1, 1),
+                new Date(year, month, 0, 23, 59, 59)
+            ];
+        }
+    },
+    {
+        text: "这个月",
+        value: function () {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            return [
+                new Date(year, month, 1),
+                new Date(year, month + 1, 0, 23, 59, 59)
+            ];
+        }
+    },
+    {
+        text: "去年",
+        value: function () {
+            const now = new Date();
+            const year = now.getFullYear();
+            const januaryFirst = new Date(year - 1, 0, 1);
+            const last = new Date(year - 1, 11, 31);
+            return [
+                januaryFirst,
+                last
+            ];
+        }
+    },
+    {
+        text: "今年",
+        value: function () {
+            const now = new Date();
+            const year = now.getFullYear();
+            const januaryFirst = new Date(year, 0, 1);
+            return [
+                januaryFirst,
+                now
+            ];
+        }
+    }
+];
+
+
+function ezopen(openType, title, appendUrl, area) {
+    var contextNameElement = document.getElementById('contextName');
+    appendUrl = (contextNameElement ? contextNameElement.value : '') + appendUrl.trim();
+    if (openType && openType.indexOf('parent.') >= 0) {
+        openType = openType.replace('parent.', '');
+        parent.window.ezopen(openType, title, appendUrl, area);
+        return;
+    }
+    var params = [];
+    $("form").find('input,select').each(function () {
+        if ($(this).attr('name')) {
+            params.push($(this).attr('name') + '=' + encodeURI($(this).val()));
+        }
+    })
+    var searchParams = params.join('&');
+
+
+    switch (openType) {
+        case 'APPEND_PARAM':
+            if (appendUrl != null && appendUrl.indexOf('?') <= 0) {
+                appendUrl += '?' + searchParams;
+            } else {
+                appendUrl += '&' + searchParams;
+            }
+            openModel(appendUrl, title, area);
+            break;
+        case 'MODAL':
+            openModel(appendUrl, title, area);
+            break;
+        case 'FORM':
+            openForm(appendUrl, title, area);
+            break;
+        case 'FULL':
+            openFull(appendUrl, title, '确定', function (index111, layero, that) {
+                    var body = layer.getChildFrame('body', index111);
+
+                    var submitBtn = body.querySelector('#submitbtn');
+                    if (submitBtn) {
+                        submitBtn.click();
+                    }
+                }, '取消',
+                function (index222, layero, that) {
+                    layer.close(index222);
+                });
+            break;
+        case 'CONFIRM_MODEL':
+            layer.confirm('确认操作?', {icon: 3, title: '提示'}, function (index) {
+                layer.close(index);
+                openModel(appendUrl, title, area);
+            })
+            break;
+        case '_BLANK':
+            openBlank(appendUrl);
+            break;
+        case '_BLANK_PARAM':
+            if (appendUrl.indexOf('?') <= 0) {
+                appendUrl += '?' + searchParams;
+            } else {
+                appendUrl += '&' + searchParams;
+            }
+            openBlank(appendUrl);
+            break;
+        case 'LOCATION':
+            location.href = appendUrl;
+            break;
+        case 'PARENT':
+            openTab(title, appendUrl)
+            break;
+        case 'AJAX':
+            fetch(appendUrl)
+                .then(response => response.json())
+                .then(function (result) {
+                    if (result.success) {
+                        layer.msg("操作成功", {time: 500}, function (index) {
+                            location.reload();
+                        })
+                    } else {
+                        layer.msg("操作失败:" + result.message)
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                });
+            // openTab(title,appendUrl)
+            break;
+        case 'AJAX_LIST':
+            var loadingIndex = layer.load(3, {shade: [1, '#FFF']});
+            fetch(appendUrl)
+                .then(response => response.json())
+                .then(function (result) {
+                    layer.close(loadingIndex);
+                    if (result.success) {
+                        Global.get("table").reloadData();
+                        layer.msg("操作成功")
+                    } else {
+                        layer.alert("操作失败:" + result.message)
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                    layer.close(loadingIndex);
+                });
+            layer.close(index);
+            break;
+        case 'CONFIRM_AJAX':
+            var title = title;
+            layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
+                var loadingIndex = layer.load(3, {shade: [1, '#FFF']});
+                fetch(appendUrl)
+                    .then(response => response.json())
+                    .then(function (result) {
+                        layer.close(loadingIndex);
+                        if (result.success) {
+                            layer.msg("操作成功", {time: 500}, function (index) {
+                                location.reload();
+                            })
+                        } else {
+                            layer.alert("操作失败:" + result.message)
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Error:', error);
+                        layer.close(loadingIndex);
+                    });
+                layer.close(index);
+            });
+            break;
+        case 'CONFIRM_AJAX_LIST':
+            var title = title;
+            layer.confirm(title, {icon: 3, title: '提示'}, function (index) {
+                layer.close(index);
+                var loadingIndex = layer.load(3, {shade: [1, '#FFF']});
+                fetch(appendUrl)
+                    .then(response => response.json())
+                    .then(function (result) {
+                        layer.close(loadingIndex);
+                        if (result.success) {
+                            Global.get("table").reloadData();
+                            layer.msg("操作成功")
+                        } else {
+                            layer.alert("操作失败:" + result.message)
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Error:', error);
+                        layer.close(loadingIndex);
+                    });
+            });
+            break;
+        default:
+            location.href = appendUrl;
+    }
+}
+
+function openModel(url, name, area) {
+    var json = ['90%', '90%'];
+    if (area !== undefined && area !== "undefined" && area != '') {
+        try {
+            json = area.split(",");
+        } catch (e) {
+            json = area;
+        }
+        if (json.length == 1) {
+            json = area;
+        }
+    }
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        shadeClose: true,
+        area: json,
+        content: url,
+        moveOut: true,
+        success: function (layero, indexyyy, that) {
+
+            // var body = layer.getChildFrame('body', indexyyy);
+            // if ($(body).find('#submitButtonContainer').length > 0) {
+            //     $(body).find('#submitButtonContainer').append("<button class='layui-btn  layui-btn-primary' id='refreshForm' type='button'>刷新</button><button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+            //     $(body).on("click", "#closeParent", function (e) {
+            //         layui.layer.close(indexyyy);
+            //         e.preventDefault();
+            //         e.stopPropagation();
+            //         return false;
+            //     })
+            //     $(body).on("click", "#refreshForm", function (e) {
+            //         layer.iframeSrc(index, url)
+            //         return false;
+            //     })
+            // }
+        }
+    });
+    return index;
+}
+
+function openForm(url, name, area) {
+    var json = ['100%', '100%'];
+    if (area !== undefined && area != '') {
+        try {
+            json = area.split(",");
+        } catch (e) {
+            json = area;
+        }
+        if (json.length == 1) {
+            json = area;
+        }
+    }
+    name = name == undefined ? "窗口" : name;
+
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        btnAlign: 'c',
+        shadeClose: true,
+        area: json,
+        content: url,
+        moveOut: true,
+        success: function (layero, indexyyy, that) {
+            var body = layer.getChildFrame('body', indexyyy);
+            // try {
+            //     $(body).find('#submitbtnProxy').after("<button class='layui-btn  layui-btn-primary' id='refreshForm' type='button'>刷新</button><button class='layui-btn  layui-btn-primary' id='closeParent' type='button'>取消</button>");
+            //     $(body).on("click", "#closeParent", function (e) {
+            //         layui.layer.close(indexyyy);
+            //         e.preventDefault();
+            //         e.stopPropagation();
+            //         return false;
+            //     })
+            //     $(body).on("click", "#refreshForm", function (e) {
+            //         layer.iframeSrc(index, url)
+            //         return false;
+            //     })
+            // } catch (e) {
+            // }
+        }
+    });
+    return index;
+}
+
+function openFull(url, name, yestxt, yesfunc, notxt, nofunc) {
+    var json = ['100%', '100%'];
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        btnAlign: 'c',
+        shadeClose: true,
+        area: json,
+        content: url,
+        moveOut: true,
+        btn: [yestxt, notxt],
+        // 按钮1 的回调
+        btn1: function (index111, layero, that) {
+            yesfunc(index111, layero, that);
+        },
+        btn2: function (index222, layero, that) {
+            nofunc(index222, layero, that);
+        },
+        success: function (layero, indexyyy, that) {
+            var body = layer.getChildFrame('body', indexyyy);
+            // $(body).find('#submitButtonContainer').html('');
+        }
+    });
+    return index;
+}
+
+function openModelSelect(url, name) {
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        shadeClose: true,
+        area: ['90%', '90%'],
+        content: url,
+        moveOut: true,
+        btn: ['确定'],
+        // 按钮1 的回调
+        btn1: function (indexxx, layero, that) {
+            var body = layer.getChildFrame('body', indexxx);
+            $(body).find('#check_click_选择').click();
+        }
+    });
+    return index;
+}
+
+function openModelReload(url, name, cancel) {
+    name = name == undefined ? "窗口" : name;
+    var index = layer.open({
+        title: name,
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        shadeClose: true,
+        area: ['90%', '90%'],
+        content: url,
+        moveOut: true,
+        cancel: cancel
+    });
+}
+
+
+function openTab(title, link) {
+    if (link == undefined) {
+        link = title;
+        title = "查看";
+    }
+    try {
+        if (window.top === window.self) {
+            return openBlank(link);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+    // 检查父窗口和当前窗口的域名是否一致
+    let parentHost = '';
+    let currentHost = window.location.host;
+    let useAbsolute = false;
+    try {
+        parentHost = window.parent.location.host;
+        if (parentHost !== currentHost) {
+            useAbsolute = true;
+        }
+    } catch (e) {
+        // 跨域无法访问，必须用绝对地址
+        useAbsolute = true;
+    }
+
+    // 如果需要，转成绝对地址
+    if (useAbsolute && !/^https?:\/\//i.test(link)) {
+        // 相对路径转绝对路径
+        let a = document.createElement('a');
+        a.href = link;
+        link = a.href;
+    }
+
+    var uniqueName = link.replace('./', '').replace(/["&'./:=%?[\]]/gi, '-').replace(/(--)/gi, '');
+
+    window.parent.postMessage({
+        from: 'ez',
+        name: title,
+        url: link,
+        id: "tab-" + uniqueName
+    }, '*');
+}
+
+function openBlank(appendUrl) {
+    // var a = document.createElement("a");
+    // a.setAttribute("href", appendUrl);
+    // a.setAttribute("target", "_blank");
+    // a.setAttribute("id", "camnpr");
+    // document.body.appendChild(a);
+    // a.click();
+    // a.remove();
+    window.open(appendUrl);
+}
+
+/**
+ *
+ * @param  parent.refreshCard.prod
+ */
+function refreshCard(card_item_name) {
+    card_item_name = card_item_name.toLowerCase();
+    if (card_item_name && card_item_name.indexOf('parent.') >= 0) {
+        card_item_name = card_item_name.replace('parent.', '');
+        window.parent.refreshCard(card_item_name);
+        return;
+    }
+    if (card_item_name.indexOf('refreshcard') >= 0) {
+        layer.closeAll();
+        const parts = card_item_name.split('.');
+        if (parts.length === 2 && parts[0] === "refreshcard") {
+            const cardItemName = parts[1]; // 获取第二个值，如 "prod"
+            if( $("[card_item_name=" + cardItemName + "]").length == 0 ) {
+                console.log("未找到对应的 card_item_name=" + cardItemName);
+                return false;
+            }
+            // 找到对应的 iframe 并刷新
+            $("[card_item_name=" + cardItemName + "]").find("iframe").attr("src", function () {
+                const currentSrc = $(this).attr("src");
+                return currentSrc + (currentSrc.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
+            });
+            console.log("已刷新 card_item_name=" + cardItemName + " 的 iframe");
+        } else {
+            console.log("参数配置错误，应为 reloadcard.xxx");
+        }
+    }
+}
+
+
+Global.formRender = function () {
+    document.querySelectorAll('.layui-form-checkbox, .layui-form-radio').forEach(function (element) {
+        element.remove();
+    });
+    layui.form.render();
+}
+
+
+Global.formatByPattern = function (value, pattern) {
+
+    let num = Number(value);
+    if (isNaN(num)) return value;
+    // 分离整数和小数部分
+    let parts = pattern.split('.');
+    let intPattern = parts[0];
+    let decPattern = parts[1] || '';
+
+    // 处理小数部分：统计 # 和 0 的个数
+    let minDecimals = (decPattern.match(/0/g) || []).length;      // 必须显示的小数位数（0的个数）
+    let maxDecimals = decPattern.length;                           // 最多小数位数（# 和 0 的总数）
+
+    // 格式化数字（按最大小数位数固定，然后截断）
+    let fixed = num.toFixed(maxDecimals);
+    let [intPart, decPart] = fixed.split('.');
+
+    // 处理小数部分：去除超过 minDecimals 的末尾零（如果允许省略）
+    if (decPart) {
+        let keepDecimals = maxDecimals;
+        if (decPattern.includes('#')) {
+            // 如果模式中有#，则允许去除末尾零，但至少保留 minDecimals 位
+            let trimmed = decPart.replace(/0+$/, '');
+            if (trimmed.length < minDecimals) {
+                // 补零到最小位数
+                decPart = decPart.substring(0, minDecimals);
+            } else {
+                decPart = trimmed;
+            }
+        } else {
+            // 全是0，必须保留固定位数
+            decPart = decPart.substring(0, maxDecimals);
+        }
+    }
+
+    // 处理整数部分：按模式补零（如果模式以0开头）
+    if (intPattern.startsWith('0') && intPart.length < intPattern.length) {
+        intPart = intPart.padStart(intPattern.length, '0');
+    }
+
+    return decPart ? `${intPart}.${decPart}` : intPart;
+}
+
+/**
+ * 将字节数转换为可读的文件大小格式（B/KB/MB/GB/TB）
+ * @param {number} bytes - 要转换的字节数
+ * @param {number} [decimals=2] - 保留的小数位数，默认2位
+ * @returns {string} 格式化后的文件大小字符串
+ */
+function formatFileSize(bytes, decimals = 2) {
+
+    if (bytes === undefined) {
+        return '0 B'
+    }
+    if (bytes === 0) return '0 B';
+
+    const k = 1000; // 使用 1024 作为进制（二进制前缀）
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    // 限制单位范围
+    const index = Math.min(i, sizes.length - 1);
+    const value = bytes / Math.pow(k, index);
+
+    // 小数位数处理
+    const formatted = value.toFixed(decimals);
+    // 移除末尾多余的 .00 或 .0（如果小数位数为0）
+    const finalValue = parseFloat(formatted).toString();
+
+    return `${finalValue} ${sizes[index]}`;
+}
+
+
+/**
+ * AJAX 下载文件 (使用 Fetch API)
+ * @param {string} url 下载地址
+ * @param {string} method 请求方法 (GET/POST)
+ * @param {object} params 请求参数 (GET请求拼接在url上, POST请求作为body)
+ * @param {object} headers 自定义请求头 (如 Authorization)
+ * @param {string} fileName 可选，指定下载后的文件名，若不传则从响应头中获取
+ */
+async function ajaxDownloadFile({
+                                    url,
+                                    method = 'GET',
+                                    params = null,
+                                    headers = {},
+                                    fileName = ''
+                                }) {
+    try {
+        // 1. 构造请求选项<span  class="layui-icon-refresh layui-icon modal-title"></span>
+        const options = { method, headers };
+
+        // 处理 GET 请求的 Query String
+        if (method.toUpperCase() === 'GET' && params) {
+            const query = new URLSearchParams(params).toString();
+            url += (url.includes('?') ? '&' : '?') + query;
+        }
+
+        // 处理 POST 请求的 Body (假定为 JSON 格式，可修改)
+        if (method.toUpperCase() === 'POST' && params) {
+            options.body = JSON.stringify(params);
+            if (!headers['Content-Type']) {
+                headers['Content-Type'] = 'application/json';
+            }
+        }
+
+        // 2. 发起请求
+        const response = await fetch(url, options);
+
+        // 检查 HTTP 状态
+        if (!response.ok) {
+            throw new Error(`下载失败: ${response.status} ${response.statusText}`);
+        }
+
+        // 3. 提取二进制数据 (Blob)
+        const blob = await response.blob();
+
+        // 4. 提取文件名 (优先级: 传入 > 响应头 > 默认)
+        if (!fileName) {
+            const disposition = response.headers.get('content-disposition');
+            if (disposition) {
+                // 匹配 filename*=UTF-8''xxxx 或 filename="xxxx"
+                const match = disposition.match(/filename\*?=(?:UTF-8''|")?([^";]+)/);
+                if (match) {
+                    // 对 URL 编码格式解码
+                    fileName = decodeURIComponent(match[1]);
+                }
+            }
+        }
+        if (!fileName) {
+            // 从 URL 提取后缀名，或使用默认名
+            const urlPath = new URL(url, window.location.origin).pathname;
+            const baseName = urlPath.substring(urlPath.lastIndexOf('/') + 1) || 'download';
+            fileName = baseName || 'file_download';
+        }
+
+        // 5. 触发浏览器下载
+        triggerDownload(blob, fileName);
+
+    } catch (error) {
+        console.error('AJAX 下载异常:', error);
+        // 可在此处调用 UI 提示错误
+        // alert('文件下载失败，请稍后重试');
+        throw error;
+    }
+}
+
+/**
+ * 辅助方法：通过创建隐藏的 <a> 标签触发下载
+ */
+function triggerDownload(blob, fileName) {
+    // 创建 Blob URL
+    const linkUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = linkUrl;
+    link.download = fileName;
+    document.body.appendChild(link); // 必须加入 DOM 才生效
+    link.click();
+
+    // 清理工作：移除元素并释放内存
+    setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(linkUrl);
+    }, 100);
+}
+

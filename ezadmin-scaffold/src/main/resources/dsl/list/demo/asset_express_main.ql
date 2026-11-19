@@ -1,0 +1,1 @@
+return search("SELECT t.ID, t.ASSET_NAME, t.NOTES FROM DEMO_ASSET t WHERE t.DELETED = FALSE");

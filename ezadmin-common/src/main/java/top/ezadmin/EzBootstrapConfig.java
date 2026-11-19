@@ -1,0 +1,269 @@
+package top.ezadmin;
+
+import top.ezadmin.common.utils.EzJson;
+import top.ezadmin.common.utils.EzJsonImpl;
+import top.ezadmin.plugins.cache.CaffeineCache;
+import top.ezadmin.plugins.cache.EzCache;
+import top.ezadmin.plugins.export.CSVExport;
+import top.ezadmin.plugins.export.EzExport;
+import top.ezadmin.plugins.sqlparser.EzSqlParser;
+import top.ezadmin.plugins.templates.EzTemplate;
+import top.ezadmin.plugins.templates.ThymeleafEzTemplate;
+
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+
+
+public class EzBootstrapConfig {
+    /**
+     * 导出类名，指定数据导出功能的实现类
+     */
+    private String exportClass = "top.ezadmin.plugins.export.CSVExport";
+
+    private EzExport ezExport = new CSVExport();
+
+    /**
+     * 缓存类名，指定缓存功能的实现类
+     */
+    private String cacheClass = "top.ezadmin.plugins.cache.CaffeineCache";
+    private EzCache ezCache = new CaffeineCache();
+
+    /**
+     * 前缀URL，系统所有接口的统一前缀路径
+     */
+    private String prefixUrl = "/topezadmin/";
+
+    private Map<String, javax.sql.DataSource> datasourceMap = new HashMap<>();
+
+    private EzTemplate ezTemplate = new ThymeleafEzTemplate();
+
+    private EzJson ezJson;
+
+    private EzSqlParser ezSqlParser;
+
+
+    /**
+     * SQL缓存开关，控制是否启用SQL查询缓存
+     */
+    private boolean sqlCache = true;
+    /**
+     * 高级搜索是否开启
+     */
+    private boolean customSearchOpen = true;
+    /**
+     * fluid 宽屏
+     * container 窄屏
+     */
+    private String layout = "fluid";
+
+
+    private String adminStyle = "layui";
+
+    private String systemName = "System";
+    /**
+     * logo
+     */
+    private String logoUrl = "/static/logo.png";
+    /**
+     * 退出登录 URL
+     */
+    private String signoutUrl = "/signout";
+    private String appName;
+    /**
+     * 上传url
+     */
+    private String uploadUrl;
+    /**
+     * 下载url
+     */
+    private String downloadUrl;
+    /**
+     * 本地上传时的路径
+     */
+    private String uploadPath = "/data/upload/ezadmin";
+    /**
+     * 自定义配置
+     */
+    private String configJson = "{\"favicon\":\"/static/favicon2.ico\",\"logo\":\"/static/logo.png\"}";
+
+    private Map<String, Object> config = new HashMap<>();
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getSignoutUrl() {
+        return signoutUrl;
+    }
+
+    public void setSignoutUrl(String signoutUrl) {
+        this.signoutUrl = signoutUrl;
+    }
+
+    public String getExportClass() {
+        return exportClass;
+    }
+
+    public void setExportClass(String exportClass) {
+        this.exportClass = exportClass;
+    }
+
+    public String getCacheClass() {
+        return cacheClass;
+    }
+
+    public void setCacheClass(String cacheClass) {
+        this.cacheClass = cacheClass;
+    }
+
+    public String getPrefixUrl() {
+        return prefixUrl;
+    }
+
+    public void setPrefixUrl(String prefixUrl) {
+        this.prefixUrl = prefixUrl;
+    }
+
+    public Map<String, DataSource> getDatasourceMap() {
+        return datasourceMap;
+    }
+
+    public void setDatasourceMap(Map<String, DataSource> datasourceMap) {
+        this.datasourceMap = datasourceMap;
+    }
+
+    public boolean isSqlCache() {
+        return sqlCache;
+    }
+
+    public void setSqlCache(boolean sqlCache) {
+        this.sqlCache = sqlCache;
+    }
+
+    public boolean isCustomSearchOpen() {
+        return customSearchOpen;
+    }
+
+    public void setCustomSearchOpen(boolean customSearchOpen) {
+        this.customSearchOpen = customSearchOpen;
+    }
+
+
+    public EzTemplate getEzTemplate() {
+        return ezTemplate;
+    }
+
+    public void setEzTemplate(EzTemplate ezTemplate) {
+        this.ezTemplate = ezTemplate;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
+    }
+
+    public EzExport getEzExport() {
+        return ezExport;
+    }
+
+    public void setEzExport(EzExport ezExport) {
+        this.ezExport = ezExport;
+    }
+
+    public EzCache getEzCache() {
+        return ezCache;
+    }
+
+    public void setEzCache(EzCache ezCache) {
+        this.ezCache = ezCache;
+    }
+
+    public String getAdminStyle() {
+        return adminStyle;
+    }
+
+    public void setAdminStyle(String adminStyle) {
+        this.adminStyle = adminStyle;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getUploadUrl() {
+        return uploadUrl;
+    }
+
+    public void setUploadUrl(String uploadUrl) {
+        this.uploadUrl = uploadUrl;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    public String getUploadPath() {
+        return uploadPath;
+    }
+
+    public void setUploadPath(String uploadPath) {
+        this.uploadPath = uploadPath;
+    }
+
+    public String getConfigJson() {
+        return configJson;
+    }
+
+    public void setConfigJson(String configJson) {
+        this.configJson = configJson;
+    }
+
+    public Map<String, Object> getConfig() {
+        return config;
+    }
+
+    public void setConfig(Map<String, Object> config) {
+        this.config = config;
+    }
+
+    public EzJson getEzJson() {
+        return ezJson == null ? new EzJsonImpl() : ezJson;
+    }
+
+    public void setEzJson(EzJson ezJson) {
+        this.ezJson = ezJson;
+    }
+
+    public EzSqlParser getEzSqlParser() {
+        return ezSqlParser;
+    }
+
+    public void setEzSqlParser(EzSqlParser ezSqlParser) {
+        this.ezSqlParser = ezSqlParser;
+    }
+
+}

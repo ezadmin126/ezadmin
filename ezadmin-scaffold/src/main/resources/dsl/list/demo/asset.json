@@ -1,0 +1,29 @@
+{
+  "id": "demo/asset",
+  "name": "资产管理",
+  "dataSource": "dataSource",
+  "body": {"showIndex": true, "limit": 10, "rowActionWidth": 150, "emptyShow": "-"},
+  "search": [
+    {"row": [
+      {"item_name": "ASSET_NAME", "label": "资产名称", "component": "input", "alias": "t.ASSET_NAME", "operator": "like"}
+    ]}
+  ],
+  "column": [
+    {"item_name": "ASSET_NAME", "label": "资产名称", "component": "tdText"},
+    {"item_name": "NOTES", "label": "备注", "component": "tdText"}
+  ],
+  "tableButton": [
+    {"item_name": "ADD", "label": "新增资产", "component": "button-table",
+      "props": {"url": "form/page-demo/asset", "opentype": "MODAL", "windowname": "新增资产", "area": "620px,430px"}}
+  ],
+  "rowButton": [
+    {"item_name": "EDIT", "label": "编辑", "component": "button-normal",
+      "props": {"url": "form/page-demo/asset?ID={{=d.ID}}", "opentype": "MODAL", "windowname": "编辑资产", "area": "620px,430px"}},
+    {"item_name": "DELETE", "label": "删除", "component": "button-normal",
+      "props": {"url": "form/delete-demo/asset?ID={{=d.ID}}", "opentype": "CONFIRM_AJAX_LIST", "windowname": "确认删除该资产？"}}
+  ],
+  "express": {
+    "main": "@import(asset_express_main.ql)",
+    "orderBy": "ORDER BY t.ID DESC"
+  }
+}

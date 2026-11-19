@@ -1,0 +1,50 @@
+{
+  "id": "test-file-list",
+  "title": "测试列表(文件版)",
+  "description": "此列表配置存储在文件中",
+  "dataSource": "defaultDataSource",
+  "express": {
+    "main": "SELECT id, name, age, email, create_time FROM t_user WHERE DELETE_FLAG = 0 #{AND name LIKE CONCAT('%',#name,'%')}",
+    "count": "SELECT COUNT(1) FROM t_user WHERE DELETE_FLAG = 0 #{AND name LIKE CONCAT('%',#name,'%')}",
+    "orderBy": "create_time DESC"
+  },
+  "column": [
+    {
+      "field": "id",
+      "label": "ID",
+      "component": "tdText",
+      "width": 80
+    },
+    {
+      "field": "name",
+      "label": "姓名",
+      "component": "tdText",
+      "width": 150
+    },
+    {
+      "field": "age",
+      "label": "年龄",
+      "component": "tdText",
+      "width": 100
+    },
+    {
+      "field": "email",
+      "label": "邮箱",
+      "component": "tdText",
+      "width": 200
+    }
+  ],
+  "search": [
+    {
+      "field": "name",
+      "label": "姓名",
+      "component": "input",
+      "props": {
+        "placeholder": "请输入姓名"
+      }
+    }
+  ],
+  "body": {
+    "limit": 20
+  }
+}

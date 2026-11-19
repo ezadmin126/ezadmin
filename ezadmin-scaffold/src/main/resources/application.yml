@@ -1,0 +1,22 @@
+server:
+  address: 127.0.0.1
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/ezadmin;MODE=MySQL
+    username: sa
+    password: ''
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+  h2:
+    console:
+      enabled: false
+
+topezadmin:
+  cache-flag: false
+  layout: fluid
+  prefixUrl: /p/
+  navUrl: /laynavs.html

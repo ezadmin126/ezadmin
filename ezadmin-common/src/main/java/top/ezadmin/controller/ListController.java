@@ -1,0 +1,913 @@
+package top.ezadmin.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import top.ezadmin.EzBootstrap;
+import top.ezadmin.common.constants.SessionConstants;
+import top.ezadmin.common.enums.DefaultParamEnum;
+import top.ezadmin.common.enums.JdbcTypeEnum;
+import top.ezadmin.common.enums.ParamNameEnum;
+import top.ezadmin.common.utils.*;
+import top.ezadmin.dao.model.CustomSearchDTO;
+import top.ezadmin.dao.model.CustomSearchOrder;
+import top.ezadmin.dao.model.TreeConfig;
+import top.ezadmin.plugins.export.EzExportResult;
+import top.ezadmin.plugins.express.executor.ListExpressExecutor;
+import top.ezadmin.plugins.parser.MapParser;
+import top.ezadmin.service.ListService;
+import top.ezadmin.web.EzResult;
+import top.ezadmin.web.RequestContext;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+
+public class ListController extends BaseController {
+    private Logger logger = LoggerFactory.getLogger(ListController.class);
+
+    private ListService listService = EzProxy.singleInstance(ListService.class);
+
+    public EzResult pageCustomSearch(RequestContext requestContext, String method, String listUrlCode) throws Exception {
+        Map<String, Object> templateParam = new HashMap<>();
+        top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(listUrlCode, "list");
+        if (dslConfig == null) {
+            return render(EzBootstrap.config().getAdminStyle() + "/404", templateParam);
+        }
+        Map<String, Object> list = dslConfig.getConfig();
+
+        // 填充 select/xmselect 等组件的选项数据
+        initSearch(requestContext, list);
+
+        // 从 search[].row[] 提取可参与自定义查询的字段
+        List<List<Map<String, Object>>> searchRows = getFlattenedSearchList(list.get("search"));
+        List<Map<String, Object>> searchableFields = new ArrayList<>();
+        Set<String> SUPPORTED_SEARCH = new HashSet<>(Arrays.asList(
+                "input", "input-text", "select", "select-search", "xmselect", "date", "inputrange"
+        ));
+        if (searchRows != null) {
+            for (List<Map<String, Object>> row : searchRows) {
+                for (Map<String, Object> item : row) {
+                    String component = Utils.trimNull(item.get("component"));
+                    if (SUPPORTED_SEARCH.contains(component)) {
+                        // 确保 dataJson 已序列化，供模板中 JS 使用
+                        if (item.get("data") != null && item.get("dataJson") == null) {
+                            item.put("dataJson", JSONUtils.toJSONString(item.get("data")));
+                        }
+                        searchableFields.add(item);
+                    }
+                }
+            }
+        }
+
+        // 从 column[] 提取可排序列（sortable 不为 false 的列）
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
+        List<Map<String, Object>> sortableColumns = new ArrayList<>();
+        if (columnList != null) {
+            for (Map<String, Object> col : columnList) {
+                Object sortable = col.get("sortable");
+                if (!(Boolean.FALSE.equals(sortable) || "false".equalsIgnoreCase(Utils.trimNull(sortable)))) {
+                    sortableColumns.add(col);
+                }
+            }
+        }
+
+        // 构建 JS 用的精简 Meta JSON（只含 item_name/label/component/data）
+        List<Map<String, Object>> searchFieldMeta = new ArrayList<>();
+        for (Map<String, Object> item : searchableFields) {
+            Map<String, Object> meta = new LinkedHashMap<>();
+            meta.put("item_name", Utils.trimNull(item.get("item_name")));
+            meta.put("label", Utils.trimNull(item.get("label")));
+            meta.put("component", Utils.trimNull(item.get("component")));
+            Object dataObj = item.get("data");
+            meta.put("data", dataObj != null ? dataObj : new ArrayList<>());
+            searchFieldMeta.add(meta);
+        }
+
+        templateParam.put("fromSearchField", searchableFields);
+        templateParam.put("fromColField", sortableColumns);
+        templateParam.put("searchFieldMetaJson", JSONUtils.toJSONString(searchFieldMeta));
+        templateParam.put("ENCRYPT_LIST_ID", listUrlCode);
+        templateParam.put("_EZ_SERVER_NAME", "//" + requestContext.getServerName() + ":" + requestContext.getServerPort());
+        return render("dsl/pageCustomSearch", templateParam);
+    }
+
+
+    public EzResult page(RequestContext requestContext, String method, String id) throws Exception {
+        Map<String, Object> templateParam = new HashMap<>();
+        // 使用统一加载器（文件优先，数据库降级）
+        top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(id, "list");
+        if (dslConfig == null) {
+            return render(EzBootstrap.config().getAdminStyle() + "/404", templateParam);
+        }
+        Map<String, Object> list = dslConfig.getConfig();
+
+        initTabList(requestContext, list);
+        initTableBtn(requestContext, list);
+
+        initSearch(requestContext, list);
+        initMenu(requestContext, list);
+        initTree(requestContext, list);
+        Collection<String> tdtemplates = initTd(requestContext, list);
+        if (list.get("initApi") == null) {
+            list.put("initApi", EzBootstrap.config().getPrefixUrl() + "list/data-" + id);
+        }
+        if (list.get("countApi") == null) {
+            list.put("countApi", EzBootstrap.config().getPrefixUrl() + "list/countpage-" + id);
+        }
+        //默认你不隐藏头部
+        if (list.get("hideSearch") == null) {
+            list.put("hideSearch", false);
+        }
+
+        list.put("prefixUrl", EzBootstrap.config().getPrefixUrl());
+        list.put("configJson", EzBootstrap.config().getConfigJson());
+
+        initRowBtn(requestContext, list);
+        templateParam.put("list", list);
+        templateParam.put("perPageInt", list.get("body") != null ? ((Map<String, Object>) list.get("body")).get("limit") : 10);
+        templateParam.put("ENCRYPT_LIST_ID", id);
+        templateParam.put("cacheFlag", EzBootstrap.config().isSqlCache());
+        templateParam.put("tdTemplates", tdtemplates);
+        templateParam.put("requestContext", requestContext);
+        templateParam.put("downloadUrl", EzBootstrap.config().getDownloadUrl());
+        templateParam.putAll(EzBootstrap.config().getConfig());
+
+        templateParam.put("EZ_SESSION_USER_NAME_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY)));
+        templateParam.put("EZ_SESSION_USER_ID_KEY", Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY)));
+
+        return render("dsl/listTemplate", templateParam);
+    }
+
+    private void initTableBtn(RequestContext requestContext, Map<String, Object> list) {
+        List<Map<String, Object>> tableButtons = (List<Map<String, Object>>) list.get("tableButton");
+        if (Utils.isNotEmpty(tableButtons)) {
+            tableButtons.forEach(item -> {
+                Map<String, Object> props = (Map<String, Object>) item.get("props");
+                if (props == null) {
+                    return;
+                }
+                //url
+                if (props.containsKey("url") && props.get("url") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("url"), requestContext.getRequestParams()).getResult();
+                    props.put("url", Utils.fixedUrl(urlNew));
+                }
+                if (props.containsKey("windowname") && props.get("windowname") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("windowname"), requestContext.getRequestParams()).getResult();
+                    props.put("windowname", urlNew);
+                }
+            });
+        }
+    }
+
+    private void initTabList(RequestContext requestContext, Map<String, Object> list) {
+        List<Map<String, Object>> tabList = (List<Map<String, Object>>) list.get("tabList");
+        if (Utils.isNotEmpty(tabList)) {
+            tabList.forEach(item -> {
+                Map<String, Object> props = (Map<String, Object>) item.get("props");
+                if (props == null) {
+                    return;
+                }
+                //url
+                if (props.containsKey("url") && props.get("url") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("url"), requestContext.getRequestParams()).getResult();
+                    props.put("url", Utils.fixedUrl(urlNew));
+                }
+                if (props.containsKey("windowname") && props.get("windowname") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("windowname"), requestContext.getRequestParams()).getResult();
+                    props.put("windowname", urlNew);
+                }
+            });
+        }
+    }
+
+    private void initMenu(RequestContext requestContext, Map<String, Object> list) {
+        Map<String, Object> menu= (Map<String, Object>) list.get("menu");
+
+        if (menu != null) {
+            listService.initComponentData(requestContext, menu);
+            if( menu.get("buttonList") != null){
+                List<Map<String,Object>> btnList=(List<Map<String,Object>>) menu.get("buttonList");
+                if(Utils.isNotEmpty(btnList)){
+                    btnList.forEach(item->{
+                        listService.initComponentData(requestContext, item);
+                    });
+                }
+            }
+        }
+    }
+
+    private void initTree(RequestContext requestContext, Map<String, Object> list) {
+        if (list.get("tree") != null) {
+            listService.initComponentData(requestContext, (Map<String, Object>) list.get("tree"));
+        }
+    }
+
+
+    public EzResult data(RequestContext requestContext, String method, String id) throws Exception {
+
+        // 使用统一加载器（文件优先，数据库降级）
+        top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(id, "list");
+        if (dslConfig == null) {
+            return EzResult.instance().code("JSON").data(EzResult.instance().code("404"));
+        }
+        Map<String, Object> list = dslConfig.getConfig();
+        String select_express = Utils.expressToString(((Map<String, Object>) list.get("express")).get("main"));
+        String orderBy = Utils.expressToString(((Map<String, Object>) list.get("express")).get("orderBy"));
+        String groupBy = Utils.expressToString(((Map<String, Object>) list.get("express")).get("groupBy"));
+        String count_express = Utils.expressToString(((Map<String, Object>) list.get("express")).get("count"));
+        //兼容老设计
+        list.put("orderby_express", orderBy);
+        list.put("count_express", count_express);
+        list.put("col", list.get("column"));
+        list.put("core", list.get("body"));
+
+
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
+        columnList.forEach(item -> {
+            //兼容老设计
+            item.put("type", item.get("component"));
+        });
+
+        // 支持一维和二维数组格式
+        List<List<Map<String, Object>>> searchList = getFlattenedSearchList(list.get("search"));
+        fillinitRequestValue(searchList, requestContext.getRequestParams());
+
+        //  Page page = new Page(requestContext.getRequestParams());
+        int perPageInt = list.get("body") != null ? Utils.toInt(Utils.trimNull(((Map<String, Object>) list.get("body")).get("limit"))) : 10;
+        if (!requestContext.getRequestParams().containsKey("perPageInt")) {
+            requestContext.getRequestParams().put("perPageInt", perPageInt);
+        }
+        if (list.get("tree") != null
+                && Utils.isNotEmpty((Map<String, Object>) list.get("tree"))
+        ) {
+            //tree最多支持10000条数据
+            requestContext.getRequestParams().put("perPageInt", 10000);
+        }
+
+        Page page = loadingPage(list, requestContext.getRequestParams());
+
+        ListExpressExecutor listExpressExecutor = ListExpressExecutor.createInstance();
+        listExpressExecutor.datasource(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource")))
+                .express(select_express)
+                .page(page);
+        //兼容老设计
+        listExpressExecutor.getOperatorParam().setListDto(list);
+
+        //计算group by
+        String group = excuteGroup(groupBy, requestContext.getRequestParams(), requestContext.getSessionParams());
+
+        listExpressExecutor.addParam("_CHECKD_IDS", Utils.getStringByObject(requestContext.getRequestParams(), "_CHECKD_IDS"));
+        listExpressExecutor.addParam("EZ_SUM_FLAG", Utils.getStringByObject(requestContext.getRequestParams(), "EZ_SUM_FLAG"));
+        listExpressExecutor.addParam("GROUP_BY", group);
+        page.setGroupBy(group);
+        listExpressExecutor.addSessionParam(requestContext.getSessionParams());
+        listExpressExecutor.addRequestParam(requestContext.getRequestParams());
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>) listExpressExecutor.execute();
+        //查询总数
+        long count = page.getPerPageInt();
+        if (list.get("tree") != null
+                && Utils.isNotEmpty((Map<String, Object>) list.get("tree"))
+        ) {
+            // 从请求参数中获取树搜索关键词
+            Map<String, Object> customNameMap = (Map<String, Object>) ((Map<?, ?>) list.get("tree")).get("customName");
+            TreeConfig config = new TreeConfig();
+            if (customNameMap != null) {
+                config.setTreeId(Utils.trimNull(customNameMap.get("id")));
+                config.setTreePid(Utils.trimNull(customNameMap.get("pid")));
+                config.setTreeLabel(Utils.trimNull(customNameMap.get("name")));
+                config.setTreeChildren(Utils.trimNull(customNameMap.get("children")));
+                config.setTreeIsParent(Utils.trimNull(customNameMap.get("isParent")));
+            }
+//            //取data配置里面的rootPid
+            Map<String, Object> dataMap = (Map<String, Object>) ((Map<?, ?>) list.get("tree")).get("data");
+            String rootPid = "";
+            if (dataMap != null) {
+                config.setRootPid(Utils.trimNull(dataMap.get("rootPid")));
+            }
+            String treeSearchKeyword = Utils.trimNull(requestContext.getParameter(config.getTreeLabel()));
+
+            List<Map<String, Object>> rr = TreeUtil.build(dataList, config, treeSearchKeyword);
+
+
+            return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(rr.size()).data(rr));
+        } else {
+            if (Utils.isTrue(list.get("pagesync"))) {
+                count = getDataCountByListId(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource"))
+                        , list, requestContext.getRequestParams(), requestContext.getSessionParams());
+            }
+        }
+        //取里面的column里面的 item_name与label组成新的list
+        List<Map<String, Object>> columnListNew = columnList.stream()
+                .map(item -> {
+                    Map<String, Object> newItem = new HashMap<>();
+                    newItem.put("item_name", item.get("item_name"));
+                    newItem.put("label", item.get("label"));
+                    return newItem;   // 返回新 Map
+                })
+                .collect(Collectors.toList());
+
+        return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(count).data(dataList).fields(columnListNew));
+    }
+
+    public EzResult countpage(RequestContext requestContext, String method, String id) throws Exception {
+
+        // 使用统一加载器（文件优先，数据库降级）
+        top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(id, "list");
+        if (dslConfig == null) {
+            return EzResult.instance().code("JSON").data(EzResult.instance().code("404"));
+        }
+        Map<String, Object> list = dslConfig.getConfig();
+        String select_express = Utils.expressToString(((Map<String, Object>) list.get("express")).get("main"));
+        String orderBy = Utils.expressToString(((Map<String, Object>) list.get("express")).get("orderBy"));
+        String groupBy = Utils.expressToString(((Map<String, Object>) list.get("express")).get("groupBy"));
+        String count_express = Utils.expressToString(((Map<String, Object>) list.get("express")).get("count"));
+        //兼容老设计
+        list.put("orderby_express", orderBy);
+        list.put("count_express", count_express);
+        list.put("col", list.get("column"));
+        list.put("core", list.get("body"));
+
+
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
+        columnList.forEach(item -> {
+            //兼容老设计
+            item.put("type", item.get("component"));
+        });
+
+        // 支持一维和二维数组格式
+        List<List<Map<String, Object>>> searchList = getFlattenedSearchList(list.get("search"));
+        fillinitRequestValue(searchList, requestContext.getRequestParams());
+
+        //  Page page = new Page(requestContext.getRequestParams());
+        int perPageInt = list.get("body") != null ? Utils.toInt(Utils.trimNull(((Map<String, Object>) list.get("body")).get("limit"))) : 10;
+        if (!requestContext.getRequestParams().containsKey("perPageInt")) {
+            requestContext.getRequestParams().put("perPageInt", perPageInt);
+        }
+        if (list.get("tree") != null
+                && Utils.isNotEmpty((Map<String, Object>) list.get("tree"))
+        ) {
+            //tree最多支持10000条数据
+            requestContext.getRequestParams().put("perPageInt", 10000);
+        }
+
+        Page page = loadingPage(list, requestContext.getRequestParams());
+
+        ListExpressExecutor listExpressExecutor = ListExpressExecutor.createInstance();
+        listExpressExecutor.datasource(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource")))
+                .express(select_express)
+                .page(page);
+        //兼容老设计
+        listExpressExecutor.getOperatorParam().setListDto(list);
+
+        //计算group by
+        String group = excuteGroup(groupBy, requestContext.getRequestParams(), requestContext.getSessionParams());
+
+        listExpressExecutor.addParam("_CHECKD_IDS", Utils.getStringByObject(requestContext.getRequestParams(), "_CHECKD_IDS"));
+        listExpressExecutor.addParam("EZ_SUM_FLAG", Utils.getStringByObject(requestContext.getRequestParams(), "EZ_SUM_FLAG"));
+        listExpressExecutor.addParam("GROUP_BY", group);
+        page.setGroupBy(group);
+        listExpressExecutor.addSessionParam(requestContext.getSessionParams());
+        listExpressExecutor.addRequestParam(requestContext.getRequestParams());
+        List<Map<String, Object>> dataList = new ArrayList<>();
+        //查询总数
+        long count = 0;
+        if (list.get("tree") != null
+                && Utils.isNotEmpty((Map<String, Object>) list.get("tree"))
+        ) {
+            // 从请求参数中获取树搜索关键词
+            Map<String, Object> customNameMap = (Map<String, Object>) ((Map<?, ?>) list.get("tree")).get("customName");
+            TreeConfig config = new TreeConfig();
+            if (customNameMap != null) {
+                config.setTreeId(Utils.trimNull(customNameMap.get("id")));
+                config.setTreePid(Utils.trimNull(customNameMap.get("pid")));
+                config.setTreeLabel(Utils.trimNull(customNameMap.get("name")));
+                config.setTreeChildren(Utils.trimNull(customNameMap.get("children")));
+                config.setTreeIsParent(Utils.trimNull(customNameMap.get("isParent")));
+            }
+            //取data配置里面的rootPid
+            Map<String, Object> dataMap = (Map<String, Object>) ((Map<?, ?>) list.get("tree")).get("data");
+            String rootPid = "";
+            if (dataMap != null) {
+                config.setRootPid(Utils.trimNull(dataMap.get("rootPid")));
+            }
+            String treeSearchKeyword = Utils.trimNull(requestContext.getParameter(config.getTreeLabel()));
+            List<Map<String, Object>> rr = Utils.flatLabelValueTree(dataList, "", "",
+                    treeSearchKeyword,
+                    config);
+            return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(rr.size()).data(rr));
+        } else {
+            count = getDataCountByListId(EzBootstrap.getInstance().getDataSourceByKey(list.get("dataSource"))
+                    , list, requestContext.getRequestParams(), requestContext.getSessionParams());
+        }
+        return EzResult.instance().code("JSON").count(count).data(EzResult.instance().count(count).data(dataList));
+    }
+
+    //简单并发拦截
+    private final Map<String, String> existList = new ConcurrentHashMap<String, String>();
+
+    public EzResult exportpage(RequestContext requestContext, String method, String listUrlCode) throws Exception {
+        String ENCRYPT_LIST_ID = listUrlCode;
+        String EZ_PER_PAGE_SIZE = Utils.trimEmptyDefault(requestContext.getParameter("EZ_PER_PAGE_SIZE"), "1000");
+
+        String key = ENCRYPT_LIST_ID + "_" + ENCRYPT_LIST_ID;
+        try {
+            String sessionUserId = Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_ID_KEY));
+            String username = Utils.trimNull(requestContext.getSessionParams().get(SessionConstants.EZ_SESSION_USER_NAME_KEY));
+
+            if (existList.containsKey(key)) {
+                return EzResult.instance().fail().message(key + "导出失败：当前已有人员" + existList.get(key) + "正在导出此列表，请等待对方先导出完成。");
+            } else {
+                existList.put(key, sessionUserId + username);
+            }
+            logger.info("start export html list_id= {}", ENCRYPT_LIST_ID);
+            Map<String, Object> requestParamMap = requestContext.getRequestParams();
+            Map<String, String> sessionParamMap = requestContext.getSessionParams();
+
+            requestParamMap.put("currentPage", "1");
+            requestParamMap.put("perPageInt", EZ_PER_PAGE_SIZE);
+
+            // 使用统一加载器（文件优先，数据库降级）
+            top.ezadmin.dao.dto.DslConfig dslConfig = DslLoader.loadDsl(ENCRYPT_LIST_ID, "list");
+            if (dslConfig == null) {
+                return EzResult.instance().fail().message("列表配置不存在: " + ENCRYPT_LIST_ID);
+            }
+            Map<String, Object> list = dslConfig.getConfig();
+            initTd(requestContext, list);
+            List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("column");
+
+            logger.info("start finish load ez   list_id=" + ENCRYPT_LIST_ID);
+
+            List<List<Object>> data = new ArrayList<>();
+            //第一页的
+            EzResult pageData = ((EzResult) data(requestContext, method, ENCRYPT_LIST_ID).getData());
+
+            List<Map<String, Object>> dataList = (List<Map<String, Object>>) pageData.getData();
+
+            fillExcelData(data, dataList, colList);
+
+            int currentPage = 2;
+            while (Utils.isNotEmpty(dataList) && dataList.size() >= NumberUtils.toInt(EZ_PER_PAGE_SIZE)) {
+                requestParamMap.put("currentPage", currentPage++);
+                EzResult pageDataTemp = ((EzResult) data(requestContext, method, ENCRYPT_LIST_ID).getData());
+                List<Map<String, Object>> dataListTemp = (List<Map<String, Object>>) pageDataTemp.getData();
+                fillExcelData(data, dataListTemp, colList);
+                dataList = dataListTemp;
+            }
+            List<List<String>> head = new ArrayList<List<String>>();
+            List<String> head0 = new ArrayList<String>();
+            head0.add("序号");
+            head0.add("");
+            head0.add("");
+            head0.add("");
+            head.add(head0);
+            for (int i = 0; i < colList.size(); i++) {
+                Map<String, Object> col = (Map<String, Object>) colList.get(i);
+                if (StringUtils.equalsIgnoreCase(col.get(ConfigConstants.SPECIALCOL) + "", "1")
+                ) {
+                    continue;
+                }
+                List<String> head1 = new ArrayList<String>();
+                //文案
+                head1.add(Utils.getStringByObject(col, ConfigConstants.LABEL));
+                //宽度
+                head1.add(Utils.getStringByObject(col, ConfigConstants.WIDTH));
+                //字段类型
+                head1.add(Utils.getStringByObject(col, ConfigConstants.JDBCTYPE));
+                //component
+                head1.add(Utils.getStringByObject(col,"component"));
+                head.add(head1);
+            }
+            //  log.info("ezadmin start export {} {} {} {}",sessionUserId,ip, Utils.getStringByObject(coreMap,"listname"));
+            String fileName = Utils.trimNull(requestParamMap.get("EXPORT_FILE_NAME"));
+
+            EzExportResult bb = EzBootstrap.config().getEzExport().export(Utils.trimEmptyDefault(fileName, Utils.getStringByObject(list, "name")), head, data);
+            if (StringUtils.isBlank(fileName)) {
+                fileName = bb.getFileName();
+            }
+            if (StringUtils.isBlank(fileName)) {
+                fileName = Utils.getStringByObject(list, "name");
+            }
+            return EzResult.instance().success().dataMap("html", bb.getFile())
+                    .dataMap("contentType", bb.getContentType())
+                    .dataMap("fileName", fileName).code("EXPORT");
+        } catch (Exception e) {
+            logger.error("", e);
+            return EzResult.instance().fail().message("导出失败：" + e.getMessage());
+        } finally {
+            existList.remove(key);
+        }
+    }
+
+    private void fillExcelData(List<List<Object>> data, List<Map<String, Object>> dataList, List<Map<String, Object>> colList) {
+        if (Utils.isEmpty(dataList)) {
+            return;
+        }
+        for (int i = 0; i < dataList.size(); i++) {
+            List<Object> row = new ArrayList<>();
+            row.add(data.size() + 1);
+            //当前行的数据
+            Map<String, Object> rowData = dataList.get(i);
+            //需要转换成 展示的数据
+            List<String> rowCol = new ArrayList<>();
+            colList.forEach(col -> {
+                String item_name = (String) col.get("item_name");
+                String component = (String) col.get("component");
+                String rowValue = Utils.trimNull(rowData.get(item_name));
+
+                List<Map<String, Object>> configData = (List<Map<String, Object>>) col.get("data");//value,label 格式
+
+                if (configData!=null&&StringUtils.equalsIgnoreCase(component, "tdSelect")
+                        || StringUtils.equalsIgnoreCase(component, "tdSelectMultiple")
+                ) {
+                    List<String> values = Arrays.asList(rowValue.split(","));
+                    //找到 configData里面 value 为 rowValue 的项 ，提取所有label
+                    List<String> rowLabels = configData.stream().filter(item ->
+                                    values.contains(Utils.trimNull(item.get("value")))
+                            ).map(item -> (String) item.get("label"))
+                            .collect(Collectors.toList());
+                    rowCol.add(StringUtils.join(rowLabels, ","));
+                } else if (StringUtils.equalsIgnoreCase(component, "tdPic")) {
+                    rowCol.add(EzBootstrap.config().getDownloadUrl() + rowValue);
+                } else {
+                    rowCol.add(rowValue);
+                }
+            });
+            //添加一行
+            row.addAll(rowCol);
+            data.add(row);
+        }
+    }
+
+
+    public void initRowBtn(RequestContext requestContext, Map<String, Object> list) {
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("rowButton");
+        List<Map<String, Object>> normal = new ArrayList<>();
+        List<Map<String, Object>> bread = new ArrayList<>();
+        List<Map<String, Object>> dropdown = new ArrayList<>();
+        columnList.forEach(item -> {
+
+            Map<String, Object> props = (Map<String, Object>) item.get("props");
+            if (props != null) {
+                //url
+                if (props.containsKey("url") && props.get("url") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("url"), requestContext.getRequestParams()).getResult();
+                    props.put("url", Utils.fixedUrl(urlNew));
+                }
+                if (props.containsKey("windowname") && props.get("windowname") != null) {
+                    String urlNew = MapParser.parseDefaultEmpty((String) props.get("windowname"), requestContext.getRequestParams()).getResult();
+                    props.put("windowname", urlNew);
+                }
+
+            }
+
+            if (item.get("component") == null || StringUtils.isBlank((String) item.get("component"))) {
+                normal.add(item);
+                return;
+            }
+            if (item.get("component").equals("button-bread")) {
+                bread.add(item);
+            } else if (item.get("component").equals("button-dropdown")) {
+                dropdown.add(item);
+            } else {
+                normal.add(item);
+            }
+        });
+        list.put("rowButtonNormal", normal);
+        list.put("rowButtonBread", bread);
+        list.put("rowButtonDropdown", dropdown);
+    }
+
+    public Collection<String> initTd(RequestContext requestContext, Map<String, Object> list) {
+        List<Map<String, Object>> columnList = (List<Map<String, Object>>) list.get("column");
+        Map<String, Object> body = (Map<String, Object>) list.get("body");
+        Map<String, String> tdTemplates = new HashMap<>();
+        columnList.forEach(item -> {
+            Map<String, Object> props = (Map<String, Object>) item.get("props");
+            if (props == null) {
+                props = new HashMap<>();
+                ;
+            }
+            String emptyShow = (String) props.get("emptyShow");
+            props.put("emptyShow", Utils.trimEmptyDefault(emptyShow, Utils.trimNull(body.get("emptyShow"))));
+            item.put("propsJson", JSONUtils.toJSONString(item.get("props")));
+            //props不为空
+            item.put("props", props);
+
+            listService.initComponentData(requestContext, item);
+
+            try {
+                String comp = Utils.trimEmptyDefault(item.get("component"), "tdText");
+                // component 不为空
+                item.put("component", comp);
+                if (!tdTemplates.containsKey(comp)) {
+                    String temp = Resources.getResourceAsString("dsl/component/" + comp + ".html");
+                    tdTemplates.put(comp, temp);
+                }
+            } catch (IOException e) {
+                logger.warn("加载组件失败 {} {}", item.get("component"), "dsl/component/" + item.get("component") + ".html");
+            }
+        });
+        return tdTemplates.values();
+    }
+
+    public void initSearch(RequestContext requestContext, Map<String, Object> list) {
+        Object searchObj = list.get("search");
+        // 支持一维和二维数组格式
+        List<List<Map<String, Object>>> searchList = getFlattenedSearchList(searchObj);
+        if (searchList == null) {
+            return;
+        }
+        searchList.forEach(row -> {
+            row.forEach(search -> {
+                if (search != null) {
+                    listService.initComponentData(requestContext, search);
+                    // 默认 classAppend：每行4列
+                    if (search.get("classAppend") == null) {
+                        search.put("classAppend", "layui-col-sm6 layui-col-md4 layui-col-lg4 layui-col-xl3");
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * 获取扁平化的搜索字段列表（支持新的对象数组格式）
+     *
+     * @param searchObj search 对象
+     * @return 扁平化的搜索字段列表
+     */
+    private List<List<Map<String, Object>>> getFlattenedSearchList(Object searchObj) {
+        try {
+            if (!(searchObj instanceof List)) {
+                return null;
+            }
+            List<Object> list = (List<Object>) searchObj;
+            if (list.isEmpty()) {
+                return null;
+            }
+
+            // 新格式：[{row:[...]}, {row:[...]}]
+            if (list.get(0) instanceof Map) {
+                Map firstItem = (Map) list.get(0);
+                if (firstItem.containsKey("row")) {
+                    List<List<Map<String, Object>>> result = new ArrayList<>();
+                    for (Object item : list) {
+                        Map rowObj = (Map) item;
+                        List<Map<String, Object>> row = (List<Map<String, Object>>) rowObj.get("row");
+                        if (row != null) {
+                            result.add(row);
+                        }
+                    }
+                    return result;
+                }
+            }
+
+            logger.error("Search配置错误，应该使用对象数组格式: [{\"row\":[...]}, {\"row\":[...]}]");
+            return null;
+        } catch (Exception e) {
+            logger.error("Search配置错误，请检查格式{}", searchObj, e);
+        }
+        return null;
+    }
+
+    private String excuteGroup(String group, Map<String, Object> request, Map<String, String> session) {
+        try {
+            String groupByExpress = group;
+            //兼容老的 group by
+            if (StringUtils.startWithTrimAndLower(groupByExpress, "group ")) {
+                return Utils.trimNull(groupByExpress);
+            }
+            ListExpressExecutor groupExe = ListExpressExecutor.createInstance();
+            groupExe.getOperatorParam().setListDto(null);
+            groupExe.express(groupByExpress);
+            groupExe.addSessionParam(session);
+            groupExe.addRequestParam(request);
+            Object obj = groupExe.executeCount();
+            return Utils.trimNull(obj);
+        } catch (Exception e) {
+            logger.error("EZADMIN   group by 配置错误   ,", e);
+            return " ";
+        }
+    }
+
+    private void fillinitRequestValue(List<List<Map<String, Object>>> searchList, Map<String, Object> requestParamMap) {
+        if (Utils.isEmpty(searchList)) {
+            return;
+        }
+        for (int j = 0; j < searchList.size(); j++) {
+            List<Map<String, Object>> searchListRow = searchList.get(j);
+            for (int i = 0; i < searchListRow.size(); i++) {
+                Map<String, Object> search = searchListRow.get(i);
+                Map<String, Object> props = search.get("props") == null ? new HashMap<String, Object>() : (Map<String, Object>) search.get("props");
+                String currentItemname = Utils.trimNull(search.get(ConfigConstants.ITEM_NAME));
+                String component = Utils.trimEmptyDefault(search.get("component"), "input");
+                String orgValue = Utils.trimNull(requestParamMap.get(currentItemname));
+                //兼容
+                search.put(ConfigConstants.OPER, Utils.trimNull(search.get("operator")));
+                search.put(ConfigConstants.TYPE, component);
+                String newJdbcType = Utils.trimEmptyDefault(search.get("jdbcType"), JdbcTypeEnum.VARCHAR.getName());
+                search.putIfAbsent(ConfigConstants.JDBCTYPE, newJdbcType);
+                search.put(ParamNameEnum.itemParamValue.getName(), orgValue);
+                search.put(ParamNameEnum.itemParamValueStart.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_START")));
+                search.put(ParamNameEnum.itemParamValueEnd.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_END")));
+                //联动日期区间  -
+                if (component.equalsIgnoreCase("date")
+                        && Utils.isTrue(props.get("range"))
+                        && StringUtils.isNotBlank(orgValue)) {
+                    //默认datetime
+                    search.put(ConfigConstants.JDBCTYPE, JdbcTypeEnum.DATETIME.getName());
+                    orgValue = DefaultParamEnum.getValue(orgValue);
+                    String[] valueSplit = orgValue.split(" - ");
+                    search.put(currentItemname, orgValue);
+                    search.put(ParamNameEnum.itemParamValue.getName(), orgValue);
+                    if (valueSplit.length == 2) {
+                        search.put(ParamNameEnum.itemParamValueStart.getName(), valueSplit[0]);
+                        search.put(ParamNameEnum.itemParamValueEnd.getName(), valueSplit[1]);
+
+                    }
+                }
+                // inputrange: "start - end" 隐藏域，按 " - " 分割填入 _START/_END
+                if (component.equalsIgnoreCase("inputrange") && StringUtils.isNotBlank(orgValue)) {
+                    String[] valueSplit = orgValue.split(" - ", 2);
+                    if (valueSplit.length == 2) {
+                        String startVal = valueSplit[0].trim();
+                        String endVal = valueSplit[1].trim();
+                        search.put(ParamNameEnum.itemParamValueStart.getName(), startVal);
+                        search.put(ParamNameEnum.itemParamValueEnd.getName(), endVal);
+                        requestParamMap.put(currentItemname + "_START", startVal);
+                        requestParamMap.put(currentItemname + "_END", endVal);
+                    }
+                }
+
+                search.put(ParamNameEnum.itemParamOrderValue.getName(), Utils.trimNull(requestParamMap.get(currentItemname + "_ORDER")));
+
+                search.put(ParamNameEnum.itemSearchKey.getName(), Utils.getStringByObject(requestParamMap, "itemSearchKey"));
+                search.put(ParamNameEnum.itemSearchValue.getName(), Utils.getStringByObject(requestParamMap, "itemSearchValue"));
+                search.put(ParamNameEnum.itemSearchConcatValue.getName(), Utils.getStringByObject(requestParamMap, "itemSearchConcatValue"));
+                search.put(ParamNameEnum.itemSearchDateKey.getName(), Utils.getStringByObject(requestParamMap, "itemSearchDateKey"));
+
+
+                String start = DefaultParamEnum.getValue(Utils.trimNull(Utils.getStringByObject(requestParamMap, "itemSearchDateValueStart")));
+                String end = DefaultParamEnum.getValue(Utils.trimNull(Utils.getStringByObject(requestParamMap, "itemSearchDateValueEnd")));
+                search.put(ParamNameEnum.itemSearchDateValueStart.getName(), start);
+                search.put(ParamNameEnum.itemSearchDateValueEnd.getName(), end);
+
+                //联动日期区间  -
+                String itemSearchDateValue = Utils.trimNull(requestParamMap.get("itemSearchDateValue"));
+                if (StringUtils.isNotBlank(itemSearchDateValue)) {
+                    itemSearchDateValue = DefaultParamEnum.getValue(itemSearchDateValue);
+                    search.put("itemSearchDateValue", itemSearchDateValue);
+                    String[] valueSplit = itemSearchDateValue.split(" - ");
+                    search.put(currentItemname, itemSearchDateValue);
+                    search.put(ParamNameEnum.itemParamValue.getName(), orgValue);
+                    search.put(ParamNameEnum.itemSearchDateValueStart.getName(), valueSplit[0]);
+                    search.put(ParamNameEnum.itemSearchDateValueEnd.getName(), valueSplit[1]);
+                }
+            }
+
+            for (int i = 0; i < searchListRow.size(); i++) {
+                Map<String, Object> search = searchListRow.get(i);
+                String currentItemname = Utils.trimNull(search.get(ConfigConstants.ITEM_NAME));
+                List<Map<String, Object>> childsearchList = chilrenByName(currentItemname, searchListRow);
+                //用于生成sql
+                search.put("children", childsearchList);
+            }
+        }
+    }
+
+    private List<Map<String, Object>> chilrenByName(String item_name, List<Map<String, Object>> searchList) {
+        if (!StringUtils.contains(item_name, ","))//多字段逗号分隔{
+        {
+            return new ArrayList<Map<String, Object>>();
+        }
+        List<Map<String, Object>> itemNameList = new ArrayList<Map<String, Object>>();
+        for (int j = 0; j < searchList.size(); j++) {
+            String itemName = Utils.trimNull(searchList.get(j).get(ConfigConstants.ITEM_NAME));
+            if (StringUtils.contains(itemName, ",")) {
+                //不可以嵌套联合
+                continue;
+            }
+            if (StringUtils.contains(item_name, itemName)) {
+                itemNameList.add(searchList.get(j));
+            }
+        }
+        // context.put("itemNameList", itemNameList);
+        return itemNameList;
+    }
+
+    private long getDataCountByListId(DataSource dataSource, Map<String, Object> list, Map<String, Object> request, Map<String, String> session) throws Exception {
+        Object select_expressObj = ((Map<String, Object>) list.get("express")).get("main");
+        String select_express = Utils.expressToString(select_expressObj);
+
+        String orderBy = Utils.expressToString(((Map<String, Object>) list.get("express")).get("orderBy"));
+        String groupBy = Utils.expressToString(((Map<String, Object>) list.get("express")).get("groupBy"));
+        String count_express = Utils.expressToString(((Map<String, Object>) list.get("express")).get("count"));
+
+        ListExpressExecutor listExpressExecutor = ListExpressExecutor.createInstance();
+        String countQl = "";
+        if (StringUtils.isBlank(count_express) ||
+                StringUtils.equalsIgnoreCase("count(1)", count_express.toLowerCase().trim())) {
+            countQl = transSqlCountToQl(select_express);
+        } else {
+            countQl = transSqlCountToQl(count_express);
+        }
+        listExpressExecutor.datasource(dataSource).express(countQl);
+        //计算group by
+        String group = excuteGroup(groupBy, request, session);
+        listExpressExecutor.listDTOAndSearchParam(list);
+        listExpressExecutor.addParam("_CHECKD_IDS", Utils.getStringByObject(request, "_CHECKD_IDS"));
+        listExpressExecutor.addParam("EZ_SUM_FLAG", Utils.getStringByObject(request, "EZ_SUM_FLAG"));
+        listExpressExecutor.addParam("GROUP_BY", group);
+        listExpressExecutor.addSessionParam(session);
+        listExpressExecutor.addRequestParam(request);
+        Object obj = listExpressExecutor.executeCount();
+        return NumberUtils.toLong(obj + "");
+    }
+
+    private String transSqlCountToQl(String ql) {
+        if (StringUtils.trimEmpty(ql).toLowerCase(Locale.ROOT).startsWith("select")) {
+            return "c=search(\"" + ql + "\");return c;";
+        }
+        return ql;
+    }
+
+    private Page loadingPage(Map<String, Object> list, Map<String, Object> requestParamMap) {
+        Page pagination = new Page(requestParamMap);
+        List<Map<String, Object>> colList = (List<Map<String, Object>>) list.get("column");
+        // 支持一维和二维数组格式，扁平化处理
+        List<List<Map<String, Object>>> searchListRows = getFlattenedSearchList(list.get("search"));
+        if (Utils.isEmpty(colList)) {
+            return pagination;
+        }
+        final String orderByName = Utils.trimNull(requestParamMap.get("orderByName"));
+        final String orderByType = Utils.trimNull(requestParamMap.get("orderByType"));
+        //从search里面找到对应字段的alias
+        StringBuilder newOrderBy = new StringBuilder();
+        if (searchListRows != null) {
+            for (List<Map<String, Object>> row : searchListRows) {
+                for (Map<String, Object> item : row) {
+                    if (StringUtils.equalsIgnoreCase(orderByName, Utils.trimNull(item.get(ConfigConstants.ITEM_NAME)))) {
+                        String fieldName = SqlUtils.alias(Utils.trimNull(item.get(ConfigConstants.ALIAS)), Utils.trimNull(item.get(ConfigConstants.ITEM_NAME)));
+                        newOrderBy.append(" order by " + fieldName + " " + orderByType);
+                        break;
+                    }
+                }
+                if (newOrderBy.length() > 0) {
+                    break;
+                }
+            }
+        }
+        //再从列里面看是否有对应的字段
+        if (colList != null && StringUtils.isBlank(newOrderBy.toString())) {
+            for (Map<String, Object> item : colList) {
+                if (StringUtils.equalsIgnoreCase(orderByName, Utils.trimNull(item.get(ConfigConstants.ITEM_NAME)))) {
+                    String fieldName = SqlUtils.alias(Utils.trimNull(item.get(ConfigConstants.ALIAS)), Utils.trimNull(item.get(ConfigConstants.ITEM_NAME)));
+                    newOrderBy.append(" order by " + fieldName + " " + orderByType);
+                    break;
+                }
+            }
+        }
+
+
+        if (StringUtils.isBlank(newOrderBy.toString())) {
+            String orderBy = Utils.trimNull(list.get("orderby_express"));
+            newOrderBy.append(orderBy);
+        }
+        pagination.setOrderByClause(newOrderBy.toString());
+        try {
+            String customJson = Utils.trimNull(requestParamMap.get("customSearch"));
+            CustomSearchDTO customSearchDTO = JSONUtils.parseObject(customJson, CustomSearchDTO.class);
+            if (customSearchDTO != null) {
+                String customOrder = customOrder(customSearchDTO.getO());
+                if (StringUtils.isNotBlank(customOrder)) {
+                    pagination.setOrderByClause(customOrder);
+                }
+            }
+        } catch (Exception e) {
+            logger.warn("", e);
+        }
+        return pagination;
+    }
+
+    private String customOrder(List<CustomSearchOrder> o) {
+        if (o == null || o.isEmpty()) {
+            return "";
+        }
+        StringBuilder order = new StringBuilder();
+        for (int i = 0; i < o.size(); i++) {
+            if (StringUtils.isNotBlank(o.get(i).getF()) && StringUtils.isNotBlank(o.get(i).getO())) {
+                order.append(", ")
+                        .append(StringUtils.safeDb(o.get(i).getF()))
+                        .append(" ")
+                        .append(StringUtils.safeDb(o.get(i).getO()));
+            }
+        }
+        if (order.length() > 1) {
+            return " order by " + order.substring(1);
+        }
+        return "";
+    }
+}

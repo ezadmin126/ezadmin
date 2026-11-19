@@ -1,0 +1,41 @@
+<div id="container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/konva@8.0.2/konva.min.js"></script>
+<script>
+    const stage = new Konva.Stage({
+        container: 'container',
+        width: 1400,
+        height: 1400
+    });
+
+    const layer = new Konva.Layer();
+    stage.add(layer);
+
+    const rect = new Konva.Rect({
+        x: 100,
+        y: 100,
+        width: 200,
+        height: 100,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        scaleX: 1.5,
+        scaleY: 1.5,
+        rotation: 45
+    });
+    layer.add(rect);
+
+    const text = new Konva.Text({
+        x: 120,
+        y: 120,
+        text: 'Hello Konva!',
+        fontSize: 24,
+        fontFamily: 'Arial',
+        fill: 'green',
+        draggable: true
+    });
+    layer.add(text);
+
+    layer.draw();
+</script>
